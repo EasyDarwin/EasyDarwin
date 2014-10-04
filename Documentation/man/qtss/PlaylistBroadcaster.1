@@ -1,0 +1,54 @@
+.Dd February 11, 2005       \" DATE 
+.Dt PlaylistBroadcaster 1       \" Program name and manual section number 
+.Os Darwin
+.Sh NAME                 \" Section Header - required - don't modify 
+.Nm PlaylistBroadcaster 
+.Nd hinted media playlist broadcaster
+.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Nm
+.Op Fl vhpcatfdl              \" [-dvxIh]
+.Op Fl i Ar destAddress         \" [-i destAddress] 
+.Op Fl e Ar filename         \" [-e filename] 
+.Op Fl s Ar broadcastnum         \" [-s broadcastnum]
+.Ar fileName                 
+.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Nm
+streams a playlist of hinted files to an instance of QuickTimeStreamingServer.
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent  \" Differs from above in -compact tag removed 
+.It Fl v
+Prints version
+.It Fl h
+Prints usage
+.It Fl p                 
+Verify a broadcast description file and movie list
+.It Fl c
+Write the current movie to the log file
+.It Fl a
+ANNOUNCE the broadcast to the server
+.It Fl t
+Send the broadcast over TCP to the server
+.It Fl f
+Force a new SDP file to be created even if one already exists
+.It Fl d
+Run attached to the terminal
+.It Fl l
+List currently running broadcasts
+.It Fl s Ar broadcastnum
+Stop a running broadcast
+.It Fl i Ar myconfigpath.conf
+Specify the destination ip address. Overrides config file value.
+.It Fl e Ar filename
+Log errors to filename
+.El
+.Sh FILES
+.Bl -tag -width /Library/QuickTimeStreaming/Playlists -compact
+.It Pa /Library/QuickTimeStreaming/Movies
+.It Pa /Library/QuickTimeStreaming/Playlists
+.El
+.Sh SEE ALSO 
+.Xr QuickTimeStreamingServer 8 , 
+.Xr MP3Broadcaster 1 , 
+.\" .Sh BUGS 
+.\" .Sh HISTORY 

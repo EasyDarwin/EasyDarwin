@@ -1,0 +1,53 @@
+.Dd February 11, 2005       \" DATE 
+.Dt MP3Broadcaster 1       \" Program name and manual section number 
+.Os Darwin
+.Sh NAME                 \" Section Header - required - don't modify 
+.Nm MP3Broadcaster 
+.Nd MP3 file playlist broadcaster
+.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Nm
+.Op Fl vdixX              \" [-vdixX]
+.Op Fl a Ar ipAddress         \" [-a ipAddress] 
+.Op Fl p Ar portNum         \" [-p portNum] 
+.Op Fl l Ar filename         \" [-l filename]
+.Op Fl w Ar filename         \" [-w filename]
+.Op Fl e Ar filename         \" [-e filename]
+-c fileName                 
+.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Nm
+streams a playlist of MP3 files to an instance of QuickTimeStreamingServer.
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent  \" Differs from above in -compact tag removed 
+.It Fl v
+display version
+.It Fl d
+display version
+.It Fl i                 
+use 'icy-' protocol header prefix (default is 'x-audio-')
+.It Fl x
+preflight configuration
+.It Fl X
+check MP3 files
+List running currently broadcasts
+.It Fl a Ar ipaddr
+broadcast to this address (default = local loopback)
+.It Fl p Ar portNum
+broadcast to this port (default = 8000)
+.It Fl l Ar filename
+path to playlist (overrides config file)
+.It Fl w Ar filename
+path to dir to create temp lists (overrides config file)
+.It Fl e Ar filename
+print output to error file
+.El
+.Sh FILES
+.Bl -tag -width /Library/QuickTimeStreaming/Playlists -compact
+.It Pa /Library/QuickTimeStreaming/Movies
+.It Pa /Library/QuickTimeStreaming/Playlists
+.El
+.Sh SEE ALSO 
+.Xr QuickTimeStreamingServer 8 , 
+.Xr PlaylistBroadcaster 1 , 
+.\" .Sh BUGS 
+.\" .Sh HISTORY 

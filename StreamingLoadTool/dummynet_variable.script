@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+#
+echo "SCRIPT $0 [ip address] [down Kbits] [up Kbits] [test seconds] "
+echo "TEST Alternate between no bandwidth limits and limited bandwidth with a delay between"
+echo ""
+
+ADDRESS="127.0.0.1"
+UP="32"
+DOWN="100"
+SLEEP="30"
+
+if [ ${1} ]; then
+    ADDRESS=${1}
+    echo "Address set. Using $ADDRESS"
+ else
+    echo "No Address given. Using $ADDRESS"
+fi
+
+if [ ${2} ]; then
+    DOWN=${2}
+    echo "Down link limit set. Using "$DOWN"kbits/s"
+else
+    echo "No down link limit given. Using "$DOWN"kbits/s"
+    
+fi
+
+if [ ${3} ]; then
+    UP=${3}
+    echo "Up link limit set. Using "$UP"kbits/s"
+else
+    echo "No up link limit given. Using "$UP"kbits/s"
+fi
+
+
+if [ ${4} ]; then
+    SLEEP=${4}
+    echo "Test time set. Using $SLEEP seconds"
+else
+    echo "No test time. Using $SLEEP seconds"
+fi
+
+echo "Starting test"
+
+while [ 1 ]
+ do 
+    
+    ipfw delete pipe 1 2
+    ipfw delete set 11 12
+    ipfw disable firewall
+    echo ""
+    echo "Bandwidth open - no limit set"
+    echo "Sleeping $SLEEP seconds"
+    sleep 30
+    echo ""
+
+    echo "Setting $DOWN kbits down and $UP kbits up"
+    ipfw pipe 1 config bw "$DOWN"kbits/s delay 0 queue 100 noerror
+    ipfw pipe 2 config bw "$UP"kbits/s delay 0 queue 100 noerror
+
+    ipfw add 11 set 11 pipe 1 src-ip $ADDRESS proto udp in
+    ipfw add 12 set 12 pipe 2 src-ip $ADDRESS proto udp out
+
+    ipfw set enable 11 
+    ipfw set enable 12
+    ipfw enable firewall one_pass
+
+    echo "Sleeping $SLEEP seconds"
+    sleep 30
+    
+
+done
+

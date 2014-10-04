@@ -1,0 +1,126 @@
+#!/bin/sh
+
+x=`uname`
+y=`uname -m`
+
+PLAT=$x.$y
+
+echo $PLAT
+
+case $PLAT in
+
+	Linux.ppc)
+		echo "Configuring for a Linux PPC platform"
+		CPLUS='egcs'
+		CCOMP=egcs
+		LINKER='egcs'
+		MACHDEFINES=-D__linuxppc__
+		PTHREADLIB=-lpthread
+		DLLIB=-ldl
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;		
+
+	Linux.i586 | \
+	Linux.i686)
+        echo "Configuring for the "$x" "$y" platform"
+                CPLUS=gcc
+                CCOMP=gcc
+                LINKER='gcc'
+                MAKE=make
+
+                COMPILER_FLAGS="-D_REENTRANT -D__linux__ -pipe"
+        	INCLUDE_FLAG="-include"
+
+                CORE_LINK_LIBS="-lpthread -ldl -lm -lcrypt"
+
+                SHARED=-shared
+                MODULE_LIBS=
+
+                if [ -f /usr/include/socketbits.h ]; then
+                        NEED_SOCKETBITS=1
+                        export NEED_SOCKETBITS
+                fi
+                ;;
+
+	FreeBSD.i386)
+		echo "Configuring for a FreeBSD platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER="gcc"
+		PTHREADLIB=-pthread
+		DLLIB=
+		MACHDEFINES="-D__FreeBSD__ -fhandle-exceptions"
+		;;
+	
+#	SunOS.sun4m | \
+#	SunOS.sun4u)
+	SunOS.*)
+		echo "Configuring for a Solaris platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER="gcc"
+		PTHREADLIB=-lpthread
+		DLLIB="-ldl -lsocket -lnsl -lresolv"
+		MACHDEFINES="-D__solaris__"
+		SHARED=-G
+		MODULE_LIBS=
+		;;
+
+IRIX*.*)
+# IRIX with MipsPro compiler
+# Change all references of Makefile.POSIX below to Makefile.IRIX
+	echo "Configuring for the "$OSNAME" "$HARDWARENAME" SGI platform"
+		CPLUS=CC
+		CCOMP=cc
+		LINKER="CC"
+# GNU make is required. Obtain from freeware.sgi.com
+		MAKE=/usr/freeware/bin/gmake
+# defines from PlatformHeader.h defined here as MipsPro does not support -include pre-processor directive		
+		COMPILER_FLAGS="-D__sgi__ -DMipsPro -D_SGI_REENTRANT_FUNCTIONS -DASSERT -D__PTHREADS__ -D__PTHREADS_MUTEXES__ -DBIGENDIAN -DUSE_THREAD -DEXPORT -D_REENTRANT"
+		INCLUDE_FLAG=
+		CORE_LINK_LIBS="-ldl -lm -lcrypt"
+		SHARED=-shared
+		MODULE_LIBS=
+		;;
+
+	*)
+		echo "I don't know your platform. I'll assume this is a Linux x86 platform."
+		echo "Please edit the BuildServer script & PlatformHeader.h to add your platform."
+		CPLUS='gcc'
+		CCOMP=gcc
+		LINKER='gcc'
+		MACHDEFINES=-D__linux__
+		DLLIB=-ldl
+		PTHREADLIB=-lpthread
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+esac
+
+echo Building for $PLAT with $CPLUS
+
+        export CPLUS
+        export CCOMP
+        export LINKER
+        export COMPILER_FLAGS
+        export INCLUDE_FLAG
+        export CORE_LINK_LIBS
+        export SHARED
+        export MODULE_LIBS
+
+make -f Makefile.POSIX $*
+
+if [ PlaylistBroadcaster ]; then
+	echo "#################################################################"
+	echo
+	echo "As root, run ./PlaylistBroadcaster"
+	echo
+	echo "#################################################################"
+fi
+
+

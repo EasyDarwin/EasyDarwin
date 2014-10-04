@@ -1,0 +1,123 @@
+#!/bin/sh
+if [ "$1" = "" ] ; then
+    echo "example: BuildOSXInstallerPkg [ dss | dss_fat ] [ update ]"
+    echo "[ dss ] is the public DarwinStreamingServer installer (buildit dss)"
+    echo "[ dss_fat ] is the private Apple DarwinStreamingServer installer (buildit dssfullfat)"
+    echo "[ update ] Don't clean just update the build before creating installer"
+else
+   DONE="no"
+
+   if [ `id -u` != 0 ]
+   then
+        echo "### You must be root or use sudo to build the installer. ###"
+        exit 1
+    fi
+
+    if [ `uname` = "Darwin" ]; then
+         if [ "$2" = "update" ] ; then
+            echo "update"
+         else
+           rm -rf /tmp/StreamingServer.dst
+           rm -rf ./build
+         fi
+
+
+		if [ -e /usr/bin/xcodebuild ] ; then
+			BUILDTOOL="xcodebuild"
+			PROJECT="-project StreamingServer.xcodeproj"
+			TARGE_REF_MOVIE_MODULE="QTSSRefMovieModule (Bundle)"
+			TARGET_HOME_DIR_MODULE="QTSSHomeDirectoryModule (Bundle)"
+		fi
+    
+        if [ "$1" = "dss" ] ; then
+            ./UpdateDSSInstallerDocs
+            echo "Build DarwinStreamingServer and installer"
+
+            rm -rf ./DarwinStreamingServer.pkg
+            ./Buildit dss install 
+             
+            echo "Build Dynamic Modules"
+            rm -rf build/Development/QTSSRefMovieModule.bundle
+            rm -rf build/Development/QTSSHomeDirectoryModule.bundle
+            rm -rf /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules/QTSSRefMovieModule.bundle
+            rm -rf /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules/QTSSHomeDirectoryModule.bundle
+            $BUILDTOOL $PROJECT -configuration Development -target "$TARGE_REF_MOVIE_MODULE"
+            $BUILDTOOL $PROJECT -configuration Development -target "$TARGET_HOME_DIR_MODULE"
+            cp -Rf build/Development/QTSSRefMovieModule.bundle /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules   
+            cp -Rf build/Development/QTSSHomeDirectoryModule.bundle /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules   
+ 
+            if [ -e "/Developer/Applications/PackageMaker.app/Contents/MacOS/PackageMaker" ]; then
+            	/Developer/Applications/PackageMaker.app/Contents/MacOS/PackageMaker  -build -p `pwd`/DarwinStreamingServer.pkg -f /tmp/StreamingServer.dst/ -r pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Resources/ -i pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Info.plist
+            else
+            	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker  -build -p `pwd`/DarwinStreamingServer.pkg -f /tmp/StreamingServer.dst/ -r pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Resources/ -i pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Info.plist
+            fi
+    
+            #delete default untitled description, we will use the language version
+            echo `date` "*remove default description*"
+            rm ./DarwinStreamingServer.pkg/Contents/Resources/Description.plist
+
+            #copy the english languge files to the installer
+            cp -Rf pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Resources ./DarwinStreamingServer.pkg/Contents/
+    
+            #remove english error messages so installer uses the default localized strings.
+            #echo `date` "*remove english strings*"
+            #rm ./DarwinStreamingServer.pkg/Contents/Resources/English.lproj/VolumeCheck.strings
+      
+            #delete the CVS dirs
+            echo `date` "*Look for and remove any CVS directories*"
+            ./deleteCVSdirs ./DarwinStreamingServer.pkg 
+    
+            echo `date` "DarwinStreamingServer Package created at "`pwd`"/DarwinStreamingServer.pkg."
+            DONE="yes"
+        fi
+
+
+        if [ "$1" = "dss_fat" ] ; then   
+            ./UpdateDSSInstallerDocs
+
+            echo "Build Apple DarwinStreamingServer installer"
+
+            rm -rf ./DarwinStreamingServer.pkg
+            ./Buildit dssfullfat install
+            
+            echo "Build Dynamic Modules"
+            rm -rf build/Development/QTSSRefMovieModule.bundle
+            rm -rf build/Development/QTSSHomeDirectoryModule.bundle
+            rm -rf /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules/QTSSRefMovieModule.bundle
+            rm -rf /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules/QTSSHomeDirectoryModule.bundle
+            $BUILDTOOL $PROJECT -configuration Development -target "$TARGE_REF_MOVIE_MODULE"
+            $BUILDTOOL $PROJECT -configuration Development -target "$TARGET_HOME_DIR_MODULE"
+            cp -Rf build/Development/QTSSRefMovieModule.bundle /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules   
+            cp -Rf build/Development/QTSSHomeDirectoryModule.bundle /tmp/StreamingServer.dst/Library/QuickTimeStreaming/Modules   
+             
+            if [ -e "/Developer/Applications/PackageMaker.app/Contents/MacOS/PackageMaker" ]; then
+            	/Developer/Applications/PackageMaker.app/Contents/MacOS/PackageMaker  -build -p `pwd`/DarwinStreamingServer.pkg -f /tmp/StreamingServer.dst/ -r pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Resources/ -i pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Info.plist
+            else
+            	/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker  -build -p `pwd`/DarwinStreamingServer.pkg -f /tmp/StreamingServer.dst/ -r pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Resources/ -i pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Info.plist
+            fi
+                      
+            rm ./DarwinStreamingServer.pkg/Contents/Resources/Description.plist
+
+            #copy the english languge files to the installer
+            cp -Rf pubPackageMetaData/pubPackageMetaData/DarwinStreamingServer.pkg/Contents/Resources ./DarwinStreamingServer.pkg/Contents/
+           
+            #delete default untitled description, we will use the language version
+            echo `date` "*remove default description*"
+            if [ -e "./DarwinStreamingServer.pkg/Contents/Resources/Description.plist" ]; then
+                rm ./DarwinStreamingServer.pkg/Contents/Resources/Description.plist
+            fi
+
+            #delete the CVS dirs
+            echo `date` "*Look for and remove any CVS directories*"
+            ./deleteCVSdirs ./DarwinStreamingServer.pkg
+    
+            echo `date` "DarwinStreamingServer Package created at " `pwd` "/DarwinStreamingServer.pkg."
+            DONE="yes"
+        fi
+        if [ $DONE != "yes" ] ; then
+           echo "Uknown $0 option"
+           "$0"
+       fi
+    fi
+fi
+

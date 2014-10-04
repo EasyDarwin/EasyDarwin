@@ -1,0 +1,1 @@
+gdb ./StreamingLoadTool -x gdb_script

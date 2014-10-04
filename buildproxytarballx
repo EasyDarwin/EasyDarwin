@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#Darwin BuildTarball script
+
+PLAT=`uname`
+
+echo removing StreamingProxy-5.0.x-MacOSX.tar.gz
+if rm -f StreamingProxy-5.0.x-MacOSX.tar.gz; 
+then :
+fi
+
+echo removing StreamingProxy-5.0.x-MacOSX
+if rm -rf StreamingProxy-5.0.x-MacOSX; 
+then :
+fi
+
+#cvs -q up
+./Buildit
+if [ -e build/StreamingProxy ] ; then
+    cp build/StreamingProxy StreamingProxy.tproj/
+fi
+
+if [ -e build/Development/StreamingProxy ] ; then
+    cp build/Development/StreamingProxy StreamingProxy.tproj/
+fi
+
+./DSS_MakeProxyRoot StreamingProxy-5.0.x-MacOSX
+tar cvf StreamingProxy-5.0.x-MacOSX.tar StreamingProxy-5.0.x-MacOSX
+gzip StreamingProxy-5.0.x-MacOSX.tar
+
+echo Done!

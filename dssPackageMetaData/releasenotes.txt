@@ -1,0 +1,24 @@
+
+	NOTES
+Project	dssPackageMetaData
+------------------------------------------------------------------------
+
+Date: 02/10/2003
+
+*   new project name dssPackageMetaData
+    package for QuickTime Streaming Server 5 
+
+    Changes: changed package name to DarwinStreamingServer.pkg
+             change Installation check to check for DarwinStreamingServer.pkg
+             change readme to describe an install of Darwin Streaming Server.
+------------------------------------------------------------------------ 
+Date: 02/12/2003
+
+*   Changes: reverting file organization back to 10.1 installer file names and organization.
+             this installer supports OS X 10.1 and later so many changes to support
+             the old 10.1 installer package format. Initial check was a copy of the
+             10.2 installer package format.
+             + add check for QuickTimeStreamingServer and DarwinStreamingServer versions.
+------------------------------------------------------------------------ 
+
+

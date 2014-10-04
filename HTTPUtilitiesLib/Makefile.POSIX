@@ -1,0 +1,40 @@
+C++ = $(CPLUS)
+CC = $(CCOMP)
+LINK = $(LINKER)
+CCFLAGS += $(MACHDEFINES) -include ../PlatformHeader.h -g -Wall $(CFLAGSX)
+
+OPTIM = -O2
+
+# EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
+
+CCFLAGS += -I.
+CCFLAGS += -I..
+CCFLAGS += -I../CommonUtilitiesLib
+CCFLAGS += -I../APIStubLib
+
+C++FLAGS = $(CCFLAGS)
+
+CFILES = 
+
+CPPFILES =	HTTPProtocol.cpp\
+			HTTPRequest.cpp
+
+all: libHTTPUtilitiesLib.a
+
+libHTTPUtilitiesLib.a: $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	ar -r libHTTPUtilitiesLib.a $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	ranlib libHTTPUtilitiesLib.a
+
+install: libHTTPUtilitiesLib.a
+
+clean:
+	rm -f libHTTPUtilitiesLib.a $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+
+.SUFFIXES: .cpp .c .o
+
+.cpp.o:
+	$(C++) -c -o $*.o $(DEFINES) $(C++FLAGS) $*.cpp
+
+.c.o:
+	$(CC) -c -o $*.o $(DEFINES) $(CCFLAGS) $*.c
+

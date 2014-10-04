@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IFPkgDescriptionDescription</key>
+	<string>This package contains the QuickTime Streaming Server files for Mac OS X.  Install it only on computers running Mac OS X.</string>
+	<key>IFPkgDescriptionTitle</key>
+	<string>QuickTime Streaming Server</string>
+	<key>IFPkgDescriptionVersion</key>
+	<string>Release 5.5.0 for Mac OS X</string>
+</dict>
+</plist>

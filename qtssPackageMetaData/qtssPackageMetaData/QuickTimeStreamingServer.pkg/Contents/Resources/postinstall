@@ -1,0 +1,284 @@
+#!/bin/sh
+#
+#
+
+echo "post_install"
+
+
+#------------------------------------------------------------------
+# migrate or install the web admin link file
+
+#rm the files installed by 3.0
+if [ -e "${3}/Library/QuickTimeStreaming/QTSSAdminUrl.bin" ]
+then
+	echo "rm -f ${3}/Library/QuickTimeStreaming/QTSSAdminUrl.bin"
+	rm "${3}/Library/QuickTimeStreaming/QTSSAdminUrl.bin"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/QTSSAdminUrl" ]
+then
+	echo "rm -f ${3}/Library/QuickTimeStreaming/QTSSAdminUrl"
+	rm "${3}/Library/QuickTimeStreaming/QTSSAdminUrl" 
+fi
+
+#rm the files installed by 4.0/4.1
+if [ -e "${3}/Applications/QTSSAdminUrl" ]
+then
+	echo "rm -f ${3}/Applications/QTSSAdminUrl"
+	rm -f "${3}/Applications/QTSSAdminUrl"
+fi
+
+if [ -e "${3}/Applications/Streaming Server Admin" ]
+then
+	echo "rm -f ${3}/Applications/Streaming Server Admin"
+	rm -f "${3}/Applications/Streaming Server Admin"
+fi
+
+#rm the files installed by 4.1.x
+if [ -e "${3}/Applications/QuickTime Streaming Server" ]
+then
+    echo "rm -f ${3}/Applications/QuickTime Streaming Server"
+    rm -f "${3}/Applications/QuickTime Streaming Server"
+fi
+
+#------------------------------------------------------------------
+# fix up auto-start file
+# if we found the old admin auto start then we must start new admin server
+# if we find the old admin server start then we must auto start the new server
+# if we find a new admin or server start then do nothing
+
+
+# use this magic
+#if [ 0 -eq $(sed -n -e '/^SEARCHTEXT/p' -e '/^SEARCHTEXT/q' "$2${conf_file}" | wc -l) ]; then 
+#   echo "thing not found"
+#fi
+# NO GREP!
+
+# default is no previous install so don't start server
+DEFAULT=0
+ 
+if [ 0 -eq $(sed -n -e '/^QTSSERVER=/p' -e '/^QTSSERVER=/q' "${3}/etc/hostconfig" | wc -l) ]; then 
+    if [ 0 -eq $(sed -n -e '/^QTSS_WEBADMIN=/p' -e '/^QTSS_WEBADMIN=/q' "${3}/etc/hostconfig" | wc -l) ]; then 
+        # no previous install so just add us
+        echo "QTSS_WEBADMIN=-NO-" >> "${3}/etc/hostconfig"
+    fi
+else
+    # found old install set default to start server based on old install value.
+	if [ 0 -eq $(sed -n -e '/^QTSSERVER=-YES-/p' -e '/^QTSSERVER=-YES-/q' "${3}/etc/hostconfig" | wc -l) ]; then 
+		DEFAULT=0
+		echo "DEFAULT="$DEFAULT >> "${3}/etc/temp"
+	else
+		DEFAULT=1
+		echo "DEFAULT="$DEFAULT >> "${3}/etc/temp"
+	fi
+		sed -e 's/QTSSERVER=/QTSS_WEBADMIN=/' "${3}/etc/hostconfig" \
+			> "${3}/etc/hostconfig.tmp"
+		mv "${3}/etc/hostconfig.tmp" "${3}/etc/hostconfig"
+fi
+
+if [ 0 -eq $(sed -n -e '/^QTSSRUNSERVER=/p' -e '/^QTSSRUNSERVER=/q' "${3}/etc/hostconfig" | wc -l) ]; then 
+    #old install or no install
+    if [ -e "${3}/tmp/streamingadminserver.conf.backup" ] ; then
+        if [ 0 -eq $(sed -n -e '/^qtssAutoStart=/p' -e '/^qtssAutoStart=/q' "${3}/tmp/streamingadminserver.conf.backup" | wc -l) ]; then 
+              #no qtssAutoStart in conf so use default
+            RUNSERVER=$DEFAULT;
+        else
+       		if [ 0 -eq $(sed -n -e '/^qtssAutoStart=1/p' -e '/^qtssAutoStart=1/q' "${3}/tmp/streamingadminserver.conf.backup" | wc -l) ]; then             
+            	RUNSERVER=0;
+           	else
+           		RUNSERVER=1;
+            fi
+        fi
+    else
+        #no adminserver conf so use default
+        RUNSERVER=$DEFAULT
+    fi
+    
+    if [ ${RUNSERVER:=0} == 1 ] ; then
+        echo "QTSSRUNSERVER=-YES-" >> "${3}/etc/hostconfig"
+     else
+        echo "QTSSRUNSERVER=-NO-" >> "${3}/etc/hostconfig"
+    fi
+fi
+hash -r
+
+#------------------------------------------------------------------
+# if backup config files exist, replace our new default config with the user's
+# old config files.  Then replace some of the old values with new tweaked values
+
+if [ -e "${3}/tmp/streamingserver.xml.backup" ]
+then
+    cp -f "${3}/tmp/streamingserver.xml.backup" "${3}/Library/QuickTimeStreaming/Config/streamingserver.xml.backup"
+   /usr/bin/perl "$1/Contents/Resources/removeprefs" "${3}/tmp/streamingserver.xml.backup" "${3}/tmp/ssbak"
+   mv -f "${3}/tmp/ssbak" "${3}/tmp/streamingserver.xml.backup"
+fi
+
+
+
+#------------------------------------------------------------------
+# If the user already had a configuration file , then restore it
+
+if [ -e "${3}/tmp/streamingrelay.conf.backup" ] ; then
+    mv -f "${3}/tmp/streamingrelay.conf.backup"	"${3}/Library/QuickTimeStreaming/Config/streamingrelay.conf"
+fi
+
+if [ -e "${3}/tmp/relayconfig.xml.backup" ] ; then
+    mv -f "${3}/tmp/relayconfig.xml.backup" "${3}/Library/QuickTimeStreaming/Config/relayconfig.xml" 
+fi
+
+if [ -e "${3}/tmp/streamingadminserver.conf.backup" ] ; then
+    mv -f "${3}/tmp/streamingadminserver.conf.backup" "${3}/Library/QuickTimeStreaming/Config/streamingadminserver.conf"
+fi
+
+if [ -e "${3}/tmp/streamingadminserver_autostart.conf.backup" ] ; then
+    mv -f "${3}/tmp/streamingadminserver_autostart.conf.backup" "${3}/Library/QuickTimeStreaming/Config/streamingadminserver_autostart.conf"
+fi
+
+if [ -e "${3}/tmp/qtusers.backup" ] ; then
+    mv -f "${3}/tmp/qtusers.backup" "${3}/Library/QuickTimeStreaming/Config/qtusers.backup"
+fi
+
+if [ -e "${3}/tmp/qtgroups.backup" ] ; then
+    mv -f "${3}/tmp/qtgroups.backup" "${3}/Library/QuickTimeStreaming/Config/qtgroups.backup"
+fi
+
+if [ -e "${3}/tmp/streamingloadtool.conf.backup" ] ; then
+    mv -f "${3}/tmp/streamingloadtool.conf.backup" "${3}/Library/QuickTimeStreaming/Config/streamingloadtool.conf"
+fi
+
+if [ -e "${3}/tmp/streamingadminserver.pem.backup" ] ; then
+    mv -f "${3}/tmp/streamingadminserver.pem.backup" "${3}/Library/QuickTimeStreaming/Config/streamingadminserver.pem"
+fi
+
+if [ -e "${3}/tmp/streamingserver.xml.backup" ] ; then
+    mv -f "${3}/tmp/streamingserver.xml.backup" "${3}/Library/QuickTimeStreaming/Config/streamingserver.xml"
+fi
+
+if [ -e "${3}/tmp/streamingserver.xml-sample.backup" ] ; then
+    mv -f "${3}/tmp/streamingserver.xml-sample.backup" "${3}/Library/QuickTimeStreaming/Config/streamingserver.xml-sample"
+fi
+
+#------------------------------------------------------------------
+#	Remove old 3.x files (which were incorrectly installed in "local" dirs)
+
+rm -f "${3}/etc/streaming/streamingserver.xml-sample"
+rm -rf "${3}/etc/streaming/"
+
+rm -rf "${3}/usr/local/sbin/StreamingServerModules.disabled/"
+rm -rf "${3}/usr/local/sbin/StreamingServerModules"
+
+rm -f "${3}/usr/local/sbin/streamingadminserver.pl"
+rm -f "${3}/usr/local/sbin/QuickTimeStreamingServer"
+
+rm -f "${3}/usr/local/bin/PlaylistBroadcaster"
+rm -f "${3}/usr/local/bin/qtpasswd"
+rm -f "${3}/usr/local/bin/StreamingLoadTool"
+
+rm -f ${3}/Library/QuickTimeStreaming/StreamingServerC?????C????C????C????.rtf
+rm -f "${3}/Library/QuickTimeStreaming/StreamingServerLisezMoi.rtf"
+rm -f "${3}/Library/QuickTimeStreaming/StreamingServerLiesMich.rtf"
+rm -f "${3}/Library/QuickTimeStreaming/StreamingServerReadMe.rtf"
+
+rm -f "${3}/Library/QuickTimeStreaming/AboutQTStreamingServer.pdf"
+rm -f ${3}/Library/QuickTimeStreaming/QTSS\ ????????????.pdf
+rm -f ${3}/Library/QuickTimeStreaming/Infos\ serveur\ d\'enchai??nement\ QT.pdf
+rm -f ${3}/Library/QuickTimeStreaming/U??ber\ QuickTime\ Streaming\ Server.pdf
+
+rm -f "${3}/Library/QuickTimeStreaming/broadcast_sdpfiles"
+
+
+#------------------------------------------------------------------
+## migrate playlist froms QTSS-3 to QTSS-4
+
+if [ -e "${RECEIPT_PATH}/updateplaylists" ]; then
+    ${RECEIPT_PATH}/updateplaylists ${3}
+fi
+
+
+#------------------------------------------------------------------
+## Migrate uses & groups
+
+
+if [ -d "${3}/Library/Receipts/QTSS3.pkg" ] 
+then
+	echo "Updating streaming users and groups"
+
+	existingGroupsFile=0
+	
+	if [ -e "${3}/Library/QuickTimeStreaming/Config/qtgroups.backup" ] 
+	then
+#		echo 'mv "${3}/Library/QuickTimeStreaming/Config/qtgroups.backup" "${3}/Library/QuickTimeStreaming/Config/qtgroups"'
+		mv "${3}/Library/QuickTimeStreaming/Config/qtgroups.backup" "${3}/Library/QuickTimeStreaming/Config/qtgroups"
+		existingGroupsFile=1
+	fi
+		
+	if [ -e "${3}/Library/QuickTimeStreaming/Config/qtusers.backup" ] 
+	then
+#		echo 'mv "${3}/Library/QuickTimeStreaming/Config/qtusers.backup" "${3}/Library/QuickTimeStreaming/Config/qtusers"'
+		mv "${3}/Library/QuickTimeStreaming/Config/qtusers.backup" "${3}/Library/QuickTimeStreaming/Config/qtusers"
+	
+		if [ ${existingGroupsFile} -eq 1 ]
+		then
+			echo  >> "${3}/Library/QuickTimeStreaming/Config/qtgroups"
+			echo "admin: streamingadmin" >> "${3}/Library/QuickTimeStreaming/Config/qtgroups"
+		else
+			echo "admin: streamingadmin" > "${3}/Library/QuickTimeStreaming/Config/qtgroups"
+		fi
+	fi
+	
+else  ## QTSS4->QTSS4 upgrade
+    if [ -e "${3}/Library/QuickTimeStreaming/Config/qtgroups.backup" ]; then
+#		echo 'mv "${3}/Library/QuickTimeStreaming/Config/qtgroups.backup" "${3}/Library/QuickTimeStreaming/Config/qtgroups"'
+        mv "${3}/Library/QuickTimeStreaming/Config/qtgroups.backup" "${3}/Library/QuickTimeStreaming/Config/qtgroups"
+    fi
+
+    if [ -e "${3}/Library/QuickTimeStreaming/Config/qtusers.backup" ]; then
+#		echo 'mv "${3}/Library/QuickTimeStreaming/Config/qtusers.backup" "${3}/Library/QuickTimeStreaming/Config/qtusers"'
+        mv "${3}/Library/QuickTimeStreaming/Config/qtusers.backup" "${3}/Library/QuickTimeStreaming/Config/qtusers"
+    fi
+fi
+
+#------------------------------------------------------------------
+# fix up permissions of config files
+if [ -d "${3}/Library/QuickTimeStreaming/Config" ]; then
+    echo "Changing ownership of ${3}/Library/QuickTimeStreaming/Config directory to qtss:admin"
+    "$3/usr/sbin/chown" -R 76:80 "${3}/Library/QuickTimeStreaming/Config"
+    echo "Setting permissions of ${3}/Library/QuickTimeStreaming/Config directory to rwxr-x---"
+    chmod 0750 "${3}/Library/QuickTimeStreaming/Config"
+    chmod -R u=rwX,g=rX,o= "${3}/Library/QuickTimeStreaming/Config"
+fi
+
+if [ -d "${3}/Library/QuickTimeStreaming/Playlists" ]; then
+    echo "Setting ownership of ${3}/Library/QuickTimeStreaming/Playlists directory to qtss:admin"
+    "$3/usr/sbin/chown" -R 76:80 "${3}/Library/QuickTimeStreaming/Playlists"
+fi
+
+if [ -d "${3}/Library/QuickTimeStreaming/Logs" ]; then
+    echo "Setting ownership of ${3}/Library/QuickTimeStreaming/Logs directory to qtss:admin"
+    "$3/usr/sbin/chown" -R 76:80 "${3}/Library/QuickTimeStreaming/Logs"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/qtgroups" ]; then
+    echo "Setting ownership of ${3}/Library/QuickTimeStreaming/Config/qtgroups to qtss:admin"
+    "$3/usr/sbin/chown" 76:80 "${3}/Library/QuickTimeStreaming/Config/qtgroups"
+    chmod 0640 "${3}/Library/QuickTimeStreaming/Config/qtgroups"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/qtusers" ]; then
+    echo "Setting ownership of ${3}/Library/QuickTimeStreaming/Config/qtusers to qtss:admin"
+    "$3/usr/sbin/chown" 76:80 "${3}/Library/QuickTimeStreaming/Config/qtusers"
+    chmod 0640 "${3}/Library/QuickTimeStreaming/Config/qtusers"
+fi
+
+/usr/bin/perl "$1/Contents/Resources/fix_movie_folder_privs"
+ 
+#------------------------------------------------------------------
+
+rm -rf "${3}/Library/Receipts/QTSS3.pkg"
+rm -rf "${3}/Library/Receipts/QTSS.pkg"
+rm -rf "${3}/Library/Receipts/QTSSUpdater4.1.1.pkg"
+
+#------------------------------------------------------------------
+
+
+exit 0

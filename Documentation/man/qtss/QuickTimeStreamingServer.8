@@ -1,0 +1,52 @@
+.Dd February 11, 2005       \" DATE 
+.Dt QuickTimeStreamingServer 8       \" Program name and manual section number 
+.Os Darwin
+.Sh NAME                 \" Section Header - required - don't modify 
+.Nm QuickTimeStreamingServer 
+.Nd RTP/RTSP streaming server
+.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Nm
+.Op Fl hvdxID              \" [-dvxIh]
+.Op Fl c Ar configFile.xml         \" [-c configFile.xml] 
+.Op Fl o Ar configFile.conf         \" [-o configFile.conf] 
+.Op Fl S Ar seconds         \" [-S seconds] 
+.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Nm
+is the Real Time Streaming Protocol (RTSP)/Realtime Trasport Protocol(RTP) server.
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent  \" Differs from above in -compact tag removed 
+.It Fl h
+Prints usage
+.It Fl v
+Prints usage
+.It Fl d                 
+Run in the foreground
+.It Fl x
+Force creation of a new .xml config file and exit
+.It Fl I
+Start the server in the idle state
+.It Fl D
+Display performance data
+.It Fl c Ar myconfigpath.xml
+Load configuration from xml config file
+.It Fl o Ar myconfigpath.conf
+Load configuration from old style config file
+.It Fl S Ar Seconds
+Output server statistics every n seconds
+.El
+.Sh FILES
+.Bl -tag -width /Library/QuickTimeStreaming/Config/streamingserver.xml -compact
+.It Pa /Library/QuickTimeStreaming/Config/streamingserver.xml
+.It Pa /Library/QuickTimeStreaming/Modules
+.It Pa /Library/QuickTimeStreaming/Movies
+.It Pa /Library/QuickTimeStreaming/Playlists
+.It Pa /Library/QuickTimeStreaming/Logs
+.It Pa /Library/QuickTimeStreaming/Docs
+.El
+.Sh SEE ALSO 
+.Xr PlaylistBroadcaster 1 , 
+.Xr MP3Broadcaster 1 , 
+.Xr StreamingLoadTool 8
+.\" .Sh BUGS 
+.\" .Sh HISTORY 

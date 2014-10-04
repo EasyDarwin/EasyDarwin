@@ -1,0 +1,284 @@
+# Copyright (c) 1999 Apple Computer, Inc.  All rights reserved.
+# $Id: Jamfile,v 1.1 2006/01/05 13:20:32 murata Exp $
+
+
+#
+# Compiler definitions and flags
+CC = cc ;
+C++ = c++ ;
+LINK = c++ ;
+
+CCFLAGS += -D__MacOSX__ -DNeXT -DDSS_USE_API_CALLBACKS -arch ppc -Wall -fno-exceptions -include PlatformHeader.h -include revision.h -Wredundant-decls -Wcast-qual -Wno-four-char-constants -fcommon ;
+
+FRAMEWORKS = -framework Carbon -framework Foundation ;
+
+CCFLAGS += -g ;
+C++FLAGS = $(CCFLAGS) ;
+
+#
+# Optimization flags
+OPTIM = -O0 ;
+
+
+
+#
+# Where our headers are located
+HDRS = . 
+		QTFileLib
+		OSMemoryLib
+		APIModules
+		APICommonCode
+		APIModules/OSMemory_Modules
+		APIModules/QTSSAccessLogModule
+		APIModules/QTSSFileModule
+		APIModules/QTSSFlowControlModule
+		APIModules/QTSSRawFileModule
+		APIModules/QTSSReflectorModule
+		APIModules/QTSSSvrControlModule
+		APIModules/QTSSWebDebugModule
+		APIModules/QTSSWebStatsModule
+		APIModules/QTSSAccessModule
+		APIModules/QTSSFilePrivsModule.bproj
+		APIModules/QTSSSpamDefenseModule
+		APIModules/QTSSHttpFileModule
+		APIModules/QTSSPOSIXFileSysModule
+		APIModules/QTSSRawFileModule.bproj
+		APIModules/QTSSRTPFileModule
+		QTFileTools/RTPFileGen.tproj
+		APIModules/QTSSAdminModule
+		APIStubLib
+		CommonUtilitiesLib
+		RTCPUtilitiesLib
+		PrefsSourceLib
+		Server.tproj
+		RTSPClientLib
+		HTTPUtilitiesLib
+		RTPMetaInfoLib
+		;
+
+#
+# Our source files
+CFILES = 	CommonUtilitiesLib/Trim.c
+			CommonUtilitiesLib/GetWord.c 
+			CommonUtilitiesLib/base64.c
+			PrefsSourceLib/nilib2.c
+		CommonUtilitiesLib/md5.c
+		 ;
+CPPFILES =
+
+# SERVER SOURCES
+
+	Server.tproj/QTSSExpirationDate.cpp
+	Server.tproj/QTSSCallbacks.cpp
+	Server.tproj/QTSSDictionary.cpp
+	Server.tproj/QTSSErrorLogModule.cpp
+	Server.tproj/QTSSMessages.cpp
+	Server.tproj/QTSSModule.cpp
+	Server.tproj/QTSSFile.cpp
+	Server.tproj/QTSSSocket.cpp
+	Server.tproj/QTSSPrefs.cpp
+	Server.tproj/QTSServerPrefs.cpp
+	Server.tproj/QTSServer.cpp
+	Server.tproj/QTSServerInterface.cpp
+	Server.tproj/RTCPTask.cpp
+	Server.tproj/RTPSession.cpp
+	Server.tproj/RTPPacketResender.cpp
+	Server.tproj/RTPBandwidthTracker.cpp
+	Server.tproj/RTPOverbufferWindow.cpp
+	Server.tproj/RTPSessionInterface.cpp
+	Server.tproj/RTPStream.cpp
+	Server.tproj/RTSPProtocol.cpp
+	Server.tproj/RTSPRequest.cpp
+	Server.tproj/RTSPRequestInterface.cpp
+	Server.tproj/RTSPRequestStream.cpp
+	Server.tproj/RTSPResponseStream.cpp
+	Server.tproj/RTSPSession.cpp
+	Server.tproj/RTSPSessionInterface.cpp
+	Server.tproj/main.cpp
+	Server.tproj/RunServer.cpp
+	Server.tproj/GenerateXMLPrefs.cpp	
+	Server.tproj/QTSSDataConverter.cpp
+	Server.tproj/QTSSUserProfile.cpp
+	
+# COMMON UTILITIES
+
+	CommonUtilitiesLib/EventContext.cpp
+	CommonUtilitiesLib/IdleTask.cpp
+	CommonUtilitiesLib/MyAssert.cpp
+	CommonUtilitiesLib/OS.cpp
+	CommonUtilitiesLib/OSCodeFragment.cpp
+	CommonUtilitiesLib/OSCond.cpp
+	CommonUtilitiesLib/OSFileSource.cpp
+	CommonUtilitiesLib/OSHeap.cpp
+	CommonUtilitiesLib/OSMutex.cpp
+	CommonUtilitiesLib/OSQueue.cpp
+	CommonUtilitiesLib/OSBufferPool.cpp
+	CommonUtilitiesLib/OSRef.cpp
+	CommonUtilitiesLib/OSThread.cpp
+	CommonUtilitiesLib/Socket.cpp
+	CommonUtilitiesLib/SocketUtils.cpp
+	CommonUtilitiesLib/ResizeableStringFormatter.cpp
+	CommonUtilitiesLib/StringFormatter.cpp
+	CommonUtilitiesLib/StringParser.cpp
+	CommonUtilitiesLib/StringTranslator.cpp
+	CommonUtilitiesLib/StrPtrLen.cpp
+	CommonUtilitiesLib/Task.cpp
+	CommonUtilitiesLib/TCPListenerSocket.cpp
+	CommonUtilitiesLib/TCPSocket.cpp
+	CommonUtilitiesLib/TimeoutTask.cpp
+	CommonUtilitiesLib/UDPDemuxer.cpp
+	CommonUtilitiesLib/UDPSocket.cpp
+	CommonUtilitiesLib/UDPSocketPool.cpp
+	CommonUtilitiesLib/UserAgentParser.cpp
+	CommonUtilitiesLib/DateTranslator.cpp
+	CommonUtilitiesLib/ConfParser.cpp
+	CommonUtilitiesLib/QueryParamList.cpp
+	CommonUtilitiesLib/OSMutexRW.cpp
+	CommonUtilitiesLib/md5digest.cpp
+	
+	
+# PREFS SOURCE LIB
+	PrefsSourceLib/XMLPrefsParser.cpp	
+	PrefsSourceLib/FilePrefsSource.cpp	
+	PrefsSourceLib/NetInfoPrefsSource.cpp
+	PrefsSourceLib/RelayPrefsSource.cpp
+
+
+# OSMEMORY LIB
+
+	OSMemoryLib/OSMemory.cpp
+	
+# RTSPCLIENT LIB
+
+	RTSPClientLib/RTSPClient.cpp
+	RTSPClientLib/ClientSocket.cpp
+
+# RTPMETAINFO LIB
+
+	RTPMetaInfoLib/RTPMetaInfoPacket.cpp
+
+# RTCPUTILS LIB
+
+	RTCPUtilitiesLib/RTCPAPPPacket.cpp
+	RTCPUtilitiesLib/RTCPPacket.cpp
+	RTCPUtilitiesLib/RTCPSRPacket.cpp
+	RTCPUtilitiesLib/RTCPAckPacket.cpp
+	
+# HTTP UTILITIES LIB
+	HTTPUtilitiesLib/HTTPProtocol.cpp
+	HTTPUtilitiesLib/HTTPRequest.cpp
+
+# QTFILE LIB
+
+	QTFileLib/QTAtom.cpp
+	QTFileLib/QTAtom_dref.cpp
+	QTFileLib/QTAtom_elst.cpp
+	QTFileLib/QTAtom_hinf.cpp
+	QTFileLib/QTAtom_mdhd.cpp
+	QTFileLib/QTAtom_mvhd.cpp
+	QTFileLib/QTAtom_stco.cpp
+	QTFileLib/QTAtom_stsc.cpp
+	QTFileLib/QTAtom_stsd.cpp
+	QTFileLib/QTAtom_stss.cpp
+	QTFileLib/QTAtom_stsz.cpp
+	QTFileLib/QTAtom_stts.cpp
+	QTFileLib/QTAtom_tkhd.cpp
+	QTFileLib/QTAtom_tref.cpp
+	QTFileLib/QTFile.cpp
+	QTFileLib/QTFile_FileControlBlock.cpp
+	QTFileLib/QTHintTrack.cpp
+	QTFileLib/QTRTPFile.cpp
+	QTFileLib/QTTrack.cpp
+	
+# API STUB LIBRARY
+
+	APIStubLib/QTSS_Private.cpp
+
+# API COMMON CODE
+
+	APICommonCode/QTSSModuleUtils.cpp
+	APICommonCode/QTSSRollingLog.cpp
+	APICommonCode/SDPSourceInfo.cpp
+	APICommonCode/SourceInfo.cpp
+	APICommonCode/QTAccessFile.cpp
+	
+# QTSS ACCESS LOG MODULE
+
+	APIModules/QTSSAccessLogModule/QTSSAccessLogModule.cpp
+
+# QTSS FILE MODULE
+
+	APIModules/QTSSFileModule/QTSSFileModule.cpp
+
+# QTSS FLOW CONTROL MODULE
+
+	APIModules/QTSSFlowControlModule/QTSSFlowControlModule.cpp
+
+# QTSS REFLECTOR MODULE
+
+	APIModules/QTSSReflectorModule/QTSSReflectorModule.cpp
+	APIModules/QTSSReflectorModule/QTSSRelayModule.cpp
+	APIModules/QTSSReflectorModule/QTSSSplitterModule.cpp
+	
+	APIModules/QTSSReflectorModule/ReflectorSession.cpp
+	APIModules/QTSSReflectorModule/ReflectorStream.cpp
+
+	APIModules/QTSSReflectorModule/RelayOutput.cpp
+	APIModules/QTSSReflectorModule/RTPSessionOutput.cpp
+	APIModules/QTSSReflectorModule/SequenceNumberMap.cpp
+
+	APIModules/QTSSReflectorModule/RCFSourceInfo.cpp
+	APIModules/QTSSReflectorModule/RelaySDPSourceInfo.cpp
+	APIModules/QTSSReflectorModule/RTSPSourceInfo.cpp
+	
+# QTSS WEB DEBUG MODULE
+
+	APIModules/QTSSWebDebugModule/QTSSWebDebugModule.cpp
+
+# QTSS AUTHORIZATION MODULE
+
+	APIModules/QTSSFilePrivsModule.bproj/QTSSFilePrivsModule.cpp
+
+# QTSS ACCESS MODULE
+        APIModules/QTSSAccessModule/QTSSAccessModule.cpp
+        APIModules/QTSSAccessModule/AccessChecker.cpp
+
+# QTSS WEB STATS MODULE
+
+	APIModules/QTSSWebStatsModule/QTSSWebStatsModule.cpp
+
+# QTSS HTTP FILE MODULE
+
+	APIModules/QTSSHttpFileModule/QTSSHttpFileModule.cpp
+
+# QTSS POSIX FILE SYSTEM MODULE
+
+	APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp
+
+# QTSS ADMIN MODULE
+
+	APIModules/QTSSAdminModule/AdminElementNode.cpp
+	APIModules/QTSSAdminModule/AdminQuery.cpp
+	APIModules/QTSSAdminModule/QTSSAdminModule.cpp
+
+# QTSS RTP FILE MODULE
+
+	APIModules/QTSSRTPFileModule/QTSSRTPFileModule.cpp
+	APIModules/QTSSRTPFileModule/RTPFileSession.cpp
+
+;
+
+#
+# Our libraries
+LIBS = atomic ;
+
+#
+# Build all of the objects
+Objects $(CFILES) $(CPPFILES) ;
+
+#
+# Link the QuickTimeStreamingServer
+MainFromObjects QuickTimeStreamingServer : $(CFILES:S=.o) $(CPPFILES:S=.o) $(ASFILES:S=.o) ;
+LinkLibraries QuickTimeStreamingServer : lib$(LIBS) ;
+LINKFLAGS on QuickTimeStreamingServer += $(FRAMEWORKS) ;
+

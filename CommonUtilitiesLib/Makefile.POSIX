@@ -1,0 +1,81 @@
+C++ = $(CPLUS)
+# Copyright (c) 1999 Apple Computer, Inc.  All rights reserved.
+#  
+
+NAME = CommonUtilitiesLib
+C++ = $(CPLUS)
+CC = $(CCOMP)
+LINK = $(LINKER)
+CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../PlatformHeader.h -g -Wall
+
+# OPTIMIZATION
+CCFLAGS += -O2
+
+# EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
+
+CCFLAGS += -I.
+CCFLAGS += -I..
+CCFLAGS += -I../APIStubLib
+CCFLAGS += -I../RTPMetaInfoLib
+CCFLAGS += -I../APICommonCode
+
+C++FLAGS = $(CCFLAGS)
+
+CFILES = base64.c	GetWord.c	Trim.c      md5.c
+
+CPPFILES =	atomic.cpp\
+			ConfParser.cpp\
+			DateTranslator.cpp\
+			EventContext.cpp\
+			IdleTask.cpp\
+			MyAssert.cpp \
+			OS.cpp\
+			OSCodeFragment.cpp \
+			OSCond.cpp\
+			OSFileSource.cpp \
+			OSHeap.cpp\
+			OSBufferPool.cpp \
+			OSMutex.cpp \
+			OSMutexRW.cpp \
+			OSQueue.cpp\
+			OSRef.cpp \
+			OSThread.cpp\
+			Socket.cpp \
+			SocketUtils.cpp\
+			ResizeableStringFormatter.cpp \
+			StringFormatter.cpp\
+			StringParser.cpp \
+			StringTranslator.cpp\
+			StrPtrLen.cpp \
+			Task.cpp\
+			TCPListenerSocket.cpp\
+			TCPSocket.cpp\
+			TimeoutTask.cpp \
+			UDPDemuxer.cpp\
+			UDPSocket.cpp \
+			UDPSocketPool.cpp\
+			ev.cpp \
+			UserAgentParser.cpp \
+			QueryParamList.cpp \
+			md5digest.cpp \
+			SDPUtils.cpp
+
+all: libCommonUtilitiesLib.a
+
+libCommonUtilitiesLib.a: $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	ar -r libCommonUtilitiesLib.a $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	ranlib libCommonUtilitiesLib.a
+
+install: libCommonUtilitiesLib.a
+
+clean:
+	rm -f libCommonUtilitiesLib.a $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+
+.SUFFIXES: .cpp .c .o
+
+.cpp.o:
+	$(C++) -c -o $*.o $(DEFINES) $(C++FLAGS) $*.cpp
+
+.c.o:
+	$(CC) -c -o $*.o $(DEFINES) $(CCFLAGS) $*.c
+

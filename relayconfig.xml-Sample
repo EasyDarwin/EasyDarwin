@@ -1,0 +1,119 @@
+<!-- This is a sample relay config file.  -->
+<!-- *** Need to add a valid dtd here. *** -->
+<RELAY_CONFIG>
+
+	<!-- RELAY-CONFIG should contain one or more objects of type relay -->
+	<OBJECT TYPE="relay">
+
+		<!-- if enabled is set to false, the server will ignore this relay -->
+		<!-- (optional, defaults to true) -->
+		<PREF NAME="enabled">true</PREF>
+
+		<!-- Each relay object contains one source object and multiple destination objects -->
+
+		<!-- an rtsp_source is used to request a stream from a server -->
+		<OBJECT CLASS="source" TYPE="rtsp_source">
+			<!-- source_addr is the address of the server -->
+			<PREF NAME="source_addr">192.1.1.2</PREF>
+			<!-- rtsp_port is the port the server is listening on -->
+			<PREF NAME="rtsp_port">5000</PREF>
+			<!-- the is the url to request -->
+			<PREF NAME="url">/sample.mov</PREF>
+			<!-- name is used if you need to authenticate for the rtsp request (optional) -->
+			<PREF NAME="name">user</PREF>
+			<!-- password is used if you need to authenticate for the rtsp request (optional) -->
+			<PREF NAME="password">password</PREF>
+		</OBJECT>
+
+		<!-- an announced_destination will send an announced stream to the destination server -->
+		<OBJECT CLASS="destination" TYPE="announced_destination">
+			<!-- out_addr is the local address to send from (optional) -->
+			<PREF NAME="out_addr">192.1.1.2</PREF>
+			<!-- dest_addr is the server to announce to -->
+			<PREF NAME="dest_addr">192.1.1.1</PREF>
+			<!-- rtsp_port is the port the server is listening for announces on -->
+			<PREF NAME="rtsp_port">5100</PREF>
+			<!-- name is used if you need to authenticate for the announce (optional) -->
+			<PREF NAME="name">user</PREF>
+			<!-- password is used if you need to authenticate for the announce (optional) -->
+			<PREF NAME="password">password</PREF>
+			<!-- url is the name of the sdp created on the client side, if the -->
+			<!-- source is an announced source you can leave this out and it will use the -->
+			<!-- announced sdp name (optional for announced_source) -->
+			<PREF NAME="url">/sample.sdp</PREF>
+		</OBJECT>
+
+		<!-- a udp_destination just streams data to the specified destination -->
+		<OBJECT CLASS="destination" TYPE="udp_destination">
+			<!-- out_addr is the local address to send from (optional) -->
+			<PREF NAME="out_addr">192.1.1.1</PREF>
+			<!-- dest_addr is the address to stream to (can be multicast address) -->
+			<PREF NAME="dest_addr">192.1.1.2</PREF>
+			<!-- udp_ports are the ports to stream to -->
+			<!-- (must match config on destination server) -->
+			<LIST-PREF NAME="udp_ports">
+				<VALUE>5000</VALUE>
+				<VALUE>5002</VALUE>
+			</LIST-PREF>
+			<!-- time to live for a multicast destination -->
+			<!-- (only needed if address is multicast) -->
+			<PREF NAME="ttl">5</PREF>
+		</OBJECT>
+	</OBJECT>
+
+	<OBJECT TYPE="relay">
+
+		<!-- this will listen for any announce, if the announce isn't one specified -->
+		<!-- by more specific rules it will be relayed to the specified destinations -->
+		<OBJECT CLASS="source" TYPE="announced_source">
+			<!-- no prefs are neccessary -->
+		</OBJECT>
+
+		<!-- this would normally be followed by announced or udp destinations -->
+
+	</OBJECT>
+
+	<OBJECT TYPE="relay">
+
+		<!-- this causes the relay to listen for a specific announce, -->
+		<!-- it overrides the general rule	-->
+		<OBJECT CLASS="source" TYPE="announced_source">
+			<!-- this is the address of the broadcaster -->
+			<PREF NAME="source_addr">192.1.1.1</PREF>
+			<!-- this is the url to listen for.  If not specified, it will -->
+			<!-- relay any announced broadcast from the source address to -->
+			<!-- the specified destinations (optional) -->
+			<PREF NAME="url">/sample.sdp</PREF>
+		</OBJECT>
+
+		<!-- this would normally be followed by announced or udp destinations -->
+
+	</OBJECT>
+
+	<OBJECT TYPE="relay">
+
+		<!-- this is the traditional relay source.  It just listens for data on the specified -->
+		<!-- ports and relays it to the specified destionations.  Note that you can't use -->
+		<!-- announced_destinations with a udp_source (they will be ignored) -->
+		<OBJECT CLASS="source" TYPE="udp_source">
+			<!-- this is the local address to listen on (optional) -->
+			<PREF NAME="in_addr">192.1.1.2</PREF>
+			<!-- this is the address of the broadcaster -->
+			<PREF NAME="source_addr">192.1.1.1</PREF>
+			<!-- in_ports are the ports to listen to (must match config on broadcaster) -->
+			<LIST-PREF NAME="udp_ports">
+				<VALUE>5000</VALUE>
+				<VALUE>5002</VALUE>
+			</LIST-PREF>
+			<!-- time to live for a multicast source (optional, only used for sending receiver -->
+			<!-- reports) -->
+			<PREF NAME="ttl">5</PREF>
+		</OBJECT>
+
+		<!-- this would normally be followed by one or more udp_destinations -->
+
+	</OBJECT>
+
+</RELAY_CONFIG>
+
+

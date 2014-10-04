@@ -1,0 +1,442 @@
+#!/bin/sh
+ 
+VERSION=`grep kVersion revision.h | grep -o [:0123456789:].*[:0123456789:]`
+##Build script for Darwin Streaming Server
+if [ `uname` = "Darwin" ] ; then
+    PLATFORM=dss
+else
+    PLATFORM=$VERSION
+fi
+
+SHOW_HELP=0
+if [ "$1" = "-v" ] ; then
+   SHOW_HELP=1
+fi
+
+if [ "$1" = "-h" ] ; then
+   SHOW_HELP=1
+fi
+
+if [ "$1" = "?" ] ; then
+   SHOW_HELP=1
+fi
+
+if [ "$1" = "help" ] ; then
+   SHOW_HELP=1
+fi
+
+if [ $SHOW_HELP = 1 ] ; then
+	if [ $PLATFORM = dss ] ; then
+		echo ""
+		echo "OS X Darwin Streaming Server ($PLATFORM v$VERSION)"
+		echo ""
+		echo "buildit (builds target dss, symbols, build os, and cpu)"
+		echo "buildit dss arg2 (builds target dss, symbols, build os, and cpu, passes to xcode optional arg2)"
+		echo "buildit dssfat arg2 (builds target dss, symbols, build os, FAT i386+ppc, passes to xcode optional arg2)"
+		echo "buildit dssfullfat arg2 (builds target dss, symbols, build os, FAT i386+x86_64+ppc+ppc64, passes to xcode optional arg2)"
+		echo "buildit qtss arg2 (builds target qtss, stripped, build os, and cpu, passes to xcode optional arg2)"
+		echo "buildit qtssfat arg2 (builds target qtss, stripped, build os, FAT i386+ppc, passes to xcode optional arg2)"	
+		echo "buildit qtssfullfat arg2 (builds target qtss, stripped, build os, FAT i386+x86_64+ppc+ppc64, passes to xcode optional arg2)"
+	fi
+	exit 0
+fi
+
+
+if [ "$1" = "install" ] ; then
+    if [ $PLATFORM = dss ] ; then
+      echo "OS X Darwin Streaming Server"
+      ./BuildOSXInstallerPkg $2 $3
+      exit 0
+    fi
+
+    ./buildtarball $PLATFORM
+    exit 0
+fi
+
+OSNAME=`uname`
+HARDWARENAME=`uname -m`
+ 
+PLAT=$OSNAME.$HARDWARENAME
+
+echo "EasyDarwin"
+echo "-----------------------"
+
+
+case $PLAT in
+
+	Linux.ppc)
+        echo "Configuring for the "$OSNAME" "$HARDWARENAME" platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER='gcc'
+ 		MAKE=make
+ 		
+		COMPILER_FLAGS="-D_REENTRANT -D__USE_POSIX -D__linuxppc__ -pipe"
+        INCLUDE_FLAG="-include"
+		
+		CORE_LINK_LIBS="-lpthread -ldl -lstdc++ -lm -lcrypt"
+
+		SHARED=-shared
+		MODULE_LIBS=
+		
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;		
+
+	Linux.i586 | \
+	Linux.i686 | \
+	Linux.x86_64)
+        echo "Configuring for the "$OSNAME" "$HARDWARENAME" platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER='gcc'
+ 		MAKE=make
+ 		
+		COMPILER_FLAGS="-D_REENTRANT -D__USE_POSIX -D__linux__ -pipe"
+        INCLUDE_FLAG="-include"
+
+		if [ "$HARDWARENAME" = "x86_64" ]; then
+			COMPILER_FLAGS="$COMPILER_FLAGS -fPIC"
+		fi
+		
+		CORE_LINK_LIBS="-lpthread -ldl -lstdc++ -lm -lcrypt"
+
+		SHARED=-shared
+		MODULE_LIBS=
+		
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+
+	Linux.mips)
+        echo "Configuring for the "$OSNAME" "$HARDWARENAME" platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER='egcs'
+ 		MAKE=make
+ 		
+		COMPILER_FLAGS="-D_REENTRANT -D__linux__ -Wno-multichar -pipe"
+        INCLUDE_FLAG="-include"
+		
+		CORE_LINK_LIBS="-lpthread -ldl -lm -lcrypt"
+
+		SHARED=-shared
+		MODULE_LIBS=
+		
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+
+	FreeBSD.i386)
+        echo "Configuring for the "$OSNAME" "$HARDWARENAME" platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER="gcc"
+ 		MAKE=make
+ 		
+		COMPILER_FLAGS=
+        INCLUDE_FLAG="-include"
+		
+		CORE_LINK_LIBS="-pthread -lm -lcrypt"
+
+		SHARED=-shared
+		MODULE_LIBS="-lgcc -lstdc++"
+		;;
+	
+#	SunOS.sun4m | \
+#	SunOS.sun4u)
+	SunOS.*)
+        echo "Configuring for the "$OSNAME" "$HARDWARENAME" platform"
+		CPLUS=g++
+		CCOMP=gcc
+		LINKER="g++"
+ 		MAKE=make
+ 		
+		COMPILER_FLAGS="-D__solaris__ -D_REENTRANT -DFD_SETSIZE=65536 -L/usr/local/lib -R/usr/local/lib"
+        INCLUDE_FLAG="-include"
+
+		CORE_LINK_LIBS="-lpthread -ldl -lsocket -lnsl -lresolv -lm -lcrypt -lstdc++"
+
+		SHARED=-G
+		MODULE_LIBS=
+		;;
+		
+	IRIX*.*)
+# IRIX with MipsPro compiler
+# Change all references of Makefile.POSIX below to Makefile.IRIX
+	echo "Configuring for the "$OSNAME" "$HARDWARENAME" SGI platform"
+		CPLUS=CC
+		CCOMP=cc
+		LINKER="CC"
+# GNU make is required. Obtain from freeware.sgi.com
+		MAKE=/usr/freeware/bin/gmake
+# defines from PlatformHeader.h defined here as MipsPro does not support -include pre-processor directive		
+		COMPILER_FLAGS="-D__sgi__ -DirixMipsPro -D_SGI_REENTRANT_FUNCTIONS -DASSERT -D__PTHREADS__ -D__PTHREADS_MUTEXES__ -DBIGENDIAN -DUSE_THREAD -DEXPORT -D_REENTRANT"
+		INCLUDE_FLAG=
+		CORE_LINK_LIBS="-ldl -lm -lcrypt -lpthread"
+		SHARED=-shared
+		MODULE_LIBS=
+		;;
+		
+    HP-UX.*)
+        echo "Configuring for the "$OSNAME" "$HARDWARENAME" platform"
+        CPLUS=gcc
+        CCOMP=gcc
+        LINKER=gcc
+        MAKE=make
+ 
+        COMPILER_FLAGS="-D__hpux__ -g -fPIC"
+        INCLUDE_FLAG="-include"
+ 
+        CORE_LINK_LIBS="-lpthread -lnsl -lm -lcrypt -lstdc++"
+ 
+        SHARED=-shared
+        MODULE_LIBS="-lgcc -lstdc++"
+        ;;
+ 
+ 	OSF1.alpha)
+         echo "Configuring for the "$OSNAME" "$HARDWARENAME" Tru64 UNIX platform"
+ 		CPLUS=`pwd`/my_tru64_cxx
+ 		CCOMP=`pwd`/my_tru64_cc
+		LINKER="cxx"
+		MAKE=/usr/local/bin/make
+
+ 		COMPILER_FLAGS="-D__osf__ -DTRUCLUSTER -pthread"
+        INCLUDE_FLAG="-FI"
+
+		CORE_LINK_LIBS="-lpthread -lclu -lm"
+
+		SHARED=-shared
+		MODULE_LIBS=
+ 		;;
+
+	"Darwin.i386" | \
+	"Darwin.Power Macintosh")
+         echo "Configuring for "$OSNAME" on "$HARDWARENAME". This is an OS X build of the QuickTimeStreamingServer."
+ 	
+ 		;;
+
+	
+	*)
+		echo "I don't know your platform. I'll assume this is a Linux x86 platform."
+		echo "Please edit the BuildServer script & PlatformHeader.h to add your platform."
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER='egcs'
+ 		MAKE=make
+ 		
+		COMPILER_FLAGS=-D__linux__
+        INCLUDE_FLAG="-include"
+
+		CORE_LINK_LIBS="-lpthread -ldl -lm -lcrypt"
+
+		SHARED=-shared
+		MODULE_LIBS=
+		
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+esac
+
+if [ "$*" = "install" ] ; then
+
+        if [ `uname` != "SunOS" ]; then
+                USERID=`id -u`
+        else
+                USERID=`/usr/xpg4/bin/id -u`
+        fi
+
+        if [ $USERID != 0 ]; then
+                echo "You must be root to perform an \"install\" build"
+                exit 1
+        fi
+fi
+
+echo Building for $PLAT with $CPLUS
+
+if [ "${OSNAME}" = "Darwin"  ]; then
+    BUILDTOOL=""
+    ##xcodebuild should be the default for tiger
+	if [ -e /usr/bin/xcodebuild ] ; then
+	    BUILDTOOL="xcodebuild"
+	    if [ -e StreamingServer.xcodeproj ] ; then
+                PROJECT="-project StreamingServer.xcodeproj"
+            else
+                PROJECT="-project StreamingServer.xcode"
+            fi
+        fi
+        
+       
+	if [ BUILDTOOL = "" ] ; then
+                echo "XCode Development Tools are not installed"
+                exit 1
+	fi
+
+    if [ "$1" = "" ] ; then
+       echo "$BUILDTOOL DarwinStreamingServer"
+       $BUILDTOOL $PROJECT -target DSS -configuration Development
+    else
+        if [ "$1" = "dss" ] ; then
+           echo "$BUILDTOOL DarwinStreamingServer $1"
+           $BUILDTOOL $PROJECT -target DSS -configuration Development $2
+        else
+            if [ "$1" = "qtss" ] ; then
+                echo "$BUILDTOOL QuickTimeStreamingServer $*"
+                $BUILDTOOL $PROJECT -target QTSS -configuration Development $2
+            else
+                if [ "$1" = "qtssfat" ] ; then
+                    echo "$BUILDTOOL QuickTimeStreamingServer FAT i386 ppc"
+                    $BUILDTOOL $PROJECT -target QTSS -configuration Deployment RC_i386=YES RC_ppc=YES RC_CFLAGS='-arch i386 -arch ppc' $2
+                else
+                    if [ "$1" = "qtssfullfat" ] ; then
+                       echo "$BUILDTOOL QuickTimeStreamingServer FAT i386 ppc x86_64 ppc64"
+                       $BUILDTOOL $PROJECT -target QTSS -configuration Deployment RC_RELEASE=YES RC_i386=YES RC_ppc=YES RC_x86_64=YES RC_ppc64=YES RC_CFLAGS='-arch i386 -arch ppc -arch x86_64 -arch ppc64' $2
+                    else
+						if [ "$1" = "dssfat" ] ; then
+							echo "$BUILDTOOL DarwinStreamingServer FAT i386 ppc"
+							$BUILDTOOL $PROJECT -target DSS -configuration Development RC_i386=YES RC_ppc=YES RC_CFLAGS='-arch i386 -arch ppc' $2
+						else
+							if [ "$1" = "dssfullfat" ] ; then
+								echo "$BUILDTOOL DarwinStreamingServer FAT i386 ppc x86_64 ppc64"
+								$BUILDTOOL $PROJECT -target DSS -configuration Development RC_RELEASE=YES RC_i386=YES RC_ppc=YES RC_x86_64=YES RC_ppc64=YES RC_CFLAGS='-arch i386 -arch ppc -arch x86_64 -arch ppc64' $2
+							else
+								echo "build $BUILDTOOL $*"
+								$BUILDTOOL $*
+							fi
+						fi
+                    fi
+                fi
+            fi
+        fi
+    fi
+else
+	export CPLUS
+	export CCOMP
+	export LINKER
+	export COMPILER_FLAGS
+	export INCLUDE_FLAG
+	export CORE_LINK_LIBS
+	export SHARED
+	export MODULE_LIBS
+	
+	echo Building CommonUtilitiesLib for $PLAT with $CPLUS
+	cd CommonUtilitiesLib/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTFileLib internal for $PLAT with $CPLUS
+	cd ../QTFileLib/
+	
+	if [ "$*" = "clean" ] ; then
+		$MAKE -f Makefile.POSIX $*
+	else
+		$MAKE -f Makefile.POSIX all $*
+	fi
+	
+	echo Building StreamingServer for $PLAT with $CPLUS
+	cd ..
+	
+	$MAKE -f Makefile.POSIX $*
+	
+	echo Building RefMovieModule for $PLAT with $CPLUS
+	cd APIModules/QTSSRefMovieModule/
+	$MAKE -f Makefile.POSIX $*
+	
+	echo Building DemoAuthorizationModule for $PLAT with $CPLUS
+	cd ../QTSSDemoAuthorizationModule.bproj/
+	$MAKE -f Makefile.POSIX $*
+	
+	echo Building RawFileModule for $PLAT with $CPLUS
+	cd ../QTSSRawFileModule.bproj/
+	$MAKE -f Makefile.POSIX $*
+	
+	echo Building SpamDefenseModule for $PLAT with $CPLUS
+	cd ../QTSSSpamDefenseModule.bproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building HomeDirectoryModule for $PLAT with $CPLUS
+	cd ../QTSSHomeDirectoryModule/
+	$MAKE -f Makefile.POSIX $*
+	
+	cd ..
+	
+	echo Building StreamingProxy for $PLAT with $CPLUS
+	cd ../StreamingProxy.tproj/
+	$MAKE -f Makefile.POSIX $*
+	
+	echo Building qtpasswd for $PLAT with $CPLUS
+	cd ../qtpasswd.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building PlaylistBroadcaster for $PLAT with $CPLUS
+	cd ../PlaylistBroadcaster.tproj/
+	$MAKE -f Makefile.POSIX $*
+	
+	echo Building MP3Broadcaster for $PLAT with $CPLUS
+	cd ../MP3Broadcaster/
+	$MAKE -f Makefile.POSIX $*
+	
+	echo Building QTFileTools for $PLAT with $CPLUS
+        cd ../QTFileTools/
+
+	echo Building QTBroadcaster for $PLAT with $CPLUS
+	cd QTBroadcaster.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTFileInfo for $PLAT with $CPLUS
+	cd ../QTFileInfo.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTFileTest for $PLAT with $CPLUS
+	cd ../QTFileTest.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTRTPFileTest for $PLAT with $CPLUS
+	cd ../QTRTPFileTest.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTRTPGen for $PLAT with $CPLUS
+	cd ../QTRTPGen.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTSDPGen for $PLAT with $CPLUS
+	cd ../QTSDPGen.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTSampleLister for $PLAT with $CPLUS
+	cd ../QTSampleLister.tproj/
+	$MAKE -f Makefile.POSIX $*
+
+	echo Building QTTrackInfo for $PLAT with $CPLUS
+	cd ../QTTrackInfo.tproj/
+	$MAKE -f Makefile.POSIX $*
+	
+	cd ..
+	
+	if [ -d ../StreamingLoadTool ]; then
+		echo Building StreamingLoadTool for $PLAT with $CPLUS
+			cd ../StreamingLoadTool/
+			$MAKE -f Makefile.POSIX $*
+	fi
+
+	if [ "$*" = "install" ] ; then
+		cd ..
+		pwdi
+		echo
+		./DSS_MakeRoot /
+	fi
+
+fi
+
+if [ "$*" != "clean" ] ; then	
+cd ..
+chmod +x DeployEasyDarwin
+./DeployEasyDarwin
+fi

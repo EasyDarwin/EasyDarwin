@@ -1,0 +1,63 @@
+.Dd February 11, 2005       \" DATE 
+.Dt qtpasswd 1       \" Program name and manual section number 
+.Os Darwin
+.Sh NAME                 \" Section Header - required - don't modify 
+.Nm qtpasswd 
+.Nd MP3 file playlist broadcaster
+.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Nm
+.Op Fl ?hvFd              \" [-Fxd?v]
+.Op Fl f Ar filename         \" [-f filename] 
+.Op Fl g Ar groupsfilename         \" [-g groupsfilename] 
+.Op Fl r Ar realm         \" [-r realm]
+.Op Fl p Ar password         \" [-p password]
+.Op Fl P Ar passwordfile         \" [-P passwordfile]
+.Op Fl A Ar group         \" [-A group]
+.Op Fl D Ar group         \" [-D group]
+.Op Fl C Ar group         \" [-C group]
+.Op Fl R Ar group         \" [-R group]
+.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Nm
+streams a playlist of MP3 files to an instance of QuickTimeStreamingServer.
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent  \" Differs from above in -compact tag removed 
+.It Fl ?
+display usage
+.It Fl h
+display usage
+.It Fl v
+display usage
+.It Fl F
+Don't ask for confirmation when deleting users or overwriting existing files.
+.It Fl d                 
+Delete the user. (Deletes the user from all groups)
+.It Fl f Ar filename
+Password file to manipulate (Default is "/Library/QuickTimeStreaming/Config/qtusers").
+.It Fl g Ar groupsfilename
+Groups file to manipulate (Default is "/Library/QuickTimeStreaming/Config/qtgroups"). If not found, will create one when necessary.
+.It Fl r Ar realm
+The realm name to use when creating a new file via "-c" (Default is "Streaming Server").
+.It Fl p Ar password
+Allows entry of password at command line rather than prompting for it.
+.It Fl P Ar passwordfile
+File to read the password from rather than prompting for it.
+.It Fl A Ar group
+Add user to group. Will create group automatically if group is not already present.
+.It Fl D Ar group
+Delete the user from the group.
+.It Fl C Ar group
+Create new group. Do not specify username with this option.
+.It Fl R Ar group
+Delete the group. Do not specify username with this option.
+.El
+.Sh FILES
+.Bl -tag -width /Library/QuickTimeStreaming/Config/qtusers -compact
+.It Pa /Library/QuickTimeStreaming/Config/qtusers
+.It Pa /Library/QuickTimeStreaming/Config/qtgroups
+.It Pa /Library/QuickTimeStreaming/Config/qtaccess
+.El
+.Sh SEE ALSO 
+.Xr QuickTimeStreamingServer 8 , 
+.\" .Sh BUGS 
+.\" .Sh HISTORY 

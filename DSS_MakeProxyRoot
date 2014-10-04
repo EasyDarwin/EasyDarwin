@@ -1,0 +1,35 @@
+#!/bin/sh -e
+
+
+# Install script for the Darwin Streaming Proxy
+# source release
+
+INSTALLROOT=$1
+
+echo Installing source build of Darwin Streaming Proxy
+
+if [ -z $INSTALLROOT ]; then
+	echo "usage: DSS_MakeProxyRoot rootdirname"
+	exit 1
+fi
+
+if [ -d $INSTALLROOT ];
+then :
+else
+	echo "creating directory $INSTALLROOT"
+	mkdir -p $INSTALLROOT
+fi
+
+# Build a "flat" directory
+
+echo copying "StreamingProxy" to "$INSTALLROOT/StreamingProxy"
+cp StreamingProxy.tproj/StreamingProxy $INSTALLROOT/
+
+echo copying "streamingproxy.conf" to "$INSTALLROOT/streamingproxy.conf"
+cp -i StreamingProxy.tproj/streamingproxy.conf $INSTALLROOT/
+
+echo copying "StreamingProxy.html" to "$INSTALLROOT/StreamingProxy.html"
+cp -i StreamingProxy.tproj/StreamingProxy.html $INSTALLROOT/
+
+echo
+echo Done.

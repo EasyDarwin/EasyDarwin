@@ -1,0 +1,148 @@
+
+<HTML>
+<HEAD>
+   <TITLE>StreamingProxy ReadMe</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<blockquote>
+<H2>Streaming Proxy ReadMe</H2>
+
+<P>The Darwin Streaming Proxy is an application-specific proxy which
+would normally be run in a border zone or perimeter network. It is
+used to give client machines within a protected network access to
+streaming servers outside that network, in the case when the firewall
+blocks RTSP connections or RTP/UDP data flow. The firewall perimeter
+network is usually configured to allow:</P>
+
+<UL>
+   <LI>RTSP connections from within the network, as long as the
+   destination is the proxy </LI>
+   
+   <LI>RTSP connections to outside the network, as long as the source
+   is the proxy</LI>
+   
+   <LI>RTP datagrams to and from the proxy to the inner network</LI>
+   
+   <LI>RTP datagrams to and from the proxy to the outside</LI>
+</UL>
+
+<P>The proxy usually sits within the perimeter network, between an
+'inner skin' and 'outer skin', which have different configurations,
+of course, to allow the flows above.</P>
+
+<P>Note that RTSP runs over TCP; the normal connection port is 554
+(but see below). Note that if the URL supplied by the client to the
+proxy includes a port number, then the proxy will attempt to connect
+to the server using that port number rather than the default 554.</P>
+
+<P>RTP runs over UDP, and a range of ports may be used. Client-side
+ports are usually in a restricted range (starting at 6970), but
+servers cannot so easily restrict what ports they use. For safety, do
+not restrict port number access to the proxy; use only the IP
+address.</P>
+
+<P>Note that this proxy handles standard RTSP controlling standard
+RTP; RTSP can be used to control other media protocols, and is used
+by a number of companies to control proprietary media protocols. This
+proxy does not attempt to proxy those other protocols. For more
+information on these protocols, consult the Internet Engineering Task
+Force documentation:</P>
+
+<UL>
+   <LI>RTSP
+   &lt;http://info.internet.isi.edu:80/in-notes/rfc/files/rfc2326.txt&gt;</LI>
+   
+   <LI>RTP
+   &lt;http://info.internet.isi.edu:80/in-notes/rfc/files/rfc1889.txt&gt;</LI>
+</UL>
+
+
+
+<h3>License</h3>
+
+<P>The Darwin Streaming Server and Streaming Proxy is distributed
+under the terms of the Apple Public Source License. For more
+information, refer to the license terms at <A HREF="http://www.publicsource.apple.com">www.publicsource.apple.com</A>.
+Note that the Apple Public Source License does not allow you to use
+the terms "QuickTime" or "QuickTime Streaming Server" in descriptions
+of products developed using Darwin Streaming Server or Streaming
+Proxy open source code, nor use any Apple trademarks or logos
+associated with QuickTime and QuickTime Streaming Server.</P>
+
+
+
+<h3>How To Use</h3>
+
+<P>The application must reside on a machine that can see both the
+Internet, and your internal network. This would be your Bastion Host,
+or another machine in your Perimeter Network.</P>
+
+
+
+<OL>
+   <LI>Install the Streaming Proxy in a reasonable place on your
+   machine (For example, /usr/local/sbin ).</LI>
+   
+   <LI>Edit the streamingproxy.conf file put place
+   it in the /etc/streaming/ directory.</LI>
+   
+   <LI>Launch the StreamingProxy application (ie.
+  <CODE> #/usr/local/sbin/StreamingProxy -c /etc/streaming/streamingproxy.conf</CODE>)</LI>
+   
+    <LI>Launch the StreamingProxy application using the -h command line option for a description of the other
+   command line options.</LI>
+   
+   <LI>NOTE: You must run as root to enable the default port 554 for
+   reception.</LI>
+
+</OL>
+
+<h3>Configuring Client Machines</h3>
+
+<OL>
+   <LI>Open the QuickTime (Win32) or QuickTime Settings (Mac) control
+   panel.</LI>
+   
+   <LI>Select <B>Streaming Proxy</B> from the popup menu and then
+   select the <B>RTSP Proxy Server</B> checkbox.</LI>
+   
+   <LI>Type in the ip address or domain name of your proxy server in the Name: field, and
+   the port you configured in the streamingproxy.conf file (or 554 as
+   a default).</LI>
+</OL>
+
+
+<h3>How It Works</h3>
+
+<P>The Streaming Proxy listens on ports you specify for a RTSP
+command sequence. It parses the commands and redirects the command to
+the desired server. It also rewrites the RTSP commands to reflect the
+new set of port numbers that the proxy must use.</P>
+
+<P>The Streaming Proxy will only relay data that comes from a server
+that the data was requested from.</P>
+
+
+
+<h4>Credits</h4>
+
+<P>This proxy includes software developed by the University of
+California, Berkeley and its contributors; that included software is
+the regular expression code developed by Henry Spencer.</P>
+
+
+<P>&nbsp;</P>
+
+<P><FONT SIZE="-1">&copy; 1999, 2000 2001 Apple Computer, Inc. All rights
+reserved. Apple, the Apple logo, Mac, Macintosh, PowerBook, Power
+Macintosh, and QuickTime are trademarks of Apple Computer, Inc.,
+registered in the United States and other countries. iBook, iMac, and
+Power Mac are trademarks of Apple Computer, Inc. All other product
+names are trademarks or registered trademarks of their respective
+holders.</FONT></P>
+
+
+</blockquote>
+</BODY>
+</HTML>
+

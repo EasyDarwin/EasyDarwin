@@ -1,0 +1,63 @@
+#!/bin/sh
+
+
+# Ask yes or no question
+boolean_ask ()
+{
+  local prompt;
+  local reply;
+
+  prompt=$1;
+
+  while (true); do
+      echo -n "${prompt} " ; read reply;
+
+      case "${reply}" in
+        y | yes | Y | YES | Yes )
+          return 0;
+          ;;
+        n | no | N | NO | No )
+          return 1;
+          ;;
+        *)
+          return 1;
+          ;;
+      esac
+  done
+}
+
+
+if [ `id -u` != 0 ]
+then
+	echo "### You must be root to execute this script ###"
+	exit 1
+fi
+
+echo "Are you sure you want to remove QuickTime Streaming Server 4"
+if ! boolean_ask "from this system (your movies directory will NOT be removed) [y,n]?"; then
+	echo "Cancelled..."
+    exit 1;
+fi;
+
+echo "Removing files..."
+
+
+rm /usr/bin/PlaylistBroadcaster
+rm /usr/bin/qtpasswd
+rm /usr/bin/MP3Broadcaster
+rm /usr/bin/StreamingLoadTool
+rm /usr/sbin/QuickTimeStreamingServer
+rm /usr/sbin/streamingadminserver.pl
+
+rm /Library/QuickTimeStreaming/StreamingServerReadMe.rtf
+rm /Library/QuickTimeStreaming/broadcast-sdpfiles
+rm /Library/QuickTimeStreaming/QTSSAdminUrl.bin
+rm -r /etc/streaming
+rm -r /Library/QuickTimeStreaming/Config
+rm -r /Library/QuickTimeStreaming/Playlists
+rm -r /Library/QuickTimeStreaming/Modules
+rm -r /Library/QuickTimeStreaming/AdminHtml
+rm -r /Library/Receipts/QTSS3.pkg
+rm -r /Library/Receipts/QTSS.pkg
+
+exit 0

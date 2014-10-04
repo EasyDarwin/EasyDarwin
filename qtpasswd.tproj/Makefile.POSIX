@@ -1,0 +1,50 @@
+# Copyright (c) 1999 Apple Computer, Inc.  All rights reserved.
+#  
+
+NAME = qtpasswd
+C++ = $(CPLUS)
+CC = $(CCOMP)
+LINK = $(LINKER)
+CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../PlatformHeader.h -g -Wall
+LIBS = $(CORE_LINK_LIBS) ../CommonUtilitiesLib/libCommonUtilitiesLib.a
+
+#OPTIMIZATION
+CCFLAGS += -O3
+
+# EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
+
+CCFLAGS += -I.
+CCFLAGS += -I..
+CCFLAGS += -I../CommonUtilitiesLib
+CCFLAGS += -I../OSMemoryLib
+
+# EACH DIRECTORY WITH A STATIC LIBRARY MUST BE APPENDED IN THIS MANNER TO THE LINKOPTS
+
+LINKOPTS = -L../CommonUtilitiesLib
+
+C++FLAGS = $(CCFLAGS)
+
+CFILES = 
+
+CPPFILES = QTSSPasswd.cpp \
+	../SafeStdLib/InternalStdLib.cpp \
+	    ../OSMemoryLib/OSMemory.cpp
+
+all: qtpasswd
+
+qtpasswd: $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	$(LINK) -o $@ $(CFILES:.c=.o) $(CPPFILES:.cpp=.o) $(COMPILER_FLAGS) $(LINKOPTS) $(LIBS) 
+
+install: qtpasswd
+
+clean:
+	rm -f qtpasswd $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+
+.SUFFIXES: .cpp .c .o
+
+.cpp.o:
+	$(C++) -c -o $*.o $(DEFINES) $(C++FLAGS) $*.cpp
+
+.c.o:
+	$(CC) -c -o $*.o $(DEFINES) $(CCFLAGS) $*.c
+

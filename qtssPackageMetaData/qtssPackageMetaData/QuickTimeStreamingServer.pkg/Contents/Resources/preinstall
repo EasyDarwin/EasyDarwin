@@ -1,0 +1,154 @@
+#!/bin/sh
+#
+#
+PATH=/usr/bin:/bin
+export PATH
+
+echo "pre_install"
+
+# add the qtss group
+echo "Adding group 'qtss'"
+if [ "$3" == "/" ] ; then
+    /usr/bin/niutil -read . /groups/qtss > /dev/null
+    if [ $? != 0 ] ; then
+        /usr/bin/niutil -create . /groups/qtss
+        /usr/bin/niutil -createprop . /groups/qtss gid 76
+        /usr/bin/niutil -createprop . /groups/qtss passwd '*'
+        echo "Group 'qtss' added."       
+#    else
+#        echo "Group 'qtss' already exists."
+    fi
+else
+    /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -read "/groups/qtss" > /dev/null
+    if [ $? != 0 ] ; then
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/groups/qtss"
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/groups/qtss" 'gid' '76'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/groups/qtss" 'passwd' '*'
+        echo "Group 'qtss' added."
+#    else
+#        echo "Group 'qtss' already exists."
+    fi
+fi
+
+# add the qtss user
+echo "Adding user 'qtss'"
+if [ "$3" == "/" ] ; then
+    /usr/bin/niutil -read . /users/qtss > /dev/null
+    if [ $? != 0 ] ; then
+        /usr/bin/niutil -create . /users/qtss
+        /usr/bin/niutil -createprop . /users/qtss uid 76
+        /usr/bin/niutil -createprop . /users/qtss gid 76
+        /usr/bin/niutil -createprop . /users/qtss passwd '*'
+        /usr/bin/niutil -createprop . /users/qtss change 0
+        /usr/bin/niutil -createprop . /users/qtss expire 0
+        /usr/bin/niutil -createprop . /users/qtss realname 'QuickTime Streaming Server'
+        /usr/bin/niutil -createprop . /users/qtss home '/dev/null'
+        /usr/bin/niutil -createprop . /users/qtss shell '/dev/null'
+        /usr/bin/niutil -createprop . /users/qtss _writers_passwd 'qtss'
+        echo "User 'qtss' added."       
+#    else
+#        echo "User 'qtss' already exists."
+    fi
+else
+    /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -read "/users/qtss" > /dev/null
+    if [ $? != 0 ] ; then
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss"
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'uid' '76'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'gid' '76'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'passwd' '*'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'change' '0'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'expire' '0'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'realname' 'QuickTime Streaming Server'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'home' '/dev/null'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" 'shell' '/dev/null'
+        /usr/bin/nicl -raw "$3/private/var/db/netinfo/local.nidb" -create "/users/qtss" '_writers_passwd' 'qtss'
+        echo "User 'qtss' added."       
+    else
+        echo "User 'qtss' already exists."
+    fi
+fi
+
+if [ "$3" != "/" ] ; then
+    # flush the netinfo database
+    /bin/chmod 700 "$3/private/var/db/netinfo/local.nidb"
+    /bin/chmod 600 "$3/private/var/db/netinfo/local.nidb/Clean"
+fi
+
+# first mv any existing 3.x files to a backup name
+if [ -e "${3}/etc/streaming/streamingserver.xml" ]; then
+    mv -f "${3}/etc/streaming/streamingserver.xml" "${3}/tmp/streamingserver.xml.backup"
+fi
+
+if [ -e "${3}/etc/streaming/streamingrelay.conf" ]; then
+    mv -f "${3}/etc/streaming/streamingrelay.conf" "${3}/tmp/streamingrelay.conf.backup"
+fi
+
+if [ -e "${3}/etc/streaming/streamingadminserver.conf" ]; then
+    mv -f "${3}/etc/streaming/streamingadminserver.conf" "${3}/tmp/streamingadminserver.conf.backup"
+fi
+
+if [ -e "${3}/etc/streaming/streamingadminserver_autostart.conf" ]; then
+    mv -f "${3}/etc/streaming/streamingadminserver_autostart.conf" "${3}/tmp/streamingadminserver_autostart.conf.backup"
+fi
+
+if [ -e "${3}/etc/streaming/qtusers" ]; then
+    mv -f "${3}/etc/streaming/qtusers" "${3}/tmp/qtusers.backup"
+fi
+
+if [ -e "${3}/etc/streaming/qtgroups" ]; then
+    mv -f "${3}/etc/streaming/qtgroups" "${3}/tmp/qtgroups.backup"
+fi
+
+if [ -e "${3}/etc/streaming/streamingloadtool.conf" ]; then
+    mv -f "${3}/etc/streaming/streamingloadtool.conf" "${3}/tmp/streamingloadtool.conf.backup"
+fi
+
+if [ -e "${3}/etc/streaming/streamingadminserver.pem" ]; then
+    mv -f "${3}/etc/streaming/streamingadminserver.pem" "${3}/tmp/streamingadminserver.pem.backup"
+fi
+
+# backup any new config files and overwrite any older files
+if [ -e "${3}/Library/QuickTimeStreaming/Config/streamingserver.xml" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/streamingserver.xml" "${3}/tmp/streamingserver.xml.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/streamingserver.xml-sample" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/streamingserver.xml-sample" "${3}/tmp/streamingserver.xml-sample.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/streamingrelay.conf" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/streamingrelay.conf" "${3}/tmp/streamingrelay.conf.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/relayconfig.xml" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/relayconfig.xml" "${3}/tmp/relayconfig.xml.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/streamingadminserver.conf" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/streamingadminserver.conf" "${3}/tmp/streamingadminserver.conf.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/streamingadminserver_autostart.conf" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/streamingadminserver_autostart.conf" "${3}/tmp/streamingadminserver_autostart.conf.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/qtusers" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/qtusers" "${3}/tmp/qtusers.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/qtgroups" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/qtgroups" "${3}/tmp/qtgroups.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/streamingloadtool.conf" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/streamingloadtool.conf" "${3}/tmp/streamingloadtool.conf.backup"
+fi
+
+if [ -e "${3}/Library/QuickTimeStreaming/Config/streamingadminserver.pem" ]; then
+    mv -f "${3}/Library/QuickTimeStreaming/Config/streamingadminserver.pem" "${3}/tmp/streamingadminserver.pem.backup"
+fi
+
+#kill any running QTSS servers
+/usr/bin/perl "$1/Contents/Resources/killqtss"
+
+exit 0

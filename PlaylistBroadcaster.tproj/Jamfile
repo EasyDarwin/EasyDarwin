@@ -1,0 +1,173 @@
+# Copyright (c) 1999 Apple Computer, Inc.  All rights reserved.
+# $Id: Jamfile,v 1.1 2006/01/05 13:20:36 murata Exp $
+# PlaylistBroadcaster
+
+#
+# Compiler definitions and flags
+CC = cc ;
+C++ = c++ ;
+LINK = c++ ;
+MIG = mig ;
+
+CCFLAGS += -D__MacOSX__ -DNeXT -arch ppc -Wall  -include ../PlatformHeader.h -include ../revision.h -Wredundant-decls -Wcast-qual -Wno-four-char-constants -fcommon ;
+
+FRAMEWORKS = -framework Foundation -framework Carbon ;
+
+CCFLAGS += -g ;
+C++FLAGS = $(CCFLAGS) ;
+
+#
+# Optimization flags
+OPTIM = -O0 ;
+
+
+#
+# Where our headers are located
+HDRS = ..
+		.
+		../OSMemoryLib
+		../APICommonCode
+		../APIStubLib
+		../CommonUtilitiesLib
+		../RTCPUtilitiesLib
+		../PrefsSourceLib
+		../RTSPClientLib
+		../RTPMetaInfoLib
+		../QTFileLib
+		../APIStubLib
+		;
+
+#
+# Our source files
+CFILES = 
+			../CommonUtilitiesLib/base64.c
+			../CommonUtilitiesLib/GetWord.c
+			../CommonUtilitiesLib/Trim.c
+			../CommonUtilitiesLib/md5.c
+			../CommonUtilitiesLib/daemon.c 
+			../CommonUtilitiesLib/getopt.c
+		 ;
+		 
+CPPFILES =
+
+# SERVER SOURCES
+
+	BCasterTracker.cpp
+	BroadcastLog.cpp
+	NoRepeat.cpp
+	PickerFromFile.cpp
+	PlaylistBroadcaster.cpp
+	PlaylistPicker.cpp
+	playlist_broadcaster.cpp
+	playlist_elements.cpp
+	playlist_lists.cpp
+	playlist_parsers.cpp
+	playlist_SDPGen.cpp
+	playlist_SimpleParse.cpp
+	playlist_utils.cpp
+	PLBroadcastDef.cpp
+	BroadcasterSession.cpp
+		
+# COMMON UTILITIES
+
+	../CommonUtilitiesLib/EventContext.cpp
+	#../CommonUtilitiesLib/Exception.cpp
+	../CommonUtilitiesLib/IdleTask.cpp
+	../CommonUtilitiesLib/MyAssert.cpp
+	../CommonUtilitiesLib/OS.cpp
+	../CommonUtilitiesLib/OSCodeFragment.cpp
+	../CommonUtilitiesLib/OSCond.cpp
+	../CommonUtilitiesLib/OSFileSource.cpp
+	../CommonUtilitiesLib/OSHeap.cpp
+	../CommonUtilitiesLib/OSMutex.cpp
+	../CommonUtilitiesLib/OSBufferPool.cpp
+	../CommonUtilitiesLib/OSMutexRW.cpp
+	../CommonUtilitiesLib/OSQueue.cpp
+	../CommonUtilitiesLib/OSRef.cpp
+	../CommonUtilitiesLib/OSThread.cpp
+	../CommonUtilitiesLib/Socket.cpp
+	../CommonUtilitiesLib/SocketUtils.cpp
+	../CommonUtilitiesLib/ResizeableStringFormatter.cpp
+	../CommonUtilitiesLib/StringFormatter.cpp
+	../CommonUtilitiesLib/StringParser.cpp
+	../CommonUtilitiesLib/StringTranslator.cpp
+	../CommonUtilitiesLib/StrPtrLen.cpp
+	../CommonUtilitiesLib/Task.cpp
+	../CommonUtilitiesLib/TCPListenerSocket.cpp
+	../CommonUtilitiesLib/TCPSocket.cpp
+	../CommonUtilitiesLib/TimeoutTask.cpp
+	../CommonUtilitiesLib/UDPDemuxer.cpp
+	../CommonUtilitiesLib/UDPSocket.cpp
+	../CommonUtilitiesLib/UDPSocketPool.cpp
+	../CommonUtilitiesLib/UserAgentParser.cpp
+	../CommonUtilitiesLib/DateTranslator.cpp
+	../CommonUtilitiesLib/ConfParser.cpp
+	../CommonUtilitiesLib/md5digest.cpp
+
+# QTFILE LIB
+
+#	../QTFileLib/QTAtom.cpp
+#	../QTFileLib/QTAtom_dref.cpp
+#	../QTFileLib/QTAtom_elst.cpp
+#	../QTFileLib/QTAtom_hinf.cpp
+#	../QTFileLib/QTAtom_mdhd.cpp
+#	../QTFileLib/QTAtom_mvhd.cpp
+#	../QTFileLib/QTAtom_stco.cpp
+#	../QTFileLib/QTAtom_stsc.cpp
+#	../QTFileLib/QTAtom_stsd.cpp
+#	../QTFileLib/QTAtom_stss.cpp
+#	../QTFileLib/QTAtom_stsz.cpp
+#	../QTFileLib/QTAtom_stts.cpp
+#	../QTFileLib/QTAtom_tkhd.cpp
+#	../QTFileLib/QTAtom_tref.cpp
+#	../QTFileLib/QTFile.cpp
+#	../QTFileLib/QTFile_FileControlBlock.cpp
+#	../QTFileLib/QTHintTrack.cpp
+#	../QTFileLib/QTRTPFile.cpp
+#	../QTFileLib/QTTrack.cpp
+
+# API STUB LIBRARY
+
+#	../APIStubLib/QTSS_Private.cpp
+
+# PREFS SOURCE LIB
+
+	../PrefsSourceLib/FilePrefsSource.cpp	
+
+
+
+# OSMEMORY LIB
+
+	../OSMemoryLib/OSMemory.cpp
+	
+# RTSPCLIENT LIB
+
+	../RTSPClientLib/RTSPClient.cpp
+	../RTSPClientLib/ClientSocket.cpp
+	../RTSPClientLib/ClientSession.cpp
+
+# API MODULES / API COMMON CODE
+
+	../APICommonCode/SDPSourceInfo.cpp
+	../APICommonCode/SourceInfo.cpp
+	../APICommonCode/QTSSRollingLog.cpp
+	
+# RTP META INFO STUFF
+
+	../RTPMetaInfoLib/RTPMetaInfoPacket.cpp
+;
+
+#
+# Our libraries
+LIBS = atomic QTFileLib ;
+
+
+#
+# Build all of the objects
+Objects $(DEFS) $(CFILES) $(CPPFILES) ;
+
+#
+# Link the PlaylistBroadcaster
+MainFromObjects PlaylistBroadcaster : $(CFILES:S=.o) $(CPPFILES:S=.o) ;
+LinkLibraries PlaylistBroadcaster : ../lib$(LIBS) ;
+LINKFLAGS on PlaylistBroadcaster += $(FRAMEWORKS) ;

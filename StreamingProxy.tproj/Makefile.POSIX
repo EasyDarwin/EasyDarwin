@@ -1,0 +1,44 @@
+# Copyright (c) 1999 Apple Computer, Inc.  All rights reserved.
+#  
+
+NAME = StreamingProxy
+C++ = $(CPLUS)
+CC = $(CCOMP)
+LINK = $(LINKER)
+CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../PlatformHeader.h -g -Wall
+LIBS = $(CORE_LINK_LIBS)
+
+#OPTIMIZATION
+CCFLAGS += -O3
+
+# EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
+
+CCFLAGS += -I.
+CCFLAGS += -I..
+
+C++FLAGS = $(CCFLAGS)
+
+CFILES = 	get_opt.c \
+			proxy.c \
+			util.c \
+			shared_udp.c \
+			proxy_unix.c
+
+all: StreamingProxy 
+
+StreamingProxy: $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	$(LINK) -o $@ $(CFILES:.c=.o) $(CPPFILES:.cpp=.o) $(COMPILER_FLAGS) $(LINKOPTS) $(LIBS)
+	
+install: StreamingProxy
+	
+clean:
+	rm -f StreamingProxy $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+
+.SUFFIXES: .cpp .c .o
+
+.cpp.o:
+	$(C++) -c -o $*.o $(DEFINES) $(C++FLAGS) $*.cpp
+
+.c.o:
+	$(CC) -c -o $*.o $(DEFINES) $(CCFLAGS) $*.c
+

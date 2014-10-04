@@ -1,0 +1,169 @@
+
+	NOTES
+Project	qtssPackageMetaData
+------------------------------------------------------------------------
+Date: 9/18/2001
+
+*	First submit for OSX installer
+*	submitproject qtssPackageMetaData-4
+------------------------------------------------------------------------
+Date: 9/20/2001
+
+*	First Check-in to CVS
+
+------------------------------------------------------------------------
+Date: 9/21/2001
+
+*	Submit new scripts with updated paths and no grep support
+*	submitproject tag:qtssPackageMetaData-5
+------------------------------------------------------------------------
+Date: 9/21/2001
+
+*	English ReadMe and License only (for now).
+*	submitproject tag:qtssPackageMetaData-6
+------------------------------------------------------------------------
+Date: 9/24/2001
+
+*	updated readmes and removal of old files and dirs.
+*	submitproject tag:qtssPackageMetaData-7
+------------------------------------------------------------------------
+Date: 9/24/2001
+
+*	changed Makefile to leave qtssPackageMetaData dir alone.	
+*	submitproject tag:qtssPackageMetaData-8
+------------------------------------------------------------------------
+Date: 9/25/2001
+
+*	test of QTSS.pkg instead of QTSS3.pkg.	
+*	submitproject tag:qtssPackageMetaData-9
+------------------------------------------------------------------------
+Date: 9/25/2001
+
+*	moved QTSS.info file to localized folder
+*	added release_version file for future version check scripts.	
+*	submitproject tag:qtssPackageMetaData-10
+------------------------------------------------------------------------
+Date: 9/27/2001
+
+*	Added InstallationCheck script which checks for OS 10.1 or later and 
+	QTSS release_version (older or same installed means allow)
+*	submitproject tag:qtssPackageMetaData-11
+------------------------------------------------------------------------
+Date: 10/01/2001
+
+*	convert lproj .strings file to unicode.
+*	backup and restore qtgroups and remove old streamingloadtool.
+*	submitproject tag:qtssPackageMetaData-12
+------------------------------------------------------------------------
+Date: 10/01/2001
+
+*	same as tag 12.
+*	submitproject tag:qtssPackageMetaData-13
+------------------------------------------------------------------------
+Date: 10/03/2001
+
+*       fixed problem in removeprefs.pl.
+*       submitproject tag:qtssPackageMetaData-14
+------------------------------------------------------------------------
+
+Date: 10/03/2001
+
+*       submitproject tag:qtssPackageMetaData-15
+------------------------------------------------------------------------
+
+Date: 10/04/2001
+
+*       changed QTSS4.pkg to QTSS.pkg in Readmt.rtf
+*       submitproject tag:qtssPackageMetaData-16
+-----------------------------------------------------------------------
+
+Date: 10/04/2001
+
+*       fixed install scripts to migrate qtusers/groups to qtusers.backup, etc
+*       submitproject tag:qtssPackageMetaData-17
+------------------------------------------------------------------------
+
+Date: 10/08/2001
+
+*       Added VolumeCheck script to grey out volumes that do not have OSX installed.
+*       submitproject tag:qtssPackageMetaData-18
+------------------------------------------------------------------------
+
+Date: 11/08/2001
+
+*	Various bugs and clean up code.
+*       submitproject tag:qtssPackageMetaData-19
+------------------------------------------------------------------------
+
+Date: 11/12/2001
+
+*	Changes to post and preinstall scripts to un-macbin the admin url link
+*       submitproject tag:qtssPackageMetaData-20
+------------------------------------------------------------------------ 
+
+Date: 11/14/2001
+
+*       activated updateplaylists script
+*       submitproject tag:qtssPackageMetaData-21
+------------------------------------------------------------------------ 
+
+Date: 11/16/2001
+
+*		submitproject tag:qtssPackageMetaData-22
+------------------------------------------------------------------------ 
+
+Date: 11/27/2001
+
+*		submitproject tag:qtssPackageMetaData-23
+------------------------------------------------------------------------ 
+
+Date: 11/29/2001
+
+*		submitproject tag:qtssPackageMetaData-24
+------------------------------------------------------------------------ 
+
+Date: 11/29/2001
+
+*		Added Japanese, German, French ReadMe.rtf files
+------------------------------------------------------------------------ 
+
+Date: 12/5/2001
+
+* 		submitproject tag:qtssPackageMetaData-25
+------------------------------------------------------------------------ 
+
+Date: 12/7/2001
+
+* 		submitproject tag:qtssPackageMetaData-26
+------------------------------------------------------------------------ 
+
+Date: 12/13/2001
+
+* 		submitproject tag:qtssPackageMetaData-27
+------------------------------------------------------------------------ 
+
+Date: 04/24/2002
+
+* 		submitproject tag:qtssPackageMetaData-28
+		
+		submitted along with qtssServer-419
+		
+		Changes: moved chown command to postinstall script
+------------------------------------------------------------------------ 
+
+Date: 12/xx/2002
+
+* 		submitproject tag:qtssPackageMetaData-??
+		
+		Changes: changed InstallationCheck script to look for installed server binary
+------------------------------------------------------------------------ 
+
+Date: 04/24/2002
+
+*
+ 		submitproject tag:qtssPackageMetaData-28
+------------------------------------------------------------------------ 
+
+Date: 03/11/2003
+
+*		project tag: qtss_pkg-1

@@ -1,0 +1,14 @@
+#!/bin/sh
+ 
+rm -rf EasyDarwinDeploy/ EasyDarwinDeploy.tar
+echo "create deploy directory"
+mkdir -p EasyDarwinDeploy/Movies
+
+echo "copy necessary files"
+cp EasyDarwin streamingserver.xml EasyDarwinDeploy/
+cp Demo.mp4 EasyDarwinDeploy/Movies
+
+echo "generate tarball"
+tar cvf EasyDarwinDeploy.tar EasyDarwinDeploy/
+
+echo Success!

@@ -1,0 +1,563 @@
+<?xml version ="1.0"?>
+<!-- This is a sample streamingserver.xml file -->
+<!-- The Document Type Definition (DTD) for the file -->
+<!DOCTYPE CONFIGURATION [
+<!ELEMENT CONFIGURATION (SERVER, MODULE*)>
+<!ELEMENT SERVER (PREF|LIST-PREF)*>
+<!ELEMENT MODULE (PREF|LIST-PREF)*>
+<!ATTLIST MODULE
+	NAME CDATA #REQUIRED>
+<!ELEMENT PREF (#PCDATA)>
+<!ATTLIST PREF
+	NAME CDATA #REQUIRED
+	TYPE (UInt8|SInt8|UInt16|SInt16|UInt32|SInt32|UInt64|SInt64|Float32|Float64|Bool16|Bool8|CharArray) "CharArray">
+<!ELEMENT LIST-PREF (VALUE*)>
+<!ELEMENT VALUE (#PCDATA)>
+<!ATTLIST LIST-PREF
+	NAME CDATA #REQUIRED
+	TYPE  (UInt8|SInt8|UInt16|SInt16|UInt32|SInt32|UInt64|SInt64|Float32|Float64|Bool16|Bool8|CharArray) "CharArray">
+]>
+<CONFIGURATION>
+
+<SERVER>
+	<!-- Port(s) for accepting client connections -->
+	<!-- NOTE: Add port 80 to the list of "rtsp_port"'s -->
+	<!-- if you are streaming across the internet -->
+	<!-- and want clients behind firewalls to be -->
+	<!-- able to connect to the streaming server -->
+	<LIST-PREF NAME="rtsp_port" TYPE="UInt16">
+        <VALUE>554</VALUE>
+	</LIST-PREF>
+
+	<!-- The text to display as the login entity "realm" by the client is defined by default_authorization_realm -->
+	<!-- if the default realm is not defined here, then the default realm is set to "Streaming Server" -->
+	<!-- the realm used in a response can also be dynamically set by authorizating modules -->
+	<PREF NAME="default_authorization_realm">Streaming Server</PREF>
+
+	<!-- when behind a round robin DNS, the client needs to be told the specific -->
+	<!-- ip address of the matching handling its request. this pref tells the server -->
+	<!-- to report its IP address in the reply to the HTTP GET request when -->
+	<!-- tunneling RTSP through HTTP. -->
+	<PREF NAME="do_report_http_connection_ip_address" TYPE="Bool16">disabled</PREF>
+
+	<!-- "scaling factor" to appropriately scale the buffer size. -->
+	<!-- Using the bitrate of the movie as a guide, the server will set the TCP send -->
+	<!-- buffer to fit this number of seconds of data. -->
+	<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32">.5</PREF>
+
+	<!-- Maximum size the send buffer can be set to. -->
+	<PREF NAME="max_tcp_buffer_size" TYPE="UInt32">200000</PREF>
+
+	<!-- Minimum size the send buffer can be set to. -->
+	<PREF NAME="min_tcp_buffer_size" TYPE="UInt32">8192</PREF>
+
+	<!-- Either "true" or "false". This toggles error -->
+	<!-- logging on and off. -->
+	<PREF NAME="error_logging" TYPE="Bool16">true</PREF>
+
+	<!-- if screen_logging is true, all content for the error log will be -->
+	<!-- written to the terminal window. Note that in order to see these messages -->
+	<!-- onscreen, the server must be launched from the command-line, and must be -->
+	<!-- launched in foreground mode (triggered by the addition of the -d flag). -->
+	<PREF NAME="screen_logging" TYPE="Bool16">true</PREF>
+
+	<!-- This controls how much information is to be -->
+	<!-- logged in the error log. A value of 0 means only log fatal errors. 1  -->
+	<!-- means log fatal errors and warnings. 2 means log fatal errors, warnings, -->
+	<!-- and asserts. 3 means log fatal errors, warnings, asserts, and debug messages. -->
+	<PREF NAME="error_logfile_verbosity" TYPE="UInt32">3</PREF>
+
+	<!-- Maximum allowed size in bytes for the error log. A -->
+	<!-- value of 0 means unlimited --> 
+	<PREF NAME="error_logfile_size" TYPE="UInt32">256000</PREF>
+
+	<!-- Amount of time in days between rolls of the -->
+	<!-- error log. A value of 0 means unlimited. -->
+	<PREF NAME="error_logfile_interval" TYPE="UInt32">7</PREF>
+
+	<!-- error log. A value of 0 means unlimited. -->
+	<PREF NAME="error_logfile_dir">c:\Program Files\Darwin Streaming Server\Logs</PREF>
+
+	<!-- Name of the error log file. -->
+	<PREF NAME="error_logfile_name">Error</PREF>
+
+	<!-- Path to the folder containing dynamic loadable server modules -->
+	<PREF NAME="module_folder">c:\Program Files\Darwin Streaming Server\QTSSModules</PREF>
+
+	<!-- If the server discovers it is serving more than its -->
+	<!-- allowed maximum bandwidth (using the average bandwidth computation) it -->
+	<!-- will attempt to disconnect the most recently connected clients until the -->
+	<!-- average bandwidth drops to acceptable levels. However, it will not -->
+	<!-- disconnect clients if they've been connected for longer than this time, -->
+	<!-- in seconds. If this value is set to 0, it will never disconnect clients. -->
+	<PREF NAME="safe_play_duration" TYPE="UInt32">600</PREF>
+
+	<!-- This is the interval in seconds between computations of the server's average bandwidth. -->
+	<PREF NAME="average_bandwidth_update" TYPE="UInt32">60</PREF>
+
+	<!-- The interval in seconds between updates of the -->
+	<!-- server's total bytes and current bandwidth statistics. -->
+	<PREF NAME="total_bytes_update" TYPE="UInt32">1</PREF>
+
+	<!-- if this is true, the server will automatically restart itself if it crashes. -->
+	<PREF NAME="auto_restart" TYPE="Bool16">true</PREF>
+
+	<!-- If this is true, the server will stop when an assert condition is hit. -->
+	<PREF NAME="break_on_assert" TYPE="Bool16">false</PREF>
+
+	<!-- This tells the server what IP address it should accept -->
+	<!-- client connections on. A value of 0 means all IP addresses currently -->
+	<!-- enabled for the machine. -->
+	<PREF NAME="bind_ip_addr">0</PREF>
+
+	<!-- Path to the root folder for movies. -->
+	<PREF NAME="movie_folder">c:\Program Files\Darwin Streaming Server\Movies</PREF>
+
+	<!-- Maximum amount of bandwidth the server is allowed to serve. -->
+	<!-- value is in kilobits/sec. While this limit is exceeded, new client requests. -->
+	<!-- for additional streams will be responded to with the RTSP error 453, "Not Enough Bandwidth". -->
+	<PREF NAME="maximum_bandwidth" TYPE="SInt32">102400</PREF>
+
+	<!-- Maximum number of concurrent connections allowed by the server -->
+	<PREF NAME="maximum_connections" TYPE="SInt32">1000</PREF>
+
+	<!-- Amount of time in seconds the server will wait before -->
+	<!-- disconnecting idle RTP clients. This timer is reset each time the server -->
+	<!-- receives an RTCP status packet from the client. -->
+	<PREF NAME="rtp_timeout" TYPE="UInt32">120</PREF>
+
+	<!-- rtsp_timeout is the timeout that gets reported to the client. This is the actual timeout value -->
+	<PREF NAME="real_rtsp_timeout" TYPE="UInt32">180</PREF>
+
+	<!-- Amount of time in seconds the server will wait before -->
+	<!-- disconnecting idle RTSP clients. This timer is reset each time the server -->
+	<!-- receives a new RTSP request from the client. -->
+	<PREF NAME="rtsp_timeout" TYPE="UInt32">0</PREF>
+
+	<!-- Run as this user -->
+	<PREF NAME="run_user_name"></PREF>
+
+	<!-- Member of this group -->
+	<PREF NAME="run_group_name"></PREF>
+
+	<!-- The following 8 prefs implement the server's thinning algorithm. -->
+	<!-- They are all in milliseconds -->
+	
+	<!-- If a packet is this late, it is dropped -->
+	<PREF NAME="drop_all_packets_delay" TYPE="SInt32">2500</PREF>
+
+	<!-- If a video packet is this late, it is dropped -->
+	<PREF NAME="drop_all_video_delay" TYPE="SInt32">1750</PREF>
+
+	<!-- If a packet is this late, the server thins the stream as much as possible -->
+	<PREF NAME="thin_all_the_way_delay" TYPE="SInt32">1500</PREF>
+
+	<!-- If a packet is this late, thin some more -->
+	<PREF NAME="always_thin_delay" TYPE="SInt32">750</PREF>
+
+	<!-- If a packet is this late, we might thin some more -->
+	<PREF NAME="start_thinning_delay" TYPE="SInt32">0</PREF>
+
+	<!-- If a packet is this late, start thicking -->
+	<PREF NAME="start_thicking_delay" TYPE="SInt32">250</PREF>
+
+	<!-- If a packet is this late (negative means it is ahead of time), restore full quality -->
+	<PREF NAME="thick_all_the_way_delay" TYPE="SInt32">-2000</PREF>
+
+	<!-- The server checks packet delay differences this often -->
+	<PREF NAME="quality_check_interval" TYPE="UInt32">1000</PREF>
+
+	<!-- If this is true, the server will add its source address to its transport. -->
+	<!-- headers. This is necessary on certain networks where the source address -->
+	<!-- is not necessarily known.  -->
+	<PREF NAME="append_source_addr_in_transport" TYPE="Bool16">false</PREF>
+
+	<!-- The server appends its own IP addr into the Transport: header. -->
+	<!-- If you want an alternate address placed there, use this pref to specify -->
+	<!-- the address.  -->
+	<PREF NAME="alt_transport_src_ipaddr" TYPE="UInt32"></PREF>
+
+	<!-- Reliable UDP: maximum interval between when a retransmit is supposed -->
+	<!-- to be sent and when it actually gets sent. -->
+	<!-- Lower values means smoother flow but slower server performance -->
+	<PREF NAME="max_retransmit_delay" TYPE="UInt32">500</PREF>
+
+	<!-- Reliable UDP: if the client doesn't explicitly say what its window is, -->
+	<!-- the server will use this as a default value. In K bytes -->
+	<PREF NAME="small_window_size" TYPE="UInt32">24</PREF>
+
+	<!-- Reliable UDP: if the client doesn't explicitly say what its window is, -->
+	<!-- the server will use this as a default value. In K bytes -->
+	<PREF NAME="medium_window_size" TYPE="UInt32">48</PREF>
+	
+	<!-- Reliable UDP: if the client doesn't explicitly say what its window is, -->
+	<!-- the server will use this as a default value. In K bytes -->
+	<PREF NAME="large_window_size" TYPE="UInt32">64</PREF>
+
+	<!-- Reliable UDP: if the client doesn't explicitly say what its window is, -->
+	<!-- the server will use the small_window_size if the bit rate is below this threshold in kbps -->
+	<PREF NAME="window_size_threshold" TYPE="UInt32">200</PREF>
+
+	<!-- Reliable UDP: if the client doesn't explicitly say what its window is, -->
+	<!-- the server will use the small_window_size if the bit rate is below this threshold in kbps -->
+	<PREF NAME="window_size_max_threshold" TYPE="UInt32">1000</PREF>
+
+	<!-- Reliable UDP: For debugging only. This turns on massive -->
+	<!-- server logging of reliable udp acking -->
+	<PREF NAME="ack_logging_enabled" TYPE="Bool16">false</PREF>
+
+	<!-- Reliable UDP: Time in msec between server checks for incoming RTCP packets. -->
+	<!-- Longer interval means better server performance but grosser -->
+	<!-- mis-estimates of packet round-trip-times -->
+	<PREF NAME="rtcp_poll_interval" TYPE="UInt32">100</PREF>
+
+	<!-- Reliable UDP: Size in Kbytes for the RTCP UDP socket receive buffers. -->
+	<!-- This in general needs to be big to absorb bursts of RTCP ACKs. -->
+	<!-- Lower value may mean ACKs will get dumped by the kernel. -->
+	<PREF NAME="rtcp_rcv_buf_size" TYPE="UInt32">768</PREF>
+	
+	<!-- This is also the minimum time the server will wait between sending packet data to a client -->
+	<PREF NAME="send_interval" TYPE="UInt32">50</PREF>
+
+	<!-- The server tries to get ahead of clients. This is the farthest ahead -->
+	<!-- in seconds that the server can go. -->
+	<PREF NAME="max_send_ahead_time" TYPE="UInt32">25</PREF>
+
+	<!-- Reliable UDP: Is Reliable UDP slow start enabled. Having this off may lead to an initial -->
+	<!-- burst of packet loss due to mis-estimate of the client's available bandwidth. Having it -->
+	<!-- on may lead to premature thinning. -->
+	<PREF NAME="reliable_udp_slow_start" TYPE="Bool16">true</PREF>
+
+	<!-- Turn on or off the SDP file deleter: files are deleted after the SDP t= endtime passes -->
+    <PREF NAME="auto_delete_sdp_files" TYPE="Bool16">false</PREF>
+    
+	<!-- Set this to be the authentication scheme you want the server to use. -->
+	<!-- "basic", "digest", and "none" are the currently supported values. -->
+    <PREF NAME="authentication_scheme">digest</PREF>
+
+	<!-- Check sdp files every interval seconds. The internal minimum value is 1 second. -->
+	<!-- Changes to sdp_file_delete_interval_seconds and auto_delete_sdp_files take  -->
+	<!-- affect at the end of the current interval. -->
+    <PREF NAME="sdp_file_delete_interval_seconds" TYPE="UInt32">10</PREF>
+
+	<!-- Enabled / disable reliable UDP protocol. -->
+    <PREF NAME="reliable_udp" TYPE="Bool16">true</PREF>
+
+    <!-- If reliable UDP is enabled, specify the directories in which -->
+    <!-- it is enabled. Directories should be relative to the movies -->
+    <!-- folder, with a leading slash but no trailing slash. For example: -->
+    <!-- \reliable_udp_dir -->
+    <PREF NAME="reliable_udp_dirs">\</PREF>
+
+    <!-- Enable printfs of some interesting stats about each reliable UDP client -->
+    <PREF NAME="reliable_udp_printfs" TYPE="Bool16">false</PREF>
+       
+    <!-- Enable debugging error messages in RTSP error response -->
+    <PREF NAME="RTSP_error_message" TYPE="Bool16">false</PREF>
+
+    <!-- If value is greater than zero, then the server creates run_num_threads threads -->
+    <!-- If value is zero, the server creates a thread for each processor -->
+    <!-- This setting is used to override the default behavior - one thread per process -->
+    <PREF NAME="run_num_threads" TYPE="UInt32">0</PREF>
+
+	<!-- Rate at which to overbuffer: number of times the data rate -->
+	<PREF NAME="overbuffer_rate" TYPE="Float32">2.0</PREF>
+    
+	<!-- Enables debugging of the RTSP protocol (used for developer debugging) -->
+    <PREF NAME="RTSP_debug_printfs" TYPE="Bool16">false</PREF>
+    
+	<!-- The monitor status file is for updating the file  -->
+    <!-- used by an external monitor application. -->
+    <PREF NAME="enable_monitor_stats_file" TYPE="Bool16">true</PREF>
+    <PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32">10</PREF>
+    <PREF NAME="monitor_stats_file_name" >server_status</PREF>
+    
+	<!-- RTP packet debugging options (used for developer debugging) -->
+    <PREF NAME="enable_packet_header_printfs" TYPE="Bool16" >false</PREF>
+    <PREF NAME="packet_header_printf_options" >rtp;rr;sr;app;ack;</PREF>
+</SERVER>
+
+<MODULE NAME="QTSSAccessLogModule">
+	<!-- Amount of time in days between rolls of the  -->
+	<!-- access log. A value of 0 means unlimited. -->
+	<PREF NAME="request_logfile_interval" TYPE="UInt32">7</PREF>
+
+	<!-- Maximum allowed size in bytes for the access log. A -->
+	<!-- value of 0 means unlimited. -->
+	<PREF NAME="request_logfile_size" TYPE="UInt32">10240000</PREF>
+
+	<!-- Path to directory where access logs are stored. -->
+	<PREF NAME="request_logfile_dir">c:\Program Files\Darwin Streaming Server\Logs</PREF>
+
+	<!-- Name of the access log file. -->
+	<PREF NAME="request_logfile_name">StreamingServer</PREF>
+
+	<!-- Either "true" or "false". Logs date time field -->
+        <!-- in GMT if true and in localtime if false-->
+        <PREF NAME="request_logtime_in_gmt" TYPE="Bool16">true</PREF>
+
+	<!-- Either "true" or "false". This toggles access. -->
+	<!-- logging on and off. -->
+	<PREF NAME="request_logging" TYPE="Bool16">true</PREF>
+</MODULE>
+
+<MODULE NAME="QTSSFileModule">
+	<!-- This URL will be included in the dynamically generated SDP -->
+	<!-- returned to the client. Typically, this should be set to your default web URL. -->
+	<PREF NAME="sdp_url"></PREF>
+
+	<!-- This email address will be included in the dynamically -->
+	<!-- generated SDP returned to the client. -->
+	<PREF NAME="admin_email"></PREF>
+	
+	<!-- File module accepts the rtsp Speed header, which controls the overall -->
+	<!-- play rate. This is the maximum rate it will allow -->
+    <PREF NAME="max_allowed_speed" TYPE="Float32">4.000000</PREF>
+    
+    <!-- When sending packets to the client, the connection may sometimes get -->
+    <!-- flow controlled. When that happens, the server periodically checks to -->
+    <!-- see if the condition has been lifted. This is how often it checks -->
+    <PREF NAME="flow_control_probe_interval" TYPE="UInt32">10</PREF>
+    
+	<!-- These options control the use of private/shared file   -->
+    <!-- buffers in the QTSSFileModule. These options allow for -->
+    <!-- performance tuning of buffering, -->
+    <PREF NAME="enable_shared_file_buffers" TYPE="Bool16">true</PREF>
+    <PREF NAME="enable_private_file_buffers" TYPE="Bool16">true</PREF>
+    <PREF NAME="num_shared_buffer_increase_per_session" TYPE="UInt32">2</PREF>
+    <PREF NAME="shared_buffer_unit_k_size" TYPE="UInt32">32</PREF>
+    <PREF NAME="private_buffer_unit_k_size" TYPE="UInt32">32</PREF>
+    <PREF NAME="num_shared_buffer_units_per_buffer" TYPE="UInt32">0</PREF>
+    <PREF NAME="num_private_buffer_units_per_buffer" TYPE="UInt32">1</PREF>
+    <PREF NAME="max_shared_buffer_units_per_buffer" TYPE="UInt32">8</PREF>
+    <PREF NAME="max_private_buffer_units_per_buffer" TYPE="UInt32">8</PREF>
+    <PREF NAME="add_seconds_to_client_buffer_delay" TYPE="Float32">0.000000</PREF>
+    
+	<!-- These options allow you to enable/disable recording of SDP files for debugging.  -->
+    <PREF NAME="record_movie_file_sdp" TYPE="Bool16">false</PREF>
+    <PREF NAME="enable_movie_file_sdp" TYPE="Bool16">false</PREF>
+</MODULE>
+
+<MODULE NAME="QTSSMP3StreamingModule">
+	<!-- Set this to false if you would like to disable native MP3 streaming -->
+	<PREF NAME="mp3_streaming_enabled" TYPE="Bool16">true</PREF>
+	
+	<!-- This is the broadcaster application's password -->
+	<PREF NAME="mp3_broadcast_password"> </PREF>
+	
+	<!-- This is the number of bytes we read from a broadcaster before sending to clients -->
+	<!-- You can use this for performance tuning. -->
+    <PREF NAME="mp3_broadcast_buffer_size" TYPE="UInt32" >8192</PREF>
+    
+	<!-- This is the number of milliseconds we will wait for flow control to be -->
+	<!-- lifted blocked clients. -->
+	<!-- You can use this for performance tuning. -->
+    <PREF NAME="mp3_max_flow_control_time" TYPE="SInt32" >10000</PREF>
+    
+	<!-- This is the name of the log file excluding the ".log" ending -->
+    <PREF NAME="mp3_request_logfile_name" >mp3_access</PREF>
+    
+	<!-- Path to directory where access logs are stored. -->
+	<PREF NAME="mp3_request_logfile_dir">c:\Program Files\Darwin Streaming Server\Logs</PREF>
+
+	<!-- Either "true" or "false". This toggles -->
+	<!-- mp3 access logging on and off. -->
+	<PREF NAME="mp3_request_logging" TYPE="Bool16">true</PREF>
+
+	<!-- Maximum allowed size in bytes for the access log. A -->
+	<!-- value of 0 means unlimited. -->
+	<PREF NAME="mp3_request_logfile_size" TYPE="UInt32">10240000</PREF>
+	
+	<!-- Amount of time in days between rolls of the  -->
+	<!-- access log. A value of 0 means unlimited. -->
+	<PREF NAME="mp3_request_logfile_interval" TYPE="UInt32">7</PREF>
+
+	<!-- Either "true" or "false". Logs date time field -->
+	<!-- in GMT if true and in localtime if false-->
+    <PREF NAME="mp3_request_logtime_in_gmt" TYPE="Bool16">true</PREF>
+</MODULE>
+
+<MODULE NAME="QTSSWebStatsModule">
+	<!-- This sets the URL for the server's web stats page. If this -->
+	<!-- is set to "stats" for instance, if you request: -->
+	<!-- http://my.server.com:554/stats in a web browser, the server will respond -->
+	<!-- with current status information. -->
+	<PREF NAME="web_stats_url"></PREF>
+</MODULE>
+
+<MODULE NAME="QTSSHttpFileModule">
+	<!-- Module enabled or disabled -->
+	<PREF NAME="http_xfer_enabled" TYPE="Bool16" >false</PREF>
+	
+	<!-- Path to the http download folder. All files -->
+	<!-- that are requested from this folder are sent via HTTP -->
+	<PREF NAME="http_folder">c:\Program Files\Darwin Streaming Server\http</PREF>
+	
+	<!-- Either "true" or "false". This toggles http module -->
+	<!-- logging on and off. -->
+	<PREF NAME="http_logging" TYPE="Bool16">true</PREF>
+	
+	<!-- Name of the http module log file. -->
+	<PREF NAME="http_logfile_name">Http</PREF>
+	
+	<!-- Path to directory where http module logs are stored. -->
+	<PREF NAME="http_logfile_dir">c:\Program Files\Darwin Streaming Server\httpLogs</PREF>
+	
+	<!-- Maximum allowed size in bytes for the http module log. A -->
+	<!-- value of 0 means unlimited. -->
+	<PREF NAME="http_logfile_size" TYPE="UInt32">256000</PREF>
+	
+	<!-- Amount of time in days between rolls of the  -->
+	<!-- http module log. A value of 0 means unlimited. -->
+	<PREF NAME="http_logfile_interval" TYPE="UInt32">7</PREF>
+</MODULE>
+
+<MODULE NAME="QTSSReflectorModule">
+	<!-- The reflector imposes time delays between groups,  -->
+	<!-- or "buckets" of clients for a given multicast. This value is the number -->
+	<!-- of clients to put in one bucket. -->
+	<PREF NAME="reflector_bucket_size" TYPE="UInt32">16</PREF>
+
+	<!-- This value is the number of milliseconds to delay each bucket of clients. -->
+	<PREF NAME="reflector_delay" TYPE="UInt32">100</PREF>
+
+	<!-- This tells the reflector whether it should append a '.sdp' to the end -->
+	<!-- of URLs when looking for a .sdp file -->
+	<PREF NAME="allow_non_sdp_urls" TYPE="Bool16">true</PREF>
+
+ 	<!-- Turn on or off a broadcaster RTSP push to the server -->
+    <PREF NAME="enable_broadcast_push" TYPE="Bool16">true</PREF>
+
+ 	<!-- Turn on or off a broadcaster Announce of an SDP file to the server -->
+     <PREF NAME="enable_broadcast_announce" TYPE="Bool16">true</PREF>
+
+  	<!-- Force announced SDPs to this maximum duration in seconds. 0 = infinite duration. -->
+     <PREF NAME="max_broadcast_announce_duration_secs" TYPE="UInt32">0</PREF>
+     
+   	<!-- Turns on or off accepting setups on an existing broadcast stream -->
+     <PREF NAME="allow_duplicate_broadcasts" TYPE="Bool16">false</PREF>
+
+   	<!-- Turns on or off checking static ports in sdp files against a valid range -->
+   	<!-- If an sdp file is played and it contains a port outside the min to max static sdp range then an invalid media error is returned to the client. -->
+    <!-- Announced broadcasts will also receive the invalid media error from the server for setups on an invalid static port. -->
+	<PREF NAME="enforce_static_sdp_port_range" TYPE="Bool16">false</PREF>
+	
+  	<!-- The maximum value for a static port. See enforce_static_sdp_port_range -->
+   	<!-- Ports in the range 6970 to 9999 are expected to be available for use by the server.  --> 
+  	<!-- If enforce_static_sdp_port_range is true a warning will be logged  -->
+  	<!-- when the minimum_static_sdp_port and maximum_static_sdp_port range crosses the server 6970 to 9999 range.  -->
+	<PREF NAME="maximum_static_sdp_port" TYPE="UInt16">65535</PREF>
+
+  	<!-- The minimum value for a static port. See enforce_static_sdp_port_range -->
+  	<!-- Ports in the range 6970 to 9999 are expected to be available for use by the server.  --> 
+  	<!-- If enforce_static_sdp_port_range is true a warning will be logged  -->
+  	<!-- when the minimum_static_sdp_port and maximum_static_sdp_port range crosses the server 6970 to 9999 range.  -->
+	<PREF NAME="minimum_static_sdp_port" TYPE="UInt16">20000</PREF>
+
+	<!-- If no packets for the current SSRC are received in timeout seconds, use the next SSRC we see  -->
+  	<!-- This timeout is only in use when use_one_SSRC_per_stream is true  -->
+	<PREF NAME="timeout_stream_SSRC_secs" TYPE="UInt32">30</PREF>
+
+  	<!-- Only reflect packets from a single SSRC -->
+  	<!-- Setting this value to false allows all packets from any source to be passed to the clients -->
+	<PREF NAME="use_one_SSRC_per_stream" TYPE="Bool16">true</PREF>
+
+  	<!-- When a broadcaster RTSP session goes down also teardown the clients watching the stream -->
+	<PREF NAME="kill_clients_when_broadcast_stops" TYPE="Bool16">false</PREF>	
+
+  	<!-- These options allow you to configure buffering for the relector module. -->
+    <PREF NAME="reflector_bucket_offset_delay_msec" TYPE="UInt32">73</PREF>
+    <PREF NAME="reflector_buffer_size_sec" TYPE="UInt32">10</PREF>
+    <PREF NAME="reflector_use_in_packet_receive_time" TYPE="Bool16">false</PREF>
+    <PREF NAME="reflector_in_packet_max_receive_sec" TYPE="UInt32">60</PREF>
+    <PREF NAME="enable_rtp_play_info" TYPE="Bool16" >false</PREF>
+    <PREF NAME="timeout_broadcaster_session_secs" TYPE="UInt32">20</PREF>
+    <PREF NAME="authenticate_local_broadcast" TYPE="Bool16">false</PREF>
+	<PREF NAME="disable_overbuffering" TYPE="Bool16">false</PREF>
+
+	<!-- Maximum content length (in K bytes) of the SDP that is announced -->
+    <!-- A value of 0 indicates that no maximum is imposed -->
+    <PREF NAME="max_announced_sdp_length_kbytes" TYPE="UInt32">0</PREF>
+
+	<!-- allow broadcasts - broadcasts are reflected only if this is set to true -->
+	<PREF NAME="allow_broadcasts" TYPE="Bool16">true</PREF>
+	
+	<!-- Redirect broadcasts if URI begins with the keyword -->
+	<PREF NAME="redirect_broadcast_keyword"></PREF>
+	<!-- Redirect broadcasts to this directory if the the URI begins with the "redirect_broadcast_keyword" -->
+	<PREF NAME="redirect_broadcasts_dir"></PREF>
+
+	<!-- List of directories from which to allow broadcasts. -->
+	<!-- Can be relative to the "movie_folder" or to the "redirect_broadcasts_dir" -->
+	<!-- The latter directory will be used if the URI also has the "redirect_broadcast_keyword" prefix -->
+	<!-- Can also be an absolute file system path -->
+	<PREF NAME="broadcast_dir_list"></PREF>
+
+</MODULE>
+
+<MODULE NAME="QTSSFlowControlModule">
+	<!-- If a client reports loss percentages greater than loss_thin_tolerance, -->
+	<!-- over the course of num_losses_to_thin consecutive RTCP (status) packets, the -->
+	<!-- server will drop the bitrate of stream. -->
+	<PREF NAME="loss_thin_tolerance" TYPE="UInt32">30</PREF>
+
+	<PREF NAME="num_losses_to_thin" TYPE="UInt32">3</PREF>
+
+	<!-- If a client reports loss percentages less than loss_thick_tolerance, over -->
+	<!-- the course of num_losses_to_thick consecutive RTCP (status) packets, the -->
+	<!-- server will increase the bitrate of the stream. -->
+	<PREF NAME="loss_thick_tolerance" TYPE="UInt32">5</PREF>
+
+	<PREF NAME="num_losses_to_thick" TYPE="UInt32">6</PREF>
+
+	<!-- After this number of RTCP packets where the client is reporting degrading quality, -->
+	<!-- the server will drop the bitrate of the stream -->
+	<PREF NAME="num_worses_to_thin" TYPE="UInt32">2</PREF>
+</MODULE>
+
+<MODULE NAME="QTSSRelayModule">
+	<!-- Relay preferences file. This file should be in the documented .rcf (Relay config file) -->
+	<!-- format. The Relay will use this to load up all relay streams -->
+	<PREF NAME="relay_prefs_file">c:\Program Files\Darwin Streaming Server\relayconfig.xml</PREF>
+
+	<!-- enter this URL into a web browser and get a web page with current stats on -->
+	<!-- your active relays -->
+	<PREF NAME="relay_stats_url"></PREF>
+</MODULE>
+
+<MODULE NAME="QTSSAccessModule">
+	<!-- The file name for the AccessModule's access file as it appears in controlled directories. -->
+	<PREF NAME="modAccess_qtaccessfilename">qtaccess</PREF>
+
+	<!-- The default path and file name for the AccessModule's groups list -->
+	<PREF NAME="modAccess_groupsfilepath">c:\Program Files\Darwin Streaming Server\qtgroups</PREF>
+
+	<!-- The default path and file name for the AccessModule's user list -->
+	<PREF NAME="modAccess_usersfilepath">c:\Program Files\Darwin Streaming Server\qtusers</PREF>
+</MODULE>
+
+<MODULE NAME="QTSSAdminModule">
+	<!-- The delay processing a new admin request until this many milliseconds has passed -->
+	<PREF NAME="RequestTimeIntervalMilli" TYPE="UInt32">50</PREF>
+	
+	<!-- Only requests from 127.0.0.1 are allowed if LocalAccessOnly is true -->
+	<!-- If this is set to false, then IP addresses as defined by the IPAccessList may make requests -->
+	<PREF NAME="LocalAccessOnly" TYPE="Bool16">true</PREF>
+	
+	<!-- Require Admin requests to authenticate with the server -->
+	<PREF NAME="Authenticate" TYPE="Bool16">true</PREF>
+	
+	<!-- turn on or off admin request processing -->
+	<PREF NAME="enable_remote_admin" TYPE="Bool16">true</PREF>
+
+	<!-- A list of IP addresses that are allowed to make admin requests. -->
+	<!-- LocalAccessOnly must be set to false before network addresses will be accepted. -->
+	<!-- A wildcard of * is allowed for designating ranges. *.*.*.* means all addresses. -->
+	<PREF NAME="IPAccessList">127.0.0.*</PREF>
+	
+	<!-- The user has to belong to this group in order to be authorized -->
+	<!-- by the admin module for admin protocol requests -->
+	<PREF NAME="AdministratorGroup">admin</PREF>	 
+</MODULE>
+
+</CONFIGURATION>

@@ -1,0 +1,2 @@
+find $1 \( -name "Release" \) -exec rm -rf {} \;
+find $1 \( -name "Debug" \) -exec rm -rf {} \;

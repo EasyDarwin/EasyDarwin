@@ -1,0 +1,25 @@
+.Dd February 11, 2005       \" DATE 
+.Dt createuserstreamingdir 8       \" Program name and manual section number 
+.Os Darwin
+.Sh NAME                 \" Section Header - required - don't modify 
+.Nm createuserstreamingdir 
+.Sh SYNOPSIS             \" Section Header - required - don't modify
+.Nm
+.Ar username                 
+.Sh DESCRIPTION          \" Section Header - required - don't modify
+.Nm
+will create the directory ~user/Sites/Streaming/
+.br
+.br
+The created directory gives the QuickTimeStreamingServer access to user managed content
+.Pp
+A list of flags and their descriptions:
+.Bl -tag -width -indent
+.br
+.Ar username
+The user whose home directory should be updated
+.El
+.Sh SEE ALSO 
+.Xr QuickTimeStreamingServer 8 , 
+.\" .Sh BUGS 
+.\" .Sh HISTORY 

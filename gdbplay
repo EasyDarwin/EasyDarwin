@@ -1,0 +1,15 @@
+
+echo $HOSTTYPE
+if [ "$HOSTTYPE" = "powerpc" ] ; then
+	if [ "$1" = "jam" ] ; then
+		echo "Debug OSX Jam'd PlaylistBroadcaster/PlaylistBroadcaster"
+		gdb PlaylistBroadcaster.tproj/PlaylistBroadcaster -x gdb_script
+	else
+		echo "Debug OSX PlaylistBroadcaster"
+		gdb build/PlaylistBroadcaster -x gdb_script
+	fi
+else
+	echo "Debug POSIX PlaylistBroadcaster.tproj/PlaylistBroadcaster"
+	gdb PlaylistBroadcaster.tproj/PlaylistBroadcaster -x gdb_script
+fi
+

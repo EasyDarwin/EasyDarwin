@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+$streaming_server_running = 0;
+$admin_server_running = 0;
+
+#kill qtss
+$pids = `ps -ax | awk '{print \$1" " \$5}' | awk '/QuickTimeStreamingServer/ {print \$1}'`;
+$pids =~ s/\n/ /;
+if ($pids ne '') {
+	$streaming_server_running = 1;
+	`kill $pids`;
+}
+
+#kill streamingadminserver.pl
+$pids = `ps -ax | awk '/streamingadminserver.pl/ {print \$0}' | awk '/perl/ {print \$1}'`;
+$pids =~ s/\n/ /;
+if ($pids ne '') {
+	$admin_server_running = 1;
+	`kill $pids`;
+}
+
+# restart the software if necessary
+if ($streaming_server_running == 1) {
+	`/usr/sbin/QuickTimeStreamingServer`;
+}
+
+if ($admin_server_running == 1) {
+	`/usr/sbin/streamingadminserver.pl`;
+}

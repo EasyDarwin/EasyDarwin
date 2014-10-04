@@ -1,0 +1,284 @@
+#!/bin/sh -e
+
+
+# Install script for the Darwin Streaming Server
+# source release
+
+DSS=0
+if [ $1 = "-f" ]; then
+	FLATTEN=1
+	INSTALLROOT=$2
+	if [ $3 = "dss" ]; then
+	    DSS=1
+	fi
+else
+	FLATTEN=0
+	INSTALLROOT=$1
+fi
+
+echo Installing source build of Darwin Streaming Server
+
+if [ -z $INSTALLROOT ]; then
+	echo "usage: DSS_MakeRoot [-f] rootdirname"
+	echo " -f: flatten directory hierarchy"
+	exit 1
+fi
+
+if [ -d $INSTALLROOT ];
+then :
+else
+	echo "creating directory $INSTALLROOT"
+	mkdir -p $INSTALLROOT
+fi
+
+if [ $FLATTEN != 1 ]; then
+	# Install each file into it's appropriate location relative to "$INSTALLROOT"
+
+	echo creating "$INSTALLROOT/usr/local/sbin" directory
+	mkdir -p $INSTALLROOT/usr/local/sbin
+
+	echo copying "DarwinStreamingServer" to "$INSTALLROOT/usr/local/sbin/DarwinStreamingServer"
+	cp -f DarwinStreamingServer $INSTALLROOT/usr/local/sbin/
+	
+	echo creating "$INSTALLROOT/usr/local/bin" directory
+	mkdir -p $INSTALLROOT/usr/local/bin
+
+	echo copying "PlaylistBroadcaster" to "$INSTALLROOT/usr/local/bin/PlaylistBroadcaster"
+	cp -f PlaylistBroadcaster.tproj/PlaylistBroadcaster $INSTALLROOT/usr/local/bin/
+	
+	echo copying "MP3Broadcaster" to "$INSTALLROOT/usr/local/bin/MP3Broadcaster"
+	cp -f MP3Broadcaster/MP3Broadcaster $INSTALLROOT/usr/local/bin/
+	
+	echo copying "qtpasswd" to "$INSTALLROOT/usr/local/bin/qtpasswd"
+	cp -f qtpasswd.tproj/qtpasswd $INSTALLROOT/usr/local/bin/
+	
+	echo creating "$INSTALLROOT/usr/local/sbin/StreamingServerModules" directory
+	mkdir -p $INSTALLROOT/usr/local/sbin/StreamingServerModules
+	cp -f APIModules/QTSSHomeDirectoryModule/QTSSHomeDirectoryModule $INSTALLROOT/usr/local/sbin/StreamingServerModules/
+	cp -f APIModules/QTSSRefMovieModule/QTSSRefMovieModule $INSTALLROOT/usr/local/sbin/StreamingServerModules/
+
+	echo copying "createuserstreamingdir" to "$INSTALLROOT/usr/local/bin/createuserstreamingdir"
+	cp -f APIModules/QTSSHomeDirectoryModule/createuserstreamingdir $INSTALLROOT/usr/local/bin/
+
+	echo creating "$INSTALLROOT/etc/streaming" directory
+	mkdir -p $INSTALLROOT/etc/streaming
+	
+	echo copying "streamingserver.xml-POSIX" to "$INSTALLROOT/etc/streaming/streamingserver.xml"
+	cp -f streamingserver.xml-POSIX $INSTALLROOT/etc/streaming/streamingserver.xml
+	echo copying "streamingserver.xml-POSIX" to "$INSTALLROOT/etc/streaming/streamingserver.xml-sample"
+	cp -f streamingserver.xml-POSIX $INSTALLROOT/etc/streaming/streamingserver.xml-sample
+	
+	echo copying "relayconfig.xml-Sample" to "$INSTALLROOT/etc/streaming/relayconfig.xml-Sample"
+	cp -f relayconfig.xml-Sample $INSTALLROOT/etc/streaming/
+
+	echo copying "qtusers" to "$INSTALLROOT/etc/streaming/qtusers"
+	cp -f qtusers $INSTALLROOT/etc/streaming/
+	
+	echo copying "qtgroups" to "$INSTALLROOT/etc/streaming/qtgroups"
+	cp -f qtgroups $INSTALLROOT/etc/streaming/
+
+	echo creating "$INSTALLROOT/var/streaming/logs" directory
+	mkdir -p $INSTALLROOT/var/streaming/logs
+	
+	echo copying "Documentation/readme.txt" into "$INSTALLROOT/var/streaming/readme.txt"
+	cp -f Documentation/readme.txt $INSTALLROOT/var/streaming/readme.txt
+	
+	echo copying "Documentation/3rdPartyAcknowledgements.rtf" into "$INSTALLROOT/var/streaming/3rdPartyAcknowledgements.rtf"
+	cp -f Documentation/3rdPartyAcknowledgements.rtf $INSTALLROOT/var/streaming/3rdPartyAcknowledgements.rtf
+	
+	echo creating "$INSTALLROOT/usr/local/movies" directory
+	mkdir -p $INSTALLROOT/usr/local/movies
+
+    echo copying "sample_100kbit.mov" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_100kbit.mov $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample_300kbit.mov" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_300kbit.mov $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample_100kbit.mp4" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_100kbit.mp4 $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample_300kbit.mp4" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_300kbit.mp4 $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample.mp3" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample.mp3 $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample_50kbit.3gp" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_50kbit.3gp $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample_h264_100kbit.mp4" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_h264_100kbit.mp4 $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample_h264_1mbit.mp4" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_h264_1mbit.mp4 $INSTALLROOT/usr/local/movies/
+
+    echo copying "sample_h264_300kbit.mp4" into "$INSTALLROOT/usr/local/movies"
+    cp -f sample_h264_300kbit.mp4 $INSTALLROOT/usr/local/movies/
+
+if [ $DSS = 0 ]; then
+    if [ -d StreamingLoadTool ]; then
+		echo copying "StreamingLoadTool" to "$INSTALLROOT/usr/local/bin/StreamingLoadTool"
+		cp -f StreamingLoadTool/StreamingLoadTool $INSTALLROOT/usr/local/bin/
+		
+		echo copying "streamingloadtool.conf" to "$INSTALLROOT/etc/streaming/streamingloadtool.conf"
+		cp -f StreamingLoadTool/streamingloadtool.conf $INSTALLROOT/etc/streaming/streamingloadtool.conf
+	else
+                echo "Warning: there is no StreamingLoadTool folder"
+    fi
+fi
+        
+	#WebAdmin install
+
+	echo copying "streamingadminserver.pl" into "$INSTALLROOT/usr/local/sbin/"
+	cp -f WebAdmin/src/streamingadminserver.pl $INSTALLROOT/usr/local/sbin/streamingadminserver.pl
+
+	#echo copying "streamingadminserver.pem" into "$INSTALLROOT/etc/streaming/"
+	#cp -f WebAdmin/streamingadminserver.pem $INSTALLROOT/etc/streaming/streamingadminserver.pem
+	
+	echo creating "$INSTALLROOT/var/streaming/AdminHtml" directory
+	mkdir -p $INSTALLROOT/var/streaming/AdminHtml
+	
+	echo copying Admin HTML to "$INSTALLROOT/var/streaming/AdminHtml" directory
+	cp -f WebAdmin/WebAdminHtml/*.pl $INSTALLROOT/var/streaming/AdminHtml/
+	cp -f WebAdmin/WebAdminHtml/*.cgi $INSTALLROOT/var/streaming/AdminHtml/
+	cp -f WebAdmin/WebAdminHtml/*.html $INSTALLROOT/var/streaming/AdminHtml/
+    
+	echo creating "$INSTALLROOT/var/streaming/AdminHtml/images/" directory
+	mkdir -p $INSTALLROOT/var/streaming/AdminHtml/images/
+	cp -f WebAdmin/WebAdminHtml/images/*.gif $INSTALLROOT/var/streaming/AdminHtml/images/
+	
+	echo creating "$INSTALLROOT/var/streaming/AdminHtml/includes/" directory
+	mkdir -p $INSTALLROOT/var/streaming/AdminHtml/includes/
+	cp -f WebAdmin/WebAdminHtml/includes/*.js $INSTALLROOT/var/streaming/AdminHtml/includes/
+	
+	echo creating "$INSTALLROOT/var/streaming/AdminHtml/html_en/" directory
+	mkdir -p $INSTALLROOT/var/streaming/AdminHtml/html_en/
+	cp -f WebAdmin/WebAdminHtml/html_en/messages $INSTALLROOT/var/streaming/AdminHtml/html_en/
+	cp -f WebAdmin/WebAdminHtml/html_en/genres $INSTALLROOT/var/streaming/AdminHtml/html_en/
+	
+else
+	# Build a "flat" directory containing an "Install" script
+
+	echo copying "Install" to "$INSTALLROOT"
+	cp -f Install $INSTALLROOT/Install
+	
+	echo copying "DarwinStreamingServer" to "$INSTALLROOT/DarwinStreamingServer"
+	cp -f DarwinStreamingServer $INSTALLROOT/
+	
+	echo copying "PlaylistBroadcaster" to "$INSTALLROOT/PlaylistBroadcaster"
+	cp -f PlaylistBroadcaster.tproj/PlaylistBroadcaster $INSTALLROOT/
+	
+	echo copying "MP3Broadcaster" to "$INSTALLROOT/MP3Broadcaster"
+	cp -f MP3Broadcaster/MP3Broadcaster $INSTALLROOT/
+	
+	echo copying "qtpasswd" to "$INSTALLROOT/qtpasswd"
+	cp -f qtpasswd.tproj/qtpasswd $INSTALLROOT/
+
+	echo creating "$INSTALLROOT/StreamingServerModules" directory
+	mkdir -p $INSTALLROOT/StreamingServerModules
+	cp -f APIModules/QTSSHomeDirectoryModule/QTSSHomeDirectoryModule $INSTALLROOT/StreamingServerModules/
+	cp -f APIModules/QTSSRefMovieModule/QTSSRefMovieModule $INSTALLROOT/StreamingServerModules/
+	
+	echo copying "createuserstreamingdir" to "$INSTALLROOT/createuserstreamingdir"
+	cp -f APIModules/QTSSHomeDirectoryModule/createuserstreamingdir $INSTALLROOT/createuserstreamingdir
+
+	echo copying "streamingserver.xml-POSIX" to "$INSTALLROOT/streamingserver.xml"
+	cp -f streamingserver.xml-POSIX $INSTALLROOT/streamingserver.xml
+	
+	echo copying "streamingserver.xml-POSIX" to "$INSTALLROOT/streamingserver.xml-sample"
+	cp -f streamingserver.xml-POSIX $INSTALLROOT/streamingserver.xml-sample
+	
+	echo copying "relayconfig.xml-Sample" to "$INSTALLROOT/relayconfig.xml-Sample"
+	cp -f relayconfig.xml-Sample $INSTALLROOT/
+
+	echo copying "qtusers" to "$INSTALLROOT/qtusers"
+    cp -f qtusers $INSTALLROOT/
+    
+    echo copying "qtgroups" to "$INSTALLROOT/qtgroups"
+	cp -f qtgroups $INSTALLROOT/
+
+	echo copying "Documentation/readme.txt" into "readme.txt"
+	cp -f Documentation/readme.txt $INSTALLROOT/readme.txt
+	
+ 	echo copying "Documentation/3rdPartyAcknowledgements.rtf" into "$INSTALLROOT/3rdPartyAcknowledgements.rtf"
+	cp -f Documentation/3rdPartyAcknowledgements.rtf $INSTALLROOT/3rdPartyAcknowledgements.rtf
+	
+    echo copying "sample_100kbit.mov" into "$INSTALLROOT/sample_100kbit.mov"
+    cp -f sample_100kbit.mov $INSTALLROOT/
+    
+    echo copying "sample_300kbit.mov" into "$INSTALLROOT/sample_300kbit.mov"
+    cp -f sample_300kbit.mov $INSTALLROOT/
+    
+    echo copying "sample_100kbit.mp4" into "$INSTALLROOT/sample_100kbit.mp4"
+    cp -f sample_100kbit.mp4 $INSTALLROOT/
+    
+    echo copying "sample_300kbit.mp4" into "$INSTALLROOT/sample_300kbit.mp4"
+    cp -f sample_300kbit.mp4 $INSTALLROOT/
+    
+    echo copying "sample.mp3" into "$INSTALLROOT/sample.mp3"
+    cp -f sample.mp3 $INSTALLROOT/
+
+    echo copying "sample_50kbit.3gp" into "$INSTALLROOT/sample_50kbit.3gp"
+    cp -f sample_50kbit.3gp $INSTALLROOT/
+
+    echo copying "sample_h264_100kbit.mp4" into "$INSTALLROOT/sample_h264_100kbit.mp4"
+    cp -f sample_h264_100kbit.mp4 $INSTALLROOT/
+
+    echo copying "sample_h264_1mbit.mp4" into "$INSTALLROOT/sample_h264_1mbit.mp4"
+    cp -f sample_h264_1mbit.mp4 $INSTALLROOT/
+
+    echo copying "sample_h264_300kbit.mp4" into "$INSTALLROOT/sample_h264_300kbit.mp4"
+    cp -f sample_h264_300kbit.mp4 $INSTALLROOT/
+
+if [ $DSS = 0 ]; then
+    if [ -d StreamingLoadTool ]; then
+	echo copying "StreamingLoadTool" to "$INSTALLROOT/StreamingLoadTool"
+	cp -f StreamingLoadTool/StreamingLoadTool $INSTALLROOT/
+	
+	echo copying "streamingloadtool.conf" to "$INSTALLROOT/streamingloadtool.conf"
+	cp -f StreamingLoadTool/streamingloadtool.conf $INSTALLROOT/
+	else
+                echo "Warning: there is no StreamingLoadTool folder"
+    fi
+fi
+ 
+	#WebAdmin install
+	
+	# copy the perlpath.pl script to the top level so that Install script can run it
+	echo copying "perlpath.pl" into "$INSTALLROOT/"
+	cp -f WebAdmin/perlpath.pl $INSTALLROOT/perlpath.pl
+
+	echo copying "streamingadminserver.pl" into "$INSTALLROOT/"
+	cp -f WebAdmin/src/streamingadminserver.pl $INSTALLROOT/streamingadminserver.pl
+
+	#echo copying "streamingadminserver.pem" into "$INSTALLROOT/"
+	#cp -f WebAdmin/streamingadminserver.pem $INSTALLROOT/streamingadminserver.pem
+	
+	echo creating "$INSTALLROOT/AdminHtml" directory
+	mkdir -p $INSTALLROOT/AdminHtml
+	
+	echo copying Admin HTML to "$INSTALLROOT/AdminHtml" directory
+	cp -f WebAdmin/WebAdminHtml/*.pl $INSTALLROOT/AdminHtml/
+	cp -f WebAdmin/WebAdminHtml/*.cgi $INSTALLROOT/AdminHtml/
+	cp -f WebAdmin/WebAdminHtml/*.html $INSTALLROOT/AdminHtml/
+
+	echo creating "$INSTALLROOT/AdminHtml/images/" directory
+	mkdir -p $INSTALLROOT/AdminHtml/images/
+	cp -f WebAdmin/WebAdminHtml/images/*.gif $INSTALLROOT/AdminHtml/images/
+	
+	echo creating "$INSTALLROOT/AdminHtml/includes/" directory
+	mkdir -p $INSTALLROOT/AdminHtml/includes/
+	cp -f WebAdmin/WebAdminHtml/includes/*.js $INSTALLROOT/AdminHtml/includes/
+	
+	echo creating "$INSTALLROOT/AdminHtml/html_en/" directory
+	mkdir -p $INSTALLROOT/AdminHtml/html_en/
+	cp -f WebAdmin/WebAdminHtml/html_en/messages $INSTALLROOT/AdminHtml/html_en/
+	cp -f WebAdmin/WebAdminHtml/html_en/genres $INSTALLROOT/AdminHtml/html_en/
+	
+fi
+
+
+
+echo
+echo Done.

@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+#kill qtss
+$pids= `ps -aux | awk '{print \$1" " \$2" " \$11}' | awk '/QuickTimeStreamingServer/ {print \$1" " \$2}' | awk '/qtss/ {print \$2}'`;
+$pids =~ s/\n/ /;
+$value= `ps -aux | awk '{print \$1" " \$2" " \$11}' | awk '/QuickTimeStreamingServer/ {print \$1" " \$3}' | awk '/qtss/ {print \$2}'`;
+
+if ($pids ne '') {
+         print "killing : \n$value  $pids\n";
+	`kill $pids`;
+}
+print "done killing QuickTimeStreamingServer\n";
+
+#kill streamingadminserver.pl
+$pids= `ps -ax | awk '/streamingadminserver.pl/ {print \$1 " " \$5}' | awk '/perl/ {print \$1}'`;
+$pids =~ s/\n/ /;
+$value= `ps -ax | awk '/streamingadminserver.pl/ {print \$5 " " \$6}' | awk '/perl/ {print \$2 }'`;
+if ($pids ne '') {
+         print "killing : \n$value $pids\n";
+	`kill $pids`;
+}
+print "done killing streamingadminserver.pl\n";

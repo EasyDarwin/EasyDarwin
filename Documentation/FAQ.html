@@ -1,0 +1,151 @@
+<p><span style="font-weight: bold;">What is Darwin Streaming Server?</span></p>
+<p>&nbsp;</p>
+<div>
+<p>Darwin Streaming Server is the open source version of the QuickTime  	Streaming Server allowing you to stream hinted QuickTime, MPEG-4, and  	3GPP files over the Internet via the industry standard RTP and RTSP  	protocols.</p>
+<p><span style="font-weight: bold;">Q. What's new in DSS 6.0.3?</span></p>
+</div>
+<blockquote>- DSS now builds and runs 64-bit on MacOS X</blockquote>
+<blockquote>- Updates for example modules:<br />- The example Authorization module has been updated.<br /></blockquote>
+<blockquote>
+<blockquote>Source code is available in: APIModules/QTSSDemoAuthorizationModule.bproj<br /></blockquote>
+</blockquote>
+<blockquote>- The example Spam Defense module has been updated.<br /></blockquote>
+<blockquote>
+<blockquote>Source code is available in: APIModules/QTSSSpamDefenseModule.bproj<br /></blockquote>
+</blockquote>
+<blockquote>- An example RTSP redirect module has been included<br /></blockquote>
+<blockquote>
+<blockquote>Source code is available in: APIModules/QTSSDemoRedirectModule.bproj<br />Example modules are installed into:<br />(MacOS X): /Library/QuickTimeStreamingServer/Modules.disabled<br />(other Unix): /usr/local/sbin/StreamingServerModules<br /></blockquote>
+</blockquote>
+<blockquote>- OS X based user account support is added using Apple Open Directory services and includes LDAP and Active  Directory user account authentication and authorization</blockquote>
+<blockquote>- Full source for the streamingloadtool the QT, MP4, and 3GPP rtsp/rtp test client.<br />- Separate thread pools are used for RTSP processing and RTP processing<br />- Performance is improved on OS X systems with 4 and 8 cores over previous releases.<br />- Supports hinted files greater than 4GB in size.<br />- The posted pre-built MacOS package runs on MacOS X 10.5 or later only<br />- No build support yet for non-Mac OS X systems (open source submissions are needed to build on other platforms)<br />- No longer posting pre-built install binaries for non-Mac OS X systems.<br />Version 5.5.5 for Mac OS X, Linux and Windows can be downloaded from  <a href="http://developer.apple.com/opensource/server/streaming/index.html">http://developer.apple.com/opensource/server/streaming/index.html</a><br /></blockquote>
+<div>
+<p><br />This release contains open source submissions for the following issues:</p>
+</div>
+<blockquote>- Fixed compilation problem on Solaris 10u3 (Stefan Parvu)<br />- Fixed access log c-bytes value (Amir Wolf)<br />- Fixed access log CPU utilization value<br />- Fixed compilation problem on FC6 linux PPC (Matthew McGillis)<br />- Fix to allow streaming of files with bad hint track references, allows compatibility with some popular encoders (Fredrik Widlund)<br />- Fix StreamingProxy compilation problems for some non-MacOSX platforms<br />- Added a HowTo for uninstalling DSS on a MacOS X system<br />- Misc. fixes for Debian linux (Ben Humpert)<br />- Fixed problem with video sync frame detection for MacOS X on Intel (Lorenzo Vicisano)<br /></blockquote>
+<div>
+<p><br />To submit your own Darwin Streaming Server modifications, please use <a href="../../../trac/newticket">http://dss.macosforge.org/trac/newticket</a></p>
+<p>&nbsp;</p>
+<p><strong>Q. Does the Darwin Streaming Server 6.0.3 install on Mac OS X 10.4 Tiger?</strong></p>
+<p>The posted installer will not install to 10.4. &nbsp;The installer binaries are built for 10.5 and will not run on older versions of the Mac OS.</p>
+<p>&nbsp;</p>
+<p><strong>Q. Can Darwin Streaming Server 6.0.3 be built on Mac OS X 10.4 Tiger?</strong></p>
+<p>Yes, there are some functional differences but the 6.0.3 source can be built using the buildit script as well as the installer package on Mac OS X 10.4. &nbsp;See the file:&nbsp;Documentation/DevNotes.html in the source code.</p>
+<p>&nbsp;</p>
+<p><strong>Q. What does the Darwin Streaming Server source  	include?</strong></p>
+<p>The package includes source files for a streaming server with web based administration that can serve on-disk "hinted" QuickTime, MPEG2-program streams, MPEG-4, and 3GPP files and reflect live  	broadcasts, as well as source for the proxy (except on Windows). See the Documentation directory included with the source for more information about the code.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Where can I find information about streaming with Darwin Streaming Server (DSS)?</span></p>
+<p>http://dss.macosforge.org</p>
+<p>http://soundscreen.com/streaming</p>
+<p>http://streaming411.com/wiki</p>
+<p>http://streaming411.com/forums</p>
+<p>http://lists.apple.com/mailman/listinfo/streaming-server-users</p>
+<p>http://lists.apple.com/mailman/listinfo/streaming-server-dev</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. What is the Darwin Streaming Server development cycle?</span></p>
+<p>Darwin Streaming Server (DSS) is an ongoing project supported by Apple and the DSS the development community. Updates to the source code and pre-compiled binaries are delivered on an as needed basis. If you are interested in seeing the latest snaphshot of the codebase, visit&nbsp;<a href="../../../../" target="_blank">http://dss.macosforge.org</a>.</p>
+<p><span style="font-family: 'Myriad Apple'; font-size: 13px;"> </span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Which CVS tag is the latest stable release</span></p>
+<p>Future CVS use is under review while SVN or simple source tar postings are being evaluated.</p>
+<p>You can download the latest Mac OS X 10.5 release from&nbsp;<span style="font-family: Verdana; font-size: 10px;">&nbsp;<a href="../../../../" target="_blank">http://dss.macosforge.org</a></span></p>
+<p>The&nbsp;http://developer.apple.com/opensource/server/streaming/&nbsp;CVS contains software for DSS Mac OS 10.4 and other OS platforms.</p>
+<p>The latest CVS tag is DSS_5_5_5_Release. The Darwin Streaming Server branch tag is DSS_10_4_Branch. The QuickTime Streaming Server branch tag is MacOS_10_4_Branch.</p>
+<p><strong>Q. What is on the CVS top of tree?</strong></p>
+<p>The top of tree is reserved for merging QuickTime Streaming Server development and unreleased code with Darwin Streaming Server code to create a new major release branch.&nbsp; Bug fixes and submissions are added to branches.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. I submitted a bug fix and/or feature request. When can I expect to see it incorporated into the DSS code base</span>?</p>
+<p>Bug fixes that have been submitted to the Darwin Streaming Server codebase are evaluated and tested by Apple prior to being incorporated into the codebase. Apple engineers make every effort to apply open source developer submitted code changes and fixes to the DSS code base where appropriate. The streaming server mailing list hosted by Apple is a forum for the &nbsp;community to discuss important features, bugs and deployments.&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. My .mp4, .3gp, or .mov file won't stream. Why does the player show 415 invalid media?</span></p>
+<p>The streaming server supports QuickTime Movie (MOV), &nbsp;MPEG-4 (MP4), and 3GPP (3GP) "hinted" files.</p>
+<p>Hinting is a post-process that you apply to your movies to make them RTSP-streamable. You can hint them with QuickTime Pro or the hinting tool available in the MPEG4IP package.</p>
+<p>If you don't hint your .mov's or mp4's they will still be HTTP-downloadable but it will take them some seconds to start playing. You won't need a streaming server for this, just use good old Apache.</p>
+<p>See also <a href="http://soundscreen.com/streaming/compress_hint.html">http://soundscreen.com/streaming/compress_hint.html</a></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I stream mp3 files with DSS?</span></p>
+<p>No, not by default, but the server can be configured using the experimental module "QTSSHttpFileModule" located in the modules.disabled directory. The module must be moved to the modules directory and an http_folder must be defined in the server's preference xml file.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I http download files with DSS?</span></p>
+<p>No, not by default, but the server can be configured using the experimental module "QTSSHttpFileModule" located in the modules.disabled directory. The module must be moved to the modules directory and an http_folder must be defined in the server's preference xml file.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I configure DSS to stream live mp3 streams to simulate a radio station to connected users?</span></p>
+<p>Yes. Use the MP3Broadcaster that is part of DSS to broadcast mp3 v1, v2, and v2.3 files from a server side playlist to DSS. All files must have the same sample rate.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I configure DSS to stream live .mp4, .3gp, or .mov streams to simulate a radio or tv station to connected users?</span></p>
+<p>Yes. Use the PlaylistBroadcaster that is part of DSS, to stream hinted files from a server side playlist to DSS. All video files must have the same frame size and use the same codec and all audio files must have the same sample size and use the same codec.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I update the server side playlists while the playlist is being broadcast?</span></p>
+<p>Yes. Replace the playlist file and add a playlist file using the playlist name and the extension ".updatelist" in the same directory as the playlist file.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I see what the upcoming files are while the server side playlist is playing?</span></p>
+<p>Yes. Look for the file with the extensions ".upcoming" in the directory with the playlist.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I see the name of the current file being played by the server side playlist?</span></p>
+<p>Yes. Look for a file with the extension ".current" in the directory with the playlist.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I tell the playlist broadcaster to stop playing a playlist after 0 or more files?</span></p>
+<p>Yes. &nbsp;Add a playlist file using the playlist name and the extension ".stoplist" in the same directory as the playlist file and it will be read at the next song and then deleted. The broadcast will stop playing at the end of the stoplist.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Can I temporarily insert a set of files into the playlist while it is playing?</span></p>
+<p>Yes. &nbsp;Add a playlist file with the playlist name and the extension ".insertlist" &nbsp;in the same directory as the playlist file and its list will be insert at the end of the next song and then deleted. The broadcast will revert back to the original list after playing the inserted list.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q.Where is the streaming server's preference xml file?</span></p>
+<p>OS X: /Library/QuickTimeStreaming/Config/streamingserver.xml</p>
+<p>Windows: c:\Program Files\Darwin Streaming Server\streamingserver.xml</p>
+<p>Unix style OS: /etc/streaming/streamingserver.xml</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. Where are the default log, movie folder, modules, and configuration paths defined?</span></p>
+<p>See the file defaultPaths.h in the source code.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. What codecs can I use with DSS?</span></p>
+<p>Because DSS streams hinted streaming files, any file that has been successfully hinted can be used by DSS. &nbsp;Hinted files remove the need for the server to understand the media information of the files it streams.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. How do I compile on Linux?</span></p>
+<p>On Unix platforms, type "./Buildit" from within the source directory.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. How do I create an installer directory and tar package?</span></p>
+<p>On Unix platforms, type "./Buildit install". A DarwinStreamingSrvr-Platform install directory and tar file will be created.</p>
+<p>See the file DevNotes.html file &nbsp;in the source code "Documentation" directory for more information.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q. How do I compile on Windows?</span></p>
+<p>DSS 5.5.5 or earlier</p>
+<p>To build Darwin Streaming Server on Windows NT or Windows 2000, you must have a copy of Visual C++ version 6.0. There is a VC++ workspace file located inside the WinNTSupport directory that can be used to to build the server. Once the workspace is open, select Batch Build from the Build menu .</p>
+<p>See the file DevNotes.html file &nbsp;in the source code "Documentation" directory for more information.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q.&nbsp;Why does it take so long (a few seconds) the first time I connect to my streaming server using the QuickTime Player?</span></p>
+<p>The first time the player connects to an IP address it checks the bandwidth to the server which can take a few seconds. &nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q.&nbsp;Why does it take so long (30 seconds or more) the first time I connect to my streaming server using the QuickTime Player?</span></p>
+<p>If there is a firewall or the default UDP port is unavailable the client will try alternate ports and protocols to connect to the server. This process can take up to a minute.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q.&nbsp;How do I get through a firewall?</span></p>
+<p>The best solution is to configure the firewall to allow streaming access minimally on port 554 and preferably with udp support on 6970-6999, and 1220 for web admin access, 8000 for mp3 streaming, and 7070 for some streaming players. &nbsp; When that is not possible, the QuickTime Player will automatically try to switch to the HTTP protocol to stream from the server, this sometimes works but if the standard streaming ports are completely blocked by a firewall then streaming on port 80 should be tried.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q.&nbsp;How do I stream on Port 80 and have a Web server on the same system.</span></p>
+<p>This is not possible without changing either DSS or the web server's port to something other than 80.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q.&nbsp;How do I set up Authenticated access?</span></p>
+<p>Version 6.0 and later</p>
+<p>Turn off guest access in the server preference xml file by setting the "enable_allow_guest_default" preference to&nbsp;"false".</p>
+<p>The server will authenticate users against Directory Services and qtaccess files.</p>
+<p>&nbsp;</p>
+<p>Please see DSS admin guide located at <a href="http://developer.apple.com/opensource/server/streaming/qtss_admin_guide.pdf">http://developer.apple.com/opensource/server/streaming/qtss_admin_guide.pdf</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Q.&nbsp;What does this error mean?</span></p>
+<p>&nbsp;"415 - Unsupported Media Type" -- file is probably not hinted or corrupt. The server was found but the requested media couldn't be accessed.&nbsp;</p>
+<p>"-3285 disconnect" error -- a &nbsp;firewall probably, the server was found but a network failure occured.</p>
+<p>"-5420 connection failed" -- server not found maybe not running or the machine or network is not connected</p>
+<p>"404 file not found" &nbsp;-- means a file is not found on the server or a live stream is no longer broadcasting to the server.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Q. Can I use the QuickTime logo or web badge with  	my server?</strong></p>
+<p>Guidelines for use of the QuickTime logo and web badge are available  	at <a href="../../../softwarelicensing/agreements/quicktime.html">http://developer.apple.com/softwarelicensing/agreements/quicktime.html</a>.</p>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>

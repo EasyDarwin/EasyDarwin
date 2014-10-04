@@ -1,0 +1,427 @@
+#!/bin/bash
+
+# Install script for the Darwin Streaming Server
+# source release
+
+
+echo;echo Installing Darwin Streaming Server;echo
+
+INSTALL_OS=`uname`
+
+if [ $INSTALL_OS != "SunOS" ]; then
+	USERID=`id -u`
+else
+	USERID=`/usr/xpg4/bin/id -u`
+fi
+
+if [ $USERID = 0 ]; then
+
+	echo Checking for and Killing currently running Darwin Streaming Server
+	if [ `uname` = "FreeBSD" ]; then
+		ps -ax | awk '/DarwinStreamingServer/ {print $1}' | xargs kill -9  
+		ps -ax | awk '/streamingadminserver.pl/ {print $1}' | xargs kill -9  
+	fi
+
+	if [ `uname` = "Linux" ]; then
+		ps ax | awk '{print $1" " $5}' | awk '/DarwinStreamingServer/ {print $1}' | xargs -r kill -9  
+		ps ax | awk '/streamingadminserver.pl/ {print $1}' | xargs -r kill -9  
+	fi
+
+	if [ `uname` = "SunOS" -o `uname` = "IRIX" -o `uname` = "IRIX64" ]; then
+		ps -aef | awk '/DarwinStreamingServer/ {print $2}' | xargs -n 2 kill -9  
+		ps -aef | awk '/streamingadminserver.pl/ {print $2}' | xargs -n 1 kill -9 
+	fi
+
+## REMOVED OLD VERSION ##
+
+	echo Removing previous versions of Darwin Streaming Server
+	if [ -f /usr/local/sbin/DarwinStreamingServer ]; then
+		echo removing /usr/local/sbin/DarwinStreamingServer
+		rm -f /usr/local/sbin/DarwinStreamingServer 
+	fi
+	
+	if [ -f /usr/local/bin/PlaylistBroadcaster ]; then
+		echo removing /usr/local/bin/PlaylistBroadcaster
+		rm -f /usr/local/bin/PlaylistBroadcaster
+	fi
+	
+	if [ -f /usr/local/bin/MP3Broadcaster ]; then
+		echo removing /usr/local/bin/MP3Broadcaster
+		rm -f /usr/local/bin/MP3Broadcaster
+	fi
+	
+	if [ -f /usr/local/bin/qtpasswd ]; then
+		echo removing /usr/local/bin/qtpasswd
+		rm -f /usr/local/bin/qtpasswd
+	fi
+
+	if [ -f /usr/local/sbin/streamingadminserver.pl ]; then
+		echo removing /usr/local/sbin/streamingadminserver.pl
+		rm -f /usr/local/sbin/streamingadminserver.pl
+	fi
+
+	if [ -f /usr/local/bin/streamingadminserver.pl ]; then
+		echo removing /usr/local/bin/streamingadminserver.pl
+		rm -f /usr/local/bin/streamingadminserver.pl
+	fi
+
+	if [ -f /usr/local/bin/SpamPro ]; then
+		echo removing /usr/local/bin/SpamPro
+		rm -f /usr/local/bin/SpamPro
+	fi
+
+if [ -e StreamingLoadTool ]; then
+	if [ -f /usr/local/bin/StreamingLoadTool ]; then
+		echo removing /usr/local/bin/StreamingLoadTool
+		rm -f /usr/local/bin/StreamingLoadTool
+	fi
+fi
+	echo
+	
+## BACKUP OLD CONFIG FILES ##
+	echo Backing up previous config files
+
+	if [ -f /etc/streaming/streamingserver.xml ]; then
+		echo backing up /etc/streaming/streamingserver.xml to /etc/streaming/streamingserver.xml.backup
+		mv /etc/streaming/streamingserver.xml /etc/streaming/streamingserver.xml.backup
+	fi
+
+	if [ -f /etc/streaming/streamingadminserver.pem ]; then
+		echo backing up /etc/streaming/streamingadminserver.pem to /etc/streaming/streamingadminserver.pem.backup
+		mv /etc/streaming/streamingadminserver.pem /etc/streaming/streamingadminserver.pem.backup
+	fi
+	
+	if [ -f /etc/streaming/qtusers ]; then
+		echo backing up /etc/streaming/qtusers to /etc/streaming/qtusers.backup
+		mv /etc/streaming/qtusers /etc/streaming/qtusers.backup
+	fi
+
+	if [ -f /etc/streaming/qtgroups ]; then
+		echo backing up /etc/streaming/qtgroups to /etc/streaming/qtgroups.backup
+		mv /etc/streaming/qtgroups /etc/streaming/qtgroups.backup
+	fi
+	
+if [ -e StreamingLoadTool ]; then
+	if [ -f /etc/streaming/streamingloadtool.conf ]; then
+		echo backing up /etc/streaming/streamingloadtool.conf to /etc/streaming/streamingloadtool.conf.backup
+		mv /etc/streaming/streamingloadtool.conf /etc/streaming/streamingloadtool.conf.backup
+	fi
+fi
+	if [ -f /etc/streaming/relayconfig.xml ]; then
+		echo backing up /etc/streaming/relayconfig.xml to /etc/streaming/relayconfig.xml.backup
+		mv /etc/streaming/relayconfig.xml /etc/streaming/relayconfig.xml.backup
+	fi
+
+	echo
+
+## CHANGE PERL PATH IN streamingadminserver.pl AND parse_xml.cgi ##
+
+# Look for perl in the default locations
+if [ -x /usr/freeware/bin/perl ]; then
+	perldef=/usr/freeware/bin/perl
+elif [ -x /usr/local/bin/perl ]; then
+	perldef=/usr/local/bin/perl
+elif [ -x /usr/bin/perl ]; then
+	perldef=/usr/bin/perl
+else
+	perldef=""
+fi
+
+# Test if it is really perl
+$perldef -e 'print "foobar\n"' 2>/dev/null | grep foobar >/dev/null
+
+# if it isn't really perl
+if [ $? != "0" ]; then
+	# prompt the user to enter the path to perl
+	if [ "$perl" = "" ]; then
+		if [ "$perldef" = "" ]; then
+			printf "Full path to perl: "
+			read perl
+			if [ "$perl" = "" ]; then
+				echo "ERROR: No path entered!"
+    	   		echo ""                                
+                	exit 4
+        	fi
+        else
+			printf "Full path to perl (default $perldef): "
+            read perl
+    		if [ "$perl" = "" ]; then
+                	perl=$perldef
+            fi
+        fi
+	fi
+	echo ""
+
+	# Test perl
+	echo "Testing Perl ..."
+	if [ ! -x $perl ]; then
+		echo "ERROR: Failed to find perl at $perl"
+		echo ""
+		exit 1
+	fi
+
+	$perl -e 'print "foobar\n"' 2>/dev/null | grep foobar >/dev/null
+	if [ $? != "0" ]; then
+		echo "ERROR: Failed to run test perl script. Maybe $perl is"
+		echo "not the perl interpreter, or is not installed properly"
+		echo ""
+		exit 1
+	fi
+
+	$perl -e 'exit ($] < 5.002 ? 1 : 0)'
+	if [ $? = "1" ]; then
+		echo "ERROR: Detected old perl version. The streaming server admin requires"
+		echo "perl 5.002 or better to run"
+		echo ""
+		exit 1
+	fi
+
+else
+	if [ "$perl" = "" ]; then
+    	perl=$perldef
+	fi
+fi
+
+if [ "$noperlpath" = "" ]; then
+	echo "Inserting path to perl into scripts.."
+	$perl WebAdmin/perlpath.pl $perl WebAdmin/src/streamingadminserver.pl WebAdmin/WebAdminHtml/parse_xml.cgi 
+    echo ""
+fi
+
+# Add the unprivileged user qtss as the server's run user
+	echo "Creating unprivileged user to run the server = \"qtss\"."
+    if [ $INSTALL_OS = "Linux" ]; then
+        /usr/sbin/groupadd qtss > /dev/null 2>&1
+        /usr/sbin/useradd -M qtss > /dev/null 2>&1
+    else
+        /usr/sbin/groupadd qtss > /dev/null 2>&1
+        /usr/sbin/useradd qtss > /dev/null 2>&1
+    fi
+	
+## INSTALL NEW VERSION ##
+    if [ ! -d /usr/local/sbin ]; then
+            echo creating "/usr/local/sbin" directory
+            mkdir -p /usr/local/sbin
+    fi              
+    if [ ! -d /usr/local/bin ]; then
+            echo creating "/usr/local/bin" directory
+            mkdir -p /usr/local/bin
+    fi              
+
+	echo copying "DarwinStreamingServer" to "/usr/local/sbin/DarwinStreamingServer"
+	cp -f DarwinStreamingServer /usr/local/sbin/
+	
+	
+	echo copying "PlaylistBroadcaster" to "/usr/local/bin/PlaylistBroadcaster"
+	cp -f ./PlaylistBroadcaster.tproj/PlaylistBroadcaster /usr/local/bin/
+	
+	echo copying "MP3Broadcaster" to "/usr/local/bin/MP3Broadcaster"
+	cp -f ./MP3Broadcaster/MP3Broadcaster /usr/local/bin/
+	
+	echo copying "qtpasswd" to "/usr/local/bin/qtpasswd"
+	cp -f ./qtpasswd.tproj/qtpasswd /usr/local/bin/
+
+	# For now, do not copy modules as there are no supported dynamic modules
+	# echo copying modules to "/usr/local/sbin/StreamingServerModules"
+	if [ ! -d /usr/local/sbin/StreamingServerModules ]; then
+		echo creating "/usr/local/sbin/StreamingServerModules" directory
+		mkdir /usr/local/sbin/StreamingServerModules
+	fi
+	#cp -f StreamingServerModules/* /usr/local/sbin/StreamingServerModules/
+
+	if [ -e /usr/local/sbin/StreamingServerModules/QTSSHomeDirectoryModule ]; then
+		echo copying "createuserstreamingdir" to "/usr/local/bin/createuserstreamingdir"
+		cp -f createuserstreamingdir $INSTALLROOT/usr/local/bin/
+	fi
+	
+	if [ ! -d /etc/streaming ]; then
+		echo creating "/etc/streaming" directory
+		mkdir -p /etc/streaming
+	fi
+	
+	if [ ! -e /etc/streaming/streamingserver.xml ]; then
+		/usr/local/sbin/DarwinStreamingServer -x
+	fi
+	
+	chmod 600 /etc/streaming/streamingserver.xml
+	chown qtss /etc/streaming/streamingserver.xml
+	
+	echo;echo copying "relayconfig.xml-Sample" to "/etc/streaming/relayconfig.xml-Sample"
+	cp -f relayconfig.xml-Sample /etc/streaming/relayconfig.xml-Sample
+	chmod 600 /etc/streaming/relayconfig.xml-Sample
+	if [ -e /etc/streaming/relayconfig.xml ]; then
+		chown qtss /etc/streaming/relayconfig.xml
+	fi
+	
+	echo;echo copying "qtusers" to "/etc/streaming/qtusers"
+	cp -f qtusers /etc/streaming/qtusers
+	chmod 600 /etc/streaming/qtusers
+	chown qtss /etc/streaming/qtusers
+
+	echo;echo copying "qtgroups" to "/etc/streaming/qtgroups"
+	cp -f qtgroups /etc/streaming/qtgroups
+	chmod 600 /etc/streaming/qtgroups
+	chown qtss /etc/streaming/qtgroups
+
+	#echo;echo copying "streamingadminserver.pem" to "/etc/streaming/streamingadminserver.pem"
+	#cp -f streamingadminserver.pem /etc/streaming/streamingadminserver.pem
+	#chmod 400 /etc/streaming/streamingadminserver.pem
+
+	if [ ! -d /var/streaming ]; then
+		echo creating "/var/streaming" directory
+		mkdir -p /var/streaming
+	fi
+	
+	echo copying "readme.txt" to "/var/streaming/readme.txt"
+	cp -f ./Documentation/readme.txt /var/streaming/readme.txt
+	
+	echo copying "3rdPartyAcknowledgements.rtf" to "/var/streaming/3rdPartyAcknowledgements.rtf"
+	cp -f ./Documentation/3rdPartyAcknowledgements.rtf /var/streaming/3rdPartyAcknowledgements.rtf
+	
+	if [ ! -d /var/streaming/logs ]; then
+		echo creating "/var/streaming/logs" directory
+		mkdir -p /var/streaming/logs
+	fi
+	
+	if [ ! -d /usr/local/movies ]; then
+		echo creating "/usr/local/movies" directory
+		mkdir -p /usr/local/movies
+	fi
+	
+	if [ ! -d /var/streaming/playlists ]; then
+		echo creating "/var/streaming/playlists" directory
+		mkdir -p /var/streaming/playlists
+	fi
+	chmod 770 /var/streaming/playlists
+	chmod 775 /usr/local/movies
+	
+    echo copying "sample_100kbit.mov" into "/usr/local/movies/sample_100kbit.mov"
+    cp -f sample_100kbit.mov /usr/local/movies/
+
+    echo copying "sample_300kbit.mov" into "/usr/local/movies/sample_300kbit.mov"
+    cp -f sample_300kbit.mov /usr/local/movies/
+
+    echo copying "sample_100kbit.mp4" into "/usr/local/movies/sample_100kbit.mp4"
+    cp -f sample_100kbit.mp4 /usr/local/movies/
+
+    echo copying "sample_300kbit.mp4" into "/usr/local/movies/sample_300kbit.mp4"
+    cp -f sample_300kbit.mp4 /usr/local/movies/
+
+    echo copying "sample.mp3" into "/usr/local/movies/sample.mp3"
+    cp -f sample.mp3 /usr/local/movies/
+
+    echo copying "sample_50kbit.3gp" into "/usr/local/movies/sample_50kbit.3gp"
+    cp -f sample_50kbit.3gp /usr/local/movies/
+
+    echo copying "sample_h264_100kbit.mp4" into "/usr/local/movies/sample_h264_100kbit.mp4"
+    cp -f sample_h264_100kbit.mp4 /usr/local/movies/
+
+    echo copying "sample_h264_300kbit.mp4" into "/usr/local/movies/sample_h264_300kbit.mp4"
+    cp -f sample_h264_300kbit.mp4 /usr/local/movies/
+
+    echo copying "sample_h264_1mbit.mp4" into "/usr/local/movies/sample_h264_1mbit.mp4"
+    cp -f sample_h264_1mbit.mp4 /usr/local/movies/
+
+if [ -e StreamingLoadTool ]; then
+	echo copying "StreamingLoadTool" to "/usr/local/bin/StreamingLoadTool"
+	cp -f ./StreamingLoadTool/StreamingLoadTool /usr/local/bin/
+	
+	echo copying "streamingloadtool.conf" to "/etc/streaming/streamingloadtool.conf"
+	cp -f ./StreamingLoadTool/streamingloadtool.conf /etc/streaming/
+fi
+	
+	#WebAdmin install
+	echo copying "streamingadminserver.pl" into "/usr/local/sbin/streamingadminserver.pl"
+	cp -f ./WebAdmin/src/streamingadminserver.pl /usr/local/sbin/streamingadminserver.pl
+	
+	if [ -d /var/streaming/AdminHtml/ ]; then
+	    echo removing old version of html from "/var/streaming/AdminHtml"
+	    rm -r -f /var/streaming/AdminHtml
+	fi    
+	
+	if [ ! -d /var/streaming/ ]; then
+		echo creating "/var/streaming/AdminHtml" directory
+		mkdir -p /var/streaming/
+	fi
+	echo copying Admin HTML to "/var/streaming/AdminHtml" directory
+	cp -f -r WebAdmin/WebAdminHtml /var/streaming/AdminHtml
+	
+
+	chown -R -f qtss /var/streaming/
+	chown -R -f qtss /etc/streaming/
+	chown -R -f qtss /usr/local/movies/
+
+	echo;echo "Launching streamingadminserver.pl"
+	/usr/local/sbin/streamingadminserver.pl
+	
+	echo;echo Installation Complete
+
+	# Setup for DSS
+	# Prompts for a username and password
+	# that can be used to administer the server
+	
+	echo;echo Darwin Streaming Server Setup;echo
+	
+	# prompt the user to enter the admin username
+	while [ "$username" = "" ]; do
+		printf "In order to administer the Darwin Streaming Server you must create an administrator user [Note: The administrator user name cannot contain spaces, or single or double quote characters, and cannot be more than 255 characters long].\n"
+		
+		printf "Please enter a new administrator user name: "
+		read username
+		if [ "$username" = "" ]; then
+			echo ""
+			echo "Error: No username entered!"
+			echo ""
+		fi
+	done
+	echo ""
+	
+	# prompt the user to enter the admin password
+	while [ "$password" = "" ]; do
+		printf "\nYou must also enter a password for the administrator user [Note: The administrator password cannot contain spaces, or quotes, either single or double, and cannot be more than 80 characters long].\n"
+
+		printf "Please enter a new administrator Password: "
+		stty -echo
+		read password
+		stty echo
+		echo ""
+		printf "Re-enter the new administrator password: "
+		stty -echo
+		read password1
+		stty echo
+		if [ "$password" = "" ]; then
+			echo ""
+			echo "Error: No password entered!"
+			echo ""
+		fi
+		if [ "$password" != "$password1" ]; then
+			echo ""
+			echo "Error: passwords entered do not match!"
+			echo ""
+			password=""
+		fi
+	
+	done
+	echo ""
+	
+	# Add the new admin username to /etc/streaming/qtusers
+	/usr/local/bin/qtpasswd -p $password $username
+	
+	# Add the new admin username to /etc/streaming/qtgroups
+	# and delete the default admin username
+	echo admin: $username > /etc/streaming/qtgroups.tmp
+	mv /etc/streaming/qtgroups.tmp /etc/streaming/qtgroups
+	
+	# Remove the default admin username to /etc/streaming/qtusers
+	/usr/local/bin/qtpasswd -F -d 'aGFja21l' > /dev/null
+		
+	chown -R -f qtss /etc/streaming/
+	
+	echo Setup Complete!
+	
+else
+
+	echo "Unable to perform install"
+	echo "You must be logged in as root to install Darwin Streaming Server";echo
+	exit 1
+fi

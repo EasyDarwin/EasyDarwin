@@ -1,0 +1,111 @@
+#!/bin/sh
+
+x=`uname`
+y=`uname -m`
+
+PLAT=$x.$y
+
+ATOMICLIB=""
+ATOMICFILE=" ../CommonUtilitiesLib/atomic.c"
+echo $PLAT
+
+case $PLAT in
+
+	Linux.ppc)
+		echo "Configuring for a Linux PPC platform"
+		CPLUS='egcs'
+		CCOMP=egcs
+		LINKER='egcs'
+		MACHDEFINES=-D__linuxppc__
+		PTHREADLIB=-lpthread
+		DLLIB=-ldl
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;		
+
+	Linux.i586 | \
+	Linux.i686)
+		echo "Configuring for a Linux x86 platform"
+		CPLUS='egcs'
+		CCOMP=egcs
+		LINKER='egcs'
+		MACHDEFINES=-D__linux__
+		DLLIB=-ldl
+		PTHREADLIB=-lpthread
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+
+	Linux.mips)
+		echo "Configuring for a Linux MIPS (Qube) platform"
+		CPLUS='gcc'
+		CCOMP=gcc
+		LINKER='gcc'
+		MACHDEFINES="-D__linux__ -fhandle-exceptions"
+		DLLIB=-ldl
+		PTHREADLIB=-lpthread
+		SHARED=-shared
+		MODULE_LIBS=
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+
+	FreeBSD.i386)
+		echo "Configuring for a FreeBSD platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER="gcc"
+		PTHREADLIB=-pthread
+		DLLIB=
+		MACHDEFINES="-D__FreeBSD__ -fhandle-exceptions"
+		;;
+	
+#	SunOS.sun4m | \
+#	SunOS.sun4u)
+	SunOS.*)
+		echo "Configuring for a Solaris platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER="gcc"
+		PTHREADLIB=-lpthread
+		DLLIB="-ldl -lsocket -lnsl"
+		MACHDEFINES="-D__solaris__"
+		;;
+		
+	*)
+		echo "I don't know your platform. I'll assume this is a Linux x86 platform."
+		echo "Please edit the BuildServer script & PlatformHeader.h to add your platform."
+		CPLUS='egcs'
+		CCOMP=egcs
+		LINKER='egcs'
+		MACHDEFINES=-D__linux__
+		DLLIB=-ldl
+		PTHREADLIB=-lpthread
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+esac
+
+echo Building for $PLAT with $CPLUS
+
+export CPLUS
+export CCOMP
+export LINKER
+export MACHDEFINES
+export PTHREADLIB
+export DLLIB
+export ATOMICLIB
+export ATOMICFILE
+
+if [ ATOMICLIB  != "" ]; then
+	ranlib ../libatomic.a
+fi
+make -f Makefile.POSIX

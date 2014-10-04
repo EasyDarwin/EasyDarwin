@@ -1,0 +1,19 @@
+# The info file for the Darwin Streaming Server package
+
+# These fields will be displayed in the Info View
+Title		Darwin Streaming Server
+Version		Release 4.1.3 for Mac OS X
+Description	This package contains the Darwin Streaming Server files for Mac OS X.  Install it only on computers running Mac OS X.
+
+# These fields are used for the installed and floppy locations
+DefaultLocation		/
+Relocatable		NO
+Diskname		DarwinStreamingServer #%d
+
+# Other fields
+Application		NO
+LibrarySubdirectory	Standard
+InstallOnly 		NO
+DisableStop		NO
+LongFilenames		YES
+NeedsAuthorization	YES
