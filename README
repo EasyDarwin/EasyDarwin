@@ -6,15 +6,15 @@ Welcome to EasyDarwin Streaming Server, which is an open source Streaming Server
 EasyDarwin is an open source project intended for developers who need to streaming on alternative platforms such as Windows, Linux, Mac, and Solaris,or those developers who need to extend and/or modify the existing streaming server code to fit their needs. Now, EasyDarwin is supported by the open source community: https://github.com/EasyDarwin/
 
 EasyDarwin Support:
-1.	MPEG-4 OnDemand Playback;
-2.	Live Streaming Broadcast(standard RTSP push mode);
-3.	RTSP Relay(standard RTSP pull mode);
+1.MPEG-4 OnDemand Playback;
+2.Live Streaming Broadcast(standard RTSP push mode);
+3.RTSP Relay(standard RTSP pull mode);
 
 We will going to Support:
-1.	RTSP Server Side Record and Playback;
-2.	Some Private protocol docking(Hikvision、Dahua etc.);
-3.  ONVIF protocol docking;
-4.  GB28181 protocol docking;
+1.RTSP Server Side Record and Playback;
+2.Some Private protocol docking(Hikvision、Dahua etc.);
+3.ONVIF protocol docking;
+4.GB28181 protocol docking;
 
 If you have any question about or need some Commercial technical support，Contact us:
 support@easydarwin.org
