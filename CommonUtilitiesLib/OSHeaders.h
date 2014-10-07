@@ -241,11 +241,21 @@
     #define W_OK 1
         
     // POSIX errorcodes
-    #define ENOTCONN 1002
-    #define EADDRINUSE 1004
-    #define EINPROGRESS 1007
-    #define ENOBUFS 1008
-    #define EADDRNOTAVAIL 1009
+	#ifndef ENOTCONN
+		#define ENOTCONN 1002
+	#endif
+	#ifndef EADDRINUSE
+		#define EADDRINUSE 1004
+	#endif
+	#ifndef EINPROGRESS
+		#define EINPROGRESS 1007
+	#endif
+	#ifndef ENOBUFS
+		#define ENOBUFS 1008
+	#endif
+	#ifndef EADDRNOTAVAIL
+		#define EADDRNOTAVAIL 1009
+	#endif
 
     // Winsock does not use iovecs
     struct iovec {

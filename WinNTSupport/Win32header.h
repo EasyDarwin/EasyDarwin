@@ -62,6 +62,9 @@
     #define _WIN32_IE 0x0400
 #endif
 
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_NONSTDC_NO_WARNINGS
+
 #include "PlatformHeader.h"
 #include "revision.h"
 #include <fcntl.h>
