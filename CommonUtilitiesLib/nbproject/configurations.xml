@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="94">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="include" projectFiles="true">
+      <itemPath>ConfParser.h</itemPath>
+      <itemPath>DateTranslator.h</itemPath>
+      <itemPath>DssStopwatch.h</itemPath>
+      <itemPath>EventContext.h</itemPath>
+      <itemPath>FastCopyMacros.h</itemPath>
+      <itemPath>GetWord.h</itemPath>
+      <itemPath>IdleTask.h</itemPath>
+      <itemPath>MakeDir.h</itemPath>
+      <itemPath>MyAssert.h</itemPath>
+      <itemPath>OS.h</itemPath>
+      <itemPath>OSArrayObjectDeleter.h</itemPath>
+      <itemPath>OSBufferPool.h</itemPath>
+      <itemPath>OSCodeFragment.h</itemPath>
+      <itemPath>OSCond.h</itemPath>
+      <itemPath>OSFileSource.h</itemPath>
+      <itemPath>OSHashTable.h</itemPath>
+      <itemPath>OSHeaders.h</itemPath>
+      <itemPath>OSHeap.h</itemPath>
+      <itemPath>OSMemory.h</itemPath>
+      <itemPath>OSMutex.h</itemPath>
+      <itemPath>OSMutexRW.h</itemPath>
+      <itemPath>OSQueue.h</itemPath>
+      <itemPath>OSRef.h</itemPath>
+      <itemPath>OSThread.h</itemPath>
+      <itemPath>PLDoubleLinkedList.h</itemPath>
+      <itemPath>PathDelimiter.h</itemPath>
+      <itemPath>QueryParamList.h</itemPath>
+      <itemPath>ResizeableStringFormatter.h</itemPath>
+      <itemPath>SDPUtils.h</itemPath>
+      <itemPath>SVector.h</itemPath>
+      <itemPath>Socket.h</itemPath>
+      <itemPath>SocketUtils.h</itemPath>
+      <itemPath>StrPtrLen.h</itemPath>
+      <itemPath>StringFormatter.h</itemPath>
+      <itemPath>StringParser.h</itemPath>
+      <itemPath>StringTranslator.h</itemPath>
+      <itemPath>TCPListenerSocket.h</itemPath>
+      <itemPath>TCPSocket.h</itemPath>
+      <itemPath>Task.h</itemPath>
+      <itemPath>TimeoutTask.h</itemPath>
+      <itemPath>Trim.h</itemPath>
+      <itemPath>UDPDemuxer.h</itemPath>
+      <itemPath>UDPSocket.h</itemPath>
+      <itemPath>UDPSocketPool.h</itemPath>
+      <itemPath>UserAgentParser.h</itemPath>
+      <itemPath>atomic.h</itemPath>
+      <itemPath>base64.h</itemPath>
+      <itemPath>ev.h</itemPath>
+      <itemPath>md5.h</itemPath>
+      <itemPath>md5digest.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="CommonUtilitiesLib"
+                   displayName="source"
+                   projectFiles="true">
+      <itemPath>ConfParser.cpp</itemPath>
+      <itemPath>DateTranslator.cpp</itemPath>
+      <itemPath>EventContext.cpp</itemPath>
+      <itemPath>GetWord.c</itemPath>
+      <itemPath>IdleTask.cpp</itemPath>
+      <itemPath>MakeDir.c</itemPath>
+      <itemPath>MyAssert.cpp</itemPath>
+      <itemPath>OS.cpp</itemPath>
+      <itemPath>OSBufferPool.cpp</itemPath>
+      <itemPath>OSCodeFragment.cpp</itemPath>
+      <itemPath>OSCond.cpp</itemPath>
+      <itemPath>OSFileSource.cpp</itemPath>
+      <itemPath>OSHeap.cpp</itemPath>
+      <itemPath>OSMutex.cpp</itemPath>
+      <itemPath>OSMutexRW.cpp</itemPath>
+      <itemPath>OSQueue.cpp</itemPath>
+      <itemPath>OSRef.cpp</itemPath>
+      <itemPath>OSThread.cpp</itemPath>
+      <itemPath>QueryParamList.cpp</itemPath>
+      <itemPath>ResizeableStringFormatter.cpp</itemPath>
+      <itemPath>SDPUtils.cpp</itemPath>
+      <itemPath>Socket.cpp</itemPath>
+      <itemPath>SocketUtils.cpp</itemPath>
+      <itemPath>StrPtrLen.cpp</itemPath>
+      <itemPath>StringFormatter.cpp</itemPath>
+      <itemPath>StringParser.cpp</itemPath>
+      <itemPath>StringTranslator.cpp</itemPath>
+      <itemPath>TCPListenerSocket.cpp</itemPath>
+      <itemPath>TCPSocket.cpp</itemPath>
+      <itemPath>Task.cpp</itemPath>
+      <itemPath>TimeoutTask.cpp</itemPath>
+      <itemPath>Trim.c</itemPath>
+      <itemPath>UDPDemuxer.cpp</itemPath>
+      <itemPath>UDPSocket.cpp</itemPath>
+      <itemPath>UDPSocketPool.cpp</itemPath>
+      <itemPath>UserAgentParser.cpp</itemPath>
+      <itemPath>atomic.cpp</itemPath>
+      <itemPath>base64.c</itemPath>
+      <itemPath>ev.cpp</itemPath>
+      <itemPath>md5.c</itemPath>
+      <itemPath>md5digest.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles" displayName="资源文件" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="测试文件"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="重要文件"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+            <pElem>..</pElem>
+            <pElem>../APIStubLib</pElem>
+            <pElem>../RTPMetaInfoLib</pElem>
+            <pElem>../APICommonCode</pElem>
+          </incDir>
+          <incFile>
+            <pElem>../PlatformHeader.h</pElem>
+          </incFile>
+          <commandLine>-fPIC</commandLine>
+        </ccTool>
+        <archiverTool>
+          <output>../${CND_CONF}/libCommonUtilitiesLib.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ConfParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DateTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DateTranslator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DssStopwatch.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EventContext.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FastCopyMacros.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GetWord.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="GetWord.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IdleTask.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="IdleTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MakeDir.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MakeDir.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MyAssert.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="MyAssert.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OS.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSArrayObjectDeleter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSBufferPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSBufferPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSCodeFragment.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSCodeFragment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSCond.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSCond.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSFileSource.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSFileSource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSHashTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSHeaders.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSHeap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSMutex.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSMutex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSMutexRW.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSMutexRW.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSQueue.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRef.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSThread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PLDoubleLinkedList.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PathDelimiter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="QueryParamList.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="QueryParamList.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ResizeableStringFormatter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ResizeableStringFormatter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SDPUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SDPUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SVector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Socket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Socket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SocketUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StrPtrLen.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StrPtrLen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StringFormatter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StringFormatter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StringParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StringParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StringTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StringTranslator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TCPListenerSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TCPListenerSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TCPSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TCPSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Task.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TimeoutTask.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TimeoutTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Trim.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Trim.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDPDemuxer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDPDemuxer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDPSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDPSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDPSocketPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDPSocketPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UserAgentParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UserAgentParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="atomic.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="atomic.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="base64.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="base64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ev.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ev.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="md5.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="md5digest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>.</pElem>
+            <pElem>..</pElem>
+            <pElem>../APIStubLib</pElem>
+            <pElem>../RTPMetaInfoLib</pElem>
+            <pElem>../APICommonCode</pElem>
+          </incDir>
+          <incFile>
+            <pElem>../PlatformHeader.h</pElem>
+          </incFile>
+          <commandLine>-fPIC</commandLine>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+          <output>../${CND_CONF}/libCommonUtilitiesLib.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ConfParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DateTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DateTranslator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DssStopwatch.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EventContext.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FastCopyMacros.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GetWord.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="GetWord.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IdleTask.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="IdleTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MakeDir.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="MakeDir.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="MyAssert.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="MyAssert.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OS.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSArrayObjectDeleter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSBufferPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSBufferPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSCodeFragment.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSCodeFragment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSCond.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSCond.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSFileSource.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSFileSource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSHashTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSHeaders.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSHeap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSMutex.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSMutex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSMutexRW.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSMutexRW.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSQueue.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRef.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSThread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OSThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PLDoubleLinkedList.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PathDelimiter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="QueryParamList.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="QueryParamList.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ResizeableStringFormatter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ResizeableStringFormatter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SDPUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SDPUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SVector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Socket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Socket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SocketUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StrPtrLen.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StrPtrLen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StringFormatter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StringFormatter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StringParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StringParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StringTranslator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StringTranslator.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TCPListenerSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TCPListenerSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TCPSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TCPSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Task.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Task.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="TimeoutTask.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TimeoutTask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Trim.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="Trim.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDPDemuxer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDPDemuxer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDPSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDPSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UDPSocketPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UDPSocketPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="UserAgentParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="UserAgentParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="atomic.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="atomic.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="base64.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="base64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ev.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ev.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="md5.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="md5digest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

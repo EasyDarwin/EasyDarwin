@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Install script for the Darwin Streaming Server
+# Install script for the Easy Darwin Streaming Server
 # source release
 
 
-echo;echo Installing Darwin Streaming Server;echo
+echo;echo Installing Easy Darwin Streaming Server;echo
 
 INSTALL_OS=`uname`
 
@@ -16,28 +16,28 @@ fi
 
 if [ $USERID = 0 ]; then
 
-	echo Checking for and Killing currently running Darwin Streaming Server
+	echo Checking for and Killing currently running Easy Darwin Streaming Server
 	if [ `uname` = "FreeBSD" ]; then
-		ps -ax | awk '/DarwinStreamingServer/ {print $1}' | xargs kill -9  
+		ps -ax | awk '/EasyDarwin/ {print $1}' | xargs kill -9  
 		ps -ax | awk '/streamingadminserver.pl/ {print $1}' | xargs kill -9  
 	fi
 
 	if [ `uname` = "Linux" ]; then
-		ps ax | awk '{print $1" " $5}' | awk '/DarwinStreamingServer/ {print $1}' | xargs -r kill -9  
+		ps ax | awk '{print $1" " $5}' | awk '/EasyDarwin/ {print $1}' | xargs -r kill -9  
 		ps ax | awk '/streamingadminserver.pl/ {print $1}' | xargs -r kill -9  
 	fi
 
 	if [ `uname` = "SunOS" -o `uname` = "IRIX" -o `uname` = "IRIX64" ]; then
-		ps -aef | awk '/DarwinStreamingServer/ {print $2}' | xargs -n 2 kill -9  
+		ps -aef | awk '/EasyDarwin/ {print $2}' | xargs -n 2 kill -9  
 		ps -aef | awk '/streamingadminserver.pl/ {print $2}' | xargs -n 1 kill -9 
 	fi
 
 ## REMOVED OLD VERSION ##
 
-	echo Removing previous versions of Darwin Streaming Server
-	if [ -f /usr/local/sbin/DarwinStreamingServer ]; then
-		echo removing /usr/local/sbin/DarwinStreamingServer
-		rm -f /usr/local/sbin/DarwinStreamingServer 
+	echo Removing previous versions of Easy Darwin Streaming Server
+	if [ -f /usr/local/sbin/EasyDarwin ]; then
+		echo removing /usr/local/sbin/EasyDarwin
+		rm -f /usr/local/sbin/EasyDarwin 
 	fi
 	
 	if [ -f /usr/local/bin/PlaylistBroadcaster ]; then
@@ -114,85 +114,11 @@ fi
 
 	echo
 
-## CHANGE PERL PATH IN streamingadminserver.pl AND parse_xml.cgi ##
-
-# Look for perl in the default locations
-if [ -x /usr/freeware/bin/perl ]; then
-	perldef=/usr/freeware/bin/perl
-elif [ -x /usr/local/bin/perl ]; then
-	perldef=/usr/local/bin/perl
-elif [ -x /usr/bin/perl ]; then
-	perldef=/usr/bin/perl
-else
-	perldef=""
-fi
-
-# Test if it is really perl
-$perldef -e 'print "foobar\n"' 2>/dev/null | grep foobar >/dev/null
-
-# if it isn't really perl
-if [ $? != "0" ]; then
-	# prompt the user to enter the path to perl
-	if [ "$perl" = "" ]; then
-		if [ "$perldef" = "" ]; then
-			printf "Full path to perl: "
-			read perl
-			if [ "$perl" = "" ]; then
-				echo "ERROR: No path entered!"
-    	   		echo ""                                
-                	exit 4
-        	fi
-        else
-			printf "Full path to perl (default $perldef): "
-            read perl
-    		if [ "$perl" = "" ]; then
-                	perl=$perldef
-            fi
-        fi
-	fi
-	echo ""
-
-	# Test perl
-	echo "Testing Perl ..."
-	if [ ! -x $perl ]; then
-		echo "ERROR: Failed to find perl at $perl"
-		echo ""
-		exit 1
-	fi
-
-	$perl -e 'print "foobar\n"' 2>/dev/null | grep foobar >/dev/null
-	if [ $? != "0" ]; then
-		echo "ERROR: Failed to run test perl script. Maybe $perl is"
-		echo "not the perl interpreter, or is not installed properly"
-		echo ""
-		exit 1
-	fi
-
-	$perl -e 'exit ($] < 5.002 ? 1 : 0)'
-	if [ $? = "1" ]; then
-		echo "ERROR: Detected old perl version. The streaming server admin requires"
-		echo "perl 5.002 or better to run"
-		echo ""
-		exit 1
-	fi
-
-else
-	if [ "$perl" = "" ]; then
-    	perl=$perldef
-	fi
-fi
-
-if [ "$noperlpath" = "" ]; then
-	echo "Inserting path to perl into scripts.."
-	$perl WebAdmin/perlpath.pl $perl WebAdmin/src/streamingadminserver.pl WebAdmin/WebAdminHtml/parse_xml.cgi 
-    echo ""
-fi
-
 # Add the unprivileged user qtss as the server's run user
 	echo "Creating unprivileged user to run the server = \"qtss\"."
     if [ $INSTALL_OS = "Linux" ]; then
         /usr/sbin/groupadd qtss > /dev/null 2>&1
-        /usr/sbin/useradd -M qtss > /dev/null 2>&1
+        /usr/sbin/useradd -M qtss -g qtss > /dev/null 2>&1
     else
         /usr/sbin/groupadd qtss > /dev/null 2>&1
         /usr/sbin/useradd qtss > /dev/null 2>&1
@@ -208,8 +134,8 @@ fi
             mkdir -p /usr/local/bin
     fi              
 
-	echo copying "DarwinStreamingServer" to "/usr/local/sbin/DarwinStreamingServer"
-	cp -f DarwinStreamingServer /usr/local/sbin/
+	echo copying "EasyDarwin" to "/usr/local/sbin/EasyDarwin"
+	cp -f EasyDarwin /usr/local/sbin/
 	
 	
 	echo copying "PlaylistBroadcaster" to "/usr/local/bin/PlaylistBroadcaster"
@@ -240,7 +166,7 @@ fi
 	fi
 	
 	if [ ! -e /etc/streaming/streamingserver.xml ]; then
-		/usr/local/sbin/DarwinStreamingServer -x
+		/usr/local/sbin/EasyDarwin -x
 	fi
 	
 	chmod 600 /etc/streaming/streamingserver.xml
@@ -295,33 +221,9 @@ fi
 	chmod 770 /var/streaming/playlists
 	chmod 775 /usr/local/movies
 	
-    echo copying "sample_100kbit.mov" into "/usr/local/movies/sample_100kbit.mov"
-    cp -f sample_100kbit.mov /usr/local/movies/
-
-    echo copying "sample_300kbit.mov" into "/usr/local/movies/sample_300kbit.mov"
-    cp -f sample_300kbit.mov /usr/local/movies/
-
-    echo copying "sample_100kbit.mp4" into "/usr/local/movies/sample_100kbit.mp4"
-    cp -f sample_100kbit.mp4 /usr/local/movies/
-
-    echo copying "sample_300kbit.mp4" into "/usr/local/movies/sample_300kbit.mp4"
-    cp -f sample_300kbit.mp4 /usr/local/movies/
-
-    echo copying "sample.mp3" into "/usr/local/movies/sample.mp3"
-    cp -f sample.mp3 /usr/local/movies/
-
-    echo copying "sample_50kbit.3gp" into "/usr/local/movies/sample_50kbit.3gp"
-    cp -f sample_50kbit.3gp /usr/local/movies/
-
-    echo copying "sample_h264_100kbit.mp4" into "/usr/local/movies/sample_h264_100kbit.mp4"
-    cp -f sample_h264_100kbit.mp4 /usr/local/movies/
-
-    echo copying "sample_h264_300kbit.mp4" into "/usr/local/movies/sample_h264_300kbit.mp4"
-    cp -f sample_h264_300kbit.mp4 /usr/local/movies/
-
-    echo copying "sample_h264_1mbit.mp4" into "/usr/local/movies/sample_h264_1mbit.mp4"
-    cp -f sample_h264_1mbit.mp4 /usr/local/movies/
-
+    echo copying "Demo.mp4" into "/usr/local/movies/Demo.mp4"
+    cp -f Demo.mp4 /usr/local/movies/
+    
 if [ -e StreamingLoadTool ]; then
 	echo copying "StreamingLoadTool" to "/usr/local/bin/StreamingLoadTool"
 	cp -f ./StreamingLoadTool/StreamingLoadTool /usr/local/bin/
@@ -329,42 +231,18 @@ if [ -e StreamingLoadTool ]; then
 	echo copying "streamingloadtool.conf" to "/etc/streaming/streamingloadtool.conf"
 	cp -f ./StreamingLoadTool/streamingloadtool.conf /etc/streaming/
 fi
-	
-	#WebAdmin install
-	echo copying "streamingadminserver.pl" into "/usr/local/sbin/streamingadminserver.pl"
-	cp -f ./WebAdmin/src/streamingadminserver.pl /usr/local/sbin/streamingadminserver.pl
-	
-	if [ -d /var/streaming/AdminHtml/ ]; then
-	    echo removing old version of html from "/var/streaming/AdminHtml"
-	    rm -r -f /var/streaming/AdminHtml
-	fi    
-	
-	if [ ! -d /var/streaming/ ]; then
-		echo creating "/var/streaming/AdminHtml" directory
-		mkdir -p /var/streaming/
-	fi
-	echo copying Admin HTML to "/var/streaming/AdminHtml" directory
-	cp -f -r WebAdmin/WebAdminHtml /var/streaming/AdminHtml
-	
-
-	chown -R -f qtss /var/streaming/
-	chown -R -f qtss /etc/streaming/
-	chown -R -f qtss /usr/local/movies/
-
-	echo;echo "Launching streamingadminserver.pl"
-	/usr/local/sbin/streamingadminserver.pl
-	
+		
 	echo;echo Installation Complete
 
-	# Setup for DSS
+	# Setup for EasyDarwin
 	# Prompts for a username and password
 	# that can be used to administer the server
 	
-	echo;echo Darwin Streaming Server Setup;echo
+	echo;echo Easy Darwin Streaming Server Setup;echo
 	
 	# prompt the user to enter the admin username
 	while [ "$username" = "" ]; do
-		printf "In order to administer the Darwin Streaming Server you must create an administrator user [Note: The administrator user name cannot contain spaces, or single or double quote characters, and cannot be more than 255 characters long].\n"
+		printf "In order to administer the Easy Darwin Streaming Server you must create an administrator user [Note: The administrator user name cannot contain spaces, or single or double quote characters, and cannot be more than 255 characters long].\n"
 		
 		printf "Please enter a new administrator user name: "
 		read username
@@ -422,6 +300,6 @@ fi
 else
 
 	echo "Unable to perform install"
-	echo "You must be logged in as root to install Darwin Streaming Server";echo
+	echo "You must be logged in as root to install Easy Darwin Streaming Server";echo
 	exit 1
 fi
