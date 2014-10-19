@@ -6,7 +6,7 @@ C++ = $(CPLUS)
 CC = $(CCOMP)
 LINK = $(LINKER)
 CCFLAGS += $(COMPILER_FLAGS)  -DDSS_USE_API_CALLBACKS -g -Wall -Wno-format-y2k $(INCLUDE_FLAG) PlatformHeader.h
-LIBS = $(CORE_LINK_LIBS) -lCommonUtilitiesLib -lQTFileLib
+LIBS = -lCommonUtilitiesLib -lQTFileLib $(CORE_LINK_LIBS) 
 
 # OPTIMIZATION
 CCFLAGS += -O3

@@ -6,7 +6,7 @@ C++ = $(CPLUS)
 CC = $(CCOMP)
 LINK = $(LINKER)
 CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../../PlatformHeader.h -g -Wall
-LIBS = $(CORE_LINK_LIBS) -lCommonUtilitiesLib  -lQTFileExternalLib ../../CommonUtilitiesLib/libCommonUtilitiesLib.a
+LIBS = -lCommonUtilitiesLib  -lQTFileExternalLib $(CORE_LINK_LIBS) ../../CommonUtilitiesLib/libCommonUtilitiesLib.a
 
 #OPTIMIZATION
 CCFLAGS += -O3
