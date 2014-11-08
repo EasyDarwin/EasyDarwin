@@ -1,1 +1,0 @@
-gdb build/MP3Broadcaster -x gdb_script
