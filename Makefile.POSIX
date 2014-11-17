@@ -6,7 +6,7 @@ C++ = $(CPLUS)
 CC = $(CCOMP)
 LINK = $(LINKER)
 CCFLAGS += $(COMPILER_FLAGS)  -DDSS_USE_API_CALLBACKS -g -Wall -Wno-format-y2k $(INCLUDE_FLAG) PlatformHeader.h
-LIBS = -lCommonUtilitiesLib -lQTFileLib $(CORE_LINK_LIBS) 
+LIBS = -lCommonUtilitiesLib -lQTFileLib -lParseDeviceConfig $(CORE_LINK_LIBS) 
 
 # OPTIMIZATION
 CCFLAGS += -O3
@@ -14,6 +14,7 @@ CCFLAGS += -O3
 # EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
 
 CCFLAGS += -I.
+CCFLAGS += -IParseDeviceConfig
 CCFLAGS += -IQTFileLib
 CCFLAGS += -IOSMemoryLib
 CCFLAGS += -IRTSPClientLib
@@ -47,6 +48,7 @@ CCFLAGS += -IServer.tproj
 
 LINKOPTS = -LCommonUtilitiesLib
 LINKOPTS += -LQTFileLib
+LINKOPTS += -LParseDeviceConfig
 
 C++FLAGS = $(CCFLAGS)
 
@@ -93,6 +95,7 @@ CPPFILES = 	Server.tproj/QTSSExpirationDate.cpp\
 			OSMemoryLib/OSMemory.cpp \
 			RTSPClientLib/RTSPClient.cpp \
 			RTSPClientLib/ClientSocket.cpp \
+			RTSPClientLib/RTSPRelaySession.cpp \
 			HTTPUtilitiesLib/HTTPProtocol.cpp \
 			HTTPUtilitiesLib/HTTPRequest.cpp \
 			RTCPUtilitiesLib/RTCPAPPPacket.cpp\
@@ -124,6 +127,7 @@ CPPFILES = 	Server.tproj/QTSSExpirationDate.cpp\
 			APIModules/QTSSReflectorModule/RelaySDPSourceInfo.cpp \
 			APIModules/QTSSReflectorModule/RTPSessionOutput.cpp \
 			APIModules/QTSSReflectorModule/SequenceNumberMap.cpp \
+			APIModules/QTSSReflectorModule/QTSSOnDemandRelayModule.cpp \
 			APIModules/QTSSWebDebugModule/QTSSWebDebugModule.cpp \
 			APIModules/QTSSWebStatsModule/QTSSWebStatsModule.cpp \
 			APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp \
@@ -140,7 +144,8 @@ CPPFILES = 	Server.tproj/QTSSExpirationDate.cpp\
 # CCFLAGS += $(foreach dir,$(HDRS),-I$(dir))
 
 LIBFILES = 	QTFileLib/libQTFileLib.a \
-			CommonUtilitiesLib/libCommonUtilitiesLib.a
+			CommonUtilitiesLib/libCommonUtilitiesLib.a \
+			ParseDeviceConfig/libParseDeviceConfig.a
 
 all: EasyDarwin
 

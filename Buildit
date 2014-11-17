@@ -331,6 +331,10 @@ else
 	cd CommonUtilitiesLib/
 	$MAKE -f Makefile.POSIX $*
 
+	echo Building ParseDeviceConfig for $PLAT with $CPLUS
+	cd ../ParseDeviceConfig/
+	$MAKE -f Makefile.POSIX $*
+	
 	echo Building QTFileLib internal for $PLAT with $CPLUS
 	cd ../QTFileLib/
 	

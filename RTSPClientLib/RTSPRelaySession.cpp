@@ -560,7 +560,11 @@ OS_Error RTSPRelaySession::SendDescribe()
 		//重试
 		else if ((theErr == EINPROGRESS) || (theErr == EAGAIN))
 		{
+#ifndef __Win32__
+			usleep(250*1000);
+#else
 			::Sleep(250);
+#endif
 		}
 		//完成退出，返回成功或者失败
 		else

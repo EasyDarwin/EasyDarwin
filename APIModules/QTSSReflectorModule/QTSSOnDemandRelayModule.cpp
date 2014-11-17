@@ -352,7 +352,7 @@ void DoDescribeAddRequiredSDPLines2(QTSS_StandardRTSP_Params* inParams, Reflecto
             editedSDP->Put("o=broadcast_sdp ");
             char tempBuff[256]= "";               
             tempBuff[255] = 0;
-            qtss_snprintf(tempBuff,sizeof(tempBuff) - 1, "%lu", (UInt32) theSession);
+            qtss_snprintf(tempBuff,sizeof(tempBuff) - 1, "%lu", (UInt64) theSession);
             editedSDP->Put(tempBuff);
 
             editedSDP->Put(" ");
@@ -887,7 +887,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
 			//}
             else
             {
-				qtss_printf("QTSSReflector.cpp:RemoveOutput Release SESSION=%lu RefCount=%d\n",(UInt32)inSession,theSessionRef->GetRefCount());
+				qtss_printf("QTSSReflector.cpp:RemoveOutput Release SESSION=%lu RefCount=%d\n",(UInt64)inSession,theSessionRef->GetRefCount());
                 sSessionMap->Release(theSessionRef); //  one of the sessions on the ref is ending just decrement the count
             }
         }
