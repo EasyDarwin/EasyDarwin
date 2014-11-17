@@ -193,7 +193,14 @@ class ReflectorSession
         QTSS_ClientSessionObject fBroadcasterSession;
         SInt64      fInitTimeMS;
 
-        Bool16      fHasBufferedStreams;         
+        Bool16      fHasBufferedStreams;   
+
+	private:
+		QTSS_Object fRTSPRelaySession;
+
+	public:
+		QTSS_Object GetRTSPRelaySession()	{ return fRTSPRelaySession;}
+		void SetRTSPRelaySession(QTSS_Object relaySession)	{ fRTSPRelaySession = relaySession; }
          
 };
 

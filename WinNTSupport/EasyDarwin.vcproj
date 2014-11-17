@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../,../Server.tproj/,../CommonUtilitiesLib/,../QTFileLib/,../RTPMetaInfoLib/,../PrefsSourceLib/,../APIModules/,../APIStubLib/,../APICommonCode/,../HTTPUtilitiesLib/,../RTCPUtilitiesLib/,../RTSPClientLib/,../APIModules/QTSSFileModule/,../APIModules/QTSSHttpFileModule/,../APIModules/QTSSAccessModule/,../APIModules/QTSSAccessLogModule/,../APIModules/QTSSPosixFileSysModule/,../APIModules/QTSSAdminModule/,../APIModules/QTSSReflectorModule/,../APIModules/QTSSWebStatsModule/,../APIModules/QTSSWebDebugModule/,../APIModules/QTSSFlowControlModule/,../APIModules/QTSSMP3StreamingModule"
+				AdditionalIncludeDirectories="../;../Server.tproj/;../CommonUtilitiesLib/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIModules/;../APIStubLib/;../APICommonCode/;../HTTPUtilitiesLib/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule;../ParseDeviceConfig/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/StreamingServer.pch"
@@ -75,6 +75,7 @@
 				OutputFile="..\WinNTSupport\Debug\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				IgnoreDefaultLibraryNames="LIBCMTD.LIB"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/DarwinStreamingServer.pdb"
 				SubSystem="1"
@@ -137,7 +138,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../,../Server.tproj/,../CommonUtilitiesLib/,../QTFileLib/,../RTPMetaInfoLib/,../PrefsSourceLib/,../APIModules/,../APIStubLib/,../APICommonCode/,../HTTPUtilitiesLib/,../RTCPUtilitiesLib/,../RTSPClientLib/,../APIModules/QTSSFileModule/,../APIModules/QTSSHttpFileModule/,../APIModules/QTSSAccessModule/,../APIModules/QTSSAccessLogModule/,../APIModules/QTSSPosixFileSysModule/,../APIModules/QTSSAdminModule/,../APIModules/QTSSReflectorModule/,../APIModules/QTSSWebStatsModule/,../APIModules/QTSSWebDebugModule/,../APIModules/QTSSFlowControlModule/,../APIModules/QTSSMP3StreamingModule"
+				AdditionalIncludeDirectories="../;../Server.tproj/;../CommonUtilitiesLib/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIModules/;../APIStubLib/;../APICommonCode/;../HTTPUtilitiesLib/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule;../ParseDeviceConfig/"
 				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -162,10 +163,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libcmt.lib odbc32.lib odbccp32.lib ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\WinNTSupport\Release\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				ProgramDatabaseFile=".\Release/DarwinStreamingServer.pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -683,6 +685,10 @@
 				<Filter
 					Name="QTSSReflectorModule"
 					>
+					<File
+						RelativePath="..\APIModules\QTSSReflectorModule\QTSSOnDemandRelayModule.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\APIModules\QTSSReflectorModule\QTSSReflectorModule.cpp"
 						>
@@ -1768,6 +1774,10 @@
 							ForcedIncludeFiles=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\RTSPClientLib\RTSPRelaySession.cpp"
+					>
 				</File>
 			</Filter>
 			<Filter

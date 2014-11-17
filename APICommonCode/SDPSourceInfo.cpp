@@ -354,10 +354,25 @@ void SDPSourceInfo::Parse(char* sdpData, UInt32 sdpLen)
                 }
                 else if (aLineType.Equal(sControlStr))
                 {           
-                    //mark the trackID if that's what this line has
-                    aParser.ConsumeUntil(NULL, '=');
-                    aParser.ConsumeUntil(NULL, StringParser::sDigitMask);
-                    fStreamArray[theStreamIndex - 1].fTrackID = aParser.ConsumeInteger(NULL);
+					// Modify By EasyDarwin
+					//if ((fStreamArray[theStreamIndex - 1].fTrackName.Len == 0) &&
+     //                   (aParser.GetThru(NULL, ' ')))
+					{
+						StrPtrLen trackNameFromParser;
+						aParser.ConsumeUntil(NULL,':');
+						aParser.ConsumeLength(NULL,1);
+						aParser.GetThruEOL(&trackNameFromParser);
+
+						char* temp = trackNameFromParser.GetAsCString();
+//                                                qtss_printf("trackNameFromParser (%x) = %s\n", temp, temp);
+						(fStreamArray[theStreamIndex - 1].fTrackName).Set(temp, trackNameFromParser.Len);
+//                                                qtss_printf("%s\n", fStreamArray[theStreamIndex - 1].fTrackName.Ptr);
+					
+						StringParser tParser(&trackNameFromParser);
+						tParser.ConsumeUntil(NULL, '=');
+						tParser.ConsumeUntil(NULL, StringParser::sDigitMask);
+						fStreamArray[theStreamIndex - 1].fTrackID = tParser.ConsumeInteger(NULL);
+					}
                 }
                 else if (aLineType.Equal(sBufferDelayStr))
                 {   // if a BufferDelay is found then set all of the streams to the same buffer delay (it's global)

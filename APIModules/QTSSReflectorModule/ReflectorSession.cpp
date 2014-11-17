@@ -99,7 +99,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo)
     fSocketStream(NULL),
     fBroadcasterSession(NULL),
     fInitTimeMS(OS::Milliseconds()),
-    fHasBufferedStreams(false)
+    fHasBufferedStreams(false),
+	fRTSPRelaySession(NULL)
 {
 
     fQueueElem.SetEnclosingObject(this);

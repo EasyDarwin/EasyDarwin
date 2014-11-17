@@ -1103,9 +1103,15 @@ OS_Error RTSPClient::SendUDPSetup(UInt32 inTrackID, UInt16 inClientPort)
     return this->DoTransaction();
 }
 
-OS_Error RTSPClient::SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16 inClientRTCPid)
+OS_Error RTSPClient::SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16 inClientRTCPid, StrPtrLen* inTrackNamePtr)
 {
     fSetupTrackID = inTrackID; // Needed when SETUP response is received.
+	
+	char trackName[64] = { 0 };
+	if(inTrackNamePtr)
+		::strncpy(trackName,inTrackNamePtr->Ptr, inTrackNamePtr->Len);
+	else
+		::sprintf(trackName,"%s=%"_U32BITARG_"",fControlID, inTrackID);
     
     if (!IsTransactionInProgress())
     {   
@@ -1115,18 +1121,18 @@ OS_Error RTSPClient::SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16
 		
         if (fTransportMode == kPushMode)
 			fmt.PutFmtStr(
-                    "SETUP %s/%s=%"_U32BITARG_" RTSP/1.0\r\n"
+                    "SETUP %s/%s RTSP/1.0\r\n"
                     "CSeq: %"_U32BITARG_"\r\n"
                     "%sTransport: RTP/AVP/TCP;unicast;mode=record;interleaved=%u-%u\r\n"
                     "User-agent: %s\r\n",
-                    fURL.Ptr,fControlID, inTrackID, fCSeq, fSessionID.Ptr,inClientRTPid, inClientRTCPid, fUserAgent);
+                    fURL.Ptr, trackName, fCSeq, fSessionID.Ptr,inClientRTPid, inClientRTCPid, fUserAgent);
         else
             fmt.PutFmtStr(
-                    "SETUP %s/%s=%"_U32BITARG_" RTSP/1.0\r\n"
+                    "SETUP %s/%s RTSP/1.0\r\n"
                     "CSeq: %"_U32BITARG_"\r\n"
                     "%sTransport: RTP/AVP/TCP;unicast;interleaved=%u-%u\r\n"
                     "%sUser-agent: %s\r\n",
-                    fURL.Ptr,fControlID, inTrackID, fCSeq, fSessionID.Ptr, inClientRTPid, inClientRTCPid,fSetupHeaders, fUserAgent);
+                    fURL.Ptr, trackName, fCSeq, fSessionID.Ptr, inClientRTPid, inClientRTCPid,fSetupHeaders, fUserAgent);
 
 		if (fBandwidth != 0)
 			fmt.PutFmtStr("Bandwidth: %"_U32BITARG_"\r\n", fBandwidth);
@@ -1386,7 +1392,7 @@ OS_Error RTSPClient::SendTeardown()
 OS_Error    RTSPClient::GetMediaPacket(UInt32* outTrackID, Bool16* outIsRTCP, char** outBuffer, UInt32* outLen)
 {
     static const UInt32 kPacketHeaderLen = 4;
-    static const UInt32 kMaxPacketSize = 4096;
+    static const UInt32 kMaxPacketSize = 20480;//10M
     
     // We need to buffer until we get a full packet.
     if (fPacketBuffer == NULL)
@@ -1440,9 +1446,47 @@ OS_Error    RTSPClient::GetMediaPacket(UInt32* outTrackID, Bool16* outIsRTCP, ch
 
     if (fPacketBufferOffset > kPacketHeaderLen)
     {
-        Assert(fPacketBuffer[0] == '$');
+		//qtss_printf("packetbufferoffset:%d,theRecvLen:%d",fPacketBufferOffset,theRecvLen);
+        ////Assert(fPacketBuffer[0] == '$');
+		//过滤掉垃圾数据
+		bool norPacket = false;
+		UInt32 ckOffset = 0;
+		while(!norPacket)
+		{
+			if( fPacketBuffer[ckOffset] == '$' )
+			{
+				if( (UInt8)fPacketBuffer[ckOffset+1] <= fNumChannelElements )
+				{
+					norPacket = true;
+				}
+			}
+
+			//帧数据不正确，跳过1个Byte
+			if(!norPacket)
+			{
+				ckOffset++;
+				if(fPacketBufferOffset-ckOffset <= kPacketHeaderLen)
+				{
+					break;
+				}
+			}
+		}
+
+		if(norPacket)
+		{
+			fPacketBufferOffset -= ckOffset;
+			::memmove(fPacketBuffer, &fPacketBuffer[ckOffset], fPacketBufferOffset);
+		}
+		else
+		{
+			fPacketBufferOffset -= ckOffset;
+			::memmove(fPacketBuffer, &fPacketBuffer[ckOffset], fPacketBufferOffset);
+			return OS_NoErr;
+		}
+
         UInt16* thePacketLenP = (UInt16*)fPacketBuffer;
         UInt16 thePacketLen = ntohs(thePacketLenP[1]);
+		//qtss_printf("interleaved packet len:%d\n",thePacketLen);
         UInt8  channelIndex = fPacketBuffer[1];
         if (fPacketBufferOffset >= (thePacketLen + kPacketHeaderLen))
         {

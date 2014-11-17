@@ -249,7 +249,7 @@ class RTSPClient
         
         OS_Error    SendReliableUDPSetup(UInt32 inTrackID, UInt16 inClientPort);
         OS_Error    SendUDPSetup(UInt32 inTrackID, UInt16 inClientPort);
-        OS_Error    SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16 inClientRTCPid);
+        OS_Error    SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16 inClientRTCPid, StrPtrLen* inTrackNamePtr = NULL);
         OS_Error    SendPlay(UInt32 inStartPlayTimeInSec, Float32 inSpeed = 1, UInt32 inTrackID = kUInt32_Max); //use a inTrackID of kUInt32_Max to turn off per stream headers
         OS_Error    SendPacketRangePlay(char* inPacketRangeHeader, Float32 inSpeed = 1);
         OS_Error    SendReceive(UInt32 inStartPlayTimeInSec);       

@@ -62,6 +62,7 @@
 #include "QTSSAccessLogModule.h"
 #include "QTSSFlowControlModule.h"
 #include "QTSSReflectorModule.h"
+#include "QTSSOnDemandRelayModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
@@ -656,6 +657,10 @@ void    QTSServer::LoadCompiledInModules()
     QTSSModule* theReflectorModule = new QTSSModule("QTSSReflectorModule");
     (void)theReflectorModule->SetupModule(&sCallbacks, &QTSSReflectorModule_Main);
     (void)AddModule(theReflectorModule);
+
+	QTSSModule* theOnDemandRelayModule = new QTSSModule("QTSSOnDemandRelayModule");
+    (void)theOnDemandRelayModule->SetupModule(&sCallbacks, &QTSSOnDemandRelayModule_Main);
+    (void)AddModule(theOnDemandRelayModule);
 
 	QTSSModule* theRelayModule = new QTSSModule("QTSSRelayModule");
     (void)theRelayModule->SetupModule(&sCallbacks, &QTSSRelayModule_Main);
