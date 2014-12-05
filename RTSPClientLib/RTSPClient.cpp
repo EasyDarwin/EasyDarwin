@@ -1107,9 +1107,11 @@ OS_Error RTSPClient::SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16
 {
     fSetupTrackID = inTrackID; // Needed when SETUP response is received.
 	
-	char trackName[64] = { 0 };
+	char trackName[128] = { 0 };
 	if(inTrackNamePtr)
-		::strncpy(trackName,inTrackNamePtr->Ptr, inTrackNamePtr->Len);
+	{
+		::strncpy(trackName,inTrackNamePtr->Ptr, inTrackNamePtr->Len>128?128:inTrackNamePtr->Len);
+	}
 	else
 		::sprintf(trackName,"%s=%"_U32BITARG_"",fControlID, inTrackID);
     
@@ -1534,7 +1536,7 @@ OS_Error RTSPClient::DoTransaction()
 {
 	OS_Error theErr = OS_NoErr;
     StrPtrLen theRequest(fSendBuffer, ::strlen(fSendBuffer));
-    StrPtrLen theMethod(fMethod);	
+    StrPtrLen theMethod(fMethod);
     
 	for(;;)
 	{
@@ -1570,10 +1572,10 @@ OS_Error RTSPClient::DoTransaction()
 						qtss_printf("RTSPClient::DoTransaction Send len=%"_U32BITARG_" err = %"_S32BITARG_"\n", theRequest.Len, theErr);
             		return theErr;
 				}
-
         		if (fVerboseLevel >= 1)
             		qtss_printf("\n-----REQUEST-----len=%"_U32BITARG_"\n%s\n", theRequest.Len, STRTOCHAR(&theRequest));
         
+
 				//Done sending request; moving onto the response
         		fContentRecvLen = 0;
         		fHeaderRecvLen = 0;
@@ -1598,8 +1600,7 @@ OS_Error RTSPClient::DoTransaction()
 				//The response has been completely received and parsed.  If the response is 401 unauthorized, then redo the request with authorization
 				fState = kInitial;
 				if (fStatus == 401 && fAuthenticator != NULL && !fAuthAttempted)
-					//break;
-					return EAGAIN;
+					break;
 				else
 					return OS_NoErr;
 				break;
