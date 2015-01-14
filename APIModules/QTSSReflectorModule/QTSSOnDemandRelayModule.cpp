@@ -264,6 +264,8 @@ QTSS_Error ProcessRelayRTPData(QTSS_RelayingData_Params* inParams)
 
 QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 {
+	OSMutexLocker locker (sSessionMap->GetMutex()); //operating on sOutputAttr
+
     QTSS_RTSPMethod* theMethod = NULL;
 
 	UInt32 theLen = 0;
@@ -373,6 +375,29 @@ void DoDescribeAddRequiredSDPLines2(QTSS_StandardRTSP_Params* inParams, Reflecto
 
 QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 {
+ //   char *theFilepath = NULL;
+ //   ReflectorSession* theSession = DoSessionSetup(inParams, qtssRTSPReqFilePath, false, NULL, &theFilepath );
+ //   OSCharArrayDeleter tempFilePath(theFilepath);
+ //   
+ //   if (theSession == NULL)
+ //       return QTSS_RequestFailed;
+ //       
+ //   RTPSessionOutput** theOutput = NULL;
+ //   UInt32 theLen = 0;
+ //   QTSS_Error theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
+
+ //   // If there already  was an RTPSessionOutput attached to this Client Session,
+ //   // destroy it. 
+ //   if (theErr == QTSS_NoErr && theOutput != NULL)
+ //   {   RemoveOutput(*theOutput, (*theOutput)->GetReflectorSession(), false);
+ //       RTPSessionOutput* theOutput = NULL;
+ //       (void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theOutput, sizeof(theOutput));
+ //       
+ //   }
+
+
+
+
 	char* theUriStr = NULL;
     QTSS_Error err = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theUriStr);
     Assert(err == QTSS_NoErr);
@@ -810,9 +835,13 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
     
         if (theOutput != NULL)
             outputPtr = (ReflectorOutput*) *theOutput;
-            
-        if (outputPtr != NULL)
+
+		if (outputPtr != NULL)
+        {    
             RemoveOutput(outputPtr, theSession, false);
+            RTPSessionOutput* theOutput = NULL;
+            (void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theOutput, sizeof(theOutput));
+        }
                 
     }
 
