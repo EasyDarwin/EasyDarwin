@@ -887,6 +887,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
         {               
             if (theSessionRef->GetRefCount() == 0)
             { 
+				inSession->TearDownAllOutputs();
 				RTSPRelaySession* proxySession = (RTSPRelaySession*)inSession->GetRTSPRelaySession();
 				if(proxySession != NULL)
 				{
