@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="GB2312"?>
 <Devices>
-	<Device id="0" name="dahua" url="rtsp://192.168.1.108/" identifier="MY" model="PUB" ip="192.168.1.108" port="554" user="admin" password="admin" rate="0"/>
+	<Device id="0" name="CAM" url="rtsp://admin:12345@192.168.1.210:554/" identifier="MY" model="PUB" ip="192.168.1.108" port="554" user="admin" password="admin" rate="0"/>
+	<Device id="1" name="dahua" url="rtsp://admin:admin@192.168.1.109:554/" identifier="MY" model="PUB" ip="192.168.1.108" port="554" user="admin" password="admin" rate="0"/>
+	<Device id="2" name="aaa" url="rtsp://admin:admin@121.15.129.227:554/" identifier="MY" model="PUB" ip="192.168.1.108" port="554" user="admin" password="admin" rate="0"/>
 </Devices>

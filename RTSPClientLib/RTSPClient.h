@@ -44,7 +44,7 @@
 
 // for authentication
 #include "StringParser.h"
-class Authenticator 
+class DSSAuthenticator 
 {
 
     public:
@@ -57,8 +57,8 @@ class Authenticator
             kDigestType = 2 // higher number is stronger type
         };
         
-        Authenticator();
-        virtual ~Authenticator() {};
+        DSSAuthenticator();
+        virtual ~DSSAuthenticator() {};
         virtual SInt16 GetType() { return 0;};
         virtual Bool16 ParseParams(StrPtrLen *authParamsPtr) {return 0;};
         virtual void AttachAuthParams(StrPtrLen *theRequestPtr) {};
@@ -112,7 +112,7 @@ class Authenticator
         StrPtrLen           fCurrentAuthLine;
 };
 
-class BasicAuth : public Authenticator
+class BasicAuth : public DSSAuthenticator
 {
     public:
         BasicAuth() {};
@@ -129,7 +129,7 @@ class BasicAuth : public Authenticator
         
 };
 
-class DigestAuth : public Authenticator 
+class DigestAuth : public DSSAuthenticator 
 {
     public:
         
@@ -213,7 +213,7 @@ class AuthParser
         AuthParser() {};
         ~AuthParser() {}
         
-        Authenticator *ParseChallenge(StrPtrLen *challenge);
+        DSSAuthenticator *ParseChallenge(StrPtrLen *challenge);
 };
 
 class RTSPClient
@@ -363,7 +363,7 @@ class RTSPClient
         OSMutex             fMutex;//this data structure is shared!
         
         AuthParser      fAuthenticationParser;
-        Authenticator   *fAuthenticator; // only one will be supported
+        DSSAuthenticator   *fAuthenticator; // only one will be supported
 
         ClientSocket*   fSocket;
         UInt32          fVerboseLevel;

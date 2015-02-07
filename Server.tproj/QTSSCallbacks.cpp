@@ -954,3 +954,23 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
     OS::GetStdLibMutex()->Unlock();
 }
 
+QTSS_Error	QTSSCallbacks::QTSS_ReflectRTPTrackData(QTSS_Object inObject, const char* inData, UInt32 inDataLen, UInt32 inTrackID)
+{
+	QTSS_RoleParams packetParams;
+	packetParams.rtspRelayingDataParams.inRTSPSession = inObject;
+	packetParams.rtspRelayingDataParams.inPacketData = (char*)inData;
+	packetParams.rtspRelayingDataParams.inPacketLen = inDataLen;
+	packetParams.rtspRelayingDataParams.inChannel = inTrackID*2;
+
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPRelayingDataRole);
+	for (; fCurrentModule < numModules; fCurrentModule++)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRTSPRelayingDataRole, fCurrentModule);
+		(void)theModule->CallDispatch(QTSS_RTSPRelayingData_Role, &packetParams);
+	}
+
+	return 0;
+}
+
+

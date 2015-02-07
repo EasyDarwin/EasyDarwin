@@ -327,6 +327,11 @@ else
 	export SHARED
 	export MODULE_LIBS
 	
+	echo Building Live555 for $PLAT with $CPLUS
+	cd live555/
+	$MAKE -f Makefile.POSIX $*
+	cd ../
+
 	echo Building CommonUtilitiesLib for $PLAT with $CPLUS
 	cd CommonUtilitiesLib/
 	$MAKE -f Makefile.POSIX $*

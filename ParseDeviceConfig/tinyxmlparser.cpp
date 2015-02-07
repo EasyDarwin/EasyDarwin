@@ -525,7 +525,7 @@ const char* TiXmlBase::GetEntity( const char* p, char* value, int* length, TiXml
 
 	// So it wasn't an entity, its unrecognized, or something like that.
 	*value = *p;	// Don't put back the last one, since we return it!
-	*length = 1;	// Leave unrecognized entities - this doesn't really work.
+	//*length = 1;	// Leave unrecognized entities - this doesn't really work.
 					// Just writes strange XML.
 	return p+1;
 }

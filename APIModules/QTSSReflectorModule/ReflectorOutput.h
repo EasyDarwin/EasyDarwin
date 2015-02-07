@@ -55,6 +55,7 @@ class ReflectorOutput
         {
             if ( fBookmarkedPacketsElemsArray )
             {   ::memset( fBookmarkedPacketsElemsArray, 0, sizeof ( OSQueueElem* ) * fNumBookmarks );
+
                 delete [] fBookmarkedPacketsElemsArray;
             }
         }
@@ -66,6 +67,7 @@ class ReflectorOutput
         SInt32              fAvailPosition;
         QTSS_TimeVal        fLastIntervalMilliSec;
         QTSS_TimeVal        fLastPacketTransmitTime;
+		OSMutex             fMutex;
        
         Bool16              fNewOutput;
 inline  OSQueueElem*    GetBookMarkedPacket(OSQueue *thePacketQueue);
@@ -93,8 +95,9 @@ inline  Bool16          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
             UInt32  numBookmarks = numStreams * 2;
 
             fBookmarkedPacketsElemsArray = new OSQueueElem*[numBookmarks]; 
-            ::memset( fBookmarkedPacketsElemsArray, 0, sizeof ( OSQueueElem* ) * numBookmarks );
+            ::memset( fBookmarkedPacketsElemsArray, 0, sizeof ( OSQueueElem* ) * (numBookmarks) );
             
+			//DT("fBookmarkedPacketsElemsArray[-1] %p= %p", &fBookmarkedPacketsElemsArray[-1], fBookmarkedPacketsElemsArray[-1]);
             fNumBookmarks = numBookmarks;
         }
 
@@ -102,9 +105,10 @@ inline  Bool16          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
 
 Bool16  ReflectorOutput::SetBookMarkPacket(OSQueueElem* thePacketElemPtr)
 {
+	OSMutexLocker locker(&fMutex);
     if (fAvailPosition != -1 && thePacketElemPtr)
     {    
-        fBookmarkedPacketsElemsArray[fAvailPosition] = thePacketElemPtr;
+        fBookmarkedPacketsElemsArray[fAvailPosition] = thePacketElemPtr; 
         
         for (UInt32 i = 0; i < fNumBookmarks; i++)
         {                   
@@ -122,19 +126,18 @@ Bool16  ReflectorOutput::SetBookMarkPacket(OSQueueElem* thePacketElemPtr)
 
 OSQueueElem*    ReflectorOutput::GetBookMarkedPacket(OSQueue *thePacketQueue)
 {
+	OSMutexLocker locker(&fMutex);
     Assert(thePacketQueue != NULL);    
         
     OSQueueElem*        packetElem = NULL;              
     UInt32              curBookmark = 0;
-    
-    fAvailPosition = -1;
-    
-    Assert( curBookmark < fNumBookmarks );       
+
+    fAvailPosition = -1;       
     
     // see if we've bookmarked a held packet for this Sender in this Output
     while ( curBookmark < fNumBookmarks )
     {                   
-        OSQueueElem*    bookmarkedElem = fBookmarkedPacketsElemsArray[curBookmark];
+        OSQueueElem*    bookmarkedElem = fBookmarkedPacketsElemsArray[curBookmark]; 
         
         if ( bookmarkedElem )   // there may be holes in this array
         {                           
@@ -143,7 +146,7 @@ OSQueueElem*    ReflectorOutput::GetBookMarkedPacket(OSQueue *thePacketQueue)
                 // this packet was previously bookmarked for this specific queue
                 // remove if from the bookmark list and use it
                 // to jump ahead into the Sender's over all packet queue                        
-                fBookmarkedPacketsElemsArray[curBookmark] = NULL;
+                fBookmarkedPacketsElemsArray[curBookmark] = NULL;  
                 fAvailPosition = curBookmark;
                 packetElem = bookmarkedElem;
                 break;

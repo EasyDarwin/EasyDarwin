@@ -129,16 +129,16 @@ static UInt8 sNOTWhiteQuoteOrEOLorEqual[] = // don't stop
     1, 1, 1, 1, 1, 1             //250-255
 };
 
-StrPtrLen   Authenticator::sAuthorizationStr("Authorization:");
-StrPtrLen   Authenticator::sAuthBasicStr("Basic");
-StrPtrLen   Authenticator::sAuthDigestStr("Digest");
-StrPtrLen   Authenticator::sUsernameStr("username");
-StrPtrLen   Authenticator::sRealmStr("realm");
-StrPtrLen   Authenticator::sWildCardMatch("*");
-StrPtrLen   Authenticator::sTrue("true");
-StrPtrLen   Authenticator::sFalse("false");
+StrPtrLen   DSSAuthenticator::sAuthorizationStr("Authorization:");
+StrPtrLen   DSSAuthenticator::sAuthBasicStr("Basic");
+StrPtrLen   DSSAuthenticator::sAuthDigestStr("Digest");
+StrPtrLen   DSSAuthenticator::sUsernameStr("username");
+StrPtrLen   DSSAuthenticator::sRealmStr("realm");
+StrPtrLen   DSSAuthenticator::sWildCardMatch("*");
+StrPtrLen   DSSAuthenticator::sTrue("true");
+StrPtrLen   DSSAuthenticator::sFalse("false");
 
-Authenticator::Authenticator()
+DSSAuthenticator::DSSAuthenticator()
 {
     char *emptyBuff = "";
     StrPtrLen emptySPL(emptyBuff);
@@ -148,7 +148,7 @@ Authenticator::Authenticator()
 
 }
 
-void Authenticator::Clean()
+void DSSAuthenticator::Clean()
 {  
     delete [] fAuthBuffer.Ptr; fAuthBuffer.Set(NULL,0); 
     delete [] fNameSPL.Ptr; fNameSPL.Set(NULL,0); 
@@ -159,12 +159,12 @@ void Authenticator::Clean()
 }
 
 
-Bool16 Authenticator::ParseRealm(StringParser *realmParserPtr)
+Bool16 DSSAuthenticator::ParseRealm(StringParser *realmParserPtr)
 {   
     StrPtrLen authRealmTag("");
     Bool16 result = false;
     this->ParseTag(realmParserPtr,&authRealmTag);
-    if (authRealmTag.EqualIgnoreCase(Authenticator::sRealmStr.Ptr, Authenticator::sRealmStr.Len))
+    if (authRealmTag.EqualIgnoreCase(DSSAuthenticator::sRealmStr.Ptr, DSSAuthenticator::sRealmStr.Len))
     {
         result = this->GetParamValueAsNewCopy(realmParserPtr, &this->fRealmSPL);
     }
@@ -172,23 +172,23 @@ Bool16 Authenticator::ParseRealm(StringParser *realmParserPtr)
     return result;
 }
 
-void Authenticator::SetName(StrPtrLen *inNamePtr)       
+void DSSAuthenticator::SetName(StrPtrLen *inNamePtr)       
 {   this->CopyParam(inNamePtr, &this->fNameSPL);    
  }
 
-void Authenticator::SetPassword(StrPtrLen *inPasswordPtr) 
+void DSSAuthenticator::SetPassword(StrPtrLen *inPasswordPtr) 
 {   this->CopyParam(inPasswordPtr, &fPasswordSPL); 
 }
 
-void Authenticator::SetMethod(StrPtrLen *inMethodStr)   
+void DSSAuthenticator::SetMethod(StrPtrLen *inMethodStr)   
 {   this->CopyParam(inMethodStr, &fMethodSPL);  
 }
 
-void Authenticator::SetRealm(StrPtrLen *inRealmPtr)     
+void DSSAuthenticator::SetRealm(StrPtrLen *inRealmPtr)     
 {   this->CopyParam(inRealmPtr, &fRealmSPL);        
 }
 
-void Authenticator::SetURI(StrPtrLen *inURIPtr) 
+void DSSAuthenticator::SetURI(StrPtrLen *inURIPtr) 
 {   // always send absolute path.
     Assert(inURIPtr); 
     UInt16 uriLen = (UInt16) (inURIPtr->Len + 2);
@@ -208,7 +208,7 @@ void Authenticator::SetURI(StrPtrLen *inURIPtr)
 }
 
 
-void Authenticator::ParseTag(StringParser *parserPtr,StrPtrLen *outTagPtr)
+void DSSAuthenticator::ParseTag(StringParser *parserPtr,StrPtrLen *outTagPtr)
 {   
     Assert(parserPtr);
     Assert(outTagPtr);
@@ -218,10 +218,10 @@ void Authenticator::ParseTag(StringParser *parserPtr,StrPtrLen *outTagPtr)
     parserPtr->ConsumeUntil(NULL,sNOTWhiteQuoteOrEOLorEqual);
     parserPtr->ConsumeUntil(outTagPtr, sWhiteQuoteOrEOLorEqual); // stop on whitespace " or =
     
-	//qtss_printf("Authenticator::ParseTag =%s\n",STRTOCHAR(outTagPtr));
+	//qtss_printf("DSSAuthenticator::ParseTag =%s\n",STRTOCHAR(outTagPtr));
 }
 
-Bool16 Authenticator::CopyParam(StrPtrLen *inPtr, StrPtrLen *destPtr)
+Bool16 DSSAuthenticator::CopyParam(StrPtrLen *inPtr, StrPtrLen *destPtr)
 {   
     Assert(inPtr);
     Assert(destPtr);    
@@ -243,7 +243,7 @@ Bool16 Authenticator::CopyParam(StrPtrLen *inPtr, StrPtrLen *destPtr)
 }
 
 
-Bool16 Authenticator::GetParamValue(StringParser *valueSourcePtr, StrPtrLen *outParamValuePtr)
+Bool16 DSSAuthenticator::GetParamValue(StringParser *valueSourcePtr, StrPtrLen *outParamValuePtr)
 {
     Assert(valueSourcePtr);
     Assert(outParamValuePtr);
@@ -264,16 +264,16 @@ Bool16 Authenticator::GetParamValue(StringParser *valueSourcePtr, StrPtrLen *out
     }
     else // get just the non-whitespace or EOL
     {
-		//qtss_printf("Authenticator::GetParamValue No quotes\n");
+		//qtss_printf("DSSAuthenticator::GetParamValue No quotes\n");
         valueSourcePtr->ConsumeWhitespace();
         valueSourcePtr->ConsumeUntilWhitespace(outParamValuePtr);
     }
 
-    //qtss_printf("Authenticator::GetParamValue len = %"_U32BITARG_" =%s\n",outParamValuePtr->Len, STRTOCHAR(outParamValuePtr));
+    //qtss_printf("DSSAuthenticator::GetParamValue len = %"_U32BITARG_" =%s\n",outParamValuePtr->Len, STRTOCHAR(outParamValuePtr));
     
     return true;
 }
-Bool16 Authenticator::GetParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *outParamValueCopyPtr)
+Bool16 DSSAuthenticator::GetParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *outParamValueCopyPtr)
 {
     StrPtrLen theParamValue;
     if (!this->GetParamValue(valueSourcePtr, &theParamValue))
@@ -282,7 +282,7 @@ Bool16 Authenticator::GetParamValueAsNewCopy(StringParser *valueSourcePtr, StrPt
     return this->CopyParam(&theParamValue, outParamValueCopyPtr);
 }
 
-Bool16 Authenticator::GetMatchListParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *inMatchListParamValuePtr, SInt16 numToMatch, StrPtrLen *outParamValueCopyPtr)
+Bool16 DSSAuthenticator::GetMatchListParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *inMatchListParamValuePtr, SInt16 numToMatch, StrPtrLen *outParamValueCopyPtr)
 {
     StrPtrLen theParamValue;
     if (!this->GetParamValue(valueSourcePtr, &theParamValue))
@@ -307,7 +307,7 @@ Bool16 Authenticator::GetMatchListParamValueAsNewCopy(StringParser *valueSourceP
     return this->CopyParam(&theParamValue, outParamValueCopyPtr);
 }
 
-void    Authenticator::ResetRequestLen(StrPtrLen *theRequestPtr, StrPtrLen *theParamsPtr)
+void    DSSAuthenticator::ResetRequestLen(StrPtrLen *theRequestPtr, StrPtrLen *theParamsPtr)
 {   // makes a new buffer and copies everything after first \r\n into the buffer and terminates the req.
     // after the \r\n 
     
@@ -332,8 +332,8 @@ void    Authenticator::ResetRequestLen(StrPtrLen *theRequestPtr, StrPtrLen *theP
 }
 
 
-//char * Authenticator::GetRequestHeader( StrPtrLen *inSourceStr, StrPtrLen *searchHeaderStr,StrPtrLen *outHeaderStr)
-char * Authenticator::GetRequestHeader( StrPtrLen *inSourceStr, StrPtrLen *searchHeaderStr)
+//char * DSSAuthenticator::GetRequestHeader( StrPtrLen *inSourceStr, StrPtrLen *searchHeaderStr,StrPtrLen *outHeaderStr)
+char * DSSAuthenticator::GetRequestHeader( StrPtrLen *inSourceStr, StrPtrLen *searchHeaderStr)
 {
     StrPtrLen   headers;
     StrPtrLen   headersTerminator("\r\n\r\n");  
@@ -341,13 +341,13 @@ char * Authenticator::GetRequestHeader( StrPtrLen *inSourceStr, StrPtrLen *searc
     if (endSourceCharPtr == NULL)
         return NULL;
 
-    //qtss_printf("Authenticator::GetRequestHeader source=%s\n find=|%s|\n", inSourceStr->Ptr, headersTerminator.Ptr);   
+    //qtss_printf("DSSAuthenticator::GetRequestHeader source=%s\n find=|%s|\n", inSourceStr->Ptr, headersTerminator.Ptr);   
     headers.Set(inSourceStr->Ptr,endSourceCharPtr - inSourceStr->Ptr);
     
     return headers.FindStringIgnoreCase(searchHeaderStr);
 }
 
-void Authenticator::RemoveAuthLine(StrPtrLen *theRequestPtr)
+void DSSAuthenticator::RemoveAuthLine(StrPtrLen *theRequestPtr)
 {
     Assert( theRequestPtr);
     Assert( theRequestPtr->Ptr);
@@ -355,7 +355,7 @@ void Authenticator::RemoveAuthLine(StrPtrLen *theRequestPtr)
     
     if (theRequestPtr->Ptr != NULL) 
     {           
-        char *theHeaderStart = GetRequestHeader(theRequestPtr, &Authenticator::sAuthorizationStr);
+        char *theHeaderStart = GetRequestHeader(theRequestPtr, &DSSAuthenticator::sAuthorizationStr);
         char *eol = StrPtrLen(theHeaderStart).FindString("\r\n");
             
         // finally remove the Authorization: line
@@ -439,7 +439,7 @@ Bool16  DigestAuth::ParseParams(StrPtrLen *authParamsPtr)
                 }
                 else 
                 {   
-                    if (this->fStaleStr.EqualIgnoreCase(Authenticator::sTrue.Ptr, Authenticator::sTrue.Len))
+                    if (this->fStaleStr.EqualIgnoreCase(DSSAuthenticator::sTrue.Ptr, DSSAuthenticator::sTrue.Len))
                     {   fStale = true;
                     }
                     else
@@ -464,7 +464,7 @@ Bool16  DigestAuth::ParseParams(StrPtrLen *authParamsPtr)
                 StrPtrLen matchList[2];
                 matchList[0].Set(sQopAuthStr.Ptr,sQopAuthStr.Len);
                 matchList[1].Set(sQopAuthIntStr.Ptr,sQopAuthIntStr.Len);
-                result = Authenticator::GetMatchListParamValueAsNewCopy(&paramParser, matchList, 2, &this->fqop);
+                result = DSSAuthenticator::GetMatchListParamValueAsNewCopy(&paramParser, matchList, 2, &this->fqop);
                 if (!result) 
                 {   
                     break;
@@ -486,7 +486,7 @@ Bool16  DigestAuth::ParseParams(StrPtrLen *authParamsPtr)
             if (authTag.EqualIgnoreCase(this->sDomainStr.Ptr, this->sDomainStr.Len))
             {   // DOMAIN in Response
                 // just get the first URL in the domain list
-                result = Authenticator::GetMatchListParamValueAsNewCopy(&paramParser, &Authenticator::sWildCardMatch, 1, &this->fqop);
+                result = DSSAuthenticator::GetMatchListParamValueAsNewCopy(&paramParser, &DSSAuthenticator::sWildCardMatch, 1, &this->fqop);
                 if (!result) 
                 {   
                     break;
@@ -764,10 +764,10 @@ void BasicAuth::AttachAuthParams(StrPtrLen *theRequestPtr)
 //===========================================
 
 
-Authenticator *AuthParser::ParseChallenge(StrPtrLen *challengePtr)
+DSSAuthenticator *AuthParser::ParseChallenge(StrPtrLen *challengePtr)
 {
     Bool16 result = false; 
-    Authenticator *authenticator = NULL;
+    DSSAuthenticator *authenticator = NULL;
     StrPtrLen   theChallenge;
     StrPtrLen   headerTerminator("\r"); 
 
@@ -788,7 +788,7 @@ Authenticator *AuthParser::ParseChallenge(StrPtrLen *challengePtr)
     
     // Get the params
     authParser.GetThruEOL(&authParams);
-    if (authWord.EqualIgnoreCase(Authenticator::sAuthBasicStr.Ptr, Authenticator::sAuthBasicStr.Len))
+    if (authWord.EqualIgnoreCase(DSSAuthenticator::sAuthBasicStr.Ptr, DSSAuthenticator::sAuthBasicStr.Len))
     {
             
         authenticator =  NEW BasicAuth();
@@ -796,7 +796,7 @@ Authenticator *AuthParser::ParseChallenge(StrPtrLen *challengePtr)
         if (authenticator)
             result =  authenticator->ParseParams(&authParams);
     }
-    else if (authWord.EqualIgnoreCase(Authenticator::sAuthDigestStr.Ptr, Authenticator::sAuthDigestStr.Len))
+    else if (authWord.EqualIgnoreCase(DSSAuthenticator::sAuthDigestStr.Ptr, DSSAuthenticator::sAuthDigestStr.Len))
     {
         authenticator = NEW DigestAuth();
         Assert(authenticator);
@@ -1107,11 +1107,9 @@ OS_Error RTSPClient::SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16
 {
     fSetupTrackID = inTrackID; // Needed when SETUP response is received.
 	
-	char trackName[128] = { 0 };
+	char trackName[64] = { 0 };
 	if(inTrackNamePtr)
-	{
-		::strncpy(trackName,inTrackNamePtr->Ptr, inTrackNamePtr->Len>128?128:inTrackNamePtr->Len);
-	}
+		::strncpy(trackName,inTrackNamePtr->Ptr, inTrackNamePtr->Len);
 	else
 		::sprintf(trackName,"%s=%"_U32BITARG_"",fControlID, inTrackID);
     
@@ -1739,9 +1737,9 @@ OS_Error RTSPClient::ReceiveResponse()
                         if (!fAuthenticator) 
                             return 401; // what to do? the challenge is bad can't authenticate.
                         else if (fVerboseLevel >= 3)
-                        {   if (fAuthenticator->GetType() == Authenticator::kBasicType)
+                        {   if (fAuthenticator->GetType() == DSSAuthenticator::kBasicType)
                                 qtss_printf("--CREATED BASIC AUTHENTICATOR\n");
-                            else if (fAuthenticator->GetType() == Authenticator::kDigestType)
+                            else if (fAuthenticator->GetType() == DSSAuthenticator::kDigestType)
                                 qtss_printf("--CREATED DIGEST AUTHENTICATOR\n");
                         }
                     #else

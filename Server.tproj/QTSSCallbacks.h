@@ -157,7 +157,8 @@ class QTSSCallbacks
             
         static void   QTSS_LockStdLib();
         static void   QTSS_UnlockStdLib();
-    private:
+
+		static	QTSS_Error	QTSS_ReflectRTPTrackData(QTSS_Object inObject, const char* inData, UInt32 inDataLen, UInt32 inTrackID);
     
 };
 

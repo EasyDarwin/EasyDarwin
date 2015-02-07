@@ -1,0 +1,9 @@
+v=0
+o=- 49451 3 IN IP4 127.0.0.1
+s=Test MPEG Video session
+i=Parameters for the session streamed by "testMPEG1or2VideoStreamer"
+t=0 0
+a=tool:testMPEG1or2VideoStreamer
+a=type:broadcast
+m=video 8888 RTP/AVP 32
+c=IN IP4 239.255.42.42/127

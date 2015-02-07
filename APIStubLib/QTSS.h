@@ -1139,7 +1139,7 @@ typedef struct
     QTSS_RTSPSessionObject		inRTSPSession;
 	UInt8						inChannel;
     char*                       inPacketData;
-    UInt32                      inPacketLen;
+    UInt16                      inPacketLen;
 } QTSS_RelayingData_Params;
 
 typedef struct
@@ -2009,6 +2009,7 @@ QTSS_Error  QTSS_Authenticate(  const char* inAuthUserName,
 //                      QTSS_BadArgument
 QTSS_Error    QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed);
 
+QTSS_Error	QTSS_ReflectRTPData(QTSS_Object inObject, const char* inData, UInt32 inDataLen, UInt32 inTrackID);
 
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();

@@ -220,7 +220,7 @@ QTSS_Error ProcessRelayRTPData(QTSS_RelayingData_Params* inParams)
 {
     ReflectorSession* theSession = NULL;
 	RTSPRelaySession* relaySes = (RTSPRelaySession*)inParams->inRTSPSession;
-	theSession = relaySes->GetReflectorSession();
+	theSession = (ReflectorSession*)relaySes->GetReflectorSession();
 
 	if (theSession == NULL) 
         return QTSS_NoErr;
@@ -254,7 +254,7 @@ QTSS_Error ProcessRelayRTPData(QTSS_RelayingData_Params* inParams)
                     isRTCP = true;
                 }
 
-				
+				//qtss_printf("%d",inIndex);
                 theStream->PushPacket(rtpPacket,packetDataLen, isRTCP);
             }
         }
@@ -264,7 +264,7 @@ QTSS_Error ProcessRelayRTPData(QTSS_RelayingData_Params* inParams)
 
 QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 {
-	OSMutexLocker locker (sSessionMap->GetMutex()); //operating on sOutputAttr
+    OSMutexLocker locker (sSessionMap->GetMutex()); //operating on sOutputAttr
 
     QTSS_RTSPMethod* theMethod = NULL;
 
@@ -315,7 +315,7 @@ ReflectorSession* SetupProxySession(QTSS_StandardRTSP_Params* inParams, RTSPRela
 
 	UInt32 sdpLen = 0;
 	char* relaySDP = NULL;
-	relaySDP = session->GetSDPInfo()->GetLocalSDP(&sdpLen);
+	relaySDP = session->GetSDPInfo()->GetLocalSDP(&sdpLen);;
 
 	if(relaySDP == NULL) return NULL;
 	StrPtrLen inData(relaySDP);
@@ -375,29 +375,6 @@ void DoDescribeAddRequiredSDPLines2(QTSS_StandardRTSP_Params* inParams, Reflecto
 
 QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 {
- //   char *theFilepath = NULL;
- //   ReflectorSession* theSession = DoSessionSetup(inParams, qtssRTSPReqFilePath, false, NULL, &theFilepath );
- //   OSCharArrayDeleter tempFilePath(theFilepath);
- //   
- //   if (theSession == NULL)
- //       return QTSS_RequestFailed;
- //       
- //   RTPSessionOutput** theOutput = NULL;
- //   UInt32 theLen = 0;
- //   QTSS_Error theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
-
- //   // If there already  was an RTPSessionOutput attached to this Client Session,
- //   // destroy it. 
- //   if (theErr == QTSS_NoErr && theOutput != NULL)
- //   {   RemoveOutput(*theOutput, (*theOutput)->GetReflectorSession(), false);
- //       RTPSessionOutput* theOutput = NULL;
- //       (void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theOutput, sizeof(theOutput));
- //       
- //   }
-
-
-
-
 	char* theUriStr = NULL;
     QTSS_Error err = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theUriStr);
     Assert(err == QTSS_NoErr);
@@ -426,24 +403,13 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	}
 	else
 	{
-		clientSes = NEW RTSPRelaySession(
-									SocketUtils::ConvertStringToAddr(pDeviceInfo->m_szIP),
-									pDeviceInfo->m_nPort,
-									pDeviceInfo->m_szSourceUrl,
-									1,
-									rtcpInterval,
-									0,
-									theReadInterval,
-									sockRcvBuf,
-									speed,
-									packetPlayHeader,
-									overbufferwindowInK,
-									sendOptions,
-									pDeviceInfo->m_szUser,
-									pDeviceInfo->m_szPassword,
-									theUriStr);
+		clientSes = NEW RTSPRelaySession(pDeviceInfo->m_szSourceUrl, RTSPRelaySession::kRTSPTCPClientType, 0, true, theUriStr);
 
-			OS_Error theErr = clientSes->SendDescribe();
+
+		QTSS_Error theErr = clientSes->SendDescribe();
+
+		qtss_printf("QTSSOnDemandRelayModule DoDescribe OK\n");
+
 
 			if(theErr == QTSS_NoErr)
 			{
@@ -465,8 +431,8 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
     
     if (theSession == NULL)
 	{
-		sClientSessionMap->Release(clientSes->GetRef());
-        return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssServerNotImplemented, 0);
+		//sClientSessionMap->Release(clientSes->GetRef());
+  //      return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssServerNotImplemented, 0);
 	}
 
 	QTSS_Error Err = QTSS_SetValue(inParams->inRTSPSession, sRTSPBroadcastSessionAttr, 0, &theSession, sizeof(theSession));
@@ -781,17 +747,17 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
             return theErr;
     }
     
-	OSRef* theRelaySessionRef = sClientSessionMap->Resolve(inSession->GetRef()->GetString());
-	if(theRelaySessionRef != NULL)
-	{
-		RTSPRelaySession* relaySes = (RTSPRelaySession*)theRelaySessionRef->GetObject();
-		QTSS_Error err = relaySes->Start();
-		sClientSessionMap->Release(theRelaySessionRef);
-	}
-	else
-	{
-		return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssServerInternal, 0);
-	}
+	//OSRef* theRelaySessionRef = sClientSessionMap->Resolve(inSession->GetRef()->GetString());
+	//if(theRelaySessionRef != NULL)
+	//{
+	//	RTSPRelaySession* relaySes = (RTSPRelaySession*)theRelaySessionRef->GetObject();
+	//	//QTSS_Error err = relaySes->Start();
+	//	sClientSessionMap->Release(theRelaySessionRef);
+	//}
+	//else
+	//{
+	//	return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssServerInternal, 0);
+	//}
 
     (void)QTSS_SendStandardRTSPResponse(inParams->inRTSPRequest, inParams->inClientSession, flags);
     return QTSS_NoErr;
@@ -802,6 +768,8 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
     RTPSessionOutput**  theOutput = NULL;
     ReflectorOutput*    outputPtr = NULL;
     ReflectorSession*   theSession = NULL;
+
+	OSMutexLocker locker (sSessionMap->GetMutex());
     
     //UInt32 theLen = sizeof(theSession);
     //QTSS_Error theErr = QTSS_GetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &theSession, &theLen);
@@ -835,13 +803,9 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
     
         if (theOutput != NULL)
             outputPtr = (ReflectorOutput*) *theOutput;
-
-		if (outputPtr != NULL)
-        {    
+            
+        if (outputPtr != NULL)
             RemoveOutput(outputPtr, theSession, false);
-            RTPSessionOutput* theOutput = NULL;
-            (void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theOutput, sizeof(theOutput));
-        }
                 
     }
 
@@ -857,6 +821,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
         if (inOutput != NULL)
         {
 			inSession->RemoveOutput(inOutput,true);
+
             //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput it is a client session\n");
         }
         else
@@ -887,7 +852,6 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
         {               
             if (theSessionRef->GetRefCount() == 0)
             { 
-				inSession->TearDownAllOutputs();
 				RTSPRelaySession* proxySession = (RTSPRelaySession*)inSession->GetRTSPRelaySession();
 				if(proxySession != NULL)
 				{
@@ -896,6 +860,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
 					proxySession->Signal(Task::kKillEvent);
 				}
 
+				qtss_printf("Delete Reflector Session \n");
 				inSession->SetRTSPRelaySession(NULL);
 				sSessionMap->UnRegister(theSessionRef);
 				delete inSession;

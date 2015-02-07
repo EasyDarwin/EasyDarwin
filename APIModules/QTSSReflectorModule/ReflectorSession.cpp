@@ -141,7 +141,7 @@ ReflectorSession::~ReflectorSession()
         {   // Delete this stream if the refcount has dropped to 0
             if (unregisterNow)
                 sStreamMap->UnRegister(fStreamArray[x]->GetRef()); // Refcount may be 0 if there was some error setting up the stream
-            //qtss_printf("delete stream index=%"_U32BITARG_" refcount=%"_U32BITARG_"\n",x,refCount);
+            qtss_printf("delete stream index=%"_U32BITARG_" refcount=%"_U32BITARG_"\n",x,refCount);
             delete fStreamArray[x];
             fStreamArray[x] = NULL;
         }   

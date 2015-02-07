@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../Server.tproj/;../CommonUtilitiesLib/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIModules/;../APIStubLib/;../APICommonCode/;../HTTPUtilitiesLib/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule;../ParseDeviceConfig/"
+				AdditionalIncludeDirectories="../;../Server.tproj/;../CommonUtilitiesLib/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIModules/;../APIStubLib/;../APICommonCode/;../HTTPUtilitiesLib/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../ParseDeviceConfig/;../live555/BasicUsageEnvironment/include/;../live555/BasicUsageEnvironment/;../live555/UsageEnvironment/include/;../live555/UsageEnvironment/;../live555/groupsock/include/;../live555/groupsock/;../live555/liveMedia/include/;../live555/liveMedia/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/StreamingServer.pch"
@@ -1754,26 +1754,6 @@
 				<File
 					RelativePath="..\RTSPClientLib\RTSPClient.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
-							ForcedIncludeFiles=""
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
-							ForcedIncludeFiles=""
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\RTSPClientLib\RTSPRelaySession.cpp"

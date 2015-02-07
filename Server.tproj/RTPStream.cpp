@@ -780,12 +780,12 @@ void RTPStream::UDPMonitorWrite(void* thePacketData, UInt32 inLen,  Bool16 isRTC
     if (sin.sin_port != 0)
     {
         int result = ::sendto(fMonitorSocket, (const char*)thePacketData, inLen, 0, (struct sockaddr *)&sin, sizeof(struct sockaddr));
-       if (DEBUG)
-        {   if (result < 0)
-                qtss_printf("RTCP Monitor Socket sendto failed\n");
-            else if (0)
-                qtss_printf("RTCP Monitor Socket sendto port=%hu, packetLen=%"_U32BITARG_"\n", ntohs(sin.sin_port), inLen);
-        }
+       //if (DEBUG)
+       // {   if (result < 0)
+       //         qtss_printf("RTCP Monitor Socket sendto failed\n");
+       //     else if (0)
+       //         qtss_printf("RTCP Monitor Socket sendto port=%hu, packetLen=%"_U32BITARG_"\n", ntohs(sin.sin_port), inLen);
+       // }
     }
 
 }

@@ -24,7 +24,7 @@
  */
 
 // Build flags. How do you want your server built?
-#define DEBUG 0
+//#define DEBUG 0
 #define ASSERT 1
 #define MEMORY_DEBUGGING  0 //enable this to turn on really fancy debugging of memory leaks, etc...
 #define QTFILE_MEMORY_DEBUGGING 0
