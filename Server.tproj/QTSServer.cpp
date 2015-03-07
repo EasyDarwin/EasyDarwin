@@ -662,9 +662,12 @@ void    QTSServer::LoadCompiledInModules()
     (void)theOnDemandRelayModule->SetupModule(&sCallbacks, &QTSSOnDemandRelayModule_Main);
     (void)AddModule(theOnDemandRelayModule);
 
+	//we not used QTSSRelayModule
+	/*
 	QTSSModule* theRelayModule = new QTSSModule("QTSSRelayModule");
     (void)theRelayModule->SetupModule(&sCallbacks, &QTSSRelayModule_Main);
     (void)AddModule(theRelayModule);
+	*/
 
     QTSSModule* theAccessLog = new QTSSModule("QTSSAccessLogModule");
     (void)theAccessLog->SetupModule(&sCallbacks, &QTSSAccessLogModule_Main);

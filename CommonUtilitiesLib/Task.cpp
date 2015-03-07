@@ -336,7 +336,7 @@ Task* TaskThread::WaitForTask()
         // Make sure we can't go to sleep for some ridiculously short
         // period of time
         // Do not allow a timeout below 10 ms without first verifying reliable udp 1-2mbit live streams. 
-        // Test with streamingserver.xml pref reliablUDP printfs enabled and look for packet loss and check client for  buffer ahead recovery.
+        // Test with easydarwin.xml pref reliablUDP printfs enabled and look for packet loss and check client for  buffer ahead recovery.
 	    if (theTimeout < 10) 
            theTimeout = 10;
             

@@ -174,61 +174,6 @@ int32_t CParseDevice::LoadDeviceXml(const char *pXmlFile)
 			strncpy(devInfo.m_szModel, pszvalue, sizeof(devInfo.m_szModel));
 		}
 
-		//ip
-		pszvalue = pDevElement->Attribute("ip", &nValue);
-		if (NULL == pszvalue) 
-		{
-			return fail;
-		}
-		else
-		{
-			strncpy(devInfo.m_szIP, pszvalue, sizeof(devInfo.m_szIP));
-		}	
-
-		//port
-		pszvalue = pDevElement->Attribute("port", &nValue);
-		if (NULL == pszvalue) 
-		{
-			return fail;
-		}
-		else
-		{
-			devInfo.m_nPort = nValue;
-		}
-
-		//username
-		pszvalue = pDevElement->Attribute("user", &nValue);
-		if (NULL == pszvalue) 
-		{
-			return fail;
-		}
-		else
-		{
-			strncpy(devInfo.m_szUser, pszvalue, sizeof(devInfo.m_szUser));
-		}
-
-		//password
-		pszvalue = pDevElement->Attribute("password", &nValue);
-		if (NULL == pszvalue) 
-		{
-			return fail;
-		}
-		else
-		{
-			strncpy(devInfo.m_szPassword, pszvalue, sizeof(devInfo.m_szPassword));
-		}
-
-		//rate
-		pszvalue = pDevElement->Attribute("rate", &nValue);
-		if (NULL == pszvalue) 
-		{
-			return fail;
-		}
-		else
-		{
-			devInfo.m_nRate = nValue;
-		}
-
 		//streamName
 		pszvalue = pDevElement->Attribute("name", &nValue);
 		if (NULL == pszvalue) 

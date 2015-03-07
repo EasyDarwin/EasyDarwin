@@ -1026,25 +1026,27 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
             {                 
                 if ( false == theOutput->IsPlaying() ) 
                     continue;
-                    
-                OSQueueElem*    packetElem = theOutput->GetBookMarkedPacket(&fPacketQueue); 
-                if ( packetElem  == NULL ) // should only be a new output
-                {                  
-                    packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
-                    firstPacket = true;
-                    theOutput->fNewOutput = false;    
-                    //if (packetElem) printf("ReflectorSender::ReflectPackets Sending first packet in Queue packetElem=fFirstPacketInQueueForNewOutput %d \n",  ( (ReflectorPacket*) (packetElem->GetEnclosingObject() )  )->GetPacketRTPSeqNum());
+				{
+					OSMutexLocker locker(&theOutput->fMutex);
+					OSQueueElem*    packetElem = theOutput->GetBookMarkedPacket(&fPacketQueue); 
+					if ( packetElem  == NULL ) // should only be a new output
+					{                  
+						packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
+						firstPacket = true;
+						theOutput->fNewOutput = false;    
+						//if (packetElem) printf("ReflectorSender::ReflectPackets Sending first packet in Queue packetElem=fFirstPacketInQueueForNewOutput %d \n",  ( (ReflectorPacket*) (packetElem->GetEnclosingObject() )  )->GetPacketRTPSeqNum());
 
-                 }
+					 }
 
-                SInt64  bucketDelay = ReflectorStream::sBucketDelayInMsec * (SInt64)bucketIndex;
-                packetElem = this->SendPacketsToOutput(theOutput, packetElem,currentTime, bucketDelay, firstPacket);
-                if (packetElem)
-                {
-                    ReflectorPacket*    thePacket = (ReflectorPacket*)packetElem->GetEnclosingObject();
-                    thePacket->fNeededByOutput = true; // flag to prevent removal in RemoveOldPackets
-                    (void) theOutput->SetBookMarkPacket(packetElem); // store a reference to the packet
-                }
+					SInt64  bucketDelay = ReflectorStream::sBucketDelayInMsec * (SInt64)bucketIndex;
+					packetElem = this->SendPacketsToOutput(theOutput, packetElem,currentTime, bucketDelay, firstPacket);
+					if (packetElem)
+					{
+						ReflectorPacket*    thePacket = (ReflectorPacket*)packetElem->GetEnclosingObject();
+						thePacket->fNeededByOutput = true; // flag to prevent removal in RemoveOldPackets
+						(void) theOutput->SetBookMarkPacket(packetElem); // store a reference to the packet
+					}
+				}
             } 
         }
     }

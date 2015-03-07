@@ -75,7 +75,7 @@
 				OutputFile="..\WinNTSupport\Debug\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				IgnoreDefaultLibraryNames="LIBCMTD.LIB"
+				IgnoreDefaultLibraryNames="libcmtd.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/DarwinStreamingServer.pdb"
 				SubSystem="1"
@@ -138,7 +138,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../;../Server.tproj/;../CommonUtilitiesLib/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIModules/;../APIStubLib/;../APICommonCode/;../HTTPUtilitiesLib/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule;../ParseDeviceConfig/"
+				AdditionalIncludeDirectories="../,../Server.tproj/,../CommonUtilitiesLib/,../QTFileLib/,../RTPMetaInfoLib/,../PrefsSourceLib/,../APIModules/,../APIStubLib/,../APICommonCode/,../HTTPUtilitiesLib/,../RTCPUtilitiesLib/,../RTSPClientLib/,../APIModules/QTSSFileModule/,../APIModules/QTSSHttpFileModule/,../APIModules/QTSSAccessModule/,../APIModules/QTSSAccessLogModule/,../APIModules/QTSSPosixFileSysModule/,../APIModules/QTSSAdminModule/,../APIModules/QTSSReflectorModule/,../APIModules/QTSSWebStatsModule/,../APIModules/QTSSWebDebugModule/,../APIModules/QTSSFlowControlModule/,../APIModules/QTSSMP3StreamingModule"
 				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -163,11 +163,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib wsock32.lib winmm.lib"
-				OutputFile="..\WinNTSupport\Release\EasyDarwin.exe"
+				AdditionalDependencies="libcmt.lib odbc32.lib odbccp32.lib ws2_32.lib wsock32.lib winmm.lib"
+				OutputFile="..\WinNTSupport\Release\DarwinStreamingServer.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				IgnoreDefaultLibraryNames="libcmt.lib"
 				ProgramDatabaseFile=".\Release/DarwinStreamingServer.pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -1754,6 +1753,26 @@
 				<File
 					RelativePath="..\RTSPClientLib\RTSPClient.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\RTSPClientLib\RTSPRelaySession.cpp"

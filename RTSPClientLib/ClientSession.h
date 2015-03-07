@@ -41,6 +41,8 @@
 #include "UDPSocket.h"
 #include "PlayerSimulator.h"
 
+using namespace EasyDarwin;
+
 class ClientSession : public Task
 {
     public:

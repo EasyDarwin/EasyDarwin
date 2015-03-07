@@ -65,8 +65,8 @@ int main(int argc, char * argv[])
     //First thing to do is to read command-line arguments.
     int ch;
     
-    char* theConfigFilePath = "./streamingserver.cfg";
-    char* theXMLFilePath = "./streamingserver.xml";
+    char* theConfigFilePath = "./easydarwin.cfg";
+    char* theXMLFilePath = "./easydarwin.xml";
     Bool16 notAService = false;
     Bool16 theXMLPrefsExist = true;
     Bool16 dontFork = false;

@@ -812,9 +812,11 @@ DSSAuthenticator *AuthParser::ParseChallenge(StrPtrLen *challengePtr)
 
 
 static char* sEmptyString = "";
+
+namespace EasyDarwin
+{
 char* RTSPClient::sUserAgent = "None";
 char* RTSPClient::sControlID = "trackID";
-
 RTSPClient::InterleavedParams RTSPClient::sInterleavedParams;
 
 RTSPClient::RTSPClient(ClientSocket* inSocket, Bool16 verbosePrinting, char* inUserAgent)
@@ -1960,6 +1962,7 @@ void RTSPClient::Attach3GPPHeaders(StringFormatter &fmt, UInt32 inTrackID)
         fmt.PutFmtStr("\r\n");
     }
 }
+}//namespace
 
 #define _RTSPCLIENTTESTING_ 0
 

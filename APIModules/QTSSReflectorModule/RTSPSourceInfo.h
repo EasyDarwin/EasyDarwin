@@ -41,6 +41,8 @@
 #include "ClientSocket.h"
 #include "RelaySession.h"
 
+using namespace EasyDarwin;
+
 class RelaySessionCreator;
 
 class RTSPOutputInfo
@@ -200,7 +202,7 @@ class RTSPSourceInfo : public RCFSourceInfo
                 
             private:
                 TCPClientSocket*    fClientSocket;
-                RTSPClient*         fClient;
+				RTSPClient*         fClient;
         };
         
         char*                   fSourceURL;

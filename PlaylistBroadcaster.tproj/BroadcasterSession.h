@@ -44,6 +44,8 @@
 #include "StrPtrLen.h"
 #include "OSMutex.h"
 
+using namespace EasyDarwin;
+
 class BroadcasterSession : public Task
 {
     public:

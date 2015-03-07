@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="GB2312"?>
+<Devices>
+	<Device id="0" name="CAM" url="rtsp://admin:12345@192.168.1.210:554/" identifier="MY" model="PUB" />
+	<Device id="1" name="camy" url="rtsp://218.204.223.237:554/live/1/66251FC11353191F/e7ooqwcfbqjoo80j.sdp" identifier="MY" model="PUB" />
+</Devices>

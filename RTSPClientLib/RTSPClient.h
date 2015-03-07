@@ -216,6 +216,8 @@ class AuthParser
         DSSAuthenticator *ParseChallenge(StrPtrLen *challenge);
 };
 
+namespace EasyDarwin
+{
 class RTSPClient
 {
     public:
@@ -470,5 +472,5 @@ static  char*       sControlID;
         static InterleavedParams sInterleavedParams;
         
 };
-
+}//namespace
 #endif //__CLIENT_SESSION_H__

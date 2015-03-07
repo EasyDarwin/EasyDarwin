@@ -105,7 +105,7 @@ inline  Bool16          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
 
 Bool16  ReflectorOutput::SetBookMarkPacket(OSQueueElem* thePacketElemPtr)
 {
-	OSMutexLocker locker(&fMutex);
+	//OSMutexLocker locker(&fMutex);
     if (fAvailPosition != -1 && thePacketElemPtr)
     {    
         fBookmarkedPacketsElemsArray[fAvailPosition] = thePacketElemPtr; 
@@ -126,7 +126,7 @@ Bool16  ReflectorOutput::SetBookMarkPacket(OSQueueElem* thePacketElemPtr)
 
 OSQueueElem*    ReflectorOutput::GetBookMarkedPacket(OSQueue *thePacketQueue)
 {
-	OSMutexLocker locker(&fMutex);
+	//OSMutexLocker locker(&fMutex);
     Assert(thePacketQueue != NULL);    
         
     OSQueueElem*        packetElem = NULL;              

@@ -42,9 +42,6 @@ static QTSS_AttributeID         sReflectorBadTrackIDErr     =   qtssIllegalAttrI
 static QTSS_AttributeID         sClientBroadcastSessionAttr =   qtssIllegalAttrID;
 static QTSS_AttributeID         sRTSPBroadcastSessionAttr   =   qtssIllegalAttrID;
 
-static UInt16	sPullMode = 0;
-static UInt16	sPullModeDefault = 0;
-
 // STATIC DATA
 static OSRefTable*      sSessionMap = NULL;
 static OSRefTable*		sClientSessionMap = NULL;
@@ -70,7 +67,8 @@ static StrPtrLen    sSDPNotValidMessage("Announced SDP is not a valid SDP");
 static StrPtrLen    sSDPTimeNotValidMessage("SDP time is not valid or movie not available at this time.");
 static StrPtrLen    sTheNowRangeHeader("npt=now-");
 
-#define DEVICE_CONFIGFILE "Device.xml"
+static char*	sDevicePrefs     = NULL;
+static char*	sDefaultDevicePrefs = "./devices.xml";
 
 // FUNCTION PROTOTYPES
 static QTSS_Error QTSSOnDemandRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -180,17 +178,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sSessionMap = NEW OSRefTable();
 	sClientSessionMap = NEW OSRefTable();
 
-	parseDevice = NEW CParseDevice();
-	if (success != parseDevice->Init())
-	{
-		qtss_printf("parseDevice Init fail\n");
-	}
-
-	if (success != parseDevice->LoadDeviceXml(DEVICE_CONFIGFILE))
-	{
-		qtss_printf("parseDevice LoadDeviceXml fail\n");
-	}
-
     sServerPrefs = inParams->inPrefs;
     sServer = inParams->inServer;
     sPrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
@@ -210,8 +197,21 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 QTSS_Error RereadPrefs()
 {
-	QTSSModuleUtils::GetAttribute(sPrefs, "relay_pull_mode",   qtssAttrDataTypeUInt16,
-                                &sPullMode, &sPullModeDefault, sizeof(sPullModeDefault));
+	delete [] sDevicePrefs;
+    
+    sDevicePrefs = QTSSModuleUtils::GetStringAttribute(sPrefs, "device_prefs_file", sDefaultDevicePrefs);
+
+	parseDevice = NEW CParseDevice();
+	if (success != parseDevice->Init())
+	{
+		qtss_printf("parseDevice Init fail\n");
+		return QTSS_Unimplemented;
+	}
+
+	if (success != parseDevice->LoadDeviceXml(sDevicePrefs))
+	{
+		qtss_printf("parseDevice LoadDeviceXml %s fail\n", sDevicePrefs);
+	}
 
 	return QTSS_NoErr;
 }
@@ -388,7 +388,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 
 	if(pDeviceInfo == NULL)
 	{
-		qtss_printf("ID:%s Not Found\n",theUriStr);
+		//qtss_printf("ID:%s Not Found\n",theUriStr);
 		return QTSS_RequestFailed;
 	}
 
