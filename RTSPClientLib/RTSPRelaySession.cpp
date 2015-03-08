@@ -77,6 +77,7 @@ public:
   StrPtrLen fSdpDescription;
   Boolean fRTPOverTCP;
   RTSPRelaySession* fRelaySession;
+  Boolean fLiveClient;
 
 public:
 	RTSPRelaySession* GetRelaySession() {return fRelaySession; }
@@ -97,7 +98,8 @@ easyRTSPClient::easyRTSPClient(UsageEnvironment& env, char const* rtspURL, RTSPR
   : RTSPClient(env,rtspURL, verbosityLevel, applicationName, tunnelOverHTTPPortNum, -1),
   fSdpDescription(NULL),
   fRTPOverTCP(rtpOverTCP),
-  fRelaySession(relaySession)
+  fRelaySession(relaySession),
+  fLiveClient(True)
 {}
 
 easyRTSPClient::~easyRTSPClient() {
@@ -306,21 +308,26 @@ SInt64 RTSPRelaySession::Run()
 
 QTSS_Error RTSPRelaySession::SendDescribe()
 {
+	QTSS_Error theErr = QTSS_RequestFailed;
 	easyRTSPClient* rtspClient = (easyRTSPClient*)fLive555Client;
 	UsageEnvironment& env = rtspClient->envir(); 
 
 	rtspClient->fLive555WatchVariable = 0;
 	rtspClient->sendDescribeCommand(continueAfterDESCRIBE);
-
-	fLive555LoopThread->live555EventLoop(&rtspClient->fLive555WatchVariable);
-	
-
-	if(rtspClient->fSdpDescription.Len)
-		fSDPParser.Parse(rtspClient->fSdpDescription.Ptr, rtspClient->fSdpDescription.Len);
-	else
-		return QTSS_RequestFailed;
 	env<< "RTSPRelaySession Send Describe" << "\n";
-	return  0;
+	fLive555LoopThread->live555EventLoop(&rtspClient->fLive555WatchVariable);
+
+	if(rtspClient->fLiveClient && rtspClient->fSdpDescription.Len)
+	{
+		fSDPParser.Parse(rtspClient->fSdpDescription.Ptr, rtspClient->fSdpDescription.Len);
+		theErr = QTSS_NoErr;
+	}
+	else
+	{
+		theErr = QTSS_RequestFailed;
+	}
+
+	return theErr;
 }
 
 // Implementation of the RTSP 'response handlers':
@@ -365,12 +372,14 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
     // (Each 'subsession' will have its own data source.)
     scs.iter = new MediaSubsessionIterator(*scs.session);
     setupNextSubsession(rtspClient);
-	//((easyRTSPClient*)rtspClient)->fLive555WatchVariable = ~0;
+
     return;
   } while (0);
 
   // An unrecoverable error occurred with this stream.
-  shutdownStream(rtspClient);
+  //shutdownStream(rtspClient);
+  ((easyRTSPClient*)rtspClient)->fLiveClient = false;
+  ((easyRTSPClient*)rtspClient)->fLive555WatchVariable = ~0;
 }
 
 void setupNextSubsession(RTSPClient* rtspClient) {
@@ -487,7 +496,8 @@ void continueAfterPLAY(RTSPClient* rtspClient, int resultCode, char* resultStrin
 
   if (!success) {
     // An unrecoverable error occurred with this stream.
-    shutdownStream(rtspClient);
+    //shutdownStream(rtspClient);
+	((easyRTSPClient*)rtspClient)->fLiveClient = false;
   }
 
   ((easyRTSPClient*)rtspClient)->fLive555WatchVariable = ~0;
