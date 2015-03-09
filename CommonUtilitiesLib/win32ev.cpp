@@ -114,7 +114,7 @@ int select_waitevent(struct eventreq *req, void* /*onlyForMacOSX*/)
         theWndClass.hCursor = NULL;
         theWndClass.hbrBackground = NULL;
         theWndClass.lpszMenuName = NULL;
-        theWndClass.lpszClassName = "DarwinStreamingServerWindow";
+        theWndClass.lpszClassName = "EasyDarwinServerWindow";
         theWndClass.hIconSm = NULL;
         
         ATOM theWndAtom = ::RegisterClassEx(&theWndClass);
@@ -122,8 +122,8 @@ int select_waitevent(struct eventreq *req, void* /*onlyForMacOSX*/)
         if (theWndAtom == NULL)
             ::exit(-1); // Poor error recovery, but this should never happen.
                 
-        sMsgWindow = ::CreateWindow(    "DarwinStreamingServerWindow",  // Window class name
-                                        "DarwinStreamingServerWindow",  // Window title bar
+        sMsgWindow = ::CreateWindow(    "EasyDarwinServerWindow",  // Window class name
+                                        "EasyDarwinServerWindow",  // Window title bar
                                         WS_POPUP,   // Window style ( a popup doesn't need a parent )
                                         0,          // x pos
                                         0,          // y pos

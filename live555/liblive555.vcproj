@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="4"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../,../WinNTSupport/,.."
+				AdditionalIncludeDirectories="../;../WinNTSupport/;..;BasicUsageEnvironment\include;groupsock\include;liveMedia\include;UsageEnvironment\include"
 				PreprocessorDefinitions="WIN32;_LIB"
 				RuntimeLibrary="0"
 				PrecompiledHeaderFile=".\Release/CommonUtilitiesLib.pch"

@@ -139,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\;..\CommonUtilitiesLib\;..\APICommonCode\;..\RTPMetaInfoLib\;..\APIStubLib\;..\RTSPClientLib\;..\PrefsSourceLib\;..\RTCPUtilitiesLib\"
+				AdditionalIncludeDirectories="../;../BasicUsageEnvironment/include/;../BasicUsageEnvironment/;../UsageEnvironment/include/;../UsageEnvironment/;../groupsock/include/;../groupsock/;../liveMedia/include/;../liveMedia/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -149,7 +149,7 @@
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				SuppressStartupBanner="true"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles=""
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

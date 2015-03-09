@@ -99,7 +99,7 @@ static char* sDefaultRelayPrefs = DEFAULTPATHS_ETC_DIR "relayconfig.xml";
 #ifdef __MacOSX__
 #define kResponseHeader	"HTTP/1.0 200 OK\r\nServer: QuickTimeStreamingServer/%s/%s\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n<HTML><TITLE>Relay Stats</TITLE><BODY>"
 #else
-#define kResponseHeader	"HTTP/1.0 200 OK\r\nServer: DarwinStreamingServer/%s/%s\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n<HTML><TITLE>Relay Stats</TITLE><BODY>"
+#define kResponseHeader	"HTTP/1.0 200 OK\r\nServer: EasyDarwinServer/%s/%s\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n<HTML><TITLE>Relay Stats</TITLE><BODY>"
 #endif
 
 static char sResponseHeader[1024];

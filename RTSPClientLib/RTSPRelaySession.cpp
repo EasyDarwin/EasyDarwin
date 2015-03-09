@@ -121,7 +121,7 @@ live555Thread::live555Thread(QTSS_Object inScheduler, QTSS_Object inEnv)
 
 live555Thread::~live555Thread() 
 {
-	printf("~live555Thread loop \n");
+	//printf("~live555Thread loop \n");
 	fLive555EventLoopWatchVariable = ~0;
 	if(fLive555EventLoopWatchVariablePtr)
 		*fLive555EventLoopWatchVariablePtr = ~0;
@@ -132,13 +132,13 @@ live555Thread::~live555Thread()
 		((UsageEnvironment*)fLive555Env)->reclaim();
 		fLive555Env = NULL;
 	}
-	printf("~live555Thread loop fLive555Env delete \n");
+	//printf("~live555Thread loop fLive555Env delete \n");
 	if(fLive555TaskScheaduler) 
 	{
 		delete fLive555TaskScheaduler;
 		fLive555TaskScheaduler = NULL;
 	}
-	printf("~live555Thread loop fLive555TaskScheaduler delete\n");
+	//printf("~live555Thread loop fLive555TaskScheaduler delete\n");
 }
 	
 // This task runs once an hour to check and see if the log needs to roll.
@@ -148,12 +148,12 @@ void live555Thread::Entry()
 	if(fLive555Env == NULL)
 		return;
 
-	qtss_printf("live555Thread loop start\n");
+	//qtss_printf("live555Thread loop start\n");
 
 	UsageEnvironment* env = (UsageEnvironment*)fLive555Env;
 	fLive555EventLoopWatchVariablePtr = &fLive555EventLoopWatchVariable;
 	env->taskScheduler().doEventLoop(fLive555EventLoopWatchVariablePtr);
-	qtss_printf("live555Thread loop over\n");	
+	//qtss_printf("live555Thread loop over\n");	
 }
 
 void live555Thread::live555EventLoop(char* watchVariable)
@@ -165,12 +165,12 @@ void live555Thread::live555EventLoop(char* watchVariable)
 	this->fLive555EventLoopWatchVariable = ~0;
 	OSMutexLocker locker(&fMutex);
 	//等待线程
-	qtss_printf("live555Thread event loop start\n");
+	//qtss_printf("live555Thread event loop start\n");
 	UsageEnvironment* env = (UsageEnvironment*)fLive555Env;
 	fLive555EventLoopWatchVariablePtr = watchVariable;
 	env->taskScheduler().doEventLoop(watchVariable);
 	fLive555EventLoopWatchVariablePtr = NULL;
-	qtss_printf("live555Thread event loop over\n");
+	//qtss_printf("live555Thread event loop over\n");
 
 	//重新开始主线程
 	fLive555EventLoopWatchVariable = 0;
@@ -314,7 +314,7 @@ QTSS_Error RTSPRelaySession::SendDescribe()
 
 	rtspClient->fLive555WatchVariable = 0;
 	rtspClient->sendDescribeCommand(continueAfterDESCRIBE);
-	env<< "RTSPRelaySession Send Describe" << "\n";
+	//env<< "RTSPRelaySession Send Describe" << "\n";
 	fLive555LoopThread->live555EventLoop(&rtspClient->fLive555WatchVariable);
 
 	if(rtspClient->fLiveClient && rtspClient->fSdpDescription.Len)

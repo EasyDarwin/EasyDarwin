@@ -33,8 +33,8 @@
     #define PLATFORM_SERVER_BIN_NAME "QuickTimeStreamingServer"
     #define PLATFORM_SERVER_TEXT_NAME "QuickTime Streaming Server"
 #else
-    #define PLATFORM_SERVER_BIN_NAME "DarwinStreamingServer"
-    #define PLATFORM_SERVER_TEXT_NAME "Darwin Streaming Server"
+    #define PLATFORM_SERVER_BIN_NAME "EasyDarwin"
+    #define PLATFORM_SERVER_TEXT_NAME "EasyDarwin"
 	#define MMAP_TABLES 0
 #endif
 

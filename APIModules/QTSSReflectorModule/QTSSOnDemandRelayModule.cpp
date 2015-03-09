@@ -408,7 +408,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 
 		QTSS_Error theErr = clientSes->SendDescribe();
 
-		qtss_printf("QTSSOnDemandRelayModule DoDescribe OK\n");
+		//qtss_printf("QTSSOnDemandRelayModule DoDescribe OK\n");
 
 
 			if(theErr == QTSS_NoErr)

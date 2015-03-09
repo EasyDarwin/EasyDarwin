@@ -152,28 +152,6 @@ int32_t CParseDevice::LoadDeviceXml(const char *pXmlFile)
 			devInfo.m_nId = nValue;
 		}
 
-		//identifier
-		pszvalue = pDevElement->Attribute("identifier", &nValue);
-		if (NULL == pszvalue) 
-		{
-			return fail;
-		}
-		else
-		{
-			strncpy(devInfo.m_szIdentifier, pszvalue, sizeof(devInfo.m_szIdentifier));
-		}
-
-		//model
-		pszvalue = pDevElement->Attribute("model", &nValue);
-		if (NULL == pszvalue) 
-		{
-			return fail;
-		}
-		else
-		{
-			strncpy(devInfo.m_szModel, pszvalue, sizeof(devInfo.m_szModel));
-		}
-
 		//streamName
 		pszvalue = pDevElement->Attribute("name", &nValue);
 		if (NULL == pszvalue) 
