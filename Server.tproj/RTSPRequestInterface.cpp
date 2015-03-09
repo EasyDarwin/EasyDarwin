@@ -780,6 +780,10 @@ void* RTSPRequestInterface::GetLocalPath(QTSSDictionary* inRequest, UInt32* outL
 	        filePath.Len --;
 	    }
 	}
+
+	char rootDir[MAX_PATH] = { 0 };
+	::strncpy(rootDir, theRootDir->Ptr, theRootDir->Len);
+	OS::RecursiveMakeDir(rootDir);
 	
 	UInt32 fullPathLen = filePath.Len + theRootDir->Len;
 	char* theFullPath = NEW char[fullPathLen+1];
