@@ -26,12 +26,9 @@
 <CONFIGURATION>
 	<SERVER>
 		<LIST-PREF NAME="rtsp_port" TYPE="UInt16" >
-			<VALUE>7070</VALUE>
 			<VALUE>554</VALUE>
-			<VALUE>8000</VALUE>
-			<VALUE>8001</VALUE>
 		</LIST-PREF>
-		<PREF NAME="default_authorization_realm" >Streaming Server</PREF>
+		<PREF NAME="default_authorization_realm" >EasyDarwin</PREF>
 		<PREF NAME="do_report_http_connection_ip_address" TYPE="Bool16" >disabled</PREF>
 		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
 		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
