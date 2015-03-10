@@ -781,7 +781,7 @@ void* RTSPRequestInterface::GetLocalPath(QTSSDictionary* inRequest, UInt32* outL
 	    }
 	}
 
-	char rootDir[MAX_PATH] = { 0 };
+	char rootDir[512] = { 0 };
 	::strncpy(rootDir, theRootDir->Ptr, theRootDir->Len);
 	OS::RecursiveMakeDir(rootDir);
 	
