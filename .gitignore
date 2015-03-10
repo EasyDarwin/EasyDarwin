@@ -29,3 +29,4 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 *.sdf
 WinNTSupport/Logs/server_status
+*.sdp
