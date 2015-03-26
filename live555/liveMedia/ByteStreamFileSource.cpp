@@ -18,6 +18,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // A file source that is a plain byte stream (rather than frames)
 // Implementation
 
+#define READ_FROM_FILES_SYNCHRONOUSLY
 #include "ByteStreamFileSource.hh"
 #include "InputFile.hh"
 #include "GroupsockHelper.hh"
