@@ -1889,18 +1889,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="ReadMe.txt"
-			>
-		</File>
-		<File
-			RelativePath="streamingrelay.cfg"
-			>
-		</File>
-		<File
-			RelativePath="streamingserver.cfg"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
