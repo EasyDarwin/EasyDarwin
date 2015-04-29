@@ -30,3 +30,4 @@ _ReSharper*/
 *.sdf
 WinNTSupport/Logs/server_status
 *.sdp
+*.o

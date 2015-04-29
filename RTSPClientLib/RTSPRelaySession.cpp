@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -158,7 +158,7 @@ void live555Thread::Entry()
 
 void live555Thread::live555EventLoop(char* watchVariable)
 {
-	if(fLive555Env == NULL)
+	if((fLive555Env == NULL) || (watchVariable == NULL) )
 		return;
 
 	//停止主线程
@@ -178,6 +178,19 @@ void live555Thread::live555EventLoop(char* watchVariable)
 	
 	//locker.Unlock();
 	this->Start();
+}
+
+void live555Thread::shutdownLiveStream(void* rtspClient)
+{
+	if( (fLive555Env == NULL) || (rtspClient == NULL) )
+		return;
+
+	//停止主线程
+	this->fLive555EventLoopWatchVariable = ~0;
+	OSMutexLocker locker(&fMutex);
+
+	shutdownStream((RTSPClient*)rtspClient);
+	
 }
 
 ///////////////////////live555Thread Implement////////////////////////////
@@ -280,8 +293,8 @@ RTSPRelaySession::~RTSPRelaySession()
 
 	if(fLive555Client)
 	{
-		shutdownStream((RTSPClient*)fLive555Client);
-		fLive555Client = NULL;
+		//env<< "RTSPRelaySession Send Describe" << "\n";
+		fLive555LoopThread->shutdownLiveStream(fLive555Client);
 	}
 
 	if(fLive555LoopThread)

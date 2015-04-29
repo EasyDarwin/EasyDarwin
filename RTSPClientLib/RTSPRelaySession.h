@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -45,7 +45,9 @@ class live555Thread : public OSThread
         live555Thread(QTSS_Object scheduler, QTSS_Object env);
         virtual ~live555Thread();
 
-		void live555EventLoop(char* watchVariable = NULL);
+		void live555EventLoop(char* watchVariable);
+
+		void shutdownLiveStream(void* rtspClient);
     
     private:
     
