@@ -1060,7 +1060,7 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 			{
 				OSQueueElem* nextElem = packetElem->Prev();	//从下一个位置开始重新定位
 				Assert(nextElem != NULL);					//必然不为空
-				packetElem =  this->GetNewestKeyFrameFirstPacket(nextElem); 
+				packetElem =  this->GetNewestKeyFrameFirstPacket(nextElem,0);	
 				if (packetElem)	
 				{
 					printf("[geyijun] =======> RtpSeq [%d]=>[%d] \n",
