@@ -73,6 +73,8 @@ UInt32                          ReflectorStream::sBucketDelayInMsec = 73;
 Bool16                          ReflectorStream::sUsePacketReceiveTime = false;
 UInt32                          ReflectorStream::sFirstPacketOffsetMsec = 500;
 
+UInt32                          ReflectorStream::sRelocatePacketAgeMSec = 10000;
+	
 void ReflectorStream::Register()
 {
     // Add text messages attributes
@@ -106,8 +108,8 @@ void ReflectorStream::Initialize(QTSS_ModulePrefsObject inPrefs)
 
     ReflectorStream::sOverBufferInMsec = sOverBufferInSec * 1000;
     ReflectorStream::sMaxFuturePacketMSec = sMaxFuturePacketSec * 1000;
-    ReflectorStream::sMaxPacketAgeMSec = (UInt32) (sOverBufferInMsec * 1.5); //allow a little time before deleting.
-
+    ReflectorStream::sMaxPacketAgeMSec = (UInt32) (sOverBufferInMsec * 2.0); //allow a little time before deleting.
+    ReflectorStream::sRelocatePacketAgeMSec = (UInt32) (sOverBufferInMsec * 1.3); 
 }
 
 void ReflectorStream::GenerateSourceID(SourceInfo::StreamInfo* inInfo, char* ioBuffer)
@@ -998,8 +1000,23 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
     // Check to see if we should update the session's bitrate average
     fStream->UpdateBitRate(currentTime);
 
-    // where to start new clients in the q
-    fFirstPacketInQueueForNewOutput = this->GetClientBufferStartPacketOffset(0); 
+    //视频数据流，最好直接定位到第一个关键帧起始包
+    //这样出视频的时间会更快一些。
+    SourceInfo::StreamInfo* streamInfo = fStream->GetStreamInfo();
+    if((streamInfo->fPayloadType == qtssVideoPayloadType)
+    	&&(streamInfo->fPayloadName.Equal("H264/90000")))
+    {	
+		fFirstPacketInQueueForNewOutput = this->GetClientBufferStartPacketOffset(0,true); 
+		if(fFirstPacketInQueueForNewOutput == NULL)
+		{
+			fFirstPacketInQueueForNewOutput = this->GetClientBufferStartPacketOffset(0); 		
+		}	
+    }
+    else
+    {
+       	// where to start new clients in the q
+		fFirstPacketInQueueForNewOutput = this->GetClientBufferStartPacketOffset(0); 
+    }
 
 #if (0) //test code 
     if (NULL != fFirstPacketInQueueForNewOutput)
@@ -1026,27 +1043,45 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
             {                 
                 if ( false == theOutput->IsPlaying() ) 
                     continue;
+		{
+			OSMutexLocker locker(&theOutput->fMutex);
+			OSQueueElem*    packetElem = theOutput->GetBookMarkedPacket(&fPacketQueue); 
+			if ( packetElem  == NULL ) // should only be a new output
+			{                  
+				packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
+				firstPacket = true;
+				theOutput->fNewOutput = false;    
+			}
+
+			//->geyijyn@20150427
+			//判断是否需要重新定位书签的位置
+			//<-
+			if(NeedRelocateBookMark(packetElem))
+			{
+				OSQueueElem* nextElem = packetElem->Prev();	//从下一个位置开始重新定位
+				Assert(nextElem != NULL);					//必然不为空
+				packetElem =  this->GetNewestKeyFrameFirstPacket(nextElem); 
+				if (packetElem)	
 				{
-					OSMutexLocker locker(&theOutput->fMutex);
-					OSQueueElem*    packetElem = theOutput->GetBookMarkedPacket(&fPacketQueue); 
-					if ( packetElem  == NULL ) // should only be a new output
-					{                  
-						packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
-						firstPacket = true;
-						theOutput->fNewOutput = false;    
-						//if (packetElem) printf("ReflectorSender::ReflectPackets Sending first packet in Queue packetElem=fFirstPacketInQueueForNewOutput %d \n",  ( (ReflectorPacket*) (packetElem->GetEnclosingObject() )  )->GetPacketRTPSeqNum());
-
-					 }
-
-					SInt64  bucketDelay = ReflectorStream::sBucketDelayInMsec * (SInt64)bucketIndex;
-					packetElem = this->SendPacketsToOutput(theOutput, packetElem,currentTime, bucketDelay, firstPacket);
-					if (packetElem)
-					{
-						ReflectorPacket*    thePacket = (ReflectorPacket*)packetElem->GetEnclosingObject();
-						thePacket->fNeededByOutput = true; // flag to prevent removal in RemoveOldPackets
-						(void) theOutput->SetBookMarkPacket(packetElem); // store a reference to the packet
-					}
+					printf("[geyijun] =======> RtpSeq [%d]=>[%d] \n",
+						((ReflectorPacket*)(nextElem->GetEnclosingObject()))->GetPacketRTPSeqNum(),
+						((ReflectorPacket*)(packetElem->GetEnclosingObject()))->GetPacketRTPSeqNum());
 				}
+				else
+				{
+					packetElem = nextElem;	
+				}	
+	
+			}
+			SInt64  bucketDelay = ReflectorStream::sBucketDelayInMsec * (SInt64)bucketIndex;
+			packetElem = this->SendPacketsToOutput(theOutput, packetElem,currentTime, bucketDelay, firstPacket);
+			if (packetElem)
+			{
+				ReflectorPacket*   thePacket = (ReflectorPacket*)packetElem->GetEnclosingObject();
+				thePacket->fNeededByOutput = true; 				// flag to prevent removal in RemoveOldPackets
+				(void) theOutput->SetBookMarkPacket(packetElem); 	// store a reference to the packet
+			}
+		}
             } 
         }
     }
@@ -1129,7 +1164,7 @@ OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput,
     return lastPacket;
 }
 
-OSQueueElem*    ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetMsec)
+OSQueueElem*    ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetMsec,Bool16 needKeyFrameFirstPacket)
 {
         
     OSQueueIter qIter(&fPacketQueue);// start at oldest packet in q
@@ -1153,12 +1188,21 @@ OSQueueElem*    ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetM
             
         if ( packetDelay <= (ReflectorStream::sOverBufferInMsec - offsetMsec) ) 
         {   
-            oldestPacketInClientBufferTime = &thePacket->fQueueElem;
-            break; // found the packet we need: done processing
+        	if(needKeyFrameFirstPacket)
+			{
+				if(IsKeyFrameFirstPacket(thePacket))
+				{
+					oldestPacketInClientBufferTime = &thePacket->fQueueElem;
+					break;
+				}	
+			}
+			else
+			{
+				oldestPacketInClientBufferTime = &thePacket->fQueueElem;
+		        break; // found the packet we need: done processing			
+			}
         }
-        
     }
-    
     return oldestPacketInClientBufferTime;
 }
 
@@ -1209,6 +1253,275 @@ void    ReflectorSender::RemoveOldPackets(OSQueue* inFreeQueue)
     
 
 }
+
+Bool16 ReflectorSender::NeedRelocateBookMark(OSQueueElem* currentElem)
+{
+	//只有视频流才需要做
+	SourceInfo::StreamInfo* streamInfo = fStream->GetStreamInfo();
+	if(streamInfo->fPayloadType != qtssVideoPayloadType)
+	{
+		return false;
+	}
+	if(!streamInfo->fPayloadName.Equal("H264/90000"))
+	{
+		return false;
+	}
+
+	//因为设备断网的情况下，数据队列中会无数据包
+	//此时fFirstPacketInQueueForNewOutput 会为空。所以不能使用断言。
+	//Assert(currentElem);	
+	if(currentElem==NULL)
+	{
+		return false;
+	}
+	//后面必须要有元素才有重定向的可能性
+	OSQueueElem* nextElem = currentElem->Prev();
+	if((nextElem == NULL)||(nextElem->GetEnclosingObject() == NULL))
+	{
+		return false;
+	}
+	
+	//触发条件1 :  当前帧已经进入重定向超时门限
+	ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();
+	//if((currentPacket)&&IsFrameLastPacket(currentPacket))
+	if((currentPacket)&&IsFrameFirstPacket(currentPacket))
+	{	
+		SInt64 packetDelay = OS::Milliseconds() - currentPacket->fTimeArrived;
+		if ( packetDelay >= (ReflectorStream::sRelocatePacketAgeMSec) )
+		{
+			return true;
+		}
+	}
+	//触发条件2 :  已经出现帧序号不联系的情况。后面的数据包已经被老化回收了
+	{
+		ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();  
+		ReflectorPacket* nextPacket = (ReflectorPacket*)nextElem->GetEnclosingObject();  
+		if((currentPacket)&&(nextPacket)&&((currentPacket->fStreamCountID+1) != nextPacket->fStreamCountID))
+		{
+			if(g_debug_print)printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
+			printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
+			return true;
+		}
+	}
+	return false;
+}
+
+OSQueueElem*    ReflectorSender::GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem,SInt64 offsetMsec)
+{
+	//printf("[geyijun] GetNewestKeyFrameFirstPacket---------------->1\n");
+	SInt64 theCurrentTime = OS::Milliseconds();
+	SInt64 packetDelay = 0;
+	OSQueueElem* requestedPacket = NULL;
+	OSQueueIter qIter(&fPacketQueue,currentElem);
+	while ( !qIter.IsDone() ) // start at oldest packet in q
+	{
+		OSQueueElem* elem = qIter.GetCurrent();
+		Assert( elem );
+		qIter.Next();
+
+		ReflectorPacket* thePacket = (ReflectorPacket*)elem->GetEnclosingObject();      
+		if(thePacket == NULL)
+		{
+			break;
+		}
+		if (IsKeyFrameFirstPacket(thePacket)) 
+		{
+			requestedPacket = &thePacket->fQueueElem;
+			//printf("[geyijun]Maybe,GetNewestKeyFrameFirstPacket --->[%#x]\n",requestedPacket);	
+
+			//
+			packetDelay = theCurrentTime - thePacket->fTimeArrived;
+			if (offsetMsec > ReflectorStream::sOverBufferInMsec)
+		       		offsetMsec = ReflectorStream::sOverBufferInMsec;
+       			if ( packetDelay <= (ReflectorStream::sOverBufferInMsec - offsetMsec) ) 
+		       {
+	        		break;
+			}
+		}
+	}
+	if(requestedPacket == NULL)
+	{
+		printf("[geyijun]GetNewestKeyFrameFirstPacket --->[NotFound]\n");	
+	}	
+	else
+	{
+		printf("[geyijun]Final,GetNewestKeyFrameFirstPacket --->[%#x]\n",requestedPacket);		
+	}	
+	return requestedPacket;
+}
+
+//下面的写法可能不太严谨(仅针对H264 的情况，未考虑其他格式)
+Bool16 ReflectorSender::IsKeyFrameFirstPacket(ReflectorPacket* thePacket)
+{
+	#if 0
+	char const* nal_unit_type_description_h264[32] = {
+	  "Unspecified", //0
+	  "Coded slice of a non-IDR picture", //1
+	  "Coded slice data partition A", //2
+	  "Coded slice data partition B", //3
+	  "Coded slice data partition C", //4
+	  "Coded slice of an IDR picture", //5
+	  "Supplemental enhancement information (SEI)", //6
+	  "Sequence parameter set", //7
+	  "Picture parameter set", //8
+	  "Access unit delimiter", //9
+	  "End of sequence", //10
+	  "End of stream", //11
+	  "Filler data", //12
+	  "Sequence parameter set extension", //13
+	  "Prefix NAL unit", //14
+	  "Subset sequence parameter set", //15
+	  "Reserved", //16
+	  "Reserved", //17
+	  "Reserved", //18
+	  "Coded slice of an auxiliary coded picture without partitioning", //19
+	  "Coded slice extension", //20
+	  "Reserved", //21
+	  "Reserved", //22
+	  "Reserved", //23
+	  "Unspecified", //24
+	  "Unspecified", //25
+	  "Unspecified", //26
+	  "Unspecified", //27
+	  "Unspecified", //28
+	  "Unspecified", //29
+	  "Unspecified", //30
+	  "Unspecified" //31
+	};
+        struct RTPHeader {
+           //unsigned int version:2;          /* protocol version */
+           //unsigned int p:1;                /* padding flag */
+           //unsigned int x:1;                /* header extension flag */
+           //unsigned int cc:4;               /* CSRC count */
+           //unsigned int m:1;                /* marker bit */
+           //unsigned int pt:7;               /* payload type */
+           UInt16 rtpheader;
+	    UInt16 seq;				        /* sequence number */
+           UInt32 ts;                       /* timestamp */
+           UInt32 ssrc;                     /* synchronization source */
+           //UInt32 csrc[1];                /* optional CSRC list */
+        };
+	#endif
+	//printf("[geyijun] IsKeyFrameFirstPacket--->RtpSeq[%d]\n",thePacket->GetPacketRTPSeqNum());	
+	Assert(thePacket);	
+	if ((thePacket->fPacketPtr.Ptr != NULL) && (thePacket->fPacketPtr.Len >= 20))
+	{
+		UInt8 csrc_count = thePacket->fPacketPtr.Ptr[0]&0x0f;
+		UInt32 rtp_head_size = /*sizeof(struct RTPHeader)*/12 + csrc_count*sizeof(UInt32);
+		UInt8 nal_unit_type = thePacket->fPacketPtr.Ptr[rtp_head_size+0]&0x1F;
+		//printf("[geyijun] IsKeyFrameFirstPacket 111--->nal_unit_type[%d]\n",nal_unit_type);
+		if((nal_unit_type >=1)&&(nal_unit_type <=23))	//单一包
+		{
+			;//不需要转换
+		}
+		else if(nal_unit_type == 24)//STAP-A
+		{
+			if(thePacket->fPacketPtr.Len > rtp_head_size+3)
+				nal_unit_type = thePacket->fPacketPtr.Ptr[rtp_head_size+3]&0x1F;
+		}
+		else if(nal_unit_type == 25)//STAP-B
+		{
+			if(thePacket->fPacketPtr.Len > rtp_head_size+5)
+				nal_unit_type = thePacket->fPacketPtr.Ptr[rtp_head_size+5]&0x1F;
+		}
+		else if(nal_unit_type == 26)//MTAP16
+		{
+			if(thePacket->fPacketPtr.Len > rtp_head_size+8)
+				nal_unit_type = thePacket->fPacketPtr.Ptr[rtp_head_size+8]&0x1F;
+		}
+		else if(nal_unit_type == 27)//MTAP24
+		{
+			if(thePacket->fPacketPtr.Len > rtp_head_size+9)
+				nal_unit_type = thePacket->fPacketPtr.Ptr[rtp_head_size+9]&0x1F;
+		}
+		else if((nal_unit_type == 28)||(nal_unit_type == 29))//FU-A/B
+		{
+			//printf("[geyijun] IsKeyFrameFirstPacket fPacketPtr.Len[%d] rtp_head_size[%d]\n",thePacket->fPacketPtr.Len,rtp_head_size);	
+			if(thePacket->fPacketPtr.Len > rtp_head_size+1)
+			{
+
+				UInt8 startBit = thePacket->fPacketPtr.Ptr[rtp_head_size+1]&0x80;
+				if (startBit) 
+				{
+					//printf("[geyijun] IsKeyFrameFirstPacket AAA--->[%x:%x:%x:%x:]\n",
+					//	(unsigned char )thePacket->fPacketPtr.Ptr[rtp_head_size+0],
+					//	(unsigned char )thePacket->fPacketPtr.Ptr[rtp_head_size+1],
+					//	(unsigned char )thePacket->fPacketPtr.Ptr[rtp_head_size+2],
+					//	(unsigned char )thePacket->fPacketPtr.Ptr[rtp_head_size+3]);
+					nal_unit_type = thePacket->fPacketPtr.Ptr[rtp_head_size+1]&0x1F;
+					//printf("[geyijun] IsKeyFrameFirstPacket BBB--->[%#x]\n",nal_unit_type);
+				}
+			}
+		}
+		//printf("[geyijun] IsKeyFrameFirstPacket 222--->nal_unit_type[%d]\n",nal_unit_type);	
+		if((nal_unit_type == 5)||(nal_unit_type == 7)||(nal_unit_type == 8))
+		{
+			//printf("[geyijun] IsKeyFrameFirstPacket 333--->nal_unit_type[%d]\n",nal_unit_type);	
+			return true;
+		}
+	}
+	return false;
+}
+
+Bool16 ReflectorSender::IsFrameFirstPacket(ReflectorPacket* thePacket)
+{
+	//printf("[geyijun] IsKeyFrameFirstPacket--->RtpSeq[%d]\n",thePacket->GetPacketRTPSeqNum());	
+	Assert(thePacket);	
+	if ((thePacket->fPacketPtr.Ptr != NULL) && (thePacket->fPacketPtr.Len >= 20))
+	{
+		UInt8 csrc_count = thePacket->fPacketPtr.Ptr[0]&0x0f;
+		UInt32 rtp_head_size = /*sizeof(struct RTPHeader)*/12 + csrc_count*sizeof(UInt32);
+		UInt8 nal_unit_type = thePacket->fPacketPtr.Ptr[rtp_head_size+0]&0x1F;
+		if((nal_unit_type >=1)&&(nal_unit_type <=23))	//单一包
+		{
+			return true;
+		}
+		else if(nal_unit_type == 24)//STAP-A
+		{
+			return true;
+		}
+		else if(nal_unit_type == 25)//STAP-B
+		{
+			return true;
+		}
+		else if(nal_unit_type == 26)//MTAP16
+		{
+			return true;
+		}
+		else if(nal_unit_type == 27)//MTAP24
+		{
+			return true;
+		}
+		else if((nal_unit_type == 28)||(nal_unit_type == 29))//FU-A/B
+		{
+			if(thePacket->fPacketPtr.Len > rtp_head_size+1)
+			{
+				UInt8 startBit = thePacket->fPacketPtr.Ptr[rtp_head_size+1]&0x80;
+				if (startBit)
+				{
+					return true;		
+				}
+			}
+		}
+	}
+	return false;
+}
+
+Bool16 ReflectorSender::IsFrameLastPacket(ReflectorPacket* thePacket)
+{
+	//printf("[geyijun] IsFrameLastPacket--->RtpSeq[%d]\n",thePacket->GetPacketRTPSeqNum());	
+	Assert(thePacket);	
+	if ((thePacket->fPacketPtr.Ptr != NULL) && (thePacket->fPacketPtr.Len >= 20))
+	{
+		UInt8 markBit = thePacket->fPacketPtr.Ptr[1]&0x80;
+		if (markBit) 
+		{
+			//printf("[geyijun] IsFrameLastPacket --->OK\n");	
+			return true;
+		}
+	}
+	return false;	
+}	
 
 void ReflectorSocketPool::SetUDPSocketOptions(UDPSocketPair* inPair)
 {
