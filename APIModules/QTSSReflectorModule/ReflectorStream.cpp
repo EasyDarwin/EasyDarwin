@@ -1298,7 +1298,6 @@ Bool16 ReflectorSender::NeedRelocateBookMark(OSQueueElem* currentElem)
 		ReflectorPacket* nextPacket = (ReflectorPacket*)nextElem->GetEnclosingObject();  
 		if((currentPacket)&&(nextPacket)&&((currentPacket->fStreamCountID+1) != nextPacket->fStreamCountID))
 		{
-			if(g_debug_print)printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
 			printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
 			return true;
 		}
