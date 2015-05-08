@@ -278,9 +278,18 @@ class ReflectorSender : public UDPDemuxerTask
     Bool16      GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr);
 
     void        RemoveOldPackets(OSQueue* inFreeQueue);
-    OSQueueElem* GetClientBufferStartPacketOffset(SInt64 offsetMsec); 
+    OSQueueElem* GetClientBufferStartPacketOffset(SInt64 offsetMsec,Bool16 needKeyFrameFirstPacket=false); 
     OSQueueElem* GetClientBufferStartPacket() { return this->GetClientBufferStartPacketOffset(0); };
 
+    //->geyijyn@20150427
+    //--重新定位书签位置
+    //<-
+    Bool16 NeedRelocateBookMark(OSQueueElem* currentElem);
+    OSQueueElem* GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem,SInt64 offsetMsec);
+    Bool16 IsKeyFrameFirstPacket(ReflectorPacket* thePacket);
+    Bool16 IsFrameFirstPacket(ReflectorPacket* thePacket);
+    Bool16 IsFrameLastPacket(ReflectorPacket* thePacket);
+	
     ReflectorStream*    fStream;
     UInt32              fWriteFlag;
     
@@ -487,6 +496,8 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         static UInt32       sBucketDelayInMsec;
         static Bool16       sUsePacketReceiveTime;
         static UInt32       sFirstPacketOffsetMsec;
+
+		static UInt32       sRelocatePacketAgeMSec;	
         
         friend class ReflectorSocket;
         friend class ReflectorSender;

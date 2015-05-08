@@ -1000,7 +1000,13 @@ Bool16 RTPStream::UpdateQualityLevel(const SInt64& inTransmitTime, const SInt64&
     
     if (inTransmitTime <= fSession->GetPlayTime())
         return true;
-                
+
+    //->geyijyn@20150427
+    //---视频流不进行thinning 算法丢帧
+    //<- 
+    if (fPayloadType == qtssVideoPayloadType)
+        return true;           
+
     if (this->Supports3GPPQualityLevels())
         return true;
     
