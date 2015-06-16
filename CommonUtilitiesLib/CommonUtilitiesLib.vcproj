@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../,../WinNTSupport/,.."
+				AdditionalIncludeDirectories="../;../Include/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/CommonUtilitiesLib.pch"
@@ -53,7 +53,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="4"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../,../WinNTSupport/,.."
+				AdditionalIncludeDirectories="../;../Include/"
 				PreprocessorDefinitions="WIN32;_LIB"
 				RuntimeLibrary="0"
 				PrecompiledHeaderFile=".\Release/CommonUtilitiesLib.pch"
@@ -127,7 +127,7 @@
 				ProgramDataBaseFileName=".\Release/"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="1"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

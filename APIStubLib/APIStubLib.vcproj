@@ -53,7 +53,7 @@
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				SuppressStartupBanner="true"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -127,7 +127,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

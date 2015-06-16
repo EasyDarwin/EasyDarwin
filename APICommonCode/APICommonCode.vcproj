@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..,../CommonUtilitiesLib/,../APIStubLib/,../RTPMetaInfoLib/"
+				AdditionalIncludeDirectories="../;../CommonUtilitiesLib/;../APIStubLib/;../EasyDarwin/RTPMetaInfoLib/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/APICommonCode.pch"
@@ -53,7 +53,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..,../CommonUtilitiesLib/,../APIStubLib/,../RTPMetaInfoLib/"
+				AdditionalIncludeDirectories="../;../CommonUtilitiesLib/;../APIStubLib/;../EasyDarwin/RTPMetaInfoLib/"
 				PreprocessorDefinitions="WIN32;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -129,7 +129,7 @@
 				ProgramDataBaseFileName=".\Release/"
 				BrowseInformation="1"
 				SuppressStartupBanner="true"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -245,28 +245,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\RTPMetaInfoLib\RTPMetaInfoPacket.cpp"
+				RelativePath="..\EasyDarwin\RTPMetaInfoLib\RTPMetaInfoPacket.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="SDPSourceInfo.cpp"

@@ -1,0 +1,79 @@
+# Copyright (c) 1999 Apple Computer, Inc.  All rights reserved.
+#  
+
+#NAME = QTFileLib
+SERVER = -DDSS_USE_API_CALLBACKS
+C++ = $(CPLUS)
+CC = $(CCOMP)
+LINK = $(LINKER)
+CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../PlatformHeader.h -g -Wall
+
+# OPTIMIZATION
+CCFLAGS += -O3
+
+# EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
+
+CCFLAGS += -I.
+CCFLAGS += -I../RTPMetaInfoLib
+CCFLAGS += -I../OSMemoryLib
+CCFLAGS += -I../APIStubLib
+CCFLAGS += -I../CommonUtilitiesLib
+
+C++FLAGS = $(CCFLAGS)
+
+CPPFILES = 	QTAtom.cpp\
+			QTAtom_dref.cpp \
+			QTAtom_elst.cpp\
+			QTAtom_hinf.cpp \
+			QTAtom_mdhd.cpp\
+			QTAtom_mvhd.cpp \
+			QTAtom_stco.cpp\
+			QTAtom_stsc.cpp \
+			QTAtom_stsd.cpp\
+			QTAtom_stss.cpp \
+			QTAtom_stsz.cpp\
+			QTAtom_stts.cpp \
+			QTAtom_tkhd.cpp\
+			QTAtom_tref.cpp \
+			QTFile.cpp\
+			QTFile_FileControlBlock.cpp \
+			QTHintTrack.cpp\
+			QTRTPFile.cpp \
+			QTTrack.cpp
+
+STDLIBCPP = ../SafeStdLib/InternalStdLib.cpp
+DYNSTDLIBCPP = ../SafeStdLib/DynamicModuleStdLib.cpp
+
+#all: libQTFileLib.a libQTFileExternalLib.a libQTFileDynModuleLib.a
+all: libQTFileLib.a libQTFileExternalLib.a 
+
+libQTFileLib.a: $(CFILES:.c=.o) $(CPPFILES:.cpp=.o) $(STDLIBCPP:.cpp=.o)  
+	ar -r libQTFileLib.a $(CFILES:.c=.o) $(CPPFILES:.cpp=.o) $(STDLIBCPP:.cpp=.o) 
+	ranlib libQTFileLib.a
+
+libQTFileExternalLib.a: $(CFILES:.c=.xo) $(CPPFILES:.cpp=.xo) $(STDLIBCPP:.cpp=.xo)  
+	ar -r libQTFileExternalLib.a $(CFILES:.c=.xo) $(CPPFILES:.cpp=.xo) $(STDLIBCPP:.cpp=.xo)  
+	ranlib libQTFileExternalLib.a
+
+
+install: libQTFileLib.a libQTFileExternalLib.a
+
+clean:
+	rm -f $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	rm -f $(CFILES:.c=.xo) $(CPPFILES:.cpp=.xo)
+	rm -f $(STDLIBCPP:.cpp=.xo)  
+	rm -f libQTFileLib.a libQTFileExternalLib.a
+
+.SUFFIXES: .cpp .c .o .xo
+
+.cpp.o:
+	$(C++) $(SERVER) -c -o $*.o $(DEFINES) $(C++FLAGS) $*.cpp
+
+.cpp.xo:
+	$(C++) -c -o $*.xo $(DEFINES) $(C++FLAGS) $*.cpp
+
+.c.o:
+	$(CC) $(SERVER) -c -o $*.o $(DEFINES) $(CCFLAGS) $*.c
+.c.xo:
+	$(CC) -c -o $*.xo $(DEFINES) $(CCFLAGS) $*.c
+

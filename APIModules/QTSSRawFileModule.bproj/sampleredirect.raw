@@ -1,5 +1,0 @@
-RTSP/1.0 302 Found
-CSeq: 1
-Server: QTSS/2.0
-Location: rtsp://www.myserver.com/mymovie
-
