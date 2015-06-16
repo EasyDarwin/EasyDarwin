@@ -1,6 +1,0 @@
-dir ../APICommonCode
-dir ../CommonUtilitiesLib
-dir ../OSMemoryLib
-dir ../PrefsSourceLib
-dir ../RTSPClientLib
-handle SIGPIPE nopass nostop noprint
