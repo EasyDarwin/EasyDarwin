@@ -1,0 +1,67 @@
+# qtaccess
+# A sample access file for streaming 
+# server authorization 
+# ----------------------------------
+# Note: 
+# For each keyword, the first sentence in the comment 
+# explains the keyword, and the usage: line explains
+# how to use it. Anything not in angle brackets is a keyword
+# and keywords are case-sensitive.
+# The comment is followed by an example usage
+
+# AuthScheme: The authentication scheme that will be used
+# usage: AuthScheme <scheme>
+# where scheme is either "basic" or "digest"
+AuthScheme basic
+
+# AuthName: The authentication realm that will be
+# presented to the client (for Basic Authentication only)
+# usage: AuthName <realm>
+# where realm can be a single word or a quoted multi-word string
+AuthName "streaming server realm"
+
+# AuthUserFile: The filename that contains the list of users
+# for this access file 
+# If not given, the default filename is /Library/QuickTimeStreaming/Config/qtusers for MacOSX
+# If not given, the default filename is /etc/streaming/qtusers for POSIX
+# usage: AuthUserFile <user filename>
+#AuthUserFile /etc/streaming/qtusers
+AuthUserFile /Library/QuickTimeStreaming/Config/qtusers
+
+# AuthGroupFile: The filename that contains the groups and the 
+# users that belong to each group
+# If not given, the default filename is /Library/QuickTimeStreaming/Config/qtgroups for MacOSX
+# If not given, the default filename is /etc/streaming/qtgroups for POSIX
+# usage: AuthGroupFile  <group filename>
+#AuthGroupFile  /etc/streaming/qtgroups
+AuthGroupFile /Library/QuickTimeStreaming/Config/qtgroups
+
+# require user: The names next to this specify which user 
+# is allowed to access the media in this folder
+# below are two special cases:
+# require any-user         =>      implies any user is allowed without
+#                                               requiring authentication
+# require valid-user       =>      implies any user that is
+#                                               authenticated is allowed access
+# usage: require user <username1> <username2> ...
+require user johndoe
+
+# require group: The names of the groups that are allowed
+# access to the media in this folder
+# usage: require group <groupname1> <groupname2> ...
+require group movie-watchers
+
+# <Limit READ/WRITE>: This directive is to specify access control
+# for READ and/or WRITE privileges. If not present, all access control
+# keywords apply to READ privileges only.
+# <Limit WRITE> is used for WRITE privileges, and <Limit READ WRITE> for 
+# both. <Limit READ> can be omitted as the access keywords outside the
+# Limit directive
+# usage: <Limit [READ|WRITE] ..> ... </Limit>
+<Limit WRITE>
+ AuthName "streaming server broadcaster realm"
+ AuthUserFile /Library/QuickTimeStreaming/Config/qtbroadcastusers
+ AuthGroupFile /Library/QuickTimeStreaming/Config/qtbroadcastgroups
+ require group broadcaster
+</Limit>
+
