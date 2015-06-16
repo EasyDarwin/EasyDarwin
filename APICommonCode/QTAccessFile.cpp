@@ -26,8 +26,6 @@
     File:       QTAccessFile.cpp
 
     Contains:   This file contains the implementation for finding and parsing qtaccess files.
-                
-
 */
 #include <string.h>
 #include <stdio.h>
@@ -43,8 +41,6 @@
 #include "OSHeaders.h"
 #include "QTAccessFile.h"
 #include "OSArrayObjectDeleter.h"
-
-
 
 #ifdef __MacOSX__
 #include <membership.h>
