@@ -24,10 +24,7 @@
  */
 /*
     File:       QTSSRefMovieModule.cpp
-
     Contains:   Implements a module to create RTSP text ref movies
-
-    
 */
 
 #include "QTSSRefMovieModule.h"
