@@ -1,9 +1,0 @@
-#!/usr/bin/perl
-
-$install_loc = $_[0];
-$movies_folder = "$install_loc/Library/QuickTimeStreaming/Movies";
-
-if (-e "$movies_folder") {
-    print ("Changing all folders and files in $movies_folder to owner=qtss, group=admin.\n");
-	exec "$3/usr/sbin/chown -R 76:80 $movies_folder" ;
-}
