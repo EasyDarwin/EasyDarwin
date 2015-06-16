@@ -293,6 +293,10 @@ SourceInfo::StreamInfo::~StreamInfo()
     if (fPayloadName.Ptr != NULL)
         delete fPayloadName.Ptr;
     fPayloadName.Len = 0;
+
+	if (fTrackName.Ptr != NULL)
+        delete fTrackName.Ptr;
+	fTrackName.Len = 0;
 }
 
 void SourceInfo::OutputInfo::Copy(const OutputInfo& copy)
