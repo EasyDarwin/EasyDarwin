@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../Server.tproj/;../../CommonUtilitiesLib/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../../APIModules/;../../APIStubLib/;../../APICommonCode/;../../HTTPUtilitiesLib/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../ParseDeviceConfig/;../live555/BasicUsageEnvironment/include/;../live555/BasicUsageEnvironment/;../live555/UsageEnvironment/include/;../live555/UsageEnvironment/;../live555/groupsock/include/;../live555/groupsock/;../live555/liveMedia/include/;../live555/liveMedia/"
+				AdditionalIncludeDirectories="../;../../Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../ParseDeviceConfig/;../live555/BasicUsageEnvironment/include/;../live555/BasicUsageEnvironment/;../live555/UsageEnvironment/include/;../live555/UsageEnvironment/;../live555/groupsock/include/;../live555/groupsock/;../live555/liveMedia/include/;../live555/liveMedia/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/EasyDarwin.pch"
@@ -138,7 +138,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../;../Server.tproj/;../../CommonUtilitiesLib/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../../APIModules/;../../APIStubLib/;../../APICommonCode/;../../HTTPUtilitiesLib/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../ParseDeviceConfig/;../live555/BasicUsageEnvironment/include/;../live555/BasicUsageEnvironment/;../live555/UsageEnvironment/include/;../live555/UsageEnvironment/;../live555/groupsock/include/;../live555/groupsock/;../live555/liveMedia/include/;../live555/liveMedia/"
+				AdditionalIncludeDirectories="../;../../Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../ParseDeviceConfig/;../live555/BasicUsageEnvironment/include/;../live555/BasicUsageEnvironment/;../live555/UsageEnvironment/include/;../live555/UsageEnvironment/;../live555/groupsock/include/;../live555/groupsock/;../live555/liveMedia/include/;../live555/liveMedia/"
 				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -417,7 +417,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\APICommonCode\QTSS3GPPModuleUtils.cpp"
+					RelativePath="..\APICommonCode\QTSS3GPPModuleUtils.cpp"
 					>
 				</File>
 				<File
