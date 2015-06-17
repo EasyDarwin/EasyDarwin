@@ -30,7 +30,6 @@
 #include "ResizeableStringFormatter.h"
 #include "DateTranslator.h"
 
-
 StrPtrLen HTTPRequest::sColonSpace(": ", 2);
 static Bool16 sFalse = false;
 static Bool16 sTrue = true;
@@ -67,7 +66,6 @@ UInt8 HTTPRequest::sURLStopConditions[] =
   0, 0, 0, 0, 0, 0                         //250-255
 };
 
-
 // Constructor
 HTTPRequest::HTTPRequest(StrPtrLen* serverHeader, StrPtrLen* requestPtr)
 {
@@ -87,6 +85,9 @@ HTTPRequest::HTTPRequest(StrPtrLen* serverHeader, StrPtrLen* requestPtr)
     fRequestPath = NULL;    
     fStatusCode = httpOK;
     fRequestKeepAlive = false; // Default value when there is no version string
+
+	//未解析情况下为httpIllegalType
+	fHTTPType = httpIllegalType;
 }
 
 // Constructor for creating a response only
@@ -113,6 +114,8 @@ HTTPRequest::HTTPRequest(StrPtrLen* serverHeader)
     // CreateResponseHeader
     fResponseHeader = NULL;
     fResponseFormatter = NULL;
+
+	fHTTPType = httpResponseType;
 }
 
 // Destructor
@@ -145,9 +148,15 @@ QTSS_Error HTTPRequest::Parse()
     // If the method or version are not found, they are set
     // to httpIllegalMethod or httpIllegalVersion respectively, 
     // and QTSS_NoErr is returned.
+	// 解析第一行
     QTSS_Error err = ParseRequestLine(&parser);
     if (err != QTSS_NoErr)
             return err;
+
+	if(fHTTPType == httpResponseType)
+	{
+		qtss_printf("recv HTTP Response\n");
+	}
   
     // Parse headers and set values of headers into fFieldValues array
     err = ParseHeaders(&parser);
@@ -164,10 +173,32 @@ QTSS_Error HTTPRequest::ParseRequestLine(StringParser* parser)
     StrPtrLen theParsedData;
     parser->ConsumeWord(&theParsedData);
     fMethod = HTTPProtocol::GetMethod(&theParsedData);
-    
+
+	//还有可能是HTTP Response类型
+	if((fMethod == httpIllegalMethod) && theParsedData.Equal("HTTP"))
+	{
+		parser->ConsumeUntilWhitespace();//过滤掉HTTP/1.1
+		parser->ConsumeUntilDigit(NULL);
+		UInt32 statusCode = parser->ConsumeInteger(NULL);
+		if( statusCode != 0 )
+		{
+			fHTTPType = httpResponseType;
+
+			parser->ConsumeWhitespace();
+			parser->ConsumeUntilWhitespace(NULL);
+			// Go past the end of line
+			if (!parser->ExpectEOL())
+			{
+				fStatusCode = httpBadRequest;
+				return QTSS_BadArgument;     // Request line is not properly formatted!
+			}
+			return QTSS_NoErr;
+		}
+	} 
     // Consume whitespace
     parser->ConsumeWhitespace();
-  
+ 
+
     // Parse the URI - If it fails returns an error after setting 
     // the fStatusCode to the appropriate error code
     QTSS_Error err = ParseURI(parser);
@@ -186,10 +217,10 @@ QTSS_Error HTTPRequest::ParseRequestLine(StringParser* parser)
   
     // Go past the end of line
     if (!parser->ExpectEOL())
-        {
-            fStatusCode = httpBadRequest;
-            return QTSS_BadArgument;     // Request line is not properly formatted!
-        }
+    {
+        fStatusCode = httpBadRequest;
+        return QTSS_BadArgument;     // Request line is not properly formatted!
+    }
 
     return QTSS_NoErr;
 }
@@ -219,22 +250,25 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
     // Allocate memory for fRequestPath
     UInt32 len = fRelativeURI.Len;
     len++;
-    char* relativeURIDecoded = NEW char[len];
-    
+    //char* relativeURIDecoded = NEW char[len];
+	char relativeURIDecoded[EASYDSS_MAX_URL_LENGTH] = { 0 };
+
     SInt32 theBytesWritten = StringTranslator::DecodeURL(fRelativeURI.Ptr, fRelativeURI.Len,
                                                        relativeURIDecoded, len);
      
     //if negative, an error occurred, reported as an QTSS_Error
     //we also need to leave room for a terminator.
     if ((theBytesWritten < 0) || ((UInt32)theBytesWritten == len))
-        {
-            fStatusCode = httpBadRequest;
-            return QTSS_BadArgument;
-        }
-    fRequestPath = NEW char[theBytesWritten + 1];
-    ::memcpy(fRequestPath, relativeURIDecoded + 1, theBytesWritten); 
-    delete relativeURIDecoded;
-    fRequestPath[theBytesWritten] = '\0';
+    {
+        fStatusCode = httpBadRequest;
+        return QTSS_BadArgument;
+    }
+
+	fRequestPath = NULL;
+    ////fRequestPath = NEW char[theBytesWritten + 1];
+    ////::memcpy(fRequestPath, relativeURIDecoded + 1, theBytesWritten); 
+    //////delete relativeURIDecoded;
+    ////fRequestPath[theBytesWritten] = '\0';
     return QTSS_NoErr;
 }
 
@@ -322,7 +356,7 @@ StrPtrLen* HTTPRequest::GetHeaderValue(HTTPHeader inHeader)
     return NULL;
 }
 
-void HTTPRequest:: CreateResponseHeader(HTTPVersion version, HTTPStatusCode statusCode)
+void HTTPRequest:: CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion version)
 {
     // If we are creating a second response for the same request, make sure and
     // deallocate memory for old response and allocate fresh memory
@@ -342,8 +376,9 @@ void HTTPRequest:: CreateResponseHeader(HTTPVersion version, HTTPStatusCode stat
     //make a partial header for the given version and status code
     PutStatusLine(fResponseFormatter, statusCode, version);
     Assert(fSvrHeader.Ptr != NULL);
-    fResponseFormatter->Put(fSvrHeader);
-    fResponseFormatter->PutEOL();
+    //fResponseFormatter->Put(fSvrHeader);
+    //fResponseFormatter->PutEOL();
+	//AppendResponseHeader(httpServerHeader,&fSvrHeader);
     fResponseHeader->Len = fResponseFormatter->GetCurrentOffset();
 }
 
@@ -365,7 +400,8 @@ void HTTPRequest::AppendResponseHeader(HTTPHeader inHeader, StrPtrLen* inValue)
 
 void HTTPRequest::AppendContentLengthHeader(UInt64 length_64bit)
 {
-    char* contentLength = NEW char[256];
+    //char* contentLength = NEW char[256];
+	char contentLength[256] = { 0 };
     qtss_sprintf(contentLength, "%"_64BITARG_"d", length_64bit);
     StrPtrLen contentLengthPtr(contentLength);
     AppendResponseHeader(httpContentLengthHeader, &contentLengthPtr);
@@ -373,7 +409,8 @@ void HTTPRequest::AppendContentLengthHeader(UInt64 length_64bit)
 
 void HTTPRequest::AppendContentLengthHeader(UInt32 length_32bit)
 {
-    char* contentLength = NEW char[256];
+    //char* contentLength = NEW char[256];
+	char contentLength[256] = { 0 };
     qtss_sprintf(contentLength, "%"_U32BITARG_"", length_32bit);
     StrPtrLen contentLengthPtr(contentLength);
     AppendResponseHeader(httpContentLengthHeader, &contentLengthPtr);
