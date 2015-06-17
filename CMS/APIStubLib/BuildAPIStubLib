@@ -1,0 +1,98 @@
+#!/bin/sh
+
+x=`uname`
+y=`uname -m`
+
+PLAT=$x.$y
+
+echo $PLAT
+
+case $PLAT in
+
+	Linux.ppc)
+		echo "Configuring for a Linux PPC platform"
+		CPLUS='egcs'
+		CCOMP=egcs
+		LINKER='egcs'
+		MACHDEFINES=-D__linuxppc__
+		LIB="ar -r "
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;		
+
+	Linux.i586 | \
+	Linux.i686)
+		echo "Configuring for a Linux x86 platform"
+		CPLUS='egcs'
+		CCOMP=egcs
+		LINKER='egcs'
+		MACHDEFINES=-D__linux__
+		LIB="ar -r "
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+
+	FreeBSD.i386)
+		echo "Configuring for a FreeBSD platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER="gcc"
+		MACHDEFINES="-D__FreeBSD__ -fhandle-exceptions"
+		LIB="ar -r "
+		;;
+	buildplay
+#	SunOS.sun4m)
+	SunOS.*)
+		echo "Configuring for a Solaris platform"
+		CPLUS=gcc
+		CCOMP=gcc
+		LINKER="gcc"
+		MACHDEFINES="-D__solaris__"
+		LIB="/usr/ccs/bin/ar -r "
+		;;
+		
+	IRIX*.*)
+#	IRIX and MipsPro compiler
+		echo "Configuring for IRIX platform"
+		CPLUS=CC
+		CCOMP=cc
+		LINKER="CC"
+		MACHDEFINES="-D__sgi__ -DirixMipsPro -D_SGI_REENTRANT_FUNCTIONS -DASSERT -D__PTHREADS__ -D__PTHREADS_MUTEXES__ -DBIGENDIAN -DUSE_THREAD -DEXPORT -D_REENTRANT"
+		LIB="ar -r "
+		;;
+
+	*)
+		echo "I don't know your platform. I'll assume this is a Linux x86 platform."
+		echo "Please edit the BuildServer script & PlatformHeader.h to add your platform."
+		CPLUS='egcs'
+		CCOMP=egcs
+		LINKER='egcs'
+		MACHDEFINES=-D__linux__
+		LIB="ar -r "
+		if [ -f /usr/include/socketbits.h ]; then
+			NEED_SOCKETBITS=1
+			export NEED_SOCKETBITS
+		fi
+		;;
+esac
+
+echo Building for $PLAT with $CPLUS
+
+export CPLUS
+echo "CPLUS " $CPLUS
+export CCOMP
+echo "CCOMP " $CCOMP
+export LINKER
+echo "LINKER " $LINKER
+export MACHDEFINES
+echo "MACHDEFINES " $MACHDEFINES
+export LIB
+echo "LIB " $LIB
+
+make -f makefile.apistublib.POSIX
+
+

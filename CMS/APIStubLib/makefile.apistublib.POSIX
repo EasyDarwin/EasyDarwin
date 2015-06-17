@@ -1,0 +1,51 @@
+# Copyright (c) 1999 Apple Computer, Inc.  All rights reserved.
+#
+
+NAME = libAPIStubLib.a
+C++ = $(CPLUS)
+CC = $(CCOMP)
+LINK = $(LINKER)
+CCFLAGS += $(MACHDEFINES) -include ../PlatformHeader.h -g -Wall $(CFLAGSX)
+LIBS = 
+
+OPTIM = -O0
+
+# EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
+
+CCFLAGS += -I.
+CCFLAGS += -I../CommonUtilitiesLib
+
+C++FLAGS = $(CCFLAGS)
+
+#
+#
+#
+#
+CFILES = 
+
+#
+#
+#
+#
+CPPFILES = 	./QTSS_Private.cpp
+
+#
+#
+
+all: libAPIStubLib.a
+
+
+libAPIStubLib.a : $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+	$(LIB) $@  $(CFILES:.c=.o) $(CPPFILES:.cpp=.o) 
+
+clean:
+	rm -f $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+
+.SUFFIXES: .cpp .c .o
+
+.cpp.o:
+	$(C++) -c -o $*.o $(DEFINES) $(C++FLAGS) $*.cpp
+
+.c.o:
+	$(CC) -c -o $*.o $(DEFINES) $(CCFLAGS) $*.c
+

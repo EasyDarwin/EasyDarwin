@@ -1,0 +1,89 @@
+/*
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.EasyDarwin.org
+*/
+/*
+    File:       QTSSExpirationDate.cpp
+
+    Contains:   Implementation of class defined in QTSSExpirationDate.h
+*/
+
+#include "QTSSExpirationDate.h"
+
+#include "MyAssert.h"
+#include "OSHeaders.h"
+#include "SafeStdLib.h"
+#include <time.h>
+
+
+Bool16  QTSSExpirationDate::sIsExpirationEnabled = true;
+//must be in "5/12/1998" format, "m/d/4digityear"
+char*   QTSSExpirationDate::sExpirationDate = "12/31/2015";
+
+void QTSSExpirationDate::PrintExpirationDate()
+{
+    if (sIsExpirationEnabled)
+        qtss_printf("Software expires on: %s\n", sExpirationDate);
+}
+
+void QTSSExpirationDate::sPrintExpirationDate(char* ioExpireMessage)
+{
+    if (sIsExpirationEnabled)
+        qtss_sprintf(ioExpireMessage, "Software expires on: %s\n", sExpirationDate);
+}
+
+
+Bool16 QTSSExpirationDate::IsSoftwareExpired()
+{
+    if (!sIsExpirationEnabled)
+        return false;
+        
+    SInt32 expMonth, expDay, expYear;
+    if (EOF == ::sscanf(sExpirationDate, "%"_S32BITARG_"/%"_S32BITARG_"/%"_S32BITARG_"", &expMonth, &expDay, &expYear))
+    {
+        Assert(false);
+        return true;
+    }
+    
+    //sanity checks
+    Assert((expMonth > 0) && (expMonth <= 12));
+    if ((expMonth <= 0) || (expMonth > 12))
+        return true;
+    
+    Assert((expDay > 0) && (expDay <= 31));
+    if ((expDay <= 0) || (expDay > 31))
+        return true;
+        
+    Assert(expYear >= 1998);
+    if (expYear < 1998)
+        return true;
+    
+    time_t theCurrentTime = ::time(NULL);
+    Assert(theCurrentTime != -1);
+    if (theCurrentTime == -1)
+        return true;
+        
+    struct tm  timeResult;
+    struct tm* theLocalTime = qtss_localtime(&theCurrentTime, &timeResult);
+    Assert(theLocalTime != NULL);
+    if (theLocalTime == NULL)
+        return true;
+        
+    if (expYear > (theLocalTime->tm_year + 1900))
+        return false;//ok
+    if (expYear < (theLocalTime->tm_year + 1900))
+        return true;//expired
+
+    if (expMonth > (theLocalTime->tm_mon + 1))
+        return false;//ok
+    if (expMonth < (theLocalTime->tm_mon + 1))
+        return true;//expired
+
+    if (expDay > theLocalTime->tm_mday)
+        return false;//ok
+    else
+        return true;//expired
+}
+

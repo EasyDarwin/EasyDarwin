@@ -1,0 +1,171 @@
+#!/bin/sh
+
+
+progname=`basename $0`
+
+usage()
+{ 
+	echo "Usage:";
+	echo "  ${progname} -u cvs-user -r build-revision [-d destination_dir]";
+	echo
+	echo "    -u cvs-user            Your cvs username (typically the same as your NetInfo user)"
+	echo "    -r build-revision      The build number.  Same as the number in revision.h"
+	echo "    -d destination_dir     The (existing) directory you'd like to check out into."
+	echo "                           \"/tmp\" is the default"
+	echo "    -T                     Don't perform a 'cvs tag'"
+	echo "    -F                     Force a 'cvs tag' (cvs tag -F)"
+	echo;
+	echo "${progname} will create a qtssServer-XXX directory, tag it, then run ~rc/bin/buildit on it."
+}
+
+echo
+
+
+
+if [ `id -u` != 0 ]
+then
+	echo "### You must be root to execute this script ###"
+	exit 1
+fi
+
+args=`getopt u:p:r:d:TFv $*`
+stat=$?
+
+if  [ ${stat} -ne 0 ] 
+then
+		usage;
+		exit 2;
+fi
+
+do_tag=true
+force_tag=""
+
+set -- $args
+for i
+do
+	case "$i" in
+		-u) cvs_user=$2; shift; shift;;
+		-p) project_dir=$2; shift; shift;;
+		-r) build_number=$2; shift; shift;;
+		-d) dest_dir=$2; shift; shift;;
+		-T) do_tag=false; shift;;
+		-F) force_tag="-F"; shift;;
+		-v) usage; shift;;
+		\?) usage; exit 1;;
+		--) shift; break;;
+	esac
+done
+
+if [ ! ${build_number} ]
+then
+	echo "## Error: Missing build-revision ##"
+	echo
+	usage; 
+	exit 1;
+fi
+
+if [ ! ${cvs_user} ]
+then
+	echo "## Error: Missing cvs-user ##"
+	echo
+	usage; 
+	exit 1;
+fi
+
+##
+##arguments look good...continue
+##
+
+orig_dir=`pwd`  #remember our original working directory
+slt_repository=/Network/Servers/svrsol/Workgroup/CVS-Repository
+slt_parent_module=Servers/Mothra/
+
+
+## use /tmp if a destination directory is not specified
+if [ ! ${dest_dir} ]
+then
+	echo Setting dest_dir to /tmp
+	dest_dir='/tmp'
+fi
+
+echo;echo "##"
+echo "## Updating from CVS ##"
+echo "##"
+project_dirname=qtssServer-${build_number}		#set project_dir to absolute path
+project_path=${dest_dir}/${project_dirname}		#set project_dir to absolute path
+
+
+##remove and prior attampts
+#
+if [ -d ${project_path} ]
+then
+	echo;echo Removing ${project_path}
+	rm -r ${project_path}
+fi
+
+##cd into ${dest_dir}
+#
+cd ${dest_dir}
+
+##checkout main server source
+#
+echo; echo Checking out StreamingServer to ${project_path}
+echo "___________________________________________________"
+echo sudo -u ${cvs_user} cvs -d cvs.opensource.apple.com:/cvs/Darwin -s CVS_RSH=ssh -z3 checkout -d ${project_dirname} StreamingServer
+sudo -u ${cvs_user} cvs -d cvs.opensource.apple.com:/cvs/Darwin -s CVS_RSH=ssh -z3 checkout -d ${project_dirname} StreamingServer
+
+
+##cd into ${project_path}
+#
+cd ${project_path}
+
+##checkout StreamingLoadTool
+#
+echo;echo Checking out StreamingLoadTool
+echo sudo -u ${cvs_user} cvs -d ${slt_repository} -z3 checkout -d StreamingLoadTool ${slt_parent_module}StreamingLoadTool
+sudo -u ${cvs_user} cvs -d ${slt_repository} -z3 checkout -d StreamingLoadTool ${slt_parent_module}StreamingLoadTool
+
+if ( ${do_tag} ) then
+	echo;echo "Tagging current files as qtssServer-${build_number}"
+	echo "_____________________________________________"
+
+	cd ${project_path}
+	echo cvs ${cvs_options} -q tag ${force_tag} -R qtssServer-${build_number}
+	sudo -u ${cvs_user} cvs ${cvs_options} -q tag ${force_tag} -R qtssServer-${build_number}
+	
+	cd ${project_path}/StreamingLoadTool
+	echo cvs ${cvs_options} -q tag ${force_tag} -R qtssServer-${build_number}
+	sudo -u ${cvs_user} cvs ${cvs_options} -q tag ${force_tag} -R qtssServer-${build_number}
+fi
+
+cd ${orig_dir}
+
+echo "##"
+echo "Executing buildit on ${project_path}"
+echo "_________________________________________"
+echo ~rc/bin/buildit ${project_path}
+~rc/bin/buildit ${project_path}
+
+
+echo "#################################"
+echo "#################################"
+echo;echo
+echo If you would like to submit this project now, type the
+echo train name (ex. Cartman) and hit enter:
+read train_name
+
+if [ ! ${train_name} ]
+then
+	echo
+	exit 0;
+fi
+
+
+echo Copying ${project_path} to your home directoy
+cp -r ${project_path} ~
+
+cd ~
+echo sudo -u ${cvs_user} ~rc/bin/submitproject ${project_dirname} ${train_name}
+sudo -u ${cvs_user} ~rc/bin/submitproject ${project_dirname} ${train_name}
+
+exit 0
