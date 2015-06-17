@@ -35,11 +35,11 @@
 class HTTPRequest
 {
 public:
-    // Constructor
+
+    //HTTP请求构造函数
     HTTPRequest(StrPtrLen* serverHeader, StrPtrLen* requestPtr);
     
-    // This cosntructor is used when the request has been parsed and thrown away
-    // and the response has to be created
+    //HTTP响应构造函数
     HTTPRequest(StrPtrLen* serverHeader); 
     
     // Destructor
@@ -53,6 +53,8 @@ public:
     // the host name from URI, the relative request URI, the request file path,
     // the HTTP version, the Status code, the keep-alive tag.
     HTTPMethod              GetMethod(){ return fMethod; }
+	HTTPType				GetHTTPType() { return fHTTPType; }
+
     StrPtrLen*              GetRequestLine(){ return &fRequestLine; }
     StrPtrLen*              GetRequestAbsoluteURI(){ return &fAbsoluteURI; }
     StrPtrLen*              GetSchemefromAbsoluteURI(){ return &fAbsoluteURIScheme; }
@@ -68,7 +70,7 @@ public:
     StrPtrLen*              GetHeaderValue(HTTPHeader inHeader);
   
     // Creates a header with the corresponding version and status code
-    void                    CreateResponseHeader(HTTPVersion version, HTTPStatusCode statusCode);
+    void                    CreateResponseHeader(HTTPStatusCode statusCode = httpOK, HTTPVersion version = http11Version);
   
     // To append response header fields as appropriate
     void                    AppendResponseHeader(HTTPHeader inHeader, StrPtrLen* inValue);
@@ -112,6 +114,8 @@ private:
     // Private members
     HTTPMethod          fMethod;
     HTTPVersion         fVersion;
+
+	HTTPType			fHTTPType;
     
     StrPtrLen           fRequestLine;
   

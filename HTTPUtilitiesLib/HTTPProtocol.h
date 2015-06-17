@@ -57,6 +57,18 @@ enum
 };
 typedef UInt32 HTTPMethod;
 
+// HTTP Types
+// Methods
+enum
+{
+    httpRequestType		= 0,
+    httpResponseType	= 1,
+
+    httpNumTypes		= 3,
+    httpIllegalType		= 3
+};
+typedef UInt32 HTTPType;
+
 // Headers
 enum
 {
@@ -172,6 +184,7 @@ enum
     httpServiceUnavailable      = 37,           //503
     httpGatewayTimeout      = 38,           //504
     httpHTTPVersionNotSupported = 39,           //505
+
     httpNumStatusCodes      = 40
 };
 typedef UInt32 HTTPStatusCode;
@@ -189,6 +202,7 @@ public:
     static StrPtrLen*                   GetStatusCodeString(HTTPStatusCode inStat) { return &sStatusCodeStrings[inStat]; }
     static SInt32                       GetStatusCode(HTTPStatusCode inStat) { return sStatusCodes[inStat]; }
     static StrPtrLen*                   GetStatusCodeAsString(HTTPStatusCode inStat) { return &sStatusCodeAsStrings[inStat]; }  
+	static HTTPStatusCode				GetStatusCodeEnum(SInt32 inCode);
     // Versions
     static HTTPVersion                  GetVersion(StrPtrLen* versionStr);
     static StrPtrLen*                   GetVersionString(HTTPVersion version) { return &sVersionStrings[version]; }

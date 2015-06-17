@@ -243,7 +243,7 @@ SInt32 HTTPProtocol::sStatusCodes[] =
     502,            //kBadGateway
     503,            //kServiceUnavailable
     504,            //kGatewayTimeout
-    505     //kHTTPVersionNotSupported
+    505				//kHTTPVersionNotSupported
 };
 
 StrPtrLen HTTPProtocol::sStatusCodeAsStrings[] =
@@ -311,3 +311,11 @@ HTTPVersion HTTPProtocol::GetVersion(StrPtrLen* versionStr)
     return httpIllegalVersion;
 }
 
+HTTPStatusCode	HTTPProtocol::GetStatusCodeEnum(SInt32 inCode)
+{
+	HTTPStatusCode statusCode = httpInternalServerError;
+	for (SInt32 x = 0; x < httpNumStatusCodes; x++)
+		if (GetStatusCode(x) == inCode)
+			return x;
+    return statusCode;
+}
