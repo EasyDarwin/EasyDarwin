@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="DMS" displayName="DMS" projectFiles="true">
+      <logicalFolder name="APICommonCode"
+                     displayName="APICommonCode"
+                     projectFiles="true">
+        <itemPath>../APICommonCode/QTAccessFile.cpp</itemPath>
+        <itemPath>../APICommonCode/QTAccessFile.h</itemPath>
+        <itemPath>../APICommonCode/QTSSMemoryDeleter.h</itemPath>
+        <itemPath>../APICommonCode/QTSSModuleUtils.cpp</itemPath>
+        <itemPath>../APICommonCode/QTSSModuleUtils.h</itemPath>
+        <itemPath>../APICommonCode/QTSSRollingLog.cpp</itemPath>
+        <itemPath>../APICommonCode/QTSSRollingLog.h</itemPath>
+        <itemPath>../APICommonCode/SDPSourceInfo.cpp</itemPath>
+        <itemPath>../APICommonCode/SDPSourceInfo.h</itemPath>
+        <itemPath>../APICommonCode/SourceInfo.cpp</itemPath>
+        <itemPath>../APICommonCode/SourceInfo.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="APIModules" displayName="APIModules" projectFiles="true">
+        <logicalFolder name="QTSSAccessModule"
+                       displayName="QTSSAccessModule"
+                       projectFiles="true">
+          <itemPath>APIModules/QTSSAccessModule/AccessChecker.cpp</itemPath>
+          <itemPath>APIModules/QTSSAccessModule/AccessChecker.h</itemPath>
+          <itemPath>APIModules/QTSSAccessModule/QTSSAccessModule.cpp</itemPath>
+          <itemPath>APIModules/QTSSAccessModule/QTSSAccessModule.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="QTSSPOSIXFileSysModule"
+                       displayName="QTSSPOSIXFileSysModule"
+                       projectFiles="true">
+          <itemPath>APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp</itemPath>
+          <itemPath>APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="QTSSWebDebugModule"
+                       displayName="QTSSWebDebugModule"
+                       projectFiles="true">
+          <itemPath>APIModules/QTSSWebDebugModule/QTSSWebDebugModule.cpp</itemPath>
+          <itemPath>APIModules/QTSSWebDebugModule/QTSSWebDebugModule.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="APIStubLib" displayName="APIStubLib" projectFiles="true">
+        <itemPath>../APIStubLib/QTSS.h</itemPath>
+        <itemPath>../APIStubLib/QTSSRTSPProtocol.h</itemPath>
+        <itemPath>../APIStubLib/QTSS_Private.cpp</itemPath>
+        <itemPath>../APIStubLib/QTSS_Private.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="HTTPUtilitiesLib"
+                     displayName="HTTPUtilitiesLib"
+                     projectFiles="true">
+        <itemPath>../HTTPUtilitiesLib/HTTPProtocol.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPProtocol.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequest.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequest.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="PrefsSourceLib"
+                     displayName="PrefsSourceLib"
+                     projectFiles="true">
+        <itemPath>PrefsSourceLib/FilePrefsSource.cpp</itemPath>
+        <itemPath>PrefsSourceLib/FilePrefsSource.h</itemPath>
+        <itemPath>PrefsSourceLib/PrefsSource.h</itemPath>
+        <itemPath>PrefsSourceLib/XMLParser.cpp</itemPath>
+        <itemPath>PrefsSourceLib/XMLParser.h</itemPath>
+        <itemPath>PrefsSourceLib/XMLPrefsParser.cpp</itemPath>
+        <itemPath>PrefsSourceLib/XMLPrefsParser.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Server.tproj"
+                     displayName="Server.tproj"
+                     projectFiles="true">
+        <itemPath>Server.tproj/BaseRequestInterface.cpp</itemPath>
+        <itemPath>Server.tproj/BaseRequestInterface.h</itemPath>
+        <itemPath>Server.tproj/BaseRequestStream.cpp</itemPath>
+        <itemPath>Server.tproj/BaseRequestStream.h</itemPath>
+        <itemPath>Server.tproj/BaseResponseStream.cpp</itemPath>
+        <itemPath>Server.tproj/BaseResponseStream.h</itemPath>
+        <itemPath>Server.tproj/BaseSessionInterface.cpp</itemPath>
+        <itemPath>Server.tproj/BaseSessionInterface.h</itemPath>
+        <itemPath>Server.tproj/DispatchMsgCenter.cpp</itemPath>
+        <itemPath>Server.tproj/DispatchMsgCenter.h</itemPath>
+        <itemPath>Server.tproj/GenerateXMLPrefs.cpp</itemPath>
+        <itemPath>Server.tproj/GenerateXMLPrefs.h</itemPath>
+        <itemPath>Server.tproj/QTSSCallbacks.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSCallbacks.h</itemPath>
+        <itemPath>Server.tproj/QTSSDictionary.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSDictionary.h</itemPath>
+        <itemPath>Server.tproj/QTSSExpirationDate.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSExpirationDate.h</itemPath>
+        <itemPath>Server.tproj/QTSSFile.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSFile.h</itemPath>
+        <itemPath>Server.tproj/QTSSMessages.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSMessages.h</itemPath>
+        <itemPath>Server.tproj/QTSSModule.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSModule.h</itemPath>
+        <itemPath>Server.tproj/QTSSPrefs.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSPrefs.h</itemPath>
+        <itemPath>Server.tproj/QTSSSocket.cpp</itemPath>
+        <itemPath>Server.tproj/QTSSSocket.h</itemPath>
+        <itemPath>Server.tproj/QTSSStream.h</itemPath>
+        <itemPath>Server.tproj/QTSServer.cpp</itemPath>
+        <itemPath>Server.tproj/QTSServer.h</itemPath>
+        <itemPath>Server.tproj/QTSServerInterface.cpp</itemPath>
+        <itemPath>Server.tproj/QTSServerInterface.h</itemPath>
+        <itemPath>Server.tproj/QTSServerPrefs.cpp</itemPath>
+        <itemPath>Server.tproj/QTSServerPrefs.h</itemPath>
+        <itemPath>Server.tproj/RTSPProtocol.cpp</itemPath>
+        <itemPath>Server.tproj/RTSPProtocol.h</itemPath>
+        <itemPath>Server.tproj/RedisSession.cpp</itemPath>
+        <itemPath>Server.tproj/RedisSession.h</itemPath>
+        <itemPath>Server.tproj/RunServer.cpp</itemPath>
+        <itemPath>Server.tproj/RunServer.h</itemPath>
+        <itemPath>Server.tproj/ServiceSession.cpp</itemPath>
+        <itemPath>Server.tproj/ServiceSession.h</itemPath>
+        <itemPath>Server.tproj/main.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="ServiceCommon"
+                     displayName="ServiceCommon"
+                     projectFiles="true">
+        <itemPath>../ServiceCommon/OSMemory.cpp</itemPath>
+        <itemPath>../ServiceCommon/QTSSDataConverter.cpp</itemPath>
+        <itemPath>../ServiceCommon/QTSSDataConverter.h</itemPath>
+        <itemPath>../ServiceCommon/QTSSErrorLogModule.cpp</itemPath>
+        <itemPath>../ServiceCommon/QTSSErrorLogModule.h</itemPath>
+        <itemPath>../ServiceCommon/QTSSUserProfile.cpp</itemPath>
+        <itemPath>../ServiceCommon/QTSSUserProfile.h</itemPath>
+        <itemPath>../ServiceCommon/SysUtil.cpp</itemPath>
+        <itemPath>../ServiceCommon/SysUtil.h</itemPath>
+        <itemPath>../ServiceCommon/commonfunc.cpp</itemPath>
+        <itemPath>../ServiceCommon/commonfunc.h</itemPath>
+        <itemPath>../ServiceCommon/systemcommdef.h</itemPath>
+      </logicalFolder>
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <logicalFolder name="HeaderFiles" displayName="头文件" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles" displayName="源文件" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles" displayName="资源文件" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="测试文件"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="重要文件"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+    <Elem>../ServiceCommon</Elem>
+    <Elem>../HTTPUtilitiesLib</Elem>
+    <Elem>../APIStubLib</Elem>
+    <Elem>../APICommonCode</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>../CommonUtilitiesLib</pElem>
+            <pElem>../APIStubLib</pElem>
+            <pElem>../HTTPUtilitiesLib</pElem>
+            <pElem>../ServiceCommon</pElem>
+            <pElem>../libTinyDispatchEvent/src</pElem>
+            <pElem>../EasyDSSBase</pElem>
+            <pElem>../include</pElem>
+            <pElem>../include/EasyDSSProtocol</pElem>
+            <pElem>APIModules/QTSSAccessModule</pElem>
+            <pElem>../APICommonCode</pElem>
+            <pElem>PrefsSourceLib</pElem>
+            <pElem>Server.tproj</pElem>
+            <pElem>../libavsredisclient</pElem>
+            <pElem>APIModules/QTSSPOSIXFileSysModule</pElem>
+          </incDir>
+          <incFile>
+            <pElem>PlatformHeader.h</pElem>
+          </incFile>
+          <commandLine>-pipe -Wno-format-y2k</commandLine>
+          <preprocessorList>
+            <Elem>USE_POSIX</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__linux__</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <output>${CND_CONF}/dms</output>
+          <linkerAddLib>
+            <pElem>${AVS_ROOT}/lib</pElem>
+          </linkerAddLib>
+          <commandLine>-lCommonUtilitiesLib -lEasyDSSProtocol -lavsxmlutil -lTinyDispatchEvent -lavsredisclient -lpthread -ldl</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="../APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSMemoryDeleter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSModuleUtils.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSModuleUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSRollingLog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SDPSourceInfo.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SDPSourceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SourceInfo.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SourceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSSRTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSS_Private.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/OSMemory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSDataConverter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSDataConverter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSErrorLogModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSErrorLogModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSUserProfile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSUserProfile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/SysUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/SysUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/commonfunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/commonfunc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/systemcommdef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/AccessChecker.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/AccessChecker.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/QTSSAccessModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/QTSSAccessModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSWebDebugModule/QTSSWebDebugModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSWebDebugModule/QTSSWebDebugModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/FilePrefsSource.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/FilePrefsSource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/PrefsSource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestStream.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseResponseStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseSessionInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/DispatchMsgCenter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/DispatchMsgCenter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSCallbacks.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSDictionary.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSDictionary.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSExpirationDate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSExpirationDate.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSMessages.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSMessages.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSModule.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSModule.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSPrefs.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerPrefs.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/RedisSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/RedisSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/ServiceSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/ServiceSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSMemoryDeleter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSModuleUtils.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSModuleUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSRollingLog.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SDPSourceInfo.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SDPSourceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SourceInfo.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APICommonCode/SourceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSSRTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../APIStubLib/QTSS_Private.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/OSMemory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSDataConverter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSDataConverter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSErrorLogModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSErrorLogModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSUserProfile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ServiceCommon/QTSSUserProfile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/SysUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/SysUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/commonfunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/commonfunc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ServiceCommon/systemcommdef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/AccessChecker.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/AccessChecker.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/QTSSAccessModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSAccessModule/QTSSAccessModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSWebDebugModule/QTSSWebDebugModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/QTSSWebDebugModule/QTSSWebDebugModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/FilePrefsSource.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/FilePrefsSource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/PrefsSource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestStream.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseRequestStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseResponseStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/BaseSessionInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/DispatchMsgCenter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/DispatchMsgCenter.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSCallbacks.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSDictionary.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSDictionary.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSExpirationDate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSExpirationDate.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSMessages.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSMessages.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSModule.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSModule.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSPrefs.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSSStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerPrefs.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/QTSServerPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/RedisSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/RedisSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/ServiceSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/ServiceSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
