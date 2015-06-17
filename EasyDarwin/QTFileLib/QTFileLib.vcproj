@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../;../../CommonUtilitiesLib/;../../APIStubLib;../RTPMetaInfoLib/"
+				AdditionalIncludeDirectories="../;../../CommonUtilitiesLib/;../APIStubLib;../RTPMetaInfoLib/"
 				PreprocessorDefinitions="WIN32;_LIB;DSS_USE_API_CALLBACKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../CommonUtilitiesLib/;../../APIStubLib;../RTPMetaInfoLib/"
+				AdditionalIncludeDirectories="../;../../CommonUtilitiesLib/;../APIStubLib;../RTPMetaInfoLib/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;DSS_USE_API_CALLBACKS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

@@ -251,7 +251,7 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
     UInt32 len = fRelativeURI.Len;
     len++;
     //char* relativeURIDecoded = NEW char[len];
-	char relativeURIDecoded[EASYDSS_MAX_URL_LENGTH] = { 0 };
+	char relativeURIDecoded[512] = { 0 };
 
     SInt32 theBytesWritten = StringTranslator::DecodeURL(fRelativeURI.Ptr, fRelativeURI.Len,
                                                        relativeURIDecoded, len);

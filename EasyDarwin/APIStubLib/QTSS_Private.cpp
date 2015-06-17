@@ -25,10 +25,7 @@
 /*
     File:       QTSS_Private.c
 
-    Contains:   Code for stub library and stub callback functions.
-                    
-    
-    
+    Contains:   Code for stub library and stub callback functions.  
 */
 
 #include <stdlib.h>
