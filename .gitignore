@@ -31,3 +31,5 @@ _ReSharper*/
 WinNTSupport/Logs/server_status
 *.sdp
 *.o
+/CMS/build/
+/CMS/dist/

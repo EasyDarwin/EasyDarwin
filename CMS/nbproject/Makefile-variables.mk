@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=Debug
-CND_ARTIFACT_NAME_Debug=dms
-CND_ARTIFACT_PATH_Debug=Debug/dms
+CND_ARTIFACT_NAME_Debug=cms
+CND_ARTIFACT_PATH_Debug=Debug/cms
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=dms.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/dms.tar
+CND_PACKAGE_NAME_Debug=cms.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/cms.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
-CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=dms
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/dms
+CND_ARTIFACT_DIR_Release=Release
+CND_ARTIFACT_NAME_Release=cms
+CND_ARTIFACT_PATH_Release=Release/cms
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=dms.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/dms.tar
+CND_PACKAGE_NAME_Release=cms.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/cms.tar
 #
 # include compiler specific variables
 #
