@@ -3,18 +3,21 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>DMS</name>
-            <c-extensions/>
+            <name>CMS</name>
+            <c-extensions>c</c-extensions>
             <cpp-extensions>cpp</cpp-extensions>
             <header-extensions>h</header-extensions>
-            <sourceEncoding>GB2312</sourceEncoding>
+            <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>.</sourceRootElem>
-                <sourceRootElem>../ServiceCommon</sourceRootElem>
+                <sourceRootElem>APICommonCode</sourceRootElem>
+                <sourceRootElem>APIStubLib</sourceRootElem>
+                <sourceRootElem>../SafeStdLib</sourceRootElem>
+                <sourceRootElem>../CommonUtilitiesLib</sourceRootElem>
+                <sourceRootElem>Server.tproj</sourceRootElem>
+                <sourceRootElem>PrefsSourceLib</sourceRootElem>
+                <sourceRootElem>../OSMemoryLib</sourceRootElem>
                 <sourceRootElem>../HTTPUtilitiesLib</sourceRootElem>
-                <sourceRootElem>../APIStubLib</sourceRootElem>
-                <sourceRootElem>../APICommonCode</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
