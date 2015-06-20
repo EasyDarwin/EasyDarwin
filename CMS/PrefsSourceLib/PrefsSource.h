@@ -23,6 +23,12 @@
  *
  */
 /*
+	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.EasyDarwin.org
+*/
+/*
     File:       PrefsSource.h
 
     Contains:   Defines an abstract common interface for extracting prefs
