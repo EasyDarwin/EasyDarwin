@@ -25,12 +25,6 @@
     #include <crypt.h>
 #endif
 
-//hack stuff
-//static char*					sRequestContentBodyName =	"EasyDSSRequestContentBodyBuffer";
-//static char*					sRequestBufferLenName	=	"EasyDSSRequestContentBodyLen";
-//static QTSS_AttributeID		sRequestBodyAttr			=   qtssIllegalAttrID;
-//static QTSS_AttributeID		sBufferOffsetAttr           =   qtssIllegalAttrID;
-
 static StrPtrLen	sServiceStr("CMSServer");
 
 CServiceSession::CServiceSession( )
@@ -54,9 +48,6 @@ CServiceSession::CServiceSession( )
     fModuleState.curTask = this;
     fModuleState.curRole = 0;
     fModuleState.globalLockRequested = false;
-
-	//(void)QTSS_IDForAttr(qtssRTSPSessionObjectType, sRequestContentBodyName, &sRequestBodyAttr);
-	//(void)QTSS_IDForAttr(qtssRTSPSessionObjectType, sRequestBufferLenName, &sBufferOffsetAttr);
 
 	qtss_printf("New Session:%s\n", fSessionID);
 }
@@ -107,7 +98,7 @@ SInt64 CServiceSession::Run()
 
 	if(events & Task::kTimeoutEvent)
 	{
-		//Session超时时间，暂时不处理 
+		//客户端Session超时，暂时不处理 
 		char msgStr[128];
 		qtss_snprintf(msgStr, sizeof(msgStr), "Service Session Timeout, No Handler\n");
 		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
@@ -188,9 +179,6 @@ SInt64 CServiceSession::Run()
                 Assert( fInputStream.GetRequestBuffer() );
                 
                 Assert(fRequest == NULL);
-                //fRequest = NEW RTSPRequest(this);
-                //fRoleParams.rtspRequestParams.inRTSPRequest = fRequest;
-                //fRoleParams.rtspRequestParams.inRTSPHeaders = fRequest->GetHeaderDictionary();
 				//根据具体请求报文构造HTTPRequest请求类
 				fRequest = NEW HTTPRequest(&sServiceStr, fInputStream.GetRequestBuffer());
 
@@ -230,14 +218,15 @@ SInt64 CServiceSession::Run()
 
 				//对请求报文进行解析
 				QTSS_Error theErr = SetupRequest();
+				//当SetupRequest步骤未读取到完整的网络报文，需要进行等待
 				if(theErr == QTSS_WouldBlock)
 				{
-					//fSocket.RequestEvent(EV_WR);
 					this->ForceSameThread();
 					fInputSocketP->RequestEvent(EV_RE);
 					// We are holding mutexes, so we need to force
 					// the same thread to be used for next Run()
-                    return 0;
+                    return 0;//返回0表示有事件才进行通知，返回>0表示规定事件后调用Run
+
 				}
                 
                 //每一步都检测响应报文是否已完成，完成则直接进行回复响应
@@ -246,18 +235,6 @@ SInt64 CServiceSession::Run()
                     fState = kSendingResponse;
                     break;
                 }
-               
-
-				//if (fModuleState.globalLockRequested) // call this request back locked
-    //                return this->CallLocked();
-
-    //            // If this module has requested an event, return and wait for the event to transpire
-    //            if (fModuleState.eventRequested)
-    //            {
-    //                this->ForceSameThread();    // We are holding mutexes, so we need to force
-    //                                            // the same thread to be used for next Run()
-    //                return fModuleState.idleTime; // If the module has requested idle time...
-    //            }
 
 				//是否跳过权限认证过程
                 if(1/*fRequest->SkipAuthorization()*/)
@@ -418,9 +395,9 @@ QTSS_Error CServiceSession::SetupRequest()
     char *body = NULL;
     UInt32 bodySizeBytes = 0;
 
-	//获取具体xml数据部分
+	//获取具体Content json数据部分
 
-	//1、获取xml部分长度
+	//1、获取json部分长度
 	StrPtrLen* lengthPtr = fRequest->GetHeaderValue(httpContentLengthHeader);
 
 	StringParser theContentLenParser(lengthPtr);
@@ -441,10 +418,8 @@ QTSS_Error CServiceSession::SetupRequest()
     theLen = sizeof(theRequestBody);
     theErr = QTSS_GetValue(this, qtssEasySesContentBody, 0, &theRequestBody, &theLen);
 
-    //qtss_printf("QTSSReflectorModule:DoAnnounce theRequestBody =%s\n",theRequestBody);
     if (theErr != QTSS_NoErr)
     {
-        qtss_printf("QTSSReflectorModule:DoAnnounce NEW =%d\n",content_length);
         // First time we've been here for this request. Create a buffer for the content body and
         // shove it in the request.
         theRequestBody = NEW char[content_length + 1];
@@ -453,8 +428,6 @@ QTSS_Error CServiceSession::SetupRequest()
         theErr = QTSS_SetValue(this, qtssEasySesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
         Assert(theErr == QTSS_NoErr);
         
-		//qtssEasySesContentBody
-		//qtssEasySesContentBodyOffset
         // Also store the offset in the buffer
         theLen = sizeof(theBufferOffset);
         theErr = QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, theLen);
@@ -464,12 +437,9 @@ QTSS_Error CServiceSession::SetupRequest()
     theLen = sizeof(theBufferOffset);
     theErr = QTSS_GetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, &theLen);
 
-	//qtss_printf("QTSSReflectorModule:DoAnnounce GetBodyLen =%s\n",theBufferOffset);
-    //
     // We have our buffer and offset. Read the data.
-    theErr = QTSS_Read(this, theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
-
-	//theErr = fInputStream.Read(theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
+    //theErr = QTSS_Read(this, theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
+	theErr = fInputStream.Read(theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
     Assert(theErr != QTSS_BadArgument);
 
     if (theErr == QTSS_RequestFailed)
@@ -487,8 +457,6 @@ QTSS_Error CServiceSession::SetupRequest()
         // Update our offset in the buffer
         theBufferOffset += theLen;
         (void)QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, sizeof(theBufferOffset));
-        //qtss_printf("QTSSReflectorModule:DoAnnounce Request some more data \n");
-        //
         // The entire content body hasn't arrived yet. Request a read event and wait for it.
        
         Assert(theErr == QTSS_NoErr);
@@ -558,10 +526,6 @@ Bool16 CServiceSession::OverMaxConnections(UInt32 buffer)
     return overLimit;
 }
 
-void CServiceSession::SaveRequestAuthorizationParams(HTTPRequest *theHTTPRequest)
-{
-
-}
 
 QTSS_Error CServiceSession::DumpRequestData()
 {

@@ -25,7 +25,6 @@
 #include "BaseSessionInterface.h"
 #include "HTTPRequest.h"
 #include "TimeoutTask.h"
-//#include "BaseRequestInterface.h"
 #include "QTSSModule.h"
 
 
@@ -79,9 +78,7 @@ class CServiceSession : public BaseSessionInterface
 
         QTSS_RoleParams     fRoleParams;//module param blocks for roles.
         QTSS_ModuleState    fModuleState;
-        
-		//保存认证凭据
-        void SaveRequestAuthorizationParams(HTTPRequest *theHTTPRequest);
+
 		//清空请求报文
         QTSS_Error DumpRequestData();
 
