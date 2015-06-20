@@ -1,8 +1,8 @@
 <CONFIGURATION>
 	<SERVER>
-		<PREF NAME="default_authorization_realm" >DMS</PREF>
+		<PREF NAME="default_authorization_realm" >EasyDarwin_CMS</PREF>
 		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
-		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
+		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</nPREF>
 		<PREF NAME="min_tcp_buffer_size" TYPE="UInt32" >8192</PREF>
 		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
 		<PREF NAME="screen_logging" TYPE="Bool16" >true</PREF>
@@ -96,7 +96,7 @@
 		<PREF NAME="monitor_wan_ip" >127.0.0.1</PREF>
 		<PREF NAME="redis_ip_addr" >127.0.0.1</PREF>
 		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
-		<PREF NAME="service_id" >CMS_EasyDarwin</PREF>
+		<PREF NAME="service_id" >EasyDarwin_CMS</PREF>
 		<PREF NAME="snap_local_path" >/opt/streaming/easydarwin/snap/</PREF>
 		<PREF NAME="snap_web_path" >http://snap.easydarwin.com/</PREF>
 	</SERVER>
