@@ -45,8 +45,6 @@ class CServiceSession : public BaseSessionInterface
         void CleanupRequest();
 		
 		QTSS_Error ExecNetMsgSnapUpdateReq(const char* szMsg);
-        //权限认证
-        void CheckAuthentication();
         
         // test current connections handled by this object against server pref connection limit
         Bool16 OverMaxConnections(UInt32 buffer);
