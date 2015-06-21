@@ -59,7 +59,7 @@ CServiceSession::~CServiceSession()
 	QTSS_GetValue(this, qtssRTSPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
 
 	char msgStr[2048] = { 0 };
-	qtss_snprintf(msgStr, sizeof(msgStr), "Device offline from ip[%s]",remoteAddress);
+	qtss_snprintf(msgStr, sizeof(msgStr), "Session Offline from ip[%s]",remoteAddress);
 	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
     // Invoke the session closing modules
     QTSS_RoleParams theParams;
@@ -343,12 +343,10 @@ SInt64 CServiceSession::Run()
     return 0;
 }
 
-//权限认证
-void CServiceSession::CheckAuthentication() 
-{
-
-}
-
+/*
+	发送HTTP+json报文，决定是否关闭当前Session
+	HTTP部分构造，json部分由函数传递
+*/
 QTSS_Error CServiceSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
 	//构造响应报文(HTTP头)
@@ -384,6 +382,10 @@ QTSS_Error CServiceSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connect
 	return QTSS_NoErr;
 }
 
+/*
+	Content报文读取与解析
+	同步进行报文处理，构造回复报文
+*/
 QTSS_Error CServiceSession::SetupRequest()
 {
     //解析请求报文

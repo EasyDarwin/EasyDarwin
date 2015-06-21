@@ -47,8 +47,6 @@
     #define RTSP_SESSION_INTERFACE_DEBUGGING 0
 #endif
 
-
-
 unsigned int            BaseSessionInterface::sSessionIndexCounter = kFirstCMSSessionID;
 
 QTSSAttrInfoDict::AttrInfo  BaseSessionInterface::sAttributes[] = 
@@ -119,8 +117,10 @@ BaseSessionInterface::BaseSessionInterface()
     this->SetEmptyVal(qtssRTSPSesLastUserName, &fUserNameBuf[0], kMaxUserNameLen);
     this->SetEmptyVal(qtssRTSPSesLastUserPassword, &fUserPasswordBuf[0], kMaxUserPasswordLen);
 
-	qtss_sprintf(fSessionID, "DEVICE%s", "Make a UUID");
-	this->SetValue(qtssEasySessionID, 0, fSessionID, ::strlen(fSessionID), QTSSDictionary::kDontObeyReadOnly);
+	//qtss_sprintf(fSessionID, "DEVICE%s", "Make a UUID");
+	//this->SetValue(qtssEasySessionID, 0, fSessionID, ::strlen(fSessionID), QTSSDictionary::kDontObeyReadOnly);
+	fSessionID[0] = '\0';
+	this->SetEmptyVal(qtssEasySessionID, &fSessionID[0], QTSS_MAX_SESSION_ID_LENGTH);
 
 	this->SetEmptyVal(qtssEasySesLastSMSSessionID, &fLastSMSSessionID[0], QTSS_MAX_SESSION_ID_LENGTH);
     

@@ -632,7 +632,7 @@ enum
     qtssPrefsStartThickingDelayInMsec       = 53,   //"start_thicking_delay" // SInt32      // maybe start thicking at this point
     qtssPrefsQualityCheckIntervalInMsec     = 54,   //"quality_check_interval" // UInt32    // adjust thinnning params this often   
     qtssPrefsEnableRTSPErrorMessage         = 55,   //"RTSP_error_message" //Bool16 // Appends a content body string error message for reported RTSP errors.
-    qtssPrefsEnableMSGDebugPrintfs         = 56,   //"MSG_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
+    qtssPrefsEnableMSGDebugPrintfs         = 56,	//"MSG_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
 
     qtssPrefsEnableMonitorStatsFile         = 57,   //"enable_monitor_stats_file" //Bool16 //write server stats to the monitor file
     qtssPrefsMonitorStatsFileIntervalSec    = 58,   //"monitor_stats_file_interval_seconds" // private
