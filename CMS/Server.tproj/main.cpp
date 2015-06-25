@@ -307,8 +307,8 @@ int main(int argc, char * argv[])
     Bool16 theXMLPrefsExist = true;
     UInt32 debugLevel = 0;
     UInt32 debugOptions = kRunServerDebug_Off;
-	static char* sDefaultConfigFilePath = DEFAULTPATHS_ETC_DIR_OLD "streamingserver.conf";
-	static char* sDefaultXMLFilePath = DEFAULTPATHS_ETC_DIR "streamingserver.xml";
+	static char* sDefaultConfigFilePath = DEFAULTPATHS_ETC_DIR_OLD "config.conf";
+	static char* sDefaultXMLFilePath = DEFAULTPATHS_ETC_DIR "config.xml";
 
     char* theConfigFilePath = sDefaultConfigFilePath;
     char* theXMLFilePath = sDefaultXMLFilePath;
@@ -388,7 +388,7 @@ int main(int argc, char * argv[])
     QTSSExpirationDate::PrintExpirationDate();
     if (QTSSExpirationDate::IsSoftwareExpired())
     {
-        qtss_printf("Streaming Server has expired\n");
+        qtss_printf("CMS Server has expired\n");
         ::exit(0);
     }
 
