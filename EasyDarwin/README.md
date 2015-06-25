@@ -17,6 +17,30 @@ EasyDarwin具备一套完整的网络I/O框架以及Utility，开发者很容易
 1. Onvif支持；
 2. WEB配置与管理模块(集成Mongoose);
 
+## 用法
+
+<strong>步骤一:</strong> 获取EasyDarwin 
+
+<pre>
+git clone https://github.com/EasyDarwin/EasyDarwin.git &&
+cd EasyDarwin/EasyDarwin
+</pre>
+
+<strong>步骤二:</strong> 编译EasyDarwin
+
+<pre>
+chmod +x ./Buildit
+./Buildit
+</pre>
+
+<strong>步骤三:</strong> 运行EasyDarwin 
+
+<pre>
+./EasyDarwin -c ./WinNTSupport/easydarwin.xml
+</pre>
+
+
+
 ### 获取更多信息 ###
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
