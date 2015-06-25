@@ -15,6 +15,7 @@ CCFLAGS += -O2
 
 CCFLAGS += -I.
 CCFLAGS += -I..
+CCFLAGS += -I../../Include
 
 
 C++FLAGS = $(CCFLAGS)

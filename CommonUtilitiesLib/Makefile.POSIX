@@ -6,7 +6,7 @@ NAME = CommonUtilitiesLib
 C++ = $(CPLUS)
 CC = $(CCOMP)
 LINK = $(LINKER)
-CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../PlatformHeader.h -g -Wall
+CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../Include/PlatformHeader.h -g -Wall
 
 # OPTIMIZATION
 CCFLAGS += -O2
@@ -14,10 +14,10 @@ CCFLAGS += -O2
 # EACH DIRECTORY WITH HEADERS MUST BE APPENDED IN THIS MANNER TO THE CCFLAGS
 
 CCFLAGS += -I.
-CCFLAGS += -I..
-CCFLAGS += -I../APIStubLib
-CCFLAGS += -I../RTPMetaInfoLib
-CCFLAGS += -I../APICommonCode
+CCFLAGS += -I../Include
+CCFLAGS += -I../EasyDarwin/APIStubLib
+CCFLAGS += -I../EasyDarwin/RTPMetaInfoLib
+CCFLAGS += -I../EasyDarwin/APICommonCode
 
 C++FLAGS = $(CCFLAGS)
 

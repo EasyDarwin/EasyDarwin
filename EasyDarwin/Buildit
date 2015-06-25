@@ -333,11 +333,12 @@ else
 	cd ../
 
 	echo Building CommonUtilitiesLib for $PLAT with $CPLUS
-	cd CommonUtilitiesLib/
+	cd ../CommonUtilitiesLib/
 	$MAKE -f Makefile.POSIX $*
+	cd ../
 
 	echo Building ParseDeviceConfig for $PLAT with $CPLUS
-	cd ../ParseDeviceConfig/
+	cd EasyDarwin/ParseDeviceConfig/
 	$MAKE -f Makefile.POSIX $*
 	
 	echo Building QTFileLib internal for $PLAT with $CPLUS
@@ -353,99 +354,5 @@ else
 	cd ..
 	
 	$MAKE -f Makefile.POSIX $*
-	
-	echo Building RefMovieModule for $PLAT with $CPLUS
-	cd APIModules/QTSSRefMovieModule/
-	$MAKE -f Makefile.POSIX $*
-	
-	echo Building DemoAuthorizationModule for $PLAT with $CPLUS
-	cd ../QTSSDemoAuthorizationModule.bproj/
-	$MAKE -f Makefile.POSIX $*
-	
-	echo Building RawFileModule for $PLAT with $CPLUS
-	cd ../QTSSRawFileModule.bproj/
-	$MAKE -f Makefile.POSIX $*
-	
-	echo Building SpamDefenseModule for $PLAT with $CPLUS
-	cd ../QTSSSpamDefenseModule.bproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building HomeDirectoryModule for $PLAT with $CPLUS
-	cd ../QTSSHomeDirectoryModule/
-	$MAKE -f Makefile.POSIX $*
-	
-	cd ..
-	
-	echo Building StreamingProxy for $PLAT with $CPLUS
-	cd ../StreamingProxy.tproj/
-	$MAKE -f Makefile.POSIX $*
-	
-	echo Building qtpasswd for $PLAT with $CPLUS
-	cd ../qtpasswd.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building PlaylistBroadcaster for $PLAT with $CPLUS
-	cd ../PlaylistBroadcaster.tproj/
-	$MAKE -f Makefile.POSIX $*
-	
-	echo Building MP3Broadcaster for $PLAT with $CPLUS
-	cd ../MP3Broadcaster/
-	$MAKE -f Makefile.POSIX $*
-	
-	echo Building QTFileTools for $PLAT with $CPLUS
-        cd ../QTFileTools/
-
-	echo Building QTBroadcaster for $PLAT with $CPLUS
-	cd QTBroadcaster.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building QTFileInfo for $PLAT with $CPLUS
-	cd ../QTFileInfo.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building QTFileTest for $PLAT with $CPLUS
-	cd ../QTFileTest.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building QTRTPFileTest for $PLAT with $CPLUS
-	cd ../QTRTPFileTest.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building QTRTPGen for $PLAT with $CPLUS
-	cd ../QTRTPGen.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building QTSDPGen for $PLAT with $CPLUS
-	cd ../QTSDPGen.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building QTSampleLister for $PLAT with $CPLUS
-	cd ../QTSampleLister.tproj/
-	$MAKE -f Makefile.POSIX $*
-
-	echo Building QTTrackInfo for $PLAT with $CPLUS
-	cd ../QTTrackInfo.tproj/
-	$MAKE -f Makefile.POSIX $*
-	
-	cd ..
-	
-	if [ -d ../StreamingLoadTool ]; then
-		echo Building StreamingLoadTool for $PLAT with $CPLUS
-			cd ../StreamingLoadTool/
-			$MAKE -f Makefile.POSIX $*
-	fi
-
-	if [ "$*" = "install" ] ; then
-		cd ..
-		pwdi
-		echo
-		./DSS_MakeRoot /
-	fi
-
 fi
 
-if [ "$*" != "clean" ] ; then	
-cd ..
-chmod +x DeployEasyDarwin
-./DeployEasyDarwin
-fi

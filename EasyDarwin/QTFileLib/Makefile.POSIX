@@ -6,7 +6,7 @@ SERVER = -DDSS_USE_API_CALLBACKS
 C++ = $(CPLUS)
 CC = $(CCOMP)
 LINK = $(LINKER)
-CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../PlatformHeader.h -g -Wall
+CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../../Include/PlatformHeader.h -g -Wall
 
 # OPTIMIZATION
 CCFLAGS += -O3
@@ -15,9 +15,9 @@ CCFLAGS += -O3
 
 CCFLAGS += -I.
 CCFLAGS += -I../RTPMetaInfoLib
-CCFLAGS += -I../OSMemoryLib
+CCFLAGS += -I../../OSMemoryLib
 CCFLAGS += -I../APIStubLib
-CCFLAGS += -I../CommonUtilitiesLib
+CCFLAGS += -I../../CommonUtilitiesLib
 
 C++FLAGS = $(CCFLAGS)
 
@@ -41,8 +41,8 @@ CPPFILES = 	QTAtom.cpp\
 			QTRTPFile.cpp \
 			QTTrack.cpp
 
-STDLIBCPP = ../SafeStdLib/InternalStdLib.cpp
-DYNSTDLIBCPP = ../SafeStdLib/DynamicModuleStdLib.cpp
+STDLIBCPP = ../../SafeStdLib/InternalStdLib.cpp
+DYNSTDLIBCPP = ../../SafeStdLib/DynamicModuleStdLib.cpp
 
 #all: libQTFileLib.a libQTFileExternalLib.a libQTFileDynModuleLib.a
 all: libQTFileLib.a libQTFileExternalLib.a 
