@@ -43,9 +43,8 @@
 #include "UDPSocketPool.h"
 #include "RTSPProtocol.h"
 #include "RTPPacketResender.h"
-#ifndef __MacOSX__
 #include "revision.h"
-#endif
+
 
 // STATIC DATA
 
