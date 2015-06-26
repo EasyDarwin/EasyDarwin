@@ -106,7 +106,7 @@ inline  SInt64  GetPacketNTPTime();
 
         enum
         {
-            kMaxReflectorPacketSize = 4096    //jm 5/02 increased from 2048 by 12 bytes for test bytes appended to packets
+            kMaxReflectorPacketSize = 10240    //jm 5/02 increased from 2048 by 12 bytes for test bytes appended to packets
         };
 
         UInt32      fBucketsSeenThisPacket;
@@ -293,7 +293,7 @@ class ReflectorSender : public UDPDemuxerTask
     OSQueueElem* GetClientBufferStartPacket() { return this->GetClientBufferStartPacketOffset(0); };
 
     //->geyijyn@20150427
-    //--重新定位书签位置
+    //--脰脴脨脗露篓脦禄脢茅脟漏脦禄脰脙
     //<-
     Bool16 NeedRelocateBookMark(OSQueueElem* currentElem);
     OSQueueElem* GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem,SInt64 offsetMsec);
