@@ -84,7 +84,18 @@ class ReflectorPacket
 
         ~ReflectorPacket() {}
         
-        void    SetPacketData(char *data, UInt32 len) { Assert(kMaxReflectorPacketSize > len); if (len > 0) memcpy(this->fPacketPtr.Ptr,data,len); this->fPacketPtr.Len = len;}
+        void    SetPacketData(char *data, UInt32 len) 
+		{ 
+			Assert(kMaxReflectorPacketSize > len);
+
+			if(len > kMaxReflectorPacketSize)
+				len = kMaxReflectorPacketSize;
+
+			if (len > 0) 
+				memcpy(this->fPacketPtr.Ptr,data,len); 
+			this->fPacketPtr.Len = len;
+		}
+
         Bool16  IsRTCP() { return fIsRTCP; }
 inline  UInt32  GetPacketRTPTime();
 inline  UInt16  GetPacketRTPSeqNum();
@@ -95,7 +106,7 @@ inline  SInt64  GetPacketNTPTime();
 
         enum
         {
-            kMaxReflectorPacketSize = 2060    //jm 5/02 increased from 2048 by 12 bytes for test bytes appended to packets
+            kMaxReflectorPacketSize = 4096    //jm 5/02 increased from 2048 by 12 bytes for test bytes appended to packets
         };
 
         UInt32      fBucketsSeenThisPacket;
