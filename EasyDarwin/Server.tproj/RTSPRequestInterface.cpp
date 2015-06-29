@@ -184,7 +184,7 @@ RTSPRequestInterface::RTSPRequestInterface(RTSPSessionInterface *session)
     fUserProfile(),
     fUserProfilePtr(&fUserProfile),
     fStale(false),
-    fSkipAuthorization(false),
+    fSkipAuthorization(true),
     fEnableDynamicRateState(-1),// -1 undefined, 0 disabled, 1 enabled
 	// DJM PROTOTYPE
 	fRandomDataSize(0),
