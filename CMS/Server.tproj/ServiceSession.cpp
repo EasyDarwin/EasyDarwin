@@ -526,7 +526,7 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 	EasyDSS::Protocol::EasyDarwinRegisterReq req(json);
 
 	std::string strSN = req.GetSerialNumber();
-	printf("Device %s Get Online \n", strSN.c_str());
+	printf("msg:MSG_DEV_CMS_REGISTER_REQ, Device %s\n", strSN.c_str());
 
 	EasyDSS::Protocol::EasyDarwinRegisterRsp rsp;
 	
@@ -567,6 +567,10 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 
 QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 {
+	EasyDSS::Protocol::EasyDSSProtocol req(json);
+
+	std::string strSN = req.GetBodyValue("SerialNumber");
+	printf("msg:MSG_NGX_CMS_NEED_STREAM_REQ, Device %s\n", strSN.c_str());
 	return QTSS_NoErr;
 }
 

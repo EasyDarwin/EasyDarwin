@@ -59,11 +59,8 @@ class CServiceSession : public BaseSessionInterface
         Bool16 OverMaxConnections(UInt32 buffer);
 
         HTTPRequest*        fRequest;
-        
         OSMutex             fReadMutex;
-        // Module invocation and module state.
-        // This info keeps track of our current state so that
-        // the state machine works properly.
+
 		//网络报文处理状态机
         enum
         {
