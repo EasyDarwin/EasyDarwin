@@ -39,6 +39,8 @@
 #include "OSMemory.h"
 #include "RTSPProtocol.h"
 #include <errno.h>
+#include "EasyDSSUtil.h"
+
 
 
 #if DEBUG
@@ -117,9 +119,9 @@ BaseSessionInterface::BaseSessionInterface()
     this->SetEmptyVal(qtssRTSPSesLastUserName, &fUserNameBuf[0], kMaxUserNameLen);
     this->SetEmptyVal(qtssRTSPSesLastUserPassword, &fUserPasswordBuf[0], kMaxUserPasswordLen);
 
-	//qtss_sprintf(fSessionID, "DEVICE%s", "Make a UUID");
-	//this->SetValue(qtssEasySessionID, 0, fSessionID, ::strlen(fSessionID), QTSSDictionary::kDontObeyReadOnly);
-	fSessionID[0] = '\0';
+	qtss_sprintf(fSessionID, "%s", EasyDSSUtil::GetUUID().c_str());
+	this->SetValue(qtssEasySessionID, 0, fSessionID, ::strlen(fSessionID), QTSSDictionary::kDontObeyReadOnly);
+
 	this->SetEmptyVal(qtssEasySessionID, &fSessionID[0], QTSS_MAX_SESSION_ID_LENGTH);
 
 	this->SetEmptyVal(qtssEasySesLastSMSSessionID, &fLastSMSSessionID[0], QTSS_MAX_SESSION_ID_LENGTH);
