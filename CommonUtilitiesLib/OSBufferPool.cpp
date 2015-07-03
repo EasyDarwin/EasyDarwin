@@ -33,6 +33,9 @@
 
 #include "OSBufferPool.h"
 #include "OSMemory.h"
+#ifdef _WIN32
+#include <new>
+#endif
 
 void*   OSBufferPool::Get()
 {
