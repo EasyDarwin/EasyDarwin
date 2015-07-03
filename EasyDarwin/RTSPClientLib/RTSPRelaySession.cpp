@@ -643,12 +643,6 @@ void EasyRelaySink::afterGettingFrame(unsigned frameSize, unsigned numTruncatedB
 //#endif
 //  envir() << "\n";
 //#endif
-
-
-	if(strcmp(fOurSubsession.mediumName(), "audio") == 0)
-		QTSS_ReflectRTPData(fRelaySession, (char*)fReceiveBuffer, frameSize, fSubsession.trackIndex());
-	else
-		break;
   
   // Then continue, to request the next frame of data:
   continuePlaying();
