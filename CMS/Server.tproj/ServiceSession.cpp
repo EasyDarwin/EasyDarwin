@@ -12,7 +12,7 @@
 #include "ServiceSession.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
-//#include "EasyDSSProtocol.h"
+
 #include "OSArrayObjectDeleter.h"
 
 #if __FreeBSD__ || __hpux__	
@@ -471,19 +471,21 @@ QTSS_Error CServiceSession::SetupRequest()
 
 
 	//报文处理，不进入队列
-	//EasyDSS::Protocol::EasyDSSProtocol protocol(theRequestBody);
-	//int nNetMsg = protocol.GetMessageType();
+	EasyDSS::Protocol::EasyDSSProtocol protocol(theRequestBody);
+	int nNetMsg = protocol.GetMessageType();
 
-	//switch (nNetMsg)
-	//{
-	//case MSG_CS_LOGIN_REQ:
-	//	break;
-	//case MSG_CS_HEARTBEAT_REQ:
-	//	break;
-	//default:
-	//	//ExecNetMsgDefaultReqHandler(pNetMsg);
-	//	break;
-	//}
+	switch (nNetMsg)
+	{
+		case MSG_DEV_CMS_REGISTER_REQ:
+			ExecNetMsgDevRegisterReq(theRequestBody);
+			break;
+		case MSG_NGX_CMS_NEED_STREAM_REQ:
+			ExecNetMsgNgxStreamReq(theRequestBody);
+			break;
+		default:
+			ExecNetMsgDefaultReqHandler(theRequestBody);
+			break;
+	}
 	
 	UInt32 offset = 0;
 	(void)QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &offset, sizeof(offset));
@@ -540,7 +542,61 @@ QTSS_Error CServiceSession::DumpRequestData()
     return theErr;
 }
 
-QTSS_Error CServiceSession::ExecNetMsgSnapUpdateReq(const char* szMsg)
+QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
+{
+	EasyDSS::Protocol::EasyDarwinRegisterReq req(json);
+
+	std::string strSN = req.GetSerialNumber();
+	printf("Device %s Get Online \n", strSN.c_str());
+
+	EasyDSS::Protocol::EasyDarwinRegisterRsp rsp;
+	
+	///we should move this to class EasyDarwinRegisterReq
+	rsp.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
+	rsp.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
+	rsp.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+	rsp.SetHeaderValue(EASYDSS_TAG_SESSION_ID, "a939cd77c7cb4af6b2bd8f2090562b91");
+	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_NUM, "200");
+	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_STRING, "Success OK");
+
+
+	string msg = rsp.GetMsg();
+
+	StrPtrLen contentXML((char*)msg.c_str());
+
+	//构造响应报文(HTTP头)
+	HTTPRequest httpAck(&sServiceStr);
+	httpAck.CreateResponseHeader(contentXML.Len?httpOK:httpNotImplemented);
+	if (contentXML.Len)
+		httpAck.AppendContentLengthHeader(contentXML.Len);
+
+	//if(connectionClose)
+	//	httpAck.AppendConnectionCloseHeader();
+
+	char respHeader[2048] = { 0 };
+	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+	
+	BaseResponseStream *pOutputStream = GetOutputStream();
+	pOutputStream->Put(respHeader);
+	if (contentXML.Len > 0) 
+		pOutputStream->Put(contentXML.Ptr, contentXML.Len);
+	
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
+{
+	return QTSS_NoErr;
+}
+
+QTSS_Error CServiceSession::ExecNetMsgDefaultReqHandler(const char* json)
+{
+	return QTSS_NoErr;
+}
+
+QTSS_Error CServiceSession::ExecNetMsgSnapUpdateReq(const char* json)
 {
 	return QTSS_NoErr;
 }

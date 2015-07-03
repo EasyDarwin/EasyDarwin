@@ -23,6 +23,12 @@
  *
  */
 /*
+	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.EasyDarwin.org
+*/
+/*
     File:       OSMemory.h
 
     Contains:   Prototypes for overridden new & delete, definition of OSMemory
@@ -122,7 +128,9 @@ class OSMemory
 
 // 
 // PLACEMENT NEW OPERATOR
+#ifdef COMMON_UTILITIES_LIB
 inline void* operator new(size_t, void* ptr) { return ptr;}
+#endif
 
 #if MEMORY_DEBUGGING
 
@@ -136,11 +144,12 @@ void* operator new[](size_t s, char* inFile, int inLine);
 
 // When memory debugging is not on, these are overridden so that if new fails,
 // the process will exit.
+#if 0
 void* operator new (size_t s);
 void* operator new[](size_t s);
 
 void operator delete(void* mem);
 void operator delete[](void* mem);
-
+#endif
 
 #endif //__OS_MEMORY_H__
