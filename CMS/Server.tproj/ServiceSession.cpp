@@ -49,7 +49,7 @@ CServiceSession::CServiceSession( )
     fModuleState.curRole = 0;
     fModuleState.globalLockRequested = false;
 
-	qtss_printf("New Session:%s\n", fSessionID);
+	qtss_printf("create session:%s\n", fSessionID);
 }
 
 CServiceSession::~CServiceSession()
@@ -59,7 +59,7 @@ CServiceSession::~CServiceSession()
 	QTSS_GetValue(this, qtssRTSPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
 
 	char msgStr[2048] = { 0 };
-	qtss_snprintf(msgStr, sizeof(msgStr), "Session Offline from ip[%s]",remoteAddress);
+	qtss_snprintf(msgStr, sizeof(msgStr), "session offline from ip[%s]",remoteAddress);
 	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
     // Invoke the session closing modules
     QTSS_RoleParams theParams;
@@ -99,8 +99,8 @@ SInt64 CServiceSession::Run()
 	if(events & Task::kTimeoutEvent)
 	{
 		//客户端Session超时，暂时不处理 
-		char msgStr[128];
-		qtss_snprintf(msgStr, sizeof(msgStr), "Service Session Timeout, No Handler\n");
+		char msgStr[512];
+		qtss_snprintf(msgStr, sizeof(msgStr), "session timeout,release session\n");
 		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 		return -1;
 	}
@@ -236,42 +236,21 @@ SInt64 CServiceSession::Run()
                     break;
                 }
 
-				//是否跳过权限认证过程
-                if(1/*fRequest->SkipAuthorization()*/)
-                {
-                    // Skip the authentication and authorization states
-                    // The foll. normally gets executed at the end of the authorization state 
-                    // Prepare for kPreprocessingRequest state.
-                    fState = kPreprocessingRequest;
-
-                    break;
-                }
-                else
-                    fState = kAuthenticatingRequest;
-            }
-            
-            case kAuthenticatingRequest:
-            {
-				//认证过程
-                fState = kAuthorizingRequest;
-            }
-            case kAuthorizingRequest:
-            {
-                //授权过程
                 fState = kPreprocessingRequest;
+                break;
             }
-            
+                       
             case kPreprocessingRequest:
             {
                 //请求预处理过程
-				qtss_printf("Processing...\n");
+				//TODO:报文处理过程
                 fState = kCleaningUp;
 				break;
             }
 
             case kProcessingRequest:
             {
-                if (/*!fRequest->HasResponseBeenSent()*/fOutputStream.GetBytesWritten() == 0)
+                if (fOutputStream.GetBytesWritten() == 0)
                 {
 					//如果到这里，响应报文还没有形成，返回500 Server Internal Error
 					////QTSSModuleUtils::SendErrorResponse(fRequest, qtssServerInternal, qtssMsgNoModuleForRequest);

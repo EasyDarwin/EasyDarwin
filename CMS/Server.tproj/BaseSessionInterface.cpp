@@ -122,8 +122,6 @@ BaseSessionInterface::BaseSessionInterface()
 	qtss_sprintf(fSessionID, "%s", EasyDSSUtil::GetUUID().c_str());
 	this->SetValue(qtssEasySessionID, 0, fSessionID, ::strlen(fSessionID), QTSSDictionary::kDontObeyReadOnly);
 
-	this->SetEmptyVal(qtssEasySessionID, &fSessionID[0], QTSS_MAX_SESSION_ID_LENGTH);
-
 	this->SetEmptyVal(qtssEasySesLastSMSSessionID, &fLastSMSSessionID[0], QTSS_MAX_SESSION_ID_LENGTH);
     
     fInputStream.ShowMSG(QTSServerInterface::GetServer()->GetPrefs()->GetMSGDebugPrintfs());
