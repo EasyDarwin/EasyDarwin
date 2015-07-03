@@ -22,6 +22,11 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/algorithm/string.hpp>
+
 std::string EasyDSSUtil::TimeT2String(EasyDSSTimeFormat whatFormat, unsigned long time)
 {
     struct tm local;
@@ -108,4 +113,21 @@ unsigned long EasyDSSUtil::NowTime()
 {
     time_t now = time(NULL);
     return (unsigned long)now;
+}
+
+std::string EasyDSSUtil::GetUUID()
+{
+	try
+	{
+		boost::uuids::random_generator rnd_gen;
+		boost::uuids::uuid u = rnd_gen();
+		std::string s = boost::uuids::to_string(u);
+		boost::erase_all(s, "-");
+		return s;
+	}
+	catch (std::exception &e)
+	{
+		printf("SysUtil::GetUUID error: %s\n", e.what());
+		return std::string();
+	}	
 }

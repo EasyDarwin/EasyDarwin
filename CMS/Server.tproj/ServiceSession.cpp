@@ -555,20 +555,20 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 	rsp.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
 	rsp.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
 	rsp.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
-	rsp.SetHeaderValue(EASYDSS_TAG_SESSION_ID, "a939cd77c7cb4af6b2bd8f2090562b91");
+	rsp.SetHeaderValue(EASYDSS_TAG_SESSION_ID, fSessionID);
 	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_NUM, "200");
 	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_STRING, "Success OK");
 
 
 	string msg = rsp.GetMsg();
 
-	StrPtrLen contentXML((char*)msg.c_str());
+	StrPtrLen contentJson((char*)msg.c_str());
 
 	//构造响应报文(HTTP头)
 	HTTPRequest httpAck(&sServiceStr);
-	httpAck.CreateResponseHeader(contentXML.Len?httpOK:httpNotImplemented);
-	if (contentXML.Len)
-		httpAck.AppendContentLengthHeader(contentXML.Len);
+	httpAck.CreateResponseHeader(contentJson.Len?httpOK:httpNotImplemented);
+	if (contentJson.Len)
+		httpAck.AppendContentLengthHeader(contentJson.Len);
 
 	//if(connectionClose)
 	//	httpAck.AppendConnectionCloseHeader();
@@ -579,8 +579,8 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 	
 	BaseResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
-	if (contentXML.Len > 0) 
-		pOutputStream->Put(contentXML.Ptr, contentXML.Len);
+	if (contentJson.Len > 0) 
+		pOutputStream->Put(contentJson.Ptr, contentJson.Len);
 	
 
 	return QTSS_NoErr;
