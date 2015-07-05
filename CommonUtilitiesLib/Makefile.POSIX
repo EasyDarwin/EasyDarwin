@@ -6,7 +6,7 @@ NAME = CommonUtilitiesLib
 C++ = $(CPLUS)
 CC = $(CCOMP)
 LINK = $(LINKER)
-CCFLAGS += $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../Include/PlatformHeader.h -g -Wall
+CCFLAGS += -DCOMMON_UTILITIES_LIB $(COMPILER_FLAGS) $(INCLUDE_FLAG) ../Include/PlatformHeader.h -g -Wall
 
 # OPTIMIZATION
 CCFLAGS += -O2

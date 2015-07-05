@@ -4,7 +4,7 @@ PRJNAME = EasyDarwin
 C++ = $(CPLUS)
 CC = $(CCOMP)
 LINK = $(LINKER)
-CCFLAGS += $(COMPILER_FLAGS)  -DDSS_USE_API_CALLBACKS -g -Wall -Wno-format-y2k $(INCLUDE_FLAG) ../Include/PlatformHeader.h
+CCFLAGS += $(COMPILER_FLAGS)  -DDSS_USE_API_CALLBACKS -DCOMMON_UTILITIES_LIB -g -Wall -Wno-format-y2k $(INCLUDE_FLAG) ../Include/PlatformHeader.h
 LIBS = -lCommonUtilitiesLib -lLive555 -lQTFileLib -lParseDeviceConfig $(CORE_LINK_LIBS) 
 
 # OPTIMIZATION
