@@ -46,6 +46,8 @@
 #endif
 //#define EASYDSS_API
 #define EASYDSS_PROTOCOL_VERSION                            "1.0"
+#define EASYDSS_PROTOCOL_STREAM_MAIN						"0"
+#define EASYDSS_PROTOCOL_STREAM_SUB							"1"
 
 /*!
 \ingroup EasyDSS_Tag_Define
@@ -112,6 +114,7 @@
 #define EASYDSS_TAG_DEVICE_SERVER							"DeviceServer"
 #define EASYDSS_TAG_TIME									"Time"
 #define EASYDSS_TAG_SCHEDULE								"Schedule" 
+#define EASYDSS_TAG_STREAM_ID								"StreamID"
 /*!
 \}
 */
