@@ -31,6 +31,8 @@ public:
     static std::string NowTime(EasyDSSTimeFormat whatFormat);
     
     static unsigned long NowTime();
+
+	static std::string GetUUID();
     
 };
 
