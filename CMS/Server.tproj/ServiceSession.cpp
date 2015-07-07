@@ -523,7 +523,7 @@ QTSS_Error CServiceSession::DumpRequestData()
 
 QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 {
-	//MSG_DEV_CMS_REGISTER_REQ消息解析
+	//MSG_DEV_CMS_REGISTER_REQ设备注册消息解析
 	EasyDSS::Protocol::EasyDarwinRegisterReq req(json);
 
 	//获取设备SN序列号
@@ -598,10 +598,91 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 
 QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 {
+	QTSS_Error theErr = QTSS_NoErr;
+
+	//MSG_NGX_CMS_NEED_STREAM_REQ请求设备直播消息解析
 	EasyDSS::Protocol::EasyDSSProtocol req(json);
 
-	std::string strSN = req.GetBodyValue("SerialNumber");
-	printf("msg:MSG_NGX_CMS_NEED_STREAM_REQ, Device %s\n", strSN.c_str());
+	//获取设备SN序列号
+	std::string strDeviceSN = req.GetBodyValue(EASYDSS_TAG_DEVICE_SERIAL);
+
+	//这里对错误报文没有进行Response回复，实际是需要进行处理的
+	if(strDeviceSN.length() <= 0) return QTSS_BadArgument;
+
+	printf("msg:MSG_NGX_CMS_NEED_STREAM_REQ, Device %s\n", strDeviceSN.c_str());
+
+	OSRefTable* devMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
+	OSRef* theDevRef = NULL;
+
+	do
+	{
+		//从设备列表Map中查找设备
+		char strSerial[EASY_MAX_SERIAL_LENGTH] = { 0 };
+		qtss_sprintf(strSerial,"%s",strDeviceSN.c_str());
+
+		StrPtrLen devSerialPtr(strSerial);
+
+		// Device RefCount++
+		theDevRef = devMap->Resolve(&devSerialPtr);
+
+		if (theDevRef == NULL)
+		{
+			//未查找到设备，返回404
+			theErr = QTSS_ValueNotFound;
+			break;
+		}
+
+		//构造MSG_CMS_DEV_STREAM_START_REQ请求设备码流消息
+		EasyDSS::Protocol::EasyDSSProtocol streamingREQ(MSG_CMS_DEV_STREAM_START_REQ);
+		//Header
+		streamingREQ.SetHeaderValue(EASYDSS_TAG_VERSION, EASYDSS_PROTOCOL_VERSION);
+		streamingREQ.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+		//Body
+		streamingREQ.SetBodyValue(EASYDSS_TAG_STREAM_ID, EASYDSS_PROTOCOL_STREAM_MAIN);
+		streamingREQ.SetBodyValue(EASYDSS_TAG_PROTOCOL, "RTSP");
+		streamingREQ.SetBodyValue("DssIP","www.easydarwin.org");
+		streamingREQ.SetBodyValue("DssPort","554");
+	
+		string buffer = streamingREQ.GetMsg();
+		//发送MSG_CMS_DEV_STREAM_START_REQ报文到设备
+		QTSS_SendHTTPPacket(theDevRef->GetObject(), (char*)buffer.c_str(), ::strlen(buffer.c_str()), false, false);
+	}while(0);
+	
+	//Device RefCount--
+	if(theDevRef)
+		devMap->Release(theDevRef);
+
+	//构造MSG_NGX_CMS_NEED_STREAM_RSP请求直播消息响应报文
+	EasyDSS::Protocol::EasyDSSProtocol rsp(MSG_NGX_CMS_NEED_STREAM_RSP);
+	rsp.SetHeaderValue(EASYDSS_TAG_VERSION, EASYDSS_PROTOCOL_VERSION);
+	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_NUM, "200");//EASYDSS_ERROR_SUCCESS_OK
+	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_STRING, EasyDSSProtocol::GetErrorString(EASYDSS_ERROR_SUCCESS_OK).c_str());
+	rsp.SetBodyValue("DssIP","www.easydarwin.org");
+	rsp.SetBodyValue("DssPort","554");
+
+	string msg = rsp.GetMsg();
+
+	StrPtrLen msgJson((char*)msg.c_str());
+
+	//构造响应报文(HTTP头)
+	HTTPRequest httpAck(&sServiceStr);
+	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
+	if (msgJson.Len)
+		httpAck.AppendContentLengthHeader(msgJson.Len);
+
+	//响应完成后断开连接
+	httpAck.AppendConnectionCloseHeader();
+
+	//Push MSG to OutputBuffer
+	char respHeader[2048] = { 0 };
+	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+	
+	BaseResponseStream *pOutputStream = GetOutputStream();
+	pOutputStream->Put(respHeader);
+	if (msgJson.Len > 0) 
+		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+	
 	return QTSS_NoErr;
 }
 
