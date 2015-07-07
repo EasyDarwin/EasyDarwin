@@ -532,10 +532,32 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 	//这里对错误报文没有进行Response回复，实际是需要进行处理的
 	if(strDeviceSN.length() <= 0) return QTSS_BadArgument;
 
-	printf("msg:MSG_DEV_CMS_REGISTER_REQ, Device %s\n", strSN.c_str());
+	printf("msg:MSG_DEV_CMS_REGISTER_REQ, Device %s\n", strDeviceSN.c_str());
 
 	//TODO:对设备SN和密码进行验证
 	//
+
+	//将设备列表维护
+	qtss_sprintf(fSerial,"%s", strDeviceSN.c_str());
+	//更新Session类型
+	fSessionType = qtssDeviceSession;
+	QTSS_SetValue(this, qtssEasySesSerial, 0, fSerial, strlen(fSerial));
+	//Device OSRef
+	fDevSerialPtr.Set( fSerial, ::strlen(fSerial));
+	fDevRef.Set( fDevSerialPtr, this);
+	//全局维护设备列表
+	OS_Error theErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(GetRef());
+	//printf("[line:%d]BaseSessionInterface::RegDevSession theErr = %d\n",__LINE__, theErr);
+	if(theErr == OS_NoErr)
+	{
+		//认证授权标识,当前Session就不需要再进行认证过程了
+		fAuthenticated = true;
+	}
+	else
+	{
+		//上线冲突
+		return QTSS_AttrNameExists;
+	}
 
 	//进行MSG_DEV_CMS_REGISTER_RSP响应，构造HTTP Content内容
 	EasyDSS::Protocol::EasyDarwinRegisterRsp rsp;
