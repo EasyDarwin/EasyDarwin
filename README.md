@@ -7,6 +7,38 @@ EasyDarwin平台目前包括CMS(中心管理服务)，EasyDarwin(流媒体服务
 - **CMS** 开源的设备接入与管理服务，具体见[https://github.com/EasyDarwin/](https://github.com/EasyDarwin/EasyDarwin/)；
 - **EasyDarwin** 开源流媒体服务，具体见[https://github.com/EasyDarwin/](https://github.com/EasyDarwin/EasyDarwin/)；
 
+
+### System Architecture
+
+<pre>
+
+      +---------+         +----------+        +------------+        +------------+
+      +  Client +         +    CMS   +        + EasyCamera +        + EasyDarwin +
+      +---|-----+         +----|-----+        +----|-------+        +------|-----+
++---------+--------------------+-------------------+-----------------------+
+|         |                    |<-Register Online--+                       |
++---------+--------------------+-------------------+-----------------------+
+|         +--Get Device List-->|                   |                       |
+|         |                    |                   |                       |
+|         |<-Device List Json--|                   |                       |
++---------+--------------------+-------------------+-----------------------+
+|         |                    |                   |                       |
+|         +-Get Device Stream->|                   |                       |
+|         |    (Device SN)     |                   |                       |
+|         |                    +--request stream-->|                       |
+|         |                    | (EasyDarwin Addr) |                       |
+|         |                    |                   +---RTSP Stream Push--->|
+|         |                    |                   +====RTP Streaming=====>|
+|         |                    |                   |                       |
+|         |                    |<---Streaming OK---+                       |
+|         |<--live stream url--+                   |                       |
+|         |                    |                   |                       |
+|         +-------------------HTTP or RTSP Streaming---------------------->|
+|         |                    |                   |                       |
++---------+--------------------+-------------------+-----------------------+
+
+</pre>
+
 ### 获取更多信息 ###
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
@@ -14,3 +46,6 @@ EasyDarwin平台目前包括CMS(中心管理服务)，EasyDarwin(流媒体服务
 WEB：[EasyDarwin.org](http://www.easydarwin.org)
 
 QQ交流群：288214068
+
+
+
