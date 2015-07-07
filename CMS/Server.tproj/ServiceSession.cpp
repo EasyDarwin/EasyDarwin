@@ -25,7 +25,7 @@
     #include <crypt.h>
 #endif
 
-static StrPtrLen	sServiceStr("CMSServer");
+static StrPtrLen	sServiceStr("EasyDariwn CMSServer");
 
 CServiceSession::CServiceSession( )
 : BaseSessionInterface(),
@@ -523,45 +523,54 @@ QTSS_Error CServiceSession::DumpRequestData()
 
 QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 {
+	//MSG_DEV_CMS_REGISTER_REQ消息解析
 	EasyDSS::Protocol::EasyDarwinRegisterReq req(json);
 
-	std::string strSN = req.GetSerialNumber();
+	//获取设备SN序列号
+	std::string strDeviceSN = req.GetSerialNumber();
+
+	//这里对错误报文没有进行Response回复，实际是需要进行处理的
+	if(strDeviceSN.length() <= 0) return QTSS_BadArgument;
+
 	printf("msg:MSG_DEV_CMS_REGISTER_REQ, Device %s\n", strSN.c_str());
 
+	//TODO:对设备SN和密码进行验证
+	//
+
+	//进行MSG_DEV_CMS_REGISTER_RSP响应，构造HTTP Content内容
 	EasyDSS::Protocol::EasyDarwinRegisterRsp rsp;
-	
-	///we should move this to class EasyDarwinRegisterReq
-	rsp.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
+	rsp.SetHeaderValue(EASYDSS_TAG_VERSION, EASYDSS_PROTOCOL_VERSION);
 	rsp.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
-	rsp.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+	rsp.SetHeaderValue(EASYDSS_TAG_CSEQ, req.GetHeaderValue(EASYDSS_TAG_CSEQ).c_str());	
 	rsp.SetHeaderValue(EASYDSS_TAG_SESSION_ID, fSessionID);
-	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_NUM, "200");
-	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_STRING, "Success OK");
-
-
+	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_NUM, "200");//EASYDSS_ERROR_SUCCESS_OK
+	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_STRING, EasyDSSProtocol::GetErrorString(EASYDSS_ERROR_SUCCESS_OK).c_str());
 	string msg = rsp.GetMsg();
 
-	StrPtrLen contentJson((char*)msg.c_str());
+	StrPtrLen jsonRSP((char*)msg.c_str());
 
-	//构造响应报文(HTTP头)
+	//构造响应报文(HTTP Header)
 	HTTPRequest httpAck(&sServiceStr);
-	httpAck.CreateResponseHeader(contentJson.Len?httpOK:httpNotImplemented);
-	if (contentJson.Len)
-		httpAck.AppendContentLengthHeader(contentJson.Len);
+	httpAck.CreateResponseHeader(jsonRSP.Len?httpOK:httpNotImplemented);
+	if (jsonRSP.Len)
+		httpAck.AppendContentLengthHeader(jsonRSP.Len);
 
+	//判断是否需要关闭当前Session连接
 	//if(connectionClose)
 	//	httpAck.AppendConnectionCloseHeader();
 
+	//Push HTTP Header to OutputBuffer
 	char respHeader[2048] = { 0 };
 	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
 	BaseResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
-	if (contentJson.Len > 0) 
-		pOutputStream->Put(contentJson.Ptr, contentJson.Len);
 	
-
+	//Push HTTP Content to OutputBuffer
+	if (jsonRSP.Len > 0) 
+		pOutputStream->Put(jsonRSP.Ptr, jsonRSP.Len);
+	
 	return QTSS_NoErr;
 }
 

@@ -28,8 +28,9 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 *.sdf
-WinNTSupport/Logs/server_status
 *.sdp
 *.o
 /CMS/build/
 /CMS/dist/
+[Bb]oost*/
+[Ll]ogs*/
