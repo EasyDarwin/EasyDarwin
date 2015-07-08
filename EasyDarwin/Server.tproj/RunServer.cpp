@@ -200,8 +200,8 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 
 
     // SWITCH TO RUN USER AND GROUP ID
-    if (!sServer->SwitchPersonality())
-        theServerState = qtssFatalErrorState;
+    //if (!sServer->SwitchPersonality())
+    //    theServerState = qtssFatalErrorState;
 
    //
     // Tell the caller whether the server started up or not
