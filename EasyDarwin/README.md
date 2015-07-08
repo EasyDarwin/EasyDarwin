@@ -12,10 +12,10 @@ EasyDarwin具备一套完整的网络I/O框架以及Utility，开发者很容易
 
 ## 正在进行开发的: ##
 1. HLS协议支持;
+2. Onvif支持；
 
 ## 计划支持： ##
-1. Onvif支持；
-2. WEB配置与管理模块(集成Mongoose);
+1. WEB配置与管理模块(集成Mongoose);
 
 ## 用法
 
