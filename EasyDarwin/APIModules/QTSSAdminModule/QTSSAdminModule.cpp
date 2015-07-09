@@ -184,9 +184,8 @@ static UInt16			sDefaultHttpPort = 80;
 //web管理静态页加载路径
 static char*			sDocumentRoot     = NULL;
 static char*			sDefaultDocumentRoot = "./";
-//resource path is EasyDarwin/WebResource
 
-
+//Mongoose事件处理
 static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
   switch (ev) {
     case MG_AUTH:
@@ -196,6 +195,7 @@ static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
   }
 }
 
+//mongoose线程
 class mongooseThread : public OSThread
 {
     public:
@@ -208,17 +208,16 @@ class mongooseThread : public OSThread
 
 
 //Mongoose
-
 void mongooseThread::Entry()
 {
 	struct mg_server *mongooseserver;
-	//// Create and configure the server
+	// Create and configure the server
 	mongooseserver = mg_create_server((void *) "1", ::ev_handler);
 	char listening_port[6];
 	sprintf(listening_port, "%d", sHttpPort);
 	mg_set_option(mongooseserver, "listening_port", listening_port);
-//	mg_set_option(mongooseserver, "document_root", sDocumentRoot); //donot use it
-//	printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
+	mg_set_option(mongooseserver, "document_root", sDocumentRoot); //donot use it
+	printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
 	//run server
 	for (;;) mg_poll_server((struct mg_server *) mongooseserver, 1000);
     mg_destroy_server(&mongooseserver);
