@@ -473,31 +473,6 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\APIModules\QTSSAdminModule\QTSSAdminModule.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
-							BrowseInformation="2"
-							ForcedIncludeFiles=""
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
-							ForcedIncludeFiles=""
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\APIModules\QTSSFileModule\QTSSFileModule.cpp"
 					>
 					<FileConfiguration
@@ -908,6 +883,43 @@
 								Name="VCCLCompilerTool"
 								AdditionalIncludeDirectories=""
 								PreprocessorDefinitions=""
+								ForcedIncludeFiles=""
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								AdditionalIncludeDirectories=""
+								PreprocessorDefinitions=""
+								ForcedIncludeFiles=""
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
+				<Filter
+					Name="QTSSAdminModule"
+					>
+					<File
+						RelativePath="..\APIModules\QTSSAdminModule\frozen.c"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\QTSSAdminModule\mongoose.c"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\QTSSAdminModule\QTSSAdminModule.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								AdditionalIncludeDirectories=""
+								PreprocessorDefinitions=""
+								BrowseInformation="2"
 								ForcedIncludeFiles=""
 							/>
 						</FileConfiguration>
