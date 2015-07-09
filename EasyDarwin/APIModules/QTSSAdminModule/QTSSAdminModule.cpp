@@ -22,33 +22,22 @@
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-
 /*
 	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-
 /*
     File:       QTSSAdminModule.cpp
-
     Contains:   Implements Admin module
-
 */
 
 #include <string.h>
 #include <sys/stat.h>
 
 #ifdef _WIN32
-
 #include <direct.h>
-//#include <winsvc.h>
-//#include <shlobj.h>
-
-//#include <sys/wait.h>
-//#include <unistd.h>
-
 #endif // _WIN32
 
 #ifndef __Win32__
@@ -188,313 +177,20 @@ static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 
 
 //**************************************************
-//Http Listening port
-static UInt16			sHttpPort = 1080;
+//web¹ÜÀí¼àÌý¶Ë¿Ú£¬Ä¬ÈÏ80
+static UInt16			sHttpPort = 80;
 static UInt16			sDefaultHttpPort = 80;
-//Http Document Root
+
+//web¹ÜÀí¾²Ì¬Ò³¼ÓÔØÂ·¾¶
 static char*			sDocumentRoot     = NULL;
 static char*			sDefaultDocumentRoot = "./";
 //resource path is EasyDarwin/WebResource
 
-//document_root is assigned here.
-//In here relative path and absolute path are all accepted,
-//but empty path will raise a http 404 error when some file is required.
-//May be an absolute path is more appropriate than relative one when the server is embeded in some appliction (eg. EasyDarwin).
-
-//**************************page related method is below
-static const char* indexfile="index.html";
-static const char* passwordfile="my_passwords.txt";
-#define MAX_PATH_LEN 256
-
-#ifdef __Win32__
-#define DIRSEP '/'
-#else
-//#define DIRSEP '/'
-#endif
-
-static int full_path(const char* rootpath,const char *pathin,char *pathout){
-	if(strlen(rootpath)+strlen(pathin)>=MAX_PATH_LEN)
-		return MG_FALSE;
-	char *rootpathtmp=NULL;
-	rootpathtmp=strdup(rootpath);
-//    if (*(rootpathtmp+strlen(rootpathtmp)-1)==DIRSEP)//not needed
-//    {
-//        *(rootpathtmp+strlen(rootpathtmp)-1)='\0';
-//        //remove the '/' ending for document_root if existed
-//    }
-    sprintf(pathout,"%s%s",rootpath,pathin);//
-        //for file resource, uri path will be converted to local path (eg. absolute path)
-    free(rootpathtmp);
-    return MG_TRUE;
-}
-
-static int is_file_exist(char *filename){
-    struct stat buf;
-    return stat(filename,&buf)+1;
-}
-
-static const char *s_no_cache_header =
-  "Cache-Control: max-age=0, post-check=0, "
-  "pre-check=0, no-store, no-cache, must-revalidate\r\n";
-
-static int send_upload_page(struct mg_connection *conn) {
-    //    const char *data;
-    mg_printf_data(conn, "%s",
-                   "<html><body>Upload example."
-                   "<form method=\"POST\" action=\"/api/handle_upload_request\" "
-                   "  enctype=\"multipart/form-data\">"
-                   "<input type=\"file\" name=\"file1\" /> <br/>"
-                   "<input type=\"file\" name=\"file2\" /> <br/>"
-                   "<input type=\"submit\" value=\"Upload\" />"
-                   "</form>");
-    return MG_TRUE;
-}
-
-static int send_error404_page(struct mg_connection *conn){
-	static const char *error_404=
-	"		<html>\
-			<head><title>404 Not Found</title></head>\
-			<body bgcolor=\"white\">\
-			<center><h1><center>404 Not Found</center></h1></center>\
-			<hr><center>EasyDarwin</center>\
-			</body>\
-			</html>";
-	mg_printf_data(conn, error_404, conn->uri);
-	return MG_TRUE;
-}
-
-static int page_router(struct mg_connection *conn){
-	//************ for bulitin webpages
-    if(!strcmp(conn->uri,"/api/upload.html")){
-
-        return send_upload_page(conn);
-    }
-    //************ for pages on disk
-	char pagepath[MAX_PATH_LEN];
-	char pagefullpath[MAX_PATH_LEN];
-	if (strlen(conn->uri) < MAX_PATH_LEN)
-		strcpy(pagepath,conn->uri);
-	else
-		return MG_FALSE;
-    if ((*(pagepath+(strlen(pagepath)-1))=='/')&&(strlen(indexfile)+strlen(indexfile) < MAX_PATH_LEN)){
-        strcat(pagepath,indexfile);
-        //for dir path (ended with '/'), an index.html page is assigned
-    }
-
-    if ((sDocumentRoot==NULL)||(full_path(sDocumentRoot,pagepath,pagefullpath)==MG_FALSE))
-		return MG_FALSE;
-    if (is_file_exist(pagefullpath)){
-        mg_send_file(conn, pagefullpath, s_no_cache_header);
-        //then, the file will be sent to client using mg_send_file.
-        return MG_MORE;
-    }
-    return MG_FALSE;
-}
-
-//**************************action related method is below
-static int handle_sum_call(struct mg_connection *conn) {
-  char n1[100], n2[100];
-
-  // Get form variables
-  mg_get_var(conn, "n1", n1, sizeof(n1));
-  mg_get_var(conn, "n2", n2, sizeof(n2));
-
-  mg_printf_data(conn, "{ \"result\": %lf }", strtod(n1, NULL) + strtod(n2, NULL));
-  return MG_TRUE;
-}
-
-static int handle_upload_request(struct mg_connection *conn) {
-    const char *data;
-    int data_len, ofs = 0;
-    char var_name[100], file_name[100];
-
-    while ((ofs = mg_parse_multipart(conn->content + ofs, conn->content_len - ofs,
-                                     var_name, sizeof(var_name),
-                                     file_name, sizeof(file_name),
-                                     &data, &data_len)) > 0) {
-        printf("%s",conn->content);
-        FILE *fp=NULL;
-        char file_path[200];
-        sprintf(file_path,"%s/api/%s",sDocumentRoot,file_name);
-        printf("%s/api/%s",sDocumentRoot,file_name);
-        if((fp= fopen(file_path, "wb"))!=NULL)
-        {
-            fwrite(data,1,data_len,fp);
-            fclose(fp);
-        }
-        mg_printf_data(conn, "var: %s, file_name: %s, size: %d bytes<br>",
-                       var_name, file_name, data_len);
-
-    }
-
-    mg_printf_data(conn, "%s", "</body></html>");
-    return MG_TRUE;
-}
-
-static int get_pullrtsplist(char *rtspurilist){
-//TODO:get pulling-mode rtsp uris from xml,
-//rtspurilist is a string like "\"rtspuri1\",\"rtspur2\",..."
-//return list length
-	int listlength=0;
-//	TODO: please fix here
-	return listlength;
-}
-static int handle_pullrtspurilist_request(struct mg_connection *conn){
-	//response for requesting pulling-mode rtsp uri list
-	char rtspurilist[102400]; //array of rtsp uri list
-	int listlength=0;
-	listlength=get_pullrtsplist(rtspurilist);
-	mg_printf_data(conn, "{\"listlength\":%lf,\"pullrtsplist\":[\%s\"] }",listlength,rtspurilist);
-	return MG_TRUE;
-}
-
-static void put_pullsinglertspuri(char *rtspuri){
-//TODO: add a rtsp uri to pulling mode xml, and then do something else
-//rtspurilist is a string like "\"rtspuri1\",\"rtspur2\",..."
-//	TODO: please fix here
-}
-static int handle_addpullrtspuri_request(struct mg_connection *conn){
-	//response for requesting pulling-mode rtsp uri list
-	char rtspuri[1024]; //array of rtsp uri list
-	mg_get_var(conn, "rtspuri", rtspuri, sizeof(rtspuri));
-	put_pullsinglertspuri(rtspuri);
-	return handle_pullrtspurilist_request(conn);
-	// return all rtspuris to client
-}
-
-static int action_router(struct mg_connection *conn){
-	   // For other uris which were neither ended with '/' nor real files existing on disk will be supposed to post actions.
-	    // As the code convention, post actions will be assign to corresponding handle functions
-	    //TODO:make an action-handle map
-	    if (!strcmp(conn->uri, "/api/sum")) {
-	        return handle_sum_call(conn);
-	        //demo for ajax
-	    }
-	    if(!strcmp(conn->uri,"/api/handle_upload_request")){
-	        return handle_upload_request(conn);
-	    }
-	    if(!strcmp(conn->uri,"/pullingmode/pullrtspurilist")){
-	    	return handle_pullrtspurilist_request(conn);
-	    }
-	    if(!strcmp(conn->uri,"/pullingmode/putpullrtspuri")){
-	    	return handle_addpullrtspuri_request(conn);
-	    }
-	    return MG_FALSE;
-}
-//**************************action related method ended here
-static int router(struct mg_connection *conn){
-    //A router is the map describes the webpage architecture and relationships between actions and handler funcions.
-    //Some rules, such as length of uri or path should be restricted to avoid segment errors.
-	int result;
-	result=page_router(conn);
-	if	(result!=MG_FALSE)
-		return result;
-	result=action_router(conn);
-	if	(result!=MG_FALSE)
-		return result;
-	return send_error404_page(conn);
-    //page or action is not exist
-}
-
-static int digested_authorize(struct mg_connection *conn){
-    int result = MG_FALSE; // Not authorized
-    char fullfilepath[MAX_PATH_LEN];
-    FILE *fp;
-    // To populate passwords file, do
-    // web_server -A my_passwords.txt mydomain.com admin admin
-    if (full_path(sDocumentRoot,passwordfile,fullfilepath)==MG_FALSE)
-    	return MG_FALSE;
-    if ((fp = fopen(fullfilepath, "r")) != NULL) {
-        result = mg_authorize_digest(conn, fp);
-        fclose(fp);
-    }
-    return result;
-}
-
-//function below should be move to an indepedent file used to generate password file when initial the server
-#if !defined(MONGOOSE_NO_AUTH) && !defined(MONGOOSE_NO_FILESYSTEM)
-
-int modify_passwords_file(const char *fname, const char *domain,
-                          const char *user, const char *pass) {
-  int found;
-  char line[512], u[512], d[512], ha1[33], tmp[MAX_PATH_LEN];
-  FILE *fp, *fp2;
-
-  found = 0;
-  fp = fp2 = NULL;
-
-  // Regard empty password as no password - remove user record.
-  if (pass != NULL && pass[0] == '\0') {
-    pass = NULL;
-  }
-
-  (void) qtss_snprintf(tmp, sizeof(tmp), "%s.tmp", fname);
-
-  // Create the file if does not exist
-  if ((fp = fopen(fname, "a+")) != NULL) {
-    fclose(fp);
-  }
-
-  // Open the given file and temporary file
-  if ((fp = fopen(fname, "r")) == NULL) {
-    return 0;
-  } else if ((fp2 = fopen(tmp, "w+")) == NULL) {
-    fclose(fp);
-    return 0;
-  }
-
-  // Copy the stuff to temporary file
-  while (fgets(line, sizeof(line), fp) != NULL) {
-    if (sscanf(line, "%[^:]:%[^:]:%*s", u, d) != 2) {
-      continue;
-    }
-
-    if (!strcmp(u, user) && !strcmp(d, domain)) {
-      found++;
-      if (pass != NULL) {
-        mg_md5(ha1, user, ":", domain, ":", pass, NULL);
-        fprintf(fp2, "%s:%s:%s\n", user, domain, ha1);
-      }
-    } else {
-      fprintf(fp2, "%s", line);
-    }
-  }
-
-  // If new user, just add it
-  if (!found && pass != NULL) {
-    mg_md5(ha1, user, ":", domain, ":", pass, NULL);
-    fprintf(fp2, "%s:%s:%s\n", user, domain, ha1);
-  }
-
-  // Close files
-  fclose(fp);
-  fclose(fp2);
-
-  // Put the temp file in place of real file
-  remove(fname);
-  rename(tmp, fname);
-
-  return 1;
-}
-#endif
-
-static int change_username_and_password(char * htpasswd_filepath, char * realm, char *username, char *password){
-	//used for generated a username&password file
-	//<htpasswd_file> <realm> <username> <password> like ./my_passwords.txt , mydomain.com, admin, admin
-#if !defined(MONGOOSE_NO_AUTH) && !defined(MONGOOSE_NO_FILESYSTEM)
-    return (modify_passwords_file(htpasswd_filepath, realm, username, password) ?
-    		MG_TRUE: MG_FALSE);
-#endif
-    return MG_TRUE;
-}
 
 static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
   switch (ev) {
     case MG_AUTH:
-          return digested_authorize(conn);
-//          return MG_TRUE; //not authorized
-    case MG_REQUEST:
-          return router(conn);
+          return MG_TRUE; //not authorized
     default:
           return MG_FALSE;
   }
@@ -805,8 +501,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(sModule);
     sServerPrefs = inParams->inPrefs;
     
-	//ï¿½ï¿½È¡mongooseï¿½ï¿½ï¿½ï¿½Ë¿Úµï¿½ï¿½ï¿½ï¿½ï¿½
-    RereadPrefs();
+	//ï¿½ï¿½È¡mongooseï¿½ï¿½ï¿½ï¿½Ë¿Úµï¿½ï¿½ï¿½ï¿½ï¿?    RereadPrefs();
 	//ï¿½ï¿½ï¿½ï¿½mongooseï¿½ß³ï¿½
 	sMongooseThread = NEW mongooseThread();
 	sMongooseThread->Start();
