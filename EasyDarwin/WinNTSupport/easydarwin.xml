@@ -243,6 +243,8 @@
 		<PREF NAME="enable_remote_admin" TYPE="Bool16" >true</PREF>
 		<PREF NAME="IPAccessList" >127.0.0.*</PREF>
 		<PREF NAME="AdministratorGroup" >admin</PREF>
+		<PREF NAME="http_port" TYPE="UInt16" >80</PREF>
+		<PREF NAME="document_root" >../WebResource/</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
