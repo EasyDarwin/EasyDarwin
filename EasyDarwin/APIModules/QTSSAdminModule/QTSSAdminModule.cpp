@@ -213,10 +213,15 @@ void mongooseThread::Entry()
 	struct mg_server *mongooseserver;
 	// Create and configure the server
 	mongooseserver = mg_create_server((void *) "1", ::ev_handler);
+	
+	//WEB¼àÌı¶Ë¿Ú
 	char listening_port[6];
 	sprintf(listening_port, "%d", sHttpPort);
 	mg_set_option(mongooseserver, "listening_port", listening_port);
+
+	//htmlÎÄµµÂ·¾¶£¬¾¡Á¿ÓÃÈ«Â·¾¶
 	mg_set_option(mongooseserver, "document_root", sDocumentRoot); //donot use it
+
 	printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
 	//run server
 	for (;;) mg_poll_server((struct mg_server *) mongooseserver, 1000);
@@ -500,8 +505,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(sModule);
     sServerPrefs = inParams->inPrefs;
     
-	//ï¿½ï¿½È¡mongooseï¿½ï¿½ï¿½ï¿½Ë¿Úµï¿½ï¿½ï¿½ï¿½ï¿?    RereadPrefs();
-	//ï¿½ï¿½ï¿½ï¿½mongooseï¿½ß³ï¿½
+	//´´½¨MongooseÏß³Ì¡¢Æô¶¯
 	sMongooseThread = NEW mongooseThread();
 	sMongooseThread->Start();
     
