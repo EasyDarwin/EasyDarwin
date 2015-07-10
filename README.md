@@ -8,7 +8,7 @@ EasyDarwin平台目前包括CMS(中心管理服务)，EasyDarwin(流媒体服务
 - **EasyDarwin** 开源流媒体服务，具体见[https://github.com/EasyDarwin/](https://github.com/EasyDarwin/EasyDarwin/)；
 
 
-### System Architecture
+### 直播流程
 
 <pre>
 
