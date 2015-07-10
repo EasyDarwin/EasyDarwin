@@ -142,7 +142,9 @@ CPPFILES =              Server.tproj/GenerateXMLPrefs.cpp \
 			APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp \
 			APIModules/QTSSAccessModule/QTSSAccessModule.cpp \
 			APIModules/QTSSHttpFileModule/QTSSHttpFileModule.cpp \
-			APIModules/QTSSAccessModule/AccessChecker.cpp
+			APIModules/QTSSAccessModule/AccessChecker.cpp \
+			APIModules/QTSSAdminModule/frozen.c \
+			APIModules/QTSSAdminModule/mongoose.c
 			
 # CCFLAGS += $(foreach dir,$(HDRS),-I$(dir))
 
