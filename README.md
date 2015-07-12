@@ -39,6 +39,7 @@ EasyDarwin平台目前包括CMS(中心管理服务)，EasyDarwin(流媒体服务
 
 </pre>
 
+
 ### 获取更多信息 ###
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
@@ -47,5 +48,5 @@ WEB：[EasyDarwin.org](http://www.easydarwin.org)
 
 QQ交流群：288214068
 
-
-
+---
+![](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
