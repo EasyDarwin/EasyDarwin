@@ -235,8 +235,6 @@ class QTSSModuleUtils
   
         static Bool16 FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);
 
-        static Bool16 HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QTSS_StandardRTSP_Params* inParams, UInt32 feature);
-        
         static QTSS_Error AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*haveUser,Bool16 *authContinue);
         
          

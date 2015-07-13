@@ -398,16 +398,6 @@ typedef UInt32 QTSS_AttrRights; // see QTSS_UserProfileObject
 //all the ids of all the internally maintained server parameters. This enumerated type block defines the indexes
 //in that array for the id's.
 
-enum 
-{
-    //All text names are identical to the enumerated type names
-    qtss3GPPStreamEnabled               = 0,
-    qtss3GPPStreamRateAdaptBufferBytes  = 1,
-    qtss3GPPStreamRateAdaptTimeMilli    = 2,
-    qtss3GPPStreamNumParams             = 3
-};
-typedef UInt32 QTSS_RTPStream3GPPAttributes; //QTSS_3GPPStreamObject
-
 enum
 {
     //QTSS_RTSPSessionObject parameters
@@ -879,11 +869,6 @@ typedef QTSS_Object             QTSS_ModulePrefsObject;
 typedef QTSS_Object             QTSS_AttrInfoObject;
 typedef QTSS_Object             QTSS_UserProfileObject;
 typedef QTSS_Object             QTSS_ConnectedUserObject;
-
-typedef QTSS_Object             QTSS_3GPPStreamObject;
-typedef QTSS_Object             QTSS_3GPPClientSessionObject;
-typedef QTSS_Object             QTSS_3GPPRTSPSessionObject;
-typedef QTSS_Object             QTSS_3GPPRequestObject;
 
 typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;
