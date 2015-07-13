@@ -139,13 +139,7 @@ StrPtrLen RTSPProtocol::sHeaders[] =
 	StrPtrLen("x-Accept-Dynamic-Rate"),
 	// DJM PROTOTYPE
 	StrPtrLen("x-Random-Data-Size"),
-	
-	//3gpp release 6 headers
-	StrPtrLen("3GPP-Link-Char"),
-	StrPtrLen("3GPP-Adaptation"),
-	StrPtrLen("3GPP-QoE-Feedback"),
-	StrPtrLen("3GPP-QoE-Metrics"),
-	
+
 	//Annex G
 	StrPtrLen("x-predecbufsize"),
 	StrPtrLen("x-initpredecbufperiod"),

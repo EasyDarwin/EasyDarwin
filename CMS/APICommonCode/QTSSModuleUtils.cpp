@@ -989,64 +989,6 @@ Bool16 QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_Att
     return false;
 }
 
-Bool16 QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QTSS_StandardRTSP_Params* inParams, UInt32 feature)
-{
-  /*  StrPtrLenDel userAgentStr;    	
-    (void)QTSS_GetValueAsString(inParams->inClientSession, qtssCliSesFirstUserAgent, 0, &userAgentStr.Ptr);
-    userAgentStr.Set(userAgentStr.Ptr);
-    
-    switch (feature)
-    {
-        case QTSSModuleUtils::kRequiresRTPInfoSeqAndTime:
-        {        
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqRTPHeader, &userAgentStr);
-
-        }
-        break;
-        
-        case QTSSModuleUtils::kAdjustBandwidth:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqBandAdjust, &userAgentStr);
-        }
-        break;
-		
-        case QTSSModuleUtils::kDisablePauseAdjustedRTPTime:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqNoPauseTimeAdjust, &userAgentStr);
-        }
-        break;
-        
-        case QTSSModuleUtils::kDelayRTPStreamsUntilAfterRTSPResponse:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqRTPStartTimeAdjust, &userAgentStr);
-        }
-        break;
-        
-        case QTSSModuleUtils::kDisable3gppRateAdaptation:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqDisable3gppRateAdapt, &userAgentStr);
-        }
-        break;
-		
-        
-        case QTSSModuleUtils::kAdjust3gppTargetTime:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReq3GPPTargetTime, &userAgentStr);
-        }
-        break;
-        
-        case QTSSModuleUtils::kDisableThinning:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqDisableThinning, &userAgentStr);
-        }
-        break;
-        
-    }*/
-    
-    return false;
-}
-
-
 QTSS_Error QTSSModuleUtils::AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*foundUser, Bool16 *authContinue)
 {
     QTSS_Error theErr = QTSS_NoErr;
