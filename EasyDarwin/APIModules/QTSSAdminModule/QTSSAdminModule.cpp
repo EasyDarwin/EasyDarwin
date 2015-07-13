@@ -174,6 +174,7 @@ static QTSS_Error FilterRequest(QTSS_Filter_Params* inParams);
 static QTSS_Error RereadPrefs();
 static QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request);
 static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
+static Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword);
 
 
 //**************************************************
@@ -1121,6 +1122,13 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
     (void) StillFlushing(inParams,true);
     return QTSS_NoErr;
 
+}
+
+//登录用户验证
+Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword)
+{
+	qtss_printf("User:%s Password:%s Authenticated!\n");
+	return true;
 }
 
 
