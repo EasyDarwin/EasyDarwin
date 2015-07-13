@@ -86,6 +86,7 @@ public:
 	void Print();
 	
 	bool TagExist(std::string sXmlTag);
+	bool IsEmpty();
 
 	bool GetValueAsString(std::string sXmlTag, std::string &value);
 	bool GetValueAsInt(std::string sXmlTag, int &value);
