@@ -330,7 +330,10 @@ std::string EasyDSSProtocol::GetMsg()
 	header.SetStringValue(EASYDSS_TAG_MESSAGE_TYPE, GetMsgTypeString(fMsgType).c_str());
 	
 	root.AddChild(EASYDSS_TAG_ROOT, EASYDSS_TAG_HEADER, header);
-	root.AddChild(EASYDSS_TAG_ROOT, EASYDSS_TAG_BODY, body);
+	if(!body.IsEmpty())
+	{
+		root.AddChild(EASYDSS_TAG_ROOT, EASYDSS_TAG_BODY, body);
+	}
 	root.Write(msg);
     return msg;
 }

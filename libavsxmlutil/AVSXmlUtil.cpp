@@ -199,6 +199,11 @@ bool AVSXmlUtil::TagExist(std::string sXmlTag)
     return false;
 }
 
+bool AVSXmlUtil::IsEmpty()
+{
+	return ((ptree*) xml)->empty();
+}
+
 AVSXmlObject AVSXmlUtil::GetChild(std::string sXmlTag)
 {
     if (TagExist(sXmlTag))
