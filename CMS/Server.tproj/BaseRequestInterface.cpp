@@ -598,17 +598,6 @@ void BaseRequestInterface::WriteStandardHeaders()
     //tags the response with the Connection: close header
     if (!fResponseKeepAlive)
         AppendHeader(qtssConnectionHeader, &sCloseString);
-        
-    // 3gpp release 6 rate adaptation calls for echoing the rate adapt header back
-    // some clients use this header in the response to signal whether to send rate adapt
-    // NADU rtcp reports.
-     Bool16 doRateAdaptation = QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled() && QTSServerInterface::GetServer()->GetPrefs()->Get3GPPRateAdaptationEnabled();
-     if (doRateAdaptation)
-     {   StrPtrLen* rateAdaptHeader = fHeaderDictionary.GetValue(qtss3GPPAdaptationHeader);
-         if (rateAdaptHeader && rateAdaptHeader->Ptr && rateAdaptHeader->Len > 0)
-            AppendHeader(qtss3GPPAdaptationHeader, fHeaderDictionary.GetValue(qtss3GPPAdaptationHeader));
-    }
-    
 }
 
 void BaseRequestInterface::SendHeader()
