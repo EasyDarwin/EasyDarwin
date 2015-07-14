@@ -35,12 +35,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/873319650/InternalStdLib.o \
 	${OBJECTDIR}/ConfParser.o \
 	${OBJECTDIR}/DateTranslator.o \
 	${OBJECTDIR}/EventContext.o \
 	${OBJECTDIR}/GetWord.o \
 	${OBJECTDIR}/IdleTask.o \
-	${OBJECTDIR}/MakeDir.o \
 	${OBJECTDIR}/MyAssert.o \
 	${OBJECTDIR}/OS.o \
 	${OBJECTDIR}/OSBufferPool.o \
@@ -53,7 +53,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/OSQueue.o \
 	${OBJECTDIR}/OSRef.o \
 	${OBJECTDIR}/OSThread.o \
-	${OBJECTDIR}/QueryParamList.o \
 	${OBJECTDIR}/ResizeableStringFormatter.o \
 	${OBJECTDIR}/SDPUtils.o \
 	${OBJECTDIR}/Socket.o \
@@ -74,12 +73,13 @@ OBJECTFILES= \
 	${OBJECTDIR}/atomic.o \
 	${OBJECTDIR}/base64.o \
 	${OBJECTDIR}/ev.o \
+	${OBJECTDIR}/getopt.o \
 	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/md5digest.o
 
 
 # C Compiler Flags
-CFLAGS=
+CFLAGS=-fPIC
 
 # CC Compiler Flags
 CCFLAGS=-fPIC
@@ -96,218 +96,218 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ../${CND_CONF}/libCommonUtilitiesLib.a
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${AVS_ROOT}/lib/libCommonUtilitiesLib.a
 
-../${CND_CONF}/libCommonUtilitiesLib.a: ${OBJECTFILES}
-	${MKDIR} -p ../${CND_CONF}
-	${RM} ../${CND_CONF}/libCommonUtilitiesLib.a
-	${AR} -rv ../${CND_CONF}/libCommonUtilitiesLib.a ${OBJECTFILES} 
-	$(RANLIB) ../${CND_CONF}/libCommonUtilitiesLib.a
+${AVS_ROOT}/lib/libCommonUtilitiesLib.a: ${OBJECTFILES}
+	${MKDIR} -p ${AVS_ROOT}/lib
+	${RM} ${AVS_ROOT}/lib/libCommonUtilitiesLib.a
+	${AR} -rv ${AVS_ROOT}/lib/libCommonUtilitiesLib.a ${OBJECTFILES} 
+	$(RANLIB) ${AVS_ROOT}/lib/libCommonUtilitiesLib.a
+
+${OBJECTDIR}/_ext/873319650/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/873319650
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/873319650/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
 
 ${OBJECTDIR}/ConfParser.o: ConfParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ConfParser.o ConfParser.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ConfParser.o ConfParser.cpp
 
 ${OBJECTDIR}/DateTranslator.o: DateTranslator.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DateTranslator.o DateTranslator.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DateTranslator.o DateTranslator.cpp
 
 ${OBJECTDIR}/EventContext.o: EventContext.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EventContext.o EventContext.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EventContext.o EventContext.cpp
 
 ${OBJECTDIR}/GetWord.o: GetWord.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GetWord.o GetWord.c
+	$(COMPILE.c) -g -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GetWord.o GetWord.c
 
 ${OBJECTDIR}/IdleTask.o: IdleTask.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/IdleTask.o IdleTask.cpp
-
-${OBJECTDIR}/MakeDir.o: MakeDir.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MakeDir.o MakeDir.c
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/IdleTask.o IdleTask.cpp
 
 ${OBJECTDIR}/MyAssert.o: MyAssert.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MyAssert.o MyAssert.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MyAssert.o MyAssert.cpp
 
 ${OBJECTDIR}/OS.o: OS.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OS.o OS.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OS.o OS.cpp
 
 ${OBJECTDIR}/OSBufferPool.o: OSBufferPool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSBufferPool.o OSBufferPool.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSBufferPool.o OSBufferPool.cpp
 
 ${OBJECTDIR}/OSCodeFragment.o: OSCodeFragment.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSCodeFragment.o OSCodeFragment.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSCodeFragment.o OSCodeFragment.cpp
 
 ${OBJECTDIR}/OSCond.o: OSCond.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSCond.o OSCond.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSCond.o OSCond.cpp
 
 ${OBJECTDIR}/OSFileSource.o: OSFileSource.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSFileSource.o OSFileSource.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSFileSource.o OSFileSource.cpp
 
 ${OBJECTDIR}/OSHeap.o: OSHeap.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSHeap.o OSHeap.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSHeap.o OSHeap.cpp
 
 ${OBJECTDIR}/OSMutex.o: OSMutex.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSMutex.o OSMutex.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSMutex.o OSMutex.cpp
 
 ${OBJECTDIR}/OSMutexRW.o: OSMutexRW.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSMutexRW.o OSMutexRW.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSMutexRW.o OSMutexRW.cpp
 
 ${OBJECTDIR}/OSQueue.o: OSQueue.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSQueue.o OSQueue.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSQueue.o OSQueue.cpp
 
 ${OBJECTDIR}/OSRef.o: OSRef.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSRef.o OSRef.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSRef.o OSRef.cpp
 
 ${OBJECTDIR}/OSThread.o: OSThread.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSThread.o OSThread.cpp
-
-${OBJECTDIR}/QueryParamList.o: QueryParamList.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/QueryParamList.o QueryParamList.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSThread.o OSThread.cpp
 
 ${OBJECTDIR}/ResizeableStringFormatter.o: ResizeableStringFormatter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ResizeableStringFormatter.o ResizeableStringFormatter.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ResizeableStringFormatter.o ResizeableStringFormatter.cpp
 
 ${OBJECTDIR}/SDPUtils.o: SDPUtils.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SDPUtils.o SDPUtils.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SDPUtils.o SDPUtils.cpp
 
 ${OBJECTDIR}/Socket.o: Socket.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Socket.o Socket.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Socket.o Socket.cpp
 
 ${OBJECTDIR}/SocketUtils.o: SocketUtils.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SocketUtils.o SocketUtils.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SocketUtils.o SocketUtils.cpp
 
 ${OBJECTDIR}/StrPtrLen.o: StrPtrLen.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StrPtrLen.o StrPtrLen.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StrPtrLen.o StrPtrLen.cpp
 
 ${OBJECTDIR}/StringFormatter.o: StringFormatter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StringFormatter.o StringFormatter.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StringFormatter.o StringFormatter.cpp
 
 ${OBJECTDIR}/StringParser.o: StringParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StringParser.o StringParser.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StringParser.o StringParser.cpp
 
 ${OBJECTDIR}/StringTranslator.o: StringTranslator.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StringTranslator.o StringTranslator.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StringTranslator.o StringTranslator.cpp
 
 ${OBJECTDIR}/TCPListenerSocket.o: TCPListenerSocket.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TCPListenerSocket.o TCPListenerSocket.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TCPListenerSocket.o TCPListenerSocket.cpp
 
 ${OBJECTDIR}/TCPSocket.o: TCPSocket.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TCPSocket.o TCPSocket.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TCPSocket.o TCPSocket.cpp
 
 ${OBJECTDIR}/Task.o: Task.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Task.o Task.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Task.o Task.cpp
 
 ${OBJECTDIR}/TimeoutTask.o: TimeoutTask.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TimeoutTask.o TimeoutTask.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TimeoutTask.o TimeoutTask.cpp
 
 ${OBJECTDIR}/Trim.o: Trim.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Trim.o Trim.c
+	$(COMPILE.c) -g -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Trim.o Trim.c
 
 ${OBJECTDIR}/UDPDemuxer.o: UDPDemuxer.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDPDemuxer.o UDPDemuxer.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDPDemuxer.o UDPDemuxer.cpp
 
 ${OBJECTDIR}/UDPSocket.o: UDPSocket.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDPSocket.o UDPSocket.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDPSocket.o UDPSocket.cpp
 
 ${OBJECTDIR}/UDPSocketPool.o: UDPSocketPool.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDPSocketPool.o UDPSocketPool.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UDPSocketPool.o UDPSocketPool.cpp
 
 ${OBJECTDIR}/UserAgentParser.o: UserAgentParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UserAgentParser.o UserAgentParser.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UserAgentParser.o UserAgentParser.cpp
 
 ${OBJECTDIR}/atomic.o: atomic.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/atomic.o atomic.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/atomic.o atomic.cpp
 
 ${OBJECTDIR}/base64.o: base64.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/base64.o base64.c
+	$(COMPILE.c) -g -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/base64.o base64.c
 
 ${OBJECTDIR}/ev.o: ev.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ev.o ev.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ev.o ev.cpp
+
+${OBJECTDIR}/getopt.o: getopt.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/getopt.o getopt.c
 
 ${OBJECTDIR}/md5.o: md5.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5.o md5.c
+	$(COMPILE.c) -g -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5.o md5.c
 
 ${OBJECTDIR}/md5digest.o: md5digest.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I.. -I../APIStubLib -I../RTPMetaInfoLib -I../APICommonCode -include ../PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5digest.o md5digest.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5digest.o md5digest.cpp
 
 # Subprojects
 .build-subprojects:
@@ -315,7 +315,7 @@ ${OBJECTDIR}/md5digest.o: md5digest.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ../${CND_CONF}/libCommonUtilitiesLib.a
+	${RM} ${AVS_ROOT}/lib/libCommonUtilitiesLib.a
 
 # Subprojects
 .clean-subprojects:
