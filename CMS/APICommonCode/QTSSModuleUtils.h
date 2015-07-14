@@ -43,24 +43,10 @@
 #include "SafeStdLib.h"
 #include "QTSS.h"
 #include "StrPtrLen.h"
-//#include "RTPMetaInfoPacket.h"
 
 class QTSSModuleUtils
 {
-    public:
-        // compatibiltiy features for certain players
-        
-        enum    {  
-                    kRequiresRTPInfoSeqAndTime  = 0, 
-                    kAdjustBandwidth            = 1,
-                    kDisablePauseAdjustedRTPTime= 2,
-                    kDelayRTPStreamsUntilAfterRTSPResponse = 3,
-                    kDisable3gppRateAdaptation =4,
-                    kAdjust3gppTargetTime = 5,
-                    kDisableThinning =6,
-                };
-    
-      
+    public:  
         static void     Initialize( QTSS_TextMessagesObject inMessages,
                                     QTSS_ServerObject inServer,
                                     QTSS_StreamRef inErrorLog);
@@ -235,8 +221,6 @@ class QTSSModuleUtils
   
         static Bool16 FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);
 
-        static Bool16 HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QTSS_StandardRTSP_Params* inParams, UInt32 feature);
-        
         static QTSS_Error AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*haveUser,Bool16 *authContinue);
         
          

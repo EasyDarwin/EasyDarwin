@@ -195,13 +195,7 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
         
         Bool16  GetDisableThinning()              { return fDisableThinning; }
-        
-        Bool16  Get3GPPEnabled()                  { return f3gppProtocolEnabled; }
-        Bool16  Get3GPPRateAdaptationEnabled()    { return f3gppProtocolRateAdaptationEnabled; }
-        UInt16  Get3GPPRateAdaptReportFrequency() { return f3gppProtocolRateAdaptationReportFrequency; }
-        UInt16  GetDefaultStreamQuality()         { return fDefaultStreamQuality; }       
-        Bool16  Get3GPPDebugPrintfs()             { return f3gppDebugPrintfsEnabled; }
-        Bool16  GetUDPMonitorEnabled()            { return fUDPMonitorEnabled; }
+
         UInt16  GetMonitorLANPort()			{ return fMonitorLANPort; }       
         UInt16  GetMonitorWANPort()         { return fMonitorWANPort; }  
 		UInt16	GetRedisPort()				{ return fRedisPort; }
@@ -290,13 +284,6 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  fCloseLogsOnWrite;
         
         Bool16 fDisableThinning;
-        
-        Bool16 f3gppProtocolEnabled;
-        Bool16 f3gppProtocolRateAdaptationEnabled;
-        UInt16 f3gppProtocolRateAdaptationReportFrequency;
-        UInt16 fDefaultStreamQuality;
-        Bool16 f3gppDebugPrintfsEnabled;
-        Bool16 fUDPMonitorEnabled;
         UInt16 fMonitorLANPort;    
         UInt16 fMonitorWANPort;
 		UInt16 fRedisPort;
@@ -342,13 +329,6 @@ class QTSServerPrefs : public QTSSPrefs
         
         // Prefs that have multiple default values (rtsp_ports) have
         // to be dealt with specially
-        static char*    sAdditionalDefaultPorts[];
-        
-        // Player prefs
-        static char*    sRTP_Header_Players[];
-        static char*    sAdjust_Bandwidth_Players[];
-        static char*    sNo_Adjust_Pause_Time_Players[];
-        static char*    sNo_Pause_Time_Adjustment_Players[];
-       
+        static char*    sAdditionalDefaultPorts[];   
 };
 #endif //__QTSSPREFS_H__

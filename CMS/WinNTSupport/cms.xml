@@ -67,27 +67,8 @@
 		<PREF NAME="pid_file" >CMS.pid</PREF>
 		<PREF NAME="force_logs_close_on_write" TYPE="Bool16" >false</PREF>
 		<PREF NAME="disable_thinning" TYPE="Bool16" >false</PREF>
-		<PREF NAME="enable_3gpp_protocol" TYPE="Bool16" >true</PREF>
-		<PREF NAME="enable_3gpp_protocol_rate_adaptation" TYPE="Bool16" >true</PREF>
-		<PREF NAME="3gpp_protocol_rate_adaptation_report_frequency" TYPE="UInt16" >1</PREF>
-		<PREF NAME="default_stream_quality" TYPE="UInt16" >0</PREF>
-		<PREF NAME="player_requires_rtp_start_time_adjust" >Real</PREF>
-		<PREF NAME="enable_3gpp_debug_printfs" TYPE="Bool16" >false</PREF>
-		<PREF NAME="enable_udp_monitor_stream" TYPE="Bool16" >false</PREF>
 		<PREF NAME="enable_allow_guest_default" TYPE="Bool16" >true</PREF>
 		<PREF NAME="run_num_msg_threads" TYPE="UInt32" >1</PREF>
-		<LIST-PREF NAME="player_requires_rtp_header_info" >
-			<VALUE>Android</VALUE>
-			<VALUE>IOS</VALUE>
-		</LIST-PREF>
-		<LIST-PREF NAME="player_requires_bandwidth_adjustment" >
-			<VALUE>Android</VALUE>
-			<VALUE>IOS</VALUE>
-		</LIST-PREF>
-		<LIST-PREF NAME="player_requires_no_pause_time_adjustment" >
-			<VALUE>Android</VALUE>
-			<VALUE>IOS</VALUE>
-		</LIST-PREF>
 		<PREF NAME="cms_ip_addr" >127.0.0.1</PREF>
 		<PREF NAME="cms_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="monitor_lan_port" TYPE="UInt16" >10000</PREF>
