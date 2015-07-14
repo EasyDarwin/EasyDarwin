@@ -202,17 +202,6 @@ enum
 };
 typedef UInt32 QTSS_SessionType;
 
-/**********************************/
-//
-// What type of RTP transport is being used for the RTP stream?
-enum
-{
-    qtssRTPTransportTypeUDP         = 0,
-    qtssRTPTransportTypeReliableUDP = 1,
-    qtssRTPTransportTypeTCP         = 2,
-    qtssRTPTransportType3GPPUDP     = 3
-};
-typedef UInt32 QTSS_RTPTransportType;
 
 /**********************************/
 //
@@ -397,16 +386,6 @@ typedef UInt32 QTSS_AttrRights; // see QTSS_UserProfileObject
 //these values by name if they'd like, but in the initialize role they will receive a struct of
 //all the ids of all the internally maintained server parameters. This enumerated type block defines the indexes
 //in that array for the id's.
-
-enum 
-{
-    //All text names are identical to the enumerated type names
-    qtss3GPPStreamEnabled               = 0,
-    qtss3GPPStreamRateAdaptBufferBytes  = 1,
-    qtss3GPPStreamRateAdaptTimeMilli    = 2,
-    qtss3GPPStreamNumParams             = 3
-};
-typedef UInt32 QTSS_RTPStream3GPPAttributes; //QTSS_3GPPStreamObject
 
 enum
 {
@@ -648,24 +627,14 @@ enum
     qtssPrefsPidFile                        = 67,    //"pid_file" //Char Array //path to pid file
     qtssPrefsCloseLogsOnWrite               = 68,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
     qtssPrefsDisableThinning                = 69,   // "disable_thinning" //Bool16 // Usually used for performance testing. Turn off stream thinning from packet loss or stream lateness.
-    qtssPrefsPlayersReqRTPHeader            = 70,   // "player_requires_rtp_header_info" //Char array //name of player to match against the player's user agent header
-    qtssPrefsPlayersReqBandAdjust           = 71,   // "player_requires_bandwidth_adjustment //Char array //name of player to match against the player's user agent header
-    qtssPrefsPlayersReqNoPauseTimeAdjust    = 72,   // "player_requires_no_pause_time_adjustment //Char array //name of player to match against the player's user agent header
-    qtssPrefsEnable3gppProtocol             = 73,   // "enable_3gpp_protocol //Bool16 //enable or disable 3gpp release 6 protocol support featues
-    qtssPrefsEnable3gppProtocolRateAdapt    = 74,   // "enable_3gpp_protocol_rate_adaptation //Bool16 //enable or disable 3gpp release 6 rate adaptation featues
-    qtssPrefs3gppRateAdaptReportFrequency   = 75,   // "3gpp_protocol_rate_adaptation_report_frequency //UInt16 //requested rate adaptation rtcp report frequency
-    qtssPrefsDefaultStreamQuality           = 76,   // "default_stream_quality //UInt16 //0 is all day and best quality. Higher values are worse maximum depends on the media and the media module
-    qtssPrefsPlayersReqRTPStartTimeAdjust   = 77,   // "player_requires_rtp_start_time_adjust" //Char Array //name of players to match against the player's user agent header
-    qtssPrefsEnable3gppDebugPrintfs         = 78,   // "enable_3gpp_debug_printfs" //Boo1l6 // 3gpp rate adaptation state and debugging printfs.
-    qtssPrefsEnableUDPMonitor               = 79,   // "enable_udp_monitor_stream" //Boo1l6 // reflect all udp streams to the monitor ports, use an sdp to view
-    qtssPrefsMonitorLANPort					= 80,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorWANPort					= 81,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorLANIPAddr				= 82,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
-    qtssPrefsMonitorWANIPAddr				= 83,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
-    qtssPrefsEnableAllowGuestDefault        = 84,   // "enable_allow_guest_authorize_default" //Boo1l6 // server hint to access modules to allow guest access as the default (can be overriden in a qtaccess file or other means)
-    qtssPrefsNumMsgThreads					= 85,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
+    qtssPrefsMonitorLANPort					= 70,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
+    qtssPrefsMonitorWANPort					= 71,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
+    qtssPrefsMonitorLANIPAddr				= 72,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
+    qtssPrefsMonitorWANIPAddr				= 73,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
+    qtssPrefsEnableAllowGuestDefault        = 74,   // "enable_allow_guest_authorize_default" //Boo1l6 // server hint to access modules to allow guest access as the default (can be overriden in a qtaccess file or other means)
+    qtssPrefsNumMsgThreads					= 75,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 
-    qtssPrefsNumParams                      = 86
+    qtssPrefsNumParams                      = 76
 };
 
 typedef UInt32 QTSS_PrefsAttributes;
@@ -889,11 +858,6 @@ typedef QTSS_Object             QTSS_ModulePrefsObject;
 typedef QTSS_Object             QTSS_AttrInfoObject;
 typedef QTSS_Object             QTSS_UserProfileObject;
 typedef QTSS_Object             QTSS_ConnectedUserObject;
-
-typedef QTSS_Object             QTSS_3GPPStreamObject;
-typedef QTSS_Object             QTSS_3GPPClientSessionObject;
-typedef QTSS_Object             QTSS_3GPPRTSPSessionObject;
-typedef QTSS_Object             QTSS_3GPPRequestObject;
 
 typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;

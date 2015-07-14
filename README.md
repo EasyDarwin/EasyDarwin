@@ -6,7 +6,10 @@ EasyDarwin平台目前包括CMS(中心管理服务)，EasyDarwin(流媒体服务
 
 - **CMS** 开源的设备接入与管理服务，具体见[https://github.com/EasyDarwin/](https://github.com/EasyDarwin/EasyDarwin/)；
 - **EasyDarwin** 开源流媒体服务，具体见[https://github.com/EasyDarwin/](https://github.com/EasyDarwin/EasyDarwin/)；
+- **EasyCamera** 摄像机平台对接方案，具体见[https://github.com/EasyDarwin/EasyCamera](https://github.com/EasyDarwin/EasyCamera)；
 
+### 系统架构
+![](http://www.easydarwin.org/skin/easydarwin/images/architecture.png)
 
 ### 直播流程
 
@@ -39,6 +42,7 @@ EasyDarwin平台目前包括CMS(中心管理服务)，EasyDarwin(流媒体服务
 
 </pre>
 
+
 ### 获取更多信息 ###
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
@@ -47,5 +51,5 @@ WEB：[EasyDarwin.org](http://www.easydarwin.org)
 
 QQ交流群：288214068
 
-
-
+---
+![](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)

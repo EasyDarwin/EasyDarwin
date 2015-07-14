@@ -65,7 +65,7 @@ int main(int argc, char * argv[])
     extern char* optarg;//命令参数，例如执行：CMS.exe -d -v
     int ch;
     
-    char* theXMLFilePath = "./config.xml";
+    char* theXMLFilePath = "./cms.xml";
     Bool16 notAService = false;
     Bool16 theXMLPrefsExist = true;
     Bool16 dontFork = false;
