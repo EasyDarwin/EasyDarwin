@@ -1,7 +1,32 @@
 #!/bin/sh
  
+cd ../CommonUtilitiesLib
 if [ "$*" = "clean" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
 else
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
 fi
+
+
+cd ../../EasyDSSProtocol/libavsxmlutil
+if [ "$*" = "clean" ] ; then
+    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
+else
+    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+fi
+
+cd ../EasyDSSProtocol
+if [ "$*" = "clean" ] ; then
+    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
+else
+    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+fi
+
+cd ../../EasyDarwin/CMS
+if [ "$*" = "clean" ] ; then
+    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
+else
+#    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
+    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+fi
+

@@ -1,146 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="94">
+<configurationDescriptor version="95">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f1" displayName="include" projectFiles="true">
-      <itemPath>ConfParser.h</itemPath>
-      <itemPath>DateTranslator.h</itemPath>
-      <itemPath>DssStopwatch.h</itemPath>
-      <itemPath>EventContext.h</itemPath>
-      <itemPath>FastCopyMacros.h</itemPath>
-      <itemPath>GetWord.h</itemPath>
-      <itemPath>IdleTask.h</itemPath>
-      <itemPath>MakeDir.h</itemPath>
-      <itemPath>MyAssert.h</itemPath>
-      <itemPath>OS.h</itemPath>
-      <itemPath>OSArrayObjectDeleter.h</itemPath>
-      <itemPath>OSBufferPool.h</itemPath>
-      <itemPath>OSCodeFragment.h</itemPath>
-      <itemPath>OSCond.h</itemPath>
-      <itemPath>OSFileSource.h</itemPath>
-      <itemPath>OSHashTable.h</itemPath>
-      <itemPath>OSHeaders.h</itemPath>
-      <itemPath>OSHeap.h</itemPath>
-      <itemPath>OSMemory.h</itemPath>
-      <itemPath>OSMutex.h</itemPath>
-      <itemPath>OSMutexRW.h</itemPath>
-      <itemPath>OSQueue.h</itemPath>
-      <itemPath>OSRef.h</itemPath>
-      <itemPath>OSThread.h</itemPath>
-      <itemPath>PLDoubleLinkedList.h</itemPath>
-      <itemPath>PathDelimiter.h</itemPath>
-      <itemPath>QueryParamList.h</itemPath>
-      <itemPath>ResizeableStringFormatter.h</itemPath>
-      <itemPath>SDPUtils.h</itemPath>
-      <itemPath>SVector.h</itemPath>
-      <itemPath>Socket.h</itemPath>
-      <itemPath>SocketUtils.h</itemPath>
-      <itemPath>StrPtrLen.h</itemPath>
-      <itemPath>StringFormatter.h</itemPath>
-      <itemPath>StringParser.h</itemPath>
-      <itemPath>StringTranslator.h</itemPath>
-      <itemPath>TCPListenerSocket.h</itemPath>
-      <itemPath>TCPSocket.h</itemPath>
-      <itemPath>Task.h</itemPath>
-      <itemPath>TimeoutTask.h</itemPath>
-      <itemPath>Trim.h</itemPath>
-      <itemPath>UDPDemuxer.h</itemPath>
-      <itemPath>UDPSocket.h</itemPath>
-      <itemPath>UDPSocketPool.h</itemPath>
-      <itemPath>UserAgentParser.h</itemPath>
-      <itemPath>atomic.h</itemPath>
-      <itemPath>base64.h</itemPath>
-      <itemPath>ev.h</itemPath>
-      <itemPath>md5.h</itemPath>
-      <itemPath>md5digest.h</itemPath>
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
     </logicalFolder>
-    <logicalFolder name="CommonUtilitiesLib"
-                   displayName="source"
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
                    projectFiles="true">
       <itemPath>ConfParser.cpp</itemPath>
+      <itemPath>ConfParser.h</itemPath>
       <itemPath>DateTranslator.cpp</itemPath>
+      <itemPath>DateTranslator.h</itemPath>
       <itemPath>EventContext.cpp</itemPath>
+      <itemPath>EventContext.h</itemPath>
       <itemPath>GetWord.c</itemPath>
+      <itemPath>GetWord.h</itemPath>
       <itemPath>IdleTask.cpp</itemPath>
-      <itemPath>MakeDir.c</itemPath>
+      <itemPath>IdleTask.h</itemPath>
+      <itemPath>../SafeStdLib/InternalStdLib.cpp</itemPath>
       <itemPath>MyAssert.cpp</itemPath>
+      <itemPath>MyAssert.h</itemPath>
       <itemPath>OS.cpp</itemPath>
+      <itemPath>OS.h</itemPath>
       <itemPath>OSBufferPool.cpp</itemPath>
+      <itemPath>OSBufferPool.h</itemPath>
       <itemPath>OSCodeFragment.cpp</itemPath>
+      <itemPath>OSCodeFragment.h</itemPath>
       <itemPath>OSCond.cpp</itemPath>
+      <itemPath>OSCond.h</itemPath>
       <itemPath>OSFileSource.cpp</itemPath>
+      <itemPath>OSFileSource.h</itemPath>
       <itemPath>OSHeap.cpp</itemPath>
+      <itemPath>OSHeap.h</itemPath>
       <itemPath>OSMutex.cpp</itemPath>
+      <itemPath>OSMutex.h</itemPath>
       <itemPath>OSMutexRW.cpp</itemPath>
+      <itemPath>OSMutexRW.h</itemPath>
       <itemPath>OSQueue.cpp</itemPath>
+      <itemPath>OSQueue.h</itemPath>
       <itemPath>OSRef.cpp</itemPath>
+      <itemPath>OSRef.h</itemPath>
       <itemPath>OSThread.cpp</itemPath>
-      <itemPath>QueryParamList.cpp</itemPath>
+      <itemPath>OSThread.h</itemPath>
       <itemPath>ResizeableStringFormatter.cpp</itemPath>
+      <itemPath>ResizeableStringFormatter.h</itemPath>
       <itemPath>SDPUtils.cpp</itemPath>
+      <itemPath>SDPUtils.h</itemPath>
       <itemPath>Socket.cpp</itemPath>
+      <itemPath>Socket.h</itemPath>
       <itemPath>SocketUtils.cpp</itemPath>
+      <itemPath>SocketUtils.h</itemPath>
       <itemPath>StrPtrLen.cpp</itemPath>
+      <itemPath>StrPtrLen.h</itemPath>
       <itemPath>StringFormatter.cpp</itemPath>
+      <itemPath>StringFormatter.h</itemPath>
       <itemPath>StringParser.cpp</itemPath>
+      <itemPath>StringParser.h</itemPath>
       <itemPath>StringTranslator.cpp</itemPath>
+      <itemPath>StringTranslator.h</itemPath>
       <itemPath>TCPListenerSocket.cpp</itemPath>
+      <itemPath>TCPListenerSocket.h</itemPath>
       <itemPath>TCPSocket.cpp</itemPath>
+      <itemPath>TCPSocket.h</itemPath>
       <itemPath>Task.cpp</itemPath>
+      <itemPath>Task.h</itemPath>
       <itemPath>TimeoutTask.cpp</itemPath>
+      <itemPath>TimeoutTask.h</itemPath>
       <itemPath>Trim.c</itemPath>
+      <itemPath>Trim.h</itemPath>
       <itemPath>UDPDemuxer.cpp</itemPath>
+      <itemPath>UDPDemuxer.h</itemPath>
       <itemPath>UDPSocket.cpp</itemPath>
+      <itemPath>UDPSocket.h</itemPath>
       <itemPath>UDPSocketPool.cpp</itemPath>
+      <itemPath>UDPSocketPool.h</itemPath>
       <itemPath>UserAgentParser.cpp</itemPath>
+      <itemPath>UserAgentParser.h</itemPath>
       <itemPath>atomic.cpp</itemPath>
+      <itemPath>atomic.h</itemPath>
       <itemPath>base64.c</itemPath>
+      <itemPath>base64.h</itemPath>
       <itemPath>ev.cpp</itemPath>
+      <itemPath>ev.h</itemPath>
+      <itemPath>getopt.c</itemPath>
+      <itemPath>getopt.h</itemPath>
       <itemPath>md5.c</itemPath>
+      <itemPath>md5.h</itemPath>
       <itemPath>md5digest.cpp</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ResourceFiles" displayName="资源文件" projectFiles="true">
+      <itemPath>md5digest.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
-                   displayName="测试文件"
+                   displayName="Test Files"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
-                   displayName="重要文件"
+                   displayName="Important Files"
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>OSMemory.h</itemPath>
   </logicalFolder>
-  <sourceRootList>
-    <Elem>.</Elem>
-  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="3">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+          <incFile>
+            <pElem>../Include/PlatformHeader.h</pElem>
+          </incFile>
+          <commandLine>-fPIC</commandLine>
+          <preprocessorList>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__USE_POSIX</Elem>
+            <Elem>__linux__</Elem>
+          </preprocessorList>
+        </cTool>
         <ccTool>
           <incDir>
             <pElem>.</pElem>
-            <pElem>..</pElem>
-            <pElem>../APIStubLib</pElem>
-            <pElem>../RTPMetaInfoLib</pElem>
-            <pElem>../APICommonCode</pElem>
+            <pElem>../Include</pElem>
+            <pElem>../EasyDarwin/APICommonCode</pElem>
+            <pElem>../EasyDarwin/APIStubLib</pElem>
+            <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
           </incDir>
           <incFile>
-            <pElem>../PlatformHeader.h</pElem>
+            <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
           <commandLine>-fPIC</commandLine>
+          <preprocessorList>
+            <Elem>COMMON_UTILITIES_LIB</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__USE_POSIX</Elem>
+            <Elem>__linux__</Elem>
+          </preprocessorList>
         </ccTool>
         <archiverTool>
-          <output>../${CND_CONF}/libCommonUtilitiesLib.a</output>
+          <output>${AVS_ROOT}/lib/libCommonUtilitiesLib.a</output>
         </archiverTool>
       </compileType>
+      <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ConfParser.h" ex="false" tool="3" flavor2="0">
@@ -149,13 +163,9 @@
       </item>
       <item path="DateTranslator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DssStopwatch.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="FastCopyMacros.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -165,10 +175,6 @@
       </item>
       <item path="IdleTask.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MakeDir.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="MakeDir.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="MyAssert.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MyAssert.h" ex="false" tool="3" flavor2="0">
@@ -176,8 +182,6 @@
       <item path="OS.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OS.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSArrayObjectDeleter.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSBufferPool.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -194,10 +198,6 @@
       <item path="OSFileSource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSFileSource.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSHashTable.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSHeaders.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSHeap.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -225,14 +225,6 @@
       </item>
       <item path="OSThread.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PLDoubleLinkedList.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="PathDelimiter.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="QueryParamList.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="QueryParamList.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="ResizeableStringFormatter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ResizeableStringFormatter.h" ex="false" tool="3" flavor2="0">
@@ -240,8 +232,6 @@
       <item path="SDPUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SDPUtils.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SVector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Socket.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -314,6 +304,10 @@
       <item path="ev.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ev.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="getopt.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="md5.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -326,27 +320,45 @@
     </conf>
     <conf name="Release" type="3">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+          <incFile>
+            <pElem>../Include/PlatformHeader.h</pElem>
+          </incFile>
+          <commandLine>-fPIC</commandLine>
+          <preprocessorList>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__USE_POSIX</Elem>
+            <Elem>__linux__</Elem>
+          </preprocessorList>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
             <pElem>.</pElem>
-            <pElem>..</pElem>
-            <pElem>../APIStubLib</pElem>
-            <pElem>../RTPMetaInfoLib</pElem>
-            <pElem>../APICommonCode</pElem>
+            <pElem>../Include</pElem>
+            <pElem>../EasyDarwin/APICommonCode</pElem>
+            <pElem>../EasyDarwin/APIStubLib</pElem>
+            <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
           </incDir>
           <incFile>
-            <pElem>../PlatformHeader.h</pElem>
+            <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
           <commandLine>-fPIC</commandLine>
+          <preprocessorList>
+            <Elem>COMMON_UTILITIES_LIB</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>__USE_POSIX</Elem>
+            <Elem>__linux__</Elem>
+          </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -355,9 +367,11 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <archiverTool>
-          <output>../${CND_CONF}/libCommonUtilitiesLib.a</output>
+          <output>${CND_CONF}/libCommonUtilitiesLib.a</output>
         </archiverTool>
       </compileType>
+      <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ConfParser.h" ex="false" tool="3" flavor2="0">
@@ -366,13 +380,9 @@
       </item>
       <item path="DateTranslator.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DssStopwatch.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="FastCopyMacros.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -382,10 +392,6 @@
       </item>
       <item path="IdleTask.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="MakeDir.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="MakeDir.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="MyAssert.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MyAssert.h" ex="false" tool="3" flavor2="0">
@@ -393,8 +399,6 @@
       <item path="OS.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OS.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSArrayObjectDeleter.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSBufferPool.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -411,10 +415,6 @@
       <item path="OSFileSource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSFileSource.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSHashTable.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSHeaders.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSHeap.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -442,14 +442,6 @@
       </item>
       <item path="OSThread.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PLDoubleLinkedList.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="PathDelimiter.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="QueryParamList.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="QueryParamList.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="ResizeableStringFormatter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ResizeableStringFormatter.h" ex="false" tool="3" flavor2="0">
@@ -457,8 +449,6 @@
       <item path="SDPUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SDPUtils.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SVector.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Socket.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -531,6 +521,10 @@
       <item path="ev.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ev.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="getopt.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="md5.c" ex="false" tool="0" flavor2="0">
       </item>
