@@ -135,25 +135,9 @@ enum
     qtssXPreBufferHeader        = 50,
 	qtssXDynamicRateHeader      = 51,
 	qtssXAcceptDynamicRateHeader= 52,
-	
-	// QT Player random data request
-	qtssXRandomDataSizeHeader   = 53,
-	
-	// 3gpp release 6
-	qtss3GPPLinkCharHeader      = 54,
-	qtss3GPPAdaptationHeader    = 55,
-	qtss3GPPQOEFeedback         = 56,
-	qtss3GPPQOEMetrics          = 57,
 
-	// 3gpp annex g
-	qtssXPreDecBufSizeHeader             = 58,
-	qtssXInitPredecBufPeriodHeader       = 59,
-	qtssXInitPostDecBufPeriodHeader      = 60,
-	qtss3GPPVideoPostDecBufSizeHeader    = 61,
-	
-
-	qtssNumHeaders				= 62,
-	qtssIllegalHeader 			= 62
+	qtssNumHeaders				= 53,
+	qtssIllegalHeader 			= 53
     
 };
 typedef UInt32 QTSS_RTSPHeader;

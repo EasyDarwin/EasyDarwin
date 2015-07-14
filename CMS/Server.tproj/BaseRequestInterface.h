@@ -151,7 +151,6 @@ class BaseRequestInterface : public QTSSDictionary
         UInt32                      GetDestAddr()       { return fDestinationAddr; }
         UInt32                      GetSourceAddr()     { return fSourceAddr; }
         UInt16                      GetTtl()            { return fTtl; }
-        QTSS_RTPTransportType       GetTransportType()  { return fTransportType; }
         QTSS_RTPNetworkMode         GetNetworkMode()    { return fNetworkMode; }
         UInt32                      GetWindowSize()     { return fWindowSize; }
         
@@ -227,7 +226,6 @@ class BaseRequestInterface : public QTSSDictionary
         UInt16                      fTtl;
         UInt32                      fDestinationAddr;
         UInt32                      fSourceAddr;
-        QTSS_RTPTransportType       fTransportType;
         QTSS_RTPNetworkMode         fNetworkMode;
     
         UInt32                      fContentLength;
