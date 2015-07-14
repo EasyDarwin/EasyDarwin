@@ -161,7 +161,6 @@ BaseRequestInterface::BaseRequestInterface(BaseSessionInterface *session)
     fTtl(0),
     fDestinationAddr(0),
     fSourceAddr(0),
-    fTransportType(qtssRTPTransportTypeUDP),
     fNetworkMode(qtssRTPNetworkModeDefault),    
     fContentLength(0),
     fIfModSinceDate(0),
@@ -222,7 +221,6 @@ BaseRequestInterface::BaseRequestInterface(BaseSessionInterface *session)
     this->SetVal(qtssRTSPReqUserFound, &fHasUser, sizeof(fHasUser));
     this->SetVal(qtssRTSPReqAuthHandled, &fAuthHandled, sizeof(fAuthHandled));
     
-    this->SetVal(qtssRTSPReqTransportType, &fTransportType, sizeof(fTransportType));
     this->SetVal(qtssRTSPReqTransportMode, &fTransportMode, sizeof(fTransportMode));
     this->SetVal(qtssRTSPReqSetUpServerPort, &fSetUpServerPort, sizeof(fSetUpServerPort));
     this->SetVal(qtssRTSPReqAction, &fAction, sizeof(fAction));

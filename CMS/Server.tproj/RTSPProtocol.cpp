@@ -136,18 +136,7 @@ StrPtrLen RTSPProtocol::sHeaders[] =
     StrPtrLen("x-Packet-Range"),
     StrPtrLen("x-Prebuffer"),
 	StrPtrLen("x-Dynamic-Rate"),
-	StrPtrLen("x-Accept-Dynamic-Rate"),
-	// DJM PROTOTYPE
-	StrPtrLen("x-Random-Data-Size"),
-
-	//Annex G
-	StrPtrLen("x-predecbufsize"),
-	StrPtrLen("x-initpredecbufperiod"),
-	StrPtrLen("x-initpostdecbufperiod"),
-	StrPtrLen("3gpp-videopostdecbufsize")
-	
-	
-	
+	StrPtrLen("x-Accept-Dynamic-Rate")	
 };
 
 QTSS_RTSPHeader RTSPProtocol::GetRequestHeader(const StrPtrLen &inHeaderStr)

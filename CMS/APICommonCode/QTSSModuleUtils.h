@@ -43,24 +43,10 @@
 #include "SafeStdLib.h"
 #include "QTSS.h"
 #include "StrPtrLen.h"
-//#include "RTPMetaInfoPacket.h"
 
 class QTSSModuleUtils
 {
-    public:
-        // compatibiltiy features for certain players
-        
-        enum    {  
-                    kRequiresRTPInfoSeqAndTime  = 0, 
-                    kAdjustBandwidth            = 1,
-                    kDisablePauseAdjustedRTPTime= 2,
-                    kDelayRTPStreamsUntilAfterRTSPResponse = 3,
-                    kDisable3gppRateAdaptation =4,
-                    kAdjust3gppTargetTime = 5,
-                    kDisableThinning =6,
-                };
-    
-      
+    public:  
         static void     Initialize( QTSS_TextMessagesObject inMessages,
                                     QTSS_ServerObject inServer,
                                     QTSS_StreamRef inErrorLog);

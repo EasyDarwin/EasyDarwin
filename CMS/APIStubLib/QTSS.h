@@ -202,17 +202,6 @@ enum
 };
 typedef UInt32 QTSS_SessionType;
 
-/**********************************/
-//
-// What type of RTP transport is being used for the RTP stream?
-enum
-{
-    qtssRTPTransportTypeUDP         = 0,
-    qtssRTPTransportTypeReliableUDP = 1,
-    qtssRTPTransportTypeTCP         = 2,
-    qtssRTPTransportType3GPPUDP     = 3
-};
-typedef UInt32 QTSS_RTPTransportType;
 
 /**********************************/
 //
