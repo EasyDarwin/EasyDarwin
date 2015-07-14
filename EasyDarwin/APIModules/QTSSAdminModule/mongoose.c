@@ -4589,9 +4589,9 @@ void mg_send_file_internal(struct mg_connection *c, const char *file_name,
 }
 void mg_send_file(struct mg_connection *c, const char *file_name,
                   const char *extra_headers) {
-  file_stat_t st;
-  const int exists = stat(file_name, &st) == 0;
-  mg_send_file_internal(c, file_name, &st, exists, extra_headers);
+					  file_stat_t st;
+					  const int exists = stat(file_name, &st) == 0;	 
+					  mg_send_file_internal(c, file_name, &st, exists, extra_headers);
 }
 #endif  // !MONGOOSE_NO_FILESYSTEM
 

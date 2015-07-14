@@ -178,23 +178,65 @@ static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 
 //**************************************************
 //web管理监听端口，默认80
-static UInt16			sHttpPort = 80;
+static UInt16			sHttpPort = 8080;
 static UInt16			sDefaultHttpPort = 80;
 
 //web管理静态页加载路径
-static char*			sDocumentRoot     = NULL;
+static char*			sDocumentRoot     = ".";
 static char*			sDefaultDocumentRoot = "./";
 
-//Mongoose事件处理
-static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
-  switch (ev) {
-    case MG_AUTH:
-          return MG_TRUE; //not authorized
-    default:
-          return MG_FALSE;
-  }
+
+static void check_auth(struct mg_connection *conn) {
+	char name[100], password[100];
+	// Get form variables
+	mg_get_var(conn, "name", name, sizeof(name));
+	mg_get_var(conn, "password", password, sizeof(password));
+	if (strcmp(name, "1") == 0 && strcmp(password, "1") == 0) {
+		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\index.html", NULL);
+	}
+	else
+	{
+		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\loginerror.html", NULL);
+	}
+}
+static int serve_request(struct mg_connection *conn) {
+
+	if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/") == 0&&strcmp(conn->request_method, "POST") == 0)) {
+		check_auth(conn);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/")||!strcmp(conn->uri,"/login.html"))
+	{
+		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\login.html", NULL);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/language.js"))
+	{
+		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\language.js", NULL);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/english/language.js"))
+	{
+		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\english\\language.js", NULL);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/chinese/language.js"))
+	{
+		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\chinese\\language.js", NULL);
+		return MG_MORE;
+	}
+	return MG_FALSE; 
 }
 
+static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
+	switch (ev) {
+		case MG_AUTH:
+			return MG_TRUE;
+		case MG_REQUEST: 
+			return serve_request(conn);
+		default: return MG_FALSE;
+	}
+}
 //mongoose线程
 class mongooseThread : public OSThread
 {
@@ -218,8 +260,6 @@ void mongooseThread::Entry()
 	char listening_port[6];
 	sprintf(listening_port, "%d", sHttpPort);
 	mg_set_option(mongooseserver, "listening_port", listening_port);
-
-	//html文档路径，尽量用全路径
 	mg_set_option(mongooseserver, "document_root", sDocumentRoot); //donot use it
 
 	printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
