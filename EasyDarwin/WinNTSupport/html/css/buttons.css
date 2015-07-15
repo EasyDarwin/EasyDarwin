@@ -1,0 +1,193 @@
+.btn,
+.btn-icon,
+.btn-mini
+{
+	background-repeat: repeat-x;
+	color: #FFF;	
+	font-weight: bold;
+	display: inline-block;	
+	text-decoration: none;
+	border-width: 1px;
+	border-style: solid;
+	padding: 0 15px 4px;
+	*padding: 0 7px 4px;
+	margin: 0;
+	text-shadow: 1px 1px 1px rgba(0,0,0,.2);
+	-moz-box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+	-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#999999,direction=135,strength=2);
+	cursor: pointer;
+	position: relative;
+}
+	
+	/* Active/Click state */
+	.btn:active, .btn-icon:active, .btn-mini:active { top: 1px; }
+
+
+/* Sizes */
+.btn, .btn-icon { background-position: 0 -80px; font-size: 12px; height: 32px; line-height: 29px; }
+.btn.btn-small, .btn-icon.btn-small { background-position: 0 0; font-size: 10px; height: 26px; line-height: 23px; }
+.btn.btn-large, .btn-icon.btn-large { background-position: 0 -160px; font-size: 15px; height: 42px; line-height: 40px; }
+
+	/* Sizes - Line height for A buttons need to be different */
+	a.btn, a.btn-icon { height: 32px; line-height: 32px; padding-bottom: 0; }
+	a.btn.btn-small, a.btn-icon.btn-small { line-height: 26px; padding-bottom: 0; }
+	a.btn.btn-large, a.btn-icon.btn-large { line-height: 42px; padding-bottom: 0; }
+	
+
+/* Fix the button in IE7 :-( */
+*+html .btn, *+html .btn-icon { border-color: none ; border: 1px solid transparent; }
+
+
+
+/* Set default button colors */
+.btn, .btn-icon, .btn-mini,
+.btn:visited, .btn-icon:visited, .btn-mini:visited {  background-image: url(../images/bg-lite.png); background-color: #F90; border-color: #D58000; color: #FFF; }
+
+.btn:hover, .btn-icon:hover, .btn-mini:hover { background-color: #D58000; color: #FFF; }
+
+
+/* Colors */	
+.btn-pink,
+.btn-pink:visited { background-color: #FF0066; border-color: #DA0C59; }
+.btn-pink:hover { background-color: #DA0C59; }
+
+.btn-blue,
+.btn-blue:visited { background-color: #066ECD; border-color: #0561B4; }
+.btn-blue:hover { background-color: #0561B4; }
+
+.btn-red,
+.btn-red:visited { background-color: #E40001; border-color: #CC0000; }
+.btn-red:hover { background-color: #CC0000; }
+
+.btn-green,
+.btn-green:visited { background-color: #77B32F; border-color: #689C29; }
+.btn-green:hover { background-color: #689C29; }
+
+.btn-black,
+.btn-black:visited { background-color: #111; border-color: #000; }
+.btn-black:hover { background-color: #000; }
+
+.btn-purple,
+.btn-purple:visited { background-color: #7B0F75; border-color: #6A0D66; }
+.btn-purple:hover { background-color: #6A0D66; }
+
+.btn-navy,
+.btn-navy:visited { background-color: #002142; border-color: #00172F; }
+.btn-navy:hover { background-color: #00172F; }
+
+.btn-maroon,
+.btn-maroon:visited { background-color: #750000; border-color: #530000; }
+.btn-maroon:hover { background-color: #530000; }
+
+.btn-yellow,
+.btn-yellow:visited { background-color: #FFCC00; border-color: #D9AD01; }
+.btn-yellow:hover { background-color: #D9AD01; }
+
+.btn-teal,
+.btn-teal:visited { background-color: #39A7B6; border-color: #2E8794; }
+.btn-teal:hover { background-color: #2E8794; }
+
+.btn-orange,
+.btn-orange:visited { background-color: #F90; border-color: #D58000; color: #FFF; }
+.btn-orange:hover{ background-color: #D58000; color: #FFF; }
+
+.btn-grey,
+.btn-grey:visited  { background-color: #999; border-color: #888; color: #FFF; }
+.btn-grey:hover{ background-color: #888; color: #FFF; }
+
+
+/* Images Overlays - Gradient Effect */
+/* 50% Opacity for darker colors */
+.btn-blue,
+.btn-black,
+.btn-purple,
+.btn-navy,
+.btn-maroon,
+.btn-teal,
+.btn-grey { background-image: url(../images/bg-dark.png) !important; }
+
+
+/* 65% opacity for lighter colors */
+.btn-red,
+.btn-orange,
+.btn-green,
+.btn-yellow,
+.btn-pink { background-image: url(../images/bg-lite.png) !important; }
+
+
+
+/* Icon Button Styles */
+.btn-icon { padding-left: 32px !important; }
+*+html .btn-icon { padding-left: 20px !important; padding-right: 5px !important; }
+
+.btn-icon span
+{
+	background-image: url(../images/amp-btn-icon-sprite.png); 
+	background-repeat: no-repeat; 
+	background-position: 0 0; 
+	width: 16px; 
+	height: 16px; 
+	position: absolute; 
+	left: 6px; 
+	top: 6px;
+}
+
+	.btn-icon.btn-small span { top: 4px; }
+	.btn-icon.btn-large span { top: 12px; }
+	@-moz-document url-prefix() { .btn-icon span { left: -24px; top: 0px; } .btn-icon.btn-small span { top: -1px; } .btn-icon.btn-large span { top: 4px; } } 
+
+
+/* Mini Buttons */
+.btn-mini 
+{ 
+	background-position: 0 0; 
+	width: 32px; 
+	height: 26px !important; 
+	line-height: 500px !important; 
+	overflow: hidden;
+	padding: 0; 
+}
+
+	.btn-mini span 
+	{ 
+		background-image: url(../images/amp-btn-icon-sprite.png); 
+		background-repeat: no-repeat; 
+		display: block;
+		width: 16px; 
+		height: 16px;
+		line-height: 0;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin-left: -8px;
+		margin-top: -8px;
+	}
+	
+	
+/* Icon Classes */
+.btn-arrow-down span { background-position: -48px 0; }
+.btn-arrow-up span { background-position: -32px 0; }
+.btn-arrow-right span { background-position: -16px 0; }
+.btn-arrow-left span { background-position: 0 0; }
+.btn-comment span { background-position: -112px 0; }
+.btn-heart span { background-position: -96px 0; }
+.btn-star span { background-position: -80px 0; }
+.btn-cart span { background-position: -64px 0; }
+.btn-print span { background-position: -128px 0; }
+.btn-rss span { background-position: -144px 0; }
+.btn-person span { background-position: 0 -16px; }
+.btn-check span { background-position: -16px -16px; }
+.btn-dollar span { background-position: -32px -16px; }
+.btn-refresh span { background-position: -48px -16px; }
+.btn-home span { background-position: -64px -16px; }
+.btn-plus span { background-position: -80px -16px; }
+.btn-minus span { background-position: -96px -16px; }
+.btn-cross span { background-position: -112px -16px; }
+	
+	
+/* Transparent Button Styles */
+.btn-transparent, .btn-transparent:hover { background-image: url(../images/bg-lite.png); background-color: transparent; filter: none; border-color: transparent\0/; border-color: rgba(0,0,0,.4) !important; margin: 0 1em 0 0; }
+*+html .btn-transparent { border: none; }

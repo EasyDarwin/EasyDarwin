@@ -166,6 +166,15 @@ static QTSS_AttributeID sAuthenticatedID = qtssIllegalAttrID;
 static char*            sAuthenticatedName = "QTSSAdminModuleAuthenticatedState";
 
 //**************************************************
+//web管理监听端口，默认80
+static UInt16			sHttpPort = 8080;
+static UInt16			sDefaultHttpPort = 80;
+
+//web管理静态页加载路径
+static char*			sDocumentRoot     = NULL;
+static char*			sDefaultDocumentRoot = "./";
+
+//**************************************************
 
 static QTSS_Error QTSSAdminModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
 static QTSS_Error Register(QTSS_Register_Params* inParams);
@@ -177,55 +186,45 @@ static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 static Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword);
 
 
-//**************************************************
-//web管理监听端口，默认80
-static UInt16			sHttpPort = 8080;
-static UInt16			sDefaultHttpPort = 80;
-
-//web管理静态页加载路径
-static char*			sDocumentRoot     = ".";
-static char*			sDefaultDocumentRoot = "./";
-
-
 static void check_auth(struct mg_connection *conn) {
 	char name[100], password[100];
 	// Get form variables
 	mg_get_var(conn, "name", name, sizeof(name));
 	mg_get_var(conn, "password", password, sizeof(password));
 	if (strcmp(name, "1") == 0 && strcmp(password, "1") == 0) {
-		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\index.html", NULL);
+		mg_send_file(conn, "index.html", NULL);
 	}
 	else
 	{
-		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\loginerror.html", NULL);
+		mg_send_file(conn, "loginerror.html", NULL);
 	}
 }
 static int serve_request(struct mg_connection *conn) {
 
-	if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/") == 0&&strcmp(conn->request_method, "POST") == 0)) {
-		check_auth(conn);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/")||!strcmp(conn->uri,"/login.html"))
-	{
-		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\login.html", NULL);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/language.js"))
-	{
-		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\language.js", NULL);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/english/language.js"))
-	{
-		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\english\\language.js", NULL);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/chinese/language.js"))
-	{
-		mg_send_file(conn, "D:\\Users\\Administrator\\Desktop\\EasyDarwin\\EasyDarwin\\WinNTSupport\\Debug\\chinese\\language.js", NULL);
-		return MG_MORE;
-	}
+	//if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/") == 0&&strcmp(conn->request_method, "POST") == 0)) {
+	//	check_auth(conn);
+	//	return MG_MORE;
+	//}
+	//if(!strcmp(conn->uri,"/")||!strcmp(conn->uri,"/login.html"))
+	//{
+	//	mg_send_file(conn, "login.html", NULL);
+	//	return MG_MORE;
+	//}
+	//if(!strcmp(conn->uri,"/language.js"))
+	//{
+	//	mg_send_file(conn, "language.js", NULL);
+	//	return MG_MORE;
+	//}
+	//if(!strcmp(conn->uri,"/english/language.js"))
+	//{
+	//	mg_send_file(conn, "language.js", NULL);
+	//	return MG_MORE;
+	//}
+	//if(!strcmp(conn->uri,"/chinese/language.js"))
+	//{
+	//	mg_send_file(conn, "language.js", NULL);
+	//	return MG_MORE;
+	//}
 	return MG_FALSE; 
 }
 
@@ -545,6 +544,8 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sModule = inParams->inModule;
     sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(sModule);
     sServerPrefs = inParams->inPrefs;
+
+	RereadPrefs();
     
 	//创建Mongoose线程、启动
 	sMongooseThread = NEW mongooseThread();
