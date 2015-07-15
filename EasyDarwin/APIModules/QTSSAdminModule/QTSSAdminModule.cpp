@@ -199,32 +199,35 @@ static void check_auth(struct mg_connection *conn) {
 		mg_send_file(conn, "loginerror.html", NULL);
 	}
 }
-static int serve_request(struct mg_connection *conn) {
+static int serve_request(struct mg_connection *conn) 
+{
+	char htmlPath[256] = { 0 };
+	sprintf(htmlPath, "%s%s", sDocumentRoot, conn->uri);
 
-	//if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/") == 0&&strcmp(conn->request_method, "POST") == 0)) {
-	//	check_auth(conn);
-	//	return MG_MORE;
-	//}
-	//if(!strcmp(conn->uri,"/")||!strcmp(conn->uri,"/login.html"))
-	//{
-	//	mg_send_file(conn, "login.html", NULL);
-	//	return MG_MORE;
-	//}
-	//if(!strcmp(conn->uri,"/language.js"))
-	//{
-	//	mg_send_file(conn, "language.js", NULL);
-	//	return MG_MORE;
-	//}
-	//if(!strcmp(conn->uri,"/english/language.js"))
-	//{
-	//	mg_send_file(conn, "language.js", NULL);
-	//	return MG_MORE;
-	//}
-	//if(!strcmp(conn->uri,"/chinese/language.js"))
-	//{
-	//	mg_send_file(conn, "language.js", NULL);
-	//	return MG_MORE;
-	//}
+	if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/") == 0&&strcmp(conn->request_method, "POST") == 0)) {
+		check_auth(conn);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/")||!strcmp(conn->uri,"/login.html"))
+	{
+		mg_send_file(conn, (const char*)htmlPath, NULL);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/language.js"))
+	{
+		mg_send_file(conn, (const char*)htmlPath, NULL);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/english/language.js"))
+	{
+		mg_send_file(conn, (const char*)htmlPath, NULL);
+		return MG_MORE;
+	}
+	if(!strcmp(conn->uri,"/chinese/language.js"))
+	{
+		mg_send_file(conn, (const char*)htmlPath, NULL);
+		return MG_MORE;
+	}
 	return MG_FALSE; 
 }
 
