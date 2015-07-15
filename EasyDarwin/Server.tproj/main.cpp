@@ -301,8 +301,8 @@ int main(int argc, char * argv[])
     Bool16 theXMLPrefsExist = true;
     UInt32 debugLevel = 0;
     UInt32 debugOptions = kRunServerDebug_Off;
-	static char* sDefaultConfigFilePath = DEFAULTPATHS_ETC_DIR_OLD "streamingserver.conf";
-	static char* sDefaultXMLFilePath = DEFAULTPATHS_ETC_DIR "streamingserver.xml";
+	static char* sDefaultConfigFilePath = DEFAULTPATHS_ETC_DIR_OLD "easydarwin.conf";
+	static char* sDefaultXMLFilePath = DEFAULTPATHS_ETC_DIR "easydarwin.xml";
 
     char* theConfigFilePath = sDefaultConfigFilePath;
     char* theXMLFilePath = sDefaultXMLFilePath;
@@ -335,7 +335,7 @@ int main(int argc, char * argv[])
                                 
                 break;
             case 'f':
-				theXMLFilePath  = DEFAULTPATHS_ETC_DIR "streamingserver.xml";
+				theXMLFilePath  = DEFAULTPATHS_ETC_DIR "easydarwin.xml";
                 break;
             case 'p':
                 Assert(optarg != NULL);// this means we didn't declare getopt options correctly or there is a bug in getopt.
