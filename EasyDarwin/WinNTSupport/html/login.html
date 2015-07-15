@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+ 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+ 
+<head> 
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" /> 
+	<title>Login</title> 
+	<style type="text/css">
+	body { font: 12px/1.7em arial, sans-serif; margin: 75px; }
+	#login { width: 400px; position: absolute; left: 50%; margin-left: -200px; }
+
+#login h1
+{
+	
+	width: 240px;
+	height: 32px;
+	line-height: 800px;
+	overflow: hidden;
+	margin: 0 auto .75em;	
+}
+
+#login_panel
+{
+	background: #FFF;
+	width: 400px;
+	border: 1px solid #CCC;
+	overflow: hidden;
+	
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	
+	-moz-box-shadow: 1px 1px 1px rgba(0,0,0,.6);
+	-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.6);
+	
+}
+
+#login_panel .login_fields { padding: 22px 15px 5px; }
+	#login_panel .login_fields input { width: 355px; }
+
+#login_panel .field { margin-bottom: 0.5em; }
+	#login_panel .field:last-child { margin-bottom: .85em; }
+	
+	#login_panel .field label { font-weight: bold; display: block; position: relative; } 	
+		#login_panel .field label small { position: absolute; right: 0; top: -2px; }
+			#login_panel .field label small a { color: #999; }
+
+#login .login_actions { background: #E8E8E8; width: auto; padding: 15px; border-top: 1px dotted #CCC; }
+h1,h2,h3,
+h4,h5,h6		{ color: #111; margin-bottom: .75em; }
+
+h1 				{ font-size: 30px; line-height: 1em; }
+h2 				{ font-size: 24px; font-weight: normal; color: #222; margin-bottom: 1em }
+h3 				{ font-size: 16px; color: #333; line-height: 1; margin-bottom: .75em }
+h4 				{ font-size: 14px; color: #666; line-height: 1.25; margin-bottom: 1.25em }
+h5 				{ font-size: 12px; font-weight: bold; margin-bottom: 1.5em }
+h6 				{ font-size: 11px; font-weight: bold }
+
+p           	{ margin: 0 0 1.5em }
+p.last      	{ margin-bottom: 0 }
+img         	{ border: none; }
+
+ul, ol			{ margin-left: 28px; margin-bottom: 1.5em; }
+li ul,
+li ol			{ margin-top: 1em; }
+ul li			{ list-style-type: disc; }
+li				{ margin-bottom: .5em; }
+
+dl          	{ margin: 0 0 1.5em 0 }
+dl dt       	{ font-weight: bold }
+dd          	{ margin-left: 1.5em }
+
+abbr, 
+acronym     	{ border-bottom: 1px dotted #666 }
+address     	{ margin-top: 1.5em; font-style: italic }
+del         	{ color:#666 }
+sup				{ font-size: 9px; vertical-align:top; }
+
+a				{ color: #06C; text-decoration: none; }
+a:visited		{ color: #667 }
+a:focus, 
+a:hover     	{ text-decoration: underline; }
+
+blockquote  	{ margin: 1.5em; color: #666; font-style: italic }
+strong      	{ font-weight: bold }
+em,dfn      	{ font-style: italic; background: #ffc }
+dfn         	{ font-weight: bold }
+pre,code    	{ margin: 1.5em 0; white-space: pre }
+pre,code,tt 	{ font: 12px 'andale mono', 'monotype.com', 'lucida console', monospace; line-height: 1.5 } 
+tt         		{ display: block; margin: 1.5em 0; line-height: 1.5 }
+
+
+hr { border: none; border-bottom: 1px dotted #CCC; margin-bottom: 2em; margin-top: 1em; }
+
+table.data { width: 100%; border: 0; margin-bottom: 2em; border-collapse: collapse;  }
+
+	 table.data thead th
+	 {
+	 	font-size: 13px;
+		font-weight: bold;
+		text-align: left;
+		padding: 10px;
+		
+		background-color: #333;
+		
+		color: #FFF;
+		
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+	}	
+	
+	table.display thead th { background-color: #333 !important; }	
+	
+	table.data td { vertical-align: top; }
+	
+	table.data tbody tr td { background: #FFF; border-bottom: 1px dotted #DDD; }
+
+	table.data th { padding: 10px 0; }
+	table.data tbody td { padding: 10px; }
+	
+	table.data tr.even td { background: #F9F9F9; }
+	
+	table.data.stripe tr:nth-child(odd) td { background-color:#F6F6F6; }
+	table.data.stripe tr:nth-child(even) td { background-color:#FFF; }
+
+
+input 
+, textarea
+, select
+{
+	font-family: Verdana, 'Helvetica Neue', Helvetica, Arial, Geneva, sans-serif;
+	font-size: 12px;
+	color: #424242;
+	padding: 6px;
+	border: 1px solid #CCC;
+	outline: none;
+	
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;	
+	
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15) inset;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .15) inset;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .15) inset;
+	
+	-moz-transition: border .2s linear, box-shadow .2s linear;
+	-webkit-transition: border .2s linear, -webkit-box-shadow .2s linear;
+}
+
+input:focus 
+, textarea:focus
+, select:focus
+{
+    border: 1px solid #80bfff;
+    
+    -moz-box-shadow: 0 0 3px #80bfff, 0 1px 2px rgba(0, 0, 0, .15) inset;
+    -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 2px rgba(0, 0, 0, .15) inset;
+    box-shadow: 0 0 3px #80bfff, 0 1px 2px rgba(0, 0, 0, .15) inset;
+}
+
+.placeholder { color: #999; }
+	</style>
+	 <script src="language.js" type="text/javascript"></script>
+	 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+        var language0;
+        function onlanchanged() {
+            var vlanguage = document.getElementById("lan").value;
+            setcookie('language0', vlanguage, 720);
+			document.getElementById("lan").value=vlanguage;
+            window.location.reload();
+        }
+		function onload()
+		{
+			var str=getcookie('language0');
+			if(str!='')
+				document.getElementById("lan").value=str;
+		}
+		
+
+			
+    </script>
+	
+</head> 
+ 
+<body onload="onload()"> 
+
+<div id="login">
+	<h1>Login</h1>
+	<div id="login_panel">
+		<form  method="POST" onsubmit="return toVaild()" id="myform">		
+			<div class="login_fields">
+				<div class="field">
+					<label for="Name"><script type="text/javascript">document.write(str_user);</script>   </label>
+					<input type="text" name="name" value="" id="name" tabindex="1"  />		
+				</div>
+				
+				<div class="field">
+					<label for="password"><script type="text/javascript">document.write(str_pwd);</script></label>
+					<input type="password" name="password" value="" id="password" tabindex="2" />			
+				</div>
+				<div class="field">
+					<label ><script type="text/javascript">document.write(str_language);</script></label>
+					 <select id="lan" name="lan" onChange="onlanchanged();">
+                <option value="1">English</option>
+                <option value="2">中文</option>
+            </select>			
+				</div>
+			</div> <!-- .login_fields -->
+			<div class="login_actions">
+				<button type="submit" class="btn btn-orange" tabindex="3" id="btnlogin"><script type="text/javascript">document.write(str_login);</script></button>
+			</div>
+			<!--  <div  id="divwarn"  style="text-align: center; color:red">
+                 <small><script type="text/javascript">document.write(str_login_warn);</script></small>
+               
+            </div> -->	
+		</form>
+	</div> <!-- #login_panel -->		
+</div> <!-- #login -->
+
+</body> 
+  <script language="javascript">
+             function toVaild(){
+               if(document.getElementById("name").value==""||document.getElementById("name").value==null)
+			{
+				alert(str_user_warn);
+                return false;
+			}
+			if(document.getElementById("password").value==""||document.getElementById("password").value==null)
+			{
+				alert(str_pwd_warn);
+                return false;
+			}
+                
+             }
+     </script>
+</html>
