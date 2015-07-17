@@ -66,28 +66,14 @@ void LogCallback(const char* msg, void* pClient)
 
 int run()
 {
-	//设备地址
-    string sDeviceAddr = IniReadString("device", "address", "127.0.0.1", "easycamera.ini");
-	//设备端口
-    int iDevicePort = IniReadInteger("device", "port", 80, "easycamera.ini");
 	//设备SN
-    string sDeviceSerial = IniReadString("device", "serial", "", "easycamera.ini");
-	//设备用户名
-    string sDeviceUserName = IniReadString("device", "username", "admin", "easycamera.ini");
+    string sDeviceSerial = IniReadString("server", "serial", "", "easycamera.ini");
 	//设备密码
-    string sDevicePassword = IniReadString("device", "password", "admin", "easycamera.ini");
-	//设备码流输出，1：主码流 0：次码流
-	int	iStreamFlag = IniReadInteger("device", "stream_flag", 0, "easycamera.ini");
-	//是否输出音频，1：输出 0：不输出
-	int	iAudioEnable = IniReadInteger("device", "audio_enable", 1, "easycamera.ini");
-	//音频是否AAC编码，1：编码 0：不编码
-	int iAACEncode = IniReadInteger("device", "aac_encode", 1, "easycamera.ini");
-	//设备端缓冲大小，0~500，0表示不限制
-	int iMediaBufferSize = IniReadInteger("device", "media_buf_size", 100, "easycamera.ini");
+    string sDevicePassword = IniReadString("server", "password", "admin", "easycamera.ini");
 	//DMS地址
-    string sDMSAddr = IniReadString("server", "dms_addr", "www.easydarwin.org", "easycamera.ini");
+    string sDMSAddr = IniReadString("server", "cms_addr", "www.easydarwin.org", "easycamera.ini");
 	//DMS端口
-    int iDMSPort = IniReadInteger("server", "dms_port", 10000, "easycamera.ini");
+    int iDMSPort = IniReadInteger("server", "cms_port", 10000, "easycamera.ini");
     
 	printf("device[%s]/v%s (Build/%s) is now running\n", sDeviceSerial.c_str(), kVersionString, kBuildString);
     
