@@ -23,7 +23,7 @@ Thumbs.db
 *.lib
 *.sbr
 obj/
-[Ll]ibEasyCMS/
+/CMS/libEasyCMS/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
