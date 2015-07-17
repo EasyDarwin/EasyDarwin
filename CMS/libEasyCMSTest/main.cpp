@@ -54,7 +54,7 @@ static int exit_flag = 0;
 
 static void TerminateHandler(int sigNumber)
 {
-    printf("EasyDSSDevice terminated[%d]\n", sigNumber);
+    printf("EasyCamera terminated[%d]\n", sigNumber);
     exit_flag = sigNumber;
     exit(0);
 }
@@ -85,9 +85,9 @@ int run()
 	//设备端缓冲大小，0~500，0表示不限制
 	int iMediaBufferSize = IniReadInteger("device", "media_buf_size", 100, "easycamera.ini");
 	//DMS地址
-    string sDMSAddr = IniReadString("server", "dms_addr", "www.easydss.com", "easycamera.ini");
+    string sDMSAddr = IniReadString("server", "dms_addr", "www.easydarwin.org", "easycamera.ini");
 	//DMS端口
-    int iDMSPort = IniReadInteger("server", "dms_port", 60200, "easycamera.ini");
+    int iDMSPort = IniReadInteger("server", "dms_port", 10000, "easycamera.ini");
     
 	printf("device[%s]/v%s (Build/%s) is now running\n", sDeviceSerial.c_str(), kVersionString, kBuildString);
     
@@ -116,34 +116,12 @@ int run()
         }
         else
         {
-            //登录成功，交给EasyDeviceCenter接管
+            //登录成功，交给libEasyCMS接管
             break;
         }
     }
     while (true);
 
-    //int i = 0;
-    //while(true)
-    //{
-    //	#ifndef _WIN32
-    //		sleep(1);
-    //	#else
-    //		Sleep(1000);
-    //	#endif
-    //	i++;
-
-    //	if(i%300 == 0)
-    //	{
-    //		printf("StopSMSStreaming");
-    //		api.StopSMSStreaming();
-
-    //	}
-    //	if(i%300 == 1)
-    //	{
-    //		api.StartSMSStreaming("121.40.50.44", 20014, "E82AEA8B9913", "E82AEA8B9913");
-    //		printf("StartSMSStreaming");
-    //	}
-    //}
 
     while (true)
     {
@@ -159,7 +137,7 @@ int run()
 
 #ifndef _WIN32
 
-#define CRASH_LOG "easydssdevice.crash"
+#define CRASH_LOG "easycamera.crash"
 
 string mktimestr()
 {
