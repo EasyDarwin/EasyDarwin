@@ -6,9 +6,10 @@ EasyDarwin CMS是做为EasyDarwin平台方案的一部分，主要进行的是Ea
 ## CMS引用的项目 ##
 [EasyDSSProtocol](https://github.com/EasyDarwin/EasyDSSProtocol)，建议目录结构配置为：
 <pre>
-./EasyDarwin/CMS/
-./EasyDSSProtocol/
-./EasyCamera/src/
+../Github
+  ./EasyDarwin/CMS/
+  ./EasyDSSProtocol/
+  ./EasyCamera/
 </pre>
 
 ## 正在进行开发的: ##
