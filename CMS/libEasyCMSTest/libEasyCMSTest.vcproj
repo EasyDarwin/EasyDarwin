@@ -161,6 +161,7 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{ADAAE13E-994E-4DCB-9B32-C3E93DAE9892}"
+			RelativePathToProject=".\libEasyCMS.vcproj"
 		/>
 	</References>
 	<Files>
@@ -197,6 +198,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\easycamera.ini"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
