@@ -58,7 +58,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib ../Bin/libEasyCMS.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib ../Bin/libEasyCMSd.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
