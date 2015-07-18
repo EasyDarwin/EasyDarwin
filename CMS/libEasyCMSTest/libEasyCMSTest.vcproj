@@ -59,6 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib ../Bin/libEasyCMSd.lib"
+				OutputFile="..\Bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
