@@ -36,7 +36,7 @@
 #include "OSHeaders.h"
 #include "OSThread.h"
 #include "MyAssert.h"
-#include <string>
+
 //
 // You have to create a window to get socket events? What's up with that?
 static HWND sMsgWindow = NULL;
@@ -114,21 +114,16 @@ int select_waitevent(struct eventreq *req, void* /*onlyForMacOSX*/)
         theWndClass.hCursor = NULL;
         theWndClass.hbrBackground = NULL;
         theWndClass.lpszMenuName = NULL;
-#ifdef LIB_EASY_CMS
-		const char* sName =  "libEasyCMSServerWindow";
-#else
-       const char* sName =  "EasyDarwinServerWindow";
-#endif
-        theWndClass.lpszClassName = sName;
-		theWndClass.hIconSm = NULL;
+        theWndClass.lpszClassName = "EasyDarwinServerWindow";
+        theWndClass.hIconSm = NULL;
         
         ATOM theWndAtom = ::RegisterClassEx(&theWndClass);
         Assert(theWndAtom != NULL);
         if (theWndAtom == NULL)
             ::exit(-1); // Poor error recovery, but this should never happen.
                 
-        sMsgWindow = ::CreateWindow(    sName,  // Window class name
-                                        sName,  // Window title bar
+        sMsgWindow = ::CreateWindow(    "EasyDarwinServerWindow",  // Window class name
+                                        "EasyDarwinServerWindow",  // Window title bar
                                         WS_POPUP,   // Window style ( a popup doesn't need a parent )
                                         0,          // x pos
                                         0,          // y pos
