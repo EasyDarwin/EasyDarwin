@@ -1,0 +1,13 @@
+{
+    "EasyDarwin": {
+        "Header": {
+            "Version": "1",
+            "TerminalType": "Camera",
+            "CSeq": "1"
+        },
+        "Body": {
+            "SerialNumber": "abcdefg",
+            "DssIP": "dss.com"
+        }
+    }
+}
