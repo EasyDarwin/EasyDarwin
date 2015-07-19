@@ -249,4 +249,3 @@ enum EasyDSSTerminalType
 */
     
 #endif	/* EASYDSS_PROTOCOL_DEF_H */
-

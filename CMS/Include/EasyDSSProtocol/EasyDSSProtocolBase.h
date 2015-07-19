@@ -108,4 +108,3 @@ private:
 
 }}//namespace
 #endif	/* EASYDSS_PROTOCOL_BASE_H */
-
