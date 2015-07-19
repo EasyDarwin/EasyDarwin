@@ -33,5 +33,4 @@ _ReSharper*/
 *.exp
 /CMS/build/
 /CMS/dist/
-[Bb]oost*/
 [Ll]ogs*/
