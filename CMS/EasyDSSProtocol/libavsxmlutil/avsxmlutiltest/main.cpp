@@ -12,7 +12,7 @@
  */
 
 #include <cstdlib>
-#include "../../include/EasyDSSProtocol/AVSXmlUtil.h"
+#include "../../../include/EasyDSSProtocol/AVSXmlUtil.h"
 #include <iostream>
 
 using namespace std;
@@ -148,17 +148,27 @@ void testRead()
 
 void testWrite()
 {
-	AVSXmlUtil  EasyDarwin, header, body;
+	AVSXmlUtil  EasyDarwin, header, body, device;
 	header.SetFloatValue("Version", 1.0);
 	header.SetStringValue("TerminalType", "Camera");
 	header.SetIntValue("CSeq", 1);
 
-	body.SetStringValue("SerialNumber", "abcdefg");
-	body.SetStringValue("DssIP", "dss.com");
+	device.SetStringValue("SerialNumber", "abcdefg");
+	device.SetStringValue("DssIP", "dss.com");
 	//body.add
 	EasyDarwin.AddChild("EasyDarwin","Header", header);
-	EasyDarwin.AddChild("EasyDarwin", "Body", body);
+	
+	AVSXmlUtil arr;
 
+	
+	for(int i = 0; i < 3; i++)
+	{
+		arr.AddArray("", device);
+	}
+
+	body.Add("Devices", arr);
+	EasyDarwin.AddChild("EasyDarwin","Body", body);
+	
 	string filename = "easydarwin.json";
 	bool ret =EasyDarwin.Write(filename, true);
 

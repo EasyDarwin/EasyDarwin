@@ -136,3 +136,40 @@ void ProtocolTest::TestRegisterReq()
 	//////
 
 }
+
+void ProtocolTest::TestDeviceListRsp()
+{
+	EasyDarwinDeviceListRsp req;
+	req.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
+	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
+	req.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+	req.SetBodyValue("DeviceCount", "5");
+	char n[10];
+	for(int i = 0; i < 5; i++)
+	{
+		sprintf(n, "%02d", i + 1);
+		EasyDarwinDevice device;
+		device.DeviceName = string("device") + n;
+		device.DeviceSerial = string("serial") + n;
+		req.AddDevice(device);
+	}
+
+	string msg = req.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	EasyDarwinDeviceListRsp parse(msg.c_str());
+	
+	cout << "header.version = " << parse.GetHeaderValue(EASYDSS_TAG_VERSION) << endl;
+	int count = parse.StartGetDevice();
+	cout << "body.device_count = " << parse.GetBodyValue("DeviceCount") << endl;
+	EasyDarwinDevice device;
+	
+	while(parse.GetNextDevice(device))
+	{
+		cout << device.DeviceName << "," << device.DeviceSerial << endl;
+	}
+
+
+}
+

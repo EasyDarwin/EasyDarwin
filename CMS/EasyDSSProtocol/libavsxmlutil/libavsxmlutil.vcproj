@@ -180,6 +180,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath="..\..\Include\EasyDSSProtocol\AVSXmlUtil.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -132,7 +132,9 @@
 #define MSG_CMS_DEV_STREAM_STOP_RSP							0xe006
 #define MSG_NGX_CMS_NEED_STREAM_REQ							0x0007
 #define MSG_NGX_CMS_NEED_STREAM_RSP							0xe008
-#define MSG_CMS_DEVICE_LIST									0xe009
+#define MSG_CLI_CMS_DEVICE_LIST_REQ							0x0009
+#define MSG_CLI_CMS_DEVICE_LIST_RSP							0xe009
+
 /*!
 \}
 */

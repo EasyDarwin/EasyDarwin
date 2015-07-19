@@ -35,7 +35,31 @@ public:
 	virtual ~EasyDarwinRegisterRsp(){}
 };
 
+class EasyDarwinDevice
+{
+public:
+	EasyDarwinDevice(){}
+	~EasyDarwinDevice(){}
 
+public:
+	std::string DeviceSerial;
+	std::string DeviceName;
+
+};
+
+class EASYDSS_API EasyDarwinDeviceListRsp : public EasyDSSProtocol
+{
+public:
+	EasyDarwinDeviceListRsp();
+	EasyDarwinDeviceListRsp(const char* msg);
+	virtual ~EasyDarwinDeviceListRsp(){}
+
+public:
+	bool AddDevice(EasyDarwinDevice &device);
+	int StartGetDevice();
+	bool GetNextDevice(EasyDarwinDevice &device);
+
+};
 
 }}//namespace
 #endif

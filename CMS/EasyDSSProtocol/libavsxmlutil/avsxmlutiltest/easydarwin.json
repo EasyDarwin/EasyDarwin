@@ -6,8 +6,20 @@
             "CSeq": "1"
         },
         "Body": {
-            "SerialNumber": "abcdefg",
-            "DssIP": "dss.com"
+            "Devices": [
+                {
+                    "SerialNumber": "abcdefg",
+                    "DssIP": "dss.com"
+                },
+                {
+                    "SerialNumber": "abcdefg",
+                    "DssIP": "dss.com"
+                },
+                {
+                    "SerialNumber": "abcdefg",
+                    "DssIP": "dss.com"
+                }
+            ]
         }
     }
 }
