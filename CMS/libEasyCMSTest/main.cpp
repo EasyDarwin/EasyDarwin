@@ -59,6 +59,21 @@ static void TerminateHandler(int sigNumber)
     exit(0);
 }
 
+void myEventCallback(EASYDARWIN_EVENT_TYPE eEvent, const char* pEventData, unsigned int iDataLen, void* pUserData)
+{
+	switch(eEvent)
+	{
+	case 	EASYDARWIN_EVENT_LOGIN:
+		printf("Device On Line!\n");
+		break;
+	case EASYDARWIN_EVENT_OFFLINE:
+		printf("Device Offline! \n");
+		break;
+	default:
+		break;
+	}
+}
+
 void LogCallback(const char* msg, void* pClient)
 {
     printf("\n%s\n", msg);
@@ -78,6 +93,8 @@ int run()
 	printf("device[%s]/v%s (Build/%s) is now running\n", sDeviceSerial.c_str(), kVersionString, kBuildString);
     
 	EasyDarwinCMSAPI api;
+
+	api.SetEventCallBack(myEventCallback, NULL);
     
     Easy_Error theErr = Easy_NoErr;
     do
