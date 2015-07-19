@@ -14,7 +14,7 @@
 namespace EasyDSS { namespace Protocol
 {
 
-class EasyDarwinRegisterReq : public EasyDSSProtocol
+class EASYDSS_API EasyDarwinRegisterReq : public EasyDSSProtocol
 {
 public:
 	EasyDarwinRegisterReq();
@@ -27,7 +27,7 @@ public:
 
 };
 
-class EasyDarwinRegisterRsp : public EasyDSSProtocol
+class EASYDSS_API EasyDarwinRegisterRsp : public EasyDSSProtocol
 {
 public:
 	EasyDarwinRegisterRsp();
@@ -39,4 +39,3 @@ public:
 
 }}//namespace
 #endif
-
