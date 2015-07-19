@@ -58,7 +58,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib EasyDSSProtocol.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\..\..\Bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\Bin\"
@@ -162,6 +162,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{14F332E3-1771-4908-8850-9A2581A4AED2}"
+			RelativePathToProject=".\EasyDSSProtocol_DLL.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

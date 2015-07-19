@@ -26,7 +26,9 @@ EasyDSSProtocol::MsgType EasyDSSProtocol::MsgTypeMap[] = {
 	MSG_CMS_DEV_STREAM_STOP_REQ,					"MSG_CMS_DEV_STREAM_STOP_REQ",
 	MSG_CMS_DEV_STREAM_STOP_RSP,					"MSG_CMS_DEV_STREAM_STOP_RSP",
 	MSG_NGX_CMS_NEED_STREAM_REQ,					"MSG_NGX_CMS_NEED_STREAM_REQ",
-	MSG_NGX_CMS_NEED_STREAM_RSP,					"MSG_NGX_CMS_NEED_STREAM_RSP"
+	MSG_NGX_CMS_NEED_STREAM_RSP,					"MSG_NGX_CMS_NEED_STREAM_RSP",
+	MSG_CLI_CMS_DEVICE_LIST_REQ,					"MSG_CLI_CMS_DEVICE_LIST_REQ",
+	MSG_CLI_CMS_DEVICE_LIST_RSP,					"MSG_CLI_CMS_DEVICE_LIST_RSP"
 };
 
 EasyDSSProtocol::MsgType EasyDSSProtocol::ErrorMap[] = {
@@ -333,6 +335,10 @@ std::string EasyDSSProtocol::GetMsg()
 	root.AddChild(EASYDSS_TAG_ROOT, EASYDSS_TAG_HEADER, header);
 	if(!body.IsEmpty())
 	{
+		if(!devices.IsEmpty())
+		{
+			body.Add("Devices", devices);
+		}
 		root.AddChild(EASYDSS_TAG_ROOT, EASYDSS_TAG_BODY, body);
 	}
 	root.Write(msg);

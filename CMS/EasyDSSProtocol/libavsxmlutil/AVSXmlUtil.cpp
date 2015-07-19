@@ -516,6 +516,25 @@ bool AVSXmlUtil::AddChild(std::string sXmlParentTag, std::string sChildName, AVS
     return true;
 }
 
+bool AVSXmlUtil::AddArray(std::string sXmlParentTag, AVSXmlUtil &arry)
+{
+	try
+    {
+        ptree *pt = (ptree*) GetChildCreateNewIfNil(sXmlParentTag);
+
+        ptree &pt_child = *((ptree*) arry.GetXmlObject());
+       
+		pt->push_back(std::make_pair("", pt_child));
+    }
+    catch (std::exception &e)
+    {
+        printf("[%s]AddArray [%s] error: %s\n", AVSXmlUtil::MyName(), sXmlParentTag.c_str(), e.what());
+        return false;
+    }
+
+    return true;
+}
+
 bool AVSXmlUtil::Add(std::string sXmlParentTag, AVSXmlUtil& child, AVSXmlAttributes* pAttrs)
 {
     try

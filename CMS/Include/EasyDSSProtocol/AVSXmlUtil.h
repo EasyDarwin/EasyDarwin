@@ -111,6 +111,7 @@ public:
 
 	bool AddChild(std::string sXmlParentTag, std::string sChildName, AVSXmlUtil &child, AVSXmlAttributes *pAttrs = NULL);
     bool Add(std::string sXmlParentTag, AVSXmlUtil &child, AVSXmlAttributes *pAttrs = NULL);
+	bool AddArray(std::string sXmlParentTag, AVSXmlUtil &arry);
     
 public:
 	AVSXmlObject GetXmlObject() const; 

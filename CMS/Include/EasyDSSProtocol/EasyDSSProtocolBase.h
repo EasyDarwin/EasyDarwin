@@ -91,6 +91,8 @@ protected:
     AVSXmlUtil root;	
 	AVSXmlUtil header;
 	AVSXmlUtil body;
+	AVSXmlUtil devices;
+	AVSXmlList device_list;
 
 	std::string json;
 private:	

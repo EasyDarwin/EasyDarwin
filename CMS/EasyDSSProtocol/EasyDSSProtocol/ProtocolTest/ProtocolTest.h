@@ -22,6 +22,8 @@ public:
     //void TestCreateSessionAck();
 	void TestRegisterReq();
 
+	void TestDeviceListRsp();
+
 private:
     void PrintMsg(const char *msg);
 };

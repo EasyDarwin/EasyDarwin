@@ -47,5 +47,72 @@ EasyDarwinRegisterRsp::EasyDarwinRegisterRsp(const char* msg)
 
 }
 
+EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp()
+: EasyDSSProtocol(MSG_CLI_CMS_DEVICE_LIST_RSP)
+{
+}
+
+EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char* msg)
+: EasyDSSProtocol(msg, MSG_CLI_CMS_DEVICE_LIST_RSP)
+{
+}
+
+bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
+{
+	AVSXmlUtil device_;
+	device_.SetStringValue("DeviceSerial", device.DeviceSerial.c_str());
+	device_.SetStringValue("DeviceName", device.DeviceName.c_str());
+	return devices.AddArray("", device_);
+}
+
+int EasyDarwinDeviceListRsp::StartGetDevice()
+{
+	device_list.clear();
+    AVSXmlUtil xml;
+	if (!xml.Read(json))
+	{
+		printf("AVSXmlUtil read xml errror\n");
+	}
+
+	AVSXmlObject obj = xml.GetChild("EasyDarwin");
+	if (obj == NULL)
+	{
+		printf("not found EasyDarwin\n");
+		return 0;
+	}
+
+	AVSXmlUtil easydarwin(obj);
+
+	obj = easydarwin.GetChild("Body");
+	if (obj == NULL)
+	{
+		printf("not found Header\n");
+		return 0;
+	}
+	AVSXmlUtil body_(obj);
+	
+	AVSXmlUtil device_ = body_.GetChild("Devices");
+
+	device_.GetAllChild("", "", device_list);
+	
+    return device_list.size();   
+}
+
+bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
+{
+	 if(device_list.empty())
+    {
+        return false;
+    }
+    
+    AVSXmlUtil device_ = device_list.front();
+    
+	device_.GetValueAsString("DeviceSerial", device.DeviceSerial);    
+	device_.GetValueAsString("DeviceName", device.DeviceName);
+	device_list.pop_front();   
+
+    return true;
+}
+
 }}//namespace
 
