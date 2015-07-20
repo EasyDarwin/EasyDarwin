@@ -263,10 +263,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\SafeStdLib\InternalStdLib.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\OSMemoryLib\OSMemory.cpp"
 				>
 			</File>
@@ -325,10 +321,6 @@
 			<Filter
 				Name="Core"
 				>
-				<File
-					RelativePath="..\Server.tproj\BaseRequestInterface.cpp"
-					>
-				</File>
 				<File
 					RelativePath="..\Server.tproj\BaseRequestStream.cpp"
 					>
@@ -395,10 +387,6 @@
 				</File>
 				<File
 					RelativePath="..\Server.tproj\QTSSSocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSSUserProfile.cpp"
 					>
 				</File>
 				<File

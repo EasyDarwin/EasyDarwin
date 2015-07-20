@@ -25,7 +25,7 @@
     #include <crypt.h>
 #endif
 
-static StrPtrLen	sServiceStr("EasyDariwn CMSServer");
+static StrPtrLen	sServiceStr("EasyDariwn_CMS");
 
 CServiceSession::CServiceSession( )
 : BaseSessionInterface(),

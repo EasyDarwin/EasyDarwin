@@ -40,7 +40,7 @@
 #include "QTSSDictionary.h"
 #include "QTSSStream.h"
 #include "OSMemory.h"
-#include "BaseRequestInterface.h"
+//#include "BaseRequestInterface.h"
 #include "BaseSessionInterface.h"
 #include "OS.h"
 #include "EventContext.h"
@@ -534,7 +534,7 @@ QTSS_Error QTSSCallbacks::QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef)
     if (inRef == NULL)
         return QTSS_BadArgument;
         
-    ((BaseRequestInterface*)inRef)->SendHeader();
+    //((BaseRequestInterface*)inRef)->SendHeader();
     return QTSS_NoErr;
 }
 
@@ -548,8 +548,6 @@ QTSS_Error QTSSCallbacks::QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef,
     if (inHeader >= qtssNumHeaders)
         return QTSS_BadArgument;
     
-    StrPtrLen theValue(inValue, inValueLen);
-    ((BaseRequestInterface*)inRef)->AppendHeader(inHeader, &theValue);
     return QTSS_NoErr;
 }
 
@@ -791,164 +789,12 @@ QTSS_Error  QTSSCallbacks::QTSS_Authenticate(const char* inAuthUserName, const c
     if(inAuthScheme == qtssAuthNone)
         return QTSS_BadArgument;
 
-    // First create a BaseRequestInterface object 
-    // There is no session attached to it, so just pass in NULL for the RTSPSession
-    BaseRequestInterface *request =  (BaseRequestInterface *) ioAuthRequestObject;
-    // Set all the attributes required by the authentication module, using the input values
-    (void) request->SetValue(qtssRTSPReqUserName, 0,  inAuthUserName , ::strlen(inAuthUserName), QTSSDictionary::kDontObeyReadOnly);
-    (void) request->SetValue(qtssRTSPReqLocalPath, 0,  inAuthResourceLocalPath , ::strlen(inAuthResourceLocalPath), QTSSDictionary::kDontObeyReadOnly);
-    (void) request->SetValue(qtssRTSPReqRootDir, 0,  inAuthMoviesDir , ::strlen(inAuthMoviesDir), QTSSDictionary::kNoFlags);
-    (void) request->SetValue(qtssRTSPReqAction, 0,  (const void *)&inAuthRequestAction , sizeof(QTSS_ActionFlags), QTSSDictionary::kNoFlags);
-    (void) request->SetValue(qtssRTSPReqAuthScheme, 0,  (const void *)&inAuthScheme , sizeof(QTSS_AuthScheme), QTSSDictionary::kDontObeyReadOnly);
-    QTSSUserProfile *profile = request->GetUserProfile();
-    (void) profile->SetValue(qtssUserName, 0, inAuthUserName, ::strlen(inAuthUserName), QTSSDictionary::kDontObeyReadOnly);
-    
-    
-    // Because this is a role being executed from inside a callback, we need to
-    // make sure that QTSS_RequestEvent will not work.
-    Task* curTask = NULL;
-    QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
-    if (OSThread::GetCurrent() != NULL)
-        theState = (QTSS_ModuleState*)OSThread::GetCurrent()->GetThreadData();
-        
-    if (theState != NULL)
-        curTask = theState->curTask;
-    
-    // Setup the authentication param block
-    QTSS_RoleParams theAuthenticationParams;
-    theAuthenticationParams.rtspAthnParams.inRTSPRequest = request;
-            
-    QTSS_Error theErr = QTSS_RequestFailed;
-    
-    UInt32 x = 0;
-    UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPAthnRole);
-    QTSSModule* theModulePtr = NULL;
-    Bool16 allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
-    Bool16 allowed = allowedDefault; //server pref?
-    Bool16 hasUser = false; 
-    Bool16 handled = false;
-    
-    
-    // Call all the modules that are registered for the RTSP Authorize Role 
-    for ( ; x < numModules; x++)
-    {
-        request->SetAllowed(allowedDefault);  
-        request->SetHasUser(false);
-        request->SetAuthHandled(false);
-    
-        debug_printf(" QTSSCallbacks::QTSS_Authenticate calling module module = %lu numModules=%lu\n", x,numModules);
-        theModulePtr = QTSServerInterface::GetModule(QTSSModule::kRTSPAthnRole, x);
-        theErr =  QTSS_NoErr;
-        if (theModulePtr)
-        {    
-            theErr = theModulePtr->CallDispatch(QTSS_RTSPAuthenticate_Role, &theAuthenticationParams);
-            debug_printf(" QTSSCallbacks::QTSS_Authorize calling module module = %lu numModules=%lu ModuleError=%ld\n", x,numModules, theErr);
-        }
-        else
-        {   
-            debug_printf(" QTSSCallbacks::QTSS_Authorize calling module module = %lu is NULL! numModules=%lu\n", x,numModules);
-            continue;
-        }
-        allowed = request->GetAllowed();
-        hasUser = request->GetHasUser();
-        handled = request->GetAuthHandled();
-        debug_printf("QTSSCallbacks::QTSS_Authenticate allowedDefault =%d allowed= %d hasUser = %d handled=%d \n",allowedDefault, allowed,hasUser, handled);
-      
-                  
-        if (hasUser || handled ) //See RTSPSession.cpp::Run state=kAuthenticatingRequest
-        {   
-            debug_printf(" QTSSCallbacks::QTSS_Authenticate skipping other modules fCurrentModule = %lu numModules=%lu\n", x,numModules);
-            break;
-        }
-    }
-
-    
-    // Reset the curTask to what it was before this role started
-    if (theState != NULL)
-        theState->curTask = curTask;
-
-    return theErr;
+    return QTSS_NoErr;
 }
 
 QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
-{
-    BaseRequestInterface* request = (BaseRequestInterface *) inAuthRequestObject;
-    if (request == NULL)
-        return QTSS_BadArgument;
-            
-    // Because this is a role being executed from inside a callback, we need to
-    // make sure that QTSS_RequestEvent will not work.
-    Task* curTask = NULL;
-    QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
-    if (OSThread::GetCurrent() != NULL)
-        theState = (QTSS_ModuleState*)OSThread::GetCurrent()->GetThreadData();
-        
-    if (theState != NULL)
-        curTask = theState->curTask;
-        
-    QTSS_RoleParams theParams;
-    theParams.rtspRequestParams.inRTSPSession = NULL;
-    theParams.rtspRequestParams.inRTSPRequest = request;
-    theParams.rtspRequestParams.inClientSession = NULL;
-
-    QTSS_Error theErr = QTSS_RequestFailed;
-    UInt32 x = 0;
-    UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPAuthRole);
-    QTSSModule* theModulePtr = NULL;
-    Bool16 		allowedDefault =  QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
-    *outAuthUserAllowed = allowedDefault;
-    Bool16      allowed = allowedDefault; //server pref?
-    Bool16      hasUser = false; 
-    Bool16      handled = false;
-    
-    
-    // Call all the modules that are registered for the RTSP Authorize Role 
-    
-    for ( ; x < numModules; x++)
-    {
-        request->SetAllowed(true);  
-        request->SetHasUser(false);
-        request->SetAuthHandled(false);
-    
-        debug_printf(" QTSSCallbacks::QTSS_Authorize calling module module = %lu numModules=%lu\n", x,numModules);
-        theModulePtr = QTSServerInterface::GetModule(QTSSModule::kRTSPAuthRole, x);
-        theErr =  QTSS_NoErr;
-        if (theModulePtr)
-        {       
-            if (__QTSSCALLBACKS_DEBUG__)
-                theModulePtr->GetValue(qtssModName)->PrintStr("QTSSModule::CallDispatch ENTER module=", "\n");
-           
-            theErr = theModulePtr->CallDispatch(QTSS_RTSPAuthorize_Role, &theParams);
-            debug_printf(" QTSSCallbacks::QTSS_Authorize calling module module = %lu numModules=%lu ModuleError=%ld\n", x,numModules, theErr);
-        }
-        else
-        {    debug_printf(" QTSSCallbacks::QTSS_Authorize calling module module = %lu is NULL! numModules=%lu\n", x,numModules);
-             continue;
-        }
-
-        allowed = request->GetAllowed();
-        hasUser = request->GetHasUser();
-        handled = request->GetAuthHandled();
-        debug_printf("QTSSCallbacks::QTSS_Authorize allowedDefault =%d allowed= %d hasUser = %d handled=%d \n",allowedDefault, allowed,hasUser, handled);
-    
-        *outAuthUserAllowed = allowed;    
-        //notes:
-        //if (allowed && !handled)  break; //old module               
-        //if (!allowed && handled) /new module handled the request but not authorized keep trying
-        //if (allowed && handled) //new module allowed but keep trying in case someone denies.
-            
-        if (!allowed && !handled)  //old module break on !allowed
-        {   
-            debug_printf("RTSPSession.cpp::Run(kAuthorizingRequest)  skipping other modules fCurrentModule = %lu numModules=%lu\n", x,numModules);
-            break;
-        }
-    }
-    
-    // outAuthRealm is set to the realm that is given by the module that has denied authentication
-    StrPtrLen* realm = request->GetValue(qtssRTSPReqURLRealm);
-    *outAuthRealm = realm->GetAsCString();
-    
-    return theErr;
+{   
+    return QTSS_NoErr;
 }
 
 void QTSSCallbacks::QTSS_LockStdLib()

@@ -69,7 +69,6 @@
 #endif
 
 //具体上层协议类
-#include "BaseRequestInterface.h"
 #include "BaseSessionInterface.h"
 #include "ServiceSession.h"
 #include "QTSSFile.h"
@@ -136,10 +135,8 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     QTSSModule::Initialize();
     QTSServerPrefs::Initialize();
     QTSSMessages::Initialize();
-    BaseRequestInterface::Initialize();
     BaseSessionInterface::Initialize();
     QTSSFile::Initialize();
-    QTSSUserProfile::Initialize();
     
     //
     // STUB SERVER INITIALIZATION
