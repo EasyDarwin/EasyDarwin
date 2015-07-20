@@ -116,5 +116,41 @@ bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
     return true;
 }
 
+EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq()
+: EasyDSSProtocol(MSG_DEV_CMS_SNAP_UPDATE_REQ)
+{
+}
+
+EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq(const char *msg)
+: EasyDSSProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_REQ)
+{
+}
+
+
+void EasyDarwinDeviceSnapUpdateReq::SetImageData(const char* sImageBase64Data, size_t iBase64DataSize)
+{
+	//std::string data;
+	//data.assign(sImageBase64Data, iBase64DataSize);
+	SetBodyValue("Img", sImageBase64Data);
+}
+
+bool EasyDarwinDeviceSnapUpdateReq::GetImageData(std::string &sImageBase64Data)
+{
+	sImageBase64Data.clear();
+	sImageBase64Data = GetBodyValue("Img");
+	return !sImageBase64Data.empty();
+}
+
+EasyDarwinDeviceSnapUpdateRsp::EasyDarwinDeviceSnapUpdateRsp()
+: EasyDSSProtocol(MSG_DEV_CMS_SNAP_UPDATE_RSP)
+{
+}
+
+EasyDarwinDeviceSnapUpdateRsp::EasyDarwinDeviceSnapUpdateRsp(const char *msg)
+: EasyDSSProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_RSP)
+{
+}
+
+
 }}//namespace
 

@@ -24,6 +24,8 @@ public:
 
 	void TestDeviceListRsp();
 
+	void TestDeviceSnapReq();
+
 private:
     void PrintMsg(const char *msg);
 };
