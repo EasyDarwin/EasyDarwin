@@ -230,7 +230,7 @@ SInt64 CServiceSession::Run()
 				}
                 
                 //每一步都检测响应报文是否已完成，完成则直接进行回复响应
-                if (/*fRequest->HasResponseBeenSent()*/fOutputStream.GetBytesWritten() > 0)
+                if (fOutputStream.GetBytesWritten() > 0)
                 {
                     fState = kSendingResponse;
                     break;
@@ -252,8 +252,10 @@ SInt64 CServiceSession::Run()
             {
                 if (fOutputStream.GetBytesWritten() == 0)
                 {
-					//如果到这里，响应报文还没有形成，返回500 Server Internal Error
-					////QTSSModuleUtils::SendErrorResponse(fRequest, qtssServerInternal, qtssMsgNoModuleForRequest);
+					// 响应报文还没有形成
+					//QTSSModuleUtils::SendErrorResponse(fRequest, qtssServerInternal, qtssMsgNoModuleForRequest);
+					fState = kCleaningUp;
+					break;
                 }
 
                 fState = kSendingResponse;
@@ -448,10 +450,20 @@ QTSS_Error CServiceSession::SetupRequest()
     
 	OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
 
-
 	//报文处理，不进入队列
 	EasyDSS::Protocol::EasyDSSProtocol protocol(theRequestBody);
 	int nNetMsg = protocol.GetMessageType();
+
+//#define MSG_DEV_CMS_REGISTER_REQ
+//#define MSG_DEV_CMS_REGISTER_RSP
+//#define MSG_CMS_DEV_STREAM_START_REQ
+//#define MSG_CMS_DEV_STREAM_START_RSP
+//#define MSG_CMS_DEV_STREAM_STOP_REQ
+//#define MSG_CMS_DEV_STREAM_STOP_RSP
+//#define MSG_NGX_CMS_NEED_STREAM_REQ
+//#define MSG_NGX_CMS_NEED_STREAM_RSP
+//#define MSG_CLI_CMS_DEVICE_LIST_REQ
+//#define MSG_CLI_CMS_DEVICE_LIST_RSP
 
 	switch (nNetMsg)
 	{
@@ -460,6 +472,12 @@ QTSS_Error CServiceSession::SetupRequest()
 			break;
 		case MSG_NGX_CMS_NEED_STREAM_REQ:
 			ExecNetMsgNgxStreamReq(theRequestBody);
+			break;
+		case MSG_CMS_DEV_STREAM_START_RSP:
+			break;
+		case MSG_CMS_DEV_STREAM_STOP_RSP:
+			break;
+		case MSG_CLI_CMS_DEVICE_LIST_REQ:
 			break;
 		default:
 			ExecNetMsgDefaultReqHandler(theRequestBody);
