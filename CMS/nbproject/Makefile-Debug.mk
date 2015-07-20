@@ -46,7 +46,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLParser.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o \
-	${OBJECTDIR}/Server.tproj/BaseRequestInterface.o \
 	${OBJECTDIR}/Server.tproj/BaseRequestStream.o \
 	${OBJECTDIR}/Server.tproj/BaseResponseStream.o \
 	${OBJECTDIR}/Server.tproj/BaseSessionInterface.o \
@@ -61,7 +60,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Server.tproj/QTSSModule.o \
 	${OBJECTDIR}/Server.tproj/QTSSPrefs.o \
 	${OBJECTDIR}/Server.tproj/QTSSSocket.o \
-	${OBJECTDIR}/Server.tproj/QTSSUserProfile.o \
 	${OBJECTDIR}/Server.tproj/QTSServer.o \
 	${OBJECTDIR}/Server.tproj/QTSServerInterface.o \
 	${OBJECTDIR}/Server.tproj/QTSServerPrefs.o \
@@ -150,11 +148,6 @@ ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o: PrefsSourceLib/XMLPrefsParser.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
 
-${OBJECTDIR}/Server.tproj/BaseRequestInterface.o: Server.tproj/BaseRequestInterface.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/BaseRequestInterface.o Server.tproj/BaseRequestInterface.cpp
-
 ${OBJECTDIR}/Server.tproj/BaseRequestStream.o: Server.tproj/BaseRequestStream.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
@@ -224,11 +217,6 @@ ${OBJECTDIR}/Server.tproj/QTSSSocket.o: Server.tproj/QTSSSocket.cpp
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSSocket.o Server.tproj/QTSSSocket.cpp
-
-${OBJECTDIR}/Server.tproj/QTSSUserProfile.o: Server.tproj/QTSSUserProfile.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSUserProfile.o Server.tproj/QTSSUserProfile.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSServer.o: Server.tproj/QTSServer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj

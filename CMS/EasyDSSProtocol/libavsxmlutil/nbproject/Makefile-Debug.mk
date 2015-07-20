@@ -67,7 +67,7 @@ ${AVS_ROOT}/lib/libavsxmlutil.a: ${OBJECTFILES}
 ${OBJECTDIR}/AVSXmlUtil.o: AVSXmlUtil.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../include/EasyDSSProtocol -I${AVS_ROOT}/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AVSXmlUtil.o AVSXmlUtil.cpp
+	$(COMPILE.cc) -g -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AVSXmlUtil.o AVSXmlUtil.cpp
 
 # Subprojects
 .build-subprojects:

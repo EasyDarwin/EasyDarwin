@@ -67,7 +67,7 @@ ${CND_CONF}/libavsxmlutil.a: ${OBJECTFILES}
 ${OBJECTDIR}/AVSXmlUtil.o: AVSXmlUtil.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AVSXmlUtil.o AVSXmlUtil.cpp
+	$(COMPILE.cc) -O2 -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AVSXmlUtil.o AVSXmlUtil.cpp
 
 # Subprojects
 .build-subprojects:
