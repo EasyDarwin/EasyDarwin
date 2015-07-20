@@ -69,17 +69,17 @@ ${AVS_ROOT}/lib/libEasyDSSProtocol.a: ${OBJECTFILES}
 ${OBJECTDIR}/EasyDSSProtocol.o: EasyDSSProtocol.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../include/EasyDSSProtocol -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSProtocol.o EasyDSSProtocol.cpp
+	$(COMPILE.cc) -g -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSProtocol.o EasyDSSProtocol.cpp
 
 ${OBJECTDIR}/EasyDSSProtocolBase.o: EasyDSSProtocolBase.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../include/EasyDSSProtocol -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSProtocolBase.o EasyDSSProtocolBase.cpp
+	$(COMPILE.cc) -g -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSProtocolBase.o EasyDSSProtocolBase.cpp
 
 ${OBJECTDIR}/EasyDSSUtil.o: EasyDSSUtil.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../include/EasyDSSProtocol -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSUtil.o EasyDSSUtil.cpp
+	$(COMPILE.cc) -g -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSUtil.o EasyDSSUtil.cpp
 
 # Subprojects
 .build-subprojects:

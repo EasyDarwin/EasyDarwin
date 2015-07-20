@@ -37,7 +37,8 @@
       <compileType>
         <ccTool>
           <incDir>
-            <pElem>../include/EasyDSSProtocol</pElem>
+            <pElem>../../Include/EasyDSSProtocol</pElem>
+            <pElem>../Include</pElem>
           </incDir>
         </ccTool>
         <archiverTool>
@@ -84,6 +85,7 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
+            <pElem>../../Include/EasyDSSProtocol</pElem>
             <pElem>../Include</pElem>
           </incDir>
           <commandLine>-fPIC</commandLine>

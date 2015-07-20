@@ -51,8 +51,6 @@
     <logicalFolder name="Server.tproj"
                    displayName="Server.tproj"
                    projectFiles="true">
-      <itemPath>Server.tproj/BaseRequestInterface.cpp</itemPath>
-      <itemPath>Server.tproj/BaseRequestInterface.h</itemPath>
       <itemPath>Server.tproj/BaseRequestStream.cpp</itemPath>
       <itemPath>Server.tproj/BaseRequestStream.h</itemPath>
       <itemPath>Server.tproj/BaseResponseStream.cpp</itemPath>
@@ -82,8 +80,6 @@
       <itemPath>Server.tproj/QTSSSocket.cpp</itemPath>
       <itemPath>Server.tproj/QTSSSocket.h</itemPath>
       <itemPath>Server.tproj/QTSSStream.h</itemPath>
-      <itemPath>Server.tproj/QTSSUserProfile.cpp</itemPath>
-      <itemPath>Server.tproj/QTSSUserProfile.h</itemPath>
       <itemPath>Server.tproj/QTSServer.cpp</itemPath>
       <itemPath>Server.tproj/QTSServer.h</itemPath>
       <itemPath>Server.tproj/QTSServerInterface.cpp</itemPath>
@@ -225,16 +221,6 @@
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/BaseRequestInterface.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseRequestInterface.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Server.tproj/BaseRequestStream.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/BaseRequestStream.h" ex="false" tool="3" flavor2="0">
@@ -308,10 +294,6 @@
       </item>
       <item path="Server.tproj/QTSSStream.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSUserProfile.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/QTSSUserProfile.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServer.h" ex="false" tool="3" flavor2="0">
@@ -363,7 +345,7 @@
             <pElem>../HTTPUtilitiesLib</pElem>
             <pElem>../Include</pElem>
             <pElem>.</pElem>
-            <pElem>../../EasyDSSProtocol/Include</pElem>
+            <pElem>Include/EasyDSSProtocol</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -379,8 +361,8 @@
           <output>${CND_CONF}/cms</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/Release</pElem>
-            <pElem>../../EasyDSSProtocol/EasyDSSProtocol/Release</pElem>
-            <pElem>../../EasyDSSProtocol/libavsxmlutil/Release</pElem>
+            <pElem>EasyDSSProtocol/EasyDSSProtocol/Release</pElem>
+            <pElem>EasyDSSProtocol/libavsxmlutil/Release</pElem>
           </linkerAddLib>
           <commandLine>-ldl -lpthread -lCommonUtilitiesLib -lEasyDSSProtocol -lavsxmlutil</commandLine>
         </linkerTool>
@@ -455,16 +437,6 @@
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/BaseRequestInterface.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseRequestInterface.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Server.tproj/BaseRequestStream.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/BaseRequestStream.h" ex="false" tool="3" flavor2="0">
@@ -537,10 +509,6 @@
       <item path="Server.tproj/QTSSSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSStream.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/QTSSUserProfile.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/QTSSUserProfile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="0">
       </item>

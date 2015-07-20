@@ -8,7 +8,7 @@ else
 fi
 
 
-cd ../../EasyDSSProtocol/libavsxmlutil
+cd ../CMS/EasyDSSProtocol/libavsxmlutil
 if [ "$*" = "clean" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
 else
@@ -22,7 +22,7 @@ else
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
 fi
 
-cd ../../EasyDarwin/CMS
+cd ../../
 if [ "$*" = "clean" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
 else
