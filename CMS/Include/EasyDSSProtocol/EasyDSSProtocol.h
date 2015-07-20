@@ -44,7 +44,7 @@ public:
 public:
 	std::string DeviceSerial;
 	std::string DeviceName;
-
+	std::string DeviceSnap;
 };
 
 class EASYDSS_API EasyDarwinDeviceListRsp : public EasyDSSProtocol

@@ -151,6 +151,7 @@ void ProtocolTest::TestDeviceListRsp()
 		EasyDarwinDevice device;
 		device.DeviceName = string("device") + n;
 		device.DeviceSerial = string("serial") + n;
+		device.DeviceSnap = device.DeviceName+"_snap.jpg";
 		req.AddDevice(device);
 	}
 
@@ -167,7 +168,7 @@ void ProtocolTest::TestDeviceListRsp()
 	
 	while(parse.GetNextDevice(device))
 	{
-		cout << device.DeviceName << "," << device.DeviceSerial << endl;
+		cout << device.DeviceName << "," << device.DeviceSerial << ", " << device.DeviceSnap<<endl;
 	}
 
 
