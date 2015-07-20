@@ -59,8 +59,7 @@
 
 //Compile time modules
 #include "QTSSErrorLogModule.h"
-//#include "QTSSPosixFileSysModule.h"
-//#include "QTSSAccessModule.h"
+
 #if __MacOSX__
 #include "QTSSDSAuthModule.h"
 #endif
