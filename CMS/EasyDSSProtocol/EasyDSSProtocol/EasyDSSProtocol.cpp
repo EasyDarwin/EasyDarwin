@@ -62,6 +62,7 @@ bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
 	AVSXmlUtil device_;
 	device_.SetStringValue("DeviceSerial", device.DeviceSerial.c_str());
 	device_.SetStringValue("DeviceName", device.DeviceName.c_str());
+	device_.SetStringValue("DeviceSnap", device.DeviceSnap.c_str());
 	return devices.AddArray("", device_);
 }
 
@@ -109,6 +110,7 @@ bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
     
 	device_.GetValueAsString("DeviceSerial", device.DeviceSerial);    
 	device_.GetValueAsString("DeviceName", device.DeviceName);
+	device_.GetValueAsString("DeviceSnap", device.DeviceSnap);
 	device_list.pop_front();   
 
     return true;
