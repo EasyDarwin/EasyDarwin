@@ -174,3 +174,28 @@ void ProtocolTest::TestDeviceListRsp()
 
 }
 
+void ProtocolTest::TestDeviceSnapReq()
+{
+	EasyDarwinDeviceSnapUpdateReq req;
+	req.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
+	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
+	req.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+
+	req.SetBodyValue("Time", EasyDSSUtil::TimeT2String(EASYDSS_TIME_FORMAT_YYYYMMDDHHMMSS, EasyDSSUtil::NowTime()).c_str());
+	req.SetBodyValue("Img", "Base64ImageData===========");
+
+	string msg = req.GetMsg();
+	PrintMsg(msg.c_str());
+
+	EasyDarwinDeviceSnapUpdateReq parse(msg.c_str());
+	
+	//get image method 1
+	string image;
+	parse.GetImageData(image);
+
+	//get image method 2
+	string img = parse.GetBodyValue("Img");
+	cout << image << "\n\n" <<endl;
+
+	cout << img << endl;
+}

@@ -61,5 +61,25 @@ public:
 
 };
 
+class EASYDSS_API EasyDarwinDeviceSnapUpdateReq : public EasyDSSProtocol
+{
+public:
+	EasyDarwinDeviceSnapUpdateReq();
+	EasyDarwinDeviceSnapUpdateReq(const char *msg);
+	~EasyDarwinDeviceSnapUpdateReq(){}
+
+public:
+	void SetImageData(const char* sImageBase64Data, size_t iBase64DataSize);
+	bool GetImageData(std::string &sImageBase64Data);
+};
+
+class EASYDSS_API EasyDarwinDeviceSnapUpdateRsp : public EasyDSSProtocol
+{
+public:
+	EasyDarwinDeviceSnapUpdateRsp();
+	EasyDarwinDeviceSnapUpdateRsp(const char *msg);
+	~EasyDarwinDeviceSnapUpdateRsp(){}
+};
+
 }}//namespace
 #endif

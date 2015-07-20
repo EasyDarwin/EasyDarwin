@@ -20,6 +20,7 @@ int main(int argc, char** argv)
 	//test.TestEasyDSSSnapUpdateAck();
 	test.TestRegisterReq();
 	test.TestDeviceListRsp();
+	test.TestDeviceSnapReq();
 	getchar();
     return 0;
 }

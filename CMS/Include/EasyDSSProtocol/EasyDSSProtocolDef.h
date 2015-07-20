@@ -134,6 +134,8 @@
 #define MSG_NGX_CMS_NEED_STREAM_RSP							0xe008
 #define MSG_CLI_CMS_DEVICE_LIST_REQ							0x0009
 #define MSG_CLI_CMS_DEVICE_LIST_RSP							0xe009
+#define MSG_DEV_CMS_SNAP_UPDATE_REQ								0x0010
+#define MSG_DEV_CMS_SNAP_UPDATE_RSP								0xe010
 
 /*!
 \}
