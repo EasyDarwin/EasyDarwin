@@ -467,7 +467,7 @@ QTSS_Error CServiceSession::SetupRequest()
 
 	switch (nNetMsg)
 	{
-		case MSG_DEV_CMS_REGISTER_REQ:
+		case MSG_DEV_CMS_REGISTER_REQ://处理设备上线消息
 			ExecNetMsgDevRegisterReq(theRequestBody);
 			break;
 		case MSG_NGX_CMS_NEED_STREAM_REQ:
@@ -539,13 +539,14 @@ QTSS_Error CServiceSession::DumpRequestData()
     return theErr;
 }
 
+//
+//MSG_DEV_CMS_REGISTER_REQ消息处理
+//
 QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
-{		
-	//MSG_DEV_CMS_REGISTER_REQ设备注册消息解析
+{	
+	QTSS_Error theErr = QTSS_NoErr;		
+
 	EasyDSS::Protocol::EasyDarwinRegisterReq req(json);
-
-	QTSS_Error theErr = QTSS_NoErr;
-
 	do
 	{
 		if(fAuthenticated)
@@ -553,17 +554,24 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 			break;
 		}
 
-
 		//获取设备SN序列号
 		std::string strDeviceSN = req.GetSerialNumber();
+		std::string strDevicePWD = req.GetAuthCode();
 
 		//这里对错误报文没有进行Response回复，实际是需要进行处理的
-		if(strDeviceSN.length() <= 0) return QTSS_BadArgument;
-
-		printf("msg:MSG_DEV_CMS_REGISTER_REQ, Device %s\n", strDeviceSN.c_str());
+		if((strDeviceSN == NULL) || (strDeviceSN.length()<=0)) return QTSS_BadArgument;
 
 		//TODO:对设备SN和密码进行验证
-		//
+		/*	说明:开源项目不对设备的序列号和密码进行验证，用户可以根据自己的需求,
+			在这里进行将获取到的设备序列号和密码与用户的设备数据库表进行对比验证,
+			密码正确，继续往下继续；密码错误返回失败，断开连接；
+		*/
+		printf("MSG_DEV_CMS_REGISTER_REQ(%s:%s)\n", strDeviceSN.c_str(), strDevicePWD.c_str());
+		//if(myAuthenticFail)
+		//{
+		//	theErr = httpUnAuthorized;
+		//	break;
+		//}
 
 		//将设备列表维护
 		qtss_sprintf(fSerial,"%s", strDeviceSN.c_str());
@@ -575,7 +583,6 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 		fDevRef.Set( fDevSerialPtr, this);
 		//全局维护设备列表
 		OS_Error theErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(GetRef());
-		//printf("[line:%d]BaseSessionInterface::RegDevSession theErr = %d\n",__LINE__, theErr);
 		if(theErr == OS_NoErr)
 		{
 			//认证授权标识,当前Session就不需要再进行认证过程了
@@ -589,6 +596,7 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 		}
 	}while(0);
 
+	if(theErr != QTSS_NoErr) return theErr;
 
 	//进行MSG_DEV_CMS_REGISTER_RSP响应，构造HTTP Content内容
 	EasyDSS::Protocol::EasyDarwinRegisterRsp rsp;
