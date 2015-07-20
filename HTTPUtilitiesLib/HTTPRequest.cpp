@@ -264,11 +264,14 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
         return QTSS_BadArgument;
     }
 
+	if (fRequestPath != NULL)
+        delete [] fRequestPath; 
+
 	fRequestPath = NULL;
-    ////fRequestPath = NEW char[theBytesWritten + 1];
-    ////::memcpy(fRequestPath, relativeURIDecoded + 1, theBytesWritten); 
-    //////delete relativeURIDecoded;
-    ////fRequestPath[theBytesWritten] = '\0';
+    fRequestPath = NEW char[theBytesWritten + 1];
+    ::memcpy(fRequestPath, relativeURIDecoded + 1, theBytesWritten); 
+    //delete relativeURIDecoded;
+    fRequestPath[theBytesWritten] = '\0';
     return QTSS_NoErr;
 }
 
