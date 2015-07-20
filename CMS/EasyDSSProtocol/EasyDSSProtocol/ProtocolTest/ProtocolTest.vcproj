@@ -114,8 +114,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../Include/libEasyCMS/"
-				RuntimeLibrary="2"
+				AdditionalIncludeDirectories="../../../Include/EasyDSSProtocol;../include/"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -131,8 +131,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyCMS.lib"
-				AdditionalLibraryDirectories="../Bin/"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
