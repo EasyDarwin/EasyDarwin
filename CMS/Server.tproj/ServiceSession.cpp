@@ -559,7 +559,7 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 		std::string strDevicePWD = req.GetAuthCode();
 
 		//这里对错误报文没有进行Response回复，实际是需要进行处理的
-		if((strDeviceSN == NULL) || (strDeviceSN.length()<=0)) return QTSS_BadArgument;
+		if(strDeviceSN.length()<=0) return QTSS_BadArgument;
 
 		//TODO:对设备SN和密码进行验证
 		/*	说明:开源项目不对设备的序列号和密码进行验证，用户可以根据自己的需求,
@@ -635,6 +635,9 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 	return QTSS_NoErr;
 }
 
+//
+//MSG_NGX_CMS_NEED_STREAM_REQ消息处理
+//
 QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
@@ -646,16 +649,16 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 	std::string strDeviceSN = req.GetBodyValue(EASYDSS_TAG_DEVICE_SERIAL);
 
 	//这里对错误报文没有进行Response回复，实际是需要进行处理的
-	if(strDeviceSN.length() <= 0) return QTSS_BadArgument;
+	if(strDeviceSN.length()<=0) return QTSS_BadArgument;
 
-	printf("msg:MSG_NGX_CMS_NEED_STREAM_REQ, Device %s\n", strDeviceSN.c_str());
+	printf("MSG_NGX_CMS_NEED_STREAM_REQ(%s)\n", strDeviceSN.c_str());
 
 	OSRefTable* devMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRef* theDevRef = NULL;
 
 	do
 	{
-		//从设备列表Map中查找设备
+		//从设备列表MAP中查找设备
 		char strSerial[EASY_MAX_SERIAL_LENGTH] = { 0 };
 		qtss_sprintf(strSerial,"%s",strDeviceSN.c_str());
 
@@ -685,6 +688,7 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 		string buffer = streamingREQ.GetMsg();
 		//发送MSG_CMS_DEV_STREAM_START_REQ报文到设备
 		QTSS_SendHTTPPacket(theDevRef->GetObject(), (char*)buffer.c_str(), ::strlen(buffer.c_str()), false, false);
+
 	}while(0);
 	
 	//Device RefCount--
