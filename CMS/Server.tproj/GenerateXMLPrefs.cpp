@@ -80,43 +80,7 @@ static const PrefConversionInfo kPrefs[] =
     { "run_group_name",                         NULL,   qtssAttrDataTypeCharArray },
     { "append_source_addr_in_transport",        NULL,   qtssAttrDataTypeBool16 },
     { "redis_port",                           NULL,   qtssAttrDataTypeUInt16 },
-    
-    //{ "request_logging",                        "QTSSAccessLogModule",  qtssAttrDataTypeBool16 },
-    //{ "request_logfile_name",                   "QTSSAccessLogModule",  qtssAttrDataTypeCharArray },
-    //{ "request_logfile_dir",                    "QTSSAccessLogModule",  qtssAttrDataTypeCharArray },
-    //{ "request_logfile_size",                   "QTSSAccessLogModule",  qtssAttrDataTypeUInt32 },
-    //{ "request_logfile_interval",               "QTSSAccessLogModule",  qtssAttrDataTypeUInt32 },
 
-    //{ "history_update_interval",                "QTSSSvrControlModule", qtssAttrDataTypeUInt32 },
-
-    //{ "buffer_seconds",                         "QTSSFileModule",   qtssAttrDataTypeUInt32 },
-    //{ "sdp_url",                                "QTSSFileModule",   qtssAttrDataTypeCharArray },
-    //{ "admin_email",                            "QTSSFileModule",   qtssAttrDataTypeCharArray },
-    //{ "max_advance_send_time",                  "QTSSFileModule",   qtssAttrDataTypeUInt32 },
-
-    //{ "reflector_delay",                        "QTSSReflectorModule",  qtssAttrDataTypeUInt32 },
-    //{ "reflector_bucket_size",                  "QTSSReflectorModule",  qtssAttrDataTypeUInt32 },
-
-    //{ "web_stats_url",                          "QTSSWebStatsModule",   qtssAttrDataTypeCharArray },
-
-	//{ "loss_thin_tolerance",                    "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
-	//{ "num_losses_to_thin",                     "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
-	//{ "loss_thick_tolerance",                   "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
-	//{ "num_losses_to_thick",                    "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
-	//{ "num_worses_to_thin",                     "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
-	//{ "cms_addr",								"QTSSFlowControlModule",	qtssAttrDataTypeCharArray},
-	//{ "cms_port",								"QTSSFlowControlModule",	qtssAttrDataTypeUInt16},
-
-	//{ "relay_stats_url",                        "QTSSRelayModule",  qtssAttrDataTypeCharArray },
-	//{ "relay_prefs_file",                       "QTSSRelayModule",  qtssAttrDataTypeCharArray },
-
-	//{ "num_conns_per_ip_addr",                  "QTSSSpamDefenseModule",    qtssAttrDataTypeUInt32 },
-
-    { "modAccess_usersfilepath",                "QTSSAccessModule", qtssAttrDataTypeCharArray },
-    { "modAccess_groupsfilepath",               "QTSSAccessModule", qtssAttrDataTypeCharArray },
-    { "modAccess_qtaccessfilename",             "QTSSAccessModule", qtssAttrDataTypeCharArray },
-
-    //
     // This element will be used if the pref is something we don't know about.
     // Just have unknown prefs default to be server prefs with a type of char
     { NULL,                                     NULL,               qtssAttrDataTypeCharArray }
