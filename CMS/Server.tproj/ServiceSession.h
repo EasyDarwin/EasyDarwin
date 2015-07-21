@@ -42,6 +42,8 @@ class CServiceSession : public BaseSessionInterface
 		////发送HTTP响应报文
 		virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
 
+		char* GetDeviceSnap(){ return fDeviceSnap; };
+
     private: 
         SInt64 Run();
 
@@ -83,6 +85,8 @@ class CServiceSession : public BaseSessionInterface
 
 		//清空请求报文
         QTSS_Error DumpRequestData();
+
+		char* fDeviceSnap;
 
 };
 #endif // __SERVICESESSION_H__

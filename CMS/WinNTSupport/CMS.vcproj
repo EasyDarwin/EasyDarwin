@@ -407,10 +407,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\cms.xml"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
