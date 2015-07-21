@@ -384,6 +384,13 @@ QTSS_Error CServiceSession::SetupRequest()
     if (theErr != QTSS_NoErr)
         return QTSS_BadArgument;
 
+
+	if(::strcmp(fRequest->GetRequestPath(),"getdevicelist") == 0)
+	{
+		ExecNetMsgGetDeviceListReq();
+		return 0;
+	}
+
     QTSS_RTSPStatusCode statusCode = qtssSuccessOK;
     char *body = NULL;
     UInt32 bodySizeBytes = 0;
@@ -780,5 +787,66 @@ QTSS_Error CServiceSession::ExecNetMsgSnapUpdateReq(const char* json)
 	free(snapDecodedBuffer);
 
 	qtss_sprintf(fDeviceSnap, "%s%s/%s.jpg",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), fSerial, jpgFileName.c_str());
+	return QTSS_NoErr;
+}
+
+QTSS_Error CServiceSession::ExecNetMsgGetDeviceListReq()
+{
+	QTSS_Error theErr = QTSS_NoErr;
+
+	printf("Get Device List! \n");
+
+	OSRefTable* devMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
+	if(devMap->GetNumRefsInTable() == 0 )
+		return QTSS_NoErr;
+
+	EasyDarwinDeviceListRsp req;
+	req.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
+	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
+	req.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+	char count[16] = { 0 };
+	sprintf(count,"%d", devMap->GetNumRefsInTable());
+	req.SetBodyValue("DeviceCount", count );
+
+	OSRef* theDevRef = NULL;
+
+	OSMutexLocker locker(devMap->GetMutex());
+    for (OSRefHashTableIter theIter(devMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+    {
+        OSRef* theRef = theIter.GetCurrent();
+        CServiceSession* theSession = (CServiceSession*)theRef->GetObject();
+
+		EasyDarwinDevice device;
+		device.DeviceName = string(theSession->GetDeviceSerial());
+		device.DeviceSerial = string(theSession->GetDeviceSerial());
+		device.DeviceSnap = string(theSession->GetDeviceSnap());
+		req.AddDevice(device);
+    }   
+
+	string msg = req.GetMsg();
+
+	printf(msg.c_str());
+
+	StrPtrLen msgJson((char*)msg.c_str());
+
+	//构造响应报文(HTTP头)
+	HTTPRequest httpAck(&sServiceStr);
+	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
+	if (msgJson.Len)
+		httpAck.AppendContentLengthHeader(msgJson.Len);
+
+	//响应完成后断开连接
+	httpAck.AppendConnectionCloseHeader();
+
+	//Push MSG to OutputBuffer
+	char respHeader[2048] = { 0 };
+	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+	
+	BaseResponseStream *pOutputStream = GetOutputStream();
+	pOutputStream->Put(respHeader);
+	if (msgJson.Len > 0) 
+		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+	
 	return QTSS_NoErr;
 }

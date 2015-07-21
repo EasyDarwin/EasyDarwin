@@ -43,6 +43,7 @@ class CServiceSession : public BaseSessionInterface
 		virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
 
 		char* GetDeviceSnap(){ return fDeviceSnap; };
+		char* GetDeviceSerial(){ return fSerial; };
 
     private: 
         SInt64 Run();
@@ -55,7 +56,7 @@ class CServiceSession : public BaseSessionInterface
 		QTSS_Error ExecNetMsgNgxStreamReq(const char* json);
 		QTSS_Error ExecNetMsgDefaultReqHandler(const char* json);
 		QTSS_Error ExecNetMsgSnapUpdateReq(const char* json);
-
+		QTSS_Error ExecNetMsgGetDeviceListReq();
         
         // test current connections handled by this object against server pref connection limit
         Bool16 OverMaxConnections(UInt32 buffer);
