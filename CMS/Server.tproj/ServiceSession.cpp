@@ -52,6 +52,9 @@ CServiceSession::CServiceSession( )
     fModuleState.curRole = 0;
     fModuleState.globalLockRequested = false;
 
+	fDeviceSnap = NEW char[EASYDSS_MAX_URL_LENGTH];
+	fDeviceSnap[0] = '\0';
+
 	qtss_printf("create session:%s\n", fSessionID);
 }
 
@@ -76,6 +79,10 @@ CServiceSession::~CServiceSession()
     this->CleanupRequest();// Make sure that all our objects are deleted
     //if (fSessionType == qtssServiceSession)
     //    QTSServerInterface::GetServer()->AlterCurrentServiceSessionCount(-1);
+
+	if (fDeviceSnap != NULL)
+        delete [] fDeviceSnap; 
+
 }
 
 /*!
@@ -772,5 +779,6 @@ QTSS_Error CServiceSession::ExecNetMsgSnapUpdateReq(const char* json)
 	::fclose(fSnap);
 	free(snapDecodedBuffer);
 
+	qtss_sprintf(fDeviceSnap, "%s%s/%s.jpg",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), fSerial, jpgFileName.c_str());
 	return QTSS_NoErr;
 }
