@@ -12,6 +12,7 @@
 #include "ServiceSession.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
+#include "EasyDSSUtil.h"
 
 #include "OSArrayObjectDeleter.h"
 
@@ -26,6 +27,8 @@
 #endif
 
 static StrPtrLen	sServiceStr("EasyDariwn_CMS");
+
+using namespace std;
 
 CServiceSession::CServiceSession( )
 : BaseSessionInterface(),
@@ -479,6 +482,8 @@ QTSS_Error CServiceSession::SetupRequest()
 			break;
 		case MSG_CLI_CMS_DEVICE_LIST_REQ:
 			break;
+		case MSG_DEV_CMS_SNAP_UPDATE_REQ:
+			ExecNetMsgSnapUpdateReq(theRequestBody);
 		default:
 			ExecNetMsgDefaultReqHandler(theRequestBody);
 			break;
@@ -736,5 +741,36 @@ QTSS_Error CServiceSession::ExecNetMsgDefaultReqHandler(const char* json)
 
 QTSS_Error CServiceSession::ExecNetMsgSnapUpdateReq(const char* json)
 {
+	QTSS_Error theErr = QTSS_NoErr;
+	bool close = false;
+	EasyDarwinDeviceSnapUpdateReq parse(json);
+	
+	string image;
+	parse.GetImageData(image);
+
+	const char* inSnapJpg = image.c_str();
+
+	if(!fAuthenticated) return QTSS_NoErr;
+
+	//先对数据进行Base64解码
+	int base64DataLen = Base64decode_len(inSnapJpg);
+	char* snapDecodedBuffer = (char*)malloc(base64DataLen);
+	::memset(snapDecodedBuffer, 0, base64DataLen);
+	//对数据进行Base64编码
+	int jpgLen = ::Base64decode(snapDecodedBuffer, inSnapJpg); 
+
+	char jpgDir[512] = { 0 };
+	qtss_sprintf(jpgDir,"%s%s", QTSServerInterface::GetServer()->GetPrefs()->GetSnapLocalPath() ,fSerial);
+	OS::RecursiveMakeDir(jpgDir);
+
+	char jpgPath[512] = { 0 };
+	string jpgFileName = EasyDSSUtil::GetUUID();
+	qtss_sprintf(jpgPath,"%s/%s.jpg", jpgDir, jpgFileName.c_str());
+
+	FILE* fSnap = ::fopen(jpgPath, "wb");
+	fwrite(snapDecodedBuffer, 1, jpgLen, fSnap);
+	::fclose(fSnap);
+	free(snapDecodedBuffer);
+
 	return QTSS_NoErr;
 }
