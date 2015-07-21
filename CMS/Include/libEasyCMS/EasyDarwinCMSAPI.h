@@ -47,6 +47,8 @@ public:
 	void SetEventCallBack(fEventCallBack fCallBack, void *pUserData);
 	//µÇÂ¼
 	Easy_Error  Login(const char *szHost, int nPort, const char *szAccess, const char *szPassword);
+	//¿ìÕÕÉÏ´«
+	Easy_Error	UpdateSnap(const char* snapData, unsigned int snapLen);
 };
 
 }
