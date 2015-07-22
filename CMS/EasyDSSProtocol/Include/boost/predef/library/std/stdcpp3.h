@@ -40,7 +40,10 @@ Version number available as year (from 1970), month, and day.
 #       define BOOST_LIB_STD_GNU BOOST_PREDEF_MAKE_YYYYMMDD(__GLIBCPP__)
 #   endif
 #endif
-
+#ifdef EASYDARWIN
+#undef BOOST_LIB_STD_GNU
+#define BOOST_LIB_STD_GNU BOOST_VERSION_NUMBER_NOT_AVAILABLE
+#endif
 #if BOOST_LIB_STD_GNU
 #   define BOOST_LIB_STD_GNU_AVAILABLE
 #endif
