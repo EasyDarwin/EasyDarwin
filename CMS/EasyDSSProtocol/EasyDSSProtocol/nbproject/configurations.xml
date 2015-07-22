@@ -127,5 +127,63 @@
       <item path="EasyDSSUtil.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
+    <conf name="ARM" type="3">
+      <toolsSet>
+        <compilerSet>GM8126|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../../Include/EasyDSSProtocol</pElem>
+            <pElem>../Include</pElem>
+          </incDir>
+          <commandLine>-fPIC</commandLine>
+          <preprocessorList>
+            <Elem>EASYDARWIN</Elem>
+          </preprocessorList>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+          <output>../../Bin/ARM/libEasyDSSProtocol.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="../include/EasyDSSProtocol/EasyDSSProtocol.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../include/EasyDSSProtocol/EasyDSSProtocolBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../include/EasyDSSProtocol/EasyDSSProtocolDef.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../include/EasyDSSProtocol/EasyDSSUtil.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="EasyDSSProtocol.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="EasyDSSProtocolBase.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="EasyDSSUtil.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+    </conf>
   </confs>
 </configurationDescriptor>

@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=Release/libCommonUtilitiesLib.a
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release=CommonUtilitiesLib.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/CommonUtilitiesLib.tar
+# ARM configuration
+CND_PLATFORM_ARM=GM8126-Linux-x86
+CND_ARTIFACT_DIR_ARM=../CMS/Bin/ARM
+CND_ARTIFACT_NAME_ARM=libCommonUtilitiesLib.a
+CND_ARTIFACT_PATH_ARM=../CMS/Bin/ARM/libCommonUtilitiesLib.a
+CND_PACKAGE_DIR_ARM=dist/ARM/GM8126-Linux-x86/package
+CND_PACKAGE_NAME_ARM=CommonUtilitiesLib.tar
+CND_PACKAGE_PATH_ARM=dist/ARM/GM8126-Linux-x86/package/CommonUtilitiesLib.tar
 #
 # include compiler specific variables
 #

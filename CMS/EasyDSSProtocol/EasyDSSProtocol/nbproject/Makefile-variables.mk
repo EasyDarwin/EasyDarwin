@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=Release/libEasyDSSProtocol.a
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release=EasyDSSProtocol.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/EasyDSSProtocol.tar
+# ARM configuration
+CND_PLATFORM_ARM=GM8126-Linux-x86
+CND_ARTIFACT_DIR_ARM=../../Bin/ARM
+CND_ARTIFACT_NAME_ARM=libEasyDSSProtocol.a
+CND_ARTIFACT_PATH_ARM=../../Bin/ARM/libEasyDSSProtocol.a
+CND_PACKAGE_DIR_ARM=dist/ARM/GM8126-Linux-x86/package
+CND_PACKAGE_NAME_ARM=EasyDSSProtocol.tar
+CND_PACKAGE_PATH_ARM=dist/ARM/GM8126-Linux-x86/package/EasyDSSProtocol.tar
 #
 # include compiler specific variables
 #
