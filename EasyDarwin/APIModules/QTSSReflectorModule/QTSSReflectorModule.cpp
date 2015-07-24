@@ -2145,16 +2145,16 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
             SourceInfo* theInfo = inSession->GetSourceInfo();         
             Assert(theInfo);
             
-            if (theInfo->IsRTSPControlled())
-            {   
-                FileDeleter(inSession->GetSourcePath());
-            }
-                
+            //if (theInfo->IsRTSPControlled())
+            //{   
+            //    FileDeleter(inSession->GetSourcePath());
+            //}
+            //    
         
-            if (killClients || sTearDownClientsOnDisconnect)
-            {    
-                inSession->TearDownAllOutputs();
-            }
+            //if (killClients || sTearDownClientsOnDisconnect)
+            //{    
+            //    inSession->TearDownAllOutputs();
+            //}
         }
         
         //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput refcount =%"_U32BITARG_"\n", inSession->GetRef()->GetRefCount() );
