@@ -85,10 +85,10 @@ int run()
     string sDeviceSerial = IniReadString("server", "serial", "", "easycamera.ini");
 	//设备密码
     string sDevicePassword = IniReadString("server", "password", "admin", "easycamera.ini");
-	//DMS地址
-    string sDMSAddr = IniReadString("server", "cms_addr", "www.easydarwin.org", "easycamera.ini");
-	//DMS端口
-    int iDMSPort = IniReadInteger("server", "cms_port", 10000, "easycamera.ini");
+	//CMS地址
+    string sCMSAddr = IniReadString("server", "cms_addr", "www.easydarwin.org", "easycamera.ini");
+	//CMS端口
+    int iCMSPort = IniReadInteger("server", "cms_port", 10000, "easycamera.ini");
     
 	printf("device[%s]/v%s (Build/%s) is now running\n", sDeviceSerial.c_str(), kVersionString, kBuildString);
     
@@ -99,7 +99,7 @@ int run()
     Easy_Error theErr = Easy_NoErr;
     do
     {
-		theErr = api.Login(sDMSAddr.c_str(), iDMSPort, sDeviceSerial.c_str(), sDevicePassword.c_str());
+		theErr = api.Login(sCMSAddr.c_str(), iCMSPort, sDeviceSerial.c_str(), sDevicePassword.c_str());
         if (Easy_NoErr != Easy_NoErr)
         {
             //如果向消息中心发送Login命令失败,相当于整个设备端启动失败
