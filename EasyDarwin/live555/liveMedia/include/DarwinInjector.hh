@@ -16,7 +16,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // "liveMedia"
 // Copyright (c) 1996-2015 Live Networks, Inc.  All rights reserved.
 // An object that redirects one or more RTP/RTCP streams - forming a single
-// multimedia session - into a 'Darwin Streaming Server' (for subsequent
+// multimedia session - into a 'EasyDarwin' (for subsequent
 // reflection to potentially arbitrarily many remote RTSP clients).
 // C++ header
 
@@ -37,8 +37,8 @@ To use a "DarwinInjector":
        Note: These can use 0.0.0.0 for the address, and 0 for the port number,
        of each 'groupsock')
   2/ Call "addStream()" for each.
-  3/ Call "setDestination()" to specify the remote Darwin Streaming Server.
-     Note: You must have 'write' permission on the Darwin Streaming Server.
+  3/ Call "setDestination()" to specify the remote EasyDarwin.
+     Note: You must have 'write' permission on the EasyDarwin.
        This can be set up using a "qtaccess" file in the server's 'movies'
        directory.  For example, the following "qtaccess" file allows anyone to
        play streams from the server, but allows only valid users to

@@ -16,7 +16,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // "liveMedia"
 // Copyright (c) 1996-2015 Live Networks, Inc.  All rights reserved.
 // An object that redirects one or more RTP/RTCP streams - forming a single
-// multimedia session - into a 'Darwin Streaming Server' (for subsequent
+// multimedia session - into a 'EasyDarwin' (for subsequent
 // reflection to potentially arbitrarily many remote RTSP clients).
 // Implementation
 
