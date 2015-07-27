@@ -85,7 +85,7 @@
 		<PREF NAME="RTSP_error_message" TYPE="Bool16" >false</PREF>
 		<PREF NAME="run_num_threads" TYPE="UInt32" >10</PREF>
 		<PREF NAME="overbuffer_rate" TYPE="Float32" >2.0</PREF>
-		<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >false</PREF>
+		<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >true</PREF>
 		<PREF NAME="enable_monitor_stats_file" TYPE="Bool16" >true</PREF>
 		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="monitor_stats_file_name" >server_status</PREF>
