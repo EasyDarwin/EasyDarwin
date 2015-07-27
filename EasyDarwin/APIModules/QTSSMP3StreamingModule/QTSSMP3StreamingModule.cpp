@@ -64,8 +64,8 @@ class QTSSMP3AccessLog;
 #define kClientAcceptHeader "HTTP/1.1 200 OK\r\nServer: QuickTime Streaming Server %s/%s\r\nContent-Type: audio/mpeg\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nConnection: close\r\n"
 #define kM3UReplyHeader "HTTP/1.1 200 OK\r\nServer: QuickTime Streaming Server %s/%s\r\nContent-Type: audio/mpegurl\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nConnection: close\r\nContent-Length:"
 #else
-#define kClientAcceptHeader "HTTP/1.1 200 OK\r\nServer: Darwin Streaming Server %s/%s\r\nContent-Type: audio/mpeg\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nConnection: close\r\n"
-#define kM3UReplyHeader "HTTP/1.1 200 OK\r\nServer: Darwin Streaming Server %s/%s\r\nContent-Type: audio/mpegurl\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nConnection: close\r\nContent-Length:"
+#define kClientAcceptHeader "HTTP/1.1 200 OK\r\nServer: EasyDarwin %s/%s\r\nContent-Type: audio/mpeg\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nConnection: close\r\n"
+#define kM3UReplyHeader "HTTP/1.1 200 OK\r\nServer: EasyDarwin %s/%s\r\nContent-Type: audio/mpegurl\r\nCache-Control: no-cache\r\nPragma: no-cache\r\nConnection: close\r\nContent-Length:"
 #endif
 #define kSourceReject "Error - Mount Point Taken or Invalid\r\n"
 #define kSourceBadPassword "Error - Bad Password\r\n"
