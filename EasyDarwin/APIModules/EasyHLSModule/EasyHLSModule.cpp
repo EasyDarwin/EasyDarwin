@@ -21,6 +21,8 @@
 #include "ClientSocket.h"
 #include "SocketUtils.h"
 
+#include "EasyHLSSession.h"
+
 class HLSSessionCheckingTask : public Task
 {
     public:
@@ -121,6 +123,29 @@ SInt64 HLSSessionCheckingTask::Run()
 
 QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 {
+	EasyHLSSession* session = NULL;
+	//首先查找Map里面是否已经有了对应的流
+	StrPtrLen streamName(inParams->inStreamName);
+	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
+	if(clientSesRef != NULL)
+	{
+		session = (EasyHLSSession*)clientSesRef->GetObject();
+	}
+	else
+	{
+		session = NEW EasyHLSSession(&streamName);
+
+		OS_Error theErr = sHLSSessionMap->Register(session->GetRef());
+		Assert(theErr == QTSS_NoErr);
+
+		//增加一次对RelaySession的无效引用，后面会统一释放
+		OSRef* debug = sHLSSessionMap->Resolve(&streamName);
+		Assert(debug == session->GetRef());
+	}
+	
+	//到这里，肯定是有一个EasyHLSSession可用的
+
+
 	return QTSS_NoErr;
 }
 
