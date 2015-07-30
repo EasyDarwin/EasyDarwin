@@ -946,6 +946,14 @@
 						RelativePath="..\APIModules\EasyHLSModule\EasyHLSModule.h"
 						>
 					</File>
+					<File
+						RelativePath="..\APIModules\EasyHLSModule\EasyHLSSession.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyHLSModule\EasyHLSSession.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
