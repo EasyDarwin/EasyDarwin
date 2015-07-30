@@ -50,10 +50,11 @@ static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inPa
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error Shutdown();
+static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
+static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
+
 
 // FUNCTION IMPLEMENTATIONS
-
-
 QTSS_Error EasyHLSModule_Main(void* inPrivateArgs)
 {
     return _stublibrary_main(inPrivateArgs, EasyHLSModuleDispatch);
@@ -70,9 +71,9 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
         case QTSS_Shutdown_Role:
             return Shutdown();
 		case Easy_HLSOpen_Role:		//Start HLS Streaming
-			return QTSS_NoErr;
+			return EasyHLSOpen(&inParams->easyHLSOpenParams);
 		case Easy_HLSClose_Role:	//Stop HLS Streaming
-			return QTSS_NoErr;
+			return EasyHLSClose(&inParams->easyHLSCloseParams);
     }
     return QTSS_NoErr;
 }
@@ -116,4 +117,14 @@ QTSS_Error Shutdown()
 SInt64 HLSSessionCheckingTask::Run()
 {
 	return kProxyTaskPollIntervalMsec;
+}
+
+QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
+{
+	return QTSS_NoErr;
+}
+
+QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
+{
+	return QTSS_NoErr;
 }
