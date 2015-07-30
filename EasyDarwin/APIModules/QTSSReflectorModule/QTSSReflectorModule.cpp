@@ -669,7 +669,7 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
         {   theStream = theSession->GetStreamByIndex(inIndex);
 
             SourceInfo::StreamInfo* theStreamInfo =theStream->GetStreamInfo();  
-            UInt16 serverReceivePort =theStreamInfo->fPort;         
+            UInt16 serverReceivePort =theStreamInfo->fPort;
 
             Bool16 isRTCP =false;
             if (theStream != NULL)
