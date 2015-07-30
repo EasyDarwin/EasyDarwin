@@ -20,23 +20,10 @@
 
 #ifndef __EASYHLS_SESSION__
 #define __EASYHLS_SESSION__
+
 class EasyHLSSession
 {
     public:
-    
-        // Public interface to generic RTP packet forwarding engine
-        
-        //
-        // Initialize
-        //
-        // Call initialize before calling any other function in this class
-        static void Initialize();
-            
-        // Create one of these ReflectorSessions per source broadcast. For mapping purposes,
-        // the object can be constructred using an optional source ID.
-        //
-        // Caller may also provide a SourceInfo object, though it is not needed and
-        // will also need to be provided to SetupReflectorSession when that is called.
         EasyHLSSession(StrPtrLen* inSourceID);
         virtual ~EasyHLSSession();
         

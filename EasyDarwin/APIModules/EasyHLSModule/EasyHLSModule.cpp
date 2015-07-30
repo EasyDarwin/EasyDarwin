@@ -21,22 +21,14 @@
 #include "ClientSocket.h"
 #include "SocketUtils.h"
 
-// STATIC DATA
-
-// Default values for preferences
-static Bool16   sDefaultLogEnabled          = true;
-static char*    sDefaultLogName             = "EasyDarwin";
-static char*    sDefaultLogDir = NULL;
-static QTSS_PrefsObject     sServerPrefs = NULL;
-
-class ProxyTask : public Task
+class HLSSessionCheckingTask : public Task
 {
     public:
     
         //
         // Task that just polls on all the sockets in the pool, sending data on all available sockets
-        ProxyTask() : Task() {this->SetTaskName("ProxyTask");  this->Signal(Task::kStartEvent); }
-        virtual ~ProxyTask() {}
+        HLSSessionCheckingTask() : Task() {this->SetTaskName("HLSSessionCheckingTask");  this->Signal(Task::kStartEvent); }
+        virtual ~HLSSessionCheckingTask() {}
     
     private:
     
@@ -44,10 +36,14 @@ class ProxyTask : public Task
         
         enum
         {
-            kProxyTaskPollIntervalMsec = 10
+            kProxyTaskPollIntervalMsec = 60*1000
         };
 };
 
+// STATIC DATA
+static QTSS_PrefsObject         sServerPrefs = NULL;
+static HLSSessionCheckingTask*	sCheckingTask = NULL;
+static OSRefTable*              sHLSSessionMap = NULL;
 
 // FUNCTION PROTOTYPES
 
@@ -102,8 +98,8 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     //
     // Setup global data structures
     sServerPrefs = inParams->inPrefs;
-    //sProxyTask = NEW ProxyTask();
-    //sSessionMap = NEW OSRefTable();
+    sCheckingTask = NEW HLSSessionCheckingTask();
+    sHLSSessionMap = NEW OSRefTable();
 
     return QTSS_NoErr;
 }
@@ -113,7 +109,7 @@ QTSS_Error Shutdown()
     return QTSS_NoErr;
 }
 
-SInt64 ProxyTask::Run()
+SInt64 HLSSessionCheckingTask::Run()
 {
-	return 0;
+	return kProxyTaskPollIntervalMsec;
 }
