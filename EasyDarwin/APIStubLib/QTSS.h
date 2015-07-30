@@ -1206,6 +1206,16 @@ typedef struct
     QTSS_EventType              inEventMask;
 } QTSS_RequestEventFile_Params;
 
+typedef struct
+{
+    char*                       inStreamName;
+} Easy_HLSOpen_Params;
+
+typedef struct
+{
+    char*                       inStreamName;
+} Easy_HLSClose_Params;
+
 typedef union
 {
     QTSS_Register_Params                regParams;
@@ -1235,7 +1245,8 @@ typedef union
     QTSS_RequestEventFile_Params        reqEventFileParams;
 
 	QTSS_RelayingData_Params			rtspRelayingDataParams;
-    
+	Easy_HLSOpen_Params					easyHLSOpenParams;
+	Easy_HLSClose_Params				easyHLSCloseParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 typedef struct
