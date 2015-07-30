@@ -69,9 +69,9 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize(&inParams->initParams);
         case QTSS_Shutdown_Role:
             return Shutdown();
-		case Easy_HLSOpen_Role:
+		case Easy_HLSOpen_Role:		//Start HLS Streaming
 			return QTSS_NoErr;
-		case Easy_HLSClose_Role:
+		case Easy_HLSClose_Role:	//Stop HLS Streaming
 			return QTSS_NoErr;
     }
     return QTSS_NoErr;
