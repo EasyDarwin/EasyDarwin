@@ -65,7 +65,7 @@ static UInt32                   sDefaultFirstPacketOffsetMsec       = 500;
 UInt32                          ReflectorStream::sBucketSize  = 16;
 UInt32                          ReflectorStream::sOverBufferInMsec = 10000; // more or less what the client over buffer will be
 UInt32                          ReflectorStream::sMaxFuturePacketMSec = 60000; // max packet future time
-UInt32                          ReflectorStream::sMaxPacketAgeMSec = 10000;
+UInt32                          ReflectorStream::sMaxPacketAgeMSec = 20000;
 
 UInt32                          ReflectorStream::sMaxFuturePacketSec = 60; // max packet future time
 UInt32                          ReflectorStream::sOverBufferInSec = 10;
@@ -108,7 +108,9 @@ void ReflectorStream::Initialize(QTSS_ModulePrefsObject inPrefs)
 
     ReflectorStream::sOverBufferInMsec = sOverBufferInSec * 1000;
     ReflectorStream::sMaxFuturePacketMSec = sMaxFuturePacketSec * 1000;
-    ReflectorStream::sMaxPacketAgeMSec = (UInt32) (sOverBufferInMsec * 2.0); //allow a little time before deleting.
+    ReflectorStream::sMaxPacketAgeMSec = (UInt32) (sOverBufferInMsec * 10.0); //allow a little time before deleting.
+	if(ReflectorStream::sMaxPacketAgeMSec == 0)
+		ReflectorStream::sMaxPacketAgeMSec = 10000;
     ReflectorStream::sRelocatePacketAgeMSec = (UInt32) (sOverBufferInMsec * 1.3); 
 }
 
@@ -1056,23 +1058,23 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 			//->geyijyn@20150427
 			//判断是否需要重新定位书签的位置
 			//<-
-			if(NeedRelocateBookMark(packetElem))
-			{
-				OSQueueElem* nextElem = packetElem->Prev();	//从下一个位置开始重新定位
-				Assert(nextElem != NULL);					//必然不为空
-				packetElem =  this->GetNewestKeyFrameFirstPacket(nextElem,0);	
-				if (packetElem)	
-				{
-					printf("[geyijun] =======> RtpSeq [%d]=>[%d] \n",
-						((ReflectorPacket*)(nextElem->GetEnclosingObject()))->GetPacketRTPSeqNum(),
-						((ReflectorPacket*)(packetElem->GetEnclosingObject()))->GetPacketRTPSeqNum());
-				}
-				else
-				{
-					packetElem = nextElem;	
-				}	
-	
-			}
+			//if(NeedRelocateBookMark(packetElem))
+			//{
+			//	OSQueueElem* nextElem = packetElem->Prev();	//从下一个位置开始重新定位
+			//	Assert(nextElem != NULL);					//必然不为空
+			//	packetElem =  this->GetNewestKeyFrameFirstPacket(nextElem,0);	
+			//	if (packetElem)
+			//	{
+			//		printf("[geyijun] =======> RtpSeq [%d]=>[%d] \n",
+			//			((ReflectorPacket*)(nextElem->GetEnclosingObject()))->GetPacketRTPSeqNum(),
+			//			((ReflectorPacket*)(packetElem->GetEnclosingObject()))->GetPacketRTPSeqNum());
+			//	}
+			//	else
+			//	{
+			//		packetElem = nextElem;	
+			//	}
+			//}
+
 			SInt64  bucketDelay = ReflectorStream::sBucketDelayInMsec * (SInt64)bucketIndex;
 			packetElem = this->SendPacketsToOutput(theOutput, packetElem,currentTime, bucketDelay, firstPacket);
 			if (packetElem)
@@ -1292,7 +1294,7 @@ Bool16 ReflectorSender::NeedRelocateBookMark(OSQueueElem* currentElem)
 			return true;
 		}
 	}
-	//触发条件2 :  已经出现帧序号不联系的情况。后面的数据包已经被老化回收了
+	//触发条件2 :  已经出现帧序号不连续的情况。后面的数据包已经被老化回收了
 	{
 		ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();  
 		ReflectorPacket* nextPacket = (ReflectorPacket*)nextElem->GetEnclosingObject();  
