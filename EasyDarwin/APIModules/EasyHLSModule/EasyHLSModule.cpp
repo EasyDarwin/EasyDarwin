@@ -31,7 +31,6 @@ class HLSSessionCheckingTask : public Task
         virtual ~HLSSessionCheckingTask() {}
     
     private:
-    
         virtual SInt64 Run();
         
         enum
@@ -60,7 +59,6 @@ QTSS_Error EasyHLSModule_Main(void* inPrivateArgs)
     return _stublibrary_main(inPrivateArgs, EasyHLSModuleDispatch);
 }
 
-
 QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
     switch (inRole)
@@ -71,6 +69,10 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize(&inParams->initParams);
         case QTSS_Shutdown_Role:
             return Shutdown();
+		case Easy_HLSOpen_Role:
+			return QTSS_NoErr;
+		case Easy_HLSClose_Role:
+			return QTSS_NoErr;
     }
     return QTSS_NoErr;
 }
@@ -81,6 +83,8 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_Shutdown_Role);
+    (void)QTSS_AddRole(Easy_HLSOpen_Role); 
+	(void)QTSS_AddRole(Easy_HLSClose_Role); 
     
     // Tell the server our name!
     static char* sModuleName = "EasyHLSModule";

@@ -1026,6 +1026,10 @@ enum
     QTSS_ReadFile_Role =            FOUR_CHARS_TO_INT('r', 'd', 'f', 'l'),  //rdfl
     QTSS_CloseFile_Role =           FOUR_CHARS_TO_INT('c', 'l', 'f', 'l'),  //clfl
     QTSS_RequestEventFile_Role =    FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
+
+	//HLS Session
+	Easy_HLSOpen_Role	=	FOUR_CHARS_TO_INT('h', 'l', 's', 'o'),  //hlso
+	Easy_HLSClose_Role	=	FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
 };
 typedef UInt32 QTSS_Role;
