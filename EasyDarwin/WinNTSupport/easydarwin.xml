@@ -251,4 +251,5 @@
 	<MODULE NAME="QTSSOnDemandRelayModule" >
 		<PREF NAME="device_prefs_file" >./devices.xml</PREF>
 	</MODULE>
+	<MODULE NAME="EasyHLSModule" ></MODULE>
 </CONFIGURATION>
