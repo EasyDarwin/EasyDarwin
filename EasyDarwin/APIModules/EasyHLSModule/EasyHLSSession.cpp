@@ -21,13 +21,6 @@
     #include <unistd.h>
 #endif
 
-
-void EasyHLSSession::Initialize()
-{
-    //if (sStreamMap == NULL)
-    //    sStreamMap = NEW OSRefTable();
-}
-
 EasyHLSSession::EasyHLSSession(StrPtrLen* inSourceID)
 :   fQueueElem()
 {
