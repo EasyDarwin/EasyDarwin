@@ -17,6 +17,7 @@
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "OSArrayObjectDeleter.h"
+#include "NVSourceAPI.h"
 
 #ifndef __EASYHLS_SESSION__
 #define __EASYHLS_SESSION__
@@ -34,13 +35,15 @@ class EasyHLSSession
         OSQueueElem*    GetQueueElem()      { return &fQueueElem; }
 
         StrPtrLen*      GetSourcePath()     { return &fSourceID; }
+		int	ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
    
     private:
 
         // For storage in the session map       
         OSRef       fRef;
         StrPtrLen   fSourceID;
-        OSQueueElem fQueueElem; // Relay uses this.         
+        OSQueueElem fQueueElem; // Relay uses this.  
+		NVS_HANDLE	fNVSHandle;
 };
 
 #endif

@@ -22,6 +22,7 @@
 #include "SocketUtils.h"
 
 #include "EasyHLSSession.h"
+#include "QTSServerInterface.h"
 
 class HLSSessionCheckingTask : public Task
 {
@@ -107,6 +108,19 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sServerPrefs = inParams->inPrefs;
     sCheckingTask = NEW HLSSessionCheckingTask();
     sHLSSessionMap = NEW OSRefTable();
+
+
+//test
+	QTSS_RoleParams packetParams;
+	packetParams.easyHLSOpenParams.inStreamName = "rtsp://admin:admin@192.168.1.106/";
+
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
+	for (; fCurrentModule < numModules; fCurrentModule++)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSOpenRole, fCurrentModule);
+		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &packetParams);
+	}
 
     return QTSS_NoErr;
 }
