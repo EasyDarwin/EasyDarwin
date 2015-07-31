@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib NVSource.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib NVSource.lib libEasyHLS.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -164,7 +164,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib NVSource.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib NVSource.lib libEasyHLS.lib"
 				OutputFile="..\WinNTSupport\Release\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -940,6 +940,10 @@
 				<Filter
 					Name="EasyHLSModule"
 					>
+					<File
+						RelativePath="..\Include\EasyHLSAPI.h"
+						>
+					</File>
 					<File
 						RelativePath="..\APIModules\EasyHLSModule\EasyHLSModule.cpp"
 						>

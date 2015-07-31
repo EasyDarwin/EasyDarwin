@@ -18,6 +18,7 @@
 #include "SourceInfo.h"
 #include "OSArrayObjectDeleter.h"
 #include "NVSourceAPI.h"
+#include "EasyHLSAPI.h"
 
 #ifndef __EASYHLS_SESSION__
 #define __EASYHLS_SESSION__
@@ -46,6 +47,7 @@ class EasyHLSSession
         StrPtrLen   fHLSSessionID;
         OSQueueElem fQueueElem; // Relay uses this.  
 		NVS_HANDLE	fNVSHandle;
+		Easy_HLS_Handle fHLSHandle;
 };
 
 #endif
