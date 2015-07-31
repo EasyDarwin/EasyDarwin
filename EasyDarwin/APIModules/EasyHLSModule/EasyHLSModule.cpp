@@ -109,20 +109,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sCheckingTask = NEW HLSSessionCheckingTask();
     sHLSSessionMap = NEW OSRefTable();
 
-
-//test
-	QTSS_RoleParams packetParams;
-	packetParams.easyHLSOpenParams.inStreamName = "test";
-	packetParams.easyHLSOpenParams.inRTSPUrl = "rtsp://admin:admin@192.168.66.189/";
-
-	UInt32 fCurrentModule = 0;
-	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
-	for (; fCurrentModule < numModules; fCurrentModule++)
-	{
-		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSOpenRole, fCurrentModule);
-		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &packetParams);
-	}
-
     return QTSS_NoErr;
 }
 
@@ -166,5 +152,12 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 
 QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 {
+	
+	//首先查找Map里面是否已经有了对应的流
+	StrPtrLen streamName(inParams->inStreamName);
+	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
+	if(NULL == clientSesRef) return QTSS_RequestFailed;
+	EasyHLSSession* session = (EasyHLSSession*)clientSesRef->GetObject();
+	session->HLSSessionRelease();
 	return QTSS_NoErr;
 }
