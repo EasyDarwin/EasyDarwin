@@ -73,8 +73,6 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
 		//printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-		printf("%s",frameinfo->type==FRAMETYPE_I?"I":"P");
-
 		::fwrite(pbuf, 1, frameinfo->length, fTest);
 		VideoMux(fHLSHandle, frameinfo->type, (unsigned char*)pbuf, frameinfo->length, frameinfo->rtptimestamp,frameinfo->rtptimestamp,frameinfo->rtptimestamp);
 	}
