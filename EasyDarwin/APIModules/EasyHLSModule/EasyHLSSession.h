@@ -33,9 +33,11 @@ class EasyHLSSession
         
         OSRef*          GetRef()            { return &fRef; }
         OSQueueElem*    GetQueueElem()      { return &fQueueElem; }
-
+	
         StrPtrLen*      GetSourcePath()     { return &fSourceID; }
-		int	ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
+		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
+		QTSS_Error		HLSSessionCreate(char* sdpName);
+		QTSS_Error		HLSSessionRelease();
    
     private:
 
