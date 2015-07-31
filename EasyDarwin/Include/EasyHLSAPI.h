@@ -10,13 +10,16 @@
 #endif
 
 #define Easy_HLS_Handle void*
+#define Easy_HLS_FRAME_TYPE_A    0
+#define Easy_HLS_FRAME_TYPE_I    1
+#define Easy_HLS_FRAME_TYPE_P    2
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-	EasyHLS_API Easy_HLS_Handle EasyHLS_APICALL NewManagerHandle(int nCapacity, bool bAllowCache, int version);
+	EasyHLS_API Easy_HLS_Handle EasyHLS_APICALL HLSSession_Create(int nCapacity, bool bAllowCache, int version);
 
 	EasyHLS_API void EasyHLS_APICALL ResetStreamCache(Easy_HLS_Handle handle, const char * strRootDir, const char* strSubDir, const char* strMediaName, int nTargetDuration);
 	
