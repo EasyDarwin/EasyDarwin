@@ -50,10 +50,10 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSourceID)
     fQueueElem.SetEnclosingObject(this);
     if (inSourceID != NULL)
     {
-        fSourceID.Ptr = NEW char[inSourceID->Len + 1];
-        ::memcpy(fSourceID.Ptr, inSourceID->Ptr, inSourceID->Len);
-        fSourceID.Len = inSourceID->Len;
-        fRef.Set(fSourceID, this);
+        fHLSSessionID.Ptr = NEW char[inSourceID->Len + 1];
+        ::memcpy(fHLSSessionID.Ptr, inSourceID->Ptr, inSourceID->Len);
+        fHLSSessionID.Len = inSourceID->Len;
+        fRef.Set(fHLSSessionID, this);
     }
 
 	fTest = ::fopen("./aaa.264","wb");
@@ -62,26 +62,27 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSourceID)
 
 EasyHLSSession::~EasyHLSSession()
 {
-    fSourceID.Delete();
+    fHLSSessionID.Delete();
 }
 
 QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
-		printf("Get Video Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		//printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		printf("%s",frameinfo->type==FRAMETYPE_I?"I":"P");
 		::fwrite(pbuf, 1, frameinfo->length, fTest);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
-		printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		//printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 	}
 	else if (mediatype == MEDIA_TYPE_EVENT)
 	{
 		printf("Get MEDIA_TYPE_EVENT\n");
 		if (NULL == pbuf && NULL == frameinfo)
 		{
-			printf("Connecting:%s ...\n", fSourceID.Ptr);
+			printf("Connecting:%s ...\n", fHLSSessionID.Ptr);
 			//_TRACE("[ch%d]连接中...\n", _chid);
 			//MEDIA_FRAME_INFO	frameinfo;
 			//memset(&frameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
@@ -91,7 +92,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 		}
 		else if (NULL!=frameinfo && frameinfo->type==0xF1)
 		{
-			printf("Lose Packet:%s ...\n", fSourceID.Ptr);
+			printf("Lose Packet:%s ...\n", fHLSSessionID.Ptr);
 			//_TRACE("[ch%d]掉包[%.2f]...\n", _chid, frameinfo->losspacket);
 			//frameinfo->length = 1;
 			//SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, "1");
@@ -121,5 +122,7 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 	if(NULL == fNVSHandle)	return QTSS_BadArgument;
 	NVS_CloseStream(fNVSHandle);
 	NVS_Deinit(&fNVSHandle);
+
+	::fclose(fTest);
 	return QTSS_NoErr;
 }

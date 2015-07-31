@@ -34,7 +34,7 @@ class EasyHLSSession
         OSRef*          GetRef()            { return &fRef; }
         OSQueueElem*    GetQueueElem()      { return &fQueueElem; }
 	
-        StrPtrLen*      GetSourcePath()     { return &fSourceID; }
+        StrPtrLen*      GetSessionID()     { return &fHLSSessionID; }
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
 		QTSS_Error		HLSSessionCreate(char* rtspUrl);
 		QTSS_Error		HLSSessionRelease();
@@ -43,7 +43,7 @@ class EasyHLSSession
 
         // For storage in the session map       
         OSRef       fRef;
-        StrPtrLen   fSourceID;
+        StrPtrLen   fHLSSessionID;
         OSQueueElem fQueueElem; // Relay uses this.  
 		NVS_HANDLE	fNVSHandle;
 };

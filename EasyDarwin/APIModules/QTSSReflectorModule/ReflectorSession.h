@@ -102,7 +102,10 @@ class ReflectorSession
         
         QTSS_Error      SetupReflectorSession(SourceInfo* inInfo, QTSS_StandardRTSP_Params* inParams,
                                                 UInt32 inFlags = kMarkSetup, Bool16 filterState = true, UInt32 filterTimeout = 30);
-                                                
+                            
+		QTSS_Error		SetSessionName();
+		QTSS_Error		StartHLSSession();
+		QTSS_Error		StopHLSSession();
         // Packets get forwarded by attaching ReflectorOutput objects to a ReflectorSession.
 
         void    AddOutput(ReflectorOutput* inOutput, Bool16 isClient);
@@ -173,6 +176,8 @@ class ReflectorSession
         // For storage in the session map       
         OSRef       fRef;
         StrPtrLen   fSourceID;
+		char*	fSessionName;
+
         OSQueueElem fQueueElem; // Relay uses this.
         
         unsigned int        fNumOutputs;
