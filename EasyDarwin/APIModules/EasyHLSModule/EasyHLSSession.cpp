@@ -69,55 +69,33 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 {
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
-		printf("MEDIA_TYPE_VIDEO\n");
-		//if ( (NULL == pRealtimePlayThread[_chid].pAVQueue) && (frameinfo->type==0x01/*Key frame*/) )
-		//{
-		//	pRealtimePlayThread[_chid].pAVQueue = new SS_QUEUE_OBJ_T();
-		//	if (NULL != pRealtimePlayThread[_chid].pAVQueue)
-		//	{
-		//		memset(pRealtimePlayThread[_chid].pAVQueue, 0x00, sizeof(SS_QUEUE_OBJ_T));
-		//		SSQ_Init(pRealtimePlayThread[_chid].pAVQueue, 0x00, _chid, TEXT(""), MAX_AVQUEUE_SIZE, 2, 0x01);
-		//		SSQ_Clear(pRealtimePlayThread[_chid].pAVQueue);
-		//		pRealtimePlayThread[_chid].initQueue = 0x01;
-		//	}
-
-		//	pRealtimePlayThread[_chid].dwLosspacketTime=0;
-		//	pRealtimePlayThread[_chid].dwDisconnectTime=0;
-		//}
-		//if (NULL != pRealtimePlayThread[_chid].pAVQueue)
-		//{
-		//	SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_VIDEO, (MEDIA_FRAME_INFO*)frameinfo, pbuf);
-		//}
+		printf("Get Video Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 		::fwrite(pbuf, 1, frameinfo->length, fTest);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
-		printf("MEDIA_TYPE_AUDIO\n");
-		//if (NULL != pRealtimePlayThread[_chid].pAVQueue)
-		//{
-		//	SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_AUDIO, (MEDIA_FRAME_INFO*)frameinfo, pbuf);
-		//}
+		printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 	}
 	else if (mediatype == MEDIA_TYPE_EVENT)
 	{
-		printf("MEDIA_TYPE_EVENT\n");
-		//if (NULL == pbuf && NULL == frameinfo)
-		//{
-		//	_TRACE("[ch%d]连接中...\n", _chid);
-
-		//	MEDIA_FRAME_INFO	frameinfo;
-		//	memset(&frameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
-		//	frameinfo.length = 1;
-		//	frameinfo.type   = 0xFF;
-		//	SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)&frameinfo, "1");
-		//}
-		//else if (NULL!=frameinfo && frameinfo->type==0xF1)
-		//{
-		//	_TRACE("[ch%d]掉包[%.2f]...\n", _chid, frameinfo->losspacket);
-
-		//	frameinfo->length = 1;
-		//	SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, "1");
-		//}
+		printf("Get MEDIA_TYPE_EVENT\n");
+		if (NULL == pbuf && NULL == frameinfo)
+		{
+			printf("Connecting:%s ...\n", fSourceID.Ptr);
+			//_TRACE("[ch%d]连接中...\n", _chid);
+			//MEDIA_FRAME_INFO	frameinfo;
+			//memset(&frameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
+			//frameinfo.length = 1;
+			//frameinfo.type   = 0xFF;
+			//SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)&frameinfo, "1");
+		}
+		else if (NULL!=frameinfo && frameinfo->type==0xF1)
+		{
+			printf("Lose Packet:%s ...\n", fSourceID.Ptr);
+			//_TRACE("[ch%d]掉包[%.2f]...\n", _chid, frameinfo->losspacket);
+			//frameinfo->length = 1;
+			//SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, "1");
+		}
 	}
 
 	return QTSS_NoErr;
