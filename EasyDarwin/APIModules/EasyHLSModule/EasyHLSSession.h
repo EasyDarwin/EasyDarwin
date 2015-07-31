@@ -36,7 +36,7 @@ class EasyHLSSession
 	
         StrPtrLen*      GetSourcePath()     { return &fSourceID; }
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
-		QTSS_Error		HLSSessionCreate(char* sdpName);
+		QTSS_Error		HLSSessionCreate(char* rtspUrl);
 		QTSS_Error		HLSSessionRelease();
    
     private:

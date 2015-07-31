@@ -123,7 +123,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 	return QTSS_NoErr;
 }
 
-QTSS_Error	EasyHLSSession::HLSSessionCreate(char* sdpName)
+QTSS_Error	EasyHLSSession::HLSSessionCreate(char* rtspUrl)
 {
 	NVS_Init(&fNVSHandle);
 
@@ -133,7 +133,7 @@ QTSS_Error	EasyHLSSession::HLSSessionCreate(char* sdpName)
 	mediaType |= MEDIA_TYPE_AUDIO;	//»»ÎªNVSource, ÆÁ±ÎÉùÒô
 
 	NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
-	NVS_OpenStream(fNVSHandle, 0, fSourceID.Ptr,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+	NVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 
 	return QTSS_NoErr;
 }
