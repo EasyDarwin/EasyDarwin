@@ -112,7 +112,8 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 //test
 	QTSS_RoleParams packetParams;
-	packetParams.easyHLSOpenParams.inStreamName = "rtsp://admin:admin@192.168.66.189/";
+	packetParams.easyHLSOpenParams.inStreamName = "test";
+	packetParams.easyHLSOpenParams.inRTSPUrl = "rtsp://admin:admin@192.168.66.189/";
 
 	UInt32 fCurrentModule = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
@@ -158,7 +159,7 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 	}
 	
 	//到这里，肯定是有一个EasyHLSSession可用的
-
+	session->HLSSessionCreate(inParams->inRTSPUrl);
 
 	return QTSS_NoErr;
 }

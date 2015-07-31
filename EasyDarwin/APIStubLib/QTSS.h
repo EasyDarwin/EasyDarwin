@@ -1209,6 +1209,7 @@ typedef struct
 typedef struct
 {
     char*                       inStreamName;
+	char*						inRTSPUrl;
 } Easy_HLSOpen_Params;
 
 typedef struct
