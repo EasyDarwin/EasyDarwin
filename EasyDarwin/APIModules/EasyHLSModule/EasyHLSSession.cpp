@@ -21,6 +21,9 @@
     #include <unistd.h>
 #endif
 
+static FILE* fTest;
+
+//NVSource Callback
 int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
 	EasyHLSSession* pHLSSession = (EasyHLSSession *)_chPtr;
@@ -33,6 +36,7 @@ int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *p
 		else if (frameinfo->height==544)	frameinfo->height=540;
 	}
 
+	//投递到具体的EasyHLSSession进行处理
 	pHLSSession->ProcessData(_chid, _mediatype, pbuf, frameinfo);
 
 	return 0;
@@ -52,15 +56,7 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSourceID)
         fRef.Set(fSourceID, this);
     }
 
-		NVS_Init(&fNVSHandle);
-		if (NULL == fNVSHandle) return;
-
-		unsigned int mediaType = MEDIA_TYPE_VIDEO;
-		mediaType |= MEDIA_TYPE_AUDIO;		//换为NVSource, 屏蔽声音
-		NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
-		NVS_OpenStream(fNVSHandle, 0, fSourceID.Ptr,RTP_OVER_TCP, mediaType, "admin", "admin", this, 1000, 0);
-
-
+	fTest = ::fopen("./aaa.264","wb");
 }
 
 
@@ -69,7 +65,7 @@ EasyHLSSession::~EasyHLSSession()
     fSourceID.Delete();
 }
 
-int	EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
+QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
@@ -92,6 +88,7 @@ int	EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_
 		//{
 		//	SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_VIDEO, (MEDIA_FRAME_INFO*)frameinfo, pbuf);
 		//}
+		::fwrite(pbuf, 1, frameinfo->length, fTest);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
@@ -123,5 +120,28 @@ int	EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_
 		//}
 	}
 
-	return 0;
+	return QTSS_NoErr;
+}
+
+QTSS_Error	EasyHLSSession::HLSSessionCreate(char* sdpName)
+{
+	NVS_Init(&fNVSHandle);
+
+	if (NULL == fNVSHandle) return QTSS_Unimplemented;
+
+	unsigned int mediaType = MEDIA_TYPE_VIDEO;
+	mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
+
+	NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
+	NVS_OpenStream(fNVSHandle, 0, fSourceID.Ptr,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error	EasyHLSSession::HLSSessionRelease()
+{
+	if(NULL == fNVSHandle)	return QTSS_BadArgument;
+	NVS_CloseStream(fNVSHandle);
+	NVS_Deinit(&fNVSHandle);
+	return QTSS_NoErr;
 }

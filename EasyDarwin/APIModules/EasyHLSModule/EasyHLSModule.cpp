@@ -112,7 +112,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 //test
 	QTSS_RoleParams packetParams;
-	packetParams.easyHLSOpenParams.inStreamName = "rtsp://admin:admin@192.168.1.106/";
+	packetParams.easyHLSOpenParams.inStreamName = "rtsp://admin:admin@192.168.66.189/";
 
 	UInt32 fCurrentModule = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
