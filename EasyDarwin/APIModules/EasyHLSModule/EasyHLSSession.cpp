@@ -23,6 +23,44 @@
 
 static FILE* fTest;
 
+// PREFS
+static UInt32                   sDefaultM3U8Version				= 3; 
+static Bool16                   sDefaultAllowCache					= false; 
+static UInt32                   sDefaultTargetDuration				= 4;
+static UInt32                   sDefaultPlaylistCapacity			= 4;
+static char*					sDefaultLocalRootDir				= "./HLS/";
+static char*					sDefaultHTTPRootDir					= "http://hls.easydarwin.org/";
+
+UInt32                          EasyHLSSession::sM3U8Version		= 3;
+Bool16                          EasyHLSSession::sAllowCache			= false;
+UInt32                          EasyHLSSession::sTargetDuration		= 4;
+UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
+char*							EasyHLSSession::sLocalRootDir		= "./HLS/";
+char*							EasyHLSSession::sHTTPRootDir		= "http://hls.easydarwin.org/";
+
+
+void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
+{
+	delete [] sLocalRootDir;
+    sLocalRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "LOCAL_ROOT_DIR", sDefaultLocalRootDir);
+
+	delete [] sHTTPRootDir;
+    sHTTPRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "HTTP_ROOT_DIR", sDefaultHTTPRootDir);
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "M3U8_VERSION", qtssAttrDataTypeUInt32,
+							  &EasyHLSSession::sM3U8Version, &sDefaultM3U8Version, sizeof(sDefaultM3U8Version));
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "ALLOW_CACHE", qtssAttrDataTypeBool16,
+							  &EasyHLSSession::sAllowCache, &sDefaultAllowCache, sizeof(sDefaultAllowCache));
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "TARGET_DURATION", qtssAttrDataTypeUInt32,
+							  &EasyHLSSession::sTargetDuration, &sDefaultTargetDuration, sizeof(sDefaultTargetDuration));
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32,
+							  &EasyHLSSession::sPlaylistCapacity, &sDefaultPlaylistCapacity, sizeof(sDefaultPlaylistCapacity));
+
+}
+
 //NVSource Callback
 int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {

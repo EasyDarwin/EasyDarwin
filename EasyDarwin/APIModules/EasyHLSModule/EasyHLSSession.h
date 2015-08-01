@@ -29,7 +29,9 @@ class EasyHLSSession
         EasyHLSSession(StrPtrLen* inSourceID);
         virtual ~EasyHLSSession();
         
-        //
+        //º”‘ÿƒ£øÈ≈‰÷√
+        static void Initialize(QTSS_ModulePrefsObject inPrefs);
+
         // ACCESSORS
         
         OSRef*          GetRef()            { return &fRef; }
@@ -48,6 +50,13 @@ class EasyHLSSession
         OSQueueElem fQueueElem; // Relay uses this.  
 		NVS_HANDLE	fNVSHandle;
 		Easy_HLS_Handle fHLSHandle;
+
+		static UInt32	sM3U8Version;
+		static Bool16	sAllowCache;
+		static UInt32	sTargetDuration;
+		static UInt32	sPlaylistCapacity;
+		static char*	sLocalRootDir;
+		static char*	sHTTPRootDir;
 };
 
 #endif
