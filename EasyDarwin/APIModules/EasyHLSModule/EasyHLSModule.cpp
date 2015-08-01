@@ -43,9 +43,11 @@ class HLSSessionCheckingTask : public Task
 };
 
 // STATIC DATA
-static QTSS_PrefsObject         sServerPrefs = NULL;
-static HLSSessionCheckingTask*	sCheckingTask = NULL;
-static OSRefTable*              sHLSSessionMap = NULL;
+static QTSS_PrefsObject         sServerPrefs	= NULL;
+static HLSSessionCheckingTask*	sCheckingTask	= NULL;
+static OSRefTable*              sHLSSessionMap	= NULL;
+static QTSS_ServerObject sServer				= NULL;
+static QTSS_ModulePrefsObject       sModulePrefs		= NULL;
 
 // FUNCTION PROTOTYPES
 
@@ -104,6 +106,13 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sServerPrefs = inParams->inPrefs;
     sCheckingTask = NEW HLSSessionCheckingTask();
     sHLSSessionMap = NEW OSRefTable();
+
+    sServer = inParams->inServer;
+    
+    sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
+
+    // Call helper class initializers
+    EasyHLSSession::Initialize(sModulePrefs);
 
     return QTSS_NoErr;
 }
