@@ -38,3 +38,4 @@ _ReSharper*/
 *.264
 *.ts
 *libEasyHLS/
+*.m3u8

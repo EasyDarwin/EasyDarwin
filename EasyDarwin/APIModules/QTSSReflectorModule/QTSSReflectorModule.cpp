@@ -2101,6 +2101,9 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 
         //qtss_printf("QTSSReflectorModule.cpp:DestroySession broadcaster theSession=%"_U32BITARG_"\n", (UInt32) theSession);
         theSession->RemoveSessionFromOutput(inParams->inClientSession);
+
+		theSession->StopHLSSession();
+
         RemoveOutput(NULL, theSession, killClients);
     }
     else
