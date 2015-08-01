@@ -16,9 +16,18 @@
 #endif
 
 #define Easy_HLS_Handle void*
-#define Easy_HLS_FRAME_TYPE_A    0
-#define Easy_HLS_FRAME_TYPE_I    1
-#define Easy_HLS_FRAME_TYPE_P    2
+
+enum{
+	TS_TYPE_PAT = 0x01000000,
+	TS_TYPE_PMT = 0x02000000,
+	TS_TYPE_PES = 0x03f00000,
+
+	TS_TYPE_PES_AUDIO         = 0x03100000,
+	TS_TYPE_PES_VIDEO_I_FRAME = 0x03200000,
+	TS_TYPE_PES_VIDEO_P_FRAME = 0x03400000,
+	TS_TYPE_PES_VIDEO_E_FRAME = 0x03800000,
+};
+
 
 #ifdef __cplusplus
 extern "C"
