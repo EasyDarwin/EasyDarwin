@@ -52,7 +52,6 @@ static OSRefTable*              sHLSSessionMap = NULL;
 static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
-static QTSS_Error Shutdown();
 static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
 static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
 
@@ -71,8 +70,6 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Register(&inParams->regParams);
         case QTSS_Initialize_Role:
             return Initialize(&inParams->initParams);
-        case QTSS_Shutdown_Role:
-            return Shutdown();
 		case Easy_HLSOpen_Role:		//Start HLS Streaming
 			return EasyHLSOpen(&inParams->easyHLSOpenParams);
 		case Easy_HLSClose_Role:	//Stop HLS Streaming
@@ -86,7 +83,6 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 {
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_Shutdown_Role);
     (void)QTSS_AddRole(Easy_HLSOpen_Role); 
 	(void)QTSS_AddRole(Easy_HLSClose_Role); 
     
@@ -109,11 +105,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sCheckingTask = NEW HLSSessionCheckingTask();
     sHLSSessionMap = NEW OSRefTable();
 
-    return QTSS_NoErr;
-}
-
-QTSS_Error Shutdown()
-{
     return QTSS_NoErr;
 }
 
