@@ -24,7 +24,7 @@
 static FILE* fTest;
 
 // PREFS
-static UInt32                   sDefaultM3U8Version				= 3; 
+static UInt32                   sDefaultM3U8Version					= 3; 
 static Bool16                   sDefaultAllowCache					= false; 
 static UInt32                   sDefaultTargetDuration				= 4;
 static UInt32                   sDefaultPlaylistCapacity			= 4;
@@ -35,8 +35,8 @@ UInt32                          EasyHLSSession::sM3U8Version		= 3;
 Bool16                          EasyHLSSession::sAllowCache			= false;
 UInt32                          EasyHLSSession::sTargetDuration		= 4;
 UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
-char*							EasyHLSSession::sLocalRootDir		= "./HLS/";
-char*							EasyHLSSession::sHTTPRootDir		= "http://hls.easydarwin.org/";
+char*							EasyHLSSession::sLocalRootDir		= NULL;
+char*							EasyHLSSession::sHTTPRootDir		= NULL;
 
 
 void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
@@ -114,7 +114,8 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 	{
 		//printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 		::fwrite(pbuf, 1, frameinfo->length, fTest);
-		VideoMux(fHLSHandle, frameinfo->type, (unsigned char*)pbuf, frameinfo->length, frameinfo->rtptimestamp,frameinfo->rtptimestamp,frameinfo->rtptimestamp);
+		unsigned long long llPts = frameinfo->rtptimestamp * 90;
+		VideoMux(fHLSHandle, frameinfo->type, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
