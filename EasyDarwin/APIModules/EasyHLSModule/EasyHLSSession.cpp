@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -21,9 +21,46 @@
     #include <unistd.h>
 #endif
 
-static FILE* fTest;
+// PREFS
+static UInt32                   sDefaultM3U8Version					= 3; 
+static Bool16                   sDefaultAllowCache					= false; 
+static UInt32                   sDefaultTargetDuration				= 4;
+static UInt32                   sDefaultPlaylistCapacity			= 4;
+//static char*					sDefaultLocalRootDir				= "./HLS/";
+static char*					sDefaultHTTPRootDir					= "http://hls.easydarwin.org/";
 
-//NVSource Callback
+UInt32                          EasyHLSSession::sM3U8Version		= 3;
+Bool16                          EasyHLSSession::sAllowCache			= false;
+UInt32                          EasyHLSSession::sTargetDuration		= 4;
+UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
+//char*							EasyHLSSession::sLocalRootDir		= NULL;
+char*							EasyHLSSession::sHTTPRootDir		= NULL;
+
+static							int sTS = 0;
+
+void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
+{
+	//delete [] sLocalRootDir;
+	//sLocalRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "LOCAL_ROOT_DIR", sDefaultLocalRootDir);
+
+	delete [] sHTTPRootDir;
+    sHTTPRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "HTTP_ROOT_DIR", sDefaultHTTPRootDir);
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "M3U8_VERSION", qtssAttrDataTypeUInt32,
+							  &EasyHLSSession::sM3U8Version, &sDefaultM3U8Version, sizeof(sDefaultM3U8Version));
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "ALLOW_CACHE", qtssAttrDataTypeBool16,
+							  &EasyHLSSession::sAllowCache, &sDefaultAllowCache, sizeof(sDefaultAllowCache));
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "TARGET_DURATION", qtssAttrDataTypeUInt32,
+							  &EasyHLSSession::sTargetDuration, &sDefaultTargetDuration, sizeof(sDefaultTargetDuration));
+
+	QTSSModuleUtils::GetAttribute(inPrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32,
+							  &EasyHLSSession::sPlaylistCapacity, &sDefaultPlaylistCapacity, sizeof(sDefaultPlaylistCapacity));
+
+}
+
+/* NVSource从RTSPClient获取数据后回调给上层 */
 int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
 	EasyHLSSession* pHLSSession = (EasyHLSSession *)_chPtr;
@@ -42,36 +79,51 @@ int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *p
 	return 0;
 }
 
-EasyHLSSession::EasyHLSSession(StrPtrLen* inSourceID)
+EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 :   fQueueElem(),
-	fNVSHandle(NULL)
+	fNVSHandle(NULL),
+	fHLSHandle(NULL)
 {
 
     fQueueElem.SetEnclosingObject(this);
-    if (inSourceID != NULL)
+    if (inSessionID != NULL)
     {
-        fHLSSessionID.Ptr = NEW char[inSourceID->Len + 1];
-        ::memcpy(fHLSSessionID.Ptr, inSourceID->Ptr, inSourceID->Len);
-        fHLSSessionID.Len = inSourceID->Len;
+        fHLSSessionID.Ptr = NEW char[inSessionID->Len + 1];
+        ::memcpy(fHLSSessionID.Ptr, inSessionID->Ptr, inSessionID->Len);
+		fHLSSessionID.Ptr[inSessionID->Len] = '\0';
+        fHLSSessionID.Len = inSessionID->Len;
         fRef.Set(fHLSSessionID, this);
     }
-
-	fTest = ::fopen("./aaa.264","wb");
 }
 
 
 EasyHLSSession::~EasyHLSSession()
 {
+	HLSSessionRelease();
     fHLSSessionID.Delete();
 }
 
 QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
+	if(NULL == fHLSHandle) return QTSS_Unimplemented;
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
-		//printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-		printf("%s",frameinfo->type==FRAMETYPE_I?"I":"P");
+		printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 		::fwrite(pbuf, 1, frameinfo->length, fTest);
+		sTS = sTS + 40;
+		unsigned long long llPts = sTS * 90;
+	
+		unsigned int uiFrameType = 0;
+		if (frameinfo->type == FRAMETYPE_I)
+		{
+			uiFrameType = TS_TYPE_PES_VIDEO_I_FRAME;
+		}
+		else if (frameinfo->type == FRAMETYPE_P)
+		{
+			uiFrameType = TS_TYPE_PES_VIDEO_P_FRAME;
+		}
+
+		VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
@@ -114,15 +166,35 @@ QTSS_Error	EasyHLSSession::HLSSessionCreate(char* rtspUrl)
 	NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
 	NVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 
+	char movieFolder[256] = { 0 };
+	UInt32 pathLen = 256;
+	QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
+
+	fHLSHandle = HLSSession_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
+
+	char subDir[128] = { 0 };
+	qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
+	ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+
+	char fileName[256] = { 0 };
+	sprintf(fileName,"%s.264",fHLSSessionID);
+	fTest = ::fopen(fileName,"wb");
+
 	return QTSS_NoErr;
 }
 
 QTSS_Error	EasyHLSSession::HLSSessionRelease()
 {
+	qtss_printf("HLSSession Release....\n");
 	if(NULL == fNVSHandle)	return QTSS_BadArgument;
 	NVS_CloseStream(fNVSHandle);
 	NVS_Deinit(&fNVSHandle);
 
+	HLSSession_Release(fHLSHandle);
+
 	::fclose(fTest);
+	fNVSHandle = NULL;
+	fHLSHandle = NULL;
+
 	return QTSS_NoErr;
 }
