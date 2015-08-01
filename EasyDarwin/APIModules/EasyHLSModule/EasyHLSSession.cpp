@@ -38,6 +38,7 @@ UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
 char*							EasyHLSSession::sLocalRootDir		= NULL;
 char*							EasyHLSSession::sHTTPRootDir		= NULL;
 
+static							int sTS = 0;
 
 void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 {
@@ -112,10 +113,22 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 {
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
-		//printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 		::fwrite(pbuf, 1, frameinfo->length, fTest);
-		unsigned long long llPts = frameinfo->rtptimestamp * 90;
-		VideoMux(fHLSHandle, frameinfo->type, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
+		sTS = sTS + 40;
+		unsigned long long llPts = sTS * 90;
+	
+		unsigned int uiFrameType = 0;
+		if (frameinfo->type == FRAMETYPE_I)
+		{
+			uiFrameType = TS_TYPE_PES_VIDEO_I_FRAME;
+		}
+		else if (frameinfo->type == FRAMETYPE_P)
+		{
+			uiFrameType = TS_TYPE_PES_VIDEO_P_FRAME;
+		}
+
+		VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
