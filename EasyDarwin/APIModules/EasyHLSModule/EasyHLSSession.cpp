@@ -61,7 +61,7 @@ void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 
 }
 
-//NVSource Callback
+/* NVSource从RTSPClient获取数据后回调给上层 */
 int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
 	EasyHLSSession* pHLSSession = (EasyHLSSession *)_chPtr;
@@ -80,23 +80,25 @@ int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *p
 	return 0;
 }
 
-EasyHLSSession::EasyHLSSession(StrPtrLen* inSourceID)
+EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 :   fQueueElem(),
 	fNVSHandle(NULL),
 	fHLSHandle(NULL)
 {
 
     fQueueElem.SetEnclosingObject(this);
-    if (inSourceID != NULL)
+    if (inSessionID != NULL)
     {
-        fHLSSessionID.Ptr = NEW char[inSourceID->Len + 1];
-        ::memcpy(fHLSSessionID.Ptr, inSourceID->Ptr, inSourceID->Len);
-        fHLSSessionID.Len = inSourceID->Len;
+        fHLSSessionID.Ptr = NEW char[inSessionID->Len + 1];
+        ::memcpy(fHLSSessionID.Ptr, inSessionID->Ptr, inSessionID->Len);
+		fHLSSessionID.Ptr[inSessionID->Len] = '\0';
+        fHLSSessionID.Len = inSessionID->Len;
         fRef.Set(fHLSSessionID, this);
     }
 
-	fHLSHandle = HLSSession_Create(4,false,3);
-	ResetStreamCache(fHLSHandle, "D:/www/hls/", "live", "live", 4);
+	fHLSHandle = HLSSession_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
+	ResetStreamCache(fHLSHandle, sLocalRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr, sTargetDuration);
+
 	fTest = ::fopen("./aaa.264","wb");
 }
 
