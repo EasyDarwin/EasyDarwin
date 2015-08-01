@@ -44,6 +44,7 @@ extern "C"
 	
 	EasyHLS_API int EasyHLS_APICALL AudioMux(Easy_HLS_Handle handle, unsigned char *data, int dataLength, /*u64 pcr,*/ unsigned long long pts, unsigned long long dts=~0);
 
+	EasyHLS_API void EasyHLS_APICALL HLSSession_Release(Easy_HLS_Handle handle);
 #ifdef __cplusplus
 }
 #endif

@@ -21,29 +21,27 @@
     #include <unistd.h>
 #endif
 
-static FILE* fTest;
-
 // PREFS
 static UInt32                   sDefaultM3U8Version					= 3; 
 static Bool16                   sDefaultAllowCache					= false; 
 static UInt32                   sDefaultTargetDuration				= 4;
 static UInt32                   sDefaultPlaylistCapacity			= 4;
-static char*					sDefaultLocalRootDir				= "./HLS/";
+//static char*					sDefaultLocalRootDir				= "./HLS/";
 static char*					sDefaultHTTPRootDir					= "http://hls.easydarwin.org/";
 
 UInt32                          EasyHLSSession::sM3U8Version		= 3;
 Bool16                          EasyHLSSession::sAllowCache			= false;
 UInt32                          EasyHLSSession::sTargetDuration		= 4;
 UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
-char*							EasyHLSSession::sLocalRootDir		= NULL;
+//char*							EasyHLSSession::sLocalRootDir		= NULL;
 char*							EasyHLSSession::sHTTPRootDir		= NULL;
 
 static							int sTS = 0;
 
 void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 {
-	delete [] sLocalRootDir;
-    sLocalRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "LOCAL_ROOT_DIR", sDefaultLocalRootDir);
+	//delete [] sLocalRootDir;
+	//sLocalRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "LOCAL_ROOT_DIR", sDefaultLocalRootDir);
 
 	delete [] sHTTPRootDir;
     sHTTPRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "HTTP_ROOT_DIR", sDefaultHTTPRootDir);
@@ -96,21 +94,18 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
         fHLSSessionID.Len = inSessionID->Len;
         fRef.Set(fHLSSessionID, this);
     }
-
-	fHLSHandle = HLSSession_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
-	ResetStreamCache(fHLSHandle, sLocalRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr, sTargetDuration);
-
-	fTest = ::fopen("./aaa.264","wb");
 }
 
 
 EasyHLSSession::~EasyHLSSession()
 {
+	HLSSessionRelease();
     fHLSSessionID.Delete();
 }
 
 QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
+	if(NULL == fHLSHandle) return QTSS_Unimplemented;
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
 		printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
@@ -171,15 +166,35 @@ QTSS_Error	EasyHLSSession::HLSSessionCreate(char* rtspUrl)
 	NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
 	NVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 
+	char movieFolder[256] = { 0 };
+	UInt32 pathLen = 256;
+	QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
+
+	fHLSHandle = HLSSession_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
+
+	char subDir[128] = { 0 };
+	qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
+	ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+
+	char fileName[256] = { 0 };
+	sprintf(fileName,"%s.264",fHLSSessionID);
+	fTest = ::fopen(fileName,"wb");
+
 	return QTSS_NoErr;
 }
 
 QTSS_Error	EasyHLSSession::HLSSessionRelease()
 {
+	qtss_printf("HLSSession Release....\n");
 	if(NULL == fNVSHandle)	return QTSS_BadArgument;
 	NVS_CloseStream(fNVSHandle);
 	NVS_Deinit(&fNVSHandle);
 
+	HLSSession_Release(fHLSHandle);
+
 	::fclose(fTest);
+	fNVSHandle = NULL;
+	fHLSHandle = NULL;
+
 	return QTSS_NoErr;
 }

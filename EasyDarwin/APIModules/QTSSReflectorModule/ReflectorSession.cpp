@@ -172,7 +172,7 @@ QTSS_Error ReflectorSession::SetSessionName()
 		StringParser parser(&fSourceID);
 		StrPtrLen strName;
 		parser.ConsumeLength(NULL,pathLen+1);
-		parser.ConsumeUntilWhitespace(&strName);
+		parser.ConsumeWord(&strName);
 		fSessionName = NEW char[strName.Len + 1];
 		::memcpy(fSessionName, strName.Ptr, strName.Len);
 		fSessionName[strName.Len] = '\0';
@@ -197,7 +197,7 @@ QTSS_Error ReflectorSession::StartHLSSession()
 	//构造本地URL
 	char url[QTSS_MAX_URL_LENGTH] = { 0 };
 
-	qtss_sprintf(url,"rtsp://127.0.0.1:%d/%s", thePort, fSessionName);
+	qtss_sprintf(url,"rtsp://127.0.0.1:%d/%s.sdp", thePort, fSessionName);
 	packetParams.easyHLSOpenParams.inRTSPUrl = url;
 
 	UInt32 fCurrentModule = 0;

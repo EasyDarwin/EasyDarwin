@@ -13,6 +13,7 @@
 #include "StrPtrLen.h"
 #include "ResizeableStringFormatter.h"
 #include "MyAssert.h"
+#include "QTSServerInterface.h"
 
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
@@ -51,11 +52,14 @@ class EasyHLSSession
 		NVS_HANDLE	fNVSHandle;
 		Easy_HLS_Handle fHLSHandle;
 
+		//≤‚ ‘Raw ˝æ›±£¥Ê
+		FILE* fTest;
+
 		static UInt32	sM3U8Version;
 		static Bool16	sAllowCache;
 		static UInt32	sTargetDuration;
 		static UInt32	sPlaylistCapacity;
-		static char*	sLocalRootDir;
+		//static char*	sLocalRootDir;
 		static char*	sHTTPRootDir;
 };
 
