@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -43,16 +43,17 @@ class HLSSessionCheckingTask : public Task
 };
 
 // STATIC DATA
-static QTSS_PrefsObject         sServerPrefs = NULL;
-static HLSSessionCheckingTask*	sCheckingTask = NULL;
-static OSRefTable*              sHLSSessionMap = NULL;
+static QTSS_PrefsObject         sServerPrefs	= NULL;
+static HLSSessionCheckingTask*	sCheckingTask	= NULL;
+static OSRefTable*              sHLSSessionMap	= NULL;
+static QTSS_ServerObject sServer				= NULL;
+static QTSS_ModulePrefsObject       sModulePrefs		= NULL;
 
 // FUNCTION PROTOTYPES
 
 static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
-static QTSS_Error Shutdown();
 static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
 static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
 
@@ -71,8 +72,6 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Register(&inParams->regParams);
         case QTSS_Initialize_Role:
             return Initialize(&inParams->initParams);
-        case QTSS_Shutdown_Role:
-            return Shutdown();
 		case Easy_HLSOpen_Role:		//Start HLS Streaming
 			return EasyHLSOpen(&inParams->easyHLSOpenParams);
 		case Easy_HLSClose_Role:	//Stop HLS Streaming
@@ -86,7 +85,6 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 {
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_Shutdown_Role);
     (void)QTSS_AddRole(Easy_HLSOpen_Role); 
 	(void)QTSS_AddRole(Easy_HLSClose_Role); 
     
@@ -109,11 +107,13 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sCheckingTask = NEW HLSSessionCheckingTask();
     sHLSSessionMap = NEW OSRefTable();
 
-    return QTSS_NoErr;
-}
+    sServer = inParams->inServer;
+    
+    sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
-QTSS_Error Shutdown()
-{
+    // Call helper class initializers
+    EasyHLSSession::Initialize(sModulePrefs);
+
     return QTSS_NoErr;
 }
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2014 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -13,11 +13,13 @@
 #include "StrPtrLen.h"
 #include "ResizeableStringFormatter.h"
 #include "MyAssert.h"
+#include "QTSServerInterface.h"
 
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "OSArrayObjectDeleter.h"
 #include "NVSourceAPI.h"
+#include "EasyHLSAPI.h"
 
 #ifndef __EASYHLS_SESSION__
 #define __EASYHLS_SESSION__
@@ -28,7 +30,9 @@ class EasyHLSSession
         EasyHLSSession(StrPtrLen* inSourceID);
         virtual ~EasyHLSSession();
         
-        //
+        //加载模块配置
+        static void Initialize(QTSS_ModulePrefsObject inPrefs);
+
         // ACCESSORS
         
         OSRef*          GetRef()            { return &fRef; }
@@ -46,6 +50,17 @@ class EasyHLSSession
         StrPtrLen   fHLSSessionID;
         OSQueueElem fQueueElem; // Relay uses this.  
 		NVS_HANDLE	fNVSHandle;
+		Easy_HLS_Handle fHLSHandle;
+
+		//测试Raw数据保存
+		FILE* fTest;
+
+		static UInt32	sM3U8Version;
+		static Bool16	sAllowCache;
+		static UInt32	sTargetDuration;
+		static UInt32	sPlaylistCapacity;
+		//static char*	sLocalRootDir;
+		static char*	sHTTPRootDir;
 };
 
 #endif

@@ -47,7 +47,7 @@
 		<PREF NAME="auto_restart" TYPE="Bool16" >true</PREF>
 		<PREF NAME="break_on_assert" TYPE="Bool16" >false</PREF>
 		<PREF NAME="bind_ip_addr" >0</PREF>
-		<PREF NAME="movie_folder" >./Movies</PREF>
+		<PREF NAME="movie_folder" >./Movies/</PREF>
 		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
 		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
 		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
@@ -251,5 +251,12 @@
 	<MODULE NAME="QTSSOnDemandRelayModule" >
 		<PREF NAME="device_prefs_file" >./devices.xml</PREF>
 	</MODULE>
-	<MODULE NAME="EasyHLSModule" ></MODULE>
+	<MODULE NAME="EasyHLSModule" >
+		<PREF NAME="LOCAL_ROOT_DIR" >./HLS/</PREF>
+		<PREF NAME="HTTP_ROOT_DIR" >http://hls.easydarwin.org/</PREF>
+		<PREF NAME="M3U8_VERSION" TYPE="UInt32" >3</PREF>
+		<PREF NAME="ALLOW_CACHE" TYPE="Bool16" >false</PREF>
+		<PREF NAME="TARGET_DURATION" TYPE="UInt32" >4</PREF>
+		<PREF NAME="PLAYLIST_CAPACITY" TYPE="UInt32" >4</PREF>
+	</MODULE>
 </CONFIGURATION>
