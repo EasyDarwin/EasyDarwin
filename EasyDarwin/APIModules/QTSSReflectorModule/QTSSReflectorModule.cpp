@@ -107,6 +107,9 @@ static Bool16   sDefaultAllowNonSDPURLs = true;
 static Bool16   sRTPInfoDisabled = false;
 static Bool16   sDefaultRTPInfoDisabled = false;
 
+static Bool16   sHLSOutputEnabled = false;
+static Bool16   sDefaultHLSOutputEnabled = false;
+
 static Bool16   sAnnounceEnabled = true;
 static Bool16   sDefaultAnnounceEnabled = true;
 static Bool16   sBroadcastPushEnabled = true;
@@ -591,6 +594,10 @@ QTSS_Error RereadPrefs()
     KillCommandPathInList();
     
     QTSS3GPPModuleUtils::ReadPrefs();
+
+	//Êä³öHLS
+    QTSSModuleUtils::GetAttribute(sPrefs, "hls_output_enabled",  qtssAttrDataTypeBool16,
+                                &sHLSOutputEnabled, &sDefaultHLSOutputEnabled, sizeof(sDefaultHLSOutputEnabled));
 
                         
     return QTSS_NoErr;
@@ -1923,7 +1930,8 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
              return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientBadRequest, 0);
         }
         
-		inSession->StartHLSSession();
+		if(sHLSOutputEnabled)
+			inSession->StartHLSSession();
     
         KeepSession(inParams->inRTSPRequest,true);
         //qtss_printf("QTSSReflectorModule.cpp:DoPlay (PUSH) inRTSPSession=%"_U32BITARG_" inClientSession=%"_U32BITARG_"\n",(UInt32)inParams->inRTSPSession,(UInt32)inParams->inClientSession);
@@ -2102,7 +2110,8 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
         //qtss_printf("QTSSReflectorModule.cpp:DestroySession broadcaster theSession=%"_U32BITARG_"\n", (UInt32) theSession);
         theSession->RemoveSessionFromOutput(inParams->inClientSession);
 
-		theSession->StopHLSSession();
+		if(sHLSOutputEnabled)
+			theSession->StopHLSSession();
 
         RemoveOutput(NULL, theSession, killClients);
     }
