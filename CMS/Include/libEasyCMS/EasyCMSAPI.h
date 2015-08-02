@@ -4,22 +4,16 @@
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-#ifndef _EasyDarwin_CMS_INTERFACE_H
-#define _EasyDarwin_CMS_INTERFACE_H
+#ifndef _Easy_CMS_API_H
+#define _Easy_CMS_API_H
 #include "libClientCommondef.h"
 
-#if (defined(_WIN32))
-#ifndef _DLL_
-#define EASYDARWIN_CMS_API
+#ifdef _WIN32
+#define EasyCMS_API  __declspec(dllexport)
+#define Easy_APICALL  __stdcall
 #else
-#ifdef EASYDARWIN_CMS_API_EXPORTS
-#define EASYDARWIN_CMS_API __declspec(dllexport) 
-#else  
-#define EASYDARWIN_CMS_API __declspec(dllimport)
-#endif
-#endif
-#elif defined(__linux__)
-#define EASYDARWIN_CMS_API
+#define EasyCMS_API
+#define Easy_APICALL 
 #endif
 
 namespace EasyDarwin { namespace libEasyCMS
@@ -33,7 +27,7 @@ enum EASYDARWIN_EVENT_TYPE
 
 typedef void (*fEventCallBack)(EASYDARWIN_EVENT_TYPE eEvent, const char* pEventData, unsigned int iDataLen, void* pUserData);
 
-class EASYDARWIN_CMS_API EasyDarwinCMSAPI
+class EasyCMS_API EasyDarwinCMSAPI
 {
 public:
 	EasyDarwinCMSAPI();
