@@ -40,7 +40,7 @@ class EasyHLSSession
 	
         StrPtrLen*      GetSessionID()     { return &fHLSSessionID; }
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
-		QTSS_Error		HLSSessionCreate(char* rtspUrl);
+		QTSS_Error		HLSSessionStart(char* rtspUrl);
 		QTSS_Error		HLSSessionRelease();
    
     private:
