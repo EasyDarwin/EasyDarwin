@@ -21,8 +21,8 @@
 #include "NVSourceAPI.h"
 #include "EasyHLSAPI.h"
 
-#ifndef __EASYHLS_SESSION__
-#define __EASYHLS_SESSION__
+#ifndef __EASY_HLS_SESSION__
+#define __EASY_HLS_SESSION__
 
 class EasyHLSSession
 {
@@ -45,12 +45,20 @@ class EasyHLSSession
    
     private:
 
-        // For storage in the session map       
+        //HLSSession列表由EasyHLSModule的sHLSSessionMap维护  
         OSRef       fRef;
         StrPtrLen   fHLSSessionID;
-        OSQueueElem fQueueElem; // Relay uses this.  
-		NVS_HANDLE	fNVSHandle;
+
+        OSQueueElem fQueueElem; 
+
+		//NVS Handle
+		NVS_Handle	fNVSHandle;
+		//HLS Handle
 		Easy_HLS_Handle fHLSHandle;
+		
+		//TS timestamp ms
+		int tsTimeStampMSsec;
+
 
 		//测试Raw数据保存
 		FILE* fTest;
