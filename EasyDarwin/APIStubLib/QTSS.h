@@ -41,6 +41,7 @@ extern "C" {
 #define QTSS_MAX_SESSION_ID_LENGTH      32
 #define QTSS_MAX_ATTRIBUTE_NAME_SIZE    64
 #define QTSS_MAX_URL_LENGTH				512
+#define QTSS_MAX_FILE_NAME_LENGTH		128
 
 
 //*******************************

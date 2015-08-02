@@ -128,7 +128,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
-		//printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 		// 暂时不对音频进行处理
 	}
 	else if (mediatype == MEDIA_TYPE_EVENT)
@@ -149,31 +149,39 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 /*
 	创建HLS直播Session
 */
-QTSS_Error	EasyHLSSession::HLSSessionCreate(char* rtspUrl)
+QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 {
-	NVS_Init(&fNVSHandle);
+	if(NULL == fNVSHandle)
+	{
+		//创建NVSource
+		NVS_Init(&fNVSHandle);
 
-	if (NULL == fNVSHandle) return QTSS_Unimplemented;
+		if (NULL == fNVSHandle) return QTSS_Unimplemented;
 
-	unsigned int mediaType = MEDIA_TYPE_VIDEO;
-	mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
+		unsigned int mediaType = MEDIA_TYPE_VIDEO;
+		//mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
 
-	NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
-	NVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+		NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
+		NVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 
-	char movieFolder[256] = { 0 };
-	UInt32 pathLen = 256;
-	QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
+		char fileName[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+		sprintf(fileName,"%s.264",fHLSSessionID.Ptr);
+		fTest = ::fopen(fileName,"wb");
+	}
 
-	fHLSHandle = HLSSession_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
+	if(NULL == fHLSHandle)
+	{
+		//创建HLSSessioin Sink
+		char movieFolder[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+		UInt32 pathLen = QTSS_MAX_FILE_NAME_LENGTH;
+		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
 
-	char subDir[128] = { 0 };
-	qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
-	ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+		fHLSHandle = HLSSession_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
 
-	char fileName[256] = { 0 };
-	sprintf(fileName,"%s.264",fHLSSessionID.Ptr);
-	fTest = ::fopen(fileName,"wb");
+		char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+		qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
+		ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+	}
 
 	return QTSS_NoErr;
 }
@@ -181,15 +189,22 @@ QTSS_Error	EasyHLSSession::HLSSessionCreate(char* rtspUrl)
 QTSS_Error	EasyHLSSession::HLSSessionRelease()
 {
 	qtss_printf("HLSSession Release....\n");
-	if(NULL == fNVSHandle)	return QTSS_BadArgument;
-	NVS_CloseStream(fNVSHandle);
-	NVS_Deinit(&fNVSHandle);
+	
+	//释放source
+	if(fNVSHandle)
+	{
+		NVS_CloseStream(fNVSHandle);
+		NVS_Deinit(&fNVSHandle);
+		fNVSHandle = NULL;
+		::fclose(fTest);
+	}
 
-	HLSSession_Release(fHLSHandle);
-
-	::fclose(fTest);
-	fNVSHandle = NULL;
-	fHLSHandle = NULL;
+	//释放sink
+	if(fHLSHandle)
+	{
+		HLSSession_Release(fHLSHandle);
+		fHLSHandle = NULL;
+	}
 
 	return QTSS_NoErr;
 }
