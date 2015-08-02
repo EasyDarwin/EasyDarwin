@@ -56,7 +56,7 @@ class EasyHLSSession
 		//HLS Handle
 		Easy_HLS_Handle fHLSHandle;
 		
-		//TS timestamp ms
+		//TS timestamp ms，自定义时间戳
 		int tsTimeStampMSsec;
 
 

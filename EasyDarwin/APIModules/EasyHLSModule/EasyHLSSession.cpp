@@ -129,33 +129,26 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
 		//printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-		//暂时不对音频进行处理
+		// 暂时不对音频进行处理
 	}
 	else if (mediatype == MEDIA_TYPE_EVENT)
 	{
-		printf("Get MEDIA_TYPE_EVENT\n");
 		if (NULL == pbuf && NULL == frameinfo)
 		{
 			printf("Connecting:%s ...\n", fHLSSessionID.Ptr);
-			//_TRACE("[ch%d]连接中...\n", _chid);
-			//MEDIA_FRAME_INFO	frameinfo;
-			//memset(&frameinfo, 0x00, sizeof(MEDIA_FRAME_INFO));
-			//frameinfo.length = 1;
-			//frameinfo.type   = 0xFF;
-			//SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)&frameinfo, "1");
 		}
 		else if (NULL!=frameinfo && frameinfo->type==0xF1)
 		{
 			printf("Lose Packet:%s ...\n", fHLSSessionID.Ptr);
-			//_TRACE("[ch%d]掉包[%.2f]...\n", _chid, frameinfo->losspacket);
-			//frameinfo->length = 1;
-			//SSQ_AddData(pRealtimePlayThread[_chid].pAVQueue, _chid, MEDIA_TYPE_EVENT, (MEDIA_FRAME_INFO*)frameinfo, "1");
 		}
 	}
 
 	return QTSS_NoErr;
 }
 
+/*
+	创建HLS直播Session
+*/
 QTSS_Error	EasyHLSSession::HLSSessionCreate(char* rtspUrl)
 {
 	NVS_Init(&fNVSHandle);
