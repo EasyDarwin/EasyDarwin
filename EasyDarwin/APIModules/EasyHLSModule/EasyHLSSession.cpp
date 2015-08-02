@@ -26,23 +26,18 @@ static UInt32                   sDefaultM3U8Version					= 3;
 static Bool16                   sDefaultAllowCache					= false; 
 static UInt32                   sDefaultTargetDuration				= 4;
 static UInt32                   sDefaultPlaylistCapacity			= 4;
-//static char*					sDefaultLocalRootDir				= "./HLS/";
 static char*					sDefaultHTTPRootDir					= "http://hls.easydarwin.org/";
 
 UInt32                          EasyHLSSession::sM3U8Version		= 3;
 Bool16                          EasyHLSSession::sAllowCache			= false;
 UInt32                          EasyHLSSession::sTargetDuration		= 4;
 UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
-//char*							EasyHLSSession::sLocalRootDir		= NULL;
 char*							EasyHLSSession::sHTTPRootDir		= NULL;
 
 static							int sTS = 0;
 
 void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 {
-	//delete [] sLocalRootDir;
-	//sLocalRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "LOCAL_ROOT_DIR", sDefaultLocalRootDir);
-
 	delete [] sHTTPRootDir;
     sHTTPRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "HTTP_ROOT_DIR", sDefaultHTTPRootDir);
 
@@ -177,7 +172,7 @@ QTSS_Error	EasyHLSSession::HLSSessionCreate(char* rtspUrl)
 	ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
 
 	char fileName[256] = { 0 };
-	sprintf(fileName,"%s.264",fHLSSessionID);
+	sprintf(fileName,"%s.264",fHLSSessionID.Ptr);
 	fTest = ::fopen(fileName,"wb");
 
 	return QTSS_NoErr;

@@ -59,7 +59,6 @@ class EasyHLSSession
 		static Bool16	sAllowCache;
 		static UInt32	sTargetDuration;
 		static UInt32	sPlaylistCapacity;
-		//static char*	sLocalRootDir;
 		static char*	sHTTPRootDir;
 };
 
