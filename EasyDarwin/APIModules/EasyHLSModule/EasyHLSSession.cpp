@@ -34,8 +34,6 @@ UInt32                          EasyHLSSession::sTargetDuration		= 4;
 UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
 char*							EasyHLSSession::sHTTPRootDir		= NULL;
 
-static							int sTS = 0;
-
 void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 {
 	delete [] sHTTPRootDir;
@@ -77,10 +75,12 @@ int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *p
 EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 :   fQueueElem(),
 	fNVSHandle(NULL),
-	fHLSHandle(NULL)
+	fHLSHandle(NULL),
+	tsTimeStampMSsec(0)
 {
 
     fQueueElem.SetEnclosingObject(this);
+
     if (inSessionID != NULL)
     {
         fHLSSessionID.Ptr = NEW char[inSessionID->Len + 1];
@@ -104,9 +104,11 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
 		printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-		::fwrite(pbuf, 1, frameinfo->length, fTest);
-		sTS = sTS + 40;
-		unsigned long long llPts = sTS * 90;
+		
+		fwrite(pbuf, 1, frameinfo->length, fTest);
+
+		tsTimeStampMSsec += 1000/frameinfo->fps;
+		unsigned long long llPts = tsTimeStampMSsec * 90;
 	
 		unsigned int uiFrameType = 0;
 		if (frameinfo->type == FRAMETYPE_I)
@@ -117,12 +119,17 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 		{
 			uiFrameType = TS_TYPE_PES_VIDEO_P_FRAME;
 		}
+		else
+		{
+			return QTSS_OutOfState;
+		}
 
 		VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
 		//printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		//暂时不对音频进行处理
 	}
 	else if (mediatype == MEDIA_TYPE_EVENT)
 	{
