@@ -9,10 +9,10 @@
 
 #ifdef _WIN32
 #define EasyHLS_API  __declspec(dllexport)
-#define EasyHLS_APICALL  __stdcall
+#define Easy_APICALL  __stdcall
 #else
 #define EasyHLS_API
-#define EasyHLS_APICALL 
+#define Easy_APICALL 
 #endif
 
 #define Easy_HLS_Handle void*
@@ -34,17 +34,17 @@ extern "C"
 {
 #endif
 
-	EasyHLS_API Easy_HLS_Handle EasyHLS_APICALL HLSSession_Create(int nCapacity, bool bAllowCache, int version);
+	EasyHLS_API Easy_HLS_Handle Easy_APICALL EasyHLS_Session_Create(int nCapacity, bool bAllowCache, int version);
 
-	EasyHLS_API void EasyHLS_APICALL ResetStreamCache(Easy_HLS_Handle handle, const char * strRootDir, const char* strSubDir, const char* strMediaName, int nTargetDuration);
+	EasyHLS_API void Easy_APICALL EasyHLS_ResetStreamCache(Easy_HLS_Handle handle, const char * strRootDir, const char* strSubDir, const char* strMediaName, int nTargetDuration);
 	
-	EasyHLS_API const char*  EasyHLS_APICALL GetM3U8File(Easy_HLS_Handle handle);
+	EasyHLS_API const char*  Easy_APICALL EasyHLS_GetM3U8File(Easy_HLS_Handle handle);
 	
-	EasyHLS_API int EasyHLS_APICALL VideoMux(Easy_HLS_Handle handle, unsigned int uiFrameType, unsigned char *data, int dataLength, unsigned long long pcr, unsigned long long pts, unsigned long long dts);
+	EasyHLS_API int Easy_APICALL EasyHLS_VideoMux(Easy_HLS_Handle handle, unsigned int uiFrameType, unsigned char *data, int dataLength, unsigned long long pcr, unsigned long long pts, unsigned long long dts);
 	
-	EasyHLS_API int EasyHLS_APICALL AudioMux(Easy_HLS_Handle handle, unsigned char *data, int dataLength, /*u64 pcr,*/ unsigned long long pts, unsigned long long dts=~0);
+	EasyHLS_API int Easy_APICALL EasyHLS_AudioMux(Easy_HLS_Handle handle, unsigned char *data, int dataLength, /*u64 pcr,*/ unsigned long long pts, unsigned long long dts=~0);
 
-	EasyHLS_API void EasyHLS_APICALL HLSSession_Release(Easy_HLS_Handle handle);
+	EasyHLS_API void Easy_APICALL EasyHLS_Session_Release(Easy_HLS_Handle handle);
 #ifdef __cplusplus
 }
 #endif
