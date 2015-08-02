@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include "revision.h"
-#include "EasyDarwinCMSAPI.h"
+#include "EasyCMSAPI.h"
 #include <string.h>
 #include <stdlib.h>
 #include "inifiles.h"
