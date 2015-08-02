@@ -124,7 +124,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 			return QTSS_OutOfState;
 		}
 
-		VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
+		EasyHLS_VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
@@ -176,11 +176,11 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 		UInt32 pathLen = QTSS_MAX_FILE_NAME_LENGTH;
 		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
 
-		fHLSHandle = HLSSession_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
+		fHLSHandle = EasyHLS_Session_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
 
 		char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
 		qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
-		ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+		EasyHLS_ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
 	}
 
 	return QTSS_NoErr;
@@ -202,7 +202,7 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 	// Õ∑≈sink
 	if(fHLSHandle)
 	{
-		HLSSession_Release(fHLSHandle);
+		EasyHLS_Session_Release(fHLSHandle);
 		fHLSHandle = NULL;
 	}
 
