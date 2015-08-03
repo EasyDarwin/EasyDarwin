@@ -76,17 +76,7 @@ class QTSServerPrefs : public QTSSPrefs
         
         //-1 means unlimited
         SInt32  GetMaxConnections()         { return fMaximumConnections; }
-        SInt32  GetMaxKBitsBandwidth()      { return fMaxBandwidthInKBits; }
-        
-        // Thinning algorithm parameters
-        SInt32  GetDropAllPacketsTimeInMsec()           { return fDropAllPacketsTimeInMsec; }
-        SInt32  GetThinAllTheWayTimeInMsec()            { return fThinAllTheWayTimeInMsec; }
-        SInt32  GetAlwaysThinTimeInMsec()               { return fAlwaysThinTimeInMsec; }
-        SInt32  GetStartThinningTimeInMsec()            { return fStartThinningTimeInMsec; }
-        SInt32  GetStartThickingTimeInMsec()            { return fStartThickingTimeInMsec; }
-        SInt32  GetThickAllTheWayTimeInMsec()           { return fThickAllTheWayTimeInMsec; }
-        UInt32  GetQualityCheckIntervalInMsec()         { return fQualityCheckIntervalInMsec; }
-                
+        SInt32  GetMaxKBitsBandwidth()      { return fMaxBandwidthInKBits; }       
         // for tcp buffer size scaling
         UInt32  GetMinTCPBufferSizeInBytes()            { return fMinTCPBufferSizeInBytes; }
         UInt32  GetMaxTCPBufferSizeInBytes()            { return fMaxTCPBufferSizeInBytes; }
@@ -115,13 +105,11 @@ class QTSServerPrefs : public QTSSPrefs
         
         //
         // For UDP retransmits
-        UInt32  IsReliableUDPEnabled()          { return fReliableUDP; }
         UInt32  GetMaxRetransmitDelayInMsec()   { return fMaxRetransDelayInMsec; }
         Bool16  IsAckLoggingEnabled()           { return fIsAckLoggingEnabled; }
         UInt32  GetSendIntervalInMsec()         { return fSendIntervalInMsec; }
         UInt32  GetMaxSendAheadTimeInSecs()     { return fMaxSendAheadTimeInSecs; }
         Bool16  IsSlowStartEnabled()            { return fIsSlowStartEnabled; }
-        Bool16  GetReliableUDPPrintfsEnabled()  { return fReliableUDPPrintfs; }
         Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }
         Bool16  GetRTSPServerInfoEnabled()      { return fEnableRTSPServerInfo; }
         
@@ -138,10 +126,6 @@ class QTSServerPrefs : public QTSSPrefs
         // force logs to close after each write (true or false)
         Bool16  GetCloseLogsOnWrite()           { return fCloseLogsOnWrite; }
         void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
-        
-        //
-        // Optionally require that reliable UDP content be in certain folders
-        Bool16 IsPathInsideReliableUDPDir(StrPtrLen* inPath);
 
         // Movie folder pref. If the path fits inside the buffer provided,
         // the path is copied into that buffer. Otherwise, a new buffer is allocated
@@ -181,9 +165,7 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32 GetStatFileIntervalSec()     { return fStatsFileIntervalSeconds; }
         Bool16  AutoDeleteSDPFiles()        { return fauto_delete_sdp_files; }
         QTSS_AuthScheme GetAuthScheme()     { return fAuthScheme; }
-        
-        UInt32 DeleteSDPFilesInterval()           { return fsdp_file_delete_interval_seconds; }
-                
+                 
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
         UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
         
@@ -228,14 +210,6 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  fErrorLogVerbosity;
         Bool16  fScreenLoggingEnabled;
         Bool16  fErrorLogEnabled;
-        
-        SInt32  fDropAllPacketsTimeInMsec;
-        SInt32  fThinAllTheWayTimeInMsec;
-        SInt32  fAlwaysThinTimeInMsec;
-        SInt32  fStartThinningTimeInMsec;
-        SInt32  fStartThickingTimeInMsec;
-        SInt32  fThickAllTheWayTimeInMsec;
-        UInt32  fQualityCheckIntervalInMsec;
 
         UInt32  fMinTCPBufferSizeInBytes;
         UInt32  fMaxTCPBufferSizeInBytes;
@@ -257,11 +231,7 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  fMaxSendAheadTimeInSecs;
         Bool16  fauto_delete_sdp_files;
         QTSS_AuthScheme fAuthScheme;
-        UInt32  fsdp_file_delete_interval_seconds;
         Bool16  fAutoStart;
-        Bool16  fReliableUDP;
-        Bool16  fReliableUDPPrintfs;
-        Bool16  fEnableRTSPErrMsg;
         Bool16  fEnableMSGDebugPrintfs;
         Bool16  fEnableRTSPServerInfo;
         UInt32  fNumThreads;
