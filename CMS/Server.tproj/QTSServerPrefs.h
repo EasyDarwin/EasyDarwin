@@ -182,13 +182,6 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  AutoDeleteSDPFiles()        { return fauto_delete_sdp_files; }
         QTSS_AuthScheme GetAuthScheme()     { return fAuthScheme; }
         
-        Bool16 PacketHeaderPrintfsEnabled() { return fEnablePacketHeaderPrintfs; }
-        Bool16 PrintRTPHeaders()    { return (Bool16) (fPacketHeaderPrintfOptions & kRTPALL); }
-        Bool16 PrintSRHeaders()     { return (Bool16) (fPacketHeaderPrintfOptions & kRTCPSR); }
-        Bool16 PrintRRHeaders()     { return (Bool16) (fPacketHeaderPrintfOptions & kRTCPRR); }
-        Bool16 PrintAPPHeaders()    { return (Bool16) (fPacketHeaderPrintfOptions & kRTCPAPP); }
-        Bool16 PrintACKHeaders()    { return (Bool16) (fPacketHeaderPrintfOptions & kRTCPACK); }
-
         UInt32 DeleteSDPFilesInterval()           { return fsdp_file_delete_interval_seconds; }
                 
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
@@ -279,8 +272,6 @@ class QTSServerPrefs : public QTSSPrefs
     
         Float32    fOverbufferRate;
         
-        Bool16  fEnablePacketHeaderPrintfs;
-        UInt32  fPacketHeaderPrintfOptions;
         Bool16  fCloseLogsOnWrite;
         
         Bool16 fDisableThinning;
@@ -293,15 +284,6 @@ class QTSServerPrefs : public QTSSPrefs
 		char   fRedisAddr[20];
 		char   fServiceID[64];
         Bool16 fAllowGuestAuthorizeDefault;
-
-        enum //fPacketHeaderPrintfOptions
-        {
-            kRTPALL = 1 << 0,
-            kRTCPSR = 1 << 1,
-            kRTCPRR = 1 << 2,
-            kRTCPAPP = 1<< 3,
-            kRTCPACK = 1<< 4
-        };
         
         enum
         {
@@ -318,7 +300,6 @@ class QTSServerPrefs : public QTSSPrefs
             
         void SetupAttributes();
         void UpdateAuthScheme();
-        void UpdatePrintfOptions();
         //
         // Returns the string preference with the specified ID. If there
         // was any problem, this will return an empty string.

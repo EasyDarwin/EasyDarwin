@@ -281,8 +281,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
 #endif 
     fStatsFileIntervalSeconds(10),
 	fOverbufferRate(0.0),
-    fEnablePacketHeaderPrintfs(false),   
-    fPacketHeaderPrintfOptions(kRTPALL | kRTCPSR | kRTCPRR | kRTCPAPP | kRTCPACK),
     fCloseLogsOnWrite(false),
     fDisableThinning(false),
 	fMonitorLANPort(0),
@@ -359,7 +357,7 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsEnableMonitorStatsFile,       &fEnableMonitorStatsFile,       sizeof(fEnableMonitorStatsFile));
     this->SetVal(qtssPrefsMonitorStatsFileIntervalSec,  &fStatsFileIntervalSeconds,     sizeof(fStatsFileIntervalSeconds));
 
-    this->SetVal(qtssPrefsEnablePacketHeaderPrintfs,    &fEnablePacketHeaderPrintfs,    sizeof(fEnablePacketHeaderPrintfs));
+    this->SetVal(qtssPrefsEnablePacketHeaderPrintfs,    &fEnableMSGDebugPrintfs,		sizeof(fEnableMSGDebugPrintfs));
     this->SetVal(qtssPrefsCloseLogsOnWrite,             &fCloseLogsOnWrite,             sizeof(fCloseLogsOnWrite));
 	this->SetVal(qtssPrefsOverbufferRate,				&fOverbufferRate,				sizeof(fOverbufferRate));
     this->SetVal(qtssPrefsDisableThinning,              &fDisableThinning,              sizeof(fDisableThinning));
@@ -497,7 +495,6 @@ void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
     //
     // Do any special pref post-processing
     this->UpdateAuthScheme();
-    this->UpdatePrintfOptions();
     QTSSModuleUtils::SetEnableRTSPErrorMsg(fEnableRTSPErrMsg);
     
     QTSSRollingLog::SetCloseOnWrite(fCloseLogsOnWrite);
@@ -562,26 +559,6 @@ Bool16 QTSServerPrefs::IsPathInsideReliableUDPDir(StrPtrLen* inPath)
     }
     Assert(0);
     return false;
-}
-
-void QTSServerPrefs::UpdatePrintfOptions()
-{
-    StrPtrLen* theOptions = this->GetValue(qtssPrefsPacketHeaderPrintfOptions);
-    if (theOptions == NULL || theOptions->Len == 0)
-        return;
-        
-    fPacketHeaderPrintfOptions = 0;
-    if (theOptions->FindStringIgnoreCase("rtp"))
-        fPacketHeaderPrintfOptions |= kRTPALL;
-    if (theOptions->FindStringIgnoreCase("sr"))
-        fPacketHeaderPrintfOptions |= kRTCPSR;
-    if (theOptions->FindStringIgnoreCase("rr"))
-        fPacketHeaderPrintfOptions |= kRTCPRR;
-    if (theOptions->FindStringIgnoreCase("app"))
-        fPacketHeaderPrintfOptions |= kRTCPAPP;
-    if (theOptions->FindStringIgnoreCase("ack"))
-        fPacketHeaderPrintfOptions |= kRTCPACK;
-
 }
 
 void QTSServerPrefs::GetTransportSrcAddr(StrPtrLen* ioBuf)
