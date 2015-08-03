@@ -277,33 +277,6 @@ QTSS_Error QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, Q
     return (sCallbacks->addr [kSendStandardRTSPCallback]) (inRTSPRequest, inRTPInfo, inFlags);      
 }
 
-// RTP ROUTINES
-
-QTSS_Error QTSS_AddRTPStream(QTSS_ClientSessionObject inClientSession, QTSS_RTSPRequestObject inRTSPRequest, QTSS_RTPStreamObject* outStream, QTSS_AddStreamFlags inFlags)
-{
-    return (sCallbacks->addr [kAddRTPStreamCallback]) (inClientSession, inRTSPRequest, outStream, inFlags);     
-}
-
-QTSS_Error QTSS_Play(QTSS_ClientSessionObject inClientSession, QTSS_RTSPRequestObject inRTSPRequest, QTSS_PlayFlags inPlayFlags)
-{
-    return (sCallbacks->addr [kPlayCallback]) (inClientSession, inRTSPRequest, inPlayFlags);        
-}
-
-QTSS_Error QTSS_Pause(QTSS_ClientSessionObject inClientSession)
-{
-    return (sCallbacks->addr [kPauseCallback]) (inClientSession);       
-}
-
-QTSS_Error QTSS_Teardown(QTSS_ClientSessionObject inClientSession)
-{
-    return (sCallbacks->addr [kTeardownCallback]) (inClientSession);        
-}
-
-QTSS_Error QTSS_RefreshTimeOut(QTSS_ClientSessionObject inClientSession)
-{
-    return (sCallbacks->addr [kRefreshTimeOutCallback]) (inClientSession);
-}
-
 
 // FILE SYSTEM ROUTINES
 
