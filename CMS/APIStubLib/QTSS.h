@@ -510,16 +510,14 @@ enum
     qtssSvrCurrentTimeMilliseconds  = 19,   //read      //QTSS_TimeVal  //Server's current time in milliseconds. Retrieving this attribute is equivalent to calling QTSS_Milliseconds
     qtssSvrCPULoadPercent           = 20,   //read      //Float32       //Current % CPU being used by the server
 
-    qtssSvrNumReliableUDPBuffers    = 21,   //read      //UInt32    //Number of buffers currently allocated for UDP retransmits
-    qtssSvrReliableUDPWastageInBytes= 22,   //read      //UInt32    //Amount of data in the reliable UDP buffers being wasted
-    qtssSvrConnectedUsers           = 23,   //r/w       //QTSS_Object   //List of connected user sessions (updated by modules for their sessions)
+	qtssSvrConnectedUsers           = 21,   //r/w       //QTSS_Object   //List of connected user sessions (updated by modules for their sessions)
 
-	qtssSvrServerBuild              = 24,   //read      //char array //build of the server
-    qtssSvrServerPlatform           = 25,   //read      //char array //Platform (OS) of the server
-    qtssSvrRTSPServerComment        = 26,   //read      //char array //RTSP comment for the server header    
-    qtssSvrNumThinned               = 27,   //read      //SInt32    //Number of thinned sessions
-    qtssSvrNumThreads               = 28,   //read     //UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
-    qtssSvrNumParams                = 29
+	qtssSvrServerBuild              = 22,   //read      //char array //build of the server
+    qtssSvrServerPlatform           = 23,   //read      //char array //Platform (OS) of the server
+    qtssSvrRTSPServerComment        = 24,   //read      //char array //RTSP comment for the server header    
+    qtssSvrNumThinned               = 25,   //read      //SInt32    //Number of thinned sessions
+    qtssSvrNumThreads               = 26,   //read     //UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
+    qtssSvrNumParams                = 27
 };
 typedef UInt32 QTSS_ServerAttributes;
 
@@ -578,7 +576,7 @@ enum
 
     qtssPrefsMaxRetransDelayInMsec          = 33,   //"max_retransmit_delay" // UInt32  //maximum interval between when a retransmit is supposed to be sent and when it actually gets sent. Lower values means smoother flow but slower server performance
     qtssPrefsSmallWindowSizeInK             = 34,   //"small_window_size"  // UInt32    //default size that will be used for low bitrate movies
-    qtssPrefsAckLoggingEnabled              = 35,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of UDP acks / retransmits
+    qtssPrefsAckLoggingEnabled              = 35,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of 
     qtssPrefsSnapLocalPath					= 36,   //"snap_local_path"		// char array   //¿ìÕÕ±¾µØ´æ´¢Â·¾¶
     qtssPrefsSnapWebPath			        = 37,   //"snap_web_path"		// char array   //¿ìÕÕÍøÂç´æ´¢Â·¾¶
     qtssPrefsSendInterval                   = 38,   //"send_interval"  // UInt32    //
@@ -1543,46 +1541,6 @@ QTSS_Error QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef, QTSS_RTSPHeader i
 
 /*****************************************/
 //  QTSS_SendStandardRTSPResponse
-//
-//  This function is also provided as an optional convienence to modules who are sending
-//  "typical" RTSP responses to clients. The function uses the QTSS_RTSPRequestObject and
-//  the QTSS_Object as inputs, where the object may either be a QTSS_ClientSessionObject
-//  or a QTSS_RTPStreamObject, depending on the method. The response is written to the
-//  stream provided.
-//
-//  Below is a description of what is returned for each method this function supports:
-//
-//  DESCRIBE:
-//
-//   Writes status line, CSeq, SessionID, Connection headers as determined by the request.
-//   Writes a Content-Base header with the Content-Base being the URL provided.
-//   Writes a Content-Type header of "application/sdp"
-//   QTSS_Object must be a QTSS_ClientSessionObject.
-//
-//  SETUP:
-//
-//   Writes status line, CSeq, SessionID, Connection headers as determined by the request.
-//   Writes a Transport header with the client & server ports (if connection is over UDP).
-//   QTSS_Object must be a QTSS_RTPStreamObject.
-//
-//  PLAY:
-//
-//   Writes status line, CSeq, SessionID, Connection headers as determined by the request.
-//   QTSS_Object must be a QTSS_ClientSessionObject.
-//
-//   Specify whether you want the server to append the seq#, timestamp, & ssrc info to
-//   the RTP-Info header via. the qtssPlayRespWriteTrackInfo flag.
-//
-//  PAUSE:
-//
-//   Writes status line, CSeq, SessionID, Connection headers as determined by the request.
-//   QTSS_Object must be a QTSS_ClientSessionObject.
-//
-//  TEARDOWN:
-//
-//   Writes status line, CSeq, SessionID, Connection headers as determined by the request.
-//   QTSS_Object must be a QTSS_ClientSessionObject.
-//
 //  Returns:    QTSS_NoErr
 //              QTSS_BadArgument: Bad argument
 QTSS_Error  QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, QTSS_Object inRTPInfo, UInt32 inFlags);

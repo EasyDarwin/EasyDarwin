@@ -105,9 +105,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "digest",   NULL                    },  //authentication_scheme
     { kDontAllowMultipleValues, "10",       NULL                    },  //sdp_file_delete_interval_seconds
     { kDontAllowMultipleValues, "false",    NULL                    },  //auto_start
-    { kDontAllowMultipleValues, "true",     NULL                    },  //reliable_udp
-	{ kAllowMultipleValues,	DEFAULTPATHS_DIRECTORY_SEPARATOR,	NULL},	//reliable_udp_dirs (set all dirs)
-    { kDontAllowMultipleValues, "false",    NULL                    },  //reliable_udp_printfs
+
     { kDontAllowMultipleValues, "2500",     NULL                    },  //drop_all_packets_delay
     { kDontAllowMultipleValues, "1500",     NULL                    },  //thin_all_the_way_delay
     { kDontAllowMultipleValues, "750",      NULL                    },  //always_thin_delay

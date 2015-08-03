@@ -114,7 +114,7 @@ class QTSServerPrefs : public QTSSPrefs
         
         Float32    GetOverbufferRate()                { return fOverbufferRate; }
         
-        // RUDP window size
+        //window size
         UInt32  GetSmallWindowSizeInK()         { return fSmallWindowSizeInK; }
         UInt32    GetMediumWindowSizeInK()        { return fMediumWindowSizeInK; }
         UInt32  GetLargeWindowSizeInK()         { return fLargeWindowSizeInK; }
