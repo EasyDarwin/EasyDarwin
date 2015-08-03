@@ -119,8 +119,6 @@ QTSSAttrInfoDict::AttrInfo  QTSServerInterface::sAttributes[] =
     /* 19 */ { "qtssSvrCurrentTimeMilliseconds",CurrentUnixTimeMilli,   qtssAttrDataTypeTimeVal,qtssAttrModeRead},
     /* 20 */ { "qtssSvrCPULoadPercent",         NULL,   qtssAttrDataTypeFloat32,    qtssAttrModeRead},
     
-	/* 21 */ { "qtssSvrNumReliableUDPBuffers",  GetNumUDPBuffers,   qtssAttrDataTypeUInt32,     qtssAttrModeRead },
-    /* 22 */ { "qtssSvrReliableUDPWastageInBytes",GetNumWastedBytes, qtssAttrDataTypeUInt32,        qtssAttrModeRead },
     /* 23 */ { "qtssSvrConnectedUsers",         NULL, qtssAttrDataTypeQTSS_Object,      qtssAttrModeRead | qtssAttrModeWrite },
     
     /* 24  */ { "qtssSvrServerBuild",           NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
@@ -185,8 +183,6 @@ QTSServerInterface::QTSServerInterface()
     fNumServiceSessions(0),
     fCPUPercent(0),
     fCPUTimeUsedInSec(0),
-    fUDPWastageInBytes(0),
-    fNumUDPBuffers(0),
     fSigInt(false),
     fSigTerm(false),
     fDebugLevel(0),
@@ -318,34 +314,6 @@ void* QTSServerInterface::IsOutOfDescriptors(QTSSDictionary* inServer, UInt32* o
     // Return the result
     *outLen = sizeof(theServer->fIsOutOfDescriptors);
     return &theServer->fIsOutOfDescriptors;
-}
-
-void* QTSServerInterface::GetNumUDPBuffers(QTSSDictionary* inServer, UInt32* outLen)
-{
-    //// This param retrieval function must be invoked each time it is called,
-    //// because whether we are out of descriptors or not is continually changing
-    //QTSServerInterface* theServer = (QTSServerInterface*)inServer;
-    //
-    //theServer->fNumUDPBuffers = RTPPacketResender::GetNumRetransmitBuffers();
-
-    //// Return the result
-    //*outLen = sizeof(theServer->fNumUDPBuffers);
-    //return &theServer->fNumUDPBuffers;
-	return 0;
-}
-
-void* QTSServerInterface::GetNumWastedBytes(QTSSDictionary* inServer, UInt32* outLen)
-{
-    //// This param retrieval function must be invoked each time it is called,
-    //// because whether we are out of descriptors or not is continually changing
-    //QTSServerInterface* theServer = (QTSServerInterface*)inServer;
-    //
-    //theServer->fUDPWastageInBytes = RTPPacketResender::GetWastedBufferBytes();
-
-    //// Return the result
-    //*outLen = sizeof(theServer->fUDPWastageInBytes);
-    //return &theServer->fUDPWastageInBytes;  
-	return 0;
 }
 
 void* QTSServerInterface::TimeConnected(QTSSDictionary* inConnection, UInt32* outLen)
