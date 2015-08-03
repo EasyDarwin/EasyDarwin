@@ -53,89 +53,80 @@
 
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
-    { kDontAllowMultipleValues, "0",        NULL                    },  //rtsp_timeout
-    { kDontAllowMultipleValues, "180",      NULL                    },  //session_timeout
-	{ kDontAllowMultipleValues,	"120",		NULL					},	//rtp_timeout
-    { kDontAllowMultipleValues, "1000",     NULL                    },  //maximum_connections
-    { kDontAllowMultipleValues, "102400",   NULL                    },  //maximum_bandwidth
-	{ kDontAllowMultipleValues,	"127.0.0.1",NULL					},	//cms_ip_addr
-    { kAllowMultipleValues,     "0",        NULL                    },  //bind_ip_addr
-    { kDontAllowMultipleValues, "false",    NULL                    },  //break_on_assert
-    { kDontAllowMultipleValues, "true",     NULL                    },  //auto_restart
-    { kDontAllowMultipleValues, "1",        NULL                    },  //total_bytes_update
-    { kDontAllowMultipleValues, "60",       NULL                    },  //average_bandwidth_update
-    { kDontAllowMultipleValues, "600",      NULL                    },  //safe_play_duration
-	{ kDontAllowMultipleValues,	DEFAULTPATHS_SSM_DIR,	NULL		},	//module_folder
-    { kDontAllowMultipleValues, "Error",    NULL                    },  //error_logfile_name
-	{ kDontAllowMultipleValues,	DEFAULTPATHS_LOG_DIR,	NULL		},	//error_logfile_dir
-    { kDontAllowMultipleValues, "7",        NULL                    },  //error_logfile_interval
-    { kDontAllowMultipleValues, "256000",   NULL                    },  //error_logfile_size
-    { kDontAllowMultipleValues, "2",        NULL                    },  //error_logfile_verbosity
-    { kDontAllowMultipleValues, "true",     NULL                    },  //screen_logging
-    { kDontAllowMultipleValues, "true",     NULL                    },  //error_logging
-    { kDontAllowMultipleValues, "CMS000",   NULL                    },  //service_id
-    { kDontAllowMultipleValues, "0",        NULL                    },  //start_thinning_delay
-    { kDontAllowMultipleValues, "64",       NULL                    },  //large_window_size
-    { kDontAllowMultipleValues, "200",      NULL                    },  //window_size_threshold
-    { kDontAllowMultipleValues, "8192",     NULL                    },  //min_tcp_buffer_size
-	{ kDontAllowMultipleValues,	"200000",	NULL					},	//max_tcp_buffer_size
-    { kDontAllowMultipleValues, ".5",       NULL                    },  //tcp_seconds_to_buffer
-    { kDontAllowMultipleValues, "60000",	NULL                    },  //cms_port
-    { kDontAllowMultipleValues, "127.0.0.1",NULL					},  //redis_ip_addr
+    { kDontAllowMultipleValues, "0",        NULL                    },  //0 rtsp_timeout
+    { kDontAllowMultipleValues, "180",      NULL                    },  //1 session_timeout
+	{ kDontAllowMultipleValues,	"120",		NULL					},	//2 rtp_timeout
+    { kDontAllowMultipleValues, "1000",     NULL                    },  //3 maximum_connections
+    { kDontAllowMultipleValues, "102400",   NULL                    },  //4 maximum_bandwidth
+	{ kDontAllowMultipleValues,	"127.0.0.1",NULL					},	//5 cms_ip_addr
+    { kAllowMultipleValues,     "0",        NULL                    },  //6 bind_ip_addr
+    { kDontAllowMultipleValues, "false",    NULL                    },  //7 break_on_assert
+    { kDontAllowMultipleValues, "true",     NULL                    },  //8 auto_restart
+    { kDontAllowMultipleValues, "1",        NULL                    },  //9 total_bytes_update
+    { kDontAllowMultipleValues, "60",       NULL                    },  //10 average_bandwidth_update
+    { kDontAllowMultipleValues, "600",      NULL                    },  //11 safe_play_duration
+	{ kDontAllowMultipleValues,	DEFAULTPATHS_SSM_DIR,	NULL		},	//12 module_folder
+    { kDontAllowMultipleValues, "Error",    NULL                    },  //13 error_logfile_name
+	{ kDontAllowMultipleValues,	DEFAULTPATHS_LOG_DIR,	NULL		},	//14 error_logfile_dir
+    { kDontAllowMultipleValues, "7",        NULL                    },  //15 error_logfile_interval
+    { kDontAllowMultipleValues, "256000",   NULL                    },  //16 error_logfile_size
+    { kDontAllowMultipleValues, "2",        NULL                    },  //17 error_logfile_verbosity
+    { kDontAllowMultipleValues, "true",     NULL                    },  //18 screen_logging
+    { kDontAllowMultipleValues, "true",     NULL                    },  //19 error_logging
+    { kDontAllowMultipleValues, "CMS000",   NULL                    },  //20 service_id
+    { kDontAllowMultipleValues, "0",        NULL                    },  //21 start_thinning_delay
+    { kDontAllowMultipleValues, "64",       NULL                    },  //22 large_window_size
+    { kDontAllowMultipleValues, "200",      NULL                    },  //23 window_size_threshold
+    { kDontAllowMultipleValues, "8192",     NULL                    },  //24 min_tcp_buffer_size
+	{ kDontAllowMultipleValues,	"200000",	NULL					},	//25 max_tcp_buffer_size
+    { kDontAllowMultipleValues, ".5",       NULL                    },  //26 tcp_seconds_to_buffer
+    { kDontAllowMultipleValues, "60000",	NULL                    },  //27 cms_port
+    { kDontAllowMultipleValues, "127.0.0.1",NULL					},  //28 redis_ip_addr
 #ifndef __Win32__
-    { kDontAllowMultipleValues, "qtss",     NULL                    },  //run_user_name
-    { kDontAllowMultipleValues, "qtss",     NULL                    },  //run_group_name
+    { kDontAllowMultipleValues, "qtss",     NULL                    },  //29 run_user_name
+    { kDontAllowMultipleValues, "qtss",     NULL                    },  //30 run_group_name
 #else
-    { kDontAllowMultipleValues, "",         NULL                    },  //run_user_name
-    { kDontAllowMultipleValues, "",         NULL                    },  //run_group_name
+    { kDontAllowMultipleValues, "",         NULL                    },  //29 run_user_name
+    { kDontAllowMultipleValues, "",         NULL                    },  //30 run_group_name
 #endif
-    { kDontAllowMultipleValues, "false",    NULL                    },  //append_source_addr_in_transport
-    { kDontAllowMultipleValues, "6379",     NULL					},	//redis_port
-    { kDontAllowMultipleValues, "500",      NULL                    },  //max_retransmit_delay
-    { kDontAllowMultipleValues, "24",       NULL                    },  //small_window_size
-    { kDontAllowMultipleValues, "false",    NULL                    },  //ack_logging_enabled
-    { kDontAllowMultipleValues, "/opt/streaming/easydarwin/snap/",      NULL                    },  //snap_local_path
-    { kDontAllowMultipleValues, "http://snap.easydarwin.com/",      NULL                    },  //snap_web_path
-    { kDontAllowMultipleValues, "50",       NULL                    },  //send_interval
-    { kDontAllowMultipleValues, "-2000",    NULL                    },  //thick_all_the_way_delay
-    { kDontAllowMultipleValues, "",         NULL                    },  //alt_transport_src_ipaddr
-    { kDontAllowMultipleValues, "25",       NULL                    },  //max_send_ahead_time
-    { kDontAllowMultipleValues, "true",     NULL                    },  //reliable_udp_slow_start
-    { kDontAllowMultipleValues, "false",    NULL                    },  //auto_delete_sdp_files
-    { kDontAllowMultipleValues, "digest",   NULL                    },  //authentication_scheme
-    { kDontAllowMultipleValues, "10",       NULL                    },  //sdp_file_delete_interval_seconds
-    { kDontAllowMultipleValues, "false",    NULL                    },  //auto_start
+    { kDontAllowMultipleValues, "false",    NULL                    },  //31 append_source_addr_in_transport
+    { kDontAllowMultipleValues, "6379",     NULL					},	//32 redis_port
+    { kDontAllowMultipleValues, "500",      NULL                    },  //33 max_retransmit_delay
+    { kDontAllowMultipleValues, "24",       NULL                    },  //34 small_window_size
+    { kDontAllowMultipleValues, "false",    NULL                    },  //35 ack_logging_enabled
+    { kDontAllowMultipleValues, "/opt/streaming/easydarwin/snap/",      NULL                    },  //36 snap_local_path
+    { kDontAllowMultipleValues, "http://snap.easydarwin.com/",      NULL                    },  //37 snap_web_path
+    { kDontAllowMultipleValues, "50",       NULL                    },  //38 send_interval
+    { kDontAllowMultipleValues, "-2000",    NULL                    },  //39 thick_all_the_way_delay
+    { kDontAllowMultipleValues, "",         NULL                    },  //40 alt_transport_src_ipaddr
+    { kDontAllowMultipleValues, "25",       NULL                    },  //41 max_send_ahead_time
+    { kDontAllowMultipleValues, "digest",   NULL                    },  //42 authentication_scheme
+    { kDontAllowMultipleValues, "false",    NULL                    },  //43 auto_start
 
-    { kDontAllowMultipleValues, "2500",     NULL                    },  //drop_all_packets_delay
-    { kDontAllowMultipleValues, "1500",     NULL                    },  //thin_all_the_way_delay
-    { kDontAllowMultipleValues, "750",      NULL                    },  //always_thin_delay
-    { kDontAllowMultipleValues, "250",      NULL                    },  //start_thicking_delay
-    { kDontAllowMultipleValues, "1000",     NULL                    },  //quality_check_interval
-    { kDontAllowMultipleValues, "false",    NULL                    },  //RTSP_error_message
-    { kDontAllowMultipleValues, "false",    NULL                    },  //MSG_debug_printfs
+    { kDontAllowMultipleValues, "false",    NULL                    },  //44 MSG_debug_printfs
 #if __MacOSX__
-    { kDontAllowMultipleValues, "false",     NULL                    },  //enable_monitor_stats_file
+    { kDontAllowMultipleValues, "false",     NULL                    },  //45 enable_monitor_stats_file
 #else
-    { kDontAllowMultipleValues, "false",    NULL                    },  //enable_monitor_stats_file
+    { kDontAllowMultipleValues, "false",    NULL                    },  //45 enable_monitor_stats_file
 #endif
-    { kDontAllowMultipleValues, "10",        NULL                   },  //monitor_stats_file_interval_seconds
-    { kDontAllowMultipleValues, "server_status",        NULL        },   //monitor_stats_file_name
-    { kDontAllowMultipleValues, "false",    NULL                    },  //enable_packet_header_printfs
-    { kDontAllowMultipleValues, "rtp;rr;sr;app;ack;",NULL           },  //packet_header_printf_options
-	{ kDontAllowMultipleValues, "2.0",		NULL					},	//overbuffer_rate
-	{ kDontAllowMultipleValues,	"48",		NULL					},	//medium_window_size
-	{ kDontAllowMultipleValues,	"1000",		NULL					},	//window_size_max_threshold
-    { kDontAllowMultipleValues, "true",     NULL                    },  //RTSP_server_info
-	{ kDontAllowMultipleValues, "0",        NULL                    },  //run_num_threads
-    { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//pid_file
-    { kDontAllowMultipleValues, "false",    NULL                    },   //force_logs_close_on_write
-    { kDontAllowMultipleValues, "false",    NULL                    },   //disable_thinning
-    { kDontAllowMultipleValues, "60200",    NULL                     }, //monitor_lan_port
-    { kDontAllowMultipleValues, "60200",    NULL                     }, //monitor_wan_port
-    { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //monitor_lan_ip
-    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //monitor_wan_ip
-    { kDontAllowMultipleValues, "true",     NULL                     }, //enable_allow_guest_default
-    { kDontAllowMultipleValues, "2",        NULL                     }  //run_num_msg_threads
+    { kDontAllowMultipleValues, "10",        NULL                   },  //46 monitor_stats_file_interval_seconds
+    { kDontAllowMultipleValues, "server_status",        NULL        },  //47 monitor_stats_file_name
+    { kDontAllowMultipleValues, "false",    NULL                    },  //48 enable_packet_header_printfs
+    { kDontAllowMultipleValues, "rtp;rr;sr;app;ack;",NULL           },  //49 packet_header_printf_options
+	{ kDontAllowMultipleValues, "2.0",		NULL					},	//50 overbuffer_rate
+	{ kDontAllowMultipleValues,	"48",		NULL					},	//51 medium_window_size
+	{ kDontAllowMultipleValues,	"1000",		NULL					},	//52 window_size_max_threshold
+    { kDontAllowMultipleValues, "true",     NULL                    },  //53 CMS_server_info
+	{ kDontAllowMultipleValues, "0",        NULL                    },  //54 run_num_threads
+    { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//55 pid_file
+    { kDontAllowMultipleValues, "false",    NULL                    },   //56 force_logs_close_on_write
+    { kDontAllowMultipleValues, "false",    NULL                    },   //57 disable_thinning
+    { kDontAllowMultipleValues, "60200",    NULL                     }, //58 monitor_lan_port
+    { kDontAllowMultipleValues, "60200",    NULL                     }, //59 monitor_wan_port
+    { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //60 monitor_lan_ip
+    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //61 monitor_wan_ip
+    { kDontAllowMultipleValues, "true",     NULL                     }, //62 enable_allow_guest_default
+    { kDontAllowMultipleValues, "2",        NULL                     }  //63 run_num_msg_threads
 };
 
 
@@ -187,7 +178,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 
 	/* 42 */ { "authentication_scheme",                 NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 43 */ { "auto_start",                            NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 44 */ { "MSG_debug_printfs",                    NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 44 */ { "MSG_debug_printfs",						NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 45 */ { "enable_monitor_stats_file",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 46 */ { "monitor_stats_file_interval_seconds",   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 47 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
@@ -196,7 +187,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 	/* 50 */ { "overbuffer_rate",						NULL,					qtssAttrDataTypeFloat32,	qtssAttrModeRead | qtssAttrModeWrite },
 	/* 51 */ { "medium_window_size",					NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
 	/* 52 */ { "window_size_max_threshold",				NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
-    /* 53 */ { "RTSP_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 53 */ { "CMS_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 54 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 55 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
     /* 56 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -245,7 +236,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fAuthScheme(qtssAuthDigest),
     fAutoStart(false),
     fEnableMSGDebugPrintfs(false),
-    fEnableRTSPServerInfo(true),
+    fEnableCMSServerInfo(true),
     fNumThreads(0),
     fNumMsgThreads(0),
 #if __MacOSX__
@@ -313,7 +304,7 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsAutoStart,                &fAutoStart,                sizeof(fAutoStart));
 
     this->SetVal(qtssPrefsEnableMSGDebugPrintfs,		&fEnableMSGDebugPrintfs,		sizeof(fEnableMSGDebugPrintfs));
-    this->SetVal(qtssPrefsEnableRTSPServerInfo,         &fEnableRTSPServerInfo,         sizeof(fEnableRTSPServerInfo));
+    this->SetVal(qtssPrefsEnableCMSServerInfo,         &fEnableCMSServerInfo,         sizeof(fEnableCMSServerInfo));
     this->SetVal(qtssPrefsRunNumThreads,                &fNumThreads,                   sizeof(fNumThreads));
     this->SetVal(qtssPrefsEnableMonitorStatsFile,       &fEnableMonitorStatsFile,       sizeof(fEnableMonitorStatsFile));
     this->SetVal(qtssPrefsMonitorStatsFileIntervalSec,  &fStatsFileIntervalSeconds,     sizeof(fStatsFileIntervalSeconds));

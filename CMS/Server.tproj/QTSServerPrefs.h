@@ -109,7 +109,7 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetSendIntervalInMsec()         { return fSendIntervalInMsec; }
         UInt32  GetMaxSendAheadTimeInSecs()     { return fMaxSendAheadTimeInSecs; }
         Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }
-        Bool16  GetRTSPServerInfoEnabled()      { return fEnableRTSPServerInfo; }
+        Bool16  GetCMSServerInfoEnabled()      { return fEnableCMSServerInfo; }
         
         Float32    GetOverbufferRate()                { return fOverbufferRate; }
         
@@ -228,7 +228,7 @@ class QTSServerPrefs : public QTSSPrefs
         QTSS_AuthScheme fAuthScheme;
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
-        Bool16  fEnableRTSPServerInfo;
+        Bool16  fEnableCMSServerInfo;
         UInt32  fNumThreads;
         UInt32  fNumMsgThreads;
         
