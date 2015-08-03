@@ -600,7 +600,7 @@ enum
     qtssPrefsOverbufferRate                 = 50,    // "overbuffer_rate"    //Float32
     qtssPrefsMediumWindowSizeInK            = 51,    // "medium_window_size" // UInt32    //default size that will be used for medium bitrate movies
     qtssPrefsWindowSizeMaxThreshold         = 52,    //"window_size_threshold"  // UInt32    //bitrate at which we switch from medium to large window size
-    qtssPrefsEnableRTSPServerInfo           = 53,   //"RTSP_server_info" //Boo1l6 // Adds server info to the RTSP responses.
+    qtssPrefsEnableCMSServerInfo           = 53,   //"CMS_server_info" //Boo1l6 // Adds server info to the RTSP responses.
     qtssPrefsRunNumThreads                  = 54,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
     qtssPrefsPidFile                        = 55,    //"pid_file" //Char Array //path to pid file
     qtssPrefsCloseLogsOnWrite               = 56,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
