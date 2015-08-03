@@ -111,25 +111,23 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 #endif
     { kDontAllowMultipleValues, "10",        NULL                   },  //46 monitor_stats_file_interval_seconds
     { kDontAllowMultipleValues, "server_status",        NULL        },  //47 monitor_stats_file_name
-    { kDontAllowMultipleValues, "false",    NULL                    },  //48 enable_packet_header_printfs
-    { kDontAllowMultipleValues, "rtp;rr;sr;app;ack;",NULL           },  //49 packet_header_printf_options
-	{ kDontAllowMultipleValues, "2.0",		NULL					},	//50 overbuffer_rate
-	{ kDontAllowMultipleValues,	"48",		NULL					},	//51 medium_window_size
-	{ kDontAllowMultipleValues,	"1000",		NULL					},	//52 window_size_max_threshold
-    { kDontAllowMultipleValues, "true",     NULL                    },  //53 CMS_server_info
-	{ kDontAllowMultipleValues, "0",        NULL                    },  //54 run_num_threads
-    { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//55 pid_file
-    { kDontAllowMultipleValues, "false",    NULL                    },   //56 force_logs_close_on_write
-    { kDontAllowMultipleValues, "false",    NULL                    },   //57 disable_thinning
-    { kDontAllowMultipleValues, "60200",    NULL                     }, //58 monitor_lan_port
-    { kDontAllowMultipleValues, "60200",    NULL                     }, //59 monitor_wan_port
-    { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //60 monitor_lan_ip
-    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //61 monitor_wan_ip
-    { kDontAllowMultipleValues, "true",     NULL                     }, //62 enable_allow_guest_default
-    { kDontAllowMultipleValues, "2",        NULL                     }  //63 run_num_msg_threads
+
+
+	{ kDontAllowMultipleValues, "2.0",		NULL					},	//48 overbuffer_rate
+	{ kDontAllowMultipleValues,	"48",		NULL					},	//49 medium_window_size
+	{ kDontAllowMultipleValues,	"1000",		NULL					},	//50 window_size_max_threshold
+    { kDontAllowMultipleValues, "true",     NULL                    },  //51 CMS_server_info
+	{ kDontAllowMultipleValues, "0",        NULL                    },  //52 run_num_threads
+    { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//53 pid_file
+    { kDontAllowMultipleValues, "false",    NULL                    },   //54 force_logs_close_on_write
+    { kDontAllowMultipleValues, "false",    NULL                    },   //55 disable_thinning
+    { kDontAllowMultipleValues, "60200",    NULL                     }, //56 monitor_lan_port
+    { kDontAllowMultipleValues, "60200",    NULL                     }, //57 monitor_wan_port
+    { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //58 monitor_lan_ip
+    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //59 monitor_wan_ip
+    { kDontAllowMultipleValues, "true",     NULL                     }, //60 enable_allow_guest_default
+    { kDontAllowMultipleValues, "2",        NULL                     }  //61 run_num_msg_threads
 };
-
-
 
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
@@ -182,22 +180,21 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 45 */ { "enable_monitor_stats_file",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 46 */ { "monitor_stats_file_interval_seconds",   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 47 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 48 */ { "enable_packet_header_printfs",          NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 49 */ { "packet_header_printf_options",          NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 50 */ { "overbuffer_rate",						NULL,					qtssAttrDataTypeFloat32,	qtssAttrModeRead | qtssAttrModeWrite },
-	/* 51 */ { "medium_window_size",					NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
-	/* 52 */ { "window_size_max_threshold",				NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
-    /* 53 */ { "CMS_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 54 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 55 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
-    /* 56 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 57 */ { "disable_thinning",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 58 */ { "monitor_lan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 59 */ { "monitor_wan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 60 */ { "monitor_lan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 61 */ { "monitor_wan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 62 */ { "enable_allow_guest_default",  NULL,                             qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 63 */ { "run_num_msg_threads",  NULL,									qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
+
+	/* 48 */ { "overbuffer_rate",						NULL,					qtssAttrDataTypeFloat32,	qtssAttrModeRead | qtssAttrModeWrite },
+	/* 49 */ { "medium_window_size",					NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
+	/* 50 */ { "window_size_max_threshold",				NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
+    /* 51 */ { "CMS_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 52 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 53 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
+    /* 54 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 55 */ { "disable_thinning",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 56 */ { "monitor_lan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 57 */ { "monitor_wan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 58 */ { "monitor_lan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 59 */ { "monitor_wan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 60 */ { "enable_allow_guest_default",  NULL,                             qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 61 */ { "run_num_msg_threads",  NULL,									qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
 
@@ -309,7 +306,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsEnableMonitorStatsFile,       &fEnableMonitorStatsFile,       sizeof(fEnableMonitorStatsFile));
     this->SetVal(qtssPrefsMonitorStatsFileIntervalSec,  &fStatsFileIntervalSeconds,     sizeof(fStatsFileIntervalSeconds));
 
-    this->SetVal(qtssPrefsEnablePacketHeaderPrintfs,    &fEnableMSGDebugPrintfs,		sizeof(fEnableMSGDebugPrintfs));
     this->SetVal(qtssPrefsCloseLogsOnWrite,             &fCloseLogsOnWrite,             sizeof(fCloseLogsOnWrite));
 	this->SetVal(qtssPrefsOverbufferRate,				&fOverbufferRate,				sizeof(fOverbufferRate));
     this->SetVal(qtssPrefsDisableThinning,              &fDisableThinning,              sizeof(fDisableThinning));
