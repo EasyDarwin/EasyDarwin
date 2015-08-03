@@ -18,31 +18,31 @@
 
 # define DEFAULTPATHS_DIRECTORY_SEPARATOR	"\\"
 
-# define DEFAULTPATHS_ETC_DIR			"c:\\Program Files\\EasyDSS\\"
-# define DEFAULTPATHS_ETC_DIR_OLD		"c:\\Program Files\\EasyDSS\\"
-# define DEFAULTPATHS_SSM_DIR			"c:\\Program Files\\EasyDSS\\QTSSModules\\"
-# define DEFAULTPATHS_LOG_DIR			"c:\\Program Files\\EasyDSS\\Logs\\"
+# define DEFAULTPATHS_ETC_DIR			"c:\\Program Files\\EasyDarwin\\"
+# define DEFAULTPATHS_ETC_DIR_OLD		"c:\\Program Files\\EasyDarwin\\"
+# define DEFAULTPATHS_SSM_DIR			"c:\\Program Files\\EasyDarwin\\QTSSModules\\"
+# define DEFAULTPATHS_LOG_DIR			"c:\\Program Files\\EasyDarwin\\Logs\\"
 # define DEFAULTPATHS_PID_FILE          ""
 # define DEFAULTPATHS_PID_DIR			""
 #elif __MacOSX__
 
 # define DEFAULTPATHS_DIRECTORY_SEPARATOR	"/"
 
-# define DEFAULTPATHS_ETC_DIR			"/opt/streaming/Config/"
-# define DEFAULTPATHS_ETC_DIR_OLD		"/opt/"
-# define DEFAULTPATHS_SSM_DIR			"/opt/streaming/Modules/"
-# define DEFAULTPATHS_LOG_DIR			"/opt/streaming/Logs/"
-# define DEFAULTPATHS_PID_DIR           "/var/run/"
+# define DEFAULTPATHS_ETC_DIR			"/opt/streaming/EasyDarwin/Config/"
+# define DEFAULTPATHS_ETC_DIR_OLD		"/opt/EasyDarwin/"
+# define DEFAULTPATHS_SSM_DIR			"/opt/streaming/EasyDarwin/Modules/"
+# define DEFAULTPATHS_LOG_DIR			"/opt/streaming/EasyDarwin/Logs/"
+# define DEFAULTPATHS_PID_DIR           "/var/run/EasyDarwin/"
 
 #else
 
 # define DEFAULTPATHS_DIRECTORY_SEPARATOR	"/"
 
-# define DEFAULTPATHS_ETC_DIR			"/opt/streaming/"
-# define DEFAULTPATHS_ETC_DIR_OLD		"/opt/"
-# define DEFAULTPATHS_SSM_DIR			"/usr/local/sbin/StreamingServerModules/"
-# define DEFAULTPATHS_LOG_DIR			"/var/streaming/logs/"
-# define DEFAULTPATHS_MOVIES_DIR        "/usr/local/movies/"
-# define DEFAULTPATHS_PID_DIR           "/var/run/"
+# define DEFAULTPATHS_ETC_DIR			"/opt/streaming/EasyDarwin/"
+# define DEFAULTPATHS_ETC_DIR_OLD		"/opt/EasyDarwin/"
+# define DEFAULTPATHS_SSM_DIR			"/usr/local/sbin/EasyDarwinModules/"
+# define DEFAULTPATHS_LOG_DIR			"/var/streaming/EasyDarwin/logs/"
+# define DEFAULTPATHS_MOVIES_DIR        "/usr/local/EasyDarwin/movies/"
+# define DEFAULTPATHS_PID_DIR           "/var/run/EasyDarwin/"
 
 #endif
