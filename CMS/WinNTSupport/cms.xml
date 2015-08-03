@@ -80,6 +80,7 @@
 		<PREF NAME="service_id" >EasyDarwin_CMS</PREF>
 		<PREF NAME="snap_local_path" >/opt/streaming/easydarwin/snap/</PREF>
 		<PREF NAME="snap_web_path" >http://snap.easydarwin.com/</PREF>
+		<PREF NAME="CMS_server_info" TYPE="Bool16" >true</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 </CONFIGURATION>
