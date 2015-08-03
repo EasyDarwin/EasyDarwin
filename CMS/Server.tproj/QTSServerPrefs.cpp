@@ -94,8 +94,8 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "500",      NULL                    },  //33 max_retransmit_delay
     { kDontAllowMultipleValues, "24",       NULL                    },  //34 small_window_size
     { kDontAllowMultipleValues, "false",    NULL                    },  //35 ack_logging_enabled
-    { kDontAllowMultipleValues, "/opt/streaming/easydarwin/snap/",      NULL                    },  //36 snap_local_path
-    { kDontAllowMultipleValues, "http://snap.easydarwin.com/",      NULL                    },  //37 snap_web_path
+    { kDontAllowMultipleValues, "./snap/",      NULL                    },  //36 snap_local_path
+    { kDontAllowMultipleValues, "http://cms.easydarwin.org/",      NULL                    },  //37 snap_web_path
     { kDontAllowMultipleValues, "50",       NULL                    },  //38 send_interval
     { kDontAllowMultipleValues, "-2000",    NULL                    },  //39 thick_all_the_way_delay
     { kDontAllowMultipleValues, "",         NULL                    },  //40 alt_transport_src_ipaddr
@@ -121,8 +121,8 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//53 pid_file
     { kDontAllowMultipleValues, "false",    NULL                    },   //54 force_logs_close_on_write
     { kDontAllowMultipleValues, "false",    NULL                    },   //55 disable_thinning
-    { kDontAllowMultipleValues, "60200",    NULL                     }, //56 monitor_lan_port
-    { kDontAllowMultipleValues, "60200",    NULL                     }, //57 monitor_wan_port
+    { kDontAllowMultipleValues, "10000",    NULL                     }, //56 monitor_lan_port
+    { kDontAllowMultipleValues, "10000",    NULL                     }, //57 monitor_wan_port
     { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //58 monitor_lan_ip
     { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //59 monitor_wan_ip
     { kDontAllowMultipleValues, "true",     NULL                     }, //60 enable_allow_guest_default
