@@ -104,7 +104,6 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  GetAppendSrcAddrInTransport()   { return fAppendSrcAddrInTransport; }
         
         //
-        // For UDP retransmits
         UInt32  GetMaxRetransmitDelayInMsec()   { return fMaxRetransDelayInMsec; }
         Bool16  IsAckLoggingEnabled()           { return fIsAckLoggingEnabled; }
         UInt32  GetSendIntervalInMsec()         { return fSendIntervalInMsec; }

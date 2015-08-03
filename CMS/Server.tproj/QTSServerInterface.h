@@ -277,11 +277,7 @@ class QTSServerInterface : public QTSSDictionary
         
         // Storage for current time attribute
         SInt64              fCurrentTime_UnixMilli;
-
-        // Stats for UDP retransmits
-        UInt32              fUDPWastageInBytes;
-        UInt32              fNumUDPBuffers;
-        
+       
         Bool16              fSigInt;
         Bool16              fSigTerm;
 
@@ -300,8 +296,6 @@ class QTSServerInterface : public QTSSDictionary
         static void* CurrentUnixTimeMilli(QTSSDictionary* inServer, UInt32* outLen);
         //static void* GetTotalUDPSockets(QTSSDictionary* inServer, UInt32* outLen);
         static void* IsOutOfDescriptors(QTSSDictionary* inServer, UInt32* outLen);
-        static void* GetNumUDPBuffers(QTSSDictionary* inServer, UInt32* outLen);
-        static void* GetNumWastedBytes(QTSSDictionary* inServer, UInt32* outLen);
         
         static QTSServerInterface*  sServer;
         static QTSSAttrInfoDict::AttrInfo   sAttributes[];
