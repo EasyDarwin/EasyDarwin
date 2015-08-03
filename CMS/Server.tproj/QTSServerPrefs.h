@@ -108,7 +108,6 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  IsAckLoggingEnabled()           { return fIsAckLoggingEnabled; }
         UInt32  GetSendIntervalInMsec()         { return fSendIntervalInMsec; }
         UInt32  GetMaxSendAheadTimeInSecs()     { return fMaxSendAheadTimeInSecs; }
-        Bool16  IsSlowStartEnabled()            { return fIsSlowStartEnabled; }
         Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }
         Bool16  GetRTSPServerInfoEnabled()      { return fEnableRTSPServerInfo; }
         
@@ -162,7 +161,6 @@ class QTSServerPrefs : public QTSSPrefs
 
         Bool16 ServerStatFileEnabled()      { return fEnableMonitorStatsFile; }
         UInt32 GetStatFileIntervalSec()     { return fStatsFileIntervalSeconds; }
-        Bool16  AutoDeleteSDPFiles()        { return fauto_delete_sdp_files; }
         QTSS_AuthScheme GetAuthScheme()     { return fAuthScheme; }
                  
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
@@ -225,10 +223,8 @@ class QTSServerPrefs : public QTSSPrefs
 
         UInt32  fMaxRetransDelayInMsec;
         Bool16  fIsAckLoggingEnabled;
-        Bool16  fIsSlowStartEnabled;
         UInt32  fSendIntervalInMsec;
         UInt32  fMaxSendAheadTimeInSecs;
-        Bool16  fauto_delete_sdp_files;
         QTSS_AuthScheme fAuthScheme;
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
