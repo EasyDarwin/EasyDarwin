@@ -107,6 +107,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 		
 		fwrite(pbuf, 1, frameinfo->length, fTest);
 
+		if(frameinfo->fps == 0) frameinfo->fps = 25;
 		tsTimeStampMSsec += 1000/frameinfo->fps;
 		unsigned long long llPts = tsTimeStampMSsec * 90;
 	
