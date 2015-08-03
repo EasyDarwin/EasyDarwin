@@ -1,86 +1,67 @@
 <CONFIGURATION>
 	<SERVER>
-		<PREF NAME="default_authorization_realm" >EasyDarwin_CMS</PREF>
-		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
-		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
-		<PREF NAME="min_tcp_buffer_size" TYPE="UInt32" >8192</PREF>
-		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
-		<PREF NAME="screen_logging" TYPE="Bool16" >true</PREF>
-		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >3</PREF>
-		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
-		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
-		<PREF NAME="error_logfile_dir" >./Logs</PREF>
-		<PREF NAME="error_logfile_name" >Error</PREF>
-		<PREF NAME="module_folder" >./QTSSModules</PREF>
-		<PREF NAME="safe_play_duration" TYPE="UInt32" >600</PREF>
-		<PREF NAME="average_bandwidth_update" TYPE="UInt32" >60</PREF>
-		<PREF NAME="total_bytes_update" TYPE="UInt32" >1</PREF>
-		<PREF NAME="auto_restart" TYPE="Bool16" >true</PREF>
-		<PREF NAME="break_on_assert" TYPE="Bool16" >false</PREF>
-		<PREF NAME="bind_ip_addr" >0</PREF>
-		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
-		<PREF NAME="maximum_connections" TYPE="SInt32" >10000</PREF>
-		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
-		<PREF NAME="session_timeout" TYPE="UInt32" >90</PREF>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
-		<PREF NAME="run_user_name" ></PREF>
-		<PREF NAME="run_group_name" ></PREF>
-		<PREF NAME="drop_all_packets_delay" TYPE="SInt32" >2500</PREF>
-		<PREF NAME="drop_all_video_delay" TYPE="SInt32" >1750</PREF>
-		<PREF NAME="thin_all_the_way_delay" TYPE="SInt32" >1500</PREF>
-		<PREF NAME="always_thin_delay" TYPE="SInt32" >750</PREF>
+		<PREF NAME="session_timeout" TYPE="UInt32" >180</PREF>
+		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
+		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
+		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
+		<PREF NAME="cms_ip_addr" >127.0.0.1</PREF>
+		<PREF NAME="bind_ip_addr" >0</PREF>
+		<PREF NAME="break_on_assert" TYPE="Bool16" >false</PREF>
+		<PREF NAME="auto_restart" TYPE="Bool16" >true</PREF>
+		<PREF NAME="total_bytes_update" TYPE="UInt32" >1</PREF>
+		<PREF NAME="average_bandwidth_update" TYPE="UInt32" >60</PREF>
+		<PREF NAME="safe_play_duration" TYPE="UInt32" >600</PREF>
+		<PREF NAME="module_folder" >./QTSSModules/</PREF>
+		<PREF NAME="error_logfile_name" >Error</PREF>
+		<PREF NAME="error_logfile_dir" >./Logs/</PREF>
+		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
+		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
+		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >2</PREF>
+		<PREF NAME="screen_logging" TYPE="Bool16" >true</PREF>
+		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
+		<PREF NAME="service_id" >CMS000</PREF>
 		<PREF NAME="start_thinning_delay" TYPE="SInt32" >0</PREF>
-		<PREF NAME="start_thicking_delay" TYPE="SInt32" >250</PREF>
-		<PREF NAME="thick_all_the_way_delay" TYPE="SInt32" >-2000</PREF>
-		<PREF NAME="quality_check_interval" TYPE="UInt32" >1000</PREF>
-		<PREF NAME="append_source_addr_in_transport" TYPE="Bool16" >false</PREF>
-		<PREF NAME="max_retransmit_delay" TYPE="UInt32" >500</PREF>
-		<PREF NAME="small_window_size" TYPE="UInt32" >24</PREF>
-		<PREF NAME="medium_window_size" TYPE="UInt32" >48</PREF>
 		<PREF NAME="large_window_size" TYPE="UInt32" >64</PREF>
 		<PREF NAME="window_size_threshold" TYPE="UInt32" >200</PREF>
-		<PREF NAME="window_size_max_threshold" TYPE="UInt32" >1000</PREF>
+		<PREF NAME="min_tcp_buffer_size" TYPE="UInt32" >8192</PREF>
+		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
+		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
+		<PREF NAME="cms_port" TYPE="UInt16" >60000</PREF>
+		<PREF NAME="redis_ip_addr" >127.0.0.1</PREF>
+		<PREF NAME="run_user_name" ></PREF>
+		<PREF NAME="run_group_name" ></PREF>
+		<PREF NAME="append_source_addr_in_transport" TYPE="Bool16" >false</PREF>
+		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
+		<PREF NAME="max_retransmit_delay" TYPE="UInt32" >500</PREF>
+		<PREF NAME="small_window_size" TYPE="UInt32" >24</PREF>
 		<PREF NAME="ack_logging_enabled" TYPE="Bool16" >false</PREF>
-		<PREF NAME="rtcp_poll_interval" TYPE="UInt32" >100</PREF>
-		<PREF NAME="rtcp_rcv_buf_size" TYPE="UInt32" >768</PREF>
+		<PREF NAME="snap_local_path" >./snap/</PREF>
+		<PREF NAME="snap_web_path" >http://snap.easydarwin.com/</PREF>
 		<PREF NAME="send_interval" TYPE="UInt32" >50</PREF>
-		<PREF NAME="max_send_ahead_time" TYPE="UInt32" >25</PREF>
-		<PREF NAME="reliable_udp_slow_start" TYPE="Bool16" >true</PREF>
-		<PREF NAME="auto_delete_sdp_files" TYPE="Bool16" >false</PREF>
-		<PREF NAME="authentication_scheme" >digest</PREF>
-		<PREF NAME="sdp_file_delete_interval_seconds" TYPE="UInt32" >10</PREF>
-		<PREF NAME="reliable_udp" TYPE="Bool16" >true</PREF>
-		<PREF NAME="reliable_udp_dirs" >\</PREF>
-		<PREF NAME="reliable_udp_printfs" TYPE="Bool16" >false</PREF>
-		<PREF NAME="RTSP_error_message" TYPE="Bool16" >false</PREF>
-		<PREF NAME="run_num_threads" TYPE="UInt32" >0</PREF>
-		<PREF NAME="overbuffer_rate" TYPE="Float32" >2.0</PREF>
-		<PREF NAME="MSG_debug_printfs" TYPE="Bool16" >true</PREF>
-		<PREF NAME="enable_monitor_stats_file" TYPE="Bool16" >true</PREF>
-		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
-		<PREF NAME="monitor_stats_file_name" >dms_status</PREF>
-		<PREF NAME="enable_packet_header_printfs" TYPE="Bool16" >false</PREF>
-		<PREF NAME="packet_header_printf_options" >rtp;rr;sr;app;ack;</PREF>
+		<PREF NAME="thick_all_the_way_delay" TYPE="SInt32" >-2000</PREF>
 		<PREF NAME="alt_transport_src_ipaddr" ></PREF>
+		<PREF NAME="max_send_ahead_time" TYPE="UInt32" >25</PREF>
+		<PREF NAME="authentication_scheme" >digest</PREF>
 		<PREF NAME="auto_start" TYPE="Bool16" >false</PREF>
-		<PREF NAME="RTSP_server_info" TYPE="Bool16" >true</PREF>
-		<PREF NAME="pid_file" >CMS.pid</PREF>
+		<PREF NAME="MSG_debug_printfs" TYPE="Bool16" >false</PREF>
+		<PREF NAME="enable_monitor_stats_file" TYPE="Bool16" >false</PREF>
+		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
+		<PREF NAME="monitor_stats_file_name" >server_status</PREF>
+		<PREF NAME="overbuffer_rate" TYPE="Float32" >2.0</PREF>
+		<PREF NAME="medium_window_size" TYPE="UInt32" >48</PREF>
+		<PREF NAME="window_size_max_threshold" TYPE="UInt32" >1000</PREF>
+		<PREF NAME="CMS_server_info" TYPE="Bool16" >true</PREF>
+		<PREF NAME="run_num_threads" TYPE="UInt32" >0</PREF>
+		<PREF NAME="pid_file" >EasyDarwin.pid</PREF>
 		<PREF NAME="force_logs_close_on_write" TYPE="Bool16" >false</PREF>
 		<PREF NAME="disable_thinning" TYPE="Bool16" >false</PREF>
-		<PREF NAME="enable_allow_guest_default" TYPE="Bool16" >true</PREF>
-		<PREF NAME="run_num_msg_threads" TYPE="UInt32" >1</PREF>
-		<PREF NAME="cms_ip_addr" >127.0.0.1</PREF>
-		<PREF NAME="cms_port" TYPE="UInt16" >10000</PREF>
-		<PREF NAME="monitor_lan_port" TYPE="UInt16" >10000</PREF>
-		<PREF NAME="monitor_wan_port" TYPE="UInt16" >10000</PREF>
+		<PREF NAME="monitor_lan_port" TYPE="UInt16" >60200</PREF>
+		<PREF NAME="monitor_wan_port" TYPE="UInt16" >60200</PREF>
 		<PREF NAME="monitor_lan_ip" >127.0.0.1</PREF>
-		<PREF NAME="monitor_wan_ip" >127.0.0.1</PREF>
-		<PREF NAME="redis_ip_addr" >127.0.0.1</PREF>
-		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
-		<PREF NAME="service_id" >EasyDarwin_CMS</PREF>
-		<PREF NAME="snap_local_path" >/opt/streaming/easydarwin/snap/</PREF>
-		<PREF NAME="snap_web_path" >http://snap.easydarwin.com/</PREF>
-		<PREF NAME="CMS_server_info" TYPE="Bool16" >true</PREF>
+		<PREF NAME="monitor_wan_ip" >0.0.0.0</PREF>
+		<PREF NAME="enable_allow_guest_default" TYPE="Bool16" >true</PREF>
+		<PREF NAME="run_num_msg_threads" TYPE="UInt32" >2</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 </CONFIGURATION>
