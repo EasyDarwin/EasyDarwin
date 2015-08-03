@@ -83,17 +83,6 @@ enum
 };
 typedef SInt32 QTSS_Error;
 
-// QTSS_AddStreamFlags used in the QTSS_AddStream Callback function
-enum
-{
-    qtssASFlagsNoFlags              = 0x00000000,
-    qtssASFlagsAllowDestination     = 0x00000001,
-    qtssASFlagsForceInterleave      = 0x00000002,
-    qtssASFlagsDontUseSlowStart     = 0x00000004,
-    qtssASFlagsForceUDPTransport    = 0x00000008
-};
-typedef UInt32 QTSS_AddStreamFlags;
-
 // QTSS_PlayFlags used in the QTSS_Play Callback function.
 enum 
 {
@@ -1601,25 +1590,6 @@ QTSS_Error  QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, 
 
 /*****************************************/
 //  CLIENT SESSION CALLBACKS
-//
-//  QTSS API Modules have the option of generating and sending RTP packets. Only
-//  one module currently can generate packets for a particular session. In order
-//  to do this, call QTSS_AddRTPStream. This must be done in response to a RTSP
-//  request, and typically is done in response to a SETUP request from the client.
-//
-//  After one or more streams have been added to the session, the module that "owns"
-//  the packet sending for that session can call QTSS_Play to start the streams playing.
-//  After calling QTSS_Play, the module will get invoked in the QTSS_SendPackets_Role.
-//  Calling QTSS_Pause stops playing.
-//
-//  The "owning" module may call QTSS_Teardown at any time. Doing this closes the
-//  session and will cause the QTSS_SessionClosing_Role to be invoked for this session. 
-//
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-//              QTSS_RequestFailed: QTSS_RTPStreamObject couldn't be created.
-QTSS_Error  QTSS_AddRTPStream(QTSS_ClientSessionObject inClientSession, QTSS_RTSPRequestObject inRTSPRequest, QTSS_RTPStreamObject* outStream, QTSS_AddStreamFlags inFlags);
-//
 //  Returns:    QTSS_NoErr
 //              QTSS_BadArgument: Bad argument
 //              QTSS_RequestFailed: No streams added to this session.

@@ -135,14 +135,6 @@ class QTSSCallbacks
         static QTSS_Error   QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef);
         static QTSS_Error   QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef, QTSS_RTSPHeader inHeader, char* inValue, UInt32 inValueLen);
         static QTSS_Error   QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, QTSS_Object inRTPInfo, UInt32 inFlags);
-
-        // RTP ROUTINES
-        
-        static QTSS_Error   QTSS_AddRTPStream(QTSS_ClientSessionObject inClientSession, QTSS_RTSPRequestObject inRTSPRequest, QTSS_RTPStreamObject* outStream, QTSS_AddStreamFlags inFlags);
-        static QTSS_Error   QTSS_Play(QTSS_ClientSessionObject inClientSession, QTSS_RTSPRequestObject inRTSPRequest, QTSS_PlayFlags inPlayFlags);
-        static QTSS_Error   QTSS_Pause(QTSS_ClientSessionObject inClientSession);
-        static QTSS_Error   QTSS_Teardown(QTSS_ClientSessionObject inClientSession);
-        static QTSS_Error   QTSS_RefreshTimeOut(QTSS_ClientSessionObject inClientSession);
         
         // ASYNC I/O ROUTINES
         static QTSS_Error   QTSS_RequestEvent(QTSS_StreamRef inStream, QTSS_EventType inEventMask);
