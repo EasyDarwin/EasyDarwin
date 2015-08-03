@@ -268,10 +268,6 @@ class QTSServerInterface : public QTSSDictionary
         Float32             fCPUPercent;
         Float32             fCPUTimeUsedInSec;              
         
-        // stores # of UDP sockets in the server currently (gets updated lazily via.
-        // param retrieval function)
-        UInt32              fTotalUDPSockets;
-        
         // are we out of descriptors?
         Bool16              fIsOutOfDescriptors;
         
@@ -294,7 +290,6 @@ class QTSServerInterface : public QTSSDictionary
  
         // Param retrieval functions
         static void* CurrentUnixTimeMilli(QTSSDictionary* inServer, UInt32* outLen);
-        //static void* GetTotalUDPSockets(QTSSDictionary* inServer, UInt32* outLen);
         static void* IsOutOfDescriptors(QTSSDictionary* inServer, UInt32* outLen);
         
         static QTSServerInterface*  sServer;
