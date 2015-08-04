@@ -1,10 +1,25 @@
-#ifndef __NVSOURCE_API_H__
-#define __NVSOURCE_API_H__
+/*
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+*/
+#ifndef _Easy_NVS_API_H
+#define _Easy_NVS_API_H
 
 #define WIN32_LEAN_AND_MEAN
 //#include <windows.h>
 #include <winsock2.h>
-#define NVSOURCE_API  __declspec(dllexport)
+
+#ifdef _WIN32
+#define EasyNVS_API  __declspec(dllexport)
+#define Easy_APICALL  __stdcall
+#else
+#define EasyNVS_API
+#define Easy_APICALL 
+#endif
+
+#define Easy_NVS_Handle void*
 
 //媒体类型
 #ifndef MEDIA_TYPE_VIDEO
@@ -72,28 +87,24 @@ typedef struct
 }NVS_FRAME_INFO;
 
 /*
-	回调:
-	_mediatype:		MEDIA_TYPE_VIDEO	MEDIA_TYPE_AUDIO	MEDIA_TYPE_EVENT	
-	如果在NVS_OpenStream中的参数outRtpPacket置为1, 则回调中的_mediatype为MEDIA_TYPE_RTP, pbuf为接收到的RTP包(包含rtp头信息), frameinfo->length为包长
+//回调:
+_mediatype:		MEDIA_TYPE_VIDEO	MEDIA_TYPE_AUDIO	MEDIA_TYPE_EVENT	
+如果在EasyNVS_OpenStream中的参数outRtpPacket置为1, 则回调中的_mediatype为MEDIA_TYPE_RTP, pbuf为接收到的RTP包(包含rtp头信息), frameinfo->length为包长
 */
 typedef int (CALLBACK *NVSourceCallBack)( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
-
-
-//NVSource Handle
-typedef void *NVS_Handle;
 
 extern "C"
 {
 	//获取错误代码
-	int	 NVSOURCE_API NVS_GetErrCode();
+	EasyNVS_API int Easy_APICALL EasyNVS_GetErrCode();
 
-	int	 NVSOURCE_API	NVS_Init(NVS_Handle *handle);
-	int	 NVSOURCE_API	NVS_Deinit(NVS_Handle *handle);
+	EasyNVS_API int Easy_APICALL EasyNVS_Init(Easy_NVS_Handle *handle);
+	EasyNVS_API int Easy_APICALL EasyNVS_Deinit(Easy_NVS_Handle *handle);
 
-	int	 NVSOURCE_API	NVS_SetCallback(NVS_Handle handle, NVSourceCallBack _callback);
+	EasyNVS_API int Easy_APICALL EasyNVS_SetCallback(Easy_NVS_Handle handle, NVSourceCallBack _callback);
 
-	int	 NVSOURCE_API	NVS_OpenStream(NVS_Handle handle, int _channelid, char *_url, RTP_CONNECT_TYPE _connType, unsigned int _mediaType, char *_username, char *_password, void *userPtr, int _reconn/*1000表示长连接,即如果网络断开自动重连, 其它值为连接次数*/, int outRtpPacket/*默认为0,即回调输出完整的帧, 如果为1,则输出RTP包*/);
-	int	 NVSOURCE_API	NVS_CloseStream(NVS_Handle handle);
+	EasyNVS_API int Easy_APICALL EasyNVS_OpenStream(Easy_NVS_Handle handle, int _channelid, char *_url, RTP_CONNECT_TYPE _connType, unsigned int _mediaType, char *_username, char *_password, void *userPtr, int _reconn/*1000表示长连接,即如果网络断开自动重连, 其它值为连接次数*/, int outRtpPacket/*默认为0,即回调输出完整的帧, 如果为1,则输出RTP包*/);
+	EasyNVS_API int Easy_APICALL EasyNVS_CloseStream(Easy_NVS_Handle handle);
 };
 
 

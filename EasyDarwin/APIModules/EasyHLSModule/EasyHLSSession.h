@@ -18,7 +18,7 @@
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "OSArrayObjectDeleter.h"
-#include "NVSourceAPI.h"
+#include "EasyNVSourceAPI.h"
 #include "EasyHLSAPI.h"
 
 #ifndef __EASY_HLS_SESSION__
@@ -52,7 +52,7 @@ class EasyHLSSession
         OSQueueElem fQueueElem; 
 
 		//NVS Handle
-		NVS_Handle	fNVSHandle;
+		Easy_NVS_Handle	fNVSHandle;
 		//HLS Handle
 		Easy_HLS_Handle fHLSHandle;
 		
