@@ -137,22 +137,19 @@ class QTSSModule : public QTSSDictionary, public Task
             kRTSPRequestRole =          7,
             kRTSPPostProcessorRole =    8,
             kRTSPSessionClosingRole =   9,
-            kRTPSendPacketsRole =       10,
-            kClientSessionClosingRole = 11,
-            kRTCPProcessRole =          12,
-            kErrorLogRole =             13,
-            kRereadPrefsRole =          14,
-            kOpenFileRole =             15,
-            kOpenFilePreProcessRole =   16,
-            kAdviseFileRole =           17,
-            kReadFileRole =             18,
-            kCloseFileRole =            19,
-            kRequestEventFileRole =     20,
-            kRTSPIncomingDataRole =     21,
-            kStateChangeRole =          22,
-            kTimedIntervalRole =        23,
+            kErrorLogRole =             10,
+            kRereadPrefsRole =          11,
+            kOpenFileRole =             12,
+            kOpenFilePreProcessRole =   13,
+            kAdviseFileRole =           14,
+            kReadFileRole =             15,
+            kCloseFileRole =            16,
+            kRequestEventFileRole =     17,
+            kRTSPIncomingDataRole =     18,
+            kStateChangeRole =          19,
+            kTimedIntervalRole =        20,
             
-            kNumRoles =                 24
+            kNumRoles =                 21
         };
         typedef UInt32 RoleIndex;
         

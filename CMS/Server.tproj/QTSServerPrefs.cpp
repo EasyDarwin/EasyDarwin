@@ -54,7 +54,7 @@
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
     { kDontAllowMultipleValues, "0",        NULL                    },  //0 rtsp_timeout
-    { kDontAllowMultipleValues, "180",      NULL                    },  //1 session_timeout
+    { kDontAllowMultipleValues, "90",      NULL                    },  //1 session_timeout
 	{ kDontAllowMultipleValues,	"120",		NULL					},	//2 rtp_timeout
     { kDontAllowMultipleValues, "1000",     NULL                    },  //3 maximum_connections
     { kDontAllowMultipleValues, "102400",   NULL                    },  //4 maximum_bandwidth

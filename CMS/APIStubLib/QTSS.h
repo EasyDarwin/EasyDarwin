@@ -83,22 +83,12 @@ enum
 };
 typedef SInt32 QTSS_Error;
 
-// QTSS_PlayFlags used in the QTSS_Play Callback function.
-enum 
-{
-    qtssPlayFlagsSendRTCP           = 0x00000010,   // have the server generate RTCP Sender Reports 
-    qtssPlayFlagsAppendServerInfo   = 0x00000020    // have the server append the server info APP packet to your RTCP Sender Reports
-};
-typedef UInt32 QTSS_PlayFlags;
-
 // Flags for QTSS_Write when writing to a QTSS_ClientSessionObject.
 enum 
 {
-    qtssWriteFlagsNoFlags           = 0x00000000,
-    qtssWriteFlagsIsRTP             = 0x00000001,
-    qtssWriteFlagsIsRTCP            = 0x00000002,   
-    qtssWriteFlagsWriteBurstBegin   = 0x00000004,
-    qtssWriteFlagsBufferData        = 0x00000008
+    qtssWriteFlagsNoFlags           = 0x00000000, 
+    qtssWriteFlagsWriteBurstBegin   = 0x00000001,
+    qtssWriteFlagsBufferData        = 0x00000002
 };
 typedef UInt32 QTSS_WriteFlags;
 
@@ -644,28 +634,28 @@ enum
     qtssMsgNoSessionID              = 20,
     qtssMsgFileNameTooLong          = 21,
     qtssMsgNoClientPortInTransport  = 22,
-    qtssMsgRTPPortMustBeEven        = 23,
-    qtssMsgRTCPPortMustBeOneBigger  = 24,
-    qtssMsgOutOfPorts               = 25,
-    qtssMsgNoModuleForRequest       = 26,
-    qtssMsgAltDestNotAllowed        = 27,
-    qtssMsgCantSetupMulticast       = 28,
-    qtssListenPortInUse             = 29,
-    qtssListenPortAccessDenied      = 30,
-    qtssListenPortError             = 31,
-    qtssMsgBadBase64                = 32,
-    qtssMsgSomePortsFailed          = 33,
-    qtssMsgNoPortsSucceeded         = 34,
-    qtssMsgCannotCreatePidFile      = 35,
-    qtssMsgCannotSetRunUser         = 36,
-    qtssMsgCannotSetRunGroup        = 37,
-    qtssMsgNoSesIDOnDescribe        = 38,
-    qtssServerPrefMissing           = 39,
-    qtssServerPrefWrongType         = 40,
-    qtssMsgCantWriteFile            = 41,
-    qtssMsgSockBufSizesTooLarge     = 42,
-    qtssMsgBadFormat                = 43,
-    qtssMsgNumParams                = 44
+
+
+    qtssMsgOutOfPorts               = 23,
+    qtssMsgNoModuleForRequest       = 24,
+    qtssMsgAltDestNotAllowed        = 25,
+    qtssMsgCantSetupMulticast       = 26,
+    qtssListenPortInUse             = 27,
+    qtssListenPortAccessDenied      = 28,
+    qtssListenPortError             = 29,
+    qtssMsgBadBase64                = 30,
+    qtssMsgSomePortsFailed          = 31,
+    qtssMsgNoPortsSucceeded         = 32,
+    qtssMsgCannotCreatePidFile      = 33,
+    qtssMsgCannotSetRunUser         = 34,
+    qtssMsgCannotSetRunGroup        = 35,
+    qtssMsgNoSesIDOnDescribe        = 36,
+    qtssServerPrefMissing           = 37,
+    qtssServerPrefWrongType         = 38,
+    qtssMsgCantWriteFile            = 39,
+    qtssMsgSockBufSizesTooLarge     = 40,
+    qtssMsgBadFormat                = 41,
+    qtssMsgNumParams                = 42
     
 };
 typedef UInt32 QTSS_TextMessagesAttributes;
@@ -790,13 +780,6 @@ enum
     QTSS_RTSPSessionClosing_Role =   FOUR_CHARS_TO_INT('s', 'e', 's', 'c'), //sesc //RTSP session is going away
 
     QTSS_RTSPIncomingData_Role =     FOUR_CHARS_TO_INT('i', 'c', 'm', 'd'), //icmd //Incoming interleaved RTP data on this RTSP connection
-
-    //RTP-specific
-    QTSS_RTPSendPackets_Role =           FOUR_CHARS_TO_INT('s', 'e', 'n', 'd'), //send //Send RTP packets to the client
-    QTSS_ClientSessionClosing_Role =     FOUR_CHARS_TO_INT('d', 'e', 's', 's'), //dess //Client session is going away
-    
-    //RTCP-specific
-    QTSS_RTCPProcess_Role =          FOUR_CHARS_TO_INT('r', 't', 'c', 'p'), //rtcp //Process all RTCP packets sent to the server
 
     //File system roles
     QTSS_OpenFilePreProcess_Role =  FOUR_CHARS_TO_INT('o', 'p', 'p', 'r'),  //oppr
@@ -928,14 +911,6 @@ typedef struct
 
 typedef struct
 {
-    QTSS_ClientSessionObject    inClientSession;
-    QTSS_RTPStreamObject        inRTPStream;
-    void*                       inRTCPPacketData;
-    UInt32                      inRTCPPacketDataLen;
-} QTSS_RTCPProcess_Params;
-
-typedef struct
-{
     char*                       inPath;
     QTSS_OpenFileFlags          inFlags;
     QTSS_Object                 inFileObject;
@@ -999,7 +974,6 @@ typedef union
 
     QTSS_RTPSendPackets_Params          rtpSendPacketsParams;
     QTSS_ClientSessionClosing_Params    clientSessionClosingParams;
-    QTSS_RTCPProcess_Params             rtcpProcessParams;
     
     QTSS_OpenFile_Params                openFilePreProcessParams;
     QTSS_OpenFile_Params                openFileParams;
@@ -1543,25 +1517,6 @@ QTSS_Error QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef, QTSS_RTSPHeader i
 //              QTSS_BadArgument: Bad argument
 QTSS_Error  QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, QTSS_Object inRTPInfo, UInt32 inFlags);
 
-
-/*****************************************/
-//  CLIENT SESSION CALLBACKS
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-//              QTSS_RequestFailed: No streams added to this session.
-QTSS_Error  QTSS_Play(QTSS_ClientSessionObject inClientSession, QTSS_RTSPRequestObject inRTSPRequest, QTSS_PlayFlags inPlayFlags);
-//
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error  QTSS_Pause(QTSS_ClientSessionObject inClientSession);
-//
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error  QTSS_Teardown(QTSS_ClientSessionObject inClientSession);
-
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error  QTSS_RefreshTimeOut(QTSS_ClientSessionObject inClientSession);
 
 /*****************************************/
 //  FILE SYSTEM CALLBACKS

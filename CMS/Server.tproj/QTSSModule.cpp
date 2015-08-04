@@ -72,9 +72,7 @@ char*    QTSSModule::sRoleNames[] =
            "RTSPRequestRole"          ,
            "RTSPPostProcessorRole"    ,
            "RTSPSessionClosingRole"   ,
-           "RTPSendPacketsRole"       ,
-           "ClientSessionClosingRole" ,
-           "RTCPProcessRole"          ,
+
            "ErrorLogRole"             ,
            "RereadPrefsRole"          ,
            "OpenFileRole"             ,
@@ -245,10 +243,8 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         case QTSS_RTSPRequest_Role:         return kRTSPRequestRole         ;
         case QTSS_RTSPPostProcessor_Role:   return kRTSPPostProcessorRole   ;
         case QTSS_RTSPSessionClosing_Role:  return kRTSPSessionClosingRole  ;
-        case QTSS_RTPSendPackets_Role:      return kRTPSendPacketsRole      ;
-        case QTSS_ClientSessionClosing_Role:return kClientSessionClosingRole;
-        case QTSS_RTCPProcess_Role:         return kRTCPProcessRole         ;
-        case QTSS_ErrorLog_Role:            return kErrorLogRole            ;
+
+		case QTSS_ErrorLog_Role:            return kErrorLogRole            ;
         case QTSS_RereadPrefs_Role:         return kRereadPrefsRole         ;
         case QTSS_OpenFile_Role:            return kOpenFileRole            ;
         case QTSS_OpenFilePreProcess_Role:  return kOpenFilePreProcessRole  ;
@@ -300,10 +296,8 @@ QTSS_Error  QTSSModule::AddRole(QTSS_Role inRole)
         case QTSS_RTSPRequest_Role:         fRoleArray[kRTSPRequestRole] = true;        break;
         case QTSS_RTSPPostProcessor_Role:   fRoleArray[kRTSPPostProcessorRole] = true;  break;
         case QTSS_RTSPSessionClosing_Role:  fRoleArray[kRTSPSessionClosingRole] = true; break;
-        case QTSS_RTPSendPackets_Role:      fRoleArray[kRTPSendPacketsRole] = true;     break;
-        case QTSS_ClientSessionClosing_Role:fRoleArray[kClientSessionClosingRole] = true;break;
-        case QTSS_RTCPProcess_Role:         fRoleArray[kRTCPProcessRole] = true;        break;
-        case QTSS_ErrorLog_Role:            fRoleArray[kErrorLogRole] = true;           break;
+
+		case QTSS_ErrorLog_Role:            fRoleArray[kErrorLogRole] = true;           break;
         case QTSS_RereadPrefs_Role:         fRoleArray[kRereadPrefsRole] = true;        break;
         case QTSS_OpenFile_Role:            fRoleArray[kOpenFileRole] = true;           break;
         case QTSS_OpenFilePreProcess_Role:  fRoleArray[kOpenFilePreProcessRole] = true; break;
