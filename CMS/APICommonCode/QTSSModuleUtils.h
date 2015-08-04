@@ -83,16 +83,6 @@ class QTSSModuleUtils
                                     UInt32* outLen,
                                     StrPtrLen* suffix = NULL);
 
-        //
-        // This function does 2 things:
-        // 1.   Compares the enabled fields in the field ID array with the fields in the
-        //      x-RTP-Meta-Info header. Turns off the fields in the array that aren't in the request.
-        //
-        // 2.   Appends the x-RTP-Meta-Info header to the response, using the proper
-        //      fields from the array, as well as the IDs provided in the array
-        //static QTSS_Error   AppendRTPMetaInfoHeader( QTSS_RTSPRequestObject inRequest,
-        //                                                StrPtrLen* inRTPMetaInfoHeader,
-        //                                                RTPMetaInfoPacket::FieldID* inFieldIDArray);
 
         // This function sends an error to the RTSP client. You must provide a
         // status code for the error, and a text message ID to describe the error.
