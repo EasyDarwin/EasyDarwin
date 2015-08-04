@@ -182,29 +182,6 @@ enum
 typedef UInt32 QTSS_SessionType;
 
 
-/**********************************/
-//
-// What type of RTP network mode is being used for the RTP stream?
-// unicast | multicast (mutually exclusive)
-enum
-{
-    qtssRTPNetworkModeDefault       = 0, // not declared
-    qtssRTPNetworkModeMulticast     = 1,
-    qtssRTPNetworkModeUnicast       = 2
-};
-typedef UInt32 QTSS_RTPNetworkMode;
-
-
-
-/**********************************/
-//
-// The transport mode in a SETUP request
-enum
-{
-    qtssRTPTransportModePlay        = 0,
-    qtssRTPTransportModeRecord      = 1
-};
-typedef UInt32 QTSS_RTPTransportMode;
 
 /**********************************/
 // PAYLOAD TYPES
@@ -343,7 +320,6 @@ enum
     qtssAttrModeDelete              = 32
 };
 typedef UInt32 QTSS_AttrPermission;
-
 
 enum
 {
