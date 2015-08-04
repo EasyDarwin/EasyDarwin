@@ -155,15 +155,15 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 	if(NULL == fNVSHandle)
 	{
 		//创建NVSource
-		NVS_Init(&fNVSHandle);
+		EasyNVS_Init(&fNVSHandle);
 
 		if (NULL == fNVSHandle) return QTSS_Unimplemented;
 
 		unsigned int mediaType = MEDIA_TYPE_VIDEO;
 		//mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
 
-		NVS_SetCallback(fNVSHandle, __NVSourceCallBack);
-		NVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+		EasyNVS_SetCallback(fNVSHandle, __NVSourceCallBack);
+		EasyNVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 
 		char fileName[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
 		sprintf(fileName,"%s.264",fHLSSessionID.Ptr);
@@ -194,8 +194,8 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 	//释放source
 	if(fNVSHandle)
 	{
-		NVS_CloseStream(fNVSHandle);
-		NVS_Deinit(&fNVSHandle);
+		EasyNVS_CloseStream(fNVSHandle);
+		EasyNVS_Deinit(&fNVSHandle);
 		fNVSHandle = NULL;
 		::fclose(fTest);
 	}
