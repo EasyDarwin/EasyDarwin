@@ -33,18 +33,24 @@ enum{
 extern "C"
 {
 #endif
-
+	/* 创建HLSSession  返回为句柄值 */
 	EasyHLS_API Easy_HLS_Handle Easy_APICALL EasyHLS_Session_Create(int nCapacity, bool bAllowCache, int version);
 
+	/* 设置HLS参数 strRootDir:以/结尾根目录 strSubDir:以/结尾子目录 strMediaName:媒体名称、nTargetDuration:单个切片时间 */
 	EasyHLS_API void Easy_APICALL EasyHLS_ResetStreamCache(Easy_HLS_Handle handle, const char * strRootDir, const char* strSubDir, const char* strMediaName, int nTargetDuration);
 	
+	/* 获取具体HLSSession的m3u8文件 */
 	EasyHLS_API const char*  Easy_APICALL EasyHLS_GetM3U8File(Easy_HLS_Handle handle);
 	
+	/* 打包视频 */
 	EasyHLS_API int Easy_APICALL EasyHLS_VideoMux(Easy_HLS_Handle handle, unsigned int uiFrameType, unsigned char *data, int dataLength, unsigned long long pcr, unsigned long long pts, unsigned long long dts);
 	
+	/* 打包音频 */
 	EasyHLS_API int Easy_APICALL EasyHLS_AudioMux(Easy_HLS_Handle handle, unsigned char *data, int dataLength, /*u64 pcr,*/ unsigned long long pts, unsigned long long dts=~0);
 
+	/* 释放HLSSession */
 	EasyHLS_API void Easy_APICALL EasyHLS_Session_Release(Easy_HLS_Handle handle);
+
 #ifdef __cplusplus
 }
 #endif
