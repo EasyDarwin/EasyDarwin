@@ -8,7 +8,6 @@
 #define _Easy_NVS_API_H
 
 #define WIN32_LEAN_AND_MEAN
-//#include <windows.h>
 #include <winsock2.h>
 
 #ifdef _WIN32
@@ -38,23 +37,23 @@
 #define MEDIA_TYPE_SDP			0x00000010
 #endif
 
-//video codec
+/* video codec */
 #define	VIDEO_CODEC_H264	0x1C
 #define	VIDEO_CODEC_MJPEG	0x08
 #define	VIDEO_CODEC_MPEG4	0x0D
-//audio codec
+/* audio codec */
 #define AUDIO_CODEC_MP4A	0x15002		//86018
 #define AUDIO_CODEC_PCMU	0x10006		//65542
 
 
-//连接类型
+/* 连接类型 */
 typedef enum __RTP_CONNECT_TYPE
 {
 	RTP_OVER_TCP	=	0x01,
 	RTP_OVER_UDP
 }RTP_CONNECT_TYPE;
 
-//帧类型
+/* 帧类型 */
 #ifndef FRAMETYPE_I
 #define FRAMETYPE_I		0x01
 #endif
@@ -65,7 +64,7 @@ typedef enum __RTP_CONNECT_TYPE
 #define FRAMETYPE_B		0x03
 #endif
 
-//帧信息
+/* 帧信息 */
 typedef struct 
 {
 	unsigned int	codec;			//编码格式
@@ -95,20 +94,23 @@ typedef int (CALLBACK *NVSourceCallBack)( int _chid, int *_chPtr, int _mediatype
 
 extern "C"
 {
-	//获取错误代码
+	/* 获取最后一次错误的错误码 */
 	EasyNVS_API int Easy_APICALL EasyNVS_GetErrCode();
 
+	/* 创建NVSource句柄  返回为句柄值 */
 	EasyNVS_API int Easy_APICALL EasyNVS_Init(Easy_NVS_Handle *handle);
+
+	/* 释放NVSource 参数为NVSource句柄 */
 	EasyNVS_API int Easy_APICALL EasyNVS_Deinit(Easy_NVS_Handle *handle);
 
+	/* 设置数据回调 */
 	EasyNVS_API int Easy_APICALL EasyNVS_SetCallback(Easy_NVS_Handle handle, NVSourceCallBack _callback);
 
+	/* 打开网络流 */
 	EasyNVS_API int Easy_APICALL EasyNVS_OpenStream(Easy_NVS_Handle handle, int _channelid, char *_url, RTP_CONNECT_TYPE _connType, unsigned int _mediaType, char *_username, char *_password, void *userPtr, int _reconn/*1000表示长连接,即如果网络断开自动重连, 其它值为连接次数*/, int outRtpPacket/*默认为0,即回调输出完整的帧, 如果为1,则输出RTP包*/);
+	
+	/* 关闭网络流 */
 	EasyNVS_API int Easy_APICALL EasyNVS_CloseStream(Easy_NVS_Handle handle);
 };
-
-
-
-
 
 #endif
