@@ -657,7 +657,7 @@ void    QTSServer::LoadCompiledInModules()
     (void)theReflectorModule->SetupModule(&sCallbacks, &QTSSReflectorModule_Main);
     (void)AddModule(theReflectorModule);
 
-	QTSSModule* theOnDemandRelayModule = new QTSSModule("QTSSOnDemandRelayModule");
+	QTSSModule* theOnDemandRelayModule = new QTSSModule("EasyRelayModule");
     (void)theOnDemandRelayModule->SetupModule(&sCallbacks, &EasyRelayModule_Main);
     (void)AddModule(theOnDemandRelayModule);
 

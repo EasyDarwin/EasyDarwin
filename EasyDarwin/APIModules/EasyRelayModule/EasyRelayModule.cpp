@@ -31,7 +31,7 @@ static QTSS_ModulePrefsObject       sPrefs = NULL;
 
 
 // FUNCTION PROTOTYPES
-static QTSS_Error QTSSOnDemandRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
+static QTSS_Error EasyRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs();
@@ -42,10 +42,10 @@ static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyRelayModule_Main(void* inPrivateArgs)
 {
-    return _stublibrary_main(inPrivateArgs, QTSSOnDemandRelayModuleDispatch);
+    return _stublibrary_main(inPrivateArgs, EasyRelayModuleDispatch);
 }
 
-QTSS_Error  QTSSOnDemandRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
+QTSS_Error  EasyRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
     switch (inRole)
     {
@@ -139,10 +139,10 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	}
 	else
 	{
-		clientSes = NEW EasyRelaySession("rtsp://admin:admin@192.168.66.189/", EasyRelaySession::kRTSPTCPClientType, theUriStr);
+		clientSes = NEW EasyRelaySession("rtsp://admin:admin@192.168.1.106/", EasyRelaySession::kRTSPTCPClientType, theUriStr);
 
 
-		QTSS_Error theErr = clientSes->HLSSessionRelease();
+		QTSS_Error theErr = clientSes->HLSSessionStart();
 
 		if(theErr == QTSS_NoErr)
 		{

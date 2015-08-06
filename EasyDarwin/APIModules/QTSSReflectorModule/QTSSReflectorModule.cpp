@@ -680,10 +680,12 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
 
             Bool16 isRTCP =false;
             if (theStream != NULL)
-            {   if (packetChannel & 1)
+            {   
+				if (packetChannel & 1)
                 {   serverReceivePort ++;
                     isRTCP = true;
                 }
+				printf(".");
                 theStream->PushPacket(rtpPacket,packetDataLen, isRTCP);
                 //qtss_printf("QTSSReflectorModule.cpp:ProcessRTPData Send RTSP packet channel=%u to UDP localServerAddr=%"_U32BITARG_" serverReceivePort=%"_U32BITARG_" packetDataLen=%u \n", (UInt16) packetChannel, localServerAddr, serverReceivePort,packetDataLen);
             }
