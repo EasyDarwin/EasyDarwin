@@ -217,7 +217,7 @@
 		<PREF NAME="force_rtp_info_sequence_and_time" TYPE="Bool16" >false</PREF>
 		<PREF NAME="BroadcasterGroup" >broadcaster</PREF>
 		<PREF NAME="ip_allow_list" >127.0.0.*</PREF>
-		<PREF NAME="hls_output_enabled" TYPE="Bool16" >false</PREF>
+		<PREF NAME="hls_output_enabled" TYPE="Bool16" >true</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSFlowControlModule" >
 		<PREF NAME="loss_thin_tolerance" TYPE="UInt32" >30</PREF>
