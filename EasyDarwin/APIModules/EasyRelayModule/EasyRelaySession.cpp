@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 /* NVSource从RTSPClient获取数据后回调给上层 */
-int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
+int CALLBACK __EasyNVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
 	EasyRelaySession* pRelaySession = (EasyRelaySession*)_chPtr;
 
@@ -28,6 +28,18 @@ int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *p
 	pRelaySession->ProcessData(_chid, _mediatype, pbuf, frameinfo);
 
 	return 0;
+}
+
+int __EasyPusher_Callback(int _id, EASY_PUSH_STATE_T _state, EASY_AV_Frame *_frame, void *_userptr)
+{
+    if (_state == EASY_PUSH_STATE_CONNECTING)               printf("Connecting...\n");
+    else if (_state == EASY_PUSH_STATE_CONNECTED)           printf("Connected\n");
+    else if (_state == EASY_PUSH_STATE_CONNECT_FAILED)      printf("Connect failed\n");
+    else if (_state == EASY_PUSH_STATE_CONNECT_ABORT)       printf("Connect abort\n");
+    //else if (_state == EASY_PUSH_STATE_PUSHING)             printf("P->");
+    else if (_state == EASY_PUSH_STATE_DISCONNECTED)        printf("Disconnect.\n");
+
+    return 0;
 }
 
 EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName)
@@ -142,14 +154,21 @@ QTSS_Error	EasyRelaySession::HLSSessionStart(char* rtspUrl)
 		unsigned int mediaType = MEDIA_TYPE_VIDEO;
 		//mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
 
-		EasyNVS_SetCallback(fNVSHandle, __NVSourceCallBack);
+		EasyNVS_SetCallback(fNVSHandle, __EasyNVSourceCallBack);
 		EasyNVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 	}
 
 	if(NULL == fPusherHandle)
 	{
-		;
+		EASY_MEDIA_INFO_T mediainfo;
+		memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
+		mediainfo.u32VideoCodec =   0x1C;
 
+		fPusherHandle = EasyPusher_Create();
+
+		EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
+
+		EasyPusher_StartStream(fPusherHandle, "127.0.0.1", 554, "live.sdp", "", "", &mediainfo, 512);
 	}
 
 	return QTSS_NoErr;
@@ -170,8 +189,9 @@ QTSS_Error	EasyRelaySession::HLSSessionRelease()
 	//释放sink
 	if(fPusherHandle)
 	{
-		//EasyHLS_Session_Release(fHLSHandle);
-		//fHLSHandle = NULL;
+		EasyPusher_StopStream(fPusherHandle);
+		EasyPusher_Release(fPusherHandle);
+		fPusherHandle = 0;
 	}
 
 	return QTSS_NoErr;
