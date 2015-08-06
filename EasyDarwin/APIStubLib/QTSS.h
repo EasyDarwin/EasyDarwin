@@ -1012,8 +1012,7 @@ enum
     QTSS_RTSPSessionClosing_Role =   FOUR_CHARS_TO_INT('s', 'e', 's', 'c'), //sesc //RTSP session is going away
 
     QTSS_RTSPIncomingData_Role =     FOUR_CHARS_TO_INT('i', 'c', 'm', 'd'), //icmd //Incoming interleaved RTP data on this RTSP connection
-	QTSS_RTSPRelayingData_Role =     FOUR_CHARS_TO_INT('r', 'l', 'y', 'd'), //rlyd //Incoming interleaved RTP data on this RTSP connection
- 
+
     //RTP-specific
     QTSS_RTPSendPackets_Role =           FOUR_CHARS_TO_INT('s', 'e', 'n', 'd'), //send //Send RTP packets to the client
     QTSS_ClientSessionClosing_Role =     FOUR_CHARS_TO_INT('d', 'e', 's', 's'), //dess //Client session is going away
@@ -1140,14 +1139,6 @@ typedef struct
 
 } QTSS_IncomingData_Params;
 
-typedef struct 
-{
-    QTSS_RTSPSessionObject		inRTSPSession;
-	UInt8						inChannel;
-    char*                       inPacketData;
-    UInt16                      inPacketLen;
-} QTSS_RelayingData_Params;
-
 typedef struct
 {
     QTSS_RTSPSessionObject      inRTSPSession;
@@ -1247,7 +1238,6 @@ typedef union
     QTSS_CloseFile_Params               closeFileParams;
     QTSS_RequestEventFile_Params        reqEventFileParams;
 
-	QTSS_RelayingData_Params			rtspRelayingDataParams;
 	Easy_HLSOpen_Params					easyHLSOpenParams;
 	Easy_HLSClose_Params				easyHLSCloseParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
@@ -2026,8 +2016,6 @@ QTSS_Error  QTSS_Authenticate(  const char* inAuthUserName,
 //  Returns:            QTSS_NoErr
 //                      QTSS_BadArgument
 QTSS_Error    QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed);
-
-QTSS_Error	QTSS_ReflectRTPData(QTSS_Object inObject, const char* inData, UInt32 inDataLen, UInt32 inTrackID);
 
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();

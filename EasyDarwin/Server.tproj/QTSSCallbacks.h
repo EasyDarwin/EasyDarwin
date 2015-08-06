@@ -156,10 +156,7 @@ class QTSSCallbacks
 		static QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed);
             
         static void   QTSS_LockStdLib();
-        static void   QTSS_UnlockStdLib();
-
-		static	QTSS_Error	QTSS_ReflectRTPTrackData(QTSS_Object inObject, const char* inData, UInt32 inDataLen, UInt32 inTrackID);
-    
+        static void   QTSS_UnlockStdLib();    
 };
 
 #endif //__QTSSCALLBACKS_H__

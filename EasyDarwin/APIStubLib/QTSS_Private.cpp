@@ -389,11 +389,6 @@ QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** out
     return (sCallbacks->addr [kAuthorizeCallback]) (inAuthRequestObject, outAuthRealm, outAuthUserAllowed);
 }
 
-QTSS_Error	QTSS_ReflectRTPData(QTSS_Object inObject, const char* inData, UInt32 inDataLen, UInt32 inTrackID)
-{
-	return (sCallbacks->addr [kReflectRTPCallback]) (inObject, inData, inDataLen, inTrackID);
-}
-
 void  QTSS_LockStdLib()
 {
    (sCallbacks->addr [kLockStdLibCallback])  ();

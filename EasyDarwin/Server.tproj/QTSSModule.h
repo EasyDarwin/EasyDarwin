@@ -146,12 +146,10 @@ class QTSSModule : public QTSSDictionary, public Task
             kStateChangeRole =          22,
             kTimedIntervalRole =        23,
 
-			kRTSPRelayingDataRole =		24,
-
-			kHLSOpenRole	=			25,
-			kHLSCloseRole	=			26,
+			kHLSOpenRole	=			24,
+			kHLSCloseRole	=			25,
             
-            kNumRoles =                 27
+            kNumRoles =                 26
         };
         typedef UInt32 RoleIndex;
         
