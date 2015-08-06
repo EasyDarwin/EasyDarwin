@@ -5,18 +5,18 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       RTSPRelaySession.cpp
+    File:       EasyRelaySession.cpp
     Contains:   RTSP Relay Client
 */
-#include "RTSPRelaySession.h"
+#include "EasyRelaySession.h"
 #include <stdlib.h>
 
-RTSPRelaySession::RTSPRelaySession(char* inURL, ClientType inClientType, const char* streamName)
+EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName)
 :   fReflectorSession(NULL),
 	fStreamName(NULL),
 	fURL(NULL)
 {
-    this->SetTaskName("RTSPRelaySession");
+    this->SetTaskName("EasyRelaySession");
 
 	//½¨Á¢NVSourceClient
 
@@ -37,7 +37,7 @@ RTSPRelaySession::RTSPRelaySession(char* inURL, ClientType inClientType, const c
 	qtss_printf("\nNew Connection %s:%s\n",fStreamName.Ptr,fURL);
 }
 
-RTSPRelaySession::~RTSPRelaySession()
+EasyRelaySession::~EasyRelaySession()
 {
 	qtss_printf("\nDisconnect %s:%s\n",fStreamName.Ptr,fURL);
 
@@ -46,7 +46,7 @@ RTSPRelaySession::~RTSPRelaySession()
 	qtss_printf("Disconnect complete\n");
 }
 
-SInt64 RTSPRelaySession::Run()
+SInt64 EasyRelaySession::Run()
 {
     EventFlags theEvents = this->GetEvents();
 
@@ -59,7 +59,7 @@ SInt64 RTSPRelaySession::Run()
 }
 
 
-QTSS_Error RTSPRelaySession::SendDescribe()
+QTSS_Error EasyRelaySession::SendDescribe()
 {
 	QTSS_Error theErr = QTSS_NoErr;
 	return theErr;

@@ -9,13 +9,13 @@
     Contains:   QTSS API Module On Demand Relay Module
 */
 
-#ifndef _QTSSONDEMANDRELAYMODULE_H_
-#define _QTSSONDEMANDRELAYMODULE_H_
+#ifndef _EASYRELAYMODULE_H_
+#define _EASYRELAYMODULE_H_
 
 #include "QTSS.h"
 
 extern "C"
 {
-    EXPORT QTSS_Error QTSSOnDemandRelayModule_Main(void* inPrivateArgs);
+    EXPORT QTSS_Error EasyRelayModule_Main(void* inPrivateArgs);
 }
-#endif //_QTSSONDEMANDRELAYMODULE_H_
+#endif //_EASYRELAYMODULE_H_

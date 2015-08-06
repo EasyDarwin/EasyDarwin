@@ -8,7 +8,7 @@
     File:       QTSSOnDemandRelayModule.cpp
     Contains:   RTSP On Demand Relay Module
 */
-#include "QTSSOnDemandRelayModule.h"
+#include "EasyRelayModule.h"
 #include "QTSSModuleUtils.h"
 #include "ReflectorSession.h"
 #include "OSArrayObjectDeleter.h"
@@ -16,7 +16,7 @@
 #include "OSRef.h"
 #include "StringParser.h"
 #include "QueryParamList.h"
-#include "RTSPRelaySession.h"
+#include "EasyRelaySession.h"
 
 #ifndef __Win32__
     #include <unistd.h>
@@ -40,7 +40,7 @@ static QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
 
 // FUNCTION IMPLEMENTATIONS
-QTSS_Error QTSSOnDemandRelayModule_Main(void* inPrivateArgs)
+QTSS_Error EasyRelayModule_Main(void* inPrivateArgs)
 {
     return _stublibrary_main(inPrivateArgs, QTSSOnDemandRelayModuleDispatch);
 }
@@ -129,17 +129,17 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	//从接口获取信息结构体
 
 	//信息存在rtsp://59.46.115.84:8554/h264/ch1/sub/av_stream
-	RTSPRelaySession* clientSes = NULL;
+	EasyRelaySession* clientSes = NULL;
 	//首先查找Map里面是否已经有了对应的流
 	StrPtrLen streamName(theUriStr);
 	OSRef* clientSesRef = sRelaySessionMap->Resolve(&streamName);
 	if(clientSesRef != NULL)
 	{
-		clientSes = (RTSPRelaySession*)clientSesRef->GetObject();
+		clientSes = (EasyRelaySession*)clientSesRef->GetObject();
 	}
 	else
 	{
-		clientSes = NEW RTSPRelaySession("rtsp://admin:admin@192.168.66.189/", RTSPRelaySession::kRTSPTCPClientType, theUriStr);
+		clientSes = NEW EasyRelaySession("rtsp://admin:admin@192.168.66.189/", EasyRelaySession::kRTSPTCPClientType, theUriStr);
 
 
 		QTSS_Error theErr = clientSes->SendDescribe();
