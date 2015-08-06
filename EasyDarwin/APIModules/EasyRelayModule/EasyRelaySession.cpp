@@ -61,6 +61,7 @@ EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const c
 		fStreamName.Ptr = NEW char[strlen(streamName) + 1];
 		::memset(fStreamName.Ptr,0,strlen(streamName) + 1);
 		::memcpy(fStreamName.Ptr, streamName, strlen(streamName));
+		fStreamName.Ptr[fStreamName.Len] = '\0';
 		fStreamName.Len = strlen(streamName);
 		fRef.Set(fStreamName, this);
     }
@@ -92,49 +93,35 @@ SInt64 EasyRelaySession::Run()
 
 QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
 {
-	//if(NULL == fHLSHandle) return QTSS_Unimplemented;
-	//if (mediatype == MEDIA_TYPE_VIDEO)
-	//{
-	//	printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-	//	
-	//	fwrite(pbuf, 1, frameinfo->length, fTest);
-
-	//	if(frameinfo->fps == 0) frameinfo->fps = 25;
-	//	tsTimeStampMSsec += 1000/frameinfo->fps;
-	//	unsigned long long llPts = tsTimeStampMSsec * 90;
-	//
-	//	unsigned int uiFrameType = 0;
-	//	if (frameinfo->type == FRAMETYPE_I)
-	//	{
-	//		uiFrameType = TS_TYPE_PES_VIDEO_I_FRAME;
-	//	}
-	//	else if (frameinfo->type == FRAMETYPE_P)
-	//	{
-	//		uiFrameType = TS_TYPE_PES_VIDEO_P_FRAME;
-	//	}
-	//	else
-	//	{
-	//		return QTSS_OutOfState;
-	//	}
-
-	//	EasyHLS_VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
-	//}
-	//else if (mediatype == MEDIA_TYPE_AUDIO)
-	//{
-	//	printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-	//	// 暂时不对音频进行处理
-	//}
-	//else if (mediatype == MEDIA_TYPE_EVENT)
-	//{
-	//	if (NULL == pbuf && NULL == frameinfo)
-	//	{
-	//		printf("Connecting:%s ...\n", fHLSSessionID.Ptr);
-	//	}
-	//	else if (NULL!=frameinfo && frameinfo->type==0xF1)
-	//	{
-	//		printf("Lose Packet:%s ...\n", fHLSSessionID.Ptr);
-	//	}
-	//}
+	if(NULL == fPusherHandle) return QTSS_Unimplemented;
+	if (mediatype == MEDIA_TYPE_VIDEO)
+	{
+		if(frameinfo && frameinfo->length)
+		{
+				EASY_AV_Frame  avFrame;
+				memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+				avFrame.u32AVFrameLen = frameinfo->length;
+				avFrame.pBuffer = (unsigned char*)pbuf;
+				avFrame.u32VFrameType = (frameinfo->type==FRAMETYPE_I)?EASY_SDK_VIDEO_FRAME_I:EASY_SDK_VIDEO_FRAME_P;
+				EasyPusher_PushFrame(fPusherHandle, &avFrame);
+		}
+	}
+	else if (mediatype == MEDIA_TYPE_AUDIO)
+	{
+		printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		// 暂时不对音频进行处理
+	}
+	else if (mediatype == MEDIA_TYPE_EVENT)
+	{
+		if (NULL == pbuf && NULL == frameinfo)
+		{
+			printf("Connecting:%s ...\n", fStreamName.Ptr);
+		}
+		else if (NULL!=frameinfo && frameinfo->type==0xF1)
+		{
+			printf("Lose Packet:%s ...\n", fStreamName.Ptr);
+		}
+	}
 
 	return QTSS_NoErr;
 }
