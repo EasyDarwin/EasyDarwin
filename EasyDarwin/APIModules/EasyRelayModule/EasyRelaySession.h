@@ -16,25 +16,21 @@
 
 #include "Task.h"
 #include "TimeoutTask.h"
-//#include "ReflectorSession.h"
-//#include "QTSServerInterface.h"
 
 #include <stdio.h>
-#include "OSHeaders.h"
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
 
 #include "OSMutex.h"
 #include "MyAssert.h"
 #include "OSMemory.h"
-#include <time.h>
 #include "StringParser.h"
 #include "StringFormatter.h"
 #include "StringTranslator.h"
 #include "StrPtrLen.h"
-#include "UserAgentParser.h"
-#include "SDPSourceInfo.h"
 #include "OSRef.h"
+#include "EasyNVSourceAPI.h"
+#include "EasyPusherAPI.h"
 
 class EasyRelaySession : public Task
 {
@@ -49,34 +45,26 @@ class EasyRelaySession : public Task
         EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName);
 
         virtual ~EasyRelaySession();
-        
-        
-        virtual SInt64 Run();
 
-		QTSS_Error SendDescribe();
-        
+        virtual SInt64	Run();
+
+		OSRef*			GetRef()    		{ return &fRef; } 
+		OSMutex*		GetMutex()						{ return &fMutex; }
+
+		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
+		QTSS_Error		HLSSessionStart(char* rtspUrl);
+		QTSS_Error		HLSSessionRelease();
   
     private:
-        
-		void*			fReflectorSession;	//Reflect Session
-
-        UInt32          fOptionsIntervalInSec;
-        Bool16          fOptions;
-
 		OSRef			fRef;
 		StrPtrLen		fStreamName;
 		char*			fURL;
-
 		OSMutex			fMutex;
 
-	public:
-		OSRef*					GetRef()    		{ return &fRef; } 
-
-		void	SetReflectorSession(void* refSes)	{ fReflectorSession = refSes; }
-
-		void*	GetReflectorSession()				{ return fReflectorSession; }
-
-		OSMutex*	GetMutex()						{ return &fMutex; }
+		//NVSource Handle
+		Easy_NVS_Handle	fNVSHandle;
+		//HLS Handle
+		Easy_U32 fPusherHandle;
 };
 
 #endif //__EASY_RELAY_SESSION__

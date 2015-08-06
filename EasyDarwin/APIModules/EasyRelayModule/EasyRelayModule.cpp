@@ -142,7 +142,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 		clientSes = NEW EasyRelaySession("rtsp://admin:admin@192.168.66.189/", EasyRelaySession::kRTSPTCPClientType, theUriStr);
 
 
-		QTSS_Error theErr = clientSes->SendDescribe();
+		QTSS_Error theErr = clientSes->HLSSessionRelease();
 
 		if(theErr == QTSS_NoErr)
 		{
