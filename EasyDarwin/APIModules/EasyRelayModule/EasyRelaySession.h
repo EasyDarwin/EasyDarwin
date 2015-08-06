@@ -52,7 +52,7 @@ class EasyRelaySession : public Task
 		OSMutex*		GetMutex()						{ return &fMutex; }
 
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
-		QTSS_Error		HLSSessionStart(char* rtspUrl);
+		QTSS_Error		HLSSessionStart();
 		QTSS_Error		HLSSessionRelease();
   
     private:

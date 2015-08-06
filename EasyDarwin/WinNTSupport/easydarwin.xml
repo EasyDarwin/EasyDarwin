@@ -184,7 +184,7 @@
 	<MODULE NAME="QTSSReflectorModule" >
 		<PREF NAME="reflector_bucket_size" TYPE="UInt32" >16</PREF>
 		<PREF NAME="reflector_delay" TYPE="UInt32" >100</PREF>
-		<PREF NAME="allow_non_sdp_urls" TYPE="Bool16" >true</PREF>
+		<PREF NAME="allow_non_sdp_urls" TYPE="Bool16" >false</PREF>
 		<PREF NAME="enable_broadcast_push" TYPE="Bool16" >true</PREF>
 		<PREF NAME="enable_broadcast_announce" TYPE="Bool16" >true</PREF>
 		<PREF NAME="max_broadcast_announce_duration_secs" TYPE="UInt32" >0</PREF>
@@ -217,7 +217,7 @@
 		<PREF NAME="force_rtp_info_sequence_and_time" TYPE="Bool16" >false</PREF>
 		<PREF NAME="BroadcasterGroup" >broadcaster</PREF>
 		<PREF NAME="ip_allow_list" >127.0.0.*</PREF>
-		<PREF NAME="hls_output_enabled" TYPE="Bool16" >true</PREF>
+		<PREF NAME="hls_output_enabled" TYPE="Bool16" >false</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSFlowControlModule" >
 		<PREF NAME="loss_thin_tolerance" TYPE="UInt32" >30</PREF>
@@ -260,4 +260,5 @@
 		<PREF NAME="TARGET_DURATION" TYPE="UInt32" >4</PREF>
 		<PREF NAME="PLAYLIST_CAPACITY" TYPE="UInt32" >4</PREF>
 	</MODULE>
+	<MODULE NAME="EasyRelayModule" ></MODULE>
 </CONFIGURATION>

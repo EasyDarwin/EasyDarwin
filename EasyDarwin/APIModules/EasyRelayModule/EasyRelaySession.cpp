@@ -54,6 +54,8 @@ EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const c
     StrPtrLen theURL(inURL);
 
 	fURL = NEW char[::strlen(inURL) + 2];
+	::memset(fURL, 0 ,::strlen(inURL) + 2);
+
 	::strcpy(fURL, inURL);
 
 	if (streamName != NULL)
@@ -74,6 +76,7 @@ EasyRelaySession::~EasyRelaySession()
 	qtss_printf("\nDisconnect %s:%s\n",fStreamName.Ptr,fURL);
 
 	delete [] fStreamName.Ptr;
+	delete [] fURL;
 
 	qtss_printf("Disconnect complete\n");
 }
@@ -129,7 +132,7 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, N
 /*
 	创建HLS直播Session
 */
-QTSS_Error	EasyRelaySession::HLSSessionStart(char* rtspUrl)
+QTSS_Error	EasyRelaySession::HLSSessionStart()
 {
 	if(NULL == fNVSHandle)
 	{
@@ -142,7 +145,7 @@ QTSS_Error	EasyRelaySession::HLSSessionStart(char* rtspUrl)
 		//mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
 
 		EasyNVS_SetCallback(fNVSHandle, __EasyNVSourceCallBack);
-		EasyNVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+		EasyNVS_OpenStream(fNVSHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 	}
 
 	if(NULL == fPusherHandle)
