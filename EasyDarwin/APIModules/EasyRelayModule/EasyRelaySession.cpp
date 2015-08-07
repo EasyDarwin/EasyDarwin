@@ -78,6 +78,8 @@ EasyRelaySession::~EasyRelaySession()
 {
 	qtss_printf("\nDisconnect %s:%s\n",fStreamName.Ptr,fURL);
 
+	this->RelaySessionRelease();
+
 	delete [] fStreamName.Ptr;
 	delete [] fURL;
 
@@ -135,7 +137,7 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, N
 /*
 	´´½¨HLSÖ±²¥Session
 */
-QTSS_Error	EasyRelaySession::HLSSessionStart()
+QTSS_Error	EasyRelaySession::RelaySessionStart()
 {
 	if(NULL == fNVSHandle)
 	{
@@ -176,7 +178,7 @@ QTSS_Error	EasyRelaySession::HLSSessionStart()
 	return QTSS_NoErr;
 }
 
-QTSS_Error	EasyRelaySession::HLSSessionRelease()
+QTSS_Error	EasyRelaySession::RelaySessionRelease()
 {
 	qtss_printf("HLSSession Release....\n");
 	
