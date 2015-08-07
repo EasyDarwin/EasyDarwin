@@ -699,6 +699,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\QueryParamList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QueryParamList.h"
+				>
+			</File>
+			<File
 				RelativePath="ResizeableStringFormatter.cpp"
 				>
 				<FileConfiguration
