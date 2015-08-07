@@ -260,5 +260,7 @@
 		<PREF NAME="TARGET_DURATION" TYPE="UInt32" >4</PREF>
 		<PREF NAME="PLAYLIST_CAPACITY" TYPE="UInt32" >4</PREF>
 	</MODULE>
-	<MODULE NAME="EasyRelayModule" ></MODULE>
+	<MODULE NAME="EasyRelayModule" >
+		<PREF NAME="local_ip_address" >127.0.0.1</PREF>
+	</MODULE>
 </CONFIGURATION>
