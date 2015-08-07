@@ -215,8 +215,11 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 		Assert(debug == session->GetRef());
 	}
 
+	sRelaySessionMap->Release(session->GetRef());
+
 	if(bStop)
 	{
+		sRelaySessionMap->UnRegister(session->GetRef());
 		session->Signal(Task::kKillEvent);
 		return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssSuccessOK, 0); 
 	}
