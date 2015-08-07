@@ -38,6 +38,9 @@ static char*            sDefaultLocal_IP_Addr = "127.0.0.1";
 
 #define QUERY_STREAM_NAME	"name"
 #define QUERY_STREAM_URL	"url"
+#define QUERY_STREAM_CMD	"cmd"
+#define QUERY_STREAM_CMD_START "start"
+#define QUERY_STREAM_CMD_STOP "stop"
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -170,6 +173,15 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
 	if(sURL == NULL) return NULL;
 
+	const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
+
+	bool bStop = false;
+	if(sCMD)
+	{
+		if(::strcmp(sCMD,QUERY_STREAM_CMD_STOP) == 0)
+			bStop = true;
+	}
+
 	StrPtrLen streamName((char*)sName);
 	//从接口获取信息结构体
 	EasyRelaySession* session = NULL;
@@ -181,9 +193,11 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	}
 	else
 	{
+		if(bStop) return NULL;
+
 		session = NEW EasyRelaySession((char*)sURL, EasyRelaySession::kRTSPTCPClientType, (char*)sName);
 
-		QTSS_Error theErr = session->HLSSessionStart();
+		QTSS_Error theErr = session->RelaySessionStart();
 
 		if(theErr == QTSS_NoErr)
 		{
@@ -199,6 +213,12 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 		//增加一次对RelaySession的无效引用，后面会统一释放
 		OSRef* debug = sRelaySessionMap->Resolve(&streamName);
 		Assert(debug == session->GetRef());
+	}
+
+	if(bStop)
+	{
+		session->Signal(Task::kKillEvent);
+		return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssSuccessOK, 0); 
 	}
 
 	QTSS_RTSPStatusCode statusCode = qtssRedirectPermMoved;
