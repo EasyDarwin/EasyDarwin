@@ -249,9 +249,6 @@
 	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
-	<MODULE NAME="QTSSOnDemandRelayModule" >
-		<PREF NAME="device_prefs_file" >./devices.xml</PREF>
-	</MODULE>
 	<MODULE NAME="EasyHLSModule" >
 		<PREF NAME="LOCAL_ROOT_DIR" >./HLS/</PREF>
 		<PREF NAME="HTTP_ROOT_DIR" >http://hls.easydarwin.org/</PREF>
