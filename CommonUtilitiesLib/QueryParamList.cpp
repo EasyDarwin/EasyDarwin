@@ -58,6 +58,7 @@ void QueryParamList::BulidList( StrPtrLen* querySPL )
     // the string is a 'form' encoded query string ( see rfc - 1808 )
     
     StringParser    queryParser( querySPL );
+	char *stopCharPtr = NULL;
     
     while  ( queryParser.GetDataRemaining() > 0 )
     {
@@ -69,8 +70,17 @@ void QueryParamList::BulidList( StrPtrLen* querySPL )
         if ( queryParser.GetDataRemaining() > 1  )
         {
             queryParser.ConsumeLength(&theCGIParamValue, 1 );   // the '='
-        
-            queryParser.ConsumeUntil(&theCGIParamValue, '&');   // our value will end by here...
+
+			stopCharPtr = queryParser.GetCurrentPosition();
+			if (*stopCharPtr == '"') // if quote read to next quote
+			{
+				queryParser.ConsumeLength(NULL, 1);
+				queryParser.ConsumeUntil(&theCGIParamValue, '"');
+				queryParser.ConsumeLength(NULL, 1);
+				queryParser.ConsumeUntil(NULL, '&');   // our value will end by here...
+			}
+			else
+				queryParser.ConsumeUntil(&theCGIParamValue, '&');   // our value will end by here...
             
             AddNameValuePairToList( theCGIParamName.GetAsCString(), theCGIParamValue.GetAsCString() );
             
