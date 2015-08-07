@@ -18,6 +18,7 @@
 #include "StringParser.h"
 #include "QueryParamList.h"
 #include "EasyRelaySession.h"
+#include "QTSServerInterface.h"
 
 #ifndef __Win32__
     #include <unistd.h>
@@ -32,6 +33,9 @@ static QTSS_ModulePrefsObject       sPrefs = NULL;
 
 static StrPtrLen    sRelaySuffix("EasyRelayModule");
 
+static char*            sLocal_IP_Addr = NULL;
+static char*            sDefaultLocal_IP_Addr = "127.0.0.1";
+
 #define QUERY_STREAM_NAME	"name"
 #define QUERY_STREAM_URL	"url"
 
@@ -43,36 +47,6 @@ static QTSS_Error RereadPrefs();
 
 static QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
-
-UInt8 sNotQueryData[] = // query stops
-{
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //0-9     
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //10-19    
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //20-29
-    1, 1, 1, 1, 0, 1, 1, 1, 1, 1, //30-39   
-    1, 1, 0, 1, 1, 0, 0, 1, 0, 0, //40-49   allow * . and - and all numbers
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, //50-59  allow :
-    1, 1, 1, 1, 1, 0, 0, 0, 0, 0, //60-69 //stop on every character except a letter
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //70-79
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //80-89
-    0, 1, 1, 1, 1, 0, 1, 0, 0, 0, //90-99 _ is a word
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //100-109
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //110-119
-    0, 0, 0, 1, 1, 1, 1, 1, 1, 1, //120-129
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //130-139
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //140-149
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //150-159
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //160-169
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //170-179
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //180-189
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //190-199
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //200-209
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //210-219
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //220-229
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //230-239
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //240-249
-    1, 1, 1, 1, 1, 0             //250-255
-};
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyRelayModule_Main(void* inPrivateArgs)
@@ -132,6 +106,9 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 QTSS_Error RereadPrefs()
 {
+	delete [] sLocal_IP_Addr;
+    sLocal_IP_Addr = QTSSModuleUtils::GetStringAttribute(sPrefs, "local_ip_address", sDefaultLocal_IP_Addr);
+
 	return QTSS_NoErr;
 }
 
@@ -187,48 +164,60 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 
 	QueryParamList parList(theQueryStr);
 
-	const char* streamName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
-	printf("EasyRelayModule Find Stream Name:%s \n", streamName);
+	const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
+	if(sName == NULL) return NULL;
 
-	const char* streamURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
-	printf("EasyRelayModule Find Stream URL:%s \n", streamURL);
+	const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
+	if(sURL == NULL) return NULL;
 
-	//StrPtrLen sRelayURL;
-	//theQueryString.FindStringCase(QUERY_STREAM_URL, &sRelayURL, false);
-	//if(sRelayURL.Len == 0) return NULL;
+	StrPtrLen streamName((char*)sName);
+	//从接口获取信息结构体
+	EasyRelaySession* session = NULL;
+	//首先查找Map里面是否已经有了对应的流
+	OSRef* sessionRef = sRelaySessionMap->Resolve(&streamName);
+	if(sessionRef != NULL)
+	{
+		session = (EasyRelaySession*)sessionRef->GetObject();
+	}
+	else
+	{
+		session = NEW EasyRelaySession((char*)sURL, EasyRelaySession::kRTSPTCPClientType, (char*)sName);
 
-	return NULL;
+		QTSS_Error theErr = session->HLSSessionStart();
 
-	////从接口获取信息结构体
-	//EasyRelaySession* session = NULL;
-	////首先查找Map里面是否已经有了对应的流
-	//OSRef* sessionRef = sRelaySessionMap->Resolve(&streamName);
-	//if(sessionRef != NULL)
-	//{
-	//	session = (EasyRelaySession*)sessionRef->GetObject();
-	//}
-	//else
-	//{
-	//	session = NEW EasyRelaySession("rtsp://admin:admin@192.168.1.106/", EasyRelaySession::kRTSPTCPClientType, "live");
+		if(theErr == QTSS_NoErr)
+		{
+			OS_Error theErr = sRelaySessionMap->Register(session->GetRef());
+			Assert(theErr == QTSS_NoErr);
+		}
+		else
+		{
+			session->Signal(Task::kKillEvent);
+			return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientNotFound, 0); 
+		}
 
+		//增加一次对RelaySession的无效引用，后面会统一释放
+		OSRef* debug = sRelaySessionMap->Resolve(&streamName);
+		Assert(debug == session->GetRef());
+	}
 
-	//	QTSS_Error theErr = session->HLSSessionStart();
+	QTSS_RTSPStatusCode statusCode = qtssRedirectPermMoved;
+	QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqStatusCode, 0, &statusCode, sizeof(statusCode));
 
-	//	if(theErr == QTSS_NoErr)
-	//	{
-	//		OS_Error theErr = sRelaySessionMap->Register(session->GetRef());
-	//		Assert(theErr == QTSS_NoErr);
-	//	}
-	//	else
-	//	{
-	//		session->Signal(Task::kKillEvent);
-	//		return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientNotFound, 0); 
-	//	}
+	// Get the ip addr out of the prefs dictionary
+	UInt16 thePort = 554;
+	UInt32 theLen = sizeof(UInt16);
+	theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
+	Assert(theErr == QTSS_NoErr);   
 
-	//	//增加一次对RelaySession的无效引用，后面会统一释放
-	//	OSRef* debug = sRelaySessionMap->Resolve(&streamName);
-	//	Assert(debug == session->GetRef());
-	//}
+	//构造本地URL
+	char url[QTSS_MAX_URL_LENGTH] = { 0 };
 
-    return QTSS_NoErr;
+	qtss_sprintf(url,"rtsp://%s:%d/%s.sdp", sLocal_IP_Addr, thePort, sName);
+	StrPtrLen locationRedirect(url);
+
+	Bool16 sFalse = false;
+	(void)QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));
+	QTSS_AppendRTSPHeader(inParams->inRTSPRequest, qtssLocationHeader, locationRedirect.Ptr, locationRedirect.Len);	
+	return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssRedirectPermMoved, 0);
 }
