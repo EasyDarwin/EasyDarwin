@@ -19,6 +19,8 @@
 #define Easy_APICALL 
 #endif
 
+#define Easy_Pusher_Handle void*
+
 typedef unsigned char           Easy_U8;
 typedef unsigned char           Easy_UCHAR;
 typedef unsigned short          Easy_U16;
@@ -107,22 +109,22 @@ extern "C"
 #endif
 
 	/* 创建推送句柄  返回为句柄值 */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_Create();
+	EasyPusher_API Easy_Pusher_Handle Easy_APICALL EasyPusher_Create();
 	
 	/* 释放推送句柄 */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_Release(Easy_U32 handle);
+	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_Release(Easy_Pusher_Handle handle);
 
     /* 设置流传输事件回调 userptr传输自定义对象指针*/
-    EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_SetEventCallback(Easy_U32 handle,  EasyPusher_Callback callback, int id, void *userptr);
+    EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_SetEventCallback(Easy_Pusher_Handle handle,  EasyPusher_Callback callback, int id, void *userptr);
 
 	/* 开始流传输 serverAddr:流媒体服务器地址、port:流媒体端口、streamName:流名称<xxx.sdp>、username/password:推送携带的用户名密码、pstruStreamInfo:推送的媒体定义、bufferKSize:以k为单位的缓冲区大小<512~2048之间,默认512> */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_StartStream(Easy_U32 handle, char* serverAddr, Easy_U16 port, char* streamName, char *username, char *password, EASY_MEDIA_INFO_T*  pstruStreamInfo, Easy_U32 bufferKSize);
+	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_StartStream(Easy_Pusher_Handle handle, char* serverAddr, Easy_U16 port, char* streamName, char *username, char *password, EASY_MEDIA_INFO_T*  pstruStreamInfo, Easy_U32 bufferKSize);
 
 	/* 停止流传输 */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_StopStream(Easy_U32 handle);
+	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_StopStream(Easy_Pusher_Handle handle);
 
 	/* 推流 frame:具体推送的流媒体帧 */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_PushFrame(Easy_U32 handle, EASY_AV_Frame* frame );
+	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_PushFrame(Easy_Pusher_Handle handle, EASY_AV_Frame* frame );
 
 #ifdef __cplusplus
 }
