@@ -64,7 +64,7 @@ class EasyRelaySession : public Task
 		//NVSource Handle
 		Easy_NVS_Handle	fNVSHandle;
 		//HLS Handle
-		Easy_U32 fPusherHandle;
+		Easy_Pusher_Handle fPusherHandle;
 };
 
 #endif //__EASY_RELAY_SESSION__
