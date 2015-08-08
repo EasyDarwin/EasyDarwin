@@ -42,10 +42,10 @@ extern "C"
 	/* 获取具体HLSSession的m3u8文件 */
 	EasyHLS_API const char*  Easy_APICALL EasyHLS_GetM3U8File(Easy_HLS_Handle handle);
 	
-	/* 打包视频 */
+	/* 打包H264视频 */
 	EasyHLS_API int Easy_APICALL EasyHLS_VideoMux(Easy_HLS_Handle handle, unsigned int uiFrameType, unsigned char *data, int dataLength, unsigned long long pcr, unsigned long long pts, unsigned long long dts);
 	
-	/* 打包音频 */
+	/* 打包AAC音频 */
 	EasyHLS_API int Easy_APICALL EasyHLS_AudioMux(Easy_HLS_Handle handle, unsigned char *data, int dataLength, /*u64 pcr,*/ unsigned long long pts, unsigned long long dts=~0);
 
 	/* 释放HLSSession */
