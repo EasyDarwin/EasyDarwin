@@ -4,10 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>OSMemory.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
+      <itemPath>../OSMemoryLib/OSMemory.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -47,6 +49,7 @@
       <itemPath>OSRef.h</itemPath>
       <itemPath>OSThread.cpp</itemPath>
       <itemPath>OSThread.h</itemPath>
+      <itemPath>QueryParamList.cpp</itemPath>
       <itemPath>ResizeableStringFormatter.cpp</itemPath>
       <itemPath>ResizeableStringFormatter.h</itemPath>
       <itemPath>SDPUtils.cpp</itemPath>
@@ -105,7 +108,6 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <itemPath>OSMemory.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -150,9 +152,11 @@
           </preprocessorList>
         </ccTool>
         <archiverTool>
-          <output>${AVS_ROOT}/lib/libCommonUtilitiesLib.a</output>
+          <output>${CND_CONF}/libCommonUtilitiesLib.a</output>
         </archiverTool>
       </compileType>
+      <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
@@ -224,6 +228,8 @@
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="QueryParamList.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ResizeableStringFormatter.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -370,6 +376,8 @@
           <output>${CND_CONF}/libCommonUtilitiesLib.a</output>
         </archiverTool>
       </compileType>
+      <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
@@ -441,6 +449,8 @@
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="QueryParamList.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ResizeableStringFormatter.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -584,9 +594,11 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <archiverTool>
-          <output>../CMS/Bin/ARM/libCommonUtilitiesLib.a</output>
+          <output>${CND_CONF}/libCommonUtilitiesLib.a</output>
         </archiverTool>
       </compileType>
+      <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="9">
@@ -658,6 +670,8 @@
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="OSThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="QueryParamList.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ResizeableStringFormatter.cpp" ex="false" tool="1" flavor2="9">
       </item>
