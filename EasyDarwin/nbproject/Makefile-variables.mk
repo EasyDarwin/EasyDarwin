@@ -9,27 +9,27 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=Debug
-CND_ARTIFACT_NAME_Debug=libCommonUtilitiesLib.a
-CND_ARTIFACT_PATH_Debug=Debug/libCommonUtilitiesLib.a
+CND_ARTIFACT_NAME_Debug=easydarwin
+CND_ARTIFACT_PATH_Debug=Debug/easydarwin
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=CommonUtilitiesLib.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/CommonUtilitiesLib.tar
+CND_PACKAGE_NAME_Debug=easydarwin.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/easydarwin.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=Release
-CND_ARTIFACT_NAME_Release=libCommonUtilitiesLib.a
-CND_ARTIFACT_PATH_Release=Release/libCommonUtilitiesLib.a
+CND_ARTIFACT_NAME_Release=easydarwin
+CND_ARTIFACT_PATH_Release=Release/easydarwin
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=CommonUtilitiesLib.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/CommonUtilitiesLib.tar
+CND_PACKAGE_NAME_Release=easydarwin.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/easydarwin.tar
 # ARM configuration
 CND_PLATFORM_ARM=GM8126-Linux-x86
 CND_ARTIFACT_DIR_ARM=ARM
-CND_ARTIFACT_NAME_ARM=libCommonUtilitiesLib.a
-CND_ARTIFACT_PATH_ARM=ARM/libCommonUtilitiesLib.a
+CND_ARTIFACT_NAME_ARM=easydarwin
+CND_ARTIFACT_PATH_ARM=ARM/easydarwin
 CND_PACKAGE_DIR_ARM=dist/ARM/GM8126-Linux-x86/package
-CND_PACKAGE_NAME_ARM=CommonUtilitiesLib.tar
-CND_PACKAGE_PATH_ARM=dist/ARM/GM8126-Linux-x86/package/CommonUtilitiesLib.tar
+CND_PACKAGE_NAME_ARM=easydarwin.tar
+CND_PACKAGE_PATH_ARM=dist/ARM/GM8126-Linux-x86/package/easydarwin.tar
 #
 # include compiler specific variables
 #

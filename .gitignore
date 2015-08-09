@@ -39,3 +39,6 @@ _ReSharper*/
 *.ts
 *libEasyHLS/
 *.m3u8
+/EasyDarwin/build/
+/EasyDarwin/dist/
+/CommonUtilitiesLib/build/

@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/540968335/OSMemory.o \
 	${OBJECTDIR}/_ext/873319650/InternalStdLib.o \
 	${OBJECTDIR}/ConfParser.o \
 	${OBJECTDIR}/DateTranslator.o \
@@ -53,6 +54,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/OSQueue.o \
 	${OBJECTDIR}/OSRef.o \
 	${OBJECTDIR}/OSThread.o \
+	${OBJECTDIR}/QueryParamList.o \
 	${OBJECTDIR}/ResizeableStringFormatter.o \
 	${OBJECTDIR}/SDPUtils.o \
 	${OBJECTDIR}/Socket.o \
@@ -103,6 +105,11 @@ ${CND_CONF}/libCommonUtilitiesLib.a: ${OBJECTFILES}
 	${RM} ${CND_CONF}/libCommonUtilitiesLib.a
 	${AR} -rv ${CND_CONF}/libCommonUtilitiesLib.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libCommonUtilitiesLib.a
+
+${OBJECTDIR}/_ext/540968335/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/540968335
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/540968335/OSMemory.o ../OSMemoryLib/OSMemory.cpp
 
 ${OBJECTDIR}/_ext/873319650/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/873319650
@@ -193,6 +200,11 @@ ${OBJECTDIR}/OSThread.o: OSThread.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSThread.o OSThread.cpp
+
+${OBJECTDIR}/QueryParamList.o: QueryParamList.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/QueryParamList.o QueryParamList.cpp
 
 ${OBJECTDIR}/ResizeableStringFormatter.o: ResizeableStringFormatter.cpp 
 	${MKDIR} -p ${OBJECTDIR}

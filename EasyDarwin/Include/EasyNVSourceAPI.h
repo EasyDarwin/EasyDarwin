@@ -8,14 +8,16 @@
 #define _Easy_NVS_API_H
 
 #define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
+
 
 #ifdef _WIN32
 #define EasyNVS_API  __declspec(dllexport)
 #define Easy_APICALL  __stdcall
+#include <winsock2.h>
 #else
 #define EasyNVS_API
 #define Easy_APICALL 
+#define CALLBACK
 #endif
 
 #define Easy_NVS_Handle void*
