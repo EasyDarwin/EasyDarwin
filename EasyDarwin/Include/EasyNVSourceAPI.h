@@ -8,14 +8,16 @@
 #define _Easy_NVS_API_H
 
 #define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
+
 
 #ifdef _WIN32
 #define EasyNVS_API  __declspec(dllexport)
 #define Easy_APICALL  __stdcall
+#include <winsock2.h>
 #else
 #define EasyNVS_API
 #define Easy_APICALL 
+#define CALLBACK
 #endif
 
 #define Easy_NVS_Handle void*
@@ -55,7 +57,7 @@ typedef enum __RTP_CONNECT_TYPE
 
 /* 帧类型 */
 #ifndef FRAMETYPE_I
-#define FRAMETYPE_I		0x01
+#define FRAMETYPE_I		0x01	/*sps:0x67 pps:0x68 I:0x65的组合*/
 #endif
 #ifndef FRAMETYPE_P
 #define FRAMETYPE_P		0x02
@@ -70,8 +72,8 @@ typedef struct
 	unsigned int	codec;			//编码格式
 	unsigned char	type;			//帧类型
 	unsigned char	fps;			//帧率
-	unsigned char	reserved1;
-	unsigned char	reserved2;
+	unsigned int	reserved1;
+	unsigned int	reserved2;
 
 	unsigned short	width;			//宽
 	unsigned short  height;			//高
