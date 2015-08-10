@@ -13,7 +13,6 @@
 #include "StrPtrLen.h"
 #include "ResizeableStringFormatter.h"
 #include "MyAssert.h"
-#include "QTSServerInterface.h"
 
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
@@ -24,7 +23,7 @@
 #ifndef __EASY_HLS_SESSION__
 #define __EASY_HLS_SESSION__
 
-class EasyHLSSession
+class EasyHLSSession : public Task
 {
     public:
         EasyHLSSession(StrPtrLen* inSourceID);
@@ -33,8 +32,9 @@ class EasyHLSSession
         //加载模块配置
         static void Initialize(QTSS_ModulePrefsObject inPrefs);
 
+		virtual SInt64	Run();
         // ACCESSORS
-        
+
         OSRef*          GetRef()            { return &fRef; }
         OSQueueElem*    GetQueueElem()      { return &fQueueElem; }
 	
@@ -42,12 +42,15 @@ class EasyHLSSession
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
 		QTSS_Error		HLSSessionStart(char* rtspUrl);
 		QTSS_Error		HLSSessionRelease();
+		char*		GetHLSURL();
    
     private:
 
         //HLSSession列表由EasyHLSModule的sHLSSessionMap维护  
         OSRef       fRef;
         StrPtrLen   fHLSSessionID;
+
+		char		fHLSURL[QTSS_MAX_URL_LENGTH];
 
         OSQueueElem fQueueElem; 
 

@@ -8,17 +8,17 @@
     File:       EasyRelayModule.cpp
     Contains:   RTSP On Demand Relay Module
 */
+
+#include "QTSServerInterface.h"
 #include "EasyRelayModule.h"
 #include "QTSSModuleUtils.h"
-#include "ReflectorSession.h"
 #include "OSArrayObjectDeleter.h"
 #include "QTSSMemoryDeleter.h"
 #include "QueryParamList.h"
 #include "OSRef.h"
 #include "StringParser.h"
-#include "QueryParamList.h"
 #include "EasyRelaySession.h"
-#include "QTSServerInterface.h"
+
 
 #ifndef __Win32__
     #include <unistd.h>

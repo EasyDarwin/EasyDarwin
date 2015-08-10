@@ -16,6 +16,7 @@
 #include "atomic.h"
 #include "QTSSModuleUtils.h"
 #include <errno.h>
+#include "QTSServerInterface.h"
 
 #ifndef __Win32__
     #include <unistd.h>
@@ -89,6 +90,8 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
         fHLSSessionID.Len = inSessionID->Len;
         fRef.Set(fHLSSessionID, this);
     }
+
+	fHLSURL[0] = '\0';
 }
 
 
@@ -96,6 +99,18 @@ EasyHLSSession::~EasyHLSSession()
 {
 	HLSSessionRelease();
     fHLSSessionID.Delete();
+}
+
+SInt64 EasyHLSSession::Run()
+{
+    EventFlags theEvents = this->GetEvents();
+
+	if (theEvents & Task::kKillEvent)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
 QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
@@ -182,6 +197,9 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 		char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
 		qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
 		EasyHLS_ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+		
+		qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", sHTTPRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr);
+
 	}
 
 	return QTSS_NoErr;
@@ -205,7 +223,13 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 	{
 		EasyHLS_Session_Release(fHLSHandle);
 		fHLSHandle = NULL;
-	}
+		fHLSURL[0] = '\0';
+ 	}
 
 	return QTSS_NoErr;
+}
+
+char* EasyHLSSession::GetHLSURL()
+{
+	return fHLSURL;
 }
