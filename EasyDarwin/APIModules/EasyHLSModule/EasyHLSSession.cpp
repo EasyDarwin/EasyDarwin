@@ -119,8 +119,6 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
 		printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-		
-		fwrite(pbuf, 1, frameinfo->length, fTest);
 
 		if(frameinfo->fps == 0) frameinfo->fps = 25;
 		tsTimeStampMSsec += 1000/frameinfo->fps;
@@ -179,10 +177,6 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 
 		EasyNVS_SetCallback(fNVSHandle, __NVSourceCallBack);
 		EasyNVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
-
-		char fileName[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
-		sprintf(fileName,"%s.264",fHLSSessionID.Ptr);
-		fTest = ::fopen(fileName,"wb");
 	}
 
 	if(NULL == fHLSHandle)
@@ -215,7 +209,6 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 		EasyNVS_CloseStream(fNVSHandle);
 		EasyNVS_Deinit(&fNVSHandle);
 		fNVSHandle = NULL;
-		::fclose(fTest);
 	}
 
 	// Õ∑≈sink
