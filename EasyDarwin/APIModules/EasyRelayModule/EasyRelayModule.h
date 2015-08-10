@@ -5,7 +5,7 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       QTSSOnDemandRelayModule.h
+    File:       EasyRelayModule.h
     Contains:   QTSS API Module On Demand Relay Module
 */
 

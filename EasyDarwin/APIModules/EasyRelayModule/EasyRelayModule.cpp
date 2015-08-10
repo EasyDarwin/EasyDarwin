@@ -5,7 +5,7 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       QTSSOnDemandRelayModule.cpp
+    File:       EasyRelayModule.cpp
     Contains:   RTSP On Demand Relay Module
 */
 #include "EasyRelayModule.h"
@@ -82,7 +82,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);    
     
     // Tell the server our name!
-    static char* sModuleName = "QTSSOnDemandRelayModule";
+    static char* sModuleName = "EasyRelayModule";
     ::strcpy(inParams->outModuleName, sModuleName);
 
     return QTSS_NoErr;
