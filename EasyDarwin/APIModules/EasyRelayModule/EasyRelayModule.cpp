@@ -19,7 +19,6 @@
 #include "StringParser.h"
 #include "EasyRelaySession.h"
 
-
 #ifndef __Win32__
     #include <unistd.h>
 	#include <netdb.h>
