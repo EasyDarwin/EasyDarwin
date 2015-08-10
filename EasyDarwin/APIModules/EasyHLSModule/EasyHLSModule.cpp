@@ -22,9 +22,7 @@
 #include "QueryParamList.h"
 #include "OSRef.h"
 #include "StringParser.h"
-
 #include "EasyHLSSession.h"
-
 
 class HLSSessionCheckingTask : public Task
 {
@@ -84,12 +82,10 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Register(&inParams->regParams);
         case QTSS_Initialize_Role:
             return Initialize(&inParams->initParams);
-
         case QTSS_RereadPrefs_Role:
             return RereadPrefs();
         case QTSS_RTSPPreProcessor_Role:
             return ProcessRTSPRequest(&inParams->rtspRequestParams);
-
 		case Easy_HLSOpen_Role:		//Start HLS Streaming
 			return EasyHLSOpen(&inParams->easyHLSOpenParams);
 		case Easy_HLSClose_Role:	//Stop HLS Streaming
