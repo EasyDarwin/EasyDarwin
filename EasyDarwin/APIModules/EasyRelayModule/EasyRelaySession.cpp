@@ -104,6 +104,8 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, N
 	if(NULL == fPusherHandle) return QTSS_Unimplemented;
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
+		printf("Get video Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+
 		if(frameinfo && frameinfo->length)
 		{
 				EASY_AV_Frame  avFrame;
