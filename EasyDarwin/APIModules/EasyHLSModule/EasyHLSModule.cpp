@@ -27,8 +27,6 @@
 class HLSSessionCheckingTask : public Task
 {
     public:
-    
-        //
         // Task that just polls on all the sockets in the pool, sending data on all available sockets
         HLSSessionCheckingTask() : Task() {this->SetTaskName("HLSSessionCheckingTask");  this->Signal(Task::kStartEvent); }
         virtual ~HLSSessionCheckingTask() {}
@@ -50,13 +48,11 @@ static QTSS_ServerObject sServer				= NULL;
 static QTSS_ModulePrefsObject       sModulePrefs		= NULL;
 
 // FUNCTION PROTOTYPES
-
 static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
 static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
-
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyHLSModule_Main(void* inPrivateArgs)
@@ -80,7 +76,6 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
     return QTSS_NoErr;
 }
 
-
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
     // Do role & attribute setup
@@ -95,13 +90,11 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
     return QTSS_NoErr;
 }
 
-
 QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
     // Setup module utils
     QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
-    
-    //
+
     // Setup global data structures
     sServerPrefs = inParams->inPrefs;
     sCheckingTask = NEW HLSSessionCheckingTask();
@@ -124,8 +117,9 @@ SInt64 HLSSessionCheckingTask::Run()
 
 QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 {
+	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 	EasyHLSSession* session = NULL;
-	//首先查找Map里面是否已经有了对应的流
+	//首先查找MAP里面是否已经有了对应的流
 	StrPtrLen streamName(inParams->inStreamName);
 	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
 	if(clientSesRef != NULL)
@@ -147,17 +141,33 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 	//到这里，肯定是有一个EasyHLSSession可用的
 	session->HLSSessionStart(inParams->inRTSPUrl);
 
+	sHLSSessionMap->Release(session->GetRef());
+
 	return QTSS_NoErr;
 }
 
 QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 {
-	
+	OSMutexLocker locker (sHLSSessionMap->GetMutex());
+
 	//首先查找Map里面是否已经有了对应的流
 	StrPtrLen streamName(inParams->inStreamName);
+
 	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
+
 	if(NULL == clientSesRef) return QTSS_RequestFailed;
+
 	EasyHLSSession* session = (EasyHLSSession*)clientSesRef->GetObject();
+
 	session->HLSSessionRelease();
+
+	sHLSSessionMap->Release(session->GetRef());
+
+    if (session->GetRef()->GetRefCount() == 0)
+    {   
+        qtss_printf("EasyHLSModule.cpp:EasyHLSClose UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", session->GetRef(), session->GetRef()->GetRefCount() ) ;       
+        sHLSSessionMap->UnRegister(session->GetRef());
+        delete session;
+    }
 	return QTSS_NoErr;
 }

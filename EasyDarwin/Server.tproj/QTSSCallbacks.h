@@ -156,7 +156,12 @@ class QTSSCallbacks
 		static QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed);
             
         static void   QTSS_LockStdLib();
-        static void   QTSS_UnlockStdLib();    
+        static void   QTSS_UnlockStdLib();
+
+		// Start HLS Session
+		static QTSS_Error	Easy_StartHLSSession(const char* inSessionName);
+		// Stop HLS Session
+		static QTSS_Error	Easy_StopHLSSession(const char* inSessionName);
 };
 
 #endif //__QTSSCALLBACKS_H__
