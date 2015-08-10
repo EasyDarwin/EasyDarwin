@@ -117,6 +117,7 @@ QTSS_Error RereadPrefs()
 
 QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 {
+	OSMutexLocker locker (sRelaySessionMap->GetMutex());
     QTSS_RTSPMethod* theMethod = NULL;
 
 	UInt32 theLen = 0;

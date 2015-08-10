@@ -118,7 +118,10 @@ enum
     kSetIntervalRoleTimerCallback   = 58,
     kLockStdLibCallback             = 59,
     kUnlockStdLibCallback           = 60,
-    kLastCallback                   = 61
+
+	kStartHLSSessionCallback		= 61,
+	kStopHLSSessionCallback			= 62,
+    kLastCallback                   = 63
 };
 
 typedef struct {

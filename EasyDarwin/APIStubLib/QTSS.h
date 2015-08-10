@@ -2020,6 +2020,12 @@ QTSS_Error    QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** 
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 
+// EasyHLSModule
+// Start HLS Session
+QTSS_Error	Easy_StartHLSSession(const char* inSessionName);
+// Stop HLS Session
+QTSS_Error	Easy_StopHLSSession(const char* inSessionName);
+
 #ifdef QTSS_OLDROUTINENAMES
 
 //
