@@ -343,6 +343,9 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <commandLine>-m32 -pipe -Wall -Wno-format-y2k</commandLine>
+        </cTool>
         <ccTool>
           <incDir>
             <pElem>../HTTPUtilitiesLib</pElem>
@@ -359,7 +362,7 @@
             <pElem>APIModules/QTSSHttpFileModule/</pElem>
             <pElem>APIModules/QTSSAccessModule/</pElem>
             <pElem>APIModules/QTSSAccessLogModule/</pElem>
-            <pElem>APIModules/QTSSPosixFileSysModule/</pElem>
+            <pElem>APIModules/QTSSPOSIXFileSysModule</pElem>
             <pElem>APIModules/QTSSAdminModule/</pElem>
             <pElem>APIModules/QTSSReflectorModule/</pElem>
             <pElem>APIModules/QTSSWebStatsModule/</pElem>
@@ -375,7 +378,7 @@
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-pipe -Wall -Wno-format-y2k</commandLine>
+          <commandLine>-m32 -pipe -Wall -Wno-format-y2k</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>DSS_USE_API_CALLBACKS</Elem>
@@ -1102,6 +1105,7 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <commandLine>-m32 -pipe -Wall -Wno-format-y2k</commandLine>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -1120,7 +1124,7 @@
             <pElem>APIModules/QTSSHttpFileModule/</pElem>
             <pElem>APIModules/QTSSAccessModule/</pElem>
             <pElem>APIModules/QTSSAccessLogModule/</pElem>
-            <pElem>APIModules/QTSSPosixFileSysModule/</pElem>
+            <pElem>APIModules/QTSSPOSIXFileSysModule</pElem>
             <pElem>APIModules/QTSSAdminModule/</pElem>
             <pElem>APIModules/QTSSReflectorModule/</pElem>
             <pElem>APIModules/QTSSWebStatsModule/</pElem>
@@ -1136,7 +1140,7 @@
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-pipe -Wall -Wno-format-y2k</commandLine>
+          <commandLine>-m32 -pipe -Wall -Wno-format-y2k</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>DSS_USE_API_CALLBACKS</Elem>
@@ -1887,7 +1891,7 @@
             <pElem>APIModules/QTSSHttpFileModule/</pElem>
             <pElem>APIModules/QTSSAccessModule/</pElem>
             <pElem>APIModules/QTSSAccessLogModule/</pElem>
-            <pElem>APIModules/QTSSPosixFileSysModule/</pElem>
+            <pElem>APIModules/QTSSPOSIXFileSysModule</pElem>
             <pElem>APIModules/QTSSAdminModule/</pElem>
             <pElem>APIModules/QTSSReflectorModule/</pElem>
             <pElem>APIModules/QTSSWebStatsModule/</pElem>
