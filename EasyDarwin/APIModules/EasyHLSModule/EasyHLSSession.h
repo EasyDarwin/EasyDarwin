@@ -62,10 +62,6 @@ class EasyHLSSession : public Task
 		//TS timestamp ms，自定义时间戳
 		int tsTimeStampMSsec;
 
-
-		//测试Raw数据保存
-		FILE* fTest;
-
 		static UInt32	sM3U8Version;
 		static Bool16	sAllowCache;
 		static UInt32	sTargetDuration;
