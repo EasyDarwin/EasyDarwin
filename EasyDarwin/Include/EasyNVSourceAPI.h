@@ -7,13 +7,10 @@
 #ifndef _Easy_NVS_API_H
 #define _Easy_NVS_API_H
 
-#define WIN32_LEAN_AND_MEAN
-
-
 #ifdef _WIN32
 #define EasyNVS_API  __declspec(dllexport)
 #define Easy_APICALL  __stdcall
-#include <winsock2.h>
+#define WIN32_LEAN_AND_MEAN
 #else
 #define EasyNVS_API
 #define Easy_APICALL 
@@ -92,7 +89,7 @@ typedef struct
 _mediatype:		MEDIA_TYPE_VIDEO	MEDIA_TYPE_AUDIO	MEDIA_TYPE_EVENT	
 如果在EasyNVS_OpenStream中的参数outRtpPacket置为1, 则回调中的_mediatype为MEDIA_TYPE_RTP, pbuf为接收到的RTP包(包含rtp头信息), frameinfo->length为包长
 */
-typedef int (CALLBACK *NVSourceCallBack)( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
+typedef int (Easy_APICALL *NVSourceCallBack)( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
 
 extern "C"
 {

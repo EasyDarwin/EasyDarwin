@@ -314,7 +314,6 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	QTSS_RTSPStatusCode statusCode = qtssRedirectPermMoved;
 	QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqStatusCode, 0, &statusCode, sizeof(statusCode));
 
-
 	StrPtrLen locationRedirect(session->GetHLSURL());
 
 	Bool16 sFalse = false;
