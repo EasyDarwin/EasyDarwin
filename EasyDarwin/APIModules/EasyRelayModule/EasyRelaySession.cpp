@@ -13,7 +13,7 @@
 
 
 /* NVSource从RTSPClient获取数据后回调给上层 */
-int CALLBACK __EasyNVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
+int Easy_APICALL __EasyRTSPClientCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	EasyRelaySession* pRelaySession = (EasyRelaySession*)_chPtr;
 
@@ -46,7 +46,7 @@ int __EasyPusher_Callback(int _id, EASY_PUSH_STATE_T _state, EASY_AV_Frame *_fra
 EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName)
 :   fStreamName(NULL),
 	fURL(NULL),
-	fNVSHandle(NULL),
+	fRTSPClientHandle(NULL),
 	fPusherHandle(NULL)
 {
     this->SetTaskName("EasyRelaySession");
@@ -99,7 +99,7 @@ SInt64 EasyRelaySession::Run()
 }
 
 
-QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
+QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	if(NULL == fPusherHandle) return QTSS_Unimplemented;
 	if (mediatype == MEDIA_TYPE_VIDEO)
@@ -141,18 +141,18 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, N
 */
 QTSS_Error	EasyRelaySession::RelaySessionStart()
 {
-	if(NULL == fNVSHandle)
+	if(NULL == fRTSPClientHandle)
 	{
 		//创建NVSource
-		EasyNVS_Init(&fNVSHandle);
+		EasyRTSP_Init(&fRTSPClientHandle);
 
-		if (NULL == fNVSHandle) return QTSS_Unimplemented;
+		if (NULL == fRTSPClientHandle) return QTSS_Unimplemented;
 
 		unsigned int mediaType = MEDIA_TYPE_VIDEO;
 		//mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
 
-		EasyNVS_SetCallback(fNVSHandle, __EasyNVSourceCallBack);
-		EasyNVS_OpenStream(fNVSHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+		EasyRTSP_SetCallback(fRTSPClientHandle, __EasyRTSPClientCallBack);
+		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 	}
 
 	if(NULL == fPusherHandle)
@@ -185,11 +185,11 @@ QTSS_Error	EasyRelaySession::RelaySessionRelease()
 	qtss_printf("HLSSession Release....\n");
 	
 	//释放source
-	if(fNVSHandle)
+	if(fRTSPClientHandle)
 	{
-		EasyNVS_CloseStream(fNVSHandle);
-		EasyNVS_Deinit(&fNVSHandle);
-		fNVSHandle = NULL;
+		EasyRTSP_CloseStream(fRTSPClientHandle);
+		EasyRTSP_Deinit(&fRTSPClientHandle);
+		fRTSPClientHandle = NULL;
 	}
 
 	//释放sink

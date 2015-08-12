@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyNVSource.lib libEasyHLS.lib libEasyPusher.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -164,7 +164,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyHLS.lib libEasyNVSource.lib libEasyPusher.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyHLS.lib libEasyRTSPClient.lib libEasyPusher.lib"
 				OutputFile="..\WinNTSupport\Release\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
