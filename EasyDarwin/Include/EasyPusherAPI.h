@@ -68,7 +68,7 @@ typedef int Easy_Error;
 
 /* 视频关键字标识 */
 #define EASY_SDK_VIDEO_FRAME_I		0x03000001	/* 关键帧 */
-#define EASY_SDK_VIDEO_FRAME_P		0x03000001	/* 非关键帧 */
+#define EASY_SDK_VIDEO_FRAME_P		0x03000002	/* 非关键帧 */
 
 typedef struct __EASY_AV_Frame
 {
