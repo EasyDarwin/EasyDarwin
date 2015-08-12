@@ -7,10 +7,6 @@
 #ifndef __EasyPusher_H__
 #define __EasyPusher_H__
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 #ifdef _WIN32
 #define EasyPusher_API  __declspec(dllexport)
 #define Easy_APICALL  __stdcall
@@ -129,15 +125,6 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-
-
-
-
-
-
-
-
-
 
 
 #endif

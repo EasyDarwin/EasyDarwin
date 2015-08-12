@@ -8,9 +8,8 @@
     File:       EasyRelaySession.cpp
     Contains:   RTSP Relay Client
 */
-#include "QTSServerInterface.h"
-#include "EasyRelaySession.h"
 
+#include "EasyRelaySession.h"
 
 /* NVSource从RTSPClient获取数据后回调给上层 */
 int Easy_APICALL __EasyRTSPClientCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)

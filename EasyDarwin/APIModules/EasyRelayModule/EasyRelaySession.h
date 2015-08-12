@@ -11,16 +11,10 @@
 #ifndef __EASY_RELAY_SESSION__
 #define __EASY_RELAY_SESSION__
 
-
-#define __SOCKET_H__
-
 #include "Task.h"
 #include "TimeoutTask.h"
-
-#include <stdio.h>
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
-
 #include "OSMutex.h"
 #include "MyAssert.h"
 #include "OSMemory.h"
@@ -31,6 +25,7 @@
 #include "OSRef.h"
 #include "EasyRTSPClientAPI.h"
 #include "EasyPusherAPI.h"
+#include "QTSServerInterface.h"
 
 class EasyRelaySession : public Task
 {

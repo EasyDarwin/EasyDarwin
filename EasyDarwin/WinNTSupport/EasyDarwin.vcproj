@@ -956,10 +956,18 @@
 						RelativePath="..\APIModules\EasyHLSModule\EasyHLSSession.h"
 						>
 					</File>
+					<File
+						RelativePath="..\Include\EasyRTSPClientAPI.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="EasyRelayModule"
 					>
+					<File
+						RelativePath="..\Include\EasyPusherAPI.h"
+						>
+					</File>
 					<File
 						RelativePath="..\APIModules\EasyRelayModule\EasyRelayModule.cpp"
 						>
