@@ -95,10 +95,10 @@ extern "C"
 	/* 获取最后一次错误的错误码 */
 	EasyRTSP_API int Easy_APICALL EasyRTSP_GetErrCode();
 
-	/* 创建NVSource句柄  返回为句柄值 */
+	/* 创建RTSPClient句柄  返回为句柄值 */
 	EasyRTSP_API int Easy_APICALL EasyRTSP_Init(Easy_RTSP_Handle *handle);
 
-	/* 释放NVSource 参数为NVSource句柄 */
+	/* 释放RTSPClient 参数为RTSPClient句柄 */
 	EasyRTSP_API int Easy_APICALL EasyRTSP_Deinit(Easy_RTSP_Handle *handle);
 
 	/* 设置数据回调 */

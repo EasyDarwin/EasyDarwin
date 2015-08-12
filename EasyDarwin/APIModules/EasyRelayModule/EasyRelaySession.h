@@ -56,7 +56,7 @@ class EasyRelaySession : public Task
 		char*			fURL;
 		OSMutex			fMutex;
 
-		//NVSource Handle
+		//RTSPClient Handle
 		Easy_RTSP_Handle	fRTSPClientHandle;
 		//HLS Handle
 		Easy_Pusher_Handle fPusherHandle;

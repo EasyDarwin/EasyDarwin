@@ -11,7 +11,7 @@
 
 #include "EasyRelaySession.h"
 
-/* NVSource从RTSPClient获取数据后回调给上层 */
+/* RTSPClient从RTSPClient获取数据后回调给上层 */
 int Easy_APICALL __EasyRTSPClientCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	EasyRelaySession* pRelaySession = (EasyRelaySession*)_chPtr;
@@ -142,13 +142,13 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 {
 	if(NULL == fRTSPClientHandle)
 	{
-		//创建NVSource
+		//创建RTSPClient
 		EasyRTSP_Init(&fRTSPClientHandle);
 
 		if (NULL == fRTSPClientHandle) return QTSS_Unimplemented;
 
 		unsigned int mediaType = MEDIA_TYPE_VIDEO;
-		//mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
+		//mediaType |= MEDIA_TYPE_AUDIO;	//换为RTSPClient, 屏蔽声音
 
 		EasyRTSP_SetCallback(fRTSPClientHandle, __EasyRTSPClientCallBack);
 		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
