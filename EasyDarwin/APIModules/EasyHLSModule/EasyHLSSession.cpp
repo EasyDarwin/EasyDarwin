@@ -55,7 +55,7 @@ void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 }
 
 /* NVSource从RTSPClient获取数据后回调给上层 */
-int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
+int Easy_APICALL __RTSPClientCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	EasyHLSSession* pHLSSession = (EasyHLSSession *)_chPtr;
 
@@ -75,7 +75,7 @@ int CALLBACK __NVSourceCallBack( int _chid, int *_chPtr, int _mediatype, char *p
 
 EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 :   fQueueElem(),
-	fNVSHandle(NULL),
+	fRTSPClientHandle(NULL),
 	fHLSHandle(NULL),
 	tsTimeStampMSsec(0)
 {
@@ -113,7 +113,7 @@ SInt64 EasyHLSSession::Run()
     return 0;
 }
 
-QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo)
+QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	if(NULL == fHLSHandle) return QTSS_Unimplemented;
 	if (mediatype == MEDIA_TYPE_VIDEO)
@@ -165,18 +165,18 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, NVS
 */
 QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 {
-	if(NULL == fNVSHandle)
+	if(NULL == fRTSPClientHandle)
 	{
 		//创建NVSource
-		EasyNVS_Init(&fNVSHandle);
+		EasyRTSP_Init(&fRTSPClientHandle);
 
-		if (NULL == fNVSHandle) return QTSS_Unimplemented;
+		if (NULL == fRTSPClientHandle) return QTSS_Unimplemented;
 
 		unsigned int mediaType = MEDIA_TYPE_VIDEO;
 		//mediaType |= MEDIA_TYPE_AUDIO;	//换为NVSource, 屏蔽声音
 
-		EasyNVS_SetCallback(fNVSHandle, __NVSourceCallBack);
-		EasyNVS_OpenStream(fNVSHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+		EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
+		EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
 	}
 
 	if(NULL == fHLSHandle)
@@ -204,11 +204,11 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 	qtss_printf("HLSSession Release....\n");
 	
 	//释放source
-	if(fNVSHandle)
+	if(fRTSPClientHandle)
 	{
-		EasyNVS_CloseStream(fNVSHandle);
-		EasyNVS_Deinit(&fNVSHandle);
-		fNVSHandle = NULL;
+		EasyRTSP_CloseStream(fRTSPClientHandle);
+		EasyRTSP_Deinit(&fRTSPClientHandle);
+		fRTSPClientHandle = NULL;
 	}
 
 	//释放sink

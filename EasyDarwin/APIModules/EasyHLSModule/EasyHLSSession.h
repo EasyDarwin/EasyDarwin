@@ -17,7 +17,7 @@
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "OSArrayObjectDeleter.h"
-#include "EasyNVSourceAPI.h"
+#include "EasyRTSPClientAPI.h"
 #include "EasyHLSAPI.h"
 
 #ifndef __EASY_HLS_SESSION__
@@ -39,7 +39,7 @@ class EasyHLSSession : public Task
         OSQueueElem*    GetQueueElem()      { return &fQueueElem; }
 	
         StrPtrLen*      GetSessionID()     { return &fHLSSessionID; }
-		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, NVS_FRAME_INFO *frameinfo);
+		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 		QTSS_Error		HLSSessionStart(char* rtspUrl);
 		QTSS_Error		HLSSessionRelease();
 		char*		GetHLSURL();
@@ -55,7 +55,7 @@ class EasyHLSSession : public Task
         OSQueueElem fQueueElem; 
 
 		//NVS Handle
-		Easy_NVS_Handle	fNVSHandle;
+		Easy_RTSP_Handle	fRTSPClientHandle;
 		//HLS Handle
 		Easy_HLS_Handle fHLSHandle;
 		
