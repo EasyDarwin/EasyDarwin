@@ -141,8 +141,8 @@
       </logicalFolder>
       <logicalFolder name="Include" displayName="Include" projectFiles="true">
         <itemPath>Include/EasyHLSAPI.h</itemPath>
-        <itemPath>Include/EasyRTSPClientAPI.h</itemPath>
         <itemPath>Include/EasyPusherAPI.h</itemPath>
+        <itemPath>Include/EasyRTSPClientAPI.h</itemPath>
       </logicalFolder>
       <logicalFolder name="PrefsSourceLib"
                      displayName="PrefsSourceLib"
@@ -741,9 +741,9 @@
       </item>
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -1509,9 +1509,9 @@
       </item>
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -2276,9 +2276,9 @@
       </item>
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -3044,9 +3044,9 @@
       </item>
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
