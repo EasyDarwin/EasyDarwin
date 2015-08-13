@@ -251,7 +251,7 @@
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
 	<MODULE NAME="EasyHLSModule" >
 		<PREF NAME="LOCAL_ROOT_DIR" >./HLS/</PREF>
-		<PREF NAME="HTTP_ROOT_DIR" >http://hls.easydarwin.org/</PREF>
+		<PREF NAME="HTTP_ROOT_DIR" >http://127.0.0.1/</PREF>
 		<PREF NAME="M3U8_VERSION" TYPE="UInt32" >3</PREF>
 		<PREF NAME="ALLOW_CACHE" TYPE="Bool16" >false</PREF>
 		<PREF NAME="TARGET_DURATION" TYPE="UInt32" >4</PREF>
