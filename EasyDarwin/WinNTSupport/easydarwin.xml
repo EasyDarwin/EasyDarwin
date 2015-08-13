@@ -174,7 +174,7 @@
 	</MODULE>
 	<MODULE NAME="QTSSHttpFileModule" >
 		<PREF NAME="http_xfer_enabled" TYPE="Bool16" >false</PREF>
-		<PREF NAME="http_folder" >c:\Program Files\Darwin Streaming Server\http</PREF>
+		<PREF NAME="http_folder" >./http</PREF>
 		<PREF NAME="http_logging" TYPE="Bool16" >true</PREF>
 		<PREF NAME="http_logfile_name" >Http</PREF>
 		<PREF NAME="http_logfile_dir" >./httpLogs</PREF>
