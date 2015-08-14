@@ -37,7 +37,7 @@ chmod +x ./Buildit
 <strong>步骤三:</strong> 运行EasyDarwin 
 
 <pre>
-./EasyDarwin -c ./WinNTSupport/easydarwin.xml
+./EasyDarwin -c ./WinNTSupport/easydarwin.xml （调试模式加：-d 参数）
 </pre>
 
 
