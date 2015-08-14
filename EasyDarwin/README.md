@@ -6,12 +6,13 @@ EasyDarwin开源流媒体服务器是EasyDarwin开源流媒体平台的流媒体
 EasyDarwin具备一套完整的网络I/O框架以及Utility，开发者很容易在EasyDarwin的基础上开发跨平台服务程序，例如Windows、Linux、Mac、Solaris等系统平台，只要一次熟悉，将会受用终身；
 
 ## EasyDarwin目前支持: ##
-1. MPEG-4点播回放;
+1. MP4点播回放;
 2. 标准RTSP推模式转发(QTSSReflectorModule);
-3. 标准RTSP拉模式转发(QTSSOnDemandRelayModule);
+3. 标准RTSP拉模式转发(EasyRelayModule);
+4. RTSP转HLS模块(EasyHLSModule);
 
 ## 正在进行开发的: ##
-1. HLS协议支持;
+1. EasyDarwin云平台架构
 2. Onvif支持；
 
 ## 计划支持： ##
@@ -30,7 +31,7 @@ cd EasyDarwin/EasyDarwin
 
 <pre>
 chmod +x ./Buildit
-./Buildit
+./Buildit（如果是64位编译：./Buildit x64）
 </pre>
 
 <strong>步骤三:</strong> 运行EasyDarwin 
