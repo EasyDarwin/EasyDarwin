@@ -8,8 +8,8 @@
 #ifndef PROTOCOLTEST_H
 #define	PROTOCOLTEST_H
 
-#include <EasyDSSProtocol.h>
-#include <EasyDSSUtil.h>
+#include <EasyProtocol.h>
+#include <EasyUtil.h>
 
 class ProtocolTest
 {
