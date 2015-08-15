@@ -59,16 +59,16 @@ EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char* msg)
 
 bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
 {
-	EasyJsonUtil device_;
+	/*EasyJsonUtil device_;
 	device_.SetStringValue("DeviceSerial", device.DeviceSerial.c_str());
 	device_.SetStringValue("DeviceName", device.DeviceName.c_str());
 	device_.SetStringValue("DeviceSnap", device.DeviceSnap.c_str());
-	return devices.AddArray("", device_);
+	return devices.AddArray("", device_);*/
 }
 
 int EasyDarwinDeviceListRsp::StartGetDevice()
 {
-	device_list.clear();
+	/*device_list.clear();
     EasyJsonUtil jsonUtil;
 	if (!jsonUtil.Read(json))
 	{
@@ -96,12 +96,12 @@ int EasyDarwinDeviceListRsp::StartGetDevice()
 
 	device_.GetAllChild("", "", device_list);
 	
-    return device_list.size();   
+    return device_list.size();   */
 }
 
 bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
 {
-	 if(device_list.empty())
+	/* if(device_list.empty())
     {
         return false;
     }
@@ -113,7 +113,7 @@ bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
 	device_.GetValueAsString("DeviceSnap", device.DeviceSnap);
 	device_list.pop_front();   
 
-    return true;
+    return true;*/
 }
 
 EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq()

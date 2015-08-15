@@ -134,7 +134,7 @@ void EasyProtocol::Read(const std::string msg, int iMsgType)
 
 void EasyProtocol::Reset()
 {
-    root.Clear();	
+	root.clear();	
     fMsgType = -1;
 }
 
@@ -171,7 +171,7 @@ std::string EasyProtocol::GetMsgTypeString(int type)
 int EasyProtocol::GetMessageType()
 {
 	std::string sMessageType;
-	EasyJsonUtil jsonUtil;
+	/*EasyJsonUtil jsonUtil;
 	if (!jsonUtil.Read(json))
 	{
 		printf("EasyJsonUtil read json errror\n");
@@ -193,7 +193,7 @@ int EasyProtocol::GetMessageType()
 		return -1;
 	}
 	EasyJsonUtil header_(obj);
-	header_.GetValueAsString(EASYDSS_TAG_MESSAGE_TYPE, sMessageType);
+	header_.GetValueAsString(EASYDSS_TAG_MESSAGE_TYPE, sMessageType);*/
 	return GetMsgType(sMessageType);
 }
 
@@ -332,7 +332,7 @@ std::string EasyProtocol::GetMsg()
     std::string msg;
 	
 
-	header.SetStringValue(EASYDSS_TAG_MESSAGE_TYPE, GetMsgTypeString(fMsgType).c_str());
+	/*header.SetStringValue(EASYDSS_TAG_MESSAGE_TYPE, GetMsgTypeString(fMsgType).c_str());
 	
 	root.AddChild(EASYDSS_TAG_ROOT, EASYDSS_TAG_HEADER, header);
 	if(!body.IsEmpty())
@@ -342,8 +342,8 @@ std::string EasyProtocol::GetMsg()
 			body.Add("Devices", devices);
 		}
 		root.AddChild(EASYDSS_TAG_ROOT, EASYDSS_TAG_BODY, body);
-	}
-	root.Write(msg);
+	}*/
+	msg = writer.write(root);
     return msg;
 }
 
@@ -362,43 +362,24 @@ bool EasyProtocol::GetMsg(char *dest, int size)
 
 bool EasyProtocol::SetHeaderValue(const char* tag, const char* value)
 {
-	return header.SetStringValue(tag, value);
+	Json::Value value_;
+	value_[tag] = value;
+	header.append(value_);
+	return true;
 }
 
 
 bool EasyProtocol::SetBodyValue(const char* tag, const char* value)
 {
-	return body.SetStringValue(tag, value);
+	Json::Value value_;
+	value_[tag] = value;
+	body.append(value_);
+	return true;
 }
 
 std::string EasyProtocol::GetHeaderValue(const char* tag)
 {
-	std::string value;
-		
-	EasyJsonUtil jsonUtil;
-	if (!jsonUtil.Read(json))
-	{
-		printf("EasyJsonUtil read json errror\n");
-	}
-
-	EasyJsonObject obj = jsonUtil.GetChild("EasyDarwin");
-	if (obj == NULL)
-	{
-		printf("not found EasyDarwin\n");
-		return "";
-	}
-
-	EasyJsonUtil easydarwin(obj);
-
-	obj = easydarwin.GetChild("Header");
-	if (obj == NULL)
-	{
-		printf("not found Header\n");
-		return "";
-	}
-	EasyJsonUtil header_(obj);
-	header_.GetValueAsString(tag, value);
-	return value;
+	return header[tag].asString()
 }
 
 std::string EasyProtocol::GetBodyValue(const char* tag)
