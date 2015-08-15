@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="avsxmlutiltest"
+	Name="easyjsonutiltest"
 	ProjectGUID="{C30B581D-22CF-46B0-A52F-877493A87DB4}"
 	RootNamespace="avsxmlutiltest"
 	Keyword="Win32Proj"
@@ -114,8 +114,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="2"
+				PreprocessorDefinitions="WIN32;NDEBUG"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -134,7 +134,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -165,7 +165,7 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}"
-			RelativePathToProject="..\libavsxmlutil.vcproj"
+			RelativePathToProject="..\easyavsjsonutil.vcproj"
 		/>
 	</References>
 	<Files>
