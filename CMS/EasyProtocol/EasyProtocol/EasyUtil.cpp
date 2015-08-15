@@ -5,13 +5,13 @@
 	Website: http://www.easydarwin.org
 */
 /* 
- * File:   EasyDSSUtil.cpp
+ * File:   EasyUtil.cpp
  * Author: wellsen
  * 
  * Created on 2014年11月22日, 上午10:16
  */
 
-#include <EasyDSSUtil.h>
+#include <EasyUtil.h>
 
 #ifdef _WIN32
 #include <time.h>
@@ -28,7 +28,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
-std::string EasyDSSUtil::TimeT2String(EasyDSSTimeFormat whatFormat, unsigned long time)
+std::string EasyUtil::TimeT2String(EasyDSSTimeFormat whatFormat, unsigned long time)
 {
     struct tm local;
     time_t t = time;
@@ -62,7 +62,7 @@ std::string EasyDSSUtil::TimeT2String(EasyDSSTimeFormat whatFormat, unsigned lon
     return std::string(timeStr);
 }
 
-unsigned long EasyDSSUtil::String2TimeT(EasyDSSTimeFormat whatFormat, std::string timeString)
+unsigned long EasyUtil::String2TimeT(EasyDSSTimeFormat whatFormat, std::string timeString)
 {
     struct tm local;
        
@@ -99,24 +99,24 @@ unsigned long EasyDSSUtil::String2TimeT(EasyDSSTimeFormat whatFormat, std::strin
     return mktime(&local);
 }
 
-unsigned long EasyDSSUtil::String2TimeT(std::string dateYYMMDD/*2014-11-23*/, std::string timeHHMMSS/*08:30:00*/)
+unsigned long EasyUtil::String2TimeT(std::string dateYYMMDD/*2014-11-23*/, std::string timeHHMMSS/*08:30:00*/)
 {
     std::string strTime = dateYYMMDD + " " + timeHHMMSS;
     return String2TimeT(EASYDSS_TIME_FORMAT_YYYYMMDDHHMMSS, strTime);
 }
 
-std::string EasyDSSUtil::NowTime(EasyDSSTimeFormat whatFormat)
+std::string EasyUtil::NowTime(EasyDSSTimeFormat whatFormat)
 {
     return TimeT2String(whatFormat, NowTime());
 }
 
-unsigned long EasyDSSUtil::NowTime()
+unsigned long EasyUtil::NowTime()
 {
     time_t now = time(NULL);
     return (unsigned long)now;
 }
 
-std::string EasyDSSUtil::GetUUID()
+std::string EasyUtil::GetUUID()
 {
 	try
 	{
@@ -133,7 +133,7 @@ std::string EasyDSSUtil::GetUUID()
 	}	
 }
 
-int EasyDSSUtil::String2Int(std::string value)
+int EasyUtil::String2Int(std::string value)
 {
 	try
 	{
@@ -141,7 +141,7 @@ int EasyDSSUtil::String2Int(std::string value)
 	}
 	catch (std::exception &e)
 	{
-		printf("EasyDSSUtil::String2Int error: %s\n", e.what());
+		printf("EasyUtil::String2Int error: %s\n", e.what());
 		return -1;
 	}	
 }
