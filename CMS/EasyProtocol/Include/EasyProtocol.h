@@ -9,12 +9,12 @@
 #ifndef EASYDSS_PROTOCOL
 #define	EASYDSS_PROTOCOL
 
-#include <EasyDSSProtocolBase.h>
+#include <EasyProtocolBase.h>
 
-namespace EasyDSS { namespace Protocol
+namespace EasyDarwin { namespace Protocol
 {
 
-class EASYDSS_API EasyDarwinRegisterReq : public EasyDSSProtocol
+class EASYDSS_API EasyDarwinRegisterReq : public EasyProtocol
 {
 public:
 	EasyDarwinRegisterReq();
@@ -27,7 +27,7 @@ public:
 
 };
 
-class EASYDSS_API EasyDarwinRegisterRsp : public EasyDSSProtocol
+class EASYDSS_API EasyDarwinRegisterRsp : public EasyProtocol
 {
 public:
 	EasyDarwinRegisterRsp();
@@ -47,7 +47,7 @@ public:
 	std::string DeviceSnap;
 };
 
-class EASYDSS_API EasyDarwinDeviceListRsp : public EasyDSSProtocol
+class EASYDSS_API EasyDarwinDeviceListRsp : public EasyProtocol
 {
 public:
 	EasyDarwinDeviceListRsp();
@@ -61,7 +61,7 @@ public:
 
 };
 
-class EASYDSS_API EasyDarwinDeviceSnapUpdateReq : public EasyDSSProtocol
+class EASYDSS_API EasyDarwinDeviceSnapUpdateReq : public EasyProtocol
 {
 public:
 	EasyDarwinDeviceSnapUpdateReq();
@@ -73,7 +73,7 @@ public:
 	bool GetImageData(std::string &sImageBase64Data);
 };
 
-class EASYDSS_API EasyDarwinDeviceSnapUpdateRsp : public EasyDSSProtocol
+class EASYDSS_API EasyDarwinDeviceSnapUpdateRsp : public EasyProtocol
 {
 public:
 	EasyDarwinDeviceSnapUpdateRsp();

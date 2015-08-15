@@ -5,7 +5,7 @@
 	Website: http://www.easydarwin.org
 */
 /* 
- * File:   EasyDSSUtil.h
+ * File:   EasyUtil.h
  * Author: wellsen
  *
  * Created on 2014年11月22日, 上午10:16
@@ -14,10 +14,10 @@
 #ifndef EASYDSS_UTIL_H
 #define	EASYDSS_UTIL_H
 
-#include <EasyDSSProtocolDef.h>
+#include <EasyProtocolDef.h>
 #include <string>
 
-class EASYDSS_API EasyDSSUtil
+class EASYDSS_API EasyUtil
 {
 public:
     static std::string TimeT2String(EasyDSSTimeFormat whatFormat, unsigned long time);

@@ -5,22 +5,22 @@
 	Website: http://www.easydarwin.org
 */
 
-#include <EasyDSSProtocol.h>
+#include <EasyProtocol.h>
 #include <string.h>
 #include <stdio.h>
-#include <EasyDSSUtil.h>
+#include <EasyUtil.h>
 
-namespace EasyDSS { namespace Protocol
+namespace EasyDarwin { namespace Protocol
 {
 
 EasyDarwinRegisterReq::EasyDarwinRegisterReq()
-: EasyDSSProtocol(MSG_DEV_CMS_REGISTER_REQ)
+: EasyProtocol(MSG_DEV_CMS_REGISTER_REQ)
 {
 
 }
 
 EasyDarwinRegisterReq::EasyDarwinRegisterReq(const char* msg)
-: EasyDSSProtocol(msg, MSG_DEV_CMS_REGISTER_REQ)
+: EasyProtocol(msg, MSG_DEV_CMS_REGISTER_REQ)
 {
 
 }
@@ -36,30 +36,30 @@ std::string EasyDarwinRegisterReq::GetAuthCode()
 }
 
 EasyDarwinRegisterRsp::EasyDarwinRegisterRsp()
-: EasyDSSProtocol(MSG_DEV_CMS_REGISTER_RSP)
+: EasyProtocol(MSG_DEV_CMS_REGISTER_RSP)
 {
 
 }
 
 EasyDarwinRegisterRsp::EasyDarwinRegisterRsp(const char* msg)
-: EasyDSSProtocol(msg, MSG_DEV_CMS_REGISTER_RSP)
+: EasyProtocol(msg, MSG_DEV_CMS_REGISTER_RSP)
 {
 
 }
 
 EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp()
-: EasyDSSProtocol(MSG_CLI_CMS_DEVICE_LIST_RSP)
+: EasyProtocol(MSG_CLI_CMS_DEVICE_LIST_RSP)
 {
 }
 
 EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char* msg)
-: EasyDSSProtocol(msg, MSG_CLI_CMS_DEVICE_LIST_RSP)
+: EasyProtocol(msg, MSG_CLI_CMS_DEVICE_LIST_RSP)
 {
 }
 
 bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
 {
-	AVSXmlUtil device_;
+	EasyJsonUtil device_;
 	device_.SetStringValue("DeviceSerial", device.DeviceSerial.c_str());
 	device_.SetStringValue("DeviceName", device.DeviceName.c_str());
 	device_.SetStringValue("DeviceSnap", device.DeviceSnap.c_str());
@@ -69,20 +69,20 @@ bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
 int EasyDarwinDeviceListRsp::StartGetDevice()
 {
 	device_list.clear();
-    AVSXmlUtil xml;
-	if (!xml.Read(json))
+    EasyJsonUtil jsonUtil;
+	if (!jsonUtil.Read(json))
 	{
-		printf("AVSXmlUtil read xml errror\n");
+		printf("EasyJsonUtil read json errror\n");
 	}
 
-	AVSXmlObject obj = xml.GetChild("EasyDarwin");
+	EasyJsonObject obj = jsonUtil.GetChild("EasyDarwin");
 	if (obj == NULL)
 	{
 		printf("not found EasyDarwin\n");
 		return 0;
 	}
 
-	AVSXmlUtil easydarwin(obj);
+	EasyJsonUtil easydarwin(obj);
 
 	obj = easydarwin.GetChild("Body");
 	if (obj == NULL)
@@ -90,9 +90,9 @@ int EasyDarwinDeviceListRsp::StartGetDevice()
 		printf("not found Header\n");
 		return 0;
 	}
-	AVSXmlUtil body_(obj);
+	EasyJsonUtil body_(obj);
 	
-	AVSXmlUtil device_ = body_.GetChild("Devices");
+	EasyJsonUtil device_ = body_.GetChild("Devices");
 
 	device_.GetAllChild("", "", device_list);
 	
@@ -106,7 +106,7 @@ bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
         return false;
     }
     
-    AVSXmlUtil device_ = device_list.front();
+    EasyJsonUtil device_ = device_list.front();
     
 	device_.GetValueAsString("DeviceSerial", device.DeviceSerial);    
 	device_.GetValueAsString("DeviceName", device.DeviceName);
@@ -117,12 +117,12 @@ bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
 }
 
 EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq()
-: EasyDSSProtocol(MSG_DEV_CMS_SNAP_UPDATE_REQ)
+: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_REQ)
 {
 }
 
 EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq(const char *msg)
-: EasyDSSProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_REQ)
+: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_REQ)
 {
 }
 
@@ -142,12 +142,12 @@ bool EasyDarwinDeviceSnapUpdateReq::GetImageData(std::string &sImageBase64Data)
 }
 
 EasyDarwinDeviceSnapUpdateRsp::EasyDarwinDeviceSnapUpdateRsp()
-: EasyDSSProtocol(MSG_DEV_CMS_SNAP_UPDATE_RSP)
+: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_RSP)
 {
 }
 
 EasyDarwinDeviceSnapUpdateRsp::EasyDarwinDeviceSnapUpdateRsp(const char *msg)
-: EasyDSSProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_RSP)
+: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_RSP)
 {
 }
 

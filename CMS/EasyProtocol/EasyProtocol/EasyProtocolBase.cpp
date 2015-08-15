@@ -5,20 +5,20 @@ WEChat: EasyDarwin
 Website: http://www.easydarwin.org
 */
 /* 
- * File:   EasyDSSProtocolBase.cpp
+ * File:   EasyProtocolBase.cpp
  * Author: wellsen
  * 
  * Created on 2014年11月15日, 下午5:21
  */
 
-#include <EasyDSSProtocolBase.h>
+#include <EasyProtocolBase.h>
 #include <string.h>
 #include <stdio.h>
 
-namespace EasyDSS { namespace Protocol
+namespace EasyDarwin { namespace Protocol
 {
 
-EasyDSSProtocol::MsgType EasyDSSProtocol::MsgTypeMap[] = {
+EasyProtocol::MsgType EasyProtocol::MsgTypeMap[] = {
 	MSG_DEV_CMS_REGISTER_REQ,						"MSG_DEV_CMS_REGISTER_REQ",
 	MSG_DEV_CMS_REGISTER_RSP,						"MSG_DEV_CMS_REGISTER_RSP",
 	MSG_CMS_DEV_STREAM_START_REQ,					"MSG_CMS_DEV_STREAM_START_REQ",
@@ -33,7 +33,7 @@ EasyDSSProtocol::MsgType EasyDSSProtocol::MsgTypeMap[] = {
 	MSG_DEV_CMS_SNAP_UPDATE_RSP,					"MSG_DEV_CMS_SNAP_UPDATE_RSP"
 };
 
-EasyDSSProtocol::MsgType EasyDSSProtocol::ErrorMap[] = {
+EasyProtocol::MsgType EasyProtocol::ErrorMap[] = {
 	EASYDSS_ERROR_SUCCESS_OK,						"Success OK",
 	EASYDSS_ERROR_SUCCESS_CREATED,					"Success Created",
 	EASYDSS_ERROR_SUCCESS_ACCEPTED,					"Success Accepted",
@@ -74,32 +74,32 @@ EasyDSSProtocol::MsgType EasyDSSProtocol::ErrorMap[] = {
 	EASYDSS_ERROR_PARAM_ERROR,                      "Param Error"
 };
 
-EasyDSSProtocol::MsgType EasyDSSProtocol::StatusMap[] = {
+EasyProtocol::MsgType EasyProtocol::StatusMap[] = {
     EASYDSS_DEVICE_STATUS_OFFLINE,                  "DEVICE_STATUS_OFFLINE",
     EASYDSS_DEVICE_STATUS_ONLINE,                   "DEVICE_STATUS_ONLINE"
 };
 
-EasyDSSProtocol::MsgType EasyDSSProtocol::ProtocolTypeMap[] = {
+EasyProtocol::MsgType EasyProtocol::ProtocolTypeMap[] = {
 	EASYDSS_PROTOCOL_TYPE_RTSP,						"RTSP",
 	EASYDSS_PROTOCOL_TYPE_HLS,						"HLS"
 };
 
-EasyDSSProtocol::MsgType EasyDSSProtocol::MediaEncodeTypeMap[] = {
+EasyProtocol::MsgType EasyProtocol::MediaEncodeTypeMap[] = {
 	EASYDSS_MEDIA_ENCODE_AUDIO_AAC,                 "AAC",
 	EASYDSS_MEDIA_ENCODE_VIDEO_H264,                "H264"
 };
 
 
-EasyDSSProtocol::MsgType EasyDSSProtocol::TerminalTypeMap[] = {
+EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
 	EASYDSS_TERMINAL_TYPE_CAMERA,						"Camera"
 };
 
-EasyDSSProtocol::EasyDSSProtocol(int iMsgType)
+EasyProtocol::EasyProtocol(int iMsgType)
 :fMsgType(iMsgType)
 {	
 }
 
-EasyDSSProtocol::EasyDSSProtocol(const std::string msg, int iMsgType)
+EasyProtocol::EasyProtocol(const std::string msg, int iMsgType)
 {	
 	json = msg;
 	
@@ -114,11 +114,11 @@ EasyDSSProtocol::EasyDSSProtocol(const std::string msg, int iMsgType)
 }
 
 
-EasyDSSProtocol::~EasyDSSProtocol()
+EasyProtocol::~EasyProtocol()
 {
 }
 
-void EasyDSSProtocol::Read(const std::string msg, int iMsgType)
+void EasyProtocol::Read(const std::string msg, int iMsgType)
 {
 	json = msg;
 
@@ -132,30 +132,30 @@ void EasyDSSProtocol::Read(const std::string msg, int iMsgType)
 	}
 }
 
-void EasyDSSProtocol::Reset()
+void EasyProtocol::Reset()
 {
     root.Clear();	
     fMsgType = -1;
 }
 
 
-void EasyDSSProtocol::SetMsgType(int type)
+void EasyProtocol::SetMsgType(int type)
 {
     fMsgType = type;
 }
 
 
-int EasyDSSProtocol::GetMsgType()
+int EasyProtocol::GetMsgType()
 {
     return fMsgType;
 }
 
-std::string EasyDSSProtocol::GetMsgTypeStr()
+std::string EasyProtocol::GetMsgTypeStr()
 {
 	return GetMsgTypeString(fMsgType);
 }
 
-std::string EasyDSSProtocol::GetMsgTypeString(int type)
+std::string EasyProtocol::GetMsgTypeString(int type)
 {
 	for (int i = 0; i < sizeof(MsgTypeMap) / sizeof(MsgType); i++)
 	{
@@ -168,23 +168,23 @@ std::string EasyDSSProtocol::GetMsgTypeString(int type)
 	return std::string();
 }
 
-int EasyDSSProtocol::GetMessageType()
+int EasyProtocol::GetMessageType()
 {
 	std::string sMessageType;
-	AVSXmlUtil xml;
-	if (!xml.Read(json))
+	EasyJsonUtil jsonUtil;
+	if (!jsonUtil.Read(json))
 	{
-		printf("AVSXmlUtil read xml errror\n");
+		printf("EasyJsonUtil read json errror\n");
 	}
 
-	AVSXmlObject obj = xml.GetChild("EasyDarwin");
+	EasyJsonObject obj = jsonUtil.GetChild("EasyDarwin");
 	if (obj == NULL)
 	{
 		printf("not found EasyDarwin\n");
 		return -1;
 	}
 
-	AVSXmlUtil easydarwin(obj);
+	EasyJsonUtil easydarwin(obj);
 
 	obj = easydarwin.GetChild("Header");
 	if (obj == NULL)
@@ -192,12 +192,12 @@ int EasyDSSProtocol::GetMessageType()
 		printf("not found Header\n");
 		return -1;
 	}
-	AVSXmlUtil header_(obj);
+	EasyJsonUtil header_(obj);
 	header_.GetValueAsString(EASYDSS_TAG_MESSAGE_TYPE, sMessageType);
 	return GetMsgType(sMessageType);
 }
 
-std::string EasyDSSProtocol::GetErrorString(int error)
+std::string EasyProtocol::GetErrorString(int error)
 {
 	for (int i = 0; i < sizeof(ErrorMap) / sizeof(MsgType); i++)
 	{
@@ -210,7 +210,7 @@ std::string EasyDSSProtocol::GetErrorString(int error)
 	return std::string();
 }
 
-int EasyDSSProtocol::GetMsgType(std::string sMessageType)
+int EasyProtocol::GetMsgType(std::string sMessageType)
 {
     for (int i = 0; i < sizeof(MsgTypeMap) / sizeof(MsgType); i++)
 	{
@@ -223,7 +223,7 @@ int EasyDSSProtocol::GetMsgType(std::string sMessageType)
     return -1;
 }
 
-std::string EasyDSSProtocol::GetDeviceStatusString(int status)
+std::string EasyProtocol::GetDeviceStatusString(int status)
 {
     for (int i = 0; i < sizeof(StatusMap) / sizeof(MsgType); i++)
 	{
@@ -236,7 +236,7 @@ std::string EasyDSSProtocol::GetDeviceStatusString(int status)
 	return std::string();
 }
 
-int EasyDSSProtocol::GetDeviceStatus(std::string sStatus)
+int EasyProtocol::GetDeviceStatus(std::string sStatus)
 {
     for (int i = 0; i < sizeof(StatusMap) / sizeof(MsgType); i++)
 	{
@@ -249,7 +249,7 @@ int EasyDSSProtocol::GetDeviceStatus(std::string sStatus)
     return -1;
 }
 
-int EasyDSSProtocol::GetProtocolType(std::string sProtocolType)
+int EasyProtocol::GetProtocolType(std::string sProtocolType)
 {
 	for (int i = 0; i < sizeof(ProtocolTypeMap) / sizeof(MsgType); i++)
 	{
@@ -262,7 +262,7 @@ int EasyDSSProtocol::GetProtocolType(std::string sProtocolType)
 	return -1;
 }
 
-std::string EasyDSSProtocol::GetProtocolString(int iProtocolType)
+std::string EasyProtocol::GetProtocolString(int iProtocolType)
 {
 	for (int i = 0; i < sizeof(ProtocolTypeMap) / sizeof(MsgType); i++)
 	{
@@ -275,7 +275,7 @@ std::string EasyDSSProtocol::GetProtocolString(int iProtocolType)
 	return std::string();
 }
 
-int EasyDSSProtocol::GetMediaEncodeType(std::string sMediaEncode)
+int EasyProtocol::GetMediaEncodeType(std::string sMediaEncode)
 {
 	for (int i = 0; i < sizeof(MediaEncodeTypeMap) / sizeof(MsgType); i++)
 	{
@@ -288,7 +288,7 @@ int EasyDSSProtocol::GetMediaEncodeType(std::string sMediaEncode)
 	return -1;
 }
 
-std::string EasyDSSProtocol::GetMediaEncodeTypeString(int iMediaEncodeType)
+std::string EasyProtocol::GetMediaEncodeTypeString(int iMediaEncodeType)
 {
 	for (int i = 0; i < sizeof(MediaEncodeTypeMap) / sizeof(MsgType); i++)
 	{
@@ -301,7 +301,7 @@ std::string EasyDSSProtocol::GetMediaEncodeTypeString(int iMediaEncodeType)
 	return std::string();
 }
 
-int EasyDSSProtocol::GetTerminalType(std::string sTerminalType)
+int EasyProtocol::GetTerminalType(std::string sTerminalType)
 {
 	for (int i = 0; i < sizeof(TerminalTypeMap) / sizeof(MsgType); i++)
 	{
@@ -314,7 +314,7 @@ int EasyDSSProtocol::GetTerminalType(std::string sTerminalType)
 	return -1;
 }
 
-std::string EasyDSSProtocol::GetTerminalTypeString(int iTerminalType)
+std::string EasyProtocol::GetTerminalTypeString(int iTerminalType)
 {
 	for (int i = 0; i < sizeof(TerminalTypeMap) / sizeof(MsgType); i++)
 	{
@@ -327,7 +327,7 @@ std::string EasyDSSProtocol::GetTerminalTypeString(int iTerminalType)
 	return std::string();
 }
 
-std::string EasyDSSProtocol::GetMsg()
+std::string EasyProtocol::GetMsg()
 {
     std::string msg;
 	
@@ -347,7 +347,7 @@ std::string EasyDSSProtocol::GetMsg()
     return msg;
 }
 
-bool EasyDSSProtocol::GetMsg(char *dest, int size)
+bool EasyProtocol::GetMsg(char *dest, int size)
 {
 	std::string msg = GetMsg();
 	if (msg.empty() || msg.size() > size)
@@ -360,35 +360,35 @@ bool EasyDSSProtocol::GetMsg(char *dest, int size)
 }
 
 
-bool EasyDSSProtocol::SetHeaderValue(const char* tag, const char* value)
+bool EasyProtocol::SetHeaderValue(const char* tag, const char* value)
 {
 	return header.SetStringValue(tag, value);
 }
 
 
-bool EasyDSSProtocol::SetBodyValue(const char* tag, const char* value)
+bool EasyProtocol::SetBodyValue(const char* tag, const char* value)
 {
 	return body.SetStringValue(tag, value);
 }
 
-std::string EasyDSSProtocol::GetHeaderValue(const char* tag)
+std::string EasyProtocol::GetHeaderValue(const char* tag)
 {
 	std::string value;
 		
-	AVSXmlUtil xml;
-	if (!xml.Read(json))
+	EasyJsonUtil jsonUtil;
+	if (!jsonUtil.Read(json))
 	{
-		printf("AVSXmlUtil read xml errror\n");
+		printf("EasyJsonUtil read json errror\n");
 	}
 
-	AVSXmlObject obj = xml.GetChild("EasyDarwin");
+	EasyJsonObject obj = jsonUtil.GetChild("EasyDarwin");
 	if (obj == NULL)
 	{
 		printf("not found EasyDarwin\n");
 		return "";
 	}
 
-	AVSXmlUtil easydarwin(obj);
+	EasyJsonUtil easydarwin(obj);
 
 	obj = easydarwin.GetChild("Header");
 	if (obj == NULL)
@@ -396,28 +396,28 @@ std::string EasyDSSProtocol::GetHeaderValue(const char* tag)
 		printf("not found Header\n");
 		return "";
 	}
-	AVSXmlUtil header_(obj);
+	EasyJsonUtil header_(obj);
 	header_.GetValueAsString(tag, value);
 	return value;
 }
 
-std::string EasyDSSProtocol::GetBodyValue(const char* tag)
+std::string EasyProtocol::GetBodyValue(const char* tag)
 {
 	std::string value;
-	AVSXmlUtil xml;
-	if (!xml.Read(json))
+	EasyJsonUtil jsonUtil;
+	if (!jsonUtil.Read(json))
 	{
-		printf("AVSXmlUtil read xml errror\n");
+		printf("EasyJsonUtil read json errror\n");
 	}
 
-	AVSXmlObject obj = xml.GetChild("EasyDarwin");
+	EasyJsonObject obj = jsonUtil.GetChild("EasyDarwin");
 	if (obj == NULL)
 	{
 		printf("not found EasyDarwin\n");
 		return "";
 	}
 
-	AVSXmlUtil easydarwin(obj);
+	EasyJsonUtil easydarwin(obj);
 
 	obj = easydarwin.GetChild("Body");
 	if (obj == NULL)
@@ -425,7 +425,7 @@ std::string EasyDSSProtocol::GetBodyValue(const char* tag)
 		printf("not found Header\n");
 		return "";
 	}
-	AVSXmlUtil body_(obj);
+	EasyJsonUtil body_(obj);
 	body_.GetValueAsString(tag, value);	
 	return value;
 }

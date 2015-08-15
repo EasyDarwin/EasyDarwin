@@ -5,33 +5,33 @@
 	Website: http://www.easydarwin.org
 */
 /* 
- * File:   EasyDSSProtocolBase.h
+ * File:   EasyProtocolBase.h
  * Author: wellsen
  *
  * Created on 2014年11月15日, 下午5:21
  */
 
-#ifndef EASYDSS_PROTOCOL_BASE_H
-#define	EASYDSS_PROTOCOL_BASE_H
+#ifndef EASY_PROTOCOL_BASE_H
+#define	EASY_PROTOCOL_BASE_H
 
-#include <EasyDSSProtocolDef.h>
-#include <AVSXmlUtil.h>
+#include <EasyProtocolDef.h>
+#include <EasyJsonUtil.h>
 
-namespace EasyDSS { namespace Protocol
+namespace EasyDarwin { namespace Protocol
 {
 
 class EasyDSSUserInfo;
 class EasyDSSDeviceInfo;
 /*!
-\brief EasyDSS Protocol base class
-\ingroup EasyDSSProtocolBase
+\brief EasyDarwin Protocol base class
+\ingroup EasyProtocolBase
 */
-class EASYDSS_API EasyDSSProtocol
+class EASYDSS_API EasyProtocol
 {
 public:
-	EasyDSSProtocol(int iMsgType);
-	EasyDSSProtocol(const std::string msg, int iMsgType = -1);
-	virtual ~EasyDSSProtocol();
+	EasyProtocol(int iMsgType);
+	EasyProtocol(const std::string msg, int iMsgType = -1);
+	virtual ~EasyProtocol();
 
 	struct MsgType
 	{
@@ -86,13 +86,13 @@ public:
 	static int GetTerminalType(std::string sTerminalType);
 	static std::string GetTerminalTypeString(int iTerminalType);
 
-    //common xml tag define
+    //common json tag define
 protected:
-    AVSXmlUtil root;	
-	AVSXmlUtil header;
-	AVSXmlUtil body;
-	AVSXmlUtil devices;
-	AVSXmlList device_list;
+    EasyJsonUtil root;	
+	EasyJsonUtil header;
+	EasyJsonUtil body;
+	EasyJsonUtil devices;
+	EasyJsonList device_list;
 
 	std::string json;
 private:	
@@ -109,4 +109,4 @@ private:
 };
 
 }}//namespace
-#endif	/* EASYDSS_PROTOCOL_BASE_H */
+#endif	/* EASY_PROTOCOL_BASE_H */

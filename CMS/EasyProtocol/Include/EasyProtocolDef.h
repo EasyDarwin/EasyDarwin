@@ -17,7 +17,7 @@
 \defgroup EasyDSS_Device_Status_Define
 \defgroup EasyDSS_Protocol_Type_Define
 \defgroup EasyDSS_Live_Type_Define
-\defgroup EasyDSSProtocolBase
+\defgroup EasyProtocolBase
 \defgroup MSG_DEV_CMS_REGISTER_REQ
 \defgroup MSG_DEV_CMS_REGISTER_RSP
 \defgroup MSG_CMS_DEV_STREAM_START_REQ
