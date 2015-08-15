@@ -13,7 +13,7 @@
 #include <stdio.h>
 using namespace std;
 
-using namespace EasyDSS::Protocol;
+using namespace EasyDarwin::Protocol;
 
 ProtocolTest::ProtocolTest()
 {
@@ -32,7 +32,7 @@ void ProtocolTest::PrintMsg(const char* msg)
 //void ProtocolTest::TestCreateSessionAck()
 //{
 //    //use namepace 
-//    EasyDSS::Protocol::EasyDSSCreateSessionAck msgpack;
+//    EasyDarwin::Protocol::EasyDSSCreateSessionAck msgpack;
 //    cout << "****************test CreateSessionAck pack*****************" << endl;
 //    msgpack.Pack(1000, "10000100010001", "www.easydss.org", 554, EASYDSS_ERROR_SUCCESS_OK);    
 //    PrintMsg(msgpack.GetMsg().c_str());  
@@ -77,7 +77,7 @@ void ProtocolTest::TestRegisterReq()
 
 	///we should move this to class EasyDarwinRegisterReq
 	req.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
-	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
+	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
 	req.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
 	
 	req.SetBodyValue("SerialNumber", "SerialNumber_abcdefg");
@@ -129,7 +129,7 @@ void ProtocolTest::TestRegisterReq()
 	///we should move this to class EasyDarwinRegisterReq
 	cout << "header.version = " << parse.GetHeaderValue(EASYDSS_TAG_VERSION) << endl;
 	cout << "header.TerminialType = " << parse.GetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE) << endl;
-	cout << "header.MessageType = " << parse.GetMessageType() << ", " << EasyDSSProtocol::GetMsgTypeString(parse.GetMessageType()) << endl;
+	cout << "header.MessageType = " << parse.GetMessageType() << ", " << EasyProtocol::GetMsgTypeString(parse.GetMessageType()) << endl;
 	
 	cout << "body.SerialNumber = " << parse.GetBodyValue("SerialNumber") << endl;
 	cout << "body.DssIP = " << parse.GetBodyValue("DssIP") << endl;
@@ -141,7 +141,7 @@ void ProtocolTest::TestDeviceListRsp()
 {
 	EasyDarwinDeviceListRsp req;
 	req.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
-	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
+	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
 	req.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
 	req.SetBodyValue("DeviceCount", "5");
 	char n[10];
@@ -178,10 +178,10 @@ void ProtocolTest::TestDeviceSnapReq()
 {
 	EasyDarwinDeviceSnapUpdateReq req;
 	req.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
-	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyDSSProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
+	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
 	req.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
 
-	req.SetBodyValue("Time", EasyDSSUtil::TimeT2String(EASYDSS_TIME_FORMAT_YYYYMMDDHHMMSS, EasyDSSUtil::NowTime()).c_str());
+	req.SetBodyValue("Time", EasyUtil::TimeT2String(EASYDSS_TIME_FORMAT_YYYYMMDDHHMMSS, EasyUtil::NowTime()).c_str());
 	req.SetBodyValue("Img", "Base64ImageData===========");
 
 	string msg = req.GetMsg();
