@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="EasyDSSProtocol"
+	Name="EasyProtocol"
 	ProjectGUID="{14F332E3-1771-4908-8850-9A2581A4AED2}"
 	TargetFrameworkVersion="131072"
 	>

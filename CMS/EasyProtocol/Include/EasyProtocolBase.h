@@ -15,7 +15,8 @@
 #define	EASY_PROTOCOL_BASE_H
 
 #include <EasyProtocolDef.h>
-#include <EasyJsonUtil.h>
+//#include <EasyJsonUtil.h>
+#include <json/json.h>
 
 namespace EasyDarwin { namespace Protocol
 {
@@ -88,13 +89,18 @@ public:
 
     //common json tag define
 protected:
-    EasyJsonUtil root;	
+   /* EasyJsonUtil root;	
 	EasyJsonUtil header;
 	EasyJsonUtil body;
 	EasyJsonUtil devices;
-	EasyJsonList device_list;
+	EasyJsonList device_list;*/
 
-	std::string json;
+	Json::Value root;
+	Json::Value header;
+	Json::Value body;
+	Json::Value devices;
+	Json::Value device_list;
+
 private:	
     int fMsgType;
 	static MsgType MsgTypeMap[];
@@ -106,6 +112,10 @@ private:
 	static MsgType DeviceTypeMap[];
 	static MsgType TerminalTypeMap[];
 	static MsgType LiveTypeMap[];
+
+	Json::Reader reader;
+	Json::FastWriter writer;//or StyleWriter
+	
 };
 
 }}//namespace
