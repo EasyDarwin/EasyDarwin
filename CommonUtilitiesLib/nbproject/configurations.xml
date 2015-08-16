@@ -815,7 +815,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <archiverTool>
-          <output>${CND_CONF}/x64/libCommonUtilitiesLib.a</output>
+          <output>${CND_CONF}/libCommonUtilitiesLib.a</output>
         </archiverTool>
       </compileType>
       <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="9">

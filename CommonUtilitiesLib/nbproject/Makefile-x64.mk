@@ -98,13 +98,13 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/x64/libCommonUtilitiesLib.a
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libCommonUtilitiesLib.a
 
-${CND_CONF}/x64/libCommonUtilitiesLib.a: ${OBJECTFILES}
-	${MKDIR} -p ${CND_CONF}/x64
-	${RM} ${CND_CONF}/x64/libCommonUtilitiesLib.a
-	${AR} -rv ${CND_CONF}/x64/libCommonUtilitiesLib.a ${OBJECTFILES} 
-	$(RANLIB) ${CND_CONF}/x64/libCommonUtilitiesLib.a
+${CND_CONF}/libCommonUtilitiesLib.a: ${OBJECTFILES}
+	${MKDIR} -p ${CND_CONF}
+	${RM} ${CND_CONF}/libCommonUtilitiesLib.a
+	${AR} -rv ${CND_CONF}/libCommonUtilitiesLib.a ${OBJECTFILES} 
+	$(RANLIB) ${CND_CONF}/libCommonUtilitiesLib.a
 
 ${OBJECTDIR}/_ext/540968335/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/540968335
@@ -327,7 +327,7 @@ ${OBJECTDIR}/md5digest.o: md5digest.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_CONF}/x64/libCommonUtilitiesLib.a
+	${RM} ${CND_CONF}/libCommonUtilitiesLib.a
 
 # Subprojects
 .clean-subprojects:

@@ -13,7 +13,7 @@ CND_BUILDDIR=build
 CND_DLIB_EXT=so
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=${CND_CONF}/x64/libCommonUtilitiesLib.a
+OUTPUT_PATH=${CND_CONF}/libCommonUtilitiesLib.a
 OUTPUT_BASENAME=libCommonUtilitiesLib.a
 PACKAGE_TOP_DIR=CommonUtilitiesLib/
 
