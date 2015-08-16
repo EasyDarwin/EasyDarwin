@@ -33,15 +33,16 @@
       <compileType>
         <ccTool>
           <incDir>
-            <pElem>../../include/EasyDSSProtocol</pElem>
+            <pElem>../../Include/</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
           <output>${CND_CONF}/protocoltest</output>
           <linkerAddLib>
-            <pElem>${AVS_ROOT}/lib</pElem>
+            <pElem>../${CND_CONF}</pElem>
+            <pElem>../../lib/Linux</pElem>
           </linkerAddLib>
-          <commandLine>-lEasyDSSProtocol</commandLine>
+          <commandLine>-lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
       <item path="ProtocolTest.cpp" ex="false" tool="1" flavor2="0">
@@ -64,7 +65,46 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
-            <pElem>../../include/EasyDSSProtocol</pElem>
+            <pElem>../../Include/</pElem>
+          </incDir>
+          <commandLine>-m32</commandLine>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <output>${CND_CONF}/protocoltest</output>
+          <linkerAddLib>
+            <pElem>../${CND_CONF}</pElem>
+            <pElem>../../lib/Linux</pElem>
+          </linkerAddLib>
+          <commandLine>-lEasyProtocol -ljsoncpp</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="ProtocolTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ProtocolTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="ARM" type="1">
+      <toolsSet>
+        <compilerSet>GM8126|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../../Include/</pElem>
           </incDir>
         </ccTool>
         <fortranCompilerTool>
@@ -76,9 +116,10 @@
         <linkerTool>
           <output>${CND_CONF}/protocoltest</output>
           <linkerAddLib>
-            <pElem>${AVS_ROOT}/lib</pElem>
+            <pElem>../${CND_CONF}</pElem>
+            <pElem>../../lib/Linux/ARM</pElem>
           </linkerAddLib>
-          <commandLine>-lEasyDSSProtocol</commandLine>
+          <commandLine>-lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
       <item path="ProtocolTest.cpp" ex="false" tool="1" flavor2="0">
@@ -86,6 +127,44 @@
       <item path="ProtocolTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="x64" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../../Include/</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <output>${CND_CONF}/protocoltest</output>
+          <linkerAddLib>
+            <pElem>../${CND_CONF}</pElem>
+            <pElem>../../lib/Linux/${CND_CONF}</pElem>
+          </linkerAddLib>
+          <commandLine>-lEasyProtocol -ljsoncpp</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="ProtocolTest.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="ProtocolTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="9">
       </item>
     </conf>
   </confs>

@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 #include "ProtocolTest.h"
+#include <stdio.h>
 
 using namespace std;
 

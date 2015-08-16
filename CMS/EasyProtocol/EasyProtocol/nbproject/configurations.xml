@@ -74,7 +74,7 @@
           <incDir>
             <pElem>../Include</pElem>
           </incDir>
-          <commandLine>-fPIC</commandLine>
+          <commandLine>-m32 -fPIC</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -120,6 +120,48 @@
           <preprocessorList>
             <Elem>EASYDARWIN</Elem>
           </preprocessorList>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+          <output>${CND_CONF}/libEasyProtocol.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="../Include/EasyProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Include/EasyProtocolBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Include/EasyProtocolDef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../Include/EasyUtil.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EasyProtocol.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EasyProtocolBase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EasyUtil.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="x64" type="3">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../Include</pElem>
+          </incDir>
+          <commandLine>-fPIC</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

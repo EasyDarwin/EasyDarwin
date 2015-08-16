@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux-x86
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=x64
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -53,7 +53,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../${CND_CONF} -L../../lib/Linux
+LDLIBSOPTIONS=-L../${CND_CONF} -L../../lib/Linux/${CND_CONF}
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -66,12 +66,12 @@ ${CND_CONF}/protocoltest: ${OBJECTFILES}
 ${OBJECTDIR}/ProtocolTest.o: ProtocolTest.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolTest.o ProtocolTest.cpp
+	$(COMPILE.cc) -O2 -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolTest.o ProtocolTest.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

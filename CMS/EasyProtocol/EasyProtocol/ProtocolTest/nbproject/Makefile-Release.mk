@@ -43,8 +43,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-m32
+CXXFLAGS=-m32
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -53,7 +53,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L${AVS_ROOT}/lib
+LDLIBSOPTIONS=-L../${CND_CONF} -L../../lib/Linux
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -61,17 +61,17 @@ LDLIBSOPTIONS=-L${AVS_ROOT}/lib
 
 ${CND_CONF}/protocoltest: ${OBJECTFILES}
 	${MKDIR} -p ${CND_CONF}
-	${LINK.cc} -o ${CND_CONF}/protocoltest ${OBJECTFILES} ${LDLIBSOPTIONS} -lEasyDSSProtocol
+	${LINK.cc} -o ${CND_CONF}/protocoltest ${OBJECTFILES} ${LDLIBSOPTIONS} -lEasyProtocol -ljsoncpp
 
 ${OBJECTDIR}/ProtocolTest.o: ProtocolTest.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../include/EasyDSSProtocol -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolTest.o ProtocolTest.cpp
+	$(COMPILE.cc) -O2 -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolTest.o ProtocolTest.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../include/EasyDSSProtocol -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
