@@ -131,8 +131,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
-				AdditionalLibraryDirectories=""
+				AdditionalDependencies="json_vc90_libmt.lib ws2_32.lib wsock32.lib winmm.lib"
+				OutputFile="..\..\..\Bin\$(ProjectName).exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\Bin\;../../lib"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
