@@ -1,9 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libeasyjsonutil", "..\libEasyJsonUtil\easyavsjsonutil.vcproj", "{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyDSSProtocol", "EasyProtocol.vcproj", "{14F332E3-1771-4908-8850-9A2581A4AED2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyProtocol", "EasyProtocol.vcproj", "{14F332E3-1771-4908-8850-9A2581A4AED2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProtocolTest", "ProtocolTest\ProtocolTest.vcproj", "{A3919249-144F-4E57-B3B2-21445CC40777}"
 EndProject
@@ -13,10 +11,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}.Debug|Win32.Build.0 = Debug|Win32
-		{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}.Release|Win32.ActiveCfg = Release|Win32
-		{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}.Release|Win32.Build.0 = Release|Win32
 		{14F332E3-1771-4908-8850-9A2581A4AED2}.Debug|Win32.ActiveCfg = Debug|Win32
 		{14F332E3-1771-4908-8850-9A2581A4AED2}.Debug|Win32.Build.0 = Debug|Win32
 		{14F332E3-1771-4908-8850-9A2581A4AED2}.Release|Win32.ActiveCfg = Release|Win32

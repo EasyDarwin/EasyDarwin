@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=EasyDSSProtocol
+PROJECTNAME=EasyProtocol
 
 # Active Configuration
 DEFAULTCONF=Debug

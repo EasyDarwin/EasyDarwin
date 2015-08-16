@@ -133,6 +133,7 @@ void ProtocolTest::TestRegisterReq()
 	
 	cout << "body.SerialNumber = " << parse.GetBodyValue("SerialNumber") << endl;
 	cout << "body.DssIP = " << parse.GetBodyValue("DssIP") << endl;
+	cout << "body.AuthCode = " << parse.GetBodyValue("AuthCode") << endl;
 	//////
 
 }

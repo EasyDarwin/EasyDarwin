@@ -166,10 +166,6 @@
 		</Configuration>
 	</Configurations>
 	<References>
-		<ProjectReference
-			ReferencedProjectIdentifier="{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}"
-			RelativePathToProject="..\libEasyJsonUtil\easyavsjsonutil.vcproj"
-		/>
 	</References>
 	<Files>
 		<Filter
@@ -206,7 +202,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\easyutil.h"
+				RelativePath="..\Include\EasyUtil.h"
 				>
 			</File>
 		</Filter>
