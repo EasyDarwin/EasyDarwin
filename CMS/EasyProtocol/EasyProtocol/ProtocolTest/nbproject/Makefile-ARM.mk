@@ -14,16 +14,16 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=arm-none-linux-gnueabi-gcc
+CCC=arm-none-linux-gnueabi-g++
+CXX=arm-none-linux-gnueabi-g++
 FC=gfortran
-AS=as
+AS=arm-none-linux-gnueabi-as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GM8126-Linux-x86
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=ARM
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -53,7 +53,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../${CND_CONF} -L../../lib/Linux
+LDLIBSOPTIONS=-L../${CND_CONF} -L../../lib/Linux/ARM
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -66,12 +66,12 @@ ${CND_CONF}/protocoltest: ${OBJECTFILES}
 ${OBJECTDIR}/ProtocolTest.o: ProtocolTest.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolTest.o ProtocolTest.cpp
+	$(COMPILE.cc) -O2 -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolTest.o ProtocolTest.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux-x86
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=x64
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -35,16 +35,17 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/ProtocolTest.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/EasyProtocol.o \
+	${OBJECTDIR}/EasyProtocolBase.o \
+	${OBJECTDIR}/EasyUtil.o
 
 
 # C Compiler Flags
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-fPIC
+CXXFLAGS=-fPIC
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -53,25 +54,32 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../${CND_CONF} -L../../lib/Linux
+LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/protocoltest
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libEasyProtocol.a
 
-${CND_CONF}/protocoltest: ${OBJECTFILES}
+${CND_CONF}/libEasyProtocol.a: ${OBJECTFILES}
 	${MKDIR} -p ${CND_CONF}
-	${LINK.cc} -o ${CND_CONF}/protocoltest ${OBJECTFILES} ${LDLIBSOPTIONS} -lEasyProtocol -ljsoncpp
+	${RM} ${CND_CONF}/libEasyProtocol.a
+	${AR} -rv ${CND_CONF}/libEasyProtocol.a ${OBJECTFILES} 
+	$(RANLIB) ${CND_CONF}/libEasyProtocol.a
 
-${OBJECTDIR}/ProtocolTest.o: ProtocolTest.cpp 
+${OBJECTDIR}/EasyProtocol.o: EasyProtocol.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolTest.o ProtocolTest.cpp
+	$(COMPILE.cc) -O2 -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocol.o EasyProtocol.cpp
 
-${OBJECTDIR}/main.o: main.cpp 
+${OBJECTDIR}/EasyProtocolBase.o: EasyProtocolBase.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../../Include/ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocolBase.o EasyProtocolBase.cpp
+
+${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyUtil.o EasyUtil.cpp
 
 # Subprojects
 .build-subprojects:
@@ -79,7 +87,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_CONF}/protocoltest
+	${RM} ${CND_CONF}/libEasyProtocol.a
 
 # Subprojects
 .clean-subprojects:

@@ -23,6 +23,10 @@
                     <name>ARM</name>
                     <type>3</type>
                 </confElem>
+                <confElem>
+                    <name>x64</name>
+                    <type>3</type>
+                </confElem>
             </confList>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>

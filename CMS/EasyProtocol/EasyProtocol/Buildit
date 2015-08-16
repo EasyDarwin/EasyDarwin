@@ -1,0 +1,16 @@
+#!/bin/sh
+ 
+if [ "$*" = "clean" ] ; then
+    make -f nbproject/Makefile-ARM.mk QMAKE= SUBPROJECTS= .clean-conf	
+	make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
+	make -f nbproject/Makefile-ARM_Hi3535.mk QMAKE= SUBPROJECTS= .clean-conf
+	make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
+elif [ "$*" = "arm" ] ; then
+    make -f nbproject/Makefile-ARM.mk QMAKE= SUBPROJECTS= .build-conf
+elif [ "$*" = "3535" ] ; then
+    make -f nbproject/Makefile-ARM_Hi3535.mk QMAKE= SUBPROJECTS= .build-conf
+elif [ "$*" = "x64" ] ; then
+    make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
+else 
+	make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+fi

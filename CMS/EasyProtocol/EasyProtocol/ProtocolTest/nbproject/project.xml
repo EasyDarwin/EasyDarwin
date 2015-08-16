@@ -19,6 +19,14 @@
                     <name>Release</name>
                     <type>1</type>
                 </confElem>
+                <confElem>
+                    <name>ARM</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>x64</name>
+                    <type>1</type>
+                </confElem>
             </confList>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>
