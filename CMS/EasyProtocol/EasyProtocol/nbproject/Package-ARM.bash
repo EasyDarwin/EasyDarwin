@@ -13,9 +13,9 @@ CND_BUILDDIR=build
 CND_DLIB_EXT=so
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=../../Bin/ARM/libEasyDSSProtocol.a
-OUTPUT_BASENAME=libEasyDSSProtocol.a
-PACKAGE_TOP_DIR=EasyDSSProtocol/
+OUTPUT_PATH=${CND_CONF}/libEasyProtocol.a
+OUTPUT_BASENAME=libEasyProtocol.a
+PACKAGE_TOP_DIR=EasyProtocol/
 
 # Functions
 function checkReturnCode
@@ -60,15 +60,15 @@ mkdir -p ${NBTMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory "${NBTMPDIR}/EasyDSSProtocol/lib"
+makeDirectory "${NBTMPDIR}/EasyProtocol/lib"
 copyFileToTmpDir "${OUTPUT_PATH}" "${NBTMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASENAME}" 0644
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/EasyDSSProtocol.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/EasyProtocol.tar
 cd ${NBTMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/EasyDSSProtocol.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/EasyProtocol.tar *
 checkReturnCode
 
 # Cleanup

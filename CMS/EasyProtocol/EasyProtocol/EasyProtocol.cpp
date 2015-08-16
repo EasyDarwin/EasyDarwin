@@ -58,62 +58,46 @@ EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char* msg)
 }
 
 bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
-{
-	/*EasyJsonUtil device_;
-	device_.SetStringValue("DeviceSerial", device.DeviceSerial.c_str());
-	device_.SetStringValue("DeviceName", device.DeviceName.c_str());
-	device_.SetStringValue("DeviceSnap", device.DeviceSnap.c_str());
-	return devices.AddArray("", device_);*/
+{	
+	Json::Value value;
+	value["DeviceSerial"] = device.DeviceSerial;
+	value["DeviceName"] = device.DeviceName;
+	value["DeviceSnap"] = device.DeviceSnap;
+	root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY]["Devices"].append(value);
+	return true;
 }
 
 int EasyDarwinDeviceListRsp::StartGetDevice()
 {
-	/*device_list.clear();
-    EasyJsonUtil jsonUtil;
-	if (!jsonUtil.Read(json))
-	{
-		printf("EasyJsonUtil read json errror\n");
-	}
-
-	EasyJsonObject obj = jsonUtil.GetChild("EasyDarwin");
-	if (obj == NULL)
-	{
-		printf("not found EasyDarwin\n");
-		return 0;
-	}
-
-	EasyJsonUtil easydarwin(obj);
-
-	obj = easydarwin.GetChild("Body");
-	if (obj == NULL)
-	{
-		printf("not found Header\n");
-		return 0;
-	}
-	EasyJsonUtil body_(obj);
+	devices.clear();	
 	
-	EasyJsonUtil device_ = body_.GetChild("Devices");
+	int size = root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY]["Devices"].size();  
 
-	device_.GetAllChild("", "", device_list);
+	for(int i = 0; i < size; i++)  
+	{  
+		Json::Value &json_device = root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY]["Devices"][i];  
+		EasyDarwinDevice device;
+		device.DeviceName = json_device["DeviceName"].asString();
+		device.DeviceSerial = json_device["DeviceSerial"].asString();    
+		device.DeviceSnap = json_device["DeviceSnap"].asString();
+
+		devices.push_back(device);
+	}  
 	
-    return device_list.size();   */
+	return devices.size();	
 }
 
 bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
 {
-	/* if(device_list.empty())
+	if(devices.empty())
     {
         return false;
     }
     
-    EasyJsonUtil device_ = device_list.front();
-    
-	device_.GetValueAsString("DeviceSerial", device.DeviceSerial);    
-	device_.GetValueAsString("DeviceName", device.DeviceName);
-	device_.GetValueAsString("DeviceSnap", device.DeviceSnap);
-	device_list.pop_front();   
+    device = devices.front();
+    devices.pop_front();   
 
-    return true;*/
+    return true;
 }
 
 EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq()

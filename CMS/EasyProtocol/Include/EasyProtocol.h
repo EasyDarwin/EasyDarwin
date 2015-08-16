@@ -10,6 +10,7 @@
 #define	EASYDSS_PROTOCOL
 
 #include <EasyProtocolBase.h>
+#include <list>
 
 namespace EasyDarwin { namespace Protocol
 {
@@ -59,6 +60,8 @@ public:
 	int StartGetDevice();
 	bool GetNextDevice(EasyDarwinDevice &device);
 
+private:
+	std::list<EasyDarwinDevice> devices;
 };
 
 class EASYDSS_API EasyDarwinDeviceSnapUpdateReq : public EasyProtocol

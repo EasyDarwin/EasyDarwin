@@ -88,18 +88,12 @@ public:
 	static std::string GetTerminalTypeString(int iTerminalType);
 
     //common json tag define
-protected:
-   /* EasyJsonUtil root;	
-	EasyJsonUtil header;
-	EasyJsonUtil body;
-	EasyJsonUtil devices;
-	EasyJsonList device_list;*/
-
+protected:  
 	Json::Value root;
-	Json::Value header;
-	Json::Value body;
-	Json::Value devices;
-	Json::Value device_list;
+	//Json::Value header;
+	//Json::Value body;
+	//Json::Value devices;
+	//Json::Value device_list;
 
 private:	
     int fMsgType;
@@ -114,7 +108,7 @@ private:
 	static MsgType LiveTypeMap[];
 
 	Json::Reader reader;
-	Json::FastWriter writer;//or StyleWriter
+	Json::StyledWriter writer;//or StyledWriter FastWriter
 	
 };
 

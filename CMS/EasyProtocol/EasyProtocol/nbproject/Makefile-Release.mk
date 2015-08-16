@@ -35,9 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/EasyDSSProtocol.o \
-	${OBJECTDIR}/EasyDSSProtocolBase.o \
-	${OBJECTDIR}/EasyDSSUtil.o
+	${OBJECTDIR}/EasyProtocol.o \
+	${OBJECTDIR}/EasyProtocolBase.o \
+	${OBJECTDIR}/EasyUtil.o
 
 
 # C Compiler Flags
@@ -58,28 +58,28 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libEasyDSSProtocol.a
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libEasyProtocol.a
 
-${CND_CONF}/libEasyDSSProtocol.a: ${OBJECTFILES}
+${CND_CONF}/libEasyProtocol.a: ${OBJECTFILES}
 	${MKDIR} -p ${CND_CONF}
-	${RM} ${CND_CONF}/libEasyDSSProtocol.a
-	${AR} -rv ${CND_CONF}/libEasyDSSProtocol.a ${OBJECTFILES} 
-	$(RANLIB) ${CND_CONF}/libEasyDSSProtocol.a
+	${RM} ${CND_CONF}/libEasyProtocol.a
+	${AR} -rv ${CND_CONF}/libEasyProtocol.a ${OBJECTFILES} 
+	$(RANLIB) ${CND_CONF}/libEasyProtocol.a
 
-${OBJECTDIR}/EasyDSSProtocol.o: EasyDSSProtocol.cpp 
+${OBJECTDIR}/EasyProtocol.o: EasyProtocol.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSProtocol.o EasyDSSProtocol.cpp
+	$(COMPILE.cc) -O2 -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocol.o EasyProtocol.cpp
 
-${OBJECTDIR}/EasyDSSProtocolBase.o: EasyDSSProtocolBase.cpp 
+${OBJECTDIR}/EasyProtocolBase.o: EasyProtocolBase.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSProtocolBase.o EasyDSSProtocolBase.cpp
+	$(COMPILE.cc) -O2 -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocolBase.o EasyProtocolBase.cpp
 
-${OBJECTDIR}/EasyDSSUtil.o: EasyDSSUtil.cpp 
+${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../../Include/EasyDSSProtocol -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyDSSUtil.o EasyDSSUtil.cpp
+	$(COMPILE.cc) -O2 -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyUtil.o EasyUtil.cpp
 
 # Subprojects
 .build-subprojects:
@@ -87,7 +87,7 @@ ${OBJECTDIR}/EasyDSSUtil.o: EasyDSSUtil.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_CONF}/libEasyDSSProtocol.a
+	${RM} ${CND_CONF}/libEasyProtocol.a
 
 # Subprojects
 .clean-subprojects:
