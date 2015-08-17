@@ -52,7 +52,7 @@ CServiceSession::CServiceSession( )
     fModuleState.curRole = 0;
     fModuleState.globalLockRequested = false;
 
-	fDeviceSnap = NEW char[EASYDSS_MAX_URL_LENGTH];
+	fDeviceSnap = NEW char[EASYDARWIN_MAX_URL_LENGTH];
 	fDeviceSnap[0] = '\0';
 
 	qtss_printf("create session:%s\n", fSessionID);
@@ -619,12 +619,12 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 
 	//进行MSG_DEV_CMS_REGISTER_RSP响应，构造HTTP Content内容
 	EasyDarwin::Protocol::EasyDarwinRegisterRsp rsp;
-	rsp.SetHeaderValue(EASYDSS_TAG_VERSION, EASYDSS_PROTOCOL_VERSION);
-	rsp.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
-	rsp.SetHeaderValue(EASYDSS_TAG_CSEQ, req.GetHeaderValue(EASYDSS_TAG_CSEQ).c_str());	
-	rsp.SetHeaderValue(EASYDSS_TAG_SESSION_ID, fSessionID);
-	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_NUM, "200");//EASYDSS_ERROR_SUCCESS_OK
-	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_STRING, EasyProtocol::GetErrorString(EASYDSS_ERROR_SUCCESS_OK).c_str());
+	rsp.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
+	rsp.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
+	rsp.SetHeaderValue(EASYDARWIN_TAG_CSEQ, req.GetHeaderValue(EASYDARWIN_TAG_CSEQ).c_str());	
+	rsp.SetHeaderValue(EASYDARWIN_TAG_SESSION_ID, fSessionID);
+	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_NUM, "200");//EASYDARWIN_ERROR_SUCCESS_OK
+	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_STRING, EasyProtocol::GetErrorString(EASYDARWIN_ERROR_SUCCESS_OK).c_str());
 	string msg = rsp.GetMsg();
 
 	StrPtrLen jsonRSP((char*)msg.c_str());
@@ -665,7 +665,7 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 	EasyDarwin::Protocol::EasyProtocol req(json);
 
 	//获取设备SN序列号
-	std::string strDeviceSN = req.GetBodyValue(EASYDSS_TAG_DEVICE_SERIAL);
+	std::string strDeviceSN = req.GetBodyValue(EASYDARWIN_TAG_DEVICE_SERIAL);
 
 	//这里对错误报文没有进行Response回复，实际是需要进行处理的
 	if(strDeviceSN.length()<=0) return QTSS_BadArgument;
@@ -696,11 +696,11 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 		//构造MSG_CMS_DEV_STREAM_START_REQ请求设备码流消息
 		EasyDarwin::Protocol::EasyProtocol streamingREQ(MSG_CMS_DEV_STREAM_START_REQ);
 		//Header
-		streamingREQ.SetHeaderValue(EASYDSS_TAG_VERSION, EASYDSS_PROTOCOL_VERSION);
-		streamingREQ.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+		streamingREQ.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
+		streamingREQ.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
 		//Body
-		streamingREQ.SetBodyValue(EASYDSS_TAG_STREAM_ID, EASYDSS_PROTOCOL_STREAM_MAIN);
-		streamingREQ.SetBodyValue(EASYDSS_TAG_PROTOCOL, "RTSP");
+		streamingREQ.SetBodyValue(EASYDARWIN_TAG_STREAM_ID, EASYDARWIN_PROTOCOL_STREAM_MAIN);
+		streamingREQ.SetBodyValue(EASYDARWIN_TAG_PROTOCOL, "RTSP");
 		streamingREQ.SetBodyValue("DssIP","www.easydarwin.org");
 		streamingREQ.SetBodyValue("DssPort","554");
 	
@@ -716,9 +716,9 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 
 	//构造MSG_NGX_CMS_NEED_STREAM_RSP请求直播消息响应报文
 	EasyDarwin::Protocol::EasyProtocol rsp(MSG_NGX_CMS_NEED_STREAM_RSP);
-	rsp.SetHeaderValue(EASYDSS_TAG_VERSION, EASYDSS_PROTOCOL_VERSION);
-	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_NUM, "200");//EASYDSS_ERROR_SUCCESS_OK
-	rsp.SetHeaderValue(EASYDSS_TAG_ERROR_STRING, EasyProtocol::GetErrorString(EASYDSS_ERROR_SUCCESS_OK).c_str());
+	rsp.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
+	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_NUM, "200");//EASYDARWIN_ERROR_SUCCESS_OK
+	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_STRING, EasyProtocol::GetErrorString(EASYDARWIN_ERROR_SUCCESS_OK).c_str());
 	rsp.SetBodyValue("DssIP","www.easydarwin.org");
 	rsp.SetBodyValue("DssPort","554");
 
@@ -801,9 +801,9 @@ QTSS_Error CServiceSession::ExecNetMsgGetDeviceListReq()
 		return QTSS_NoErr;
 
 	EasyDarwinDeviceListRsp req;
-	req.SetHeaderValue(EASYDSS_TAG_VERSION, "1.0");
-	req.SetHeaderValue(EASYDSS_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDSS_TERMINAL_TYPE_CAMERA).c_str());
-	req.SetHeaderValue(EASYDSS_TAG_CSEQ, "1");	
+	req.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
+	req.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
+	req.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
 	char count[16] = { 0 };
 	sprintf(count,"%d", devMap->GetNumRefsInTable());
 	req.SetBodyValue("DeviceCount", count );
