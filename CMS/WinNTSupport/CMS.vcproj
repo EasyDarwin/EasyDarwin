@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../Include/;../Include/EasyDSSProtocol/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/CMS.pch"
@@ -71,10 +71,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib json_vc90_libmtd.lib"
 				OutputFile="..\WinNTSupport\Debug\CMS.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="../EasyProtocol/lib/"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/CMS.pdb"
@@ -138,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../;../../Include/;../Include/EasyDSSProtocol/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
 				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -163,10 +164,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib json_vc90_libmt.lib"
 				OutputFile="..\WinNTSupport\Release\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="../EasyProtocol/lib/"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\Release/DarwinStreamingServer.pdb"
 				SubSystem="1"
@@ -214,11 +216,7 @@
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{14F332E3-1771-4908-8850-9A2581A4AED2}"
-			RelativePathToProject="..\EasyDSSProtocol\EasyDSSProtocol\EasyDSSProtocol.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{9A0F3AA4-5E2E-406A-BAC1-C0F26B5D3EB2}"
-			RelativePathToProject="..\EasyDSSProtocol\libavsxmlutil\libavsxmlutil.vcproj"
+			RelativePathToProject="..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{230D5525-AEA7-4037-95FE-3B45BEF98E55}"
