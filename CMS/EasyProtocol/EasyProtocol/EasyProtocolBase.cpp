@@ -34,64 +34,64 @@ EasyProtocol::MsgType EasyProtocol::MsgTypeMap[] = {
 };
 
 EasyProtocol::MsgType EasyProtocol::ErrorMap[] = {
-	EASYDSS_ERROR_SUCCESS_OK,						"Success OK",
-	EASYDSS_ERROR_SUCCESS_CREATED,					"Success Created",
-	EASYDSS_ERROR_SUCCESS_ACCEPTED,					"Success Accepted",
-	EASYDSS_ERROR_SUCCESS_NO_CONTENT,				"Success No Content",
-	EASYDSS_ERROR_SUCCESS_PARTIAL_CONTENT,			"Success Partial Content",
-	EASYDSS_ERROR_REDIRECT_PERMANENT_MOVED,			"Redirect Permanent Moved",
-	EASYDSS_ERROR_REDIRECT_TEMP_MOVED,				"Redirect Temp Moved",
-	EASYDSS_ERROR_REDIRECT_SEE_OTHER,				"Redirect See Other",
-	EASYDSS_ERROR_USE_PROXY,						"Use Proxy",
-	EASYDSS_ERROR_CLIENT_BAD_REQUEST,				"Client Bad Request",
-	EASYDSS_ERROR_CLIENT_UNAUTHORIZED,				"Client Unauthorized",
-	EASYDSS_ERROR_PAYMENT_REQUIRED,					"Payment Required",
-	EASYDSS_ERROR_CLIENT_FORBIDDEN,					"Client Forbidden",
-	EASYDSS_ERROR_NOT_FOUND,						"Not Found",
-	EASYDSS_ERROR_METHOD_NOT_ALLOWED,				"Method Not Allowed",
-	EASYDSS_ERROR_PROXY_AUTHENTICATION_REQUIRED,	"Proxy Authentication Required",
-	EASYDSS_ERROR_REQUEST_TIMEOUT,					"Request Timeout",
-	EASYDSS_ERROR_CONFLICT,							"Conflict",
-	EASYDSS_ERROR_PRECONDITION_FAILED,				"Precondition Failed",
-	EASYDSS_ERROR_UNSUPPORTED_MEDIA_TYPE,			"Unsupported Media Type",
-	EASYDSS_ERROR_SERVER_INTERNAL_ERROR,			"Server Internal Error",
-	EASYDSS_ERROR_SERVER_NOT_IMPLEMENTED,			"Server Not Implemented",
-	EASYDSS_ERROR_SERVER_BAD_GATEWAY,				"Server Bad Gateway",
-	EASYDSS_ERROR_SERVER_UNAVAILABLE,				"Server Unavailable",
-	EASYDSS_ERROR_RTSP_VERSION_NOT_SUPPORTED,		"RTSP Version Not Supported",
-	EASYDSS_ERROR_DEVICE_VERSION_TOO_OLD,			"Device Version Too Old",
-	EASYDSS_ERROR_DEVICE_FAILURE,					"Device Failure",
-	EASYDSS_ERROR_MEMCACHE_NOT_FOUND,				"Memcache Not Found",
-	EASYDSS_ERROR_DATABASE_NOT_FOUND,				"Database Not Found",
-	EASYDSS_ERROR_USER_NOT_FOUND,					"User Not Found",
-	EASYDSS_ERROR_DEVICE_NOT_FOUND,					"Device Not Found",
-	EASYDSS_ERROR_SESSION_NOT_FOUND,				"Session Not Found",
-	EASYDSS_ERROR_SERVICE_NOT_FOUND,				"Service Not Found",
-	EASYDSS_ERROR_PASSWORD_ERROR,					"Password Error",
-	EASYDSS_ERROR_XML_PARSE_ERROR,					"XML Parse Error",
-	EASYDSS_ERROR_PERMISSION_ERROR,					"Permission Error",
-	EASYDSS_ERROR_LOCAL_SYSTEM_ERROR,               "Local System Error",
-	EASYDSS_ERROR_PARAM_ERROR,                      "Param Error"
+	EASYDARWIN_ERROR_SUCCESS_OK,						"Success OK",
+	EASYDARWIN_ERROR_SUCCESS_CREATED,					"Success Created",
+	EASYDARWIN_ERROR_SUCCESS_ACCEPTED,					"Success Accepted",
+	EASYDARWIN_ERROR_SUCCESS_NO_CONTENT,				"Success No Content",
+	EASYDARWIN_ERROR_SUCCESS_PARTIAL_CONTENT,			"Success Partial Content",
+	EASYDARWIN_ERROR_REDIRECT_PERMANENT_MOVED,			"Redirect Permanent Moved",
+	EASYDARWIN_ERROR_REDIRECT_TEMP_MOVED,				"Redirect Temp Moved",
+	EASYDARWIN_ERROR_REDIRECT_SEE_OTHER,				"Redirect See Other",
+	EASYDARWIN_ERROR_USE_PROXY,						"Use Proxy",
+	EASYDARWIN_ERROR_CLIENT_BAD_REQUEST,				"Client Bad Request",
+	EASYDARWIN_ERROR_CLIENT_UNAUTHORIZED,				"Client Unauthorized",
+	EASYDARWIN_ERROR_PAYMENT_REQUIRED,					"Payment Required",
+	EASYDARWIN_ERROR_CLIENT_FORBIDDEN,					"Client Forbidden",
+	EASYDARWIN_ERROR_NOT_FOUND,						"Not Found",
+	EASYDARWIN_ERROR_METHOD_NOT_ALLOWED,				"Method Not Allowed",
+	EASYDARWIN_ERROR_PROXY_AUTHENTICATION_REQUIRED,	"Proxy Authentication Required",
+	EASYDARWIN_ERROR_REQUEST_TIMEOUT,					"Request Timeout",
+	EASYDARWIN_ERROR_CONFLICT,							"Conflict",
+	EASYDARWIN_ERROR_PRECONDITION_FAILED,				"Precondition Failed",
+	EASYDARWIN_ERROR_UNSUPPORTED_MEDIA_TYPE,			"Unsupported Media Type",
+	EASYDARWIN_ERROR_SERVER_INTERNAL_ERROR,			"Server Internal Error",
+	EASYDARWIN_ERROR_SERVER_NOT_IMPLEMENTED,			"Server Not Implemented",
+	EASYDARWIN_ERROR_SERVER_BAD_GATEWAY,				"Server Bad Gateway",
+	EASYDARWIN_ERROR_SERVER_UNAVAILABLE,				"Server Unavailable",
+	EASYDARWIN_ERROR_RTSP_VERSION_NOT_SUPPORTED,		"RTSP Version Not Supported",
+	EASYDARWIN_ERROR_DEVICE_VERSION_TOO_OLD,			"Device Version Too Old",
+	EASYDARWIN_ERROR_DEVICE_FAILURE,					"Device Failure",
+	EASYDARWIN_ERROR_MEMCACHE_NOT_FOUND,				"Memcache Not Found",
+	EASYDARWIN_ERROR_DATABASE_NOT_FOUND,				"Database Not Found",
+	EASYDARWIN_ERROR_USER_NOT_FOUND,					"User Not Found",
+	EASYDARWIN_ERROR_DEVICE_NOT_FOUND,					"Device Not Found",
+	EASYDARWIN_ERROR_SESSION_NOT_FOUND,				"Session Not Found",
+	EASYDARWIN_ERROR_SERVICE_NOT_FOUND,				"Service Not Found",
+	EASYDARWIN_ERROR_PASSWORD_ERROR,					"Password Error",
+	EASYDARWIN_ERROR_XML_PARSE_ERROR,					"XML Parse Error",
+	EASYDARWIN_ERROR_PERMISSION_ERROR,					"Permission Error",
+	EASYDARWIN_ERROR_LOCAL_SYSTEM_ERROR,               "Local System Error",
+	EASYDARWIN_ERROR_PARAM_ERROR,                      "Param Error"
 };
 
 EasyProtocol::MsgType EasyProtocol::StatusMap[] = {
-    EASYDSS_DEVICE_STATUS_OFFLINE,                  "DEVICE_STATUS_OFFLINE",
-    EASYDSS_DEVICE_STATUS_ONLINE,                   "DEVICE_STATUS_ONLINE"
+    EASYDARWIN_DEVICE_STATUS_OFFLINE,                  "DEVICE_STATUS_OFFLINE",
+    EASYDARWIN_DEVICE_STATUS_ONLINE,                   "DEVICE_STATUS_ONLINE"
 };
 
 EasyProtocol::MsgType EasyProtocol::ProtocolTypeMap[] = {
-	EASYDSS_PROTOCOL_TYPE_RTSP,						"RTSP",
-	EASYDSS_PROTOCOL_TYPE_HLS,						"HLS"
+	EASYDARWIN_PROTOCOL_TYPE_RTSP,						"RTSP",
+	EASYDARWIN_PROTOCOL_TYPE_HLS,						"HLS"
 };
 
 EasyProtocol::MsgType EasyProtocol::MediaEncodeTypeMap[] = {
-	EASYDSS_MEDIA_ENCODE_AUDIO_AAC,                 "AAC",
-	EASYDSS_MEDIA_ENCODE_VIDEO_H264,                "H264"
+	EASYDARWIN_MEDIA_ENCODE_AUDIO_AAC,                 "AAC",
+	EASYDARWIN_MEDIA_ENCODE_VIDEO_H264,                "H264"
 };
 
 
 EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
-	EASYDSS_TERMINAL_TYPE_CAMERA,						"Camera"
+	EASYDARWIN_TERMINAL_TYPE_CAMERA,						"Camera"
 };
 
 EasyProtocol::EasyProtocol(int iMsgType)
@@ -171,7 +171,7 @@ std::string EasyProtocol::GetMsgTypeString(int type)
 
 int EasyProtocol::GetMessageType()
 {
-	std::string sMessageType = root[EASYDSS_TAG_ROOT][EASYDSS_TAG_HEADER][EASYDSS_TAG_MESSAGE_TYPE].asString();	
+	std::string sMessageType = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][EASYDARWIN_TAG_MESSAGE_TYPE].asString();	
 
 	return GetMsgType(sMessageType);
 }
@@ -308,7 +308,7 @@ std::string EasyProtocol::GetTerminalTypeString(int iTerminalType)
 
 std::string EasyProtocol::GetMsg()
 {   	
-	root[EASYDSS_TAG_ROOT][EASYDSS_TAG_HEADER][EASYDSS_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);	
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][EASYDARWIN_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);	
     return writer.write(root);;
 }
 
@@ -327,25 +327,25 @@ bool EasyProtocol::GetMsg(char *dest, int size)
 
 bool EasyProtocol::SetHeaderValue(const char* tag, const char* value){
 	
-	root[EASYDSS_TAG_ROOT][EASYDSS_TAG_HEADER][tag] = value;
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][tag] = value;
 	return true;
 }
 
 
 bool EasyProtocol::SetBodyValue(const char* tag, const char* value){
 	
-	root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY][tag] = value;
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY][tag] = value;
 	return true;
 }
 
 std::string EasyProtocol::GetHeaderValue(const char* tag)
 {
-	return root[EASYDSS_TAG_ROOT][EASYDSS_TAG_HEADER][tag].asString();
+	return root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][tag].asString();
 }
 
 std::string EasyProtocol::GetBodyValue(const char* tag)
 {
-	return root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY][tag].asString();	
+	return root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY][tag].asString();	
 }
 
 }}//namespace

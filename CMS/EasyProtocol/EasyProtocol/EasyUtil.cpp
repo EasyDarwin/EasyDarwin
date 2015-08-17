@@ -28,7 +28,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
-std::string EasyUtil::TimeT2String(EasyDSSTimeFormat whatFormat, unsigned long time)
+std::string EasyUtil::TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time)
 {
     struct tm local;
     time_t t = time;
@@ -43,16 +43,16 @@ std::string EasyUtil::TimeT2String(EasyDSSTimeFormat whatFormat, unsigned long t
     memset(timeStr, 0, 64);
     switch (whatFormat)
     {
-    case EASYDSS_TIME_FORMAT_YYYYMMDDHHMMSS:
+    case EASYDARWIN_TIME_FORMAT_YYYYMMDDHHMMSS:
         sprintf(timeStr, "%04d-%02d-%02d %02d:%02d:%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday,\
 												local.tm_hour, local.tm_min, local.tm_sec);
         break;
         
-    case EASYDSS_TIME_FORMAT_YYYYMMDD:
+    case EASYDARWIN_TIME_FORMAT_YYYYMMDD:
         sprintf(timeStr, "%04d-%02d-%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday);
         break;
         
-    case EASYDSS_TIME_FORMAT_HHMMSS:
+    case EASYDARWIN_TIME_FORMAT_HHMMSS:
         sprintf(timeStr, "%02d:%02d:%02d", local.tm_hour, local.tm_min, local.tm_sec);
         break;
         
@@ -62,7 +62,7 @@ std::string EasyUtil::TimeT2String(EasyDSSTimeFormat whatFormat, unsigned long t
     return std::string(timeStr);
 }
 
-unsigned long EasyUtil::String2TimeT(EasyDSSTimeFormat whatFormat, std::string timeString)
+unsigned long EasyUtil::String2TimeT(EasyDarwinTimeFormat whatFormat, std::string timeString)
 {
     struct tm local;
        
@@ -75,20 +75,20 @@ unsigned long EasyUtil::String2TimeT(EasyDSSTimeFormat whatFormat, std::string t
     
     switch (whatFormat)
     {
-    case EASYDSS_TIME_FORMAT_YYYYMMDDHHMMSS:
+    case EASYDARWIN_TIME_FORMAT_YYYYMMDDHHMMSS:
         sscanf(timeString.c_str(), "%04d-%02d-%02d %02d:%02d:%02d", &local.tm_year, &local.tm_mon, &local.tm_mday,\
 												&local.tm_hour, &local.tm_min, &local.tm_sec);
         local.tm_year -= 1900;
         local.tm_mon -= 1;
         break;
         
-    case EASYDSS_TIME_FORMAT_YYYYMMDD:
+    case EASYDARWIN_TIME_FORMAT_YYYYMMDD:
         sscanf(timeString.c_str(), "%04d-%02d-%02d", &local.tm_year, &local.tm_mon, &local.tm_mday);
         local.tm_year -= 1900;
         local.tm_mon -= 1;
         break;
         
-    case EASYDSS_TIME_FORMAT_HHMMSS:
+    case EASYDARWIN_TIME_FORMAT_HHMMSS:
         sscanf(timeString.c_str(), "%02d:%02d:%02d", &local.tm_hour, &local.tm_min, &local.tm_sec);
         break;
         
@@ -102,10 +102,10 @@ unsigned long EasyUtil::String2TimeT(EasyDSSTimeFormat whatFormat, std::string t
 unsigned long EasyUtil::String2TimeT(std::string dateYYMMDD/*2014-11-23*/, std::string timeHHMMSS/*08:30:00*/)
 {
     std::string strTime = dateYYMMDD + " " + timeHHMMSS;
-    return String2TimeT(EASYDSS_TIME_FORMAT_YYYYMMDDHHMMSS, strTime);
+    return String2TimeT(EASYDARWIN_TIME_FORMAT_YYYYMMDDHHMMSS, strTime);
 }
 
-std::string EasyUtil::NowTime(EasyDSSTimeFormat whatFormat)
+std::string EasyUtil::NowTime(EasyDarwinTimeFormat whatFormat)
 {
     return TimeT2String(whatFormat, NowTime());
 }
