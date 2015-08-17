@@ -45,76 +45,76 @@
 #define EASYDARWIN_API
 #endif
 //#define EASYDARWIN_API
-#define EASYDARWIN_PROTOCOL_VERSION                            "1.0"
+#define EASYDARWIN_PROTOCOL_VERSION                         "1.0"
 #define EASYDARWIN_PROTOCOL_STREAM_MAIN						"0"
-#define EASYDARWIN_PROTOCOL_STREAM_SUB							"1"
+#define EASYDARWIN_PROTOCOL_STREAM_SUB						"1"
 
 /*!
 \ingroup EasyDarwin_Tag_Define
 \{
 */
 #define EASYDARWIN_TAG_ROOT									"EasyDarwin"
-#define EASYDARWIN_TAG_HEADER									"Header"
+#define EASYDARWIN_TAG_HEADER								"Header"
 #define EASYDARWIN_TAG_BODY									"Body"
-#define EASYDARWIN_TAG_VERSION									"Version"
-#define EASYDARWIN_TAG_TERMINAL_TYPE                           "TerminalType"
-#define EASYDARWIN_TAG_SESSION_ID								"SessionID"
+#define EASYDARWIN_TAG_VERSION								"Version"
+#define EASYDARWIN_TAG_TERMINAL_TYPE                        "TerminalType"
+#define EASYDARWIN_TAG_SESSION_ID							"SessionID"
 #define EASYDARWIN_TAG_MESSAGE_TYPE							"MessageType"
 #define EASYDARWIN_TAG_CSEQ									"CSeq"
-#define EASYDARWIN_TAG_ERROR_NUM								"ErrorNum"
+#define EASYDARWIN_TAG_ERROR_NUM							"ErrorNum"
 #define EASYDARWIN_TAG_ERROR_STRING							"ErrorString"
-#define EASYDARWIN_TAG_REDIRECT                                "Redirect"
-#define EASYDARWIN_TAG_SERVER_ADDRESS                          "ServerAddress"
-#define EASYDARWIN_TAG_SERVER_PORT                             "ServerPort"
-#define EASYDARWIN_TAG_KEY                                     "Key"
+#define EASYDARWIN_TAG_REDIRECT                             "Redirect"
+#define EASYDARWIN_TAG_SERVER_ADDRESS                       "ServerAddress"
+#define EASYDARWIN_TAG_SERVER_PORT                          "ServerPort"
+#define EASYDARWIN_TAG_KEY                                  "Key"
 #define EASYDARWIN_TAG_NAME									"Name"
-#define EASYDARWIN_TAG_PASSWORD                                "Password"
-#define EASYDARWIN_TAG_LAST_LOGIN_TIME							"LastLoginTime"
-#define EASYDARWIN_TAG_LAST_LOGIN_ADDRESS						"LastLoginAddress"
-#define EASYDARWIN_TAG_PERMISSION								"Permission"
-#define EASYDARWIN_TAG_PAGE_NUM                                "PageNum"
-#define EASYDARWIN_TAG_DEVICE                                  "Device"
-#define EASYDARWIN_TAG_DEVICE_TYPE								"DeviceType"
-#define EASYDARWIN_TAG_DEVICE_SUM_PER_PAGE                     "DeviceSumPerPage"
-#define EASYDARWIN_TAG_DEVICE_SUM                              "DeviceSum"
-#define EASYDARWIN_TAG_DEVICE_LIST                             "DeviceList"
-#define EASYDARWIN_TAG_DEVICE_SERIAL                           "SerialNumber"
-#define EASYDARWIN_TAG_DEVICE_NAME                             "DeviceName"
-#define EASYDARWIN_TAG_INVALID_ACCESS_DATE						"InvalidAccessDate"
-#define EASYDARWIN_TAG_INVALID_ACCESS_TIME						"InvalidAccessTime"
-#define EASYDARWIN_TAG_FROM                                    "From"
-#define EASYDARWIN_TAG_TO                                      "To"
-#define EASYDARWIN_TAG_STATUS                                  "Status"
-#define EASYDARWIN_TAG_SNAPSHOT                                "Snapshot"
-#define EASYDARWIN_TAG_DESCRIPTION                             "Description"
-#define EASYDARWIN_TAG_TOKEN                                   "Token"
-#define EASYDARWIN_TAG_CUSTOM_FIELD                            "CustomField"
-#define EASYDARWIN_TAG_ORDER                                   "Order"
-#define EASYDARWIN_TAG_SERVICE_TYPE                            "ServiceType"
-#define EASYDARWIN_TAG_SERVICE_UNIT                            "ServiceUnit"
-#define EASYDARWIN_TAG_WAN_IP                                  "WanIP"
-#define EASYDARWIN_TAG_LAN_IP                                  "LanIP"
-#define EASYDARWIN_TAG_PORT                                    "Port"
-#define EASYDARWIN_TAG_LOAD                                    "Load"
+#define EASYDARWIN_TAG_PASSWORD                             "Password"
+#define EASYDARWIN_TAG_LAST_LOGIN_TIME						"LastLoginTime"
+#define EASYDARWIN_TAG_LAST_LOGIN_ADDRESS					"LastLoginAddress"
+#define EASYDARWIN_TAG_PERMISSION							"Permission"
+#define EASYDARWIN_TAG_PAGE_NUM                             "PageNum"
+#define EASYDARWIN_TAG_DEVICE                               "Device"
+#define EASYDARWIN_TAG_DEVICE_TYPE							"DeviceType"
+#define EASYDARWIN_TAG_DEVICE_SUM_PER_PAGE                  "DeviceSumPerPage"
+#define EASYDARWIN_TAG_DEVICE_SUM                           "DeviceSum"
+#define EASYDARWIN_TAG_DEVICE_LIST                          "DeviceList"
+#define EASYDARWIN_TAG_DEVICE_SERIAL                        "SerialNumber"
+#define EASYDARWIN_TAG_DEVICE_NAME                          "DeviceName"
+#define EASYDARWIN_TAG_INVALID_ACCESS_DATE					"InvalidAccessDate"
+#define EASYDARWIN_TAG_INVALID_ACCESS_TIME					"InvalidAccessTime"
+#define EASYDARWIN_TAG_FROM                                 "From"
+#define EASYDARWIN_TAG_TO                                   "To"
+#define EASYDARWIN_TAG_STATUS                               "Status"
+#define EASYDARWIN_TAG_SNAPSHOT                             "Snapshot"
+#define EASYDARWIN_TAG_DESCRIPTION                          "Description"
+#define EASYDARWIN_TAG_TOKEN                                "Token"
+#define EASYDARWIN_TAG_CUSTOM_FIELD                         "CustomField"
+#define EASYDARWIN_TAG_ORDER                                "Order"
+#define EASYDARWIN_TAG_SERVICE_TYPE                         "ServiceType"
+#define EASYDARWIN_TAG_SERVICE_UNIT                         "ServiceUnit"
+#define EASYDARWIN_TAG_WAN_IP                               "WanIP"
+#define EASYDARWIN_TAG_LAN_IP                               "LanIP"
+#define EASYDARWIN_TAG_PORT                                 "Port"
+#define EASYDARWIN_TAG_LOAD                                 "Load"
 #define EASYDARWIN_TAG_USER									"User"
-#define EASYDARWIN_TAG_USER_NAME								"UserName"
+#define EASYDARWIN_TAG_USER_NAME							"UserName"
 #define EASYDARWIN_TAG_PROTOCOL								"Protocol"
-#define EASYDARWIN_TAG_AUDIO									"Audio"
-#define EASYDARWIN_TAG_VIDEO									"Video"
-#define EASYDARWIN_TAG_CMD										"Command"
-#define EASYDARWIN_TAG_VALUE									"Value"
-#define EASYDARWIN_TAG_CLIENT_SERIAL							"ClientSerial"
-#define EASYDARWIN_TAG_LIVE_STREAM_ID							"LiveStreamID"
-#define EASYDARWIN_TAG_CLIENT_SESSION							"ClientSession"
-#define EASYDARWIN_TAG_IP										"IP"
-#define EASYDARWIN_TAG_LIVE_TYPE								"LiveType"
-#define EASYDARWIN_TAG_USER_PLAY_COUNT							"UserPlayCount"
+#define EASYDARWIN_TAG_AUDIO								"Audio"
+#define EASYDARWIN_TAG_VIDEO								"Video"
+#define EASYDARWIN_TAG_CMD									"Command"
+#define EASYDARWIN_TAG_VALUE								"Value"
+#define EASYDARWIN_TAG_CLIENT_SERIAL						"ClientSerial"
+#define EASYDARWIN_TAG_LIVE_STREAM_ID						"LiveStreamID"
+#define EASYDARWIN_TAG_CLIENT_SESSION						"ClientSession"
+#define EASYDARWIN_TAG_IP									"IP"
+#define EASYDARWIN_TAG_LIVE_TYPE							"LiveType"
+#define EASYDARWIN_TAG_USER_PLAY_COUNT						"UserPlayCount"
 #define EASYDARWIN_TAG_PROXY_PLAY_COUNT						"ProxyPlayCount"
-#define EASYDARWIN_TAG_PLAY_STREAM_ID                          "PlayStreamID"
-#define EASYDARWIN_TAG_DEVICE_SERVER							"DeviceServer"
+#define EASYDARWIN_TAG_PLAY_STREAM_ID                       "PlayStreamID"
+#define EASYDARWIN_TAG_DEVICE_SERVER						"DeviceServer"
 #define EASYDARWIN_TAG_TIME									"Time"
 #define EASYDARWIN_TAG_SCHEDULE								"Schedule" 
-#define EASYDARWIN_TAG_STREAM_ID								"StreamID"
+#define EASYDARWIN_TAG_STREAM_ID							"StreamID"
 /*!
 \}
 */
@@ -175,14 +175,14 @@
 #define EASYDARWIN_ERROR_MEMCACHE_NOT_FOUND					600				///< Memcache Not Found
 #define EASYDARWIN_ERROR_DATABASE_NOT_FOUND					601				///< Database Not Found
 #define EASYDARWIN_ERROR_USER_NOT_FOUND						602				///< User Not Found
-#define EASYDARWIN_ERROR_DEVICE_NOT_FOUND						603				///< Device Not Found
-#define EASYDARWIN_ERROR_SESSION_NOT_FOUND						604				///< Session Not Found
-#define EASYDARWIN_ERROR_SERVICE_NOT_FOUND						605				///< Service Not Found
+#define EASYDARWIN_ERROR_DEVICE_NOT_FOUND					603				///< Device Not Found
+#define EASYDARWIN_ERROR_SESSION_NOT_FOUND					604				///< Session Not Found
+#define EASYDARWIN_ERROR_SERVICE_NOT_FOUND					605				///< Service Not Found
 #define EASYDARWIN_ERROR_PASSWORD_ERROR						620				///< Password Error
-#define EASYDARWIN_ERROR_XML_PARSE_ERROR						621				///< XML Parse Error
-#define EASYDARWIN_ERROR_PERMISSION_ERROR						622				///< Permission Error
-#define EASYDARWIN_ERROR_LOCAL_SYSTEM_ERROR                    623             ///< Local System Error
-#define EASYDARWIN_ERROR_PARAM_ERROR                           624             ///< Param Error
+#define EASYDARWIN_ERROR_XML_PARSE_ERROR					621				///< XML Parse Error
+#define EASYDARWIN_ERROR_PERMISSION_ERROR					622				///< Permission Error
+#define EASYDARWIN_ERROR_LOCAL_SYSTEM_ERROR                 623             ///< Local System Error
+#define EASYDARWIN_ERROR_PARAM_ERROR                        624             ///< Param Error
 
 /*!
 \}

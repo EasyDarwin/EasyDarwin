@@ -4,8 +4,6 @@
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-
-
 #ifndef EASYDARWIN_PROTOCOL
 #define	EASYDARWIN_PROTOCOL
 
