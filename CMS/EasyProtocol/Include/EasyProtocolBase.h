@@ -15,19 +15,18 @@
 #define	EASY_PROTOCOL_BASE_H
 
 #include <EasyProtocolDef.h>
-//#include <EasyJsonUtil.h>
 #include <json/json.h>
 
 namespace EasyDarwin { namespace Protocol
 {
 
-class EasyDSSUserInfo;
-class EasyDSSDeviceInfo;
+class EasyDarwinUserInfo;
+class EasyDarwinDeviceInfo;
 /*!
 \brief EasyDarwin Protocol base class
 \ingroup EasyProtocolBase
 */
-class EASYDSS_API EasyProtocol
+class EASYDARWIN_API EasyProtocol
 {
 public:
 	EasyProtocol(int iMsgType);
@@ -67,23 +66,23 @@ public:
     static std::string GetMsgTypeString(int type);
     static int GetMsgType(std::string sMessageType);
     
-	//enum EasyDSSDeviceStatus
+	//enum EasyDarwinDeviceStatus
     static std::string GetDeviceStatusString(int status);
     static int GetDeviceStatus(std::string sStatus);
         
-	//enum EasyDSSPortType
+	//enum EasyDarwinPortType
     static int GetPortType(std::string sPortType);
     static std::string GetPortTypeString(int iPortType);
 
-	//enum EasyDSSProtocolType
+	//enum EasyDarwinProtocolType
 	static int GetProtocolType(std::string sProtocolType);
 	static std::string GetProtocolString(int iProtocolType);
 	
-	//enum EasyDSSEncodeType
+	//enum EasyDarwinEncodeType
 	static int GetMediaEncodeType(std::string sMediaEncode);
 	static std::string GetMediaEncodeTypeString(int iMediaEncodeType);
 
-	//enum EasyDSSTerminalType
+	//enum EasyDarwinTerminalType
 	static int GetTerminalType(std::string sTerminalType);
 	static std::string GetTerminalTypeString(int iTerminalType);
 

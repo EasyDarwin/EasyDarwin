@@ -9,12 +9,12 @@
 */
 
 #define kVersionString "0.2"
-#define kBuildString "15.0609"
+#define kBuildString "15.0817"
 
 // Use kCommentString for seed or other release info 
 // Do not use '(' or ')' in the kCommentString
 // form = token1/info; token2/info;
 // example "Release/public seed 1; Event/Big Event; state/half-baked"
 
-#define kCommentString "Release/EasyDSS/EasyDSSDevice; State/Development; " 
+#define kCommentString "Release/EasyDarwin/libEasyCMSTest; State/Development; " 
 

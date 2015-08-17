@@ -63,7 +63,7 @@ bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
 	value["DeviceSerial"] = device.DeviceSerial;
 	value["DeviceName"] = device.DeviceName;
 	value["DeviceSnap"] = device.DeviceSnap;
-	root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY]["Devices"].append(value);
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"].append(value);
 	return true;
 }
 
@@ -71,11 +71,11 @@ int EasyDarwinDeviceListRsp::StartGetDevice()
 {
 	devices.clear();	
 	
-	int size = root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY]["Devices"].size();  
+	int size = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"].size();  
 
 	for(int i = 0; i < size; i++)  
 	{  
-		Json::Value &json_device = root[EASYDSS_TAG_ROOT][EASYDSS_TAG_BODY]["Devices"][i];  
+		Json::Value &json_device = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"][i];  
 		EasyDarwinDevice device;
 		device.DeviceName = json_device["DeviceName"].asString();
 		device.DeviceSerial = json_device["DeviceSerial"].asString();    

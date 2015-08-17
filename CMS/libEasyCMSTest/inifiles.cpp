@@ -3,7 +3,6 @@
 inifiles.c
 ini file read/write functions
 used by linux programs
-
 ********************************************************/
 #include <stdio.h>
 #include <string.h>

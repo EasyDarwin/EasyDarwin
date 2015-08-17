@@ -63,7 +63,7 @@ void myEventCallback(EASYDARWIN_EVENT_TYPE eEvent, const char* pEventData, unsig
 {
 	switch(eEvent)
 	{
-	case 	EASYDARWIN_EVENT_LOGIN:
+	case EASYDARWIN_EVENT_LOGIN:
 		printf("Device On Line!\n");
 		break;
 	case EASYDARWIN_EVENT_OFFLINE:
