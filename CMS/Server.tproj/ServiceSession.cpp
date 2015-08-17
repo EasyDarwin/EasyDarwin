@@ -471,17 +471,6 @@ QTSS_Error CServiceSession::SetupRequest()
 	EasyDarwin::Protocol::EasyProtocol protocol(theRequestBody);
 	int nNetMsg = protocol.GetMessageType();
 
-//#define MSG_DEV_CMS_REGISTER_REQ
-//#define MSG_DEV_CMS_REGISTER_RSP
-//#define MSG_CMS_DEV_STREAM_START_REQ
-//#define MSG_CMS_DEV_STREAM_START_RSP
-//#define MSG_CMS_DEV_STREAM_STOP_REQ
-//#define MSG_CMS_DEV_STREAM_STOP_RSP
-//#define MSG_NGX_CMS_NEED_STREAM_REQ
-//#define MSG_NGX_CMS_NEED_STREAM_RSP
-//#define MSG_CLI_CMS_DEVICE_LIST_REQ
-//#define MSG_CLI_CMS_DEVICE_LIST_RSP
-
 	switch (nNetMsg)
 	{
 		case MSG_DEV_CMS_REGISTER_REQ://处理设备上线消息
