@@ -27,10 +27,10 @@
 #include "TimeoutTask.h"
 #include "QTSSModule.h"
 
-#include "EasyDSSProtocolDef.h"
-#include "EasyDSSProtocol.h"
+#include "EasyProtocolDef.h"
+#include "EasyProtocol.h"
 
-using namespace EasyDSS::Protocol;
+using namespace EasyDarwin::Protocol;
 using namespace std;
 
 class CServiceSession : public BaseSessionInterface

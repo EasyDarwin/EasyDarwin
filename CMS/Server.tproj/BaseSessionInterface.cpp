@@ -39,7 +39,7 @@
 #include "OSMemory.h"
 #include "RTSPProtocol.h"
 #include <errno.h>
-#include "EasyDSSUtil.h"
+#include "EasyUtil.h"
 
 
 
@@ -119,7 +119,7 @@ BaseSessionInterface::BaseSessionInterface()
     this->SetEmptyVal(qtssRTSPSesLastUserName, &fUserNameBuf[0], kMaxUserNameLen);
     this->SetEmptyVal(qtssRTSPSesLastUserPassword, &fUserPasswordBuf[0], kMaxUserPasswordLen);
 
-	qtss_sprintf(fSessionID, "%s", EasyDSSUtil::GetUUID().c_str());
+	qtss_sprintf(fSessionID, "%s", EasyUtil::GetUUID().c_str());
 	this->SetValue(qtssEasySessionID, 0, fSessionID, ::strlen(fSessionID), QTSSDictionary::kDontObeyReadOnly);
 
 	this->SetEmptyVal(qtssEasySesLastSMSSessionID, &fLastSMSSessionID[0], QTSS_MAX_SESSION_ID_LENGTH);
