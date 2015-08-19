@@ -178,6 +178,9 @@ class ReflectorSession
         StrPtrLen   fSourceID;
 		char*	fSessionName;
 
+		// HLS Session
+		Bool16		fHLSLive;
+
         OSQueueElem fQueueElem; // Relay uses this.
         
         unsigned int        fNumOutputs;

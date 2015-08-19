@@ -102,7 +102,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo)
     fInitTimeMS(OS::Milliseconds()),
     fHasBufferedStreams(false),
 	fRTSPRelaySession(NULL),
-	fSessionName(NULL)
+	fSessionName(NULL),
+	fHLSLive(false)
 {
 
     fQueueElem.SetEnclosingObject(this);
@@ -183,12 +184,30 @@ QTSS_Error ReflectorSession::SetSessionName()
 
 QTSS_Error ReflectorSession::StartHLSSession()
 {
-	return Easy_StartHLSSession(fSessionName);
+	QTSS_Error theErr = QTSS_NoErr;
+
+	if(!fHLSLive) 
+	{
+		theErr = Easy_StartHLSSession(fSessionName);
+		if(QTSS_NoErr == theErr)
+			fHLSLive = true;
+	}
+
+	return theErr;
 }
 
 QTSS_Error ReflectorSession::StopHLSSession()
 {
-	return Easy_StopHLSSession(fSessionName);;
+	QTSS_Error theErr = QTSS_NoErr;
+
+	if(fHLSLive) 
+	{
+		theErr = Easy_StopHLSSession(fSessionName);
+		if(QTSS_NoErr == theErr)
+			fHLSLive = false;
+	}
+
+	return theErr;
 }
 
 
