@@ -406,7 +406,7 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lpthread -ldl -lstdc++ -lm -lcrypt -lCommonUtilitiesLib -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -755,8 +755,6 @@
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -1174,7 +1172,7 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lpthread -ldl -lstdc++ -lm -lcrypt -lCommonUtilitiesLib -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -1523,8 +1521,6 @@
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -1941,7 +1937,7 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>Lib/arm</pElem>
           </linkerAddLib>
-          <commandLine>-lpthread -ldl -lstdc++ -lm -lcrypt -lCommonUtilitiesLib -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -2290,8 +2286,6 @@
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -2709,7 +2703,7 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>Lib/x64</pElem>
           </linkerAddLib>
-          <commandLine>-lpthread -ldl -lstdc++ -lm -lcrypt -lCommonUtilitiesLib -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -3058,8 +3052,6 @@
       <item path="Include/EasyHLSAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Include/EasyRTSPClientAPI.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
