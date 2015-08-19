@@ -164,7 +164,7 @@ LDLIBSOPTIONS=-L../CommonUtilitiesLib/${CND_CONF} -LLib/x64
 
 ${CND_CONF}/easydarwin: ${OBJECTFILES}
 	${MKDIR} -p ${CND_CONF}
-	${LINK.cc} -o ${CND_CONF}/easydarwin ${OBJECTFILES} ${LDLIBSOPTIONS} -lpthread -ldl -lstdc++ -lm -lcrypt -lCommonUtilitiesLib -leasyhls -leasypusher -leasyrtspclient
+	${LINK.cc} -o ${CND_CONF}/easydarwin ${OBJECTFILES} ${LDLIBSOPTIONS} -lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient
 
 ${OBJECTDIR}/_ext/1174643662/HTTPProtocol.o: ../HTTPUtilitiesLib/HTTPProtocol.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1174643662
