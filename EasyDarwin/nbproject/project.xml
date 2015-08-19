@@ -12,6 +12,8 @@
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
                 <sourceRootElem>../HTTPUtilitiesLib</sourceRootElem>
+                <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../HTTPUtilitiesLib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
