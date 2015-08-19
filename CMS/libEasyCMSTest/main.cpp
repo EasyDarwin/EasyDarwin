@@ -47,7 +47,6 @@ static void uninitialise(void)
 }
 
 using namespace std;
-using namespace EasyDarwin::libEasyCMS;
 
 
 static int exit_flag = 0;
@@ -59,14 +58,14 @@ static void TerminateHandler(int sigNumber)
     exit(0);
 }
 
-void myEventCallback(EASYDARWIN_EVENT_TYPE eEvent, const char* pEventData, unsigned int iDataLen, void* pUserData)
+void myEventCallback(EASY_CMS_EVENT_T eEvent, const char* pEventData, void* pUserData)
 {
 	switch(eEvent)
 	{
-	case EASYDARWIN_EVENT_LOGIN:
+	case Easy_CMS_Event_Login:
 		printf("Device On Line!\n");
 		break;
-	case EASYDARWIN_EVENT_OFFLINE:
+	case Easy_CMS_Event_Offline:
 		printf("Device Offline! \n");
 		break;
 	default:
@@ -92,15 +91,14 @@ int run()
     
 	printf("device[%s]/v%s (Build/%s) is now running\n", sDeviceSerial.c_str(), kVersionString, kBuildString);
     
-	EasyDarwinCMSAPI api;
-
-	api.SetEventCallBack(myEventCallback, NULL);
+	Easy_CMS_Handle handle= EasyCMS_Session_Create();
+	EasyCMS_SetEventCallback(handle, (EasyCMS_Callback)myEventCallback, NULL);
     
-    Easy_Error theErr = Easy_NoErr;
+    Easy_U32 theErr = 0;
     do
     {
-		theErr = api.Login(sCMSAddr.c_str(), iCMSPort, sDeviceSerial.c_str(), sDevicePassword.c_str());
-        if (Easy_NoErr != Easy_NoErr)
+		theErr = EasyCMS_Login(handle, (char*)sCMSAddr.c_str(), iCMSPort, (char*)sDeviceSerial.c_str(), (char*)sDevicePassword.c_str());
+        if (theErr != 0)
         {
             //如果向消息中心发送Login命令失败,相当于整个设备端启动失败
 #ifndef _WIN32
