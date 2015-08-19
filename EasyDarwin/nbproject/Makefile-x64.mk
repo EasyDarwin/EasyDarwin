@@ -156,7 +156,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../CommonUtilitiesLib/${CND_CONF}/x64 -LLib/x64
+LDLIBSOPTIONS=-L../CommonUtilitiesLib/${CND_CONF} -LLib/x64
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
