@@ -632,6 +632,9 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
     if (theSession == NULL || theErr != QTSS_NoErr) 
         return QTSS_NoErr;
     
+	if(sHLSOutputEnabled)
+		theSession->StartHLSSession();
+
     // it is a broadcaster session
     //qtss_printf("QTSSReflectorModule.cpp:is broadcaster session\n");
 
@@ -673,7 +676,8 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
         UInt32 inIndex = packetChannel / 2; // one stream per every 2 channels rtcp channel handled below
         ReflectorStream* theStream = NULL;
         if (inIndex < numStreams) 
-        {   theStream = theSession->GetStreamByIndex(inIndex);
+        {   
+			theStream = theSession->GetStreamByIndex(inIndex);
 
             SourceInfo::StreamInfo* theStreamInfo =theStream->GetStreamInfo();  
             UInt16 serverReceivePort =theStreamInfo->fPort;
@@ -1931,9 +1935,6 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
         {   
              return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientBadRequest, 0);
         }
-        
-		if(sHLSOutputEnabled)
-			inSession->StartHLSSession();
     
         KeepSession(inParams->inRTSPRequest,true);
         //qtss_printf("QTSSReflectorModule.cpp:DoPlay (PUSH) inRTSPSession=%"_U32BITARG_" inClientSession=%"_U32BITARG_"\n",(UInt32)inParams->inRTSPSession,(UInt32)inParams->inClientSession);
