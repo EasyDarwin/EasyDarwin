@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommonUtilitiesLib", "..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcproj", "{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SafeInternalStdLib", "..\..\SafeStdLib\SafeInternalStdLib.vcproj", "{230D5525-AEA7-4037-95FE-3B45BEF98E55}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APIStubLib", "..\APIStubLib\APIStubLib.vcproj", "{21898038-6830-4B4D-BE2C-E32641F253BC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APICommonCode", "..\APICommonCode\APICommonCode.vcproj", "{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyCMS", "EasyCMS.vcproj", "{A0EFC09D-B539-40ED-B7A2-06177CBA669D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyProtocol", "..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj", "{14F332E3-1771-4908-8850-9A2581A4AED2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}.Debug|Win32.Build.0 = Debug|Win32
+		{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}.Release|Win32.ActiveCfg = Release|Win32
+		{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}.Release|Win32.Build.0 = Release|Win32
+		{230D5525-AEA7-4037-95FE-3B45BEF98E55}.Debug|Win32.ActiveCfg = Debug|Win32
+		{230D5525-AEA7-4037-95FE-3B45BEF98E55}.Debug|Win32.Build.0 = Debug|Win32
+		{230D5525-AEA7-4037-95FE-3B45BEF98E55}.Release|Win32.ActiveCfg = Release|Win32
+		{230D5525-AEA7-4037-95FE-3B45BEF98E55}.Release|Win32.Build.0 = Release|Win32
+		{21898038-6830-4B4D-BE2C-E32641F253BC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{21898038-6830-4B4D-BE2C-E32641F253BC}.Debug|Win32.Build.0 = Debug|Win32
+		{21898038-6830-4B4D-BE2C-E32641F253BC}.Release|Win32.ActiveCfg = Release|Win32
+		{21898038-6830-4B4D-BE2C-E32641F253BC}.Release|Win32.Build.0 = Release|Win32
+		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}.Debug|Win32.Build.0 = Debug|Win32
+		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}.Release|Win32.ActiveCfg = Release|Win32
+		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}.Release|Win32.Build.0 = Release|Win32
+		{A0EFC09D-B539-40ED-B7A2-06177CBA669D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A0EFC09D-B539-40ED-B7A2-06177CBA669D}.Debug|Win32.Build.0 = Debug|Win32
+		{A0EFC09D-B539-40ED-B7A2-06177CBA669D}.Release|Win32.ActiveCfg = Release|Win32
+		{A0EFC09D-B539-40ED-B7A2-06177CBA669D}.Release|Win32.Build.0 = Release|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Debug|Win32.Build.0 = Debug|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Release|Win32.ActiveCfg = Release|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
