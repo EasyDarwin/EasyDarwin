@@ -71,11 +71,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib json_vc90_libmtd.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyCMS.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../EasyProtocol/lib/"
+				AdditionalLibraryDirectories=""
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/CMS.pdb"
@@ -164,7 +164,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib json_vc90_libmt.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\WinNTSupport\Release\EasyCMS.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -217,6 +217,10 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{14F332E3-1771-4908-8850-9A2581A4AED2}"
 			RelativePathToProject="..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
+			RelativePathToProject="..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{230D5525-AEA7-4037-95FE-3B45BEF98E55}"
