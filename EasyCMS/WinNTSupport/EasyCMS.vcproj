@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/jsoncpp/include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/CMS.pch"
@@ -139,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/jsoncpp/include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
 				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
