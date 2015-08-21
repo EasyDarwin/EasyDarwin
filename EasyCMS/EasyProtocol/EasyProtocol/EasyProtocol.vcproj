@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Include/"
+				AdditionalIncludeDirectories="../Include/;../jsoncpp/include/"
 				PreprocessorDefinitions="_LIB"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/EasyDSSProtocol.pch"
