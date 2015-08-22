@@ -2022,7 +2022,7 @@ void        QTSS_UnlockStdLib();
 
 // EasyHLSModule
 // Start HLS Session
-QTSS_Error	Easy_StartHLSSession(const char* inSessionName);
+QTSS_Error	Easy_StartHLSSession(const char* inSessionName, const char* inURL);
 // Stop HLS Session
 QTSS_Error	Easy_StopHLSSession(const char* inSessionName);
 

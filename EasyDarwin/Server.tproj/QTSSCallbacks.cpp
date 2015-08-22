@@ -954,33 +954,23 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
     OS::GetStdLibMutex()->Unlock();
 }
 
-QTSS_Error QTSSCallbacks::Easy_StartHLSSession(const char* inSessionName)
+QTSS_Error QTSSCallbacks::Easy_StartHLSSession(const char* inSessionName, const char* inURL)
 {
 	//启动HLS Module
 	QTSS_RoleParams packetParams;
 	packetParams.easyHLSOpenParams.inStreamName = (char*)inSessionName;
-
-	// Get the ip addr out of the prefs dictionary
-	UInt16 thePort = 554;
-	UInt32 theLen = sizeof(UInt16);
-	QTSS_Error theErr = QTSS_NoErr;
-	theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
-	Assert(theErr == QTSS_NoErr);   
-
-	//构造本地URL
-	char url[QTSS_MAX_URL_LENGTH] = { 0 };
-
-	qtss_sprintf(url,"rtsp://127.0.0.1:%d/%s.sdp", thePort, inSessionName);
-	packetParams.easyHLSOpenParams.inRTSPUrl = url;
+	packetParams.easyHLSOpenParams.inRTSPUrl = (char*)inURL;
 
 	UInt32 fCurrentModule = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
 	for (; fCurrentModule < numModules; fCurrentModule++)
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSOpenRole, fCurrentModule);
-		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &packetParams);
+		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &packetParams);	
+		return QTSS_NoErr;
 	}
-	return QTSS_NoErr;
+	
+	return QTSS_RequestFailed;
 }
 
 QTSS_Error QTSSCallbacks::Easy_StopHLSSession(const char* inSessionName)
@@ -995,6 +985,8 @@ QTSS_Error QTSSCallbacks::Easy_StopHLSSession(const char* inSessionName)
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSCloseRole, fCurrentModule);
 		(void)theModule->CallDispatch(Easy_HLSClose_Role, &packetParams);
+		return QTSS_NoErr;
 	}
-	return QTSS_NoErr;
+	
+	return QTSS_RequestFailed;
 }
