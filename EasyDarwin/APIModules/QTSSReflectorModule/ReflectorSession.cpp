@@ -197,7 +197,18 @@ QTSS_Error ReflectorSession::StartHLSSession()
 
 	if(!fHLSLive) 
 	{
-		theErr = Easy_StartHLSSession(fSessionName);
+		// Get the ip addr out of the prefs dictionary
+		UInt16 thePort = 554;
+		UInt32 theLen = sizeof(UInt16);
+		QTSS_Error theErr = QTSS_NoErr;
+		theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
+		Assert(theErr == QTSS_NoErr);   
+
+		//构造本地URL
+		char url[QTSS_MAX_URL_LENGTH] = { 0 };
+		qtss_sprintf(url,"rtsp://127.0.0.1:%d/%s.sdp", thePort, fSessionName);
+
+		theErr = Easy_StartHLSSession(fSessionName, url);
 		if(QTSS_NoErr == theErr)
 			fHLSLive = true;
 	}

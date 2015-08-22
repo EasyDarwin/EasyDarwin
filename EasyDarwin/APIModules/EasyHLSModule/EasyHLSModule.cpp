@@ -67,6 +67,7 @@ static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
 
 static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
 static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
+static char* GetHLSUrl(char* inSessionName);
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyHLSModule_Main(void* inPrivateArgs)
@@ -200,6 +201,27 @@ QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 	return QTSS_NoErr;
 }
 
+char* GetHLSUrl(char* inSessionName)
+{
+	OSMutexLocker locker (sHLSSessionMap->GetMutex());
+
+	char* hlsURL = NULL;
+	//首先查找Map里面是否已经有了对应的流
+	StrPtrLen streamName(inSessionName);
+
+	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
+
+	if(NULL == clientSesRef) return NULL;
+
+	EasyHLSSession* session = (EasyHLSSession*)clientSesRef->GetObject();
+
+	hlsURL = session->GetHLSURL();
+
+	sHLSSessionMap->Release(session->GetRef());
+
+	return hlsURL;
+}
+
 QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 {
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
@@ -221,6 +243,7 @@ QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 
 QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 {
+	char* location = NULL;
 	//解析命令
     char* theFullPathStr = NULL;
     QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFullPathStr);
@@ -268,54 +291,29 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 			bStop = true;
 	}
 
-	StrPtrLen streamName((char*)sName);
-	//从接口获取信息结构体
-	EasyHLSSession* session = NULL;
-	//首先查找Map里面是否已经有了对应的流
-	OSRef* sessionRef = sHLSSessionMap->Resolve(&streamName);
-	if(sessionRef != NULL)
+	if(bStop)
 	{
-		session = (EasyHLSSession*)sessionRef->GetObject();
+		Easy_HLSClose_Params params;
+		params.inStreamName = (char*)sName;
+		EasyHLSClose(&params);
 	}
 	else
 	{
-		if(bStop) return NULL;
-
 		if(sURL == NULL) return NULL;
 
-		session = NEW EasyHLSSession(&streamName);
+		Easy_HLSOpen_Params params;
+		params.inRTSPUrl = (char*)sURL;
+		params.inStreamName = (char*)sName;
 
-		QTSS_Error theErr = session->HLSSessionStart((char*)sURL);
-
-		if(theErr == QTSS_NoErr)
-		{
-			OS_Error theErr = sHLSSessionMap->Register(session->GetRef());
-			Assert(theErr == QTSS_NoErr);
-		}
-		else
-		{
-			session->Signal(Task::kKillEvent);
-			return QTSS_NoErr; 
-		}
-
-		//增加一次对RelaySession的无效引用，后面会统一释放
-		OSRef* debug = sHLSSessionMap->Resolve(&streamName);
-		Assert(debug == session->GetRef());
+		EasyHLSOpen(&params);
 	}
 
-	sHLSSessionMap->Release(session->GetRef());
-
-	if(bStop)
-	{
-		sHLSSessionMap->UnRegister(session->GetRef());
-		session->Signal(Task::kKillEvent);
-		return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssSuccessOK, 0); 
-	}
+	location = GetHLSUrl((char*)sName);
 
 	QTSS_RTSPStatusCode statusCode = qtssRedirectPermMoved;
 	QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqStatusCode, 0, &statusCode, sizeof(statusCode));
 
-	StrPtrLen locationRedirect(session->GetHLSURL());
+	StrPtrLen locationRedirect(location);
 
 	Bool16 sFalse = false;
 	(void)QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));

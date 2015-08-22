@@ -118,7 +118,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	if(NULL == fHLSHandle) return QTSS_Unimplemented;
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
-		//printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
 
 		if(frameinfo->fps == 0) frameinfo->fps = 25;
 		tsTimeStampMSsec += 1000/frameinfo->fps;

@@ -399,9 +399,9 @@ void  QTSS_UnlockStdLib()
     (sCallbacks->addr [kUnlockStdLibCallback])  ();
 }
 
-QTSS_Error	Easy_StartHLSSession(const char* inSessionName)
+QTSS_Error	Easy_StartHLSSession(const char* inSessionName, const char* inURL)
 {
-	return (sCallbacks->addr [kStartHLSSessionCallback]) (inSessionName);
+	return (sCallbacks->addr [kStartHLSSessionCallback]) (inSessionName, inURL);
 }
 
 QTSS_Error	Easy_StopHLSSession(const char* inSessionName)
