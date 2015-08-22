@@ -44,7 +44,7 @@
 		<PREF NAME="max_send_ahead_time" TYPE="UInt32" >25</PREF>
 		<PREF NAME="authentication_scheme" >digest</PREF>
 		<PREF NAME="auto_start" TYPE="Bool16" >false</PREF>
-		<PREF NAME="MSG_debug_printfs" TYPE="Bool16" >false</PREF>
+		<PREF NAME="MSG_debug_printfs" TYPE="Bool16" >true</PREF>
 		<PREF NAME="enable_monitor_stats_file" TYPE="Bool16" >false</PREF>
 		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="monitor_stats_file_name" >server_status</PREF>
