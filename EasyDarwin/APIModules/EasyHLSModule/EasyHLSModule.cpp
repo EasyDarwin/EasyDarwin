@@ -258,7 +258,6 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	if(sName == NULL) return NULL;
 
 	const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
-	if(sURL == NULL) return NULL;
 
 	const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
 
@@ -281,6 +280,8 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	else
 	{
 		if(bStop) return NULL;
+
+		if(sURL == NULL) return NULL;
 
 		session = NEW EasyHLSSession(&streamName);
 
