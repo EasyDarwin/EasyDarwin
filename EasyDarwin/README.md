@@ -31,13 +31,14 @@ cd EasyDarwin/EasyDarwin
 
 <pre>
 chmod +x ./Buildit
-./Buildit（如果是64位编译：./Buildit x64）
+./Buildit     (有编译方法提示)
 </pre>
 
 <strong>步骤三:</strong> 运行EasyDarwin 
 
 <pre>
-./EasyDarwin -c ./WinNTSupport/easydarwin.xml （调试模式加：-d 参数）
+cd ./Release  （64位 cd ./x64）
+./easydarwin -c ../WinNTSupport/easydarwin.xml （调试模式加：-d 参数）
 </pre>
 
 
