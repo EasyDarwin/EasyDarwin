@@ -296,6 +296,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 		Easy_HLSClose_Params params;
 		params.inStreamName = (char*)sName;
 		EasyHLSClose(&params);
+		return NULL;
 	}
 	else
 	{
