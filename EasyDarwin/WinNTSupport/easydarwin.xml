@@ -49,7 +49,7 @@
 		<PREF NAME="bind_ip_addr" >0</PREF>
 		<PREF NAME="movie_folder" >./Movies/</PREF>
 		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
-		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
+		<PREF NAME="maximum_connections" TYPE="SInt32" >10000</PREF>
 		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
 		<PREF NAME="real_rtsp_timeout" TYPE="UInt32" >30</PREF>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
@@ -244,7 +244,7 @@
 		<PREF NAME="enable_remote_admin" TYPE="Bool16" >true</PREF>
 		<PREF NAME="IPAccessList" >127.0.0.*</PREF>
 		<PREF NAME="AdministratorGroup" >admin</PREF>
-		<PREF NAME="http_port" TYPE="UInt16" >80</PREF>
+		<PREF NAME="http_port" TYPE="UInt16" >8088</PREF>
 		<PREF NAME="document_root" >./html/</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
