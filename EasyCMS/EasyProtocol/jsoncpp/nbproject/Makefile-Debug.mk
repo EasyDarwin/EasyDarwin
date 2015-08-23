@@ -28,16 +28,16 @@ CND_DISTDIR=dist
 CND_BUILDDIR=build
 
 # Include project Makefile
-include Makefile
+include jsoncpp-Makefile.mk
 
 # Object Directory
 OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/EasyProtocol.o \
-	${OBJECTDIR}/EasyProtocolBase.o \
-	${OBJECTDIR}/EasyUtil.o
+	${OBJECTDIR}/src/lib_json/json_reader.o \
+	${OBJECTDIR}/src/lib_json/json_value.o \
+	${OBJECTDIR}/src/lib_json/json_writer.o
 
 
 # C Compiler Flags
@@ -58,28 +58,28 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libEasyProtocol.a
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libjsoncpp.a
 
-${CND_CONF}/libEasyProtocol.a: ${OBJECTFILES}
+${CND_CONF}/libjsoncpp.a: ${OBJECTFILES}
 	${MKDIR} -p ${CND_CONF}
-	${RM} ${CND_CONF}/libEasyProtocol.a
-	${AR} -rv ${CND_CONF}/libEasyProtocol.a ${OBJECTFILES} 
-	$(RANLIB) ${CND_CONF}/libEasyProtocol.a
+	${RM} ${CND_CONF}/libjsoncpp.a
+	${AR} -rv ${CND_CONF}/libjsoncpp.a ${OBJECTFILES} 
+	$(RANLIB) ${CND_CONF}/libjsoncpp.a
 
-${OBJECTDIR}/EasyProtocol.o: EasyProtocol.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/lib_json/json_reader.o: src/lib_json/json_reader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/lib_json
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocol.o EasyProtocol.cpp
+	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/lib_json/json_reader.o src/lib_json/json_reader.cpp
 
-${OBJECTDIR}/EasyProtocolBase.o: EasyProtocolBase.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/lib_json/json_value.o: src/lib_json/json_value.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/lib_json
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocolBase.o EasyProtocolBase.cpp
+	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/lib_json/json_value.o src/lib_json/json_value.cpp
 
-${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/lib_json/json_writer.o: src/lib_json/json_writer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src/lib_json
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyUtil.o EasyUtil.cpp
+	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/lib_json/json_writer.o src/lib_json/json_writer.cpp
 
 # Subprojects
 .build-subprojects:
@@ -87,7 +87,7 @@ ${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_CONF}/libEasyProtocol.a
+	${RM} ${CND_CONF}/libjsoncpp.a
 
 # Subprojects
 .clean-subprojects:

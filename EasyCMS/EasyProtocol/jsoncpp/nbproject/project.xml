@@ -3,34 +3,29 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>EasyCMS</name>
+            <name>jsoncpp</name>
             <c-extensions/>
             <cpp-extensions>cpp</cpp-extensions>
             <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
-            <sourceRootList>
-                <sourceRootElem>APICommonCode</sourceRootElem>
-                <sourceRootElem>APIStubLib</sourceRootElem>
-                <sourceRootElem>../SafeStdLib</sourceRootElem>
-                <sourceRootElem>../CommonUtilitiesLib</sourceRootElem>
-                <sourceRootElem>Server.tproj</sourceRootElem>
-                <sourceRootElem>PrefsSourceLib</sourceRootElem>
-                <sourceRootElem>../OSMemoryLib</sourceRootElem>
-                <sourceRootElem>../HTTPUtilitiesLib</sourceRootElem>
-            </sourceRootList>
+            <sourceRootList/>
             <confList>
                 <confElem>
                     <name>Debug</name>
-                    <type>1</type>
+                    <type>3</type>
                 </confElem>
                 <confElem>
                     <name>Release</name>
-                    <type>1</type>
+                    <type>3</type>
                 </confElem>
                 <confElem>
                     <name>x64</name>
-                    <type>1</type>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>ARM</name>
+                    <type>3</type>
                 </confElem>
             </confList>
             <formatting>

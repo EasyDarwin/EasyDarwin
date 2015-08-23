@@ -2,15 +2,8 @@
 <configurationDescriptor version="95">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles" displayName="头文件" projectFiles="true">
-      <itemPath>../Include/EasyProtocol.h</itemPath>
-      <itemPath>../Include/EasyProtocolBase.h</itemPath>
-      <itemPath>../Include/EasyProtocolDef.h</itemPath>
-      <itemPath>../Include/EasyUtil.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles" displayName="源文件" projectFiles="true">
-      <itemPath>EasyProtocol.cpp</itemPath>
-      <itemPath>EasyProtocolBase.cpp</itemPath>
-      <itemPath>EasyUtil.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles" displayName="资源文件" projectFiles="true">
     </logicalFolder>
@@ -23,10 +16,16 @@
                    displayName="重要文件"
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>Makefile</itemPath>
+      <itemPath>jsoncpp-Makefile.mk</itemPath>
     </logicalFolder>
+    <itemPath>src/lib_json/json_reader.cpp</itemPath>
+    <itemPath>src/lib_json/json_tool.h</itemPath>
+    <itemPath>src/lib_json/json_value.cpp</itemPath>
+    <itemPath>src/lib_json/json_valueiterator.inl</itemPath>
+    <itemPath>src/lib_json/json_writer.cpp</itemPath>
+    <itemPath>src/lib_json/version.h.in</itemPath>
   </logicalFolder>
-  <projectmakefile>Makefile</projectmakefile>
+  <projectmakefile>jsoncpp-Makefile.mk</projectmakefile>
   <confs>
     <conf name="Debug" type="3">
       <toolsSet>
@@ -37,32 +36,32 @@
       <compileType>
         <ccTool>
           <incDir>
-            <pElem>../jsoncpp/include</pElem>
-            <pElem>../Include</pElem>
+            <pElem>include</pElem>
           </incDir>
         </ccTool>
         <archiverTool>
-          <output>${CND_CONF}/libEasyProtocol.a</output>
+          <output>${CND_CONF}/libjsoncpp.a</output>
         </archiverTool>
       </compileType>
-      <item path="../Include/EasyProtocol.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_reader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../Include/EasyProtocolBase.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_tool.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../Include/EasyProtocolDef.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_value.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../Include/EasyUtil.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_valueiterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="EasyProtocol.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/lib_json/json_writer.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="EasyProtocolBase.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="EasyUtil.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/lib_json/version.h.in" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="3">
       <toolsSet>
-        <compilerSet>GNU|GNU</compilerSet>
+        <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -73,8 +72,7 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
-            <pElem>../jsoncpp/include</pElem>
-            <pElem>../Include</pElem>
+            <pElem>include</pElem>
           </incDir>
           <commandLine>-m32 -fPIC</commandLine>
         </ccTool>
@@ -85,22 +83,66 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <archiverTool>
-          <output>${CND_CONF}/libEasyProtocol.a</output>
+          <output>${CND_CONF}/libjsoncpp.a</output>
         </archiverTool>
       </compileType>
-      <item path="../Include/EasyProtocol.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_reader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../Include/EasyProtocolBase.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_tool.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../Include/EasyProtocolDef.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_value.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../Include/EasyUtil.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_valueiterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="EasyProtocol.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/lib_json/json_writer.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="EasyProtocolBase.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/lib_json/version.h.in" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="EasyUtil.cpp" ex="false" tool="1" flavor2="0">
+    </conf>
+    <conf name="x64" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+          <commandLine>-fPIC</commandLine>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+          <output>${CND_CONF}/libjsoncpp.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="src/lib_json/json_reader.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="src/lib_json/json_tool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/lib_json/json_value.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="src/lib_json/json_valueiterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/lib_json/json_writer.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="src/lib_json/version.h.in" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="ARM" type="3">
@@ -116,13 +158,8 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
-            <pElem>../jsoncpp/include</pElem>
-            <pElem>../Include</pElem>
+            <pElem>include</pElem>
           </incDir>
-          <commandLine>-fPIC</commandLine>
-          <preprocessorList>
-            <Elem>EASYDARWIN</Elem>
-          </preprocessorList>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -131,65 +168,23 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <archiverTool>
-          <output>${CND_CONF}/libEasyProtocol.a</output>
+          <output>${CND_CONF}/libjsoncpp.a</output>
         </archiverTool>
       </compileType>
-      <item path="../Include/EasyProtocol.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_reader.cpp" ex="false" tool="1" flavor2="9">
       </item>
-      <item path="../Include/EasyProtocolBase.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_tool.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../Include/EasyProtocolDef.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_value.cpp" ex="false" tool="1" flavor2="9">
       </item>
-      <item path="../Include/EasyUtil.h" ex="false" tool="3" flavor2="0">
+      <item path="src/lib_json/json_valueiterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="EasyProtocol.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/lib_json/json_writer.cpp" ex="false" tool="1" flavor2="9">
       </item>
-      <item path="EasyProtocolBase.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="EasyUtil.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-    </conf>
-    <conf name="x64" type="3">
-      <toolsSet>
-        <compilerSet>GNU|GNU</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
-      </toolsSet>
-      <compileType>
-        <cTool>
-          <developmentMode>5</developmentMode>
-        </cTool>
-        <ccTool>
-          <developmentMode>5</developmentMode>
-          <incDir>
-            <pElem>../jsoncpp/include</pElem>
-            <pElem>../Include</pElem>
-          </incDir>
-          <commandLine>-fPIC</commandLine>
-        </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
-        <archiverTool>
-          <output>${CND_CONF}/libEasyProtocol.a</output>
-        </archiverTool>
-      </compileType>
-      <item path="../Include/EasyProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/EasyProtocolBase.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/EasyProtocolDef.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../Include/EasyUtil.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="EasyProtocol.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="EasyProtocolBase.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="EasyUtil.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/lib_json/version.h.in" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
