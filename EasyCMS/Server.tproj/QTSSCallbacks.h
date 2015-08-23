@@ -44,7 +44,7 @@ class QTSSCallbacks
 {
     public:
     
-        //内存操作
+        //脛脷麓忙虏脵脳梅
         
         static void*    QTSS_New(FourCharCode inMemoryIdentifier, UInt32 inSize);
         static void     QTSS_Delete(void* inMemory);
@@ -154,7 +154,7 @@ class QTSSCallbacks
         static void   QTSS_LockStdLib();
         static void   QTSS_UnlockStdLib();
 
-		//DispatchCenter消息中心调用
+		//DispatchCenter脧没脧垄脰脨脨脛碌梅脫脙
 		static QTSS_Error	QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen, Bool16 connectionClose = false, Bool16 decrement = true);
 		static QTSS_Error	QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen);
 		static QTSS_Error	QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession);
