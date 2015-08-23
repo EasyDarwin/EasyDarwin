@@ -1,32 +1,59 @@
 #!/bin/sh
  
+usage()
+{
+	echo "0. clean up ./Buildit clean"
+	echo "1. build 32bit program ./Buildit i386 [target in Release]"	
+	echo "2. build 64bit program ./Buildit x64 [target in x64]"		
+}
+ 
 cd ../CommonUtilitiesLib
 if [ "$*" = "clean" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
-else
+	make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
+elif [ "$*" = "x64" ] ; then
+    make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
+elif [ "$*" = "i386" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+#else
+#    usage;
 fi
 
 
-cd ../CMS/EasyDSSProtocol/libavsxmlutil
+cd ../EasyCMS/EasyProtocol/jsoncpp
 if [ "$*" = "clean" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
-else
+	make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
+elif [ "$*" = "x64" ] ; then
+    make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
+elif [ "$*" = "i386" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+#else
+#    usage;
 fi
+    
 
-cd ../EasyDSSProtocol
+cd ../EasyProtocol
 if [ "$*" = "clean" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
-else
+	make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
+elif [ "$*" = "x64" ] ; then
+    make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
+elif [ "$*" = "i386" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+#else
+#    usage;
 fi
 
 cd ../../
 if [ "$*" = "clean" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
-else
-#    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
+	make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
+elif [ "$*" = "x64" ] ; then
+    make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
+elif [ "$*" = "i386" ] ; then
     make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+else
+    usage;
 fi
 

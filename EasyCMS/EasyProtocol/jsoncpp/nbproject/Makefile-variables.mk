@@ -9,27 +9,35 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=Debug
-CND_ARTIFACT_NAME_Debug=easycms
-CND_ARTIFACT_PATH_Debug=Debug/easycms
+CND_ARTIFACT_NAME_Debug=libjsoncpp.a
+CND_ARTIFACT_PATH_Debug=Debug/libjsoncpp.a
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=easycms.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/easycms.tar
+CND_PACKAGE_NAME_Debug=jsoncpp.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/jsoncpp.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=Release
-CND_ARTIFACT_NAME_Release=easycms
-CND_ARTIFACT_PATH_Release=Release/easycms
+CND_ARTIFACT_NAME_Release=libjsoncpp.a
+CND_ARTIFACT_PATH_Release=Release/libjsoncpp.a
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=easycms.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/easycms.tar
+CND_PACKAGE_NAME_Release=jsoncpp.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/jsoncpp.tar
 # x64 configuration
 CND_PLATFORM_x64=GNU-Linux-x86
 CND_ARTIFACT_DIR_x64=x64
-CND_ARTIFACT_NAME_x64=easycms
-CND_ARTIFACT_PATH_x64=x64/easycms
+CND_ARTIFACT_NAME_x64=libjsoncpp.a
+CND_ARTIFACT_PATH_x64=x64/libjsoncpp.a
 CND_PACKAGE_DIR_x64=dist/x64/GNU-Linux-x86/package
-CND_PACKAGE_NAME_x64=easycms.tar
-CND_PACKAGE_PATH_x64=dist/x64/GNU-Linux-x86/package/easycms.tar
+CND_PACKAGE_NAME_x64=jsoncpp.tar
+CND_PACKAGE_PATH_x64=dist/x64/GNU-Linux-x86/package/jsoncpp.tar
+# ARM configuration
+CND_PLATFORM_ARM=GM8126-Linux-x86
+CND_ARTIFACT_DIR_ARM=ARM
+CND_ARTIFACT_NAME_ARM=libjsoncpp.a
+CND_ARTIFACT_PATH_ARM=ARM/libjsoncpp.a
+CND_PACKAGE_DIR_ARM=dist/ARM/GM8126-Linux-x86/package
+CND_PACKAGE_NAME_ARM=jsoncpp.tar
+CND_PACKAGE_PATH_ARM=dist/ARM/GM8126-Linux-x86/package/jsoncpp.tar
 #
 # include compiler specific variables
 #
