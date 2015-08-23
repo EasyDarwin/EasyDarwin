@@ -10,9 +10,10 @@ EasyDarwin CMS是做为EasyDarwin平台方案的一部分，主要进行的是Ea
 
 <pre>
 chmod +x ./Buildit
+
 ./Buildit
 
-./CMS -c ./WinNTSupport/cms.xml
+./easycms -c ../WinNTSupport/easycms.xml
 </pre>
 
 
