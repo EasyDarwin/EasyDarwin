@@ -4587,6 +4587,16 @@ void mg_send_file_internal(struct mg_connection *c, const char *file_name,
     send_http_error(conn, 404, NULL);
   }
 }
+void mg_easy_send(struct mg_connection *c)
+{
+	struct connection *conn = MG_CONN_2_CONN(c);
+	char headers[500] = { 0 };
+	int headers_len = mg_snprintf(headers, sizeof(headers),
+		"HTTP/1.1 403 Forbidden\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\nFobidden");
+	ns_send(conn->ns_conn, headers, headers_len);
+	close_local_endpoint(conn);  // This will write to the log file
+}
+
 void mg_send_file(struct mg_connection *c, const char *file_name,
                   const char *extra_headers) {
 					  file_stat_t st;

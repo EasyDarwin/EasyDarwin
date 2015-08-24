@@ -204,6 +204,11 @@ static int serve_request(struct mg_connection *conn)
 	char htmlPath[256] = { 0 };
 	sprintf(htmlPath, "%s%s", sDocumentRoot, conn->uri);
 
+	if(strcmp(conn->uri, "/EasyHLSModule") == 0)
+	{
+		mg_easy_send(conn);
+		return MG_TRUE;
+	}
 	if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/") == 0&&strcmp(conn->request_method, "POST") == 0)) {
 		check_auth(conn);
 		return MG_MORE;
