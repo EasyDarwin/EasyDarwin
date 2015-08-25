@@ -61,6 +61,7 @@ public:
     StrPtrLen*              GetHostfromAbsoluteURI(){ return &fHostHeader; }
     StrPtrLen*              GetRequestRelativeURI(){ return &fRelativeURI; }
     char*                   GetRequestPath(){ return fRequestPath; }
+	char*					GetfQueryString(){ return fQueryString; }
     HTTPVersion             GetVersion(){ return fVersion; }
     HTTPStatusCode          GetStatusCode(){ return fStatusCode; }
     Bool16                  IsRequestKeepAlive(){ return fRequestKeepAlive; }
@@ -129,6 +130,7 @@ private:
     StrPtrLen           fAbsoluteURIScheme;
     StrPtrLen           fHostHeader;        // If the full url is given in the request line
     char*               fRequestPath;       // Also contains the query string
+	char*				fQueryString;
       
     HTTPStatusCode      fStatusCode;
     Bool16              fRequestKeepAlive;              // Keep-alive information in the client request

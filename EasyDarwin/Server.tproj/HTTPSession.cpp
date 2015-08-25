@@ -363,8 +363,7 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 }
 
 /*
-	Content报文读取与解析
-	同步进行报文处理，构造回复报文
+	处理HTTP请求报文
 */
 QTSS_Error HTTPSession::SetupRequest()
 {
@@ -385,101 +384,93 @@ QTSS_Error HTTPSession::SetupRequest()
 	StringParser theContentLenParser(lengthPtr);
     theContentLenParser.ConsumeWhitespace();
     UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
-       
-	qtss_printf("HTTPSession read content-length:%d \n", content_length);
 
-    if (content_length <= 0) return QTSS_BadArgument;
+    if (content_length)
+	{	
+		qtss_printf("HTTPSession read content-length:%d \n", content_length);
+		// Check for the existence of 2 attributes in the request: a pointer to our buffer for
+		// the request body, and the current offset in that buffer. If these attributes exist,
+		// then we've already been here for this request. If they don't exist, add them.
+		UInt32 theBufferOffset = 0;
+		char* theRequestBody = NULL;
+		 UInt32 theLen = 0;
+		theLen = sizeof(theRequestBody);
+		theErr = QTSS_GetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, &theLen);
 
-	   //
-    // Check for the existence of 2 attributes in the request: a pointer to our buffer for
-    // the request body, and the current offset in that buffer. If these attributes exist,
-    // then we've already been here for this request. If they don't exist, add them.
-    UInt32 theBufferOffset = 0;
-    char* theRequestBody = NULL;
-	 UInt32 theLen = 0;
-    theLen = sizeof(theRequestBody);
-    theErr = QTSS_GetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, &theLen);
+		if (theErr != QTSS_NoErr)
+		{
+			// First time we've been here for this request. Create a buffer for the content body and
+			// shove it in the request.
+			theRequestBody = NEW char[content_length + 1];
+			memset(theRequestBody,0,content_length + 1);
+			theLen = sizeof(theRequestBody);
+			theErr = QTSS_SetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
+			Assert(theErr == QTSS_NoErr);
+	        
+			// Also store the offset in the buffer
+			theLen = sizeof(theBufferOffset);
+			theErr = QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, theLen);
+			Assert(theErr == QTSS_NoErr);
+		}
+	    
+		theLen = sizeof(theBufferOffset);
+		theErr = QTSS_GetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, &theLen);
 
-    if (theErr != QTSS_NoErr)
-    {
-        // First time we've been here for this request. Create a buffer for the content body and
-        // shove it in the request.
-        theRequestBody = NEW char[content_length + 1];
-        memset(theRequestBody,0,content_length + 1);
-        theLen = sizeof(theRequestBody);
-        theErr = QTSS_SetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
-        Assert(theErr == QTSS_NoErr);
-        
-        // Also store the offset in the buffer
-        theLen = sizeof(theBufferOffset);
-        theErr = QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, theLen);
-        Assert(theErr == QTSS_NoErr);
-    }
-    
-    theLen = sizeof(theBufferOffset);
-    theErr = QTSS_GetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, &theLen);
+		// We have our buffer and offset. Read the data.
+		//theErr = QTSS_Read(this, theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
+		theErr = fInputStream.Read(theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
+		Assert(theErr != QTSS_BadArgument);
 
-    // We have our buffer and offset. Read the data.
-    //theErr = QTSS_Read(this, theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
-	theErr = fInputStream.Read(theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
-    Assert(theErr != QTSS_BadArgument);
+		if (theErr == QTSS_RequestFailed)
+		{
+			OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
+			//
+			// NEED TO RETURN HTTP ERROR RESPONSE
+			return QTSS_RequestFailed;
+		}
+	    
+		qtss_printf("Add Len:%d \n", theLen);
+		if ((theErr == QTSS_WouldBlock) || (theLen < ( content_length - theBufferOffset)))
+		{
+			//
+			// Update our offset in the buffer
+			theBufferOffset += theLen;
+			(void)QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, sizeof(theBufferOffset));
+			// The entire content body hasn't arrived yet. Request a read event and wait for it.
+	       
+			Assert(theErr == QTSS_NoErr);
+			return QTSS_WouldBlock;
+		}
 
-    if (theErr == QTSS_RequestFailed)
-    {
-        OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
-        //
-        // NEED TO RETURN HTTP ERROR RESPONSE
-        return QTSS_RequestFailed;
-    }
-    
-	qtss_printf("Add Len:%d \n", theLen);
-    if ((theErr == QTSS_WouldBlock) || (theLen < ( content_length - theBufferOffset)))
-    {
-		//
-        // Update our offset in the buffer
-        theBufferOffset += theLen;
-        (void)QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, sizeof(theBufferOffset));
-        // The entire content body hasn't arrived yet. Request a read event and wait for it.
-       
-        Assert(theErr == QTSS_NoErr);
-        return QTSS_WouldBlock;
-    }
+		Assert(theErr == QTSS_NoErr);
+	    
+		OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
 
-    Assert(theErr == QTSS_NoErr);
-    
-	OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
+		////报文处理，不进入队列
+		//EasyDarwin::Protocol::EasyProtocol protocol(theRequestBody);
+		//int nNetMsg = protocol.GetMessageType();
 
-	qtss_printf("get complete http msg:%s \n%s \n", fRequest->GetRequestPath(), theRequestBody);
+		//switch (nNetMsg)
+		//{
+		//	case MSG_DEV_CMS_REGISTER_REQ:
+		//		ExecNetMsgDevRegisterReq(theRequestBody);
+		//		break;
+		//	case MSG_NGX_CMS_NEED_STREAM_REQ:
+		//		ExecNetMsgNgxStreamReq(theRequestBody);
+		//		break;
+		//	default:
+		//		ExecNetMsgDefaultReqHandler(theRequestBody);
+		//		break;
+		//}
+		
+		UInt32 offset = 0;
+		(void)QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
+		char* content = NULL;
+		(void)QTSS_SetValue(this, easyHTTPSesContentBody, 0, &content, 0);
 
-	////报文处理，不进入队列
-	//EasyDarwin::Protocol::EasyProtocol protocol(theRequestBody);
-	//int nNetMsg = protocol.GetMessageType();
+	}
 
-	//switch (nNetMsg)
-	//{
-	//	case MSG_DEV_CMS_REGISTER_REQ://处理设备上线消息
-	//		ExecNetMsgDevRegisterReq(theRequestBody);
-	//		break;
-	//	case MSG_NGX_CMS_NEED_STREAM_REQ:
-	//		ExecNetMsgNgxStreamReq(theRequestBody);
-	//		break;
-	//	case MSG_CMS_DEV_STREAM_START_RSP:
-	//		break;
-	//	case MSG_CMS_DEV_STREAM_STOP_RSP:
-	//		break;
-	//	case MSG_CLI_CMS_DEVICE_LIST_REQ:
-	//		break;
-	//	case MSG_DEV_CMS_SNAP_UPDATE_REQ:
-	//		ExecNetMsgSnapUpdateReq(theRequestBody);
-	//	default:
-	//		ExecNetMsgDefaultReqHandler(theRequestBody);
-	//		break;
-	//}
-	
-	UInt32 offset = 0;
-	(void)QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
-	char* content = NULL;
-	(void)QTSS_SetValue(this, easyHTTPSesContentBody, 0, &content, 0);
+	qtss_printf("get complete http msg:%s \n", fRequest->GetRequestPath());
 
 	return QTSS_NoErr;
 }

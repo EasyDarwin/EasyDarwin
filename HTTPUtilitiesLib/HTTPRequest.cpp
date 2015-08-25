@@ -38,32 +38,32 @@ static StrPtrLen sKeepAliveString("keep-alive", 10);
 static StrPtrLen sDefaultRealm("Streaming Server", 19);
 UInt8 HTTPRequest::sURLStopConditions[] =
 {
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 1, //0-9      //'\t' is a stop condition
-  1, 0, 0, 1, 0, 0, 0, 0, 0, 0, //10-19    //'\r' & '\n' are stop conditions
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //20-29
-  0, 0, 1, 0, 0, 0, 0, 0, 0, 0, //30-39    //' '
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //40-49
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //50-59
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //60-69
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //70-79
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //80-89
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //90-99
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //100-109
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //110-119
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140-149
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //150-159
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //170-179
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //180-189
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //200-209
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //210-219
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //220-229
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //230-239
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //240-249
-  0, 0, 0, 0, 0, 0                         //250-255
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, //0-9      //'\t' is a stop condition
+    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, //10-19    //'\r' & '\n' are stop conditions
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //20-29
+    0, 0, 1, 0, 0, 0, 0, 0, 0, 0, //30-39    //' '
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //40-49
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //50-59
+    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, //60-69   //'?' 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //70-79
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //80-89
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //90-99
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //100-109
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //110-119
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140-149
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //150-159
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //170-179
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //180-189
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //200-209
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //210-219
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //220-229
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //230-239
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //240-249
+    0, 0, 0, 0, 0, 0             //250-255
 };
 
 // Constructor
@@ -82,7 +82,8 @@ HTTPRequest::HTTPRequest(StrPtrLen* serverHeader, StrPtrLen* requestPtr)
     fRelativeURI = NULL;
     fAbsoluteURIScheme = NULL;
     fHostHeader = NULL;
-    fRequestPath = NULL;    
+    fRequestPath = NULL;  
+	fQueryString = NULL;
     fStatusCode = httpOK;
     fRequestKeepAlive = false; // Default value when there is no version string
 
@@ -106,7 +107,8 @@ HTTPRequest::HTTPRequest(StrPtrLen* serverHeader)
     fRelativeURI = NULL;
     fAbsoluteURIScheme = NULL;
     fHostHeader = NULL;
-    fRequestPath = NULL;    
+    fRequestPath = NULL; 
+	fQueryString = NULL;
     fStatusCode = 0;
     fRequestKeepAlive = false; 
     
@@ -131,6 +133,8 @@ HTTPRequest::HTTPRequest(StrPtrLen* serverHeader)
         delete fResponseFormatter;
     if (fRequestPath != NULL)
         delete [] fRequestPath;  
+	if (fQueryString != NULL)
+		delete [] fQueryString;
  }
 //Parses the request
 QTSS_Error HTTPRequest::Parse()
@@ -151,7 +155,7 @@ QTSS_Error HTTPRequest::Parse()
 	// 解析第一行
     QTSS_Error err = ParseRequestLine(&parser);
     if (err != QTSS_NoErr)
-            return err;
+		return err;
 
 	if(fHTTPType == httpResponseType)
 	{
@@ -242,22 +246,33 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
             urlParser.ConsumeUntil(&fHostHeader, '/');
     }
 
-    //StrPtrLen queryString;
-    ////this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
-    //
-    //if ( urlParser.GetDataRemaining() > 0 )
-    //{   
-    //    if ( urlParser.PeekFast() == '?' )
-    //    {       
-    //        // we've got some CGI param
-    //        urlParser.ConsumeLength(&queryString, 1); // toss '?'
-    //        
-    //        // consume the rest of the line..
-    //        urlParser.ConsumeUntilWhitespace(&queryString);
-    //        
-    //        //this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
-    //    }
-    //}
+    StrPtrLen queryString;
+    //this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
+    if ( parser->GetDataRemaining() > 0 )
+    {   
+        if ( parser->PeekFast() == '?' )
+        {       
+            // we've got some CGI param
+            parser->ConsumeLength(&queryString, 1); // toss '?'
+            
+            // consume the rest of the line..
+            parser->ConsumeUntilWhitespace(&queryString);
+            
+			if(queryString.Len)
+			{
+				if (fQueryString != NULL)
+				{
+					delete [] fQueryString;
+					fQueryString = NULL;
+				}
+
+				fQueryString = NEW char[queryString.Len + 1];
+				::memcpy(fQueryString, queryString.Ptr, queryString.Len); 
+				fQueryString[queryString.Len] = '\0';
+				//this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
+			}
+        }
+    }
   
     // whatever is in this position is the relative URI
     StrPtrLen relativeURI(urlParser.GetCurrentPosition(), urlParser.GetDataReceivedLen() - urlParser.GetDataParsedLen());
@@ -285,10 +300,12 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
         delete [] fRequestPath; 
 
 	fRequestPath = NULL;
+
     fRequestPath = NEW char[theBytesWritten + 1];
     ::memcpy(fRequestPath, relativeURIDecoded + 1, theBytesWritten); 
     //delete relativeURIDecoded;
     fRequestPath[theBytesWritten] = '\0';
+
     return QTSS_NoErr;
 }
 
