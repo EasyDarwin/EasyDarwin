@@ -54,7 +54,7 @@ HTTPSession::~HTTPSession()
 {
 	char remoteAddress[20] = {0};
 	StrPtrLen theIPAddressStr(remoteAddress,sizeof(remoteAddress));
-	QTSS_GetValue(this, qtssRTSPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
+	QTSS_GetValue(this, easyHTTPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
 
 	char msgStr[2048] = { 0 };
 	qtss_snprintf(msgStr, sizeof(msgStr), "session offline from ip[%s]",remoteAddress);
@@ -449,7 +449,7 @@ QTSS_Error HTTPSession::SetupRequest()
     
 	OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
 
-	qtss_printf("get complete http msg:%s \n", theRequestBody);
+	qtss_printf("get complete http msg:%s \n%s \n", fRequest->GetRequestPath(), theRequestBody);
 
 	////报文处理，不进入队列
 	//EasyDarwin::Protocol::EasyProtocol protocol(theRequestBody);

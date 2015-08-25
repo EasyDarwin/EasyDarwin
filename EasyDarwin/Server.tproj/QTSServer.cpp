@@ -192,6 +192,8 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     QTSServerPrefs::Initialize();
     QTSSMessages::Initialize();
     RTSPRequestInterface::Initialize();
+	HTTPSessionInterface::Initialize();
+
     RTSPSessionInterface::Initialize();
     RTPSessionInterface::Initialize();
     RTPStream::Initialize();
