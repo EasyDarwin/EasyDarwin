@@ -1234,6 +1234,7 @@ typedef struct
 {
     char*                       inStreamName;
 	char*						inRTSPUrl;
+	char*						outHLSUrl;
 } Easy_HLSOpen_Params;
 
 typedef struct
@@ -2053,7 +2054,7 @@ void        QTSS_UnlockStdLib();
 
 // EasyHLSModule
 // Start HLS Session
-QTSS_Error	Easy_StartHLSSession(const char* inSessionName, const char* inURL);
+const char*	Easy_StartHLSSession(const char* inSessionName, const char* inURL);
 // Stop HLS Session
 QTSS_Error	Easy_StopHLSSession(const char* inSessionName);
 
