@@ -224,14 +224,14 @@ void* HTTPSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*out
          Assert(0);   //for debugging
          return NULL; //nothing to set
     }
-    theSession->SetVal(qtssRTSPSesLocalAddr, &theSession->fLocalAddr, sizeof(theSession->fLocalAddr));
-    theSession->SetVal(qtssRTSPSesLocalAddrStr, theLocalAddrStr->Ptr, theLocalAddrStr->Len);
-    theSession->SetVal(qtssRTSPSesLocalDNS, theLocalDNSStr->Ptr, theLocalDNSStr->Len);
-    theSession->SetVal(qtssRTSPSesRemoteAddr, &theSession->fRemoteAddr, sizeof(theSession->fRemoteAddr));
-    theSession->SetVal(qtssRTSPSesRemoteAddrStr, theRemoteAddrStr->Ptr, theRemoteAddrStr->Len);
+    theSession->SetVal(easyHTTPSesLocalAddr, &theSession->fLocalAddr, sizeof(theSession->fLocalAddr));
+    theSession->SetVal(easyHTTPSesLocalAddrStr, theLocalAddrStr->Ptr, theLocalAddrStr->Len);
+    theSession->SetVal(easyHTTPSesLocalDNS, theLocalDNSStr->Ptr, theLocalDNSStr->Len);
+    theSession->SetVal(easyHTTPSesRemoteAddr, &theSession->fRemoteAddr, sizeof(theSession->fRemoteAddr));
+    theSession->SetVal(easyHTTPSesRemoteAddrStr, theRemoteAddrStr->Ptr, theRemoteAddrStr->Len);
     
-    theSession->SetVal(qtssRTSPSesLocalPort, &theSession->fLocalPort, sizeof(theSession->fLocalPort));
-    theSession->SetVal(qtssRTSPSesRemotePort, &theSession->fRemotePort, sizeof(theSession->fRemotePort));
+    theSession->SetVal(easyHTTPSesLocalPort, &theSession->fLocalPort, sizeof(theSession->fLocalPort));
+    theSession->SetVal(easyHTTPSesRemotePort, &theSession->fRemotePort, sizeof(theSession->fRemotePort));
     return NULL;
 }
 
