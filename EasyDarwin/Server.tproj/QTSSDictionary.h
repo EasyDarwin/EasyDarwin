@@ -389,9 +389,10 @@ class QTSSDictionaryMap
             k3GPPStreamDictIndex            = 16,
             k3GPPClientSessionDictIndex     = 17,
             k3GPPRTSPSessionDictIndex       = 18,
+			kHTTPSessionDictIndex           = 19,
 
-            kNumDictionaries                = 19,
-            
+            kNumDictionaries                = 20,
+
             kNumDynamicDictionaryTypes      = 500,
             kIllegalDictionary              = kNumDynamicDictionaryTypes + kNumDictionaries
         };

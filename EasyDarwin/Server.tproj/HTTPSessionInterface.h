@@ -24,7 +24,7 @@ class HTTPSessionInterface : public QTSSDictionary, public Task
 {
 public:
 
-    static void     Initialize();
+    static void	Initialize();
     
     HTTPSessionInterface();
     virtual ~HTTPSessionInterface();

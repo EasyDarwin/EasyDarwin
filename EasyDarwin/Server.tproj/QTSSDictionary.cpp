@@ -870,7 +870,7 @@ void QTSSDictionaryMap::Initialize()
     sDictionaryMaps[k3GPPStreamDictIndex] = new QTSSDictionaryMap(qtss3GPPStreamNumParams);
     sDictionaryMaps[k3GPPClientSessionDictIndex] = new QTSSDictionaryMap(qtss3GPPCliSesNumParams);
     sDictionaryMaps[k3GPPRTSPSessionDictIndex] = new QTSSDictionaryMap(qtss3GPPRTSPSessNumParams);
-
+	sDictionaryMaps[kHTTPSessionDictIndex]  = new QTSSDictionaryMap(qtssRTSPSesNumParams);
 }
 
 QTSSDictionaryMap::QTSSDictionaryMap(UInt32 inNumReservedAttrs, UInt32 inFlags)
@@ -1131,6 +1131,8 @@ UInt32  QTSSDictionaryMap::GetMapIndex(QTSS_ObjectType inType)
         case qtss3GPPClientSessionObjectType:   return k3GPPClientSessionDictIndex;
         case qtss3GPPRTSPObjectType:            return k3GPPRTSPSessionDictIndex;
         case qtss3GPPRequestObjectType:         return k3GPPRequestDictIndex;
+
+        case easyHTTPSessionObjectType:     return kHTTPSessionDictIndex;
  
        
         default:                            return kIllegalDictionary;
