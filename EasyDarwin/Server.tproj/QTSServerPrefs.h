@@ -210,6 +210,8 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16 GetAllowGuestDefault()               { return fAllowGuestAuthorizeDefault; }
         
         UInt32 Get3GPPForcedTargetTime()            {return f3GPPRateAdaptTargetTime; }
+
+		UInt16 GetHTTPServicePort()					{return fHTTPServicePort; }
         
     private:
 
@@ -275,6 +277,8 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  fNumThreads;
         UInt32  fNumRTSPThreads;
         UInt32 f3GPPRateAdaptTargetTime;
+
+		UInt16	fHTTPServicePort;
         
         Bool16  fEnableMonitorStatsFile;
         UInt32  fStatsFileIntervalSeconds;

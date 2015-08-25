@@ -126,6 +126,7 @@
 		<PREF NAME="player_requires_3gpp_target_time" ></PREF>
 		<PREF NAME="3gpp_target_time_milliseconds" TYPE="UInt32" >3000</PREF>
 		<PREF NAME="player_requires_disable_thinning" ></PREF>
+		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
 		<PREF NAME="request_logfile_interval" TYPE="UInt32" >7</PREF>

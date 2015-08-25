@@ -48,8 +48,6 @@ HTTPSession::HTTPSession( )
     fModuleState.curTask = this;
     fModuleState.curRole = 0;
     fModuleState.globalLockRequested = false;
-
-	qtss_printf("create session:%s\n", fSessionID);
 }
 
 HTTPSession::~HTTPSession()
@@ -450,6 +448,8 @@ QTSS_Error HTTPSession::SetupRequest()
     Assert(theErr == QTSS_NoErr);
     
 	OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
+
+	qtss_printf("get complete http msg:%s \n", theRequestBody);
 
 	////报文处理，不进入队列
 	//EasyDarwin::Protocol::EasyProtocol protocol(theRequestBody);
