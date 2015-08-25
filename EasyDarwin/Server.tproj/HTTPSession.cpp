@@ -9,11 +9,18 @@
     Contains:   实现对服务单元每一个Session会话的网络报文处理
 */
 
+#undef COMMON_UTILITIES_LIB
 #include "HTTPSession.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
 
 #include "OSArrayObjectDeleter.h"
+
+#include "EasyProtocolDef.h"
+#include "EasyProtocol.h"
+
+using namespace EasyDarwin::Protocol;
+using namespace std;
 
 #if __FreeBSD__ || __hpux__	
     #include <unistd.h>

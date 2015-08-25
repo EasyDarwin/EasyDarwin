@@ -27,12 +27,6 @@
 #include "TimeoutTask.h"
 #include "QTSSModule.h"
 
-//#include "EasyProtocolDef.h"
-//#include "EasyProtocol.h"
-//
-//using namespace EasyDarwin::Protocol;
-//using namespace std;
-
 class HTTPSession : public HTTPSessionInterface
 {
     public:
