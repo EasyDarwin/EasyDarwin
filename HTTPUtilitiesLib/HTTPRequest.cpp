@@ -241,6 +241,23 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
             urlParser.ConsumeLength(&fAbsoluteURIScheme, 7); //consume "http://"
             urlParser.ConsumeUntil(&fHostHeader, '/');
     }
+
+    //StrPtrLen queryString;
+    ////this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
+    //
+    //if ( urlParser.GetDataRemaining() > 0 )
+    //{   
+    //    if ( urlParser.PeekFast() == '?' )
+    //    {       
+    //        // we've got some CGI param
+    //        urlParser.ConsumeLength(&queryString, 1); // toss '?'
+    //        
+    //        // consume the rest of the line..
+    //        urlParser.ConsumeUntilWhitespace(&queryString);
+    //        
+    //        //this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
+    //    }
+    //}
   
     // whatever is in this position is the relative URI
     StrPtrLen relativeURI(urlParser.GetCurrentPosition(), urlParser.GetDataReceivedLen() - urlParser.GetDataParsedLen());
