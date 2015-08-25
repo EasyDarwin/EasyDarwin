@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/jsoncpp/include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/CMS.pch"
@@ -139,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../;../../Include/;../EasyProtocol/jsoncpp/include/;../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
 				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -216,11 +216,11 @@
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{14F332E3-1771-4908-8850-9A2581A4AED2}"
-			RelativePathToProject="..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
+			RelativePathToProject="..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
-			RelativePathToProject="..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcproj"
+			RelativePathToProject="..\..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{230D5525-AEA7-4037-95FE-3B45BEF98E55}"
