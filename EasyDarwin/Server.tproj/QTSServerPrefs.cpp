@@ -192,8 +192,9 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kAllowMultipleValues,     "",         sDisable_Rate_Adapt_Players }, //player_requires_disable_3gpp_rate_adapt
     { kAllowMultipleValues,     "",         sFixed_Target_Time_Players  }, //player_requires_3gpp_target_time
     { kDontAllowMultipleValues, "3000",     NULL                        }, //3gpp_target_time_milliseconds
-    { kAllowMultipleValues,     "",         sDisable_Thinning_Players   }  //player_requires_disable_thinning
+    { kAllowMultipleValues,     "",         sDisable_Thinning_Players   }, //player_requires_disable_thinning
     
+    { kDontAllowMultipleValues, "8080",     NULL                        }  //http_service_port
     
     
     
@@ -293,8 +294,9 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 86 */ { "player_requires_disable_3gpp_rate_adapt",   NULL,               qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 87 */ { "player_requires_3gpp_target_time",   NULL,                      qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 88 */ { "3gpp_target_time_milliseconds",   NULL,                         qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 89 */ { "player_requires_disable_thinning", NULL,                        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite }
+    /* 89 */ { "player_requires_disable_thinning", NULL,                        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     
+    /* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
 
 };
 
@@ -374,9 +376,8 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
 	fUDPMonitorVideoPort(0),
 	fUDPMonitorAudioPort(0),
 	fAllowGuestAuthorizeDefault(true),
-	f3GPPRateAdaptTargetTime(0)
-	
-	
+	f3GPPRateAdaptTargetTime(0),
+	fHTTPServicePort(8080)
 {
     SetupAttributes();
     RereadServerPreferences(inWriteMissingPrefs);
@@ -469,6 +470,9 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsEnableAllowGuestDefault,      &fAllowGuestAuthorizeDefault,   sizeof(fAllowGuestAuthorizeDefault)); //enable_allow_guest_authorize_default
     this->SetVal(qtssPrefsNumRTSPThreads,               &fNumRTSPThreads,               sizeof(fNumRTSPThreads));
     this->SetVal(qtssPrefs3GPPTargetTime,               &f3GPPRateAdaptTargetTime,      sizeof(f3GPPRateAdaptTargetTime));
+
+	this->SetVal(easyPrefsHTTPServicePort,				&fHTTPServicePort,				sizeof(fHTTPServicePort));
+
     
     
     

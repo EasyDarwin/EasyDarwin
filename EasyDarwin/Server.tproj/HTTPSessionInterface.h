@@ -74,7 +74,6 @@ protected:
 
     char                fUserNameBuf[kMaxUserNameLen];
     char                fUserPasswordBuf[kMaxUserPasswordLen];
-    char                fSessionID[QTSS_MAX_SESSION_ID_LENGTH];
 
     TimeoutTask         fTimeoutTask;//allows the session to be timed out
     

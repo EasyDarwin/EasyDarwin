@@ -861,7 +861,9 @@ enum
     qtssPrefs3GPPTargetTime  				= 88,   // "3gpp_target_time_milliseconds" //UInt32 // milliseconds set as the target time.
     qtssPrefsPlayersReqDisableThinning 		= 89,   // "player_requires_disable_thinning" //Char array //name of player to set the target time for
 	
-    qtssPrefsNumParams                      = 90
+	easyPrefsHTTPServicePort				= 90,	// "http_service_port"
+
+    qtssPrefsNumParams                      = 91
 };
 
 typedef UInt32 QTSS_PrefsAttributes;
