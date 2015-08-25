@@ -20,6 +20,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APIStubLib", "..\APIStubLib
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APICommonCode", "..\APICommonCode\APICommonCode.vcproj", "{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_json", "..\..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcproj", "{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyProtocol", "..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj", "{14F332E3-1771-4908-8850-9A2581A4AED2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -50,6 +54,14 @@ Global
 		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}.Debug|Win32.Build.0 = Debug|Win32
 		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}.Release|Win32.ActiveCfg = Release|Win32
 		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}.Release|Win32.Build.0 = Release|Win32
+		{B84F7231-16CE-41D8-8C08-7B523FF4225B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B84F7231-16CE-41D8-8C08-7B523FF4225B}.Debug|Win32.Build.0 = Debug|Win32
+		{B84F7231-16CE-41D8-8C08-7B523FF4225B}.Release|Win32.ActiveCfg = Release|Win32
+		{B84F7231-16CE-41D8-8C08-7B523FF4225B}.Release|Win32.Build.0 = Release|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Debug|Win32.Build.0 = Debug|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Release|Win32.ActiveCfg = Release|Win32
+		{14F332E3-1771-4908-8850-9A2581A4AED2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
