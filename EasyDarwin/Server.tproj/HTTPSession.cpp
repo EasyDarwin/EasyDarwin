@@ -12,7 +12,6 @@
 #include "HTTPSession.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
-#include "EasyUtil.h"
 
 #include "OSArrayObjectDeleter.h"
 
@@ -26,9 +25,7 @@
     #include <crypt.h>
 #endif
 
-static StrPtrLen	sServiceStr("EasyDariwn_CMS");
-
-using namespace std;
+static StrPtrLen	sServiceStr("EasyDariwn_HTTP");
 
 HTTPSession::HTTPSession( )
 : HTTPSessionInterface(),
@@ -40,7 +37,7 @@ HTTPSession::HTTPSession( )
     this->SetTaskName("HTTPSession");
     
 	//在全局服务对象中Session数增长一个
-    QTSServerInterface::GetServer()->AlterCurrentServiceSessionCount(1);
+    QTSServerInterface::GetServer()->AlterCurrentRTSPSessionCount(1);
 
     // Setup the QTSS param block, as none of these fields will change through the course of this session.
     fRoleParams.rtspRequestParams.inRTSPSession = this;
@@ -51,9 +48,6 @@ HTTPSession::HTTPSession( )
     fModuleState.curTask = this;
     fModuleState.curRole = 0;
     fModuleState.globalLockRequested = false;
-
-	fDeviceSnap = NEW char[EASYDARWIN_MAX_URL_LENGTH];
-	fDeviceSnap[0] = '\0';
 
 	qtss_printf("create session:%s\n", fSessionID);
 }
@@ -350,7 +344,7 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
-	BaseResponseStream *pOutputStream = GetOutputStream();
+	RTSPResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
 	if (contentXML->Len > 0) 
 		pOutputStream->Put(contentXML->Ptr, contentXML->Len);
@@ -381,13 +375,6 @@ QTSS_Error HTTPSession::SetupRequest()
     if (theErr != QTSS_NoErr)
         return QTSS_BadArgument;
 
-
-	if(::strcmp(fRequest->GetRequestPath(),"getdevicelist") == 0)
-	{
-		ExecNetMsgGetDeviceListReq();
-		return 0;
-	}
-
     QTSS_RTSPStatusCode statusCode = qtssSuccessOK;
     char *body = NULL;
     UInt32 bodySizeBytes = 0;
@@ -413,7 +400,7 @@ QTSS_Error HTTPSession::SetupRequest()
     char* theRequestBody = NULL;
 	 UInt32 theLen = 0;
     theLen = sizeof(theRequestBody);
-    theErr = QTSS_GetValue(this, qtssEasySesContentBody, 0, &theRequestBody, &theLen);
+    theErr = QTSS_GetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, &theLen);
 
     if (theErr != QTSS_NoErr)
     {
@@ -422,17 +409,17 @@ QTSS_Error HTTPSession::SetupRequest()
         theRequestBody = NEW char[content_length + 1];
         memset(theRequestBody,0,content_length + 1);
         theLen = sizeof(theRequestBody);
-        theErr = QTSS_SetValue(this, qtssEasySesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
+        theErr = QTSS_SetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
         Assert(theErr == QTSS_NoErr);
         
         // Also store the offset in the buffer
         theLen = sizeof(theBufferOffset);
-        theErr = QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, theLen);
+        theErr = QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, theLen);
         Assert(theErr == QTSS_NoErr);
     }
     
     theLen = sizeof(theBufferOffset);
-    theErr = QTSS_GetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, &theLen);
+    theErr = QTSS_GetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, &theLen);
 
     // We have our buffer and offset. Read the data.
     //theErr = QTSS_Read(this, theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
@@ -453,7 +440,7 @@ QTSS_Error HTTPSession::SetupRequest()
 		//
         // Update our offset in the buffer
         theBufferOffset += theLen;
-        (void)QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, sizeof(theBufferOffset));
+        (void)QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, sizeof(theBufferOffset));
         // The entire content body hasn't arrived yet. Request a read event and wait for it.
        
         Assert(theErr == QTSS_NoErr);
@@ -464,35 +451,35 @@ QTSS_Error HTTPSession::SetupRequest()
     
 	OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
 
-	//报文处理，不进入队列
-	EasyDarwin::Protocol::EasyProtocol protocol(theRequestBody);
-	int nNetMsg = protocol.GetMessageType();
+	////报文处理，不进入队列
+	//EasyDarwin::Protocol::EasyProtocol protocol(theRequestBody);
+	//int nNetMsg = protocol.GetMessageType();
 
-	switch (nNetMsg)
-	{
-		case MSG_DEV_CMS_REGISTER_REQ://处理设备上线消息
-			ExecNetMsgDevRegisterReq(theRequestBody);
-			break;
-		case MSG_NGX_CMS_NEED_STREAM_REQ:
-			ExecNetMsgNgxStreamReq(theRequestBody);
-			break;
-		case MSG_CMS_DEV_STREAM_START_RSP:
-			break;
-		case MSG_CMS_DEV_STREAM_STOP_RSP:
-			break;
-		case MSG_CLI_CMS_DEVICE_LIST_REQ:
-			break;
-		case MSG_DEV_CMS_SNAP_UPDATE_REQ:
-			ExecNetMsgSnapUpdateReq(theRequestBody);
-		default:
-			ExecNetMsgDefaultReqHandler(theRequestBody);
-			break;
-	}
+	//switch (nNetMsg)
+	//{
+	//	case MSG_DEV_CMS_REGISTER_REQ://处理设备上线消息
+	//		ExecNetMsgDevRegisterReq(theRequestBody);
+	//		break;
+	//	case MSG_NGX_CMS_NEED_STREAM_REQ:
+	//		ExecNetMsgNgxStreamReq(theRequestBody);
+	//		break;
+	//	case MSG_CMS_DEV_STREAM_START_RSP:
+	//		break;
+	//	case MSG_CMS_DEV_STREAM_STOP_RSP:
+	//		break;
+	//	case MSG_CLI_CMS_DEVICE_LIST_REQ:
+	//		break;
+	//	case MSG_DEV_CMS_SNAP_UPDATE_REQ:
+	//		ExecNetMsgSnapUpdateReq(theRequestBody);
+	//	default:
+	//		ExecNetMsgDefaultReqHandler(theRequestBody);
+	//		break;
+	//}
 	
 	UInt32 offset = 0;
-	(void)QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &offset, sizeof(offset));
+	(void)QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
 	char* content = NULL;
-	(void)QTSS_SetValue(this, qtssEasySesContentBody, 0, &content, 0);
+	(void)QTSS_SetValue(this, easyHTTPSesContentBody, 0, &content, 0);
 
 	return QTSS_NoErr;
 }
@@ -524,7 +511,7 @@ Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
     if (maxConns > -1) // limit connections
     { 
         UInt32 maxConnections = (UInt32) maxConns + buffer;
-        if  ( theServer->GetNumServiceSessions() > maxConnections ) 
+        if  ( theServer->GetNumRTSPSessions() > maxConnections ) 
         {
             overLimit = true;          
         }
@@ -627,7 +614,7 @@ QTSS_Error HTTPSession::DumpRequestData()
 //	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 //	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 //	
-//	BaseResponseStream *pOutputStream = GetOutputStream();
+//	RTSPResponseStream *pOutputStream = GetOutputStream();
 //	pOutputStream->Put(respHeader);
 //	
 //	//Push HTTP Content to OutputBuffer
@@ -720,7 +707,7 @@ QTSS_Error HTTPSession::DumpRequestData()
 //	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 //	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 //	
-//	BaseResponseStream *pOutputStream = GetOutputStream();
+//	RTSPResponseStream *pOutputStream = GetOutputStream();
 //	pOutputStream->Put(respHeader);
 //	if (msgJson.Len > 0) 
 //		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
@@ -823,7 +810,7 @@ QTSS_Error HTTPSession::DumpRequestData()
 //	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 //	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 //	
-//	BaseResponseStream *pOutputStream = GetOutputStream();
+//	RTSPResponseStream *pOutputStream = GetOutputStream();
 //	pOutputStream->Put(respHeader);
 //	if (msgJson.Len > 0) 
 //		pOutputStream->Put(msgJson.Ptr, msgJson.Len);

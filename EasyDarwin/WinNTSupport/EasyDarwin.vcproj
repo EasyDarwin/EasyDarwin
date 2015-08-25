@@ -1014,6 +1014,22 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\HTTPSession.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPSession.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPSessionInterface.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPSessionInterface.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\OSMemoryLib\OSMemory.cpp"
 					>
 				</File>

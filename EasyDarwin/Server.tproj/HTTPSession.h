@@ -12,7 +12,7 @@
   \mainpage 使用引导
   
   网络调用主要流程\n
-  Select -> HTTPSession -> DispatchMsgCenter -> HTTPSession -> Cleanup\n\n
+  Select -> HTTPSession -> MsgCenter -> HTTPSession -> Cleanup\n\n
 
   Copyright (c) 2014 EasyDarwin.org 版权所有\n  
  
@@ -27,11 +27,11 @@
 #include "TimeoutTask.h"
 #include "QTSSModule.h"
 
-#include "EasyProtocolDef.h"
-#include "EasyProtocol.h"
-
-using namespace EasyDarwin::Protocol;
-using namespace std;
+//#include "EasyProtocolDef.h"
+//#include "EasyProtocol.h"
+//
+//using namespace EasyDarwin::Protocol;
+//using namespace std;
 
 class HTTPSession : public HTTPSessionInterface
 {
@@ -40,7 +40,7 @@ class HTTPSession : public HTTPSessionInterface
         virtual ~HTTPSession();
 		
 		////发送HTTP响应报文
-		virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
+		virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
 
     private: 
         SInt64 Run();
