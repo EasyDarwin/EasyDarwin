@@ -433,9 +433,11 @@ QTSS_Error HTTPSession::SetupRequest()
 
 				//构造响应报文(HTTP头)
 				HTTPRequest httpAck(&sServiceStr);
-				httpAck.CreateResponseHeader(httpMovedPermanently);
-				StrPtrLen strLocation((char*)location);
-				httpAck.AppendResponseHeader(httpLocationHeader, &strLocation);
+				httpAck.CreateResponseHeader(httpOK);
+				httpAck.AppendContentLengthHeader((UInt32)strlen(location));
+
+				//StrPtrLen strLocation((char*)location);
+				//httpAck.AppendResponseHeader(httpLocationHeader, &strLocation);
 				//响应完成后断开连接
 				httpAck.AppendConnectionCloseHeader();
 
@@ -446,6 +448,8 @@ QTSS_Error HTTPSession::SetupRequest()
 				
 				RTSPResponseStream *pOutputStream = GetOutputStream();
 				pOutputStream->Put(respHeader);
+				pOutputStream->Put((char*)location, strlen(location));
+
 				return QTSS_NoErr;
 
 			}
