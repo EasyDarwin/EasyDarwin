@@ -142,7 +142,10 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
-		//printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		
+		if (frameinfo->codec == AUDIO_CODEC_MP4A)
+			EasyHLS_AudioMux(fHLSHandle, (unsigned char*)pbuf, frameinfo->length, frameinfo->rtptimestamp);
 		// 暂时不对音频进行处理
 	}
 	else if (mediatype == MEDIA_TYPE_EVENT)
