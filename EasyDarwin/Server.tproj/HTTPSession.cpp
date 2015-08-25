@@ -13,6 +13,7 @@
 #include "HTTPSession.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
+#include "QueryParamList.h"
 
 #include "OSArrayObjectDeleter.h"
 
@@ -33,6 +34,13 @@ using namespace std;
 #endif
 
 static StrPtrLen	sServiceStr("EasyDariwn_HTTP");
+static StrPtrLen	sEasyHLSModule("EasyHLSModule");
+#define QUERY_STREAM_NAME	"name"
+#define QUERY_STREAM_URL	"url"
+#define QUERY_STREAM_CMD	"cmd"
+#define QUERY_STREAM_CMD_START "start"
+#define QUERY_STREAM_CMD_STOP "stop"
+
 
 HTTPSession::HTTPSession( )
 : HTTPSessionInterface(),
@@ -379,15 +387,79 @@ QTSS_Error HTTPSession::SetupRequest()
     if (theErr != QTSS_NoErr)
         return QTSS_BadArgument;
 
+	const char* location = NULL;
     QTSS_RTSPStatusCode statusCode = qtssSuccessOK;
     char *body = NULL;
     UInt32 bodySizeBytes = 0;
+
+	if(fRequest->GetRequestPath())
+	{
+		StrPtrLen theFullPath(fRequest->GetRequestPath());
+
+		if (theFullPath.Equal(sEasyHLSModule))
+		{   
+			if(fRequest->GetfQueryString())
+			{
+				//解析查询字符串
+				char* theQueryStr = fRequest->GetfQueryString();
+			       
+				StrPtrLen theQueryString(theQueryStr);
+
+				QueryParamList parList(theQueryStr);
+
+				const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
+				if(sName == NULL) return NULL;
+
+				const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
+
+				const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
+
+				bool bStop = false;
+				if(sCMD)
+				{
+					if(::strcmp(sCMD,QUERY_STREAM_CMD_STOP) == 0)
+						bStop = true;
+				}
+
+				if(bStop)
+				{
+					Easy_StopHLSSession(sName);
+				}
+				else
+				{
+					if(sURL == NULL) return NULL;
+					location = Easy_StartHLSSession(sName, sURL);
+				}
+
+				//构造响应报文(HTTP头)
+				HTTPRequest httpAck(&sServiceStr);
+				httpAck.CreateResponseHeader(httpMovedPermanently);
+				StrPtrLen strLocation((char*)location);
+				httpAck.AppendResponseHeader(httpLocationHeader, &strLocation);
+				//响应完成后断开连接
+				httpAck.AppendConnectionCloseHeader();
+
+				//Push MSG to OutputBuffer
+				char respHeader[2048] = { 0 };
+				StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+				strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+				
+				RTSPResponseStream *pOutputStream = GetOutputStream();
+				pOutputStream->Put(respHeader);
+				return QTSS_NoErr;
+
+			}
+
+
+		}
+
+
+	}
 
 	//获取具体Content json数据部分
 
 	//1、获取json部分长度
 	StrPtrLen* lengthPtr = fRequest->GetHeaderValue(httpContentLengthHeader);
-
 	StringParser theContentLenParser(lengthPtr);
     theContentLenParser.ConsumeWhitespace();
     UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);

@@ -208,8 +208,8 @@ QTSS_Error ReflectorSession::StartHLSSession()
 		char url[QTSS_MAX_URL_LENGTH] = { 0 };
 		qtss_sprintf(url,"rtsp://127.0.0.1:%d/%s.sdp", thePort, fSessionName);
 
-		theErr = Easy_StartHLSSession(fSessionName, url);
-		if(QTSS_NoErr == theErr)
+		Easy_StartHLSSession(fSessionName, url);
+		//if(QTSS_NoErr == theErr)
 			fHLSLive = true;
 	}
 

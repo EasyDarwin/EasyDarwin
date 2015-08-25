@@ -172,6 +172,8 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 
 	sHLSSessionMap->Release(session->GetRef());
 
+	inParams->outHLSUrl = session->GetHLSURL();
+
 	return QTSS_NoErr;
 }
 

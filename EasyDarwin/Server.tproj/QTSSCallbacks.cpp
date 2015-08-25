@@ -954,12 +954,13 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
     OS::GetStdLibMutex()->Unlock();
 }
 
-QTSS_Error QTSSCallbacks::Easy_StartHLSSession(const char* inSessionName, const char* inURL)
+const char* QTSSCallbacks::Easy_StartHLSSession(const char* inSessionName, const char* inURL)
 {
 	//Æô¶¯HLS Module
 	QTSS_RoleParams packetParams;
 	packetParams.easyHLSOpenParams.inStreamName = (char*)inSessionName;
 	packetParams.easyHLSOpenParams.inRTSPUrl = (char*)inURL;
+	packetParams.easyHLSOpenParams.outHLSUrl = NULL;
 
 	UInt32 fCurrentModule = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
@@ -967,10 +968,10 @@ QTSS_Error QTSSCallbacks::Easy_StartHLSSession(const char* inSessionName, const 
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSOpenRole, fCurrentModule);
 		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &packetParams);	
-		return QTSS_NoErr;
+		return packetParams.easyHLSOpenParams.outHLSUrl;
 	}
 	
-	return QTSS_RequestFailed;
+	return NULL;
 }
 
 QTSS_Error QTSSCallbacks::Easy_StopHLSSession(const char* inSessionName)
