@@ -470,7 +470,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 	}
 
-	qtss_printf("get complete http msg:%s \n", fRequest->GetRequestPath());
+	qtss_printf("get complete http msg:%s QueryString:%s \n", fRequest->GetRequestPath(), fRequest->GetfQueryString());
 
 	return QTSS_NoErr;
 }
