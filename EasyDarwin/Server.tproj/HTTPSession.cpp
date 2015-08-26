@@ -12,10 +12,10 @@
 #undef COMMON_UTILITIES_LIB
 #include "HTTPSession.h"
 #include "QTSServerInterface.h"
-#include "OSMemory.h"
-#include "QueryParamList.h"
-
 #include "OSArrayObjectDeleter.h"
+#include "OSMemory.h"
+#include "QTSSMemoryDeleter.h"
+#include "QueryParamList.h"
 
 #include "EasyProtocolDef.h"
 #include "EasyProtocol.h"
@@ -551,8 +551,8 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 {	
 	QTSS_Error theErr = QTSS_NoErr;
        
-	char* hlsURL = NULL;
-
+	char* hlsURL = NEW char[QTSS_MAX_URL_LENGTH];
+    QTSSCharArrayDeleter theHLSURLDeleter(hlsURL);
 	do{
 		StrPtrLen theQueryString(queryString);
 
@@ -587,7 +587,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 				break;
 			}
 
-			hlsURL = Easy_StartHLSSession(sName, sURL);
+			Easy_StartHLSSession(sName, sURL, hlsURL);
 		}
 	}while(0);
 

@@ -159,7 +159,7 @@ class QTSSCallbacks
         static void   QTSS_UnlockStdLib();
 
 		// Start HLS Session
-		static char*	Easy_StartHLSSession(const char* inSessionName, const char* inURL);
+		static QTSS_Error	Easy_StartHLSSession(const char* inSessionName, const char* inURL, char* outURL);
 		// Stop HLS Session
 		static QTSS_Error	Easy_StopHLSSession(const char* inSessionName);
 };
