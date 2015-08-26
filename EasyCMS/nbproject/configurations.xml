@@ -141,8 +141,8 @@
             <pElem>../HTTPUtilitiesLib</pElem>
             <pElem>../Include</pElem>
             <pElem>.</pElem>
-            <pElem>EasyProtocol/Include</pElem>
-            <pElem>EasyProtocol/jsoncpp/include</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -152,8 +152,8 @@
           <output>${CND_CONF}/easycms</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
-            <pElem>EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
-            <pElem>EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
           </linkerAddLib>
           <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
@@ -352,8 +352,8 @@
             <pElem>../HTTPUtilitiesLib</pElem>
             <pElem>../Include</pElem>
             <pElem>.</pElem>
-            <pElem>EasyProtocol/Include</pElem>
-            <pElem>EasyProtocol/jsoncpp/include</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -370,8 +370,8 @@
           <output>${CND_CONF}/easycms</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
-            <pElem>EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
-            <pElem>EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
           </linkerAddLib>
           <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
@@ -570,8 +570,8 @@
             <pElem>../HTTPUtilitiesLib</pElem>
             <pElem>../Include</pElem>
             <pElem>.</pElem>
-            <pElem>EasyProtocol/Include</pElem>
-            <pElem>EasyProtocol/jsoncpp/include</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -587,8 +587,8 @@
           <output>${CND_CONF}/easycms</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
-            <pElem>EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
-            <pElem>EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
           </linkerAddLib>
           <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>

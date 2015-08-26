@@ -238,6 +238,10 @@
                      projectFiles="true">
         <itemPath>Server.tproj/GenerateXMLPrefs.cpp</itemPath>
         <itemPath>Server.tproj/GenerateXMLPrefs.h</itemPath>
+        <itemPath>Server.tproj/HTTPSession.cpp</itemPath>
+        <itemPath>Server.tproj/HTTPSession.h</itemPath>
+        <itemPath>Server.tproj/HTTPSessionInterface.cpp</itemPath>
+        <itemPath>Server.tproj/HTTPSessionInterface.h</itemPath>
         <itemPath>Server.tproj/Makefile</itemPath>
         <itemPath>Server.tproj/QTSSCallbacks.cpp</itemPath>
         <itemPath>Server.tproj/QTSSCallbacks.h</itemPath>
@@ -935,6 +939,20 @@
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Server.tproj/HTTPSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="Server.tproj/Makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
@@ -1147,6 +1165,8 @@
             <pElem>Include</pElem>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -1170,9 +1190,11 @@
           <output>${CND_CONF}/easydarwin</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -1701,6 +1723,20 @@
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Server.tproj/HTTPSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="Server.tproj/Makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
@@ -1935,9 +1971,11 @@
           <output>${CND_CONF}/easydarwin</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>Lib/arm</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -2465,6 +2503,20 @@
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="Server.tproj/Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -2678,6 +2730,8 @@
             <pElem>Include</pElem>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -2701,9 +2755,11 @@
           <output>${CND_CONF}/easydarwin</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>Lib/x64</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -3231,6 +3287,20 @@
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="Server.tproj/Makefile" ex="false" tool="3" flavor2="0">
       </item>
