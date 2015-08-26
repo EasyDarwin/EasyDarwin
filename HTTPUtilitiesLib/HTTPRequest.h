@@ -61,7 +61,7 @@ public:
     StrPtrLen*              GetHostfromAbsoluteURI(){ return &fHostHeader; }
     StrPtrLen*              GetRequestRelativeURI(){ return &fRelativeURI; }
     char*                   GetRequestPath(){ return fRequestPath; }
-	char*					GetfQueryString(){ return fQueryString; }
+	char*					GetQueryString(){ return fQueryString; }
     HTTPVersion             GetVersion(){ return fVersion; }
     HTTPStatusCode          GetStatusCode(){ return fStatusCode; }
     Bool16                  IsRequestKeepAlive(){ return fRequestKeepAlive; }

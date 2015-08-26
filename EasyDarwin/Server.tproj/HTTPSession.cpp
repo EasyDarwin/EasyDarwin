@@ -33,13 +33,13 @@ using namespace std;
     #include <crypt.h>
 #endif
 
-static StrPtrLen	sServiceStr("EasyDariwn_HTTP");
+static StrPtrLen	sServiceStr("EasyDarwin");
 static StrPtrLen	sEasyHLSModule("EasyHLSModule");
-#define QUERY_STREAM_NAME	"name"
-#define QUERY_STREAM_URL	"url"
-#define QUERY_STREAM_CMD	"cmd"
-#define QUERY_STREAM_CMD_START "start"
-#define QUERY_STREAM_CMD_STOP "stop"
+#define	QUERY_STREAM_NAME		"name"
+#define QUERY_STREAM_URL		"url"
+#define QUERY_STREAM_CMD		"cmd"
+#define QUERY_STREAM_CMD_START	"start"
+#define QUERY_STREAM_CMD_STOP	"stop"
 
 
 HTTPSession::HTTPSession( )
@@ -397,67 +397,9 @@ QTSS_Error HTTPSession::SetupRequest()
 		StrPtrLen theFullPath(fRequest->GetRequestPath());
 
 		if (theFullPath.Equal(sEasyHLSModule))
-		{   
-			if(fRequest->GetfQueryString())
-			{
-				//解析查询字符串
-				char* theQueryStr = fRequest->GetfQueryString();
-			       
-				StrPtrLen theQueryString(theQueryStr);
-
-				QueryParamList parList(theQueryStr);
-
-				const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
-				if(sName == NULL) return NULL;
-
-				const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
-
-				const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
-
-				bool bStop = false;
-				if(sCMD)
-				{
-					if(::strcmp(sCMD,QUERY_STREAM_CMD_STOP) == 0)
-						bStop = true;
-				}
-
-				if(bStop)
-				{
-					Easy_StopHLSSession(sName);
-				}
-				else
-				{
-					if(sURL == NULL) return NULL;
-					location = Easy_StartHLSSession(sName, sURL);
-				}
-
-				//构造响应报文(HTTP头)
-				HTTPRequest httpAck(&sServiceStr);
-				httpAck.CreateResponseHeader(httpOK);
-				httpAck.AppendContentLengthHeader((UInt32)strlen(location));
-
-				//StrPtrLen strLocation((char*)location);
-				//httpAck.AppendResponseHeader(httpLocationHeader, &strLocation);
-				//响应完成后断开连接
-				httpAck.AppendConnectionCloseHeader();
-
-				//Push MSG to OutputBuffer
-				char respHeader[2048] = { 0 };
-				StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
-				strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
-				
-				RTSPResponseStream *pOutputStream = GetOutputStream();
-				pOutputStream->Put(respHeader);
-				pOutputStream->Put((char*)location, strlen(location));
-
-				return QTSS_NoErr;
-
-			}
-
-
+		{
+			return ExecNetMsgEasyHLSModuleReq(fRequest->GetQueryString(), NULL);
 		}
-
-
 	}
 
 	//获取具体Content json数据部分
@@ -553,7 +495,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 	}
 
-	qtss_printf("get complete http msg:%s QueryString:%s \n", fRequest->GetRequestPath(), fRequest->GetfQueryString());
+	qtss_printf("get complete http msg:%s QueryString:%s \n", fRequest->GetRequestPath(), fRequest->GetQueryString());
 
 	return QTSS_NoErr;
 }
@@ -605,99 +547,74 @@ QTSS_Error HTTPSession::DumpRequestData()
     return theErr;
 }
 
-//QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
-//{	
-//	QTSS_Error theErr = QTSS_NoErr;		
-//
-//	EasyDarwin::Protocol::EasyDarwinRegisterReq req(json);
-//	do
-//	{
-//		if(fAuthenticated)
-//		{
-//			break;
-//		}
-//
-//		//获取设备SN序列号
-//		std::string strDeviceSN = req.GetSerialNumber();
-//		std::string strDevicePWD = req.GetAuthCode();
-//
-//		//这里对错误报文没有进行Response回复，实际是需要进行处理的
-//		if(strDeviceSN.length()<=0) return QTSS_BadArgument;
-//
-//		//TODO:对设备SN和密码进行验证
-//		/*	说明:开源项目不对设备的序列号和密码进行验证，用户可以根据自己的需求,
-//			在这里进行将获取到的设备序列号和密码与用户的设备数据库表进行对比验证,
-//			密码正确，继续往下继续；密码错误返回失败，断开连接；
-//		*/
-//		printf("MSG_DEV_CMS_REGISTER_REQ(%s:%s)\n", strDeviceSN.c_str(), strDevicePWD.c_str());
-//		//if(myAuthenticFail)
-//		//{
-//		//	theErr = httpUnAuthorized;
-//		//	break;
-//		//}
-//
-//		//将设备列表维护
-//		qtss_sprintf(fSerial,"%s", strDeviceSN.c_str());
-//		//更新Session类型
-//		fSessionType = qtssDeviceSession;
-//		QTSS_SetValue(this, qtssEasySesSerial, 0, fSerial, strlen(fSerial));
-//		//Device OSRef
-//		fDevSerialPtr.Set( fSerial, ::strlen(fSerial));
-//		fDevRef.Set( fDevSerialPtr, this);
-//		//全局维护设备列表
-//		OS_Error theErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(GetRef());
-//		if(theErr == OS_NoErr)
-//		{
-//			//认证授权标识,当前Session就不需要再进行认证过程了
-//			fAuthenticated = true;
-//		}
-//		else
-//		{
-//			//上线冲突
-//			theErr =  QTSS_AttrNameExists;
-//			break;
-//		}
-//	}while(0);
-//
-//	if(theErr != QTSS_NoErr) return theErr;
-//
-//	//进行MSG_DEV_CMS_REGISTER_RSP响应，构造HTTP Content内容
-//	EasyDarwin::Protocol::EasyDarwinRegisterRsp rsp;
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_CSEQ, req.GetHeaderValue(EASYDARWIN_TAG_CSEQ).c_str());	
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_SESSION_ID, fSessionID);
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_NUM, "200");//EASYDARWIN_ERROR_SUCCESS_OK
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_STRING, EasyProtocol::GetErrorString(EASYDARWIN_ERROR_SUCCESS_OK).c_str());
-//	string msg = rsp.GetMsg();
-//
-//	StrPtrLen jsonRSP((char*)msg.c_str());
-//
-//	//构造响应报文(HTTP Header)
-//	HTTPRequest httpAck(&sServiceStr);
-//	httpAck.CreateResponseHeader(jsonRSP.Len?httpOK:httpNotImplemented);
-//	if (jsonRSP.Len)
-//		httpAck.AppendContentLengthHeader(jsonRSP.Len);
-//
-//	//判断是否需要关闭当前Session连接
-//	//if(connectionClose)
-//	//	httpAck.AppendConnectionCloseHeader();
-//
-//	//Push HTTP Header to OutputBuffer
-//	char respHeader[2048] = { 0 };
-//	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
-//	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
-//	
-//	RTSPResponseStream *pOutputStream = GetOutputStream();
-//	pOutputStream->Put(respHeader);
-//	
-//	//Push HTTP Content to OutputBuffer
-//	if (jsonRSP.Len > 0) 
-//		pOutputStream->Put(jsonRSP.Ptr, jsonRSP.Len);
-//	
-//	return QTSS_NoErr;
-//}
-//
+QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json)
+{	
+	QTSS_Error theErr = QTSS_NoErr;
+       
+	char* hlsURL = NULL;
+
+	do{
+		StrPtrLen theQueryString(queryString);
+
+		QueryParamList parList(queryString);
+
+		const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
+		if(sName == NULL)
+		{
+			theErr = QTSS_Unimplemented;
+			break;
+		}
+
+		const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
+		const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
+
+		bool bStop = false;
+		if(sCMD)
+		{
+			if(::strcmp(sCMD,QUERY_STREAM_CMD_STOP) == 0)
+				bStop = true;
+		}
+
+		if(bStop)
+		{
+			Easy_StopHLSSession(sName);
+		}
+		else
+		{
+			if(sURL == NULL)
+			{
+				theErr = QTSS_Unimplemented;
+				break;
+			}
+
+			hlsURL = Easy_StartHLSSession(sName, sURL);
+		}
+	}while(0);
+
+	StrPtrLen msgJson(hlsURL);
+	//构造响应报文(HTTP头)
+	HTTPRequest httpAck(&sServiceStr);
+	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
+	if (msgJson.Len)
+		httpAck.AppendContentLengthHeader(msgJson.Len);
+
+	//响应完成后断开连接
+	httpAck.AppendConnectionCloseHeader();
+
+	//Push MSG to OutputBuffer
+	char respHeader[2048] = { 0 };
+	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+	
+	RTSPResponseStream *pOutputStream = GetOutputStream();
+	pOutputStream->Put(respHeader);
+	if (msgJson.Len > 0) 
+		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+
+	return QTSS_NoErr;
+}
+
+
 //QTSS_Error HTTPSession::ExecNetMsgNgxStreamReq(const char* json)
 //{
 //	QTSS_Error theErr = QTSS_NoErr;
