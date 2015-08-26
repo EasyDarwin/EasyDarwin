@@ -7,26 +7,31 @@ usage()
 	echo "2. build 64bit program ./Buildit x64 [target in x64]"		
 }
 
-cd ../CommonUtilitiesLib
-if [ "$*" = "clean" ] ; then
-    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
-	make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
-elif [ "$*" = "x64" ] ; then
-    make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
-elif [ "$*" = "i386" ] ; then
-    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
-#else
-#    usage;
+build()
+{
+	if [ "$*" = "clean" ] ; then
+		make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
+		make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
+	elif [ "$*" = "x64" ] ; then
+		make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
+	elif [ "$*" = "i386" ] ; then
+		make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
+	fi
+}
+
+
+if [ "$*" = "clean" -o "$*" = "x64" -o "$*" = "i386" ] ; then 
+	cd ../CommonUtilitiesLib
+	build $1
+
+	cd ../EasyProtocol/jsoncpp
+	build $1    
+
+	cd ../EasyProtocol
+	build $1
+	cd ../../EasyDarwin
+	build $1
+else
+	usage;
 fi
 
-cd ../EasyDarwin
-if [ "$*" = "clean" ] ; then
-    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .clean-conf
-	make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
-elif [ "$*" = "x64" ] ; then
-    make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
-elif [ "$*" = "i386" ] ; then
-    make -f nbproject/Makefile-Release.mk QMAKE= SUBPROJECTS= .build-conf
-else
-    usage;
-fi

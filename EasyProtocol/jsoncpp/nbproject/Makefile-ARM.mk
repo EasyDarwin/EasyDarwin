@@ -18,7 +18,7 @@ CC=arm-none-linux-gnueabi-gcc
 CCC=arm-none-linux-gnueabi-g++
 CXX=arm-none-linux-gnueabi-g++
 FC=gfortran
-AS=as
+AS=arm-none-linux-gnueabi-as
 
 # Macros
 CND_PLATFORM=GM8126-Linux-x86
