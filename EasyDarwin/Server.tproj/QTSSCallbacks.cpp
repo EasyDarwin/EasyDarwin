@@ -954,7 +954,7 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
     OS::GetStdLibMutex()->Unlock();
 }
 
-const char* QTSSCallbacks::Easy_StartHLSSession(const char* inSessionName, const char* inURL)
+char* QTSSCallbacks::Easy_StartHLSSession(const char* inSessionName, const char* inURL)
 {
 	//Æô¶¯HLS Module
 	QTSS_RoleParams packetParams;

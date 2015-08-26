@@ -43,7 +43,7 @@ class HTTPSession : public HTTPSessionInterface
         QTSS_Error SetupRequest();
         void CleanupRequest();
 		
-		//QTSS_Error ExecNetMsgDevRegisterReq(const char* json);
+		QTSS_Error ExecNetMsgEasyHLSModuleReq(char* queryString, char* json);
 		//QTSS_Error ExecNetMsgNgxStreamReq(const char* json);
 		//QTSS_Error ExecNetMsgDefaultReqHandler(const char* json);
 		//QTSS_Error ExecNetMsgSnapUpdateReq(const char* json);
