@@ -76,7 +76,7 @@ typedef struct
 	unsigned int	sample_rate;	//采样率
 	unsigned int	channels;		//声道
 	unsigned int	length;			//帧大小
-	unsigned int    rtptimestamp;	//rtp timestamp
+	unsigned int    timestamp_usec;	//微妙
 	unsigned int	timestamp_sec;	//秒
 	
 	float			bitrate;
