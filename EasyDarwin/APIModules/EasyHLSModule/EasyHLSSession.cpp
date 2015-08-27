@@ -118,12 +118,10 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	if(NULL == fHLSHandle) return QTSS_Unimplemented;
 	if (mediatype == MEDIA_TYPE_VIDEO)
 	{
-		printf("Get %s Video Len:%d tm:%d rtp:%d\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
+		unsigned long long llPTS = (frameinfo->timestamp_sec%1000000)*1000 + frameinfo->timestamp_usec/1000;	
 
-		if(frameinfo->fps == 0) frameinfo->fps = 25;
-		tsTimeStampMSsec += 1000/frameinfo->fps;
-		unsigned long long llPts = tsTimeStampMSsec * 90;
-	
+		printf("Get %s Video \tLen:%d \ttm:%u.%u \t%u\n",frameinfo->type==FRAMETYPE_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
+
 		unsigned int uiFrameType = 0;
 		if (frameinfo->type == FRAMETYPE_I)
 		{
@@ -138,15 +136,19 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 			return QTSS_OutOfState;
 		}
 
-		EasyHLS_VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPts, llPts, llPts);
+		EasyHLS_VideoMux(fHLSHandle, uiFrameType, (unsigned char*)pbuf, frameinfo->length, llPTS*90, llPTS*90, llPTS*90);
 	}
 	else if (mediatype == MEDIA_TYPE_AUDIO)
 	{
-		printf("Get Audio Len:%d tm:%d rtp:%d\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->rtptimestamp);
-		
+
+		unsigned long long llPTS = (frameinfo->timestamp_sec%1000000)*1000 + frameinfo->timestamp_usec/1000;	
+
+		printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
+
 		if (frameinfo->codec == AUDIO_CODEC_MP4A)
-			EasyHLS_AudioMux(fHLSHandle, (unsigned char*)pbuf, frameinfo->length, frameinfo->rtptimestamp);
-		// 暂时不对音频进行处理
+		{
+			EasyHLS_AudioMux(fHLSHandle, (unsigned char*)pbuf, frameinfo->length, llPTS*90, llPTS*90);
+		}
 	}
 	else if (mediatype == MEDIA_TYPE_EVENT)
 	{
