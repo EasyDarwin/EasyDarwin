@@ -42,19 +42,19 @@ EasyProtocol::MsgType EasyProtocol::ErrorMap[] = {
 	EASYDARWIN_ERROR_REDIRECT_PERMANENT_MOVED,			"Redirect Permanent Moved",
 	EASYDARWIN_ERROR_REDIRECT_TEMP_MOVED,				"Redirect Temp Moved",
 	EASYDARWIN_ERROR_REDIRECT_SEE_OTHER,				"Redirect See Other",
-	EASYDARWIN_ERROR_USE_PROXY,						"Use Proxy",
+	EASYDARWIN_ERROR_USE_PROXY,							"Use Proxy",
 	EASYDARWIN_ERROR_CLIENT_BAD_REQUEST,				"Client Bad Request",
 	EASYDARWIN_ERROR_CLIENT_UNAUTHORIZED,				"Client Unauthorized",
 	EASYDARWIN_ERROR_PAYMENT_REQUIRED,					"Payment Required",
 	EASYDARWIN_ERROR_CLIENT_FORBIDDEN,					"Client Forbidden",
-	EASYDARWIN_ERROR_NOT_FOUND,						"Not Found",
+	EASYDARWIN_ERROR_NOT_FOUND,							"Not Found",
 	EASYDARWIN_ERROR_METHOD_NOT_ALLOWED,				"Method Not Allowed",
-	EASYDARWIN_ERROR_PROXY_AUTHENTICATION_REQUIRED,	"Proxy Authentication Required",
+	EASYDARWIN_ERROR_PROXY_AUTHENTICATION_REQUIRED,		"Proxy Authentication Required",
 	EASYDARWIN_ERROR_REQUEST_TIMEOUT,					"Request Timeout",
 	EASYDARWIN_ERROR_CONFLICT,							"Conflict",
 	EASYDARWIN_ERROR_PRECONDITION_FAILED,				"Precondition Failed",
 	EASYDARWIN_ERROR_UNSUPPORTED_MEDIA_TYPE,			"Unsupported Media Type",
-	EASYDARWIN_ERROR_SERVER_INTERNAL_ERROR,			"Server Internal Error",
+	EASYDARWIN_ERROR_SERVER_INTERNAL_ERROR,				"Server Internal Error",
 	EASYDARWIN_ERROR_SERVER_NOT_IMPLEMENTED,			"Server Not Implemented",
 	EASYDARWIN_ERROR_SERVER_BAD_GATEWAY,				"Server Bad Gateway",
 	EASYDARWIN_ERROR_SERVER_UNAVAILABLE,				"Server Unavailable",
@@ -65,18 +65,18 @@ EasyProtocol::MsgType EasyProtocol::ErrorMap[] = {
 	EASYDARWIN_ERROR_DATABASE_NOT_FOUND,				"Database Not Found",
 	EASYDARWIN_ERROR_USER_NOT_FOUND,					"User Not Found",
 	EASYDARWIN_ERROR_DEVICE_NOT_FOUND,					"Device Not Found",
-	EASYDARWIN_ERROR_SESSION_NOT_FOUND,				"Session Not Found",
-	EASYDARWIN_ERROR_SERVICE_NOT_FOUND,				"Service Not Found",
+	EASYDARWIN_ERROR_SESSION_NOT_FOUND,					"Session Not Found",
+	EASYDARWIN_ERROR_SERVICE_NOT_FOUND,					"Service Not Found",
 	EASYDARWIN_ERROR_PASSWORD_ERROR,					"Password Error",
 	EASYDARWIN_ERROR_XML_PARSE_ERROR,					"XML Parse Error",
 	EASYDARWIN_ERROR_PERMISSION_ERROR,					"Permission Error",
-	EASYDARWIN_ERROR_LOCAL_SYSTEM_ERROR,               "Local System Error",
-	EASYDARWIN_ERROR_PARAM_ERROR,                      "Param Error"
+	EASYDARWIN_ERROR_LOCAL_SYSTEM_ERROR,				"Local System Error",
+	EASYDARWIN_ERROR_PARAM_ERROR,						"Param Error"
 };
 
 EasyProtocol::MsgType EasyProtocol::StatusMap[] = {
-    EASYDARWIN_DEVICE_STATUS_OFFLINE,                  "DEVICE_STATUS_OFFLINE",
-    EASYDARWIN_DEVICE_STATUS_ONLINE,                   "DEVICE_STATUS_ONLINE"
+    EASYDARWIN_DEVICE_STATUS_OFFLINE,					"DEVICE_STATUS_OFFLINE",
+    EASYDARWIN_DEVICE_STATUS_ONLINE,					"DEVICE_STATUS_ONLINE"
 };
 
 EasyProtocol::MsgType EasyProtocol::ProtocolTypeMap[] = {
@@ -85,13 +85,13 @@ EasyProtocol::MsgType EasyProtocol::ProtocolTypeMap[] = {
 };
 
 EasyProtocol::MsgType EasyProtocol::MediaEncodeTypeMap[] = {
-	EASYDARWIN_MEDIA_ENCODE_AUDIO_AAC,                 "AAC",
-	EASYDARWIN_MEDIA_ENCODE_VIDEO_H264,                "H264"
+	EASYDARWIN_MEDIA_ENCODE_AUDIO_AAC,					"AAC",
+	EASYDARWIN_MEDIA_ENCODE_VIDEO_H264,					"H264"
 };
 
 
 EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
-	EASYDARWIN_TERMINAL_TYPE_CAMERA,						"Camera"
+	EASYDARWIN_TERMINAL_TYPE_CAMERA,					"Camera"
 };
 
 EasyProtocol::EasyProtocol(int iMsgType)
