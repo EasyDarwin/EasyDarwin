@@ -7,64 +7,7 @@
 #ifndef __EasyPusher_H__
 #define __EasyPusher_H__
 
-#ifdef _WIN32
-#define EasyPusher_API  __declspec(dllexport)
-#define Easy_APICALL  __stdcall
-#else
-#define EasyPusher_API
-#define Easy_APICALL 
-#endif
-
-#define Easy_Pusher_Handle void*
-
-typedef unsigned char           Easy_U8;
-typedef unsigned char           Easy_UCHAR;
-typedef unsigned short          Easy_U16;
-typedef unsigned int            Easy_U32;
-
-enum
-{
-    Easy_NoErr						= 0,
-    Easy_RequestFailed				= -1,
-    Easy_Unimplemented				= -2,
-    Easy_RequestArrived				= -3,
-    Easy_OutOfState					= -4,
-    Easy_NotAModule					= -5,
-    Easy_WrongVersion				= -6,
-    Easy_IllegalService				= -7,
-    Easy_BadIndex					= -8,
-    Easy_ValueNotFound				= -9,
-    Easy_BadArgument				= -10,
-    Easy_ReadOnly					= -11,
-    Easy_NotPreemptiveSafe			= -12,
-    Easy_NotEnoughSpace				= -13,
-    Easy_WouldBlock					= -14,
-    Easy_NotConnected				= -15,
-    Easy_FileNotFound				= -16,
-    Easy_NoMoreData					= -17,
-    Easy_AttrDoesntExist			= -18,
-    Easy_AttrNameExists				= -19,
-    Easy_InstanceAttrsNotAllowed	= -20,
-	Easy_InvalidSocket				= -21,
-	Easy_MallocError				= -22,
-	Easy_ConnectError				= -23,
-	Easy_SendError					= -24
-};
-typedef int Easy_Error;
-
-/* 音视频编码 */
-#define EASY_SDK_VIDEO_CODEC_H264	0x01000001		/* H264 */
-#define EASY_SDK_AUDIO_CODEC_AAC	0x01000011		/* AAC */
-#define EASY_SDK_AUDIO_CODEC_G711	0x01000012		/* G711 */
-#define EASY_SDK_AUDIO_CODEC_G726	0x01000013		/* G726 */
-
-/* 音视频帧标识 */
-#define EASY_SDK_VIDEO_FRAME_FLAG	0x02000001	/* 视频帧标志 */
-#define EASY_SDK_AUDIO_FRAME_FLAG	0x02000002	/* 音频帧标志 */
-
-/* 视频关键字标识 */
-#define EASY_SDK_VIDEO_FRAME_I		0x03000001	/* 关键帧 */
-#define EASY_SDK_VIDEO_FRAME_P		0x03000002	/* 非关键帧 */
+#include "EasyAPITypes.h"
 
 typedef struct __EASY_AV_Frame
 {
@@ -105,26 +48,25 @@ extern "C"
 #endif
 
 	/* 创建推送句柄  返回为句柄值 */
-	EasyPusher_API Easy_Pusher_Handle Easy_APICALL EasyPusher_Create();
+	Easy_API Easy_Pusher_Handle Easy_APICALL EasyPusher_Create();
 	
 	/* 释放推送句柄 */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_Release(Easy_Pusher_Handle handle);
+	Easy_API Easy_U32 Easy_APICALL EasyPusher_Release(Easy_Pusher_Handle handle);
 
     /* 设置流传输事件回调 userptr传输自定义对象指针*/
-    EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_SetEventCallback(Easy_Pusher_Handle handle,  EasyPusher_Callback callback, int id, void *userptr);
+    Easy_API Easy_U32 Easy_APICALL EasyPusher_SetEventCallback(Easy_Pusher_Handle handle,  EasyPusher_Callback callback, int id, void *userptr);
 
 	/* 开始流传输 serverAddr:流媒体服务器地址、port:流媒体端口、streamName:流名称<xxx.sdp>、username/password:推送携带的用户名密码、pstruStreamInfo:推送的媒体定义、bufferKSize:以k为单位的缓冲区大小<512~2048之间,默认512> */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_StartStream(Easy_Pusher_Handle handle, char* serverAddr, Easy_U16 port, char* streamName, char *username, char *password, EASY_MEDIA_INFO_T*  pstruStreamInfo, Easy_U32 bufferKSize);
+	Easy_API Easy_U32 Easy_APICALL EasyPusher_StartStream(Easy_Pusher_Handle handle, char* serverAddr, Easy_U16 port, char* streamName, char *username, char *password, EASY_MEDIA_INFO_T*  pstruStreamInfo, Easy_U32 bufferKSize);
 
 	/* 停止流传输 */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_StopStream(Easy_Pusher_Handle handle);
+	Easy_API Easy_U32 Easy_APICALL EasyPusher_StopStream(Easy_Pusher_Handle handle);
 
 	/* 推流 frame:具体推送的流媒体帧 */
-	EasyPusher_API Easy_U32 Easy_APICALL EasyPusher_PushFrame(Easy_Pusher_Handle handle, EASY_AV_Frame* frame );
+	Easy_API Easy_U32 Easy_APICALL EasyPusher_PushFrame(Easy_Pusher_Handle handle, EASY_AV_Frame* frame );
 
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif
