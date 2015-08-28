@@ -42,19 +42,17 @@ class EasyHLSSession : public Task
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 		QTSS_Error		HLSSessionStart(char* rtspUrl);
 		QTSS_Error		HLSSessionRelease();
-		char*		GetHLSURL();
+		char*			GetHLSURL();
    
     private:
 
         //HLSSession列表由EasyHLSModule的sHLSSessionMap维护  
         OSRef       fRef;
         StrPtrLen   fHLSSessionID;
-
 		char		fHLSURL[QTSS_MAX_URL_LENGTH];
-
         OSQueueElem fQueueElem; 
 
-		//NVS Handle
+		//RTSPClient Handle
 		Easy_RTSP_Handle	fRTSPClientHandle;
 		//HLS Handle
 		Easy_HLS_Handle fHLSHandle;

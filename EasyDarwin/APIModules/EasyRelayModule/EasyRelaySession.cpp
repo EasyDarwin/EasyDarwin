@@ -50,7 +50,7 @@ EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const c
 {
     this->SetTaskName("EasyRelaySession");
 
-	//建立NVSourceClient
+	//建立RTSPClient
     StrPtrLen theURL(inURL);
 
 	fURL = NEW char[::strlen(inURL) + 2];
@@ -101,7 +101,7 @@ SInt64 EasyRelaySession::Run()
 QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	if(NULL == fPusherHandle) return QTSS_Unimplemented;
-	if (mediatype == MEDIA_TYPE_VIDEO)
+	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
 	{
 		printf("Get video Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
 
@@ -111,16 +111,16 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, R
 				memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
 				avFrame.u32AVFrameLen = frameinfo->length;
 				avFrame.pBuffer = (unsigned char*)pbuf;
-				avFrame.u32VFrameType = (frameinfo->type==FRAMETYPE_I)?EASY_SDK_VIDEO_FRAME_I:EASY_SDK_VIDEO_FRAME_P;
+				avFrame.u32VFrameType = (frameinfo->type==EASY_SDK_VIDEO_FRAME_I)?EASY_SDK_VIDEO_FRAME_I:EASY_SDK_VIDEO_FRAME_P;
 				EasyPusher_PushFrame(fPusherHandle, &avFrame);
 		}
 	}
-	else if (mediatype == MEDIA_TYPE_AUDIO)
+	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
 	{
 		printf("Get Audio Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
 		// 暂时不对音频进行处理
 	}
-	else if (mediatype == MEDIA_TYPE_EVENT)
+	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)
 	{
 		if (NULL == pbuf && NULL == frameinfo)
 		{
@@ -147,8 +147,8 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 
 		if (NULL == fRTSPClientHandle) return QTSS_Unimplemented;
 
-		unsigned int mediaType = MEDIA_TYPE_VIDEO;
-		//mediaType |= MEDIA_TYPE_AUDIO;	//换为RTSPClient, 屏蔽声音
+		unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG;
+		//mediaType |= EASY_SDK_AUDIO_FRAME_FLAG;	//换为RTSPClient, 屏蔽声音
 
 		EasyRTSP_SetCallback(fRTSPClientHandle, __EasyRTSPClientCallBack);
 		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
