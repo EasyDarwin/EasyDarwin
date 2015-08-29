@@ -479,9 +479,9 @@ QTSS_Error CServiceSession::SetupRequest()
 		case MSG_NGX_CMS_NEED_STREAM_REQ:
 			ExecNetMsgNgxStreamReq(theRequestBody);
 			break;
-		case MSG_CMS_DEV_STREAM_START_RSP:
+		case MSG_CMS_DEV_STREAM_START_ACK:
 			break;
-		case MSG_CMS_DEV_STREAM_STOP_RSP:
+		case MSG_CMS_DEV_STREAM_STOP_ACK:
 			break;
 		case MSG_CLI_CMS_DEVICE_LIST_REQ:
 			break;
@@ -607,7 +607,7 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 	if(theErr != QTSS_NoErr) return theErr;
 
 	//进行MSG_DEV_CMS_REGISTER_RSP响应，构造HTTP Content内容
-	EasyDarwin::Protocol::EasyDarwinRegisterRsp rsp;
+	EasyDarwin::Protocol::EasyDarwinRegisterAck rsp;
 	rsp.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
 	rsp.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
 	rsp.SetHeaderValue(EASYDARWIN_TAG_CSEQ, req.GetHeaderValue(EASYDARWIN_TAG_CSEQ).c_str());	
@@ -704,7 +704,7 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 		devMap->Release(theDevRef);
 
 	//构造MSG_NGX_CMS_NEED_STREAM_RSP请求直播消息响应报文
-	EasyDarwin::Protocol::EasyProtocol rsp(MSG_NGX_CMS_NEED_STREAM_RSP);
+	EasyDarwin::Protocol::EasyProtocol rsp(MSG_NGX_CMS_NEED_STREAM_ACK);
 	rsp.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
 	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_NUM, "200");//EASYDARWIN_ERROR_SUCCESS_OK
 	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_STRING, EasyProtocol::GetErrorString(EASYDARWIN_ERROR_SUCCESS_OK).c_str());
@@ -789,7 +789,7 @@ QTSS_Error CServiceSession::ExecNetMsgGetDeviceListReq()
 	if(devMap->GetNumRefsInTable() == 0 )
 		return QTSS_NoErr;
 
-	EasyDarwinDeviceListRsp req;
+	EasyDarwinDeviceListAck req;
 	req.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
 	req.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
 	req.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	

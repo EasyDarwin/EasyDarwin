@@ -35,29 +35,29 @@ std::string EasyDarwinRegisterReq::GetAuthCode()
 	return GetBodyValue("AuthCode");
 }
 
-EasyDarwinRegisterRsp::EasyDarwinRegisterRsp()
-: EasyProtocol(MSG_DEV_CMS_REGISTER_RSP)
+EasyDarwinRegisterAck::EasyDarwinRegisterAck()
+: EasyProtocol(MSG_DEV_CMS_REGISTER_ACK)
 {
 
 }
 
-EasyDarwinRegisterRsp::EasyDarwinRegisterRsp(const char* msg)
-: EasyProtocol(msg, MSG_DEV_CMS_REGISTER_RSP)
+EasyDarwinRegisterAck::EasyDarwinRegisterAck(const char* msg)
+: EasyProtocol(msg, MSG_DEV_CMS_REGISTER_ACK)
 {
 
 }
 
-EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp()
-: EasyProtocol(MSG_CLI_CMS_DEVICE_LIST_RSP)
+EasyDarwinDeviceListAck::EasyDarwinDeviceListAck()
+: EasyProtocol(MSG_CLI_CMS_DEVICE_LIST_ACK)
 {
 }
 
-EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char* msg)
-: EasyProtocol(msg, MSG_CLI_CMS_DEVICE_LIST_RSP)
+EasyDarwinDeviceListAck::EasyDarwinDeviceListAck(const char* msg)
+: EasyProtocol(msg, MSG_CLI_CMS_DEVICE_LIST_ACK)
 {
 }
 
-bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
+bool EasyDarwinDeviceListAck::AddDevice(EasyDarwinDevice &device)
 {	
 	Json::Value value;
 	value["DeviceSerial"] = device.DeviceSerial;
@@ -67,7 +67,7 @@ bool EasyDarwinDeviceListRsp::AddDevice(EasyDarwinDevice &device)
 	return true;
 }
 
-int EasyDarwinDeviceListRsp::StartGetDevice()
+int EasyDarwinDeviceListAck::StartGetDevice()
 {
 	devices.clear();	
 	
@@ -87,7 +87,7 @@ int EasyDarwinDeviceListRsp::StartGetDevice()
 	return devices.size();	
 }
 
-bool EasyDarwinDeviceListRsp::GetNextDevice(EasyDarwinDevice &device)
+bool EasyDarwinDeviceListAck::GetNextDevice(EasyDarwinDevice &device)
 {
 	if(devices.empty())
     {
@@ -125,16 +125,25 @@ bool EasyDarwinDeviceSnapUpdateReq::GetImageData(std::string &sImageBase64Data)
 	return !sImageBase64Data.empty();
 }
 
-EasyDarwinDeviceSnapUpdateRsp::EasyDarwinDeviceSnapUpdateRsp()
-: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_RSP)
+EasyDarwinDeviceSnapUpdateAck::EasyDarwinDeviceSnapUpdateAck()
+: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_ACK)
 {
 }
 
-EasyDarwinDeviceSnapUpdateRsp::EasyDarwinDeviceSnapUpdateRsp(const char *msg)
-: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_RSP)
+EasyDarwinDeviceSnapUpdateAck::EasyDarwinDeviceSnapUpdateAck(const char *msg)
+: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_ACK)
 {
 }
 
+EasyDarwinEasyHLSAck::EasyDarwinEasyHLSAck()
+: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_ACK)
+{
+}
+
+EasyDarwinEasyHLSAck::EasyDarwinEasyHLSAck(const char *msg)
+: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_ACK)
+{
+}
 
 }}//namespace
 

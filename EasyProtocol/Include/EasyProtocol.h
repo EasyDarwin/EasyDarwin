@@ -26,12 +26,12 @@ public:
 
 };
 
-class EASYDARWIN_API EasyDarwinRegisterRsp : public EasyProtocol
+class EASYDARWIN_API EasyDarwinRegisterAck : public EasyProtocol
 {
 public:
-	EasyDarwinRegisterRsp();
-	EasyDarwinRegisterRsp(const char* msg);
-	virtual ~EasyDarwinRegisterRsp(){}
+	EasyDarwinRegisterAck();
+	EasyDarwinRegisterAck(const char* msg);
+	virtual ~EasyDarwinRegisterAck(){}
 };
 
 class EasyDarwinDevice
@@ -46,12 +46,12 @@ public:
 	std::string DeviceSnap;
 };
 
-class EASYDARWIN_API EasyDarwinDeviceListRsp : public EasyProtocol
+class EASYDARWIN_API EasyDarwinDeviceListAck : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceListRsp();
-	EasyDarwinDeviceListRsp(const char* msg);
-	virtual ~EasyDarwinDeviceListRsp(){}
+	EasyDarwinDeviceListAck();
+	EasyDarwinDeviceListAck(const char* msg);
+	virtual ~EasyDarwinDeviceListAck(){}
 
 public:
 	bool AddDevice(EasyDarwinDevice &device);
@@ -74,12 +74,20 @@ public:
 	bool GetImageData(std::string &sImageBase64Data);
 };
 
-class EASYDARWIN_API EasyDarwinDeviceSnapUpdateRsp : public EasyProtocol
+class EASYDARWIN_API EasyDarwinDeviceSnapUpdateAck : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceSnapUpdateRsp();
-	EasyDarwinDeviceSnapUpdateRsp(const char *msg);
-	~EasyDarwinDeviceSnapUpdateRsp(){}
+	EasyDarwinDeviceSnapUpdateAck();
+	EasyDarwinDeviceSnapUpdateAck(const char *msg);
+	~EasyDarwinDeviceSnapUpdateAck(){}
+};
+
+class EASYDARWIN_API EasyDarwinEasyHLSAck : public EasyProtocol
+{
+public:
+	EasyDarwinEasyHLSAck();
+	EasyDarwinEasyHLSAck(const char *msg);
+	~EasyDarwinEasyHLSAck(){}
 };
 
 }}//namespace
