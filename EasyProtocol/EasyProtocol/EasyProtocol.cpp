@@ -136,13 +136,23 @@ EasyDarwinDeviceSnapUpdateAck::EasyDarwinDeviceSnapUpdateAck(const char *msg)
 }
 
 EasyDarwinEasyHLSAck::EasyDarwinEasyHLSAck()
-: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_ACK)
+: EasyProtocol(MSG_CLI_SMS_HLS_ACK)
 {
 }
 
 EasyDarwinEasyHLSAck::EasyDarwinEasyHLSAck(const char *msg)
-: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_ACK)
+: EasyProtocol(msg, MSG_CLI_SMS_HLS_ACK)
 {
+}
+
+void EasyDarwinEasyHLSAck::SetStreamName(const char* sName)
+{
+	SetBodyValue("name", sName);
+}
+
+void EasyDarwinEasyHLSAck::SetStreamURL(const char* sURL)
+{
+	SetBodyValue("url", sURL);
 }
 
 }}//namespace
