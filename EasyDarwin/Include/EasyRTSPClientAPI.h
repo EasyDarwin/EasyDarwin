@@ -7,7 +7,7 @@
 #ifndef _Easy_RTSPClient_API_H
 #define _Easy_RTSPClient_API_H
 
-#include "EasyAPITypes.h"
+#include "EasyTypes.h"
 
 /*
 	_mediatype:		EASY_SDK_VIDEO_FRAME_FLAG	EASY_SDK_AUDIO_FRAME_FLAG	EASY_SDK_EVENT_FRAME_FLAG	

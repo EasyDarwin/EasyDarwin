@@ -4,8 +4,8 @@
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-#ifndef _Easy_API_Types_H
-#define _Easy_API_Types_H
+#ifndef _Easy_Types_H
+#define _Easy_Types_H
 
 #ifdef _WIN32
 #define Easy_API  __declspec(dllexport)
@@ -88,7 +88,7 @@ typedef enum __RTP_CONNECT_TYPE
 typedef struct 
 {
 	unsigned int	codec;			//编码格式
-	unsigned char	type;			//帧类型
+	unsigned int	type;			//帧类型
 	unsigned char	fps;			//帧率
 	unsigned int	reserved1;
 	unsigned int	reserved2;
