@@ -7,7 +7,7 @@
 #ifndef __EasyPusher_H__
 #define __EasyPusher_H__
 
-#include "EasyAPITypes.h"
+#include "EasyTypes.h"
 
 typedef struct __EASY_AV_Frame
 {
