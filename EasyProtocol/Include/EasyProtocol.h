@@ -88,6 +88,9 @@ public:
 	EasyDarwinEasyHLSAck();
 	EasyDarwinEasyHLSAck(const char *msg);
 	~EasyDarwinEasyHLSAck(){}
+
+	void SetStreamName(const char* sName);
+	void SetStreamURL(const char* sURL);
 };
 
 }}//namespace

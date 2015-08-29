@@ -137,6 +137,8 @@
 #define MSG_DEV_CMS_SNAP_UPDATE_REQ							0x0010
 #define MSG_DEV_CMS_SNAP_UPDATE_ACK							0xe010
 
+#define	MSG_CLI_SMS_HLS_ACK									0xe011
+
 /*!
 \}
 */

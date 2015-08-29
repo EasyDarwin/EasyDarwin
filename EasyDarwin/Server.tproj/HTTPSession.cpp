@@ -591,7 +591,16 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 		}
 	}while(0);
 
-	StrPtrLen msgJson(hlsURL);
+	//构造MSG_CLI_SMS_HLS_ACK响应报文
+	EasyDarwinEasyHLSAck ack;
+	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
+	
+	ack.SetStreamURL(hlsURL);
+
+	string msg = ack.GetMsg();
+
+	StrPtrLen msgJson((char*)msg.c_str());
+
 	//构造响应报文(HTTP头)
 	HTTPRequest httpAck(&sServiceStr);
 	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
