@@ -109,6 +109,7 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, R
 		{
 				EASY_AV_Frame  avFrame;
 				memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+				avFrame.u32AVFrameFlag	=	EASY_SDK_VIDEO_FRAME_FLAG;
 				avFrame.u32AVFrameLen = frameinfo->length;
 				avFrame.pBuffer = (unsigned char*)pbuf;
 				avFrame.u32VFrameType = (frameinfo->type==EASY_SDK_VIDEO_FRAME_I)?EASY_SDK_VIDEO_FRAME_I:EASY_SDK_VIDEO_FRAME_P;
@@ -156,9 +157,10 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 
 	if(NULL == fPusherHandle)
 	{
-		EASY_MEDIA_INFO_T mediainfo;
+		EASY_MEDIA_INFO_T	mediainfo;
 		memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
-		mediainfo.u32VideoCodec =   0x1C;
+		mediainfo.u32VideoCodec =   EASY_SDK_VIDEO_CODEC_H264;
+		mediainfo.u32VideoFps = 20;
 
 		fPusherHandle = EasyPusher_Create();
 
