@@ -182,7 +182,7 @@ QTSS_Error ReflectorSession::SetSessionName()
 #endif
 
 		parser.ConsumeLength(NULL,thePathLen);
-		parser.ConsumeWord(&strName);
+		parser.ConsumeUntil(&strName,'\.');
 		fSessionName = NEW char[strName.Len + 1];
 		::memcpy(fSessionName, strName.Ptr, strName.Len);
 		fSessionName[strName.Len] = '\0';
