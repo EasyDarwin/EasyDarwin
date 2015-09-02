@@ -2174,8 +2174,8 @@ void RTSPSession::HandleIncomingDataPacket()
     if (theSessionID == NULL)
     {
         Assert(0);
+		return;
         theSessionID = &fLastRTPSessionIDPtr;
-
     }
     
     OSRefTable* theMap = QTSServerInterface::GetServer()->GetRTPSessionMap();
