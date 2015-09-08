@@ -27,7 +27,7 @@ static UInt32                   sDefaultM3U8Version					= 3;
 static Bool16                   sDefaultAllowCache					= false; 
 static UInt32                   sDefaultTargetDuration				= 4;
 static UInt32                   sDefaultPlaylistCapacity			= 4;
-static char*					sDefaultHTTPRootDir					= "http://hls.easydarwin.org/";
+static char*					sDefaultHTTPRootDir					= "http://www.easydarwin.org/";
 
 UInt32                          EasyHLSSession::sM3U8Version		= 3;
 Bool16                          EasyHLSSession::sAllowCache			= false;
@@ -61,13 +61,7 @@ int Easy_APICALL __RTSPClientCallBack( int _chid, int *_chPtr, int _mediatype, c
 
 	if (NULL == pHLSSession)	return -1;
 
-	if (NULL != frameinfo)
-	{
-		if (frameinfo->height==1088)		frameinfo->height=1080;
-		else if (frameinfo->height==544)	frameinfo->height=540;
-	}
-
-	//投递到具体的EasyHLSSession进行处理
+	//投递到具体对应的EasyHLSSession进行处理
 	pHLSSession->ProcessData(_chid, _mediatype, pbuf, frameinfo);
 
 	return 0;

@@ -10,10 +10,13 @@
 #include "EasyTypes.h"
 
 /*
-	_mediatype:		EASY_SDK_VIDEO_FRAME_FLAG	EASY_SDK_AUDIO_FRAME_FLAG	EASY_SDK_EVENT_FRAME_FLAG	
-	如果在EasyRTSP_OpenStream中的参数outRtpPacket置为1, 则回调中的_mediatype为EASY_SDK_RTP_FRAME_FLAG, pbuf为接收到的RTP包(包含rtp头信息), frameinfo->length为包长
+	_channelId:		通道号,暂时不用
+	_channelPtr:	通道对应对象,暂时不用
+	_frameType:		EASY_SDK_VIDEO_FRAME_FLAG/EASY_SDK_AUDIO_FRAME_FLAG/EASY_SDK_EVENT_FRAME_FLAG/...	
+	_pBuf:			回调的数据部分，具体用法看Demo
+	_frameInfo:		帧结构数据
 */
-typedef int (Easy_APICALL *RTSPSourceCallBack)( int _chid, int *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
+typedef int (Easy_APICALL *RTSPSourceCallBack)( int _channelId, int *_channelPtr, int _frameType, char *pBuf, RTSP_FRAME_INFO* _frameInfo);
 
 #ifdef __cplusplus
 extern "C"
@@ -22,7 +25,7 @@ extern "C"
 	/* 获取最后一次错误的错误码 */
 	Easy_API int Easy_APICALL EasyRTSP_GetErrCode();
 
-	/* 创建RTSPClient句柄  返回为句柄值 */
+	/* 创建RTSPClient句柄  返回0表示成功，返回非0表示失败 */
 	Easy_API int Easy_APICALL EasyRTSP_Init(Easy_RTSP_Handle *handle);
 
 	/* 释放RTSPClient 参数为RTSPClient句柄 */
