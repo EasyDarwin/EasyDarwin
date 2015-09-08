@@ -17,16 +17,6 @@ typedef struct __EASY_AV_Frame
     Easy_U8     *pBuffer;			/* 数据 */
 }EASY_AV_Frame;
 
-typedef struct __EASY_MEDIA_INFO_T
-{
-	Easy_U32 u32VideoCodec;			/* 视频编码类型 */
-	Easy_U32 u32VideoFps;			/* 视频帧率 */
-	
-	Easy_U32 u32AudioCodec;			/* 音频编码类型 */
-	Easy_U32 u32AudioSamplerate;	/* 音频采样率 */
-	Easy_U32 u32AudioChannel;		/* 音频通道数 */
-}EASY_MEDIA_INFO_T;
-
 /* 推送事件类型定义 */
 typedef enum __EASY_PUSH_STATE_T
 {
