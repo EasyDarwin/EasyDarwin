@@ -517,6 +517,8 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
     
             OSMutexLocker locker(((ReflectorSocket*)(fSockets->GetSocketA()))->GetDemuxer()->GetMutex());
             thePacket->SetPacketData(packet, packetLen);
+
+			printf("TimeStamp:%u \n", thePacket->GetPacketRTPTime());
              ((ReflectorSocket*)fSockets->GetSocketA())->ProcessPacket(OS::Milliseconds(),thePacket,0,0);
              ((ReflectorSocket*)fSockets->GetSocketA())->Signal(Task::kIdleEvent);
         }
@@ -1716,7 +1718,7 @@ void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket,Bool16 isRTC
 }
 
 Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPacket* thePacket,UInt32 theRemoteAddr,UInt16 theRemotePort)
-{   
+{
     Bool16 done = false; // stop when result is true
     if (thePacket != NULL) do
     {
