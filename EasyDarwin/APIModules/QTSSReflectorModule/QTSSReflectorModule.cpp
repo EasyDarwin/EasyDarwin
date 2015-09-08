@@ -1424,136 +1424,22 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
         delete theInfo;
         
         theSession = (ReflectorSession*)theSessionRef->GetObject(); 
-        if (isPush && theSession)
+		if (isPush && theSession && !(theSession->IsSetup()))
         {
             UInt32 theSetupFlag = ReflectorSession::kMarkSetup | ReflectorSession::kIsPushSession;
             QTSS_Error theErr = theSession->SetupReflectorSession(NULL, inParams, theSetupFlag);
             if (theErr != QTSS_NoErr)
-            {   return NULL;
+            {   
+				return NULL;
             }
         }
     }
             
     Assert(theSession != NULL);
 
-    return theSession;
-    if (theSessionRef == NULL)
-    {
-        //If this URL doesn't already have a reflector session, we must make a new
-        //one. The first step is to create an SDPSourceInfo object.
-        
-        StrPtrLen theFileData;
-        StrPtrLen theFileDeleteData;
-        
-        //
-        // If no file data is provided by the caller, read the file data out of the file.
-        // If file data is provided, use that as our SDP data
-        if (inData == NULL)
-        {   (void)QTSSModuleUtils::ReadEntireFile(inPath->Ptr, &theFileDeleteData);
-            theFileData = theFileDeleteData;
-        }
-        else
-            theFileData = *inData;
-        OSCharArrayDeleter fileDataDeleter(theFileDeleteData.Ptr); 
-            
-        if (theFileData.Len <= 0)
-            return NULL;
-            
-        SDPSourceInfo* theInfo = NEW SDPSourceInfo(theFileData.Ptr, theFileData.Len); // will make a copy
-            
-        if (!theInfo->IsReflectable())
-        {   delete theInfo;
-            return NULL;
-        }
-        if ( !theInfo->IsActiveNow() && !isPush)
-        {   delete theInfo;
-            return NULL;
-        }
-        
-        if (!InfoPortsOK(inParams, theInfo, inPath))
-        {   delete theInfo;
-            return NULL;
-        }
-        //
-        // Setup a ReflectorSession and bind the sockets. If we are negotiating,
-        // make sure to let the session know that this is a Push Session so
-        // ports may be modified.
-        UInt32 theSetupFlag = ReflectorSession::kMarkSetup;
-        if (isPush)
-            theSetupFlag |= ReflectorSession::kIsPushSession;
-        
-        theSession = NEW ReflectorSession(inPath);
-        
-        // SetupReflectorSession stores theInfo in theSession so DONT delete the Info if we fail here, leave it alone.
-        // deleting the session will delete the info.
-        QTSS_Error theErr = theSession->SetupReflectorSession(theInfo, inParams, theSetupFlag,sOneSSRCPerStream, sTimeoutSSRCSecs);
-        if (theErr != QTSS_NoErr || theSession == NULL)
-        {   delete theSession;
-            return NULL;
-        }
-       
-        //printf("Created reflector session = %"_U32BITARG_" theInfo=%"_U32BITARG_" \n", (UInt32) theSession,(UInt32)theInfo);
-        //put the session's ID into the session map.
-        theErr = sSessionMap->Register(theSession->GetRef());
-        Assert(theErr == QTSS_NoErr);
-
-        //unless we do this, the refcount won't increment (and we'll delete the session prematurely
-        if (!isPush)
-        {   OSRef* debug = sSessionMap->Resolve(inPath);
-            Assert(debug == theSession->GetRef());
-        }
-    }
-    else
-    {
-    
-        if (isPush) 
-            sSessionMap->Release(theSessionRef); // don't need if a push;// don't need if a push; A Release is necessary or we will leak ReflectorSessions.
-
-        if (foundSessionPtr)
-            *foundSessionPtr = true;
-            
-        StrPtrLen theFileData;
-        SDPSourceInfo* theInfo = NULL;
-        
-        if (inData == NULL)
-            (void)QTSSModuleUtils::ReadEntireFile(inPath->Ptr, &theFileData);
-        OSCharArrayDeleter charArrayDeleter(theFileData.Ptr);
-            
-        if (theFileData.Len <= 0)
-            return NULL;
-        
-        theInfo = NEW SDPSourceInfo(theFileData.Ptr, theFileData.Len);
-        if (theInfo == NULL) 
-            return NULL;
-            
-        if ( !theInfo->IsActiveNow() && !isPush)
-        {   delete theInfo;
-            return NULL;
-        }
-        
-        if (!InfoPortsOK(inParams, theInfo, inPath))
-        {   delete theInfo;
-            return NULL;
-        }
-        
-        delete theInfo;
-        
-        theSession = (ReflectorSession*)theSessionRef->GetObject(); 
-        if (isPush && theSession)
-        {
-            UInt32 theSetupFlag = ReflectorSession::kMarkSetup | ReflectorSession::kIsPushSession;
-            QTSS_Error theErr = theSession->SetupReflectorSession(NULL, inParams, theSetupFlag,sOneSSRCPerStream, sTimeoutSSRCSecs);
-            if (theErr != QTSS_NoErr)
-            {   return NULL;
-            }
-        }
-    }
-            
-    Assert(theSession != NULL);
-
-	// Turn off overbuffering if the "disable_overbuffering" pref says so
-	if (sDisableOverbuffering)
-		(void)QTSS_SetValue(inParams->inClientSession, qtssCliSesOverBufferEnabled, 0, &sFalse, sizeof(sFalse));
+	//// Turn off overbuffering if the "disable_overbuffering" pref says so
+	//if (sDisableOverbuffering)
+	//	(void)QTSS_SetValue(inParams->inClientSession, qtssCliSesOverBufferEnabled, 0, &sFalse, sizeof(sFalse));
 
     return theSession;
 }

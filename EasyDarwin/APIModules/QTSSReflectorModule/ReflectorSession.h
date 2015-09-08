@@ -95,9 +95,9 @@ class ReflectorSession
         
         enum
         {
-            kMarkSetup = 0,     //After SetupReflectorSession is called, IsSetup returns true
-            kDontMarkSetup = 1, //After SetupReflectorSession is called, IsSetup returns false
-            kIsPushSession = 2  // When setting up streams handle port conflicts by allocating.
+            kMarkSetup = 1,     //After SetupReflectorSession is called, IsSetup returns true
+            kDontMarkSetup = 2, //After SetupReflectorSession is called, IsSetup returns false
+            kIsPushSession = 4  // When setting up streams handle port conflicts by allocating.
         };
         
         QTSS_Error      SetupReflectorSession(SourceInfo* inInfo, QTSS_StandardRTSP_Params* inParams,
