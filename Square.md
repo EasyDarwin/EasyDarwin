@@ -4,7 +4,7 @@
 
 ## 一、部署EasyCMS接入服务器 ##
 ### 1.1、获取EasyCMS最新版本 ###
-在Github：https://github.com/EasyDarwin/EasyDarwin中获取最新的EasyCMS版本源码，自行编译成需要的可执行文件，也可以直接在https://github.com/EasyDarwin/EasyDarwin/releases 中下载已经归档的相应版本进行部署。
+在Github：https://github.com/EasyDarwin/EasyDarwin 中获取最新的EasyCMS版本源码，自行编译成需要的可执行文件，也可以直接在 https://github.com/EasyDarwin/EasyDarwin/releases 中下载已经归档的相应版本进行部署。
 
 ### 1.2、编译EasyCMS最新版本 ###
 Windows版本编译：可以直接用Visual Studio 2008打开源码文件中的：/EasyDarwin-master/EasyCMS/WinNTSupport/EasyCMS.sln解决方案文件，编译出exe可执行文件EasyCMS.exe；
@@ -67,7 +67,7 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 ## 二、部署EasyDarwin流媒体服务器 ##
 
 ### 2.1、获取EasyDarwin最新版本 ###
-在Github：https://github.com/EasyDarwin/EasyDarwin中获取最新的EasyDarwin版本源码，自行编译成需要的可执行文件，也可以直接在https://github.com/EasyDarwin/EasyDarwin/releases 中下载已经归档的相应版本进行部署。
+在Github：https://github.com/EasyDarwin/EasyDarwin 中获取最新的EasyDarwin版本源码，自行编译成需要的可执行文件，也可以直接在 https://github.com/EasyDarwin/EasyDarwin/releases 中下载已经归档的相应版本进行部署。
 
 ### 2.2、编译EasyDarwin最新版本 ###
 Windows版本编译：可以直接用Visual Studio 2008打开源码文件中的：/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln解决方案文件，编译出exe可执行文件EasyDarwin.exe；
@@ -138,7 +138,7 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 
 ### 3.1、获取EasyCamera最新版本(目前仅维护Windows/arm摄像机版本) ###
 
-在Github：https://github.com/EasyDarwin/EasyCamera 中获取最新的EasyCamera版本源码，自行编译成需要的可执行文件，也可以直接在https://github.com/EasyDarwin/EasyCamera/releases 中下载已经归档的相应版本进行部署。
+在Github：https://github.com/EasyDarwin/EasyCamera 中获取最新的EasyCamera版本源码，自行编译成需要的可执行文件，也可以直接在 https://github.com/EasyDarwin/EasyCamera/releases 中下载已经归档的相应版本进行部署。
 
 ### 3.2、编译EasyCamera最新版本 ###
 Windows版本编译：可以直接用Visual Studio 2008打开源码文件中的：/EasyCamera-master/src/WinNTSupport/EasyCamera.sln解决方案文件，编译出exe可执行文件EasyCamera.exe；
