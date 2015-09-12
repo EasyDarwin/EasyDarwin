@@ -137,7 +137,7 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 ## 常见问题 ##
 ### 1. EasyDarwin收费吗？ ###
 
-	不要钱
+不要钱
 
 ### 2. EasyDarwin返回401 Unauthorized ###
 
@@ -205,6 +205,50 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 ### 6. mp4点播返回415错误(Requested movie hasn't been hinted) ###
 
 MP4文件需要先经过RTSP/RTP Hint处理，处理工具可以选择MP4Box或者MediaCoder等；
+
+### 7. /bin/sh^M: bad interpreter: No such file or directory ###
+
+**感谢QQ:591003999提供的完整解决方案**
+
+从git上导下来的Buildit的格式是：fileformat=dos，但是在Linux下的话 是需要fileformat=unix 所以 ./Buildit 就出现错误 无法执行，需要修改文件格式，
+
+- 在Windows下转换： 
+
+> 利用一些编辑器如UltraEdit或EditPlus等工具先将脚本编码转换，再放到Linux中执行。转换方式如下
+> 
+> **（UltraEdit）：File-->Conversions-->DOS->UNIX**
+> 
+> 即可。 
+
+- 也可在Linux中转换： 
+
+> 首先要确保文件有可执行权限 
+> 
+> 	#sh>chmod a+x filename 
+> 
+> 然后修改文件格式 
+> 
+> 	#sh>vi filename 
+> 
+> 利用如下命令查看文件格式 
+> 
+> 	:set ff 或 :set fileformat 
+> 
+> 可以看到如下信息 
+> 
+> 	fileformat=dos 或 fileformat=unix 
+> 
+> 利用如下命令修改文件格式
+>  
+> 	:set ff=unix 或 :set fileformat=unix 
+> 
+> :wq (存盘退出) 
+> 
+> 最后再执行文件 
+> 	
+> 	#sh>./filename
+> 
+
 
 ## 获取更多信息 ##
 
