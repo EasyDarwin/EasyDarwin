@@ -1,4 +1,5 @@
 # EasyDarwin常见问题 #
+
 ## 1. EasyDarwin收费吗？ ##
 
 不要钱
@@ -114,7 +115,7 @@ MP4文件需要先经过RTSP/RTP Hint处理，处理工具可以选择MP4Box或�
 > 
 
 
-## 获取更多信息 ##
+# 获取更多信息 #
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
 
