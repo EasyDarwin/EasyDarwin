@@ -12,7 +12,7 @@ EasyDarwin具备一套完整的网络I/O框架以及Utility，开发者很容易
 1. HLS直播(EasyHLSModule)；
 1. 接入EasyDarwin流媒体平台，分布式部署；
 
-## 正在进行开发的: ##
+## EasyDarwin正在进行开发的: ##
 1. HLS回放；
 1. Onvif支持；
 1. WEB配置与管理模块(集成Mongoose)；
@@ -41,13 +41,13 @@ EasyDarwin主要的几个配置项：
 
 ***movie_folder***：媒体文件存储的路径，包括点播文件、直播切片生成的hls文件；
 
-***http_service_port***：Webservice服务端口；
+***http\_service\_port***：Webservice服务端口；
 
-***hls_output_enabled***：配置QTSSReflectorModule在接收推送的同时，是否同步输出hls；
+***hls\_output\_enabled***：配置QTSSReflectorModule在接收推送的同时，是否同步输出hls；
 
-***HTTP_ROOT_DIR***：配置EasyHLSModule的对外WEB路径；
+***HTTP\_ROOT\_DIR***：配置EasyHLSModule的对外WEB路径；
 
-***local_ip_address***：配置EasyRelayModule对外服务的ip地址，因为可能会有多网卡或者内网映射，所以需要手动配置；
+***local\_ip\_address***：配置EasyRelayModule对外服务的ip地址，因为可能会有多网卡或者内网映射，所以需要手动配置；
 
 以Linux系统nginx做WEB服务器为例，比如我们将点播文件存储在/EasyDarwin/movies/目录，也就是
 
