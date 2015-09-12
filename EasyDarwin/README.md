@@ -1,6 +1,5 @@
-# EasyDarwin #
+# 高性能流媒体服务器EasyDarwin #
 
-## 接地气的流媒体服务器 ##
 EasyDarwin开源流媒体服务器是EasyDarwin开源流媒体平台的流媒体服务部分，基于Apple的开源项目Darwin Streaming Server开发和扩展的, EasyDarwin支持标准RTSP/RTP/RTCP协议，具备RTSP/RTP点播、直播（推模式和拉模式）等功能，支持HLS直播，适应安卓、IOS、微信直播等终端平台，最大程度贴近安防监控、移动互联网流媒体需求；EasyDarwin本身提供了一个高性能的平台框架，Linux/Windows跨平台支持，是开发流媒体服务以及其他类型服务的极佳框架工具； 
 
 EasyDarwin具备一套完整的网络I/O框架以及Utility，开发者很容易在EasyDarwin的基础上开发跨平台服务程序，例如Windows、Linux、Mac、Solaris等系统平台，只要一次熟悉，将会受用终身，并且部署和开发过程简单，文档和支持完备，是互联网<sup>+</sup>时代，对企业和开发者来说，最接地气的开源流媒体服务器；
