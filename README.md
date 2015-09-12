@@ -19,7 +19,7 @@
 ![](http://www.easydarwin.org/skin/easydarwin/images/architecture20150825.png)
 
 
-### 直播流程
+## 直播流程 ##
 
 <pre>
 
@@ -50,9 +50,8 @@
 
 </pre>
 
-----------
 
-### 获取更多信息 ###
+## 获取更多信息 ##
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
 
