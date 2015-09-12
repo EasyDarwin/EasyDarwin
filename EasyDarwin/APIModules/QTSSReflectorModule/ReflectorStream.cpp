@@ -518,7 +518,6 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
             OSMutexLocker locker(((ReflectorSocket*)(fSockets->GetSocketA()))->GetDemuxer()->GetMutex());
             thePacket->SetPacketData(packet, packetLen);
 
-			printf("TimeStamp:%u \n", thePacket->GetPacketRTPTime());
              ((ReflectorSocket*)fSockets->GetSocketA())->ProcessPacket(OS::Milliseconds(),thePacket,0,0);
              ((ReflectorSocket*)fSockets->GetSocketA())->Signal(Task::kIdleEvent);
         }

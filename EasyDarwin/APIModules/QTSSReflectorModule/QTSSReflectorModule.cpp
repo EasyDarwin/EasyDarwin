@@ -673,7 +673,6 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
 
     if (1)
     {
-		printf("Channel:%d \t", packetChannel);
         UInt32 inIndex = packetChannel / 2; // one stream per every 2 channels rtcp channel handled below
         ReflectorStream* theStream = NULL;
         if (inIndex < numStreams) 
