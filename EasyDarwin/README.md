@@ -4,14 +4,14 @@ EasyDarwin开源流媒体服务器是EasyDarwin开源流媒体平台的流媒体
 
 EasyDarwin具备一套完整的网络I/O框架以及Utility，开发者很容易在EasyDarwin的基础上开发跨平台服务程序，例如Windows、Linux、Mac、Solaris等系统平台，只要一次熟悉，将会受用终身，并且部署和开发过程简单，文档和支持完备，是互联网<sup>+</sup>时代，对企业和开发者来说，最接地气的开源流媒体服务器；
 
-## EasyDarwin目前支持: ##
+## EasyDarwin目前支持 ##
 1. MP4点播回放；
 1. 标准RTSP推模式直播(QTSSReflectorModule)；
 1. 标准RTSP拉模式直播(EasyRelayModule)；
 1. HLS直播(EasyHLSModule)；
 1. 接入EasyDarwin流媒体平台，分布式部署；
 
-## EasyDarwin正在进行开发的: ##
+## EasyDarwin正在进行开发的 ##
 1. HLS回放；
 1. Onvif支持；
 1. WEB配置与管理模块(集成Mongoose)；
@@ -84,8 +84,9 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
     ./easydarwin -c ../WinNTSupport/easydarwin.xml  &
 注：如果xml配置文件路径不能确定，建议最保险的方式就是用全路径，例如 “/etc/streaming/EasyDarwin/easydarwin.xml”，这样在下一次更新服务的时候，配置文件可以保留！
 
-### 5、EasyDarwin是否部署成功检查 ###
-<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >true</PREF>
+### 5、检查EasyDarwin是否部署成功 ###
+
+	<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >true</PREF>
 将easydarwin.xml中输出打印配置为true，这样就能在调试模式中看是否有报文发来，也可以在easydarwin.xml中配置log输出的目录和文件名称，再根据log确定问题（具体个性化log，需要自己添加代码，编译部署）；
 
 ## 调用方法 ##
