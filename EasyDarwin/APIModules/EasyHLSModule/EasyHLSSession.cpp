@@ -164,38 +164,58 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 */
 QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 {
-	if(NULL == fRTSPClientHandle)
-	{
-		//创建RTSPClient
-		EasyRTSP_Init(&fRTSPClientHandle);
+	QTSS_Error theErr = QTSS_NoErr;
 
-		if (NULL == fRTSPClientHandle) return QTSS_Unimplemented;
+	do{
+		if(NULL == fRTSPClientHandle)
+		{
+			//创建RTSPClient
+			EasyRTSP_Init(&fRTSPClientHandle);
 
-		unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG;
-		//mediaType |= EASY_SDK_AUDIO_FRAME_FLAG;	//换为RTSPClient, 屏蔽声音
+			if (NULL == fRTSPClientHandle)
+			{
+				theErr = QTSS_RequestFailed;
+				break;
+			}
 
-		EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
-		EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
-	}
+			unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG | EASY_SDK_AUDIO_FRAME_FLAG;
 
-	if(NULL == fHLSHandle)
-	{
-		//创建HLSSessioin Sink
-		char movieFolder[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
-		UInt32 pathLen = QTSS_MAX_FILE_NAME_LENGTH;
-		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
+			EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
+			EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+		}
 
-		fHLSHandle = EasyHLS_Session_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
+		if(NULL == fHLSHandle)
+		{
+			//创建HLSSessioin Sink
+			char movieFolder[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+			UInt32 pathLen = QTSS_MAX_FILE_NAME_LENGTH;
+			QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
 
-		char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
-		qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
-		EasyHLS_ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
-		
-		qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", sHTTPRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr);
+			fHLSHandle = EasyHLS_Session_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
 
-	}
+			if (NULL == fHLSHandle)
+			{
+				theErr = QTSS_Unimplemented;
+				break;
+			}
 
-	return QTSS_NoErr;
+			char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+			qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
+			EasyHLS_ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+
+			char msgStr[2048] = { 0 };
+			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,movieFolder=%s,subDir=%s", fHLSSessionID.Ptr, movieFolder, subDir);
+			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+					
+			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", sHTTPRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr);
+		}
+	}while(0);
+
+	char msgStr[2048] = { 0 };
+	qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::HLSSessionStart SessionID=%s,url=%s,return=%d", fHLSSessionID.Ptr, rtspUrl, theErr);
+	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+
+	return theErr;
 }
 
 QTSS_Error	EasyHLSSession::HLSSessionRelease()

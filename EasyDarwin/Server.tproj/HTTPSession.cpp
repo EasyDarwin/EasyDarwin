@@ -72,7 +72,7 @@ HTTPSession::~HTTPSession()
 	QTSS_GetValue(this, easyHTTPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
 
 	char msgStr[2048] = { 0 };
-	qtss_snprintf(msgStr, sizeof(msgStr), "session offline from ip[%s]",remoteAddress);
+	qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession Offline from ip[%s]",remoteAddress);
 	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
     // Invoke the session closing modules
     QTSS_RoleParams theParams;
@@ -114,7 +114,7 @@ SInt64 HTTPSession::Run()
 	{
 		//客户端Session超时，暂时不处理 
 		char msgStr[512];
-		qtss_snprintf(msgStr, sizeof(msgStr), "session timeout,release session\n");
+		qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession Timeout Release");
 		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 		return -1;
 	}
@@ -587,6 +587,10 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 				break;
 			}
 
+			char msgStr[2048] = { 0 };
+			qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession::ExecNetMsgEasyHLSModuleReq name=%s,url=%s", sName, sURL);
+			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+
 			Easy_StartHLSSession(sName, sURL, hlsURL);
 		}
 	}while(0);
@@ -622,198 +626,3 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 
 	return QTSS_NoErr;
 }
-
-
-//QTSS_Error HTTPSession::ExecNetMsgNgxStreamReq(const char* json)
-//{
-//	QTSS_Error theErr = QTSS_NoErr;
-//
-//	//MSG_NGX_CMS_NEED_STREAM_REQ请求设备直播消息解析
-//	EasyDarwin::Protocol::EasyProtocol req(json);
-//
-//	//获取设备SN序列号
-//	std::string strDeviceSN = req.GetBodyValue(EASYDARWIN_TAG_DEVICE_SERIAL);
-//
-//	//这里对错误报文没有进行Response回复，实际是需要进行处理的
-//	if(strDeviceSN.length()<=0) return QTSS_BadArgument;
-//
-//	printf("MSG_NGX_CMS_NEED_STREAM_REQ(%s)\n", strDeviceSN.c_str());
-//
-//	OSRefTable* devMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
-//	OSRef* theDevRef = NULL;
-//
-//	do
-//	{
-//		//从设备列表MAP中查找设备
-//		char strSerial[EASY_MAX_SERIAL_LENGTH] = { 0 };
-//		qtss_sprintf(strSerial,"%s",strDeviceSN.c_str());
-//
-//		StrPtrLen devSerialPtr(strSerial);
-//
-//		// Device RefCount++
-//		theDevRef = devMap->Resolve(&devSerialPtr);
-//
-//		if (theDevRef == NULL)
-//		{
-//			//未查找到设备，返回404
-//			theErr = QTSS_ValueNotFound;
-//			break;
-//		}
-//
-//		//构造MSG_CMS_DEV_STREAM_START_REQ请求设备码流消息
-//		EasyDarwin::Protocol::EasyProtocol streamingREQ(MSG_CMS_DEV_STREAM_START_REQ);
-//		//Header
-//		streamingREQ.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
-//		streamingREQ.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
-//		//Body
-//		streamingREQ.SetBodyValue(EASYDARWIN_TAG_STREAM_ID, EASYDARWIN_PROTOCOL_STREAM_MAIN);
-//		streamingREQ.SetBodyValue(EASYDARWIN_TAG_PROTOCOL, "RTSP");
-//		streamingREQ.SetBodyValue("DssIP","www.easydarwin.org");
-//		streamingREQ.SetBodyValue("DssPort","554");
-//	
-//		string buffer = streamingREQ.GetMsg();
-//		//发送MSG_CMS_DEV_STREAM_START_REQ报文到设备
-//		QTSS_SendHTTPPacket(theDevRef->GetObject(), (char*)buffer.c_str(), ::strlen(buffer.c_str()), false, false);
-//
-//	}while(0);
-//	
-//	//Device RefCount--
-//	if(theDevRef)
-//		devMap->Release(theDevRef);
-//
-//	//构造MSG_NGX_CMS_NEED_STREAM_ACK请求直播消息响应报文
-//	EasyDarwin::Protocol::EasyProtocol rsp(MSG_NGX_CMS_NEED_STREAM_ACK);
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_VERSION, EASYDARWIN_PROTOCOL_VERSION);
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_NUM, "200");//EASYDARWIN_ERROR_SUCCESS_OK
-//	rsp.SetHeaderValue(EASYDARWIN_TAG_ERROR_STRING, EasyProtocol::GetErrorString(EASYDARWIN_ERROR_SUCCESS_OK).c_str());
-//	rsp.SetBodyValue("DssIP","www.easydarwin.org");
-//	rsp.SetBodyValue("DssPort","554");
-//
-//	string msg = rsp.GetMsg();
-//
-//	StrPtrLen msgJson((char*)msg.c_str());
-//
-//	//构造响应报文(HTTP头)
-//	HTTPRequest httpAck(&sServiceStr);
-//	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
-//	if (msgJson.Len)
-//		httpAck.AppendContentLengthHeader(msgJson.Len);
-//
-//	//响应完成后断开连接
-//	httpAck.AppendConnectionCloseHeader();
-//
-//	//Push MSG to OutputBuffer
-//	char respHeader[2048] = { 0 };
-//	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
-//	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
-//	
-//	RTSPResponseStream *pOutputStream = GetOutputStream();
-//	pOutputStream->Put(respHeader);
-//	if (msgJson.Len > 0) 
-//		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
-//	
-//	return QTSS_NoErr;
-//}
-//
-//QTSS_Error HTTPSession::ExecNetMsgDefaultReqHandler(const char* json)
-//{
-//	return QTSS_NoErr;
-//}
-//
-//QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)
-//{
-//	QTSS_Error theErr = QTSS_NoErr;
-//	bool close = false;
-//	EasyDarwinDeviceSnapUpdateReq parse(json);
-//	
-//	string image;
-//	parse.GetImageData(image);
-//
-//	const char* inSnapJpg = image.c_str();
-//
-//	if(!fAuthenticated) return QTSS_NoErr;
-//
-//	//先对数据进行Base64解码
-//	int base64DataLen = Base64decode_len(inSnapJpg);
-//	char* snapDecodedBuffer = (char*)malloc(base64DataLen);
-//	::memset(snapDecodedBuffer, 0, base64DataLen);
-//	//对数据进行Base64编码
-//	int jpgLen = ::Base64decode(snapDecodedBuffer, inSnapJpg); 
-//
-//	char jpgDir[512] = { 0 };
-//	qtss_sprintf(jpgDir,"%s%s", QTSServerInterface::GetServer()->GetPrefs()->GetSnapLocalPath() ,fSerial);
-//	OS::RecursiveMakeDir(jpgDir);
-//
-//	char jpgPath[512] = { 0 };
-//	string jpgFileName = EasyUtil::GetUUID();
-//	qtss_sprintf(jpgPath,"%s/%s.jpg", jpgDir, jpgFileName.c_str());
-//
-//	FILE* fSnap = ::fopen(jpgPath, "wb");
-//	fwrite(snapDecodedBuffer, 1, jpgLen, fSnap);
-//	::fclose(fSnap);
-//	free(snapDecodedBuffer);
-//
-//	qtss_sprintf(fDeviceSnap, "%s%s/%s.jpg",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), fSerial, jpgFileName.c_str());
-//	return QTSS_NoErr;
-//}
-//
-//QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReq()
-//{
-//	QTSS_Error theErr = QTSS_NoErr;
-//
-//	printf("Get Device List! \n");
-//
-//	OSRefTable* devMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
-//	if(devMap->GetNumRefsInTable() == 0 )
-//		return QTSS_NoErr;
-//
-//	EasyDarwinDeviceListAck req;
-//	req.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-//	req.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
-//	req.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
-//	char count[16] = { 0 };
-//	sprintf(count,"%d", devMap->GetNumRefsInTable());
-//	req.SetBodyValue("DeviceCount", count );
-//
-//	OSRef* theDevRef = NULL;
-//
-//	OSMutexLocker locker(devMap->GetMutex());
-//    for (OSRefHashTableIter theIter(devMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
-//    {
-//        OSRef* theRef = theIter.GetCurrent();
-//        HTTPSession* theSession = (HTTPSession*)theRef->GetObject();
-//
-//		EasyDarwinDevice device;
-//		device.DeviceName = string(theSession->GetDeviceSerial());
-//		device.DeviceSerial = string(theSession->GetDeviceSerial());
-//		device.DeviceSnap = string(theSession->GetDeviceSnap());
-//		req.AddDevice(device);
-//    }   
-//
-//	string msg = req.GetMsg();
-//
-//	printf(msg.c_str());
-//
-//	StrPtrLen msgJson((char*)msg.c_str());
-//
-//	//构造响应报文(HTTP头)
-//	HTTPRequest httpAck(&sServiceStr);
-//	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
-//	if (msgJson.Len)
-//		httpAck.AppendContentLengthHeader(msgJson.Len);
-//
-//	//响应完成后断开连接
-//	httpAck.AppendConnectionCloseHeader();
-//
-//	//Push MSG to OutputBuffer
-//	char respHeader[2048] = { 0 };
-//	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
-//	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
-//	
-//	RTSPResponseStream *pOutputStream = GetOutputStream();
-//	pOutputStream->Put(respHeader);
-//	if (msgJson.Len > 0) 
-//		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
-//	
-//	return QTSS_NoErr;
-//}

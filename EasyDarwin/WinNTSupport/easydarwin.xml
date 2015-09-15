@@ -39,7 +39,7 @@
 		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
 		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
 		<PREF NAME="error_logfile_dir" >./Logs</PREF>
-		<PREF NAME="error_logfile_name" >Error</PREF>
+		<PREF NAME="error_logfile_name" >EasyDarwin</PREF>
 		<PREF NAME="module_folder" >./QTSSModules</PREF>
 		<PREF NAME="safe_play_duration" TYPE="UInt32" >600</PREF>
 		<PREF NAME="average_bandwidth_update" TYPE="UInt32" >60</PREF>
