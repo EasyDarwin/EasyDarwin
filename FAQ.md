@@ -21,6 +21,26 @@
 
 方法二：修改RTSP ANNOUNCE里面的sdp信息，把 "o=- %u %u IN IP4 %s/r/n" 和 "c=IN IP4 %s/r/n"里面的ip地址改成127.0.0.1就可以了;
 
+方法三：我们将EasyDarwin部署到公网，当服务器置身内网，用端口映射的方式对外提供服务，在接收RTSP/RTP推送的时候，经常会出现在SETUP步骤Darwin返回404错误，经过查找原因，主要是EasyDarwin对推送的sdp信息中的IP地址不能识别，服务器并不知道自己已经置身于公网的地址：
+
+**ifconfig查看地址信息**
+
+![EasyDarwin](http://www.easydarwin.org/d/file/article/doc/EasyDarwin/9d86ccd17b3d38b84c27ed1008a9bf38.jpg)
+
+**ip addr查看eth0地址列表**
+
+![EasyDarwin](http://www.easydarwin.org/d/file/article/doc/EasyDarwin/45d612cba5ddc67617e734f532df78c7.jpg)
+
+我们通过命令：ip addr add dev eth0 [公网IP]，向eth0添加一个公网地址就解决问题了：
+
+![](http://www.easydarwin.org/d/file/article/doc/EasyDarwin/267035e801fadf06ea5f6acb5486a988.jpg)
+
+Windows添加公网地址的方法：
+
+![EasyDarwin](http://www.easydarwin.org/d/file/article/doc/EasyDarwin/8604f16ba3eb39ba2dd4e32a63f1fcf1.jpg)
+
+![EasyDarwin](http://www.easydarwin.org/d/file/article/doc/EasyDarwin/8604f16ba3eb39ba2dd4e32a63f1fcf1.jpg)
+
 ## 4. EasyDarwin做转发延时10几秒? ##
 	
 在EasyDarwin QTSSReflectorModule转发模块中，有一个控制转发Buffer时间的配置**reflector_buffer_size_sec**，我们将这个配置改成0，也就是在服务器端不做缓存，直接转发，这样在网络条件充足的情况下对比转发和实时流，转发带来的延时也几乎可以忽略了：
