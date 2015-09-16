@@ -168,7 +168,7 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 	}
 	
 	//到这里，肯定是有一个EasyHLSSession可用的
-	session->HLSSessionStart(inParams->inRTSPUrl);
+	session->HLSSessionStart(inParams->inRTSPUrl, inParams->inTimeout);
 
 	if(inParams->outHLSUrl)
 		qtss_sprintf(inParams->outHLSUrl,"%s",session->GetHLSURL());
