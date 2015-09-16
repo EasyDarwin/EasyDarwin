@@ -42,7 +42,7 @@ class EasyHLSSession : public Task
 	
         StrPtrLen*      GetSessionID()     { return &fHLSSessionID; }
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
-		QTSS_Error		HLSSessionStart(char* rtspUrl);
+		QTSS_Error		HLSSessionStart(char* rtspUrl, UInt32 inTimeout);
 		QTSS_Error		HLSSessionRelease();
 		char*			GetHLSURL();
 

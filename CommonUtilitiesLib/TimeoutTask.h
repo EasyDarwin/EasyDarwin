@@ -84,7 +84,7 @@ class TimeoutTask
         static  void Initialize();
         //Pass in the task you'd like to send timeouts to. 
         //Also pass in the timeout you'd like to use. By default, the timeout is 0 (NEVER).
-        TimeoutTask(Task* inTask, SInt64 inTimeoutInMilSecs = 60);
+        TimeoutTask(Task* inTask, SInt64 inTimeoutInMilSecs = 30);
         ~TimeoutTask();
         
         //MODIFIERS

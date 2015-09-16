@@ -38,6 +38,7 @@ static StrPtrLen	sEasyHLSModule("api/easyhlsmodule");
 #define	QUERY_STREAM_NAME		"name"
 #define QUERY_STREAM_URL		"url"
 #define QUERY_STREAM_CMD		"cmd"
+#define QUERY_STREAM_TIMEOUT	"timeout"
 #define QUERY_STREAM_CMD_START	"start"
 #define QUERY_STREAM_CMD_STOP	"stop"
 
@@ -569,7 +570,8 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 
 		const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
 		const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
-
+		const char* sTIMEOUT = parList.DoFindCGIValueForParam(QUERY_STREAM_TIMEOUT);
+		int iTIMEOUT = 0;
 
 		if(sCMD)
 		{
@@ -589,11 +591,16 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 				break;
 			}
 
+			//TODO::这里需要对URL进行过滤
+
 			char msgStr[2048] = { 0 };
 			qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession::ExecNetMsgEasyHLSModuleReq name=%s,url=%s", sName, sURL);
 			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
-			Easy_StartHLSSession(sName, sURL, hlsURL);
+			if(sTIMEOUT)
+				iTIMEOUT = ::atoi(sTIMEOUT);
+
+			Easy_StartHLSSession(sName, sURL, iTIMEOUT, hlsURL );
 		}
 	}while(0);
 

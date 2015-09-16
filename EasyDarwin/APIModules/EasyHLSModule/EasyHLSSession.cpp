@@ -174,7 +174,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 /*
 	´´½¨HLSÖ±²¥Session
 */
-QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
+QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -221,6 +221,8 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl)
 					
 			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", sHTTPRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr);
 		}
+		
+		fTimeoutTask.SetTimeout(inTimeout * 1000);
 	}while(0);
 
 	char msgStr[2048] = { 0 };
