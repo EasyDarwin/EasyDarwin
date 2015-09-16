@@ -54,7 +54,7 @@ void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 
 }
 
-/* RTSPClient从RTSPClient获取数据后回调给上层 */
+/* RTSPClient获取数据后回调给上层 */
 int Easy_APICALL __RTSPClientCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	EasyHLSSession* pHLSSession = (EasyHLSSession *)_chPtr;
@@ -71,9 +71,10 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 :   fQueueElem(),
 	fRTSPClientHandle(NULL),
 	fHLSHandle(NULL),
-	tsTimeStampMSsec(0)
+	tsTimeStampMSsec(0),
+	fTimeoutTask(NULL, 60*1000)
 {
-
+    fTimeoutTask.SetTask(this);
     fQueueElem.SetEnclosingObject(this);
 
     if (inSessionID != NULL)
@@ -102,6 +103,17 @@ SInt64 EasyHLSSession::Run()
 	if (theEvents & Task::kKillEvent)
     {
         return -1;
+    }
+
+	if (theEvents & Task::kTimeoutEvent)
+    {
+		char msgStr[2048] = { 0 };
+		qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::Run Timeout SessionID=%s", fHLSSessionID.Ptr);
+		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+
+		HLSSessionRelease();
+
+		fTimeoutTask.SetTimeout(0);
     }
 
     return 0;

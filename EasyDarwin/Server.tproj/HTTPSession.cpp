@@ -550,8 +550,10 @@ QTSS_Error HTTPSession::DumpRequestData()
 QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json)
 {	
 	QTSS_Error theErr = QTSS_NoErr;
-       
+	bool bStop = false;  
+
 	char* hlsURL = NEW char[QTSS_MAX_URL_LENGTH];
+	hlsURL[0] = '\0';
     QTSSCharArrayDeleter theHLSURLDeleter(hlsURL);
 	do{
 		StrPtrLen theQueryString(queryString);
@@ -568,7 +570,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 		const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
 		const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
 
-		bool bStop = false;
+
 		if(sCMD)
 		{
 			if(::strcmp(sCMD,QUERY_STREAM_CMD_STOP) == 0)
@@ -598,11 +600,10 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	//构造MSG_CLI_SMS_HLS_ACK响应报文
 	EasyDarwinEasyHLSAck ack;
 	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-	
-	ack.SetStreamURL(hlsURL);
+	if(strlen(hlsURL))
+		ack.SetStreamURL(hlsURL);
 
 	string msg = ack.GetMsg();
-
 	StrPtrLen msgJson((char*)msg.c_str());
 
 	//构造响应报文(HTTP头)
