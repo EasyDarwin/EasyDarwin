@@ -122,8 +122,9 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 
 RESTful调用接口（用浏览器或者其他http client调用）
 
-	http://[ip]:[http_service_port]/api/easyhlsmodule?name=[hlsName]&url=[RTSP_URL]
-例如EasyDarwin服务器IP地址是：8.8.8.8，EasyDarwin WebService端口(**http_service_port**)：8080，IPCamera的RTSP地址是：rtsp://admin:admin@192.168.66.189/22，同时，我们在EasyDarwin服务器上部署了nginx，端口为8088，WEB目录为easydarwin.xml中 **movie_folder** 同一个目录，那么我们可以：
+	http://[ip]:[http_service_port]/api/easyhlsmodule?name=[hlsName]&url=[RTSP_URL]&timeout=[seconds]
+
+其中**timeout**参数是指HLS直播时间(单位秒)，0表示不限制时长，默认为0；例如EasyDarwin服务器IP地址是：8.8.8.8，EasyDarwin WebService端口(**http_service_port**)：8080，IPCamera的RTSP地址是：rtsp://admin:admin@192.168.66.189/22，同时，我们在EasyDarwin服务器上部署了nginx，端口为8088，WEB目录为easydarwin.xml中 **movie_folder** 同一个目录，那么我们可以：
 
 1、配置easydarwin.xml EasyHLSModule
 
