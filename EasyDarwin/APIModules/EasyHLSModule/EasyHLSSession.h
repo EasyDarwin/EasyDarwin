@@ -20,6 +20,8 @@
 #include "EasyRTSPClientAPI.h"
 #include "EasyHLSAPI.h"
 
+#include "TimeoutTask.h"
+
 #ifndef __EASY_HLS_SESSION__
 #define __EASY_HLS_SESSION__
 
@@ -43,6 +45,8 @@ class EasyHLSSession : public Task
 		QTSS_Error		HLSSessionStart(char* rtspUrl);
 		QTSS_Error		HLSSessionRelease();
 		char*			GetHLSURL();
+
+		void RefreshTimeout()	{ fTimeoutTask.RefreshTimeout(); }
    
     private:
 
@@ -65,6 +69,9 @@ class EasyHLSSession : public Task
 		static UInt32	sTargetDuration;
 		static UInt32	sPlaylistCapacity;
 		static char*	sHTTPRootDir;
+
+	protected:
+		TimeoutTask		fTimeoutTask;
 };
 
 #endif
