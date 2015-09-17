@@ -87,6 +87,7 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
     }
 
 	fHLSURL[0] = '\0';
+	fSourceURL[0] = '\0';
 }
 
 
@@ -94,11 +95,19 @@ EasyHLSSession::~EasyHLSSession()
 {
 	HLSSessionRelease();
     fHLSSessionID.Delete();
+
+    if (this->GetRef()->GetRefCount() == 0)
+    {   
+        qtss_printf("EasyHLSSession::~EasyHLSSession() UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", GetRef(), GetRef()->GetRefCount() ) ;       
+        QTSServerInterface::GetServer()->GetHLSSessionMap()->UnRegister(GetRef());
+    }
 }
 
 SInt64 EasyHLSSession::Run()
 {
     EventFlags theEvents = this->GetEvents();
+	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
+	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
 	if (theEvents & Task::kKillEvent)
     {
@@ -111,9 +120,7 @@ SInt64 EasyHLSSession::Run()
 		qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::Run Timeout SessionID=%s", fHLSSessionID.Ptr);
 		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
-		HLSSessionRelease();
-
-		fTimeoutTask.SetTimeout(0);
+		return -1;
     }
 
     return 0;
@@ -190,6 +197,8 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 				break;
 			}
 
+			::sprintf(fSourceURL, "%s", rtspUrl);
+
 			unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG | EASY_SDK_AUDIO_FRAME_FLAG;
 
 			EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
@@ -242,6 +251,7 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 		EasyRTSP_CloseStream(fRTSPClientHandle);
 		EasyRTSP_Deinit(&fRTSPClientHandle);
 		fRTSPClientHandle = NULL;
+		fSourceURL[0] = '\0';
 	}
 
 	// Õ∑≈sink
@@ -258,4 +268,9 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 char* EasyHLSSession::GetHLSURL()
 {
 	return fHLSURL;
+}
+
+char* EasyHLSSession::GetSourceURL()
+{
+	return 	fSourceURL;
 }
