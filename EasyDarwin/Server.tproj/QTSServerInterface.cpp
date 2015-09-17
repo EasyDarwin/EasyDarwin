@@ -189,6 +189,7 @@ QTSServerInterface::QTSServerInterface()
  :  QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kServerDictIndex), &fMutex),
     fSocketPool(NULL),
     fRTPMap(NULL),
+	fHLSMap(NULL),
     fSrvrPrefs(NULL),
     fSrvrMessages(NULL),
     fServerState(qtssStartingUpState),

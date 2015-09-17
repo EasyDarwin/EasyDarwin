@@ -170,6 +170,8 @@ QTSServer::~QTSServer()
     OSThread::SetMainThreadData(NULL);
 
     delete fRTPMap;
+	delete fHLSMap;
+
     delete fSocketPool;
     delete fSrvrMessages;
     delete locker;
@@ -179,7 +181,8 @@ QTSServer::~QTSServer()
 
 Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, Bool16 createListeners)
 {
-    static const UInt32 kRTPSessionMapSize = 577;
+    static const UInt32 kRTPSessionMapSize = 2000;
+	static const UInt32 kHLSSessionMapSize = 2000;
     fServerState = qtssFatalErrorState;
     sPrefsSource = inPrefsSource;
     sMessagesSource = inMessagesSource;
@@ -229,6 +232,7 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     // CREATE GLOBAL OBJECTS
     fSocketPool = new RTPSocketPool();
     fRTPMap = new OSRefTable(kRTPSessionMapSize);
+	fHLSMap = new OSRefTable(kHLSSessionMapSize);
 
     //
     // Load ERROR LOG module only. This is good in case there is a startup error.
