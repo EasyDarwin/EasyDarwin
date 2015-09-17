@@ -20,6 +20,8 @@
 #include "EasyProtocolDef.h"
 #include "EasyProtocol.h"
 
+#include "EasyHLSSession.h"
+
 using namespace EasyDarwin::Protocol;
 using namespace std;
 
@@ -35,6 +37,8 @@ using namespace std;
 
 static StrPtrLen	sServiceStr("EasyDarwin");
 static StrPtrLen	sEasyHLSModule("api/easyhlsmodule");
+static StrPtrLen	sGetHLSSessions("api/gethlssessions");
+
 #define	QUERY_STREAM_NAME		"name"
 #define QUERY_STREAM_URL		"url"
 #define QUERY_STREAM_CMD		"cmd"
@@ -401,6 +405,11 @@ QTSS_Error HTTPSession::SetupRequest()
 		{
 			return ExecNetMsgEasyHLSModuleReq(fRequest->GetQueryString(), NULL);
 		}
+
+		if (theFullPath.Equal(sGetHLSSessions))
+		{
+			return ExecNetMsgGetHlsSessionsReq(fRequest->GetQueryString(), NULL);
+		}
 	}
 
 	//获取具体Content json数据部分
@@ -631,6 +640,89 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	pOutputStream->Put(respHeader);
 	if (msgJson.Len > 0) 
 		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+
+	return QTSS_NoErr;
+}
+
+
+QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* json)
+{	
+	QTSS_Error theErr = QTSS_NoErr;
+
+	do{
+		StrPtrLen theQueryString(queryString);
+
+		QueryParamList parList(queryString);
+
+		//const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
+		//if(sName == NULL)
+		//{
+		//	theErr = QTSS_Unimplemented;
+		//	break;
+		//}
+
+		OSRefTable* hlsMap = QTSServerInterface::GetServer()->GetHLSSessionMap();
+		if(hlsMap->GetNumRefsInTable() == 0 )
+		{
+			theErr = QTSS_FileNotFound;
+			break;
+		}
+
+		EasyDarwinHLSessionListAck ack;
+		ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
+		ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
+		char count[16] = { 0 };
+		sprintf(count,"%d", hlsMap->GetNumRefsInTable());
+		ack.SetBodyValue("SessionCount", count );
+
+		OSRef* theSesRef = NULL;
+
+		OSMutexLocker locker(hlsMap->GetMutex());
+		for (OSRefHashTableIter theIter(hlsMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+		{
+			OSRef* theRef = theIter.GetCurrent();
+			EasyHLSSession* theSession = (EasyHLSSession*)theRef->GetObject();
+
+			EasyDarwinHLSession session;
+			session.SessionName = string(theSession->GetSessionID()->Ptr);
+			session.HlsUrl = string(theSession->GetHLSURL());
+			//session.sourceUrl = string("");
+			ack.AddSession(session);
+		}   
+
+		string msg = ack.GetMsg();
+
+		printf(msg.c_str());
+
+		StrPtrLen msgJson((char*)msg.c_str());
+
+		//构造响应报文(HTTP头)
+		HTTPRequest httpAck(&sServiceStr);
+		httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
+		if (msgJson.Len)
+			httpAck.AppendContentLengthHeader(msgJson.Len);
+
+		//响应完成后断开连接
+		httpAck.AppendConnectionCloseHeader();
+
+		//Push MSG to OutputBuffer
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+		
+		RTSPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (msgJson.Len > 0) 
+			pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+
+	}while(0);
+
+
+
+
+
+
+	
 
 	return QTSS_NoErr;
 }
