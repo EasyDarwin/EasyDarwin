@@ -46,6 +46,18 @@ public:
 	std::string DeviceSnap;
 };
 
+class EasyDarwinHLSession
+{
+public:
+	EasyDarwinHLSession(){}
+	~EasyDarwinHLSession(){}
+
+public:
+	std::string SessionName;
+	std::string HlsUrl;
+	std::string sourceUrl;
+};
+
 class EASYDARWIN_API EasyDarwinDeviceListAck : public EasyProtocol
 {
 public:
@@ -92,6 +104,24 @@ public:
 	void SetStreamName(const char* sName);
 	void SetStreamURL(const char* sURL);
 };
+
+
+class EASYDARWIN_API EasyDarwinHLSessionListAck : public EasyProtocol
+{
+public:
+	EasyDarwinHLSessionListAck();
+	EasyDarwinHLSessionListAck(const char* msg);
+	virtual ~EasyDarwinHLSessionListAck(){}
+
+public:
+	bool AddSession(EasyDarwinHLSession &session);
+	//int StartGetDevice();
+	//bool GetNextDevice(EasyDarwinDevice &device);
+
+private:
+	std::list<EasyDarwinHLSession> sessions;
+};
+
 
 }}//namespace
 #endif

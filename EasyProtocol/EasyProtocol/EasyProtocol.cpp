@@ -155,5 +155,25 @@ void EasyDarwinEasyHLSAck::SetStreamURL(const char* sURL)
 	SetBodyValue("url", sURL);
 }
 
+EasyDarwinHLSessionListAck::EasyDarwinHLSessionListAck()
+: EasyProtocol(MSG_CLI_SMS_HLS_LIST_ACK)
+{
+}
+
+EasyDarwinHLSessionListAck::EasyDarwinHLSessionListAck(const char* msg)
+: EasyProtocol(msg, MSG_CLI_SMS_HLS_LIST_ACK)
+{
+}
+
+bool EasyDarwinHLSessionListAck::AddSession(EasyDarwinHLSession &session)
+{	
+	Json::Value value;
+	value["name"] = session.SessionName;
+	value["url"] = session.HlsUrl;
+	value["source"] = session.sourceUrl;
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Sessions"].append(value);
+	return true;
+}
+
 }}//namespace
 

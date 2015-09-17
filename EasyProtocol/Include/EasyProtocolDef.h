@@ -139,6 +139,8 @@
 
 #define	MSG_CLI_SMS_HLS_ACK									0xe011
 
+#define MSG_CLI_SMS_HLS_LIST_ACK							0xe012
+
 /*!
 \}
 */
