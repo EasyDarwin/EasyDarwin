@@ -181,8 +181,8 @@ QTSServer::~QTSServer()
 
 Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, Bool16 createListeners)
 {
-    static const UInt32 kRTPSessionMapSize = 2000;
-	static const UInt32 kHLSSessionMapSize = 2000;
+    static const UInt32 kRTPSessionMapSize = 5000;
+	static const UInt32 kHLSSessionMapSize = 5000;
     fServerState = qtssFatalErrorState;
     sPrefsSource = inPrefsSource;
     sMessagesSource = inMessagesSource;
