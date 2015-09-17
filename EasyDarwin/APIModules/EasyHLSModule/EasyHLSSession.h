@@ -45,6 +45,7 @@ class EasyHLSSession : public Task
 		QTSS_Error		HLSSessionStart(char* rtspUrl, UInt32 inTimeout);
 		QTSS_Error		HLSSessionRelease();
 		char*			GetHLSURL();
+		char*			GetSourceURL();
 
 		void RefreshTimeout()	{ fTimeoutTask.RefreshTimeout(); }
    
@@ -54,6 +55,7 @@ class EasyHLSSession : public Task
         OSRef       fRef;
         StrPtrLen   fHLSSessionID;
 		char		fHLSURL[QTSS_MAX_URL_LENGTH];
+		char		fSourceURL[QTSS_MAX_URL_LENGTH];
         OSQueueElem fQueueElem; 
 
 		//RTSPClient Handle

@@ -665,7 +665,6 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 		if(hlsMap->GetNumRefsInTable() == 0 )
 		{
 			theErr = QTSS_FileNotFound;
-			break;
 		}
 
 		EasyDarwinHLSessionListAck ack;
@@ -686,7 +685,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 			EasyDarwinHLSession session;
 			session.SessionName = string(theSession->GetSessionID()->Ptr);
 			session.HlsUrl = string(theSession->GetHLSURL());
-			//session.sourceUrl = string("");
+			session.sourceUrl = string(theSession->GetSourceURL());
 			ack.AddSession(session);
 		}   
 
@@ -717,12 +716,5 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 
 	}while(0);
 
-
-
-
-
-
-	
-
-	return QTSS_NoErr;
+	return theErr;
 }
