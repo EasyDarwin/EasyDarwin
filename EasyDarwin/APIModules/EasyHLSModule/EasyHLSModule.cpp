@@ -24,6 +24,8 @@
 #include "StringParser.h"
 #include "EasyHLSSession.h"
 
+#include "QTSServerInterface.h"
+
 class HLSSessionCheckingTask : public Task
 {
     public:
@@ -43,7 +45,7 @@ class HLSSessionCheckingTask : public Task
 // STATIC DATA
 static QTSS_PrefsObject         sServerPrefs		= NULL;
 static HLSSessionCheckingTask*	sCheckingTask		= NULL;
-static OSRefTable*              sHLSSessionMap		= NULL;
+
 static QTSS_ServerObject sServer					= NULL;
 static QTSS_ModulePrefsObject       sModulePrefs	= NULL;
 
@@ -61,9 +63,6 @@ static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 
 static QTSS_Error RereadPrefs();
-
-static QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams);
-static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
 
 static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
 static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
@@ -85,8 +84,6 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize(&inParams->initParams);
         case QTSS_RereadPrefs_Role:
             return RereadPrefs();
-        case QTSS_RTSPPreProcessor_Role:
-            return ProcessRTSPRequest(&inParams->rtspRequestParams);
 		case Easy_HLSOpen_Role:		//Start HLS Streaming
 			return EasyHLSOpen(&inParams->easyHLSOpenParams);
 		case Easy_HLSClose_Role:	//Stop HLS Streaming
@@ -99,7 +96,6 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 {
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_RTSPPreProcessor_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);   
     (void)QTSS_AddRole(Easy_HLSOpen_Role); 
 	(void)QTSS_AddRole(Easy_HLSClose_Role); 
@@ -119,7 +115,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     // Setup global data structures
     sServerPrefs = inParams->inPrefs;
     sCheckingTask = NEW HLSSessionCheckingTask();
-    sHLSSessionMap = NEW OSRefTable();
 
     sServer = inParams->inServer;
     
@@ -145,8 +140,11 @@ SInt64 HLSSessionCheckingTask::Run()
 }
 
 QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
-{
+{	
+	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
+
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
+
 	EasyHLSSession* session = NULL;
 	//首先查找MAP里面是否已经有了对应的流
 	StrPtrLen streamName(inParams->inStreamName);
@@ -180,6 +178,8 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 
 QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 {
+	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
+
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
 	//首先查找Map里面是否已经有了对应的流
@@ -206,6 +206,8 @@ QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 
 char* GetHLSUrl(char* inSessionName)
 {
+	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
+
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
 	char* hlsURL = NULL;
@@ -223,106 +225,4 @@ char* GetHLSUrl(char* inSessionName)
 	sHLSSessionMap->Release(session->GetRef());
 
 	return hlsURL;
-}
-
-QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
-{
-	OSMutexLocker locker (sHLSSessionMap->GetMutex());
-    QTSS_RTSPMethod* theMethod = NULL;
-
-	UInt32 theLen = 0;
-    if ((QTSS_GetValuePtr(inParams->inRTSPRequest, qtssRTSPReqMethod, 0,
-            (void**)&theMethod, &theLen) != QTSS_NoErr) || (theLen != sizeof(QTSS_RTSPMethod)))
-    {
-        Assert(0);
-        return QTSS_RequestFailed;
-    }
-
-    if (*theMethod == qtssDescribeMethod)
-        return DoDescribe(inParams);
-             
-    return QTSS_NoErr;
-}
-
-QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
-{
-	char* location = NULL;
-	//解析命令
-    char* theFullPathStr = NULL;
-    QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFullPathStr);
-    Assert(theErr == QTSS_NoErr);
-    QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
-        
-    if (theErr != QTSS_NoErr)
-        return NULL;
-
-    StrPtrLen theFullPath(theFullPathStr);
-
-    if (theFullPath.Len != sHLSSuffix.Len )
-	return NULL;
-
-	StrPtrLen endOfPath2(&theFullPath.Ptr[theFullPath.Len -  sHLSSuffix.Len], sHLSSuffix.Len);
-    if (!endOfPath2.Equal(sHLSSuffix))
-    {   
-        return NULL;
-    }
-
-	//解析查询字符串
-    char* theQueryStr = NULL;
-    theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqQueryString, 0, &theQueryStr);
-    Assert(theErr == QTSS_NoErr);
-    QTSSCharArrayDeleter theQueryStringDeleter(theQueryStr);
-        
-    if (theErr != QTSS_NoErr)
-        return NULL;
-
-    StrPtrLen theQueryString(theQueryStr);
-
-	QueryParamList parList(theQueryStr);
-
-	const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
-	if(sName == NULL) return NULL;
-
-	const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
-
-	const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
-
-	bool bStop = false;
-	if(sCMD)
-	{
-		if(::strcmp(sCMD,QUERY_STREAM_CMD_STOP) == 0)
-			bStop = true;
-	}
-
-	if(bStop)
-	{
-		Easy_HLSClose_Params params;
-		params.inStreamName = (char*)sName;
-		EasyHLSClose(&params);
-		return NULL;
-	}
-	else
-	{
-		if(sURL == NULL) return NULL;
-
-		Easy_HLSOpen_Params params;
-		params.inRTSPUrl = (char*)sURL;
-		params.inStreamName = (char*)sName;
-
-		EasyHLSOpen(&params);
-	}
-
-	location = GetHLSUrl((char*)sName);
-
-	QTSS_RTSPStatusCode statusCode = qtssRedirectPermMoved;
-	QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqStatusCode, 0, &statusCode, sizeof(statusCode));
-
-	StrPtrLen locationRedirect(location);
-
-	Bool16 sFalse = false;
-	(void)QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));
-	QTSS_AppendRTSPHeader(inParams->inRTSPRequest, qtssLocationHeader, locationRedirect.Ptr, locationRedirect.Len);	
-	return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssRedirectPermMoved, 0);
-
-	return QTSS_NoErr;
 }

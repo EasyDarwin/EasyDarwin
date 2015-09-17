@@ -186,6 +186,8 @@ class QTSServerInterface : public QTSSDictionary
         
         //Allows you to map RTP session IDs (strings) to actual RTP session objects
         OSRefTable*         GetRTPSessionMap()          { return fRTPMap; }
+
+		OSRefTable*			GetHLSSessionMap()			{ return fHLSMap; }
     
         //Server provides a statically created & bound UDPSocket / Demuxer pair
         //for each IP address setup to serve RTP. You access those pairs through
@@ -275,6 +277,8 @@ class QTSServerInterface : public QTSSDictionary
         
         // All RTP sessions are put into this map
         OSRefTable*                 fRTPMap;
+
+		OSRefTable*					fHLSMap;
         
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;
