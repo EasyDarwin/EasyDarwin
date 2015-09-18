@@ -676,6 +676,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 
 		OSRef* theSesRef = NULL;
 
+		UInt32 uIndex= 0;
 		OSMutexLocker locker(hlsMap->GetMutex());
 		for (OSRefHashTableIter theIter(hlsMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
 		{
@@ -683,10 +684,12 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 			EasyHLSSession* theSession = (EasyHLSSession*)theRef->GetObject();
 
 			EasyDarwinHLSession session;
+			session.index = uIndex;
 			session.SessionName = string(theSession->GetSessionID()->Ptr);
 			session.HlsUrl = string(theSession->GetHLSURL());
 			session.sourceUrl = string(theSession->GetSourceURL());
 			ack.AddSession(session);
+			uIndex++;
 		}   
 
 		string msg = ack.GetMsg();

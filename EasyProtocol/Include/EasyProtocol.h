@@ -53,6 +53,7 @@ public:
 	~EasyDarwinHLSession(){}
 
 public:
+	int index;
 	std::string SessionName;
 	std::string HlsUrl;
 	std::string sourceUrl;
