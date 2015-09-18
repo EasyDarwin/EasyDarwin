@@ -168,6 +168,7 @@ EasyDarwinHLSessionListAck::EasyDarwinHLSessionListAck(const char* msg)
 bool EasyDarwinHLSessionListAck::AddSession(EasyDarwinHLSession &session)
 {	
 	Json::Value value;
+	value["index"] = session.index;
 	value["name"] = session.SessionName;
 	value["url"] = session.HlsUrl;
 	value["source"] = session.sourceUrl;
