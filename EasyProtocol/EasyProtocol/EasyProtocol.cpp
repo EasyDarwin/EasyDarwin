@@ -172,6 +172,7 @@ bool EasyDarwinHLSessionListAck::AddSession(EasyDarwinHLSession &session)
 	value["name"] = session.SessionName;
 	value["url"] = session.HlsUrl;
 	value["source"] = session.sourceUrl;
+	value["Bitrate"] = session.bitrate;
 	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Sessions"].append(value);
 	return true;
 }

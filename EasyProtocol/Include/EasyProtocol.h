@@ -57,6 +57,7 @@ public:
 	std::string SessionName;
 	std::string HlsUrl;
 	std::string sourceUrl;
+	int bitrate;
 };
 
 class EASYDARWIN_API EasyDarwinDeviceListAck : public EasyProtocol

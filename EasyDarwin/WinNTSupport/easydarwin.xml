@@ -36,7 +36,7 @@
 		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
 		<PREF NAME="screen_logging" TYPE="Bool16" >true</PREF>
 		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >3</PREF>
-		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
+		<PREF NAME="error_logfile_size" TYPE="UInt32" >512000</PREF>
 		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
 		<PREF NAME="error_logfile_dir" >./Logs</PREF>
 		<PREF NAME="error_logfile_name" >EasyDarwin</PREF>

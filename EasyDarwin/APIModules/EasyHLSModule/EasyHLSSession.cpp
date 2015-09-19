@@ -72,6 +72,14 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 	fRTSPClientHandle(NULL),
 	fHLSHandle(NULL),
 	tsTimeStampMSsec(0),
+	fPlayTime(0),
+    fTotalPlayTime(0),
+	fLastStatPlayTime(0),
+	fLastStatBitrate(0),
+	fNumPacketsReceived(0),
+	fLastNumPacketsReceived(0),
+	fNumBytesReceived(0),
+	fLastNumBytesReceived(0),
 	fTimeoutTask(NULL, 60*1000)
 {
     fTimeoutTask.SetTask(this);
@@ -88,6 +96,8 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 
 	fHLSURL[0] = '\0';
 	fSourceURL[0] = '\0';
+
+	this->Signal(Task::kStartEvent);
 }
 
 
@@ -123,12 +133,34 @@ SInt64 EasyHLSSession::Run()
 		return -1;
     }
 
-    return 0;
+	//统计数据
+	{
+		SInt64 curTime = OS::Milliseconds();
+
+		UInt64 bytesReceived = fNumBytesReceived - fLastNumBytesReceived;
+		UInt64 durationTime	= curTime - fLastStatPlayTime;
+
+		if(durationTime)
+			fLastStatBitrate = (bytesReceived*1000)/(durationTime);
+
+		fLastNumBytesReceived = fNumBytesReceived;
+		fLastStatPlayTime = curTime;
+
+	}
+
+    return 2000;
 }
 
 QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	if(NULL == fHLSHandle) return QTSS_Unimplemented;
+
+	if ((mediatype == EASY_SDK_VIDEO_FRAME_FLAG) || (mediatype == EASY_SDK_AUDIO_FRAME_FLAG))
+	{
+		fNumPacketsReceived++;
+		fNumBytesReceived += frameinfo->length;
+	}
+
 	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
 	{
 		unsigned long long llPTS = (frameinfo->timestamp_sec%1000000)*1000 + frameinfo->timestamp_usec/1000;	
@@ -203,6 +235,11 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 
 			EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
 			EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+
+			fPlayTime = fLastStatPlayTime = OS::Milliseconds();
+			fNumPacketsReceived = fLastNumPacketsReceived = 0;
+			fNumBytesReceived = fLastNumBytesReceived = 0;
+
 		}
 
 		if(NULL == fHLSHandle)
