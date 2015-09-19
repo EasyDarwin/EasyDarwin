@@ -601,13 +601,15 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 			}
 
 			//TODO::这里需要对URL进行过滤
+			//
 
-			char msgStr[2048] = { 0 };
-			qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession::ExecNetMsgEasyHLSModuleReq name=%s,url=%s", sName, sURL);
-			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
 			if(sTIMEOUT)
 				iTIMEOUT = ::atoi(sTIMEOUT);
+
+			char msgStr[2048] = { 0 };
+			qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession::ExecNetMsgEasyHLSModuleReq name=%s,url=%s,time=%d", sName, sURL, iTIMEOUT);
+			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
 			Easy_StartHLSSession(sName, sURL, iTIMEOUT, hlsURL );
 		}
@@ -688,6 +690,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 			session.SessionName = string(theSession->GetSessionID()->Ptr);
 			session.HlsUrl = string(theSession->GetHLSURL());
 			session.sourceUrl = string(theSession->GetSourceURL());
+			session.bitrate = theSession->GetLastStatBitrate();
 			ack.AddSession(session);
 			uIndex++;
 		}   

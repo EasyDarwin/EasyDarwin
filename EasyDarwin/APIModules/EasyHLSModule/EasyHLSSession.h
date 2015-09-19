@@ -48,6 +48,12 @@ class EasyHLSSession : public Task
 		char*			GetSourceURL();
 
 		void RefreshTimeout()	{ fTimeoutTask.RefreshTimeout(); }
+
+		//统计
+		SInt64          GetTotalPlayTime()		const { return fTotalPlayTime; }
+		SInt64			GetNumPacketsReceived() const { return fNumPacketsReceived; }
+		SInt64			GetNumBytesReceived()	const { return fNumBytesReceived; }
+		UInt32			GetLastStatBitrate()	const { return fLastStatBitrate; }
    
     private:
 
@@ -71,6 +77,20 @@ class EasyHLSSession : public Task
 		static UInt32	sTargetDuration;
 		static UInt32	sPlaylistCapacity;
 		static char*	sHTTPRootDir;
+
+		//统计
+		SInt64          fPlayTime;				//起始的时间
+		SInt64			fLastStatPlayTime;		//上一次统计的时间
+
+        SInt64          fTotalPlayTime;			//总共播放时间
+
+        SInt64			fNumPacketsReceived;	//收到的数据包的数量
+		SInt64			fLastNumPacketsReceived;//上一次统计收到的数据包数量
+
+        SInt64			fNumBytesReceived;		//收到的数据总量
+        SInt64			fLastNumBytesReceived;	//上一次统计收到的数据总量
+
+		UInt32			fLastStatBitrate;		//最后一次统计得到的比特率
 
 	protected:
 		TimeoutTask		fTimeoutTask;
