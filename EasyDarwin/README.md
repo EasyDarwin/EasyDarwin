@@ -120,19 +120,32 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 
 ### HLS直播 ###
 
-RESTful调用接口（用浏览器或者其他http client调用）
-
-	http://[ip]:[http_service_port]/api/easyhlsmodule?name=[hlsName]&url=[RTSP_URL]&timeout=[seconds]
-
+- 启动HLS直播（用浏览器或者其他httpClient调用）
+<pre>
+http://[ip]:[http_service_port]/api/easyhlsmodule?name=[hlsName]&url=[RTSP_URL]&timeout=[seconds]
+</pre>
 其中**timeout**参数是指HLS直播时间(单位秒)，0表示不限制时长，默认为0；例如EasyDarwin服务器IP地址是：8.8.8.8，EasyDarwin WebService端口(**http_service_port**)：8080，IPCamera的RTSP地址是：rtsp://admin:admin@192.168.66.189/22，同时，我们在EasyDarwin服务器上部署了nginx，端口为8088，WEB目录为easydarwin.xml中 **movie_folder** 同一个目录，那么我们可以：
 
-1、配置easydarwin.xml EasyHLSModule
+> 1、配置easydarwin.xml EasyHLSModule
+> 
+> 	<PREF NAME="HTTP_ROOT_DIR" >http://8.8.8.8:8088/</PREF>
+> 
+> 2、请求接口：http://8.8.8.8:8080/api/easyhlsmodule?name=live&url=rtsp://admin:admin@192.168.66.189/   （**接口会返回http+json格式的hls流地址**）
 
-	<PREF NAME="HTTP_ROOT_DIR" >http://8.8.8.8:8088/</PREF>
 
-2、请求接口：http://8.8.8.8:8080/api/easyhlsmodule?name=live&url=rtsp://admin:admin@192.168.66.189/22   （**接口会返回http+json格式的hls流地址**）
+- 停止HLS直播（用浏览器或者其他httpClient调用）
+<pre>
+http://[ip]:[http_service_port]/api/easyhlsmodule?name=[hlsName]&cmd=stop
+</pre>
 
-3、请求停止转发：http://8.8.8.8:8080/api/easyhlsmodule?name=live&cmd=stop  （**cmd=stop表示停止HLS切片**）
+例如停止上面启动的HLS直播：
+
+> 3、请求停止转发：http://8.8.8.8:8080/api/easyhlsmodule?name=live&cmd=stop
+
+- 获取服务器当前所有的HLS Session列表（用浏览器或者其他httpClient调用）
+<pre>
+http://[ip]:[http_service_port]/api/gethlssessions
+</pre>
 
 ## 获取更多信息 ##
 
