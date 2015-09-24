@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../,../APIStubLib/,../CommonUtilitiesLib/"
+				AdditionalIncludeDirectories="../;../APIStubLib/;../CommonUtilitiesLib/"
 				PreprocessorDefinitions="WIN32;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../,../APIStubLib/,../CommonUtilitiesLib/"
+				AdditionalIncludeDirectories="../;../APIStubLib/;../CommonUtilitiesLib/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/SafeInternalStdLib.pch"
