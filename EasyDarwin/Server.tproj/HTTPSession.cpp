@@ -47,6 +47,38 @@ static StrPtrLen	sGetHLSSessions("api/gethlssessions");
 #define QUERY_STREAM_CMD_STOP	"stop"
 
 
+//Ω‚url±‡¬Î µœ÷ 
+
+unsigned char* urldecode(unsigned char* encd,unsigned char* decd) 
+{ 
+    int j,i; 
+    char *cd =(char*) encd; 
+    char p[2]; 
+    unsigned int num; 
+	j=0; 
+
+    for( i = 0; i < strlen(cd); i++ ) 
+    { 
+        memset( p, '\0', 2 ); 
+        if( cd[i] != '%' ) 
+        { 
+            decd[j++] = cd[i]; 
+            continue; 
+        } 
+  
+		p[0] = cd[++i]; 
+        p[1] = cd[++i]; 
+
+        p[0] = p[0] - 48 - ((p[0] >= 'A') ? 7 : 0) - ((p[0] >= 'a') ? 32 : 0); 
+        p[1] = p[1] - 48 - ((p[1] >= 'A') ? 7 : 0) - ((p[1] >= 'a') ? 32 : 0); 
+        decd[j++] = (unsigned char)(p[0] * 16 + p[1]); 
+  
+    } 
+    decd[j] = '\0'; 
+
+    return decd; 
+}
+
 HTTPSession::HTTPSession( )
 : HTTPSessionInterface(),
   fRequest(NULL),
@@ -562,13 +594,20 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	QTSS_Error theErr = QTSS_NoErr;
 	bool bStop = false;  
 
+	char decQueryString[QTSS_MAX_URL_LENGTH] = { 0 };
+	urldecode((unsigned char*)queryString, (unsigned char*)decQueryString);
+
 	char* hlsURL = NEW char[QTSS_MAX_URL_LENGTH];
 	hlsURL[0] = '\0';
     QTSSCharArrayDeleter theHLSURLDeleter(hlsURL);
-	do{
-		StrPtrLen theQueryString(queryString);
+	do{	
+		
+		if( strlen(decQueryString) == 0 )
+			break;
 
-		QueryParamList parList(queryString);
+		StrPtrLen theQueryString(decQueryString);
+
+		QueryParamList parList(decQueryString);
 
 		const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
 		if(sName == NULL)
