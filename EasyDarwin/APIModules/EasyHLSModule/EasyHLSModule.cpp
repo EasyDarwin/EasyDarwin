@@ -26,19 +26,27 @@
 
 #include "QTSServerInterface.h"
 
+#include "ParseDevice.h"
+
 class HLSSessionCheckingTask : public Task
 {
     public:
         // Task that just polls on all the sockets in the pool, sending data on all available sockets
-        HLSSessionCheckingTask() : Task() {this->SetTaskName("HLSSessionCheckingTask");  this->Signal(Task::kStartEvent); }
+        HLSSessionCheckingTask() : Task() 
+		{
+			this->SetTaskName("HLSSessionCheckingTask");  
+			uIndex = 0;
+			this->Signal(Task::kStartEvent); 
+		}
         virtual ~HLSSessionCheckingTask() {}
     
     private:
         virtual SInt64 Run();
         
+		UInt32 uIndex;
         enum
         {
-            kProxyTaskPollIntervalMsec = 60*1000
+            kProxyTaskPollIntervalMsec = 1000
         };
 };
 
@@ -49,6 +57,9 @@ static HLSSessionCheckingTask*	sCheckingTask		= NULL;
 static QTSS_ServerObject sServer					= NULL;
 static QTSS_ModulePrefsObject       sModulePrefs	= NULL;
 
+// Éè±¸Ó³Éä±í
+CParseDevice*			parseDevice = NULL;
+
 static StrPtrLen	sHLSSuffix("EasyHLSModule");
 
 #define QUERY_STREAM_NAME	"name"
@@ -56,6 +67,10 @@ static StrPtrLen	sHLSSuffix("EasyHLSModule");
 #define QUERY_STREAM_CMD	"cmd"
 #define QUERY_STREAM_CMD_START "start"
 #define QUERY_STREAM_CMD_STOP "stop"
+
+static char*	sDevicePrefs		= NULL;
+static char*	sDefaultDevicePrefs = "./devices.xml";
+static unsigned int	sDeviceNum			= 0;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -114,7 +129,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
     // Setup global data structures
     sServerPrefs = inParams->inPrefs;
-    sCheckingTask = NEW HLSSessionCheckingTask();
 
     sServer = inParams->inServer;
     
@@ -125,17 +139,45 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	RereadPrefs();
 
+    sCheckingTask = NEW HLSSessionCheckingTask();
+
     return QTSS_NoErr;
 }
 
 QTSS_Error RereadPrefs()
 {
+	delete [] sDevicePrefs;
+    
+    sDevicePrefs = QTSSModuleUtils::GetStringAttribute(sModulePrefs, "device_prefs_file", sDefaultDevicePrefs);
+
+	parseDevice = NEW CParseDevice();
+	if (success != parseDevice->Init())
+	{
+		qtss_printf("parseDevice Init fail\n");
+		return QTSS_Unimplemented;
+	}
+
+	sDeviceNum = parseDevice->LoadDeviceXml(sDevicePrefs);
+	if(sDeviceNum == 0)
+	{
+		qtss_printf("parseDevice LoadDeviceXml %s fail\n", sDevicePrefs);
+	}
+
 	return QTSS_NoErr;
 }
 
 
 SInt64 HLSSessionCheckingTask::Run()
 {
+	if(uIndex >= sDeviceNum)
+		return -1;
+
+	DeviceInfo* pDeviceInfo = parseDevice->GetDeviceInfoByIdIndex(uIndex);
+	qtss_printf("%d/%d name=%s url=%s\n", uIndex, sDeviceNum, pDeviceInfo->m_szIdname, pDeviceInfo->m_szSourceUrl);
+
+	Easy_StartHLSSession(pDeviceInfo->m_szIdname, pDeviceInfo->m_szSourceUrl, 0, NULL);
+
+	uIndex ++;
 	return kProxyTaskPollIntervalMsec;
 }
 

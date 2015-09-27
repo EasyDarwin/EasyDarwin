@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="GB2312"?>
+<Devices>
+	<Device id="0" name="cam" url="rtsp://218.204.223.237:554/111.sdp"/>
+	<Device id="1" name="camy" url="rtsp://218.204.223.237:554/222.sdp"/>
+	<Device id="2" name="aaa" url="rtsp://218.204.223.237:554/333.sdp"/>
+	<Device id="3" name="bbb" url="rtsp://218.204.223.237:554/444.sdp"/>
+	<Device id="4" name="ccc" url="rtsp://218.204.223.237:554/555.sdp"/>
+	<Device id="5" name="ddd" url="rtsp://218.204.223.237:554/666.sdp"/>
+	<Device id="6" name="eee" url="rtsp://218.204.223.237:554/777.sdp"/>
+	<Device id="7" name="fff" url="rtsp://218.204.223.237:554/888.sdp"/>
+</Devices>
