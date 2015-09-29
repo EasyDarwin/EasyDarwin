@@ -130,7 +130,7 @@ http://[ip]:[http_service_port]/api/easyhlsmodule?name=[hlsName]&url=[RTSP_URL]&
 > 
 > 	<PREF NAME="HTTP_ROOT_DIR" >http://8.8.8.8:8088/</PREF>
 > 
-> 2、请求接口：http://8.8.8.8:8080/api/easyhlsmodule?name=live&url=rtsp://admin:admin@192.168.66.189/   （**接口会返回http+json格式的hls流地址**）
+> 2、请求接口：http://8.8.8.8:8080/api/easyhlsmodule?name=live&url="rtsp://admin:admin@192.168.66.189/"   （**接口会返回http+json格式的hls流地址**）
 
 
 - 停止HLS直播（用浏览器或者其他httpClient调用）
