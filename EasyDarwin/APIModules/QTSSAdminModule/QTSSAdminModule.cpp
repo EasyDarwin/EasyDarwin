@@ -65,6 +65,8 @@
 #include "mongoose.h"
 #include "frozen.h"
 
+#include "QTSServerInterface.h"
+
 #if __MacOSX__
 #include <Security/Authorization.h>
 #include <Security/AuthorizationTags.h>
@@ -96,11 +98,10 @@ static char* sResponseHeader = "HTTP/1.0 200 OK";
 static char* sUnauthorizedResponseHeader = "HTTP/1.1 401 Unauthorized\r\nWWW-Authenticate: Basic realm=\"QTSS/modules/admin\"\r\nServer: QTSS\r\nConnection: Close\r\nContent-Type: text/plain\r\n\r\n";
 static char* sPermissionDeniedHeader = "HTTP/1.1 403 Forbidden\r\nConnection: Close\r\nContent-Type: text/html\r\n\r\n";
 static char* sHTMLBody =  "<HTML><BODY>\n<P><b>Your request was denied by the server.</b></P>\n</BODY></HTML>\r\n\r\n";
-    
 
 static char* sVersionHeader = NULL;
 static char* sConnectionHeader = "Connection: Close";
-static char* kDefaultHeader = "Server: QTSS";
+static char* kDefaultHeader = "Server: EasyDarwin";
 static char* sContentType = "Content-Type: text/plain";
 static char* sEOL = "\r\n";
 static char* sEOM = "\r\n\r\n";
@@ -110,6 +111,9 @@ static char* sAuthResourceLocalPath = "/modules/admin/";
 static QTSS_ServerObject        sServer = NULL;
 static QTSS_ModuleObject        sModule = NULL;
 static QTSS_ModulePrefsObject   sModulePrefs = NULL;
+static QTSS_ModulePrefsObject   sAccessLogPrefs = NULL;
+static QTSS_ModulePrefsObject   sReflectorPrefs = NULL;
+
 static QTSS_PrefsObject         sServerPrefs = NULL;
 static AdminClass               *sAdminPtr = NULL;
 static QueryURI                 *sQueryPtr = NULL;
@@ -128,7 +132,6 @@ static char*                sSecurityServerAuthKey = "com.apple.server.admin.str
 static AuthorizationItem    sRight = { sSecurityServerAuthKey, 0, NULL, 0 };
 static AuthorizationRights  sRightSet = { 1, &sRight };
 #endif
-
 
 // ATTRIBUTES
 //**************************************************
@@ -185,6 +188,34 @@ static QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request);
 static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 static Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword);
 
+
+//***************************************************
+//EasyDarwin WEB管理
+//static	UInt16*		Easy_GetRTSPPorts(UInt32* outNumPortsPtr);
+//static	void		Easy_GetRTSPPortsDemo();
+
+//获取RTSP端口
+static  UInt16	EasyAdmin_GetRTSPort();
+//设置RTSP端口
+static	void	EasyAdmin_SetRTSPort(UInt16 uPort);
+//重启EasyDarwin服务
+static	void	EasyAdmin_Restart();
+//获取HTTP服务端口
+static	UInt16	EasyAdmin_GetHTTPServicePort();
+//设置HTTP服务端口
+static	void	EasyAdmin_SetHTTPServicePort(UInt16 uPort);
+//获取流媒体文件目录
+static	char*	EasyAdmin_GetMoviesFolder();
+//设置流媒体文件目录
+static	void	EasyAdmin_SetMoviesFolder(char* folder);
+//获取日志文件目录
+static	char*	EasyAdmin_GetErrorLogFolder();
+//设置日志文件目录
+static	void	EasyAdmin_SetErrorLogFolder(char* folder);
+//转发缓冲时间获取
+static	UInt32	EasyAdmin_GetReflectBufferSecs();
+//设置缓冲时间
+static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
 
 static void check_auth(struct mg_connection *conn) {
 	char name[100], password[100];
@@ -271,6 +302,30 @@ void mongooseThread::Entry()
 	mg_set_option(mongooseserver, "document_root", sDocumentRoot); //donot use it
 
 	printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
+
+	printf("RTSP Port:%d !!!!!!!!! \n", EasyAdmin_GetRTSPort());
+
+	EasyAdmin_SetRTSPort(888);
+
+	printf("HTTP Service Port:%d !!!!!!!!! \n", EasyAdmin_GetHTTPServicePort());
+
+	EasyAdmin_SetHTTPServicePort(999);
+
+	//获取Movies目录 
+	char* moviesFolder = EasyAdmin_GetMoviesFolder();
+	printf("Movies Folder:%s !!!!!!!!! \n", moviesFolder);
+	delete moviesFolder;
+
+	EasyAdmin_SetMoviesFolder("/etc/streaming/movies/");
+
+	//获取日志目录 
+	char* logFolder = EasyAdmin_GetErrorLogFolder();
+	printf("Log Folder:%s !!!!!!!!! \n", logFolder);
+	delete logFolder;
+
+	EasyAdmin_SetErrorLogFolder("/etc/streaming/Logs/");
+	//EasyAdmin_Restart();
+
 	//run server
 	for (;;) mg_poll_server((struct mg_server *) mongooseserver, 1000);
     mg_destroy_server(&mongooseserver);
@@ -550,6 +605,10 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sQTSSparams = *inParams;
     sServer = inParams->inServer;
     sModule = inParams->inModule;
+	
+	sAccessLogPrefs = QTSSModuleUtils::GetModulePrefsObject(QTSSModuleUtils::GetModuleObjectByName("QTSSAccessLogModule"));
+    sReflectorPrefs = QTSSModuleUtils::GetModulePrefsObject(QTSSModuleUtils::GetModuleObjectByName("QTSSReflectorModule"));
+
     sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(sModule);
     sServerPrefs = inParams->inPrefs;
 
@@ -1180,7 +1239,111 @@ Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword)
 	return true;
 }
 
+//UInt16* Easy_GetRTSPPorts(UInt32* outNumPortsPtr)
+//{
+//    *outNumPortsPtr = QTSServerInterface::GetServer()->GetPrefs()->GetNumValues(qtssPrefsRTSPPorts);
+//    
+//    if (*outNumPortsPtr == 0)
+//        return NULL;
+//        
+//    UInt16* thePortArray = NEW UInt16[*outNumPortsPtr];
+//    
+//    for (UInt32 theIndex = 0; theIndex < *outNumPortsPtr; theIndex++)
+//    {
+//        // Get the ip addr out of the prefs dictionary
+//        UInt32 theLen = sizeof(UInt16);
+//        QTSS_Error theErr = QTSS_NoErr;
+//        theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, theIndex, &thePortArray[theIndex], &theLen);
+//        Assert(theErr == QTSS_NoErr);   
+//    }
+//    
+//    return thePortArray;
+//}
+//
+//void Easy_GetRTSPPortsDemo()
+//{
+//    UInt32 theNumPorts = 0;
+//	UInt16* thePorts = Easy_GetRTSPPorts(&theNumPorts);
+//
+//    UInt32 portIndex  = 0;
+//
+//    for (UInt32 portIndex = 0; portIndex < theNumPorts; portIndex++)
+//    {
+//		printf("Get RTSP Port Index:%d, Value:%d \n", portIndex, thePorts[portIndex]);
+//    }
+//	delete [] thePorts;
+//}
 
+UInt16 EasyAdmin_GetRTSPort()
+{
+	UInt16 port;
+    UInt32 len = sizeof(UInt16);
+    (void) QTSS_GetValue(sServerPrefs, qtssPrefsRTSPPorts, 0, (void*)&port, &len);  
+    
+    return port;
+}
 
+void EasyAdmin_SetRTSPort(UInt16 uPort)
+{
+	//(void) QTSS_RemoveValue(sServerPrefs, qtssPrefsRTSPPorts, 0);
+	(void) QTSS_SetValue(sServerPrefs, qtssPrefsRTSPPorts, 0, &uPort, sizeof(uPort));
+}
 
+void EasyAdmin_Restart()
+{
+	exit(0);
+}
 
+UInt16 EasyAdmin_GetHTTPServicePort()
+{
+	UInt16 port;
+    UInt32 len = sizeof(UInt16);
+    (void) QTSS_GetValue(sServerPrefs, easyPrefsHTTPServicePort, 0, (void*)&port, &len);  
+    
+    return port;
+}
+
+void EasyAdmin_SetHTTPServicePort(UInt16 uPort)
+{
+	(void) QTSS_SetValue(sServerPrefs, easyPrefsHTTPServicePort, 0, &uPort, sizeof(uPort));
+}
+
+char* EasyAdmin_GetMoviesFolder()
+{
+    char* movieFolderString = NULL;
+    (void) QTSS_GetValueAsString (sServerPrefs, qtssPrefsMovieFolder, 0, &movieFolderString);
+    
+	return movieFolderString;
+}
+
+void EasyAdmin_SetMoviesFolder(char* folder)
+{
+	(void) QTSS_SetValue(sServerPrefs, qtssPrefsMovieFolder, 0, (void*)folder, strlen(folder));
+}
+
+char* EasyAdmin_GetErrorLogFolder()
+{
+    char* logFolderString = NULL;
+    (void) QTSS_GetValueAsString (sServerPrefs, qtssPrefsErrorLogDir, 0, &logFolderString);
+    
+	return logFolderString;
+}
+
+void EasyAdmin_SetErrorLogFolder(char* folder)
+{
+	(void) QTSS_SetValue(sServerPrefs, qtssPrefsErrorLogDir, 0, (void*)folder, strlen(folder));
+}
+
+UInt32 EasyAdmin_GetReflectBufferSecs()
+{
+	UInt32 bufferSecs;
+    UInt32 len = sizeof(UInt32);
+    (void) QTSS_GetValue(sReflectorPrefs, easyPrefsHTTPServicePort, 0, (void*)&bufferSecs, &len);  
+    
+    return bufferSecs;
+}
+
+void EasyAdmin_SetReflectBufferSecs(UInt32 secs)
+{
+	//(void) QTSS_SetValue(sServerPrefs, qtssPrefsErrorLogDir, 0, (void*)folder, strlen(folder));
+}
