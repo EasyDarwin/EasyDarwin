@@ -191,8 +191,6 @@ static Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPass
 
 //***************************************************
 //EasyDarwin WEB管理
-//static	UInt16*		Easy_GetRTSPPorts(UInt32* outNumPortsPtr);
-//static	void		Easy_GetRTSPPortsDemo();
 
 //获取RTSP端口
 static  UInt16	EasyAdmin_GetRTSPort();
@@ -230,6 +228,8 @@ static void check_auth(struct mg_connection *conn) {
 		mg_send_file(conn, "loginerror.html", NULL);
 	}
 }
+
+// @Arno,暂时不需要英文页面
 static int serve_request(struct mg_connection *conn) 
 {
 	char htmlPath[256] = { 0 };
@@ -1238,41 +1238,6 @@ Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword)
 	qtss_printf("User:%s Password:%s Authenticated!\n");
 	return true;
 }
-
-//UInt16* Easy_GetRTSPPorts(UInt32* outNumPortsPtr)
-//{
-//    *outNumPortsPtr = QTSServerInterface::GetServer()->GetPrefs()->GetNumValues(qtssPrefsRTSPPorts);
-//    
-//    if (*outNumPortsPtr == 0)
-//        return NULL;
-//        
-//    UInt16* thePortArray = NEW UInt16[*outNumPortsPtr];
-//    
-//    for (UInt32 theIndex = 0; theIndex < *outNumPortsPtr; theIndex++)
-//    {
-//        // Get the ip addr out of the prefs dictionary
-//        UInt32 theLen = sizeof(UInt16);
-//        QTSS_Error theErr = QTSS_NoErr;
-//        theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, theIndex, &thePortArray[theIndex], &theLen);
-//        Assert(theErr == QTSS_NoErr);   
-//    }
-//    
-//    return thePortArray;
-//}
-//
-//void Easy_GetRTSPPortsDemo()
-//{
-//    UInt32 theNumPorts = 0;
-//	UInt16* thePorts = Easy_GetRTSPPorts(&theNumPorts);
-//
-//    UInt32 portIndex  = 0;
-//
-//    for (UInt32 portIndex = 0; portIndex < theNumPorts; portIndex++)
-//    {
-//		printf("Get RTSP Port Index:%d, Value:%d \n", portIndex, thePorts[portIndex]);
-//    }
-//	delete [] thePorts;
-//}
 
 UInt16 EasyAdmin_GetRTSPort()
 {
