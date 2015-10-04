@@ -307,37 +307,37 @@ void mongooseThread::Entry()
 	//printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
 
 //**********************************************************
-	//获取RTSP端口
-	printf("RTSP Port:%d !!!!!!!!! \n", EasyAdmin_GetRTSPort());
-	EasyAdmin_SetRTSPort(888);
+	////获取RTSP端口
+	//printf("RTSP Port:%d !!!!!!!!! \n", EasyAdmin_GetRTSPort());
+	//EasyAdmin_SetRTSPort(888);
 
-	//获取HTTP Service端口
-	printf("HTTP Service Port:%d !!!!!!!!! \n", EasyAdmin_GetHTTPServicePort());
-	EasyAdmin_SetHTTPServicePort(999);
+	////获取HTTP Service端口
+	//printf("HTTP Service Port:%d !!!!!!!!! \n", EasyAdmin_GetHTTPServicePort());
+	//EasyAdmin_SetHTTPServicePort(999);
 
-	//获取Movies目录 
-	char* moviesFolder = EasyAdmin_GetMoviesFolder();
-	printf("Movies Folder:%s !!!!!!!!! \n", moviesFolder);
-	delete moviesFolder;
-	EasyAdmin_SetMoviesFolder("/etc/streaming/movies/");
+	////获取Movies目录 
+	//char* moviesFolder = EasyAdmin_GetMoviesFolder();
+	//printf("Movies Folder:%s !!!!!!!!! \n", moviesFolder);
+	//delete moviesFolder;
+	//EasyAdmin_SetMoviesFolder("/etc/streaming/movies/");
 
-	//获取日志目录 
-	char* logFolder = EasyAdmin_GetErrorLogFolder();
-	printf("Log Folder:%s !!!!!!!!! \n", logFolder);
-	delete logFolder;
+	////获取日志目录 
+	//char* logFolder = EasyAdmin_GetErrorLogFolder();
+	//printf("Log Folder:%s !!!!!!!!! \n", logFolder);
+	//delete logFolder;
 
-	EasyAdmin_SetErrorLogFolder("/etc/streaming/Logs/");
+	//EasyAdmin_SetErrorLogFolder("/etc/streaming/Logs/");
 
-	//获取转发缓冲时间
-	printf("Reflector Buffer Secs:%d \n", EasyAdmin_GetReflectBufferSecs());
-	EasyAdmin_SetReflectBufferSecs(8);
+	////获取转发缓冲时间
+	//printf("Reflector Buffer Secs:%d \n", EasyAdmin_GetReflectBufferSecs());
+	//EasyAdmin_SetReflectBufferSecs(8);
 
-	//获取Mongoose端口
-	printf("Mongoose Port:%d \n", EasyAdmin_GetMongoosePort());
-	EasyAdmin_SetMongoosePort(818);
+	////获取Mongoose端口
+	//printf("Mongoose Port:%d \n", EasyAdmin_GetMongoosePort());
+	//EasyAdmin_SetMongoosePort(818);
 
-	//修改配置后重启
-	EasyAdmin_Restart();
+	////修改配置后重启
+	//EasyAdmin_Restart();
 //**********************************************************
 
 	//run server
