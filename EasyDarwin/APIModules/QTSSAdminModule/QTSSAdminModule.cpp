@@ -214,6 +214,10 @@ static	void	EasyAdmin_SetErrorLogFolder(char* folder);
 static	UInt32	EasyAdmin_GetReflectBufferSecs();
 //设置缓冲时间
 static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
+//获取WEB Admin端口
+static	UInt16	EasyAdmin_GetMongoosePort();
+//设置WEB Admin端口
+static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
 
 static void check_auth(struct mg_connection *conn) {
 	char name[100], password[100];
@@ -229,7 +233,6 @@ static void check_auth(struct mg_connection *conn) {
 	}
 }
 
-// @Arno,暂时不需要英文页面
 static int serve_request(struct mg_connection *conn) 
 {
 	char htmlPath[256] = { 0 };
@@ -301,21 +304,21 @@ void mongooseThread::Entry()
 	mg_set_option(mongooseserver, "listening_port", listening_port);
 	mg_set_option(mongooseserver, "document_root", sDocumentRoot); //donot use it
 
-	printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
+	//printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
 
+//**********************************************************
+	//获取RTSP端口
 	printf("RTSP Port:%d !!!!!!!!! \n", EasyAdmin_GetRTSPort());
-
 	EasyAdmin_SetRTSPort(888);
 
+	//获取HTTP Service端口
 	printf("HTTP Service Port:%d !!!!!!!!! \n", EasyAdmin_GetHTTPServicePort());
-
 	EasyAdmin_SetHTTPServicePort(999);
 
 	//获取Movies目录 
 	char* moviesFolder = EasyAdmin_GetMoviesFolder();
 	printf("Movies Folder:%s !!!!!!!!! \n", moviesFolder);
 	delete moviesFolder;
-
 	EasyAdmin_SetMoviesFolder("/etc/streaming/movies/");
 
 	//获取日志目录 
@@ -324,7 +327,18 @@ void mongooseThread::Entry()
 	delete logFolder;
 
 	EasyAdmin_SetErrorLogFolder("/etc/streaming/Logs/");
-	//EasyAdmin_Restart();
+
+	//获取转发缓冲时间
+	printf("Reflector Buffer Secs:%d \n", EasyAdmin_GetReflectBufferSecs());
+	EasyAdmin_SetReflectBufferSecs(8);
+
+	//获取Mongoose端口
+	printf("Mongoose Port:%d \n", EasyAdmin_GetMongoosePort());
+	EasyAdmin_SetMongoosePort(818);
+
+	//修改配置后重启
+	EasyAdmin_Restart();
+//**********************************************************
 
 	//run server
 	for (;;) mg_poll_server((struct mg_server *) mongooseserver, 1000);
@@ -1301,14 +1315,22 @@ void EasyAdmin_SetErrorLogFolder(char* folder)
 
 UInt32 EasyAdmin_GetReflectBufferSecs()
 {
-	UInt32 bufferSecs;
-    UInt32 len = sizeof(UInt32);
-    (void) QTSS_GetValue(sReflectorPrefs, easyPrefsHTTPServicePort, 0, (void*)&bufferSecs, &len);  
-    
-    return bufferSecs;
+	UInt32 reflectBufferSecs = 0;
+	QTSSModuleUtils::GetAttribute(sReflectorPrefs, "reflector_buffer_size_sec", qtssAttrDataTypeUInt32, &reflectBufferSecs, NULL, sizeof(reflectBufferSecs));
+	return reflectBufferSecs;
 }
 
 void EasyAdmin_SetReflectBufferSecs(UInt32 secs)
 {
-	//(void) QTSS_SetValue(sServerPrefs, qtssPrefsErrorLogDir, 0, (void*)folder, strlen(folder));
+	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "reflector_buffer_size_sec", qtssAttrDataTypeUInt32, &secs, sizeof(UInt32));
+}
+
+UInt16 EasyAdmin_GetMongoosePort()
+{
+	return sHttpPort;
+}
+
+void EasyAdmin_SetMongoosePort(UInt16 port)
+{
+	QTSSModuleUtils::CreateAttribute(sModulePrefs, "http_port", qtssAttrDataTypeUInt16, &port, sizeof(UInt16));
 }
