@@ -76,7 +76,7 @@
 
 **列表页**：js调用EasyCMS获取设备列表接口，html展示在线设备列表（[可参考EasyDarwin视频广场页面](http://www.easydarwin.org/article/video/ "EasyDarwin视频广场")）；
 
-**播放页**：html播放页面用调用ckplayer等m3u8播放器（[可参考EasyDarwin视频播放页面](http://www.easydarwin.org/article/play/ "EasyDarwin视频播放")）；
+**播放页**：html播放页面用调用ckplayer等m3u8播放器（[可参考EasyDarwin视频播放页面](http://www.easydarwin.org/article/hlsplayer/ "EasyDarwin视频播放")）；
 
 
 ## 获取更多信息 ##
