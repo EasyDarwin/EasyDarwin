@@ -51,9 +51,9 @@
 UInt32                  QTSServerInterface::sServerAPIVersion = QTSS_API_VERSION;
 QTSServerInterface*     QTSServerInterface::sServer = NULL;
 #if __MacOSX__
-StrPtrLen               QTSServerInterface::sServerNameStr("QTSS");
+StrPtrLen               QTSServerInterface::sServerNameStr("EasyDarwin");
 #else
-StrPtrLen               QTSServerInterface::sServerNameStr("DSS");
+StrPtrLen               QTSServerInterface::sServerNameStr("EasyDarwin");
 #endif
 
 // kVersionString from revision.h, include with -i at project level
