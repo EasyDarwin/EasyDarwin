@@ -71,8 +71,18 @@ int main(int argc, char * argv[])
 #if _DEBUG
     char* compileType = "Compile_Flags/_DEBUG; ";
 #else
-   char* compileType = "";
+   char* compileType = "Compile_Flags/_RELEASE;";
 #endif
+
+   	qtss_printf("%s/%s ( Build/%s; Platform/%s; %s%s) Built on: %s\n",
+										QTSServerInterface::GetServerName().Ptr,
+                                        QTSServerInterface::GetServerVersion().Ptr,
+                                        QTSServerInterface::GetServerBuild().Ptr,
+                                        QTSServerInterface::GetServerPlatform().Ptr,
+                                        compileType,
+                                        QTSServerInterface::GetServerComment().Ptr,
+                                        QTSServerInterface::GetServerBuildDate().Ptr);
+
 
     while ((ch = getopt(argc,argv, "vdxp:o:c:irsS:I")) != EOF) // opt: means requires option
     {
