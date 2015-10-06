@@ -110,7 +110,7 @@ class HTTPResponseStream : public ResizeableStringFormatter
         TimeoutTask*            fTimeoutTask;
         Bool16                  fPrintMSG;     // debugging printfs
         
-        friend class RTSPRequestInterface;
+        friend class HTTPRequestInterface;
 };
 
 
