@@ -39,7 +39,7 @@
 #include "revision.h"
 #endif
 #include "QTSServerInterface.h"
-#include "BaseSessionInterface.h"
+#include "HTTPSessionInterface.h"
 
 #include "OSRef.h"
 #include "RTSPProtocol.h"

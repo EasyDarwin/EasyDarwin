@@ -41,7 +41,7 @@
 #include "QTSSStream.h"
 #include "OSMemory.h"
 //#include "BaseRequestInterface.h"
-#include "BaseSessionInterface.h"
+#include "HTTPSessionInterface.h"
 #include "OS.h"
 #include "EventContext.h"
 #include "Socket.h"
@@ -725,7 +725,7 @@ QTSS_Error	QTSSCallbacks::QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSe
 	if(inServiceSession == NULL)
 		return QTSS_BadArgument;
 
-	BaseSessionInterface* session = (BaseSessionInterface*)inServiceSession;
+	HTTPSessionInterface* session = (HTTPSessionInterface*)inServiceSession;
 	StrPtrLen theValue(inValue, inValueLen);
 	return session->SendHTTPPacket(&theValue, connectionClose, decrement);
 }
@@ -737,19 +737,19 @@ QTSS_Error	QTSSCallbacks::QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSes
 	//QTSS_SessionType sType = qtssDeviceSession;
 	//QTSS_SetValue(inServiceSession, qtssRTSPSesType, 0, &sType, sizeof(sType));
 	//QTSS_SetValue(inServiceSession, qtssEasySesSerial, 0, inValue, inValueLen);
-	return ((BaseSessionInterface*)inServiceSession)->RegDevSession(inValue, inValueLen);
+	return ((HTTPSessionInterface*)inServiceSession)->RegDevSession(inValue, inValueLen);
 }
 
 QTSS_Error	QTSSCallbacks::QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession)
 {
 	if(inServiceSession == NULL)
 		return QTSS_BadArgument;
-	return ((BaseSessionInterface*)inServiceSession)->UpdateDevRedis();
+	return ((HTTPSessionInterface*)inServiceSession)->UpdateDevRedis();
 }
 
 QTSS_Error	QTSSCallbacks::QTSS_UpdateDevSnap(QTSS_RTSPSessionObject inServiceSession, const char* inSnapTime, const char* inSnapJpg)
 {
 	if(inServiceSession == NULL)
 		return QTSS_BadArgument;
-	return ((BaseSessionInterface*)inServiceSession)->UpdateDevSnap(inSnapTime, inSnapJpg);
+	return ((HTTPSessionInterface*)inServiceSession)->UpdateDevSnap(inSnapTime, inSnapJpg);
 }

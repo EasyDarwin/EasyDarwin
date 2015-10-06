@@ -5,11 +5,11 @@
 	Website: http://www.EasyDarwin.org
 */
 /*
-    File:       ServiceSession.cpp
+    File:       HTTPSession.cpp
     Contains:   实现对服务单元每一个Session会话的网络报文处理
 */
 
-#include "ServiceSession.h"
+#include "HTTPSession.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
 #include "EasyUtil.h"
@@ -30,8 +30,8 @@ static StrPtrLen	sServiceStr("EasyDariwn_CMS");
 
 using namespace std;
 
-CServiceSession::CServiceSession( )
-: BaseSessionInterface(),
+HTTPSession::HTTPSession( )
+: HTTPSessionInterface(),
   fRequest(NULL),
   fReadMutex(),
   fCurrentModule(0),
@@ -58,7 +58,7 @@ CServiceSession::CServiceSession( )
 	qtss_printf("create session:%s\n", fSessionID);
 }
 
-CServiceSession::~CServiceSession()
+HTTPSession::~HTTPSession()
 {
 	char remoteAddress[20] = {0};
 	StrPtrLen theIPAddressStr(remoteAddress,sizeof(remoteAddress));
@@ -86,13 +86,13 @@ CServiceSession::~CServiceSession()
 }
 
 /*!
-	\brief 事件由ServiceSession Task进行处理，大多数为网络报文处理事件 
+	\brief 事件由HTTPSession Task进行处理，大多数为网络报文处理事件 
 	\param 
 	\return 处理完成返回0,断开Session返回-1
 	\ingroup 
 	\see 
 */
-SInt64 CServiceSession::Run()
+SInt64 HTTPSession::Run()
 {
 	//获取事件类型
     EventFlags events = this->GetEvents();
@@ -338,7 +338,7 @@ SInt64 CServiceSession::Run()
 	发送HTTP+json报文，决定是否关闭当前Session
 	HTTP部分构造，json部分由函数传递
 */
-QTSS_Error CServiceSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
+QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
 	//构造响应报文(HTTP头)
 	HTTPRequest httpAck(&sServiceStr);
@@ -353,7 +353,7 @@ QTSS_Error CServiceSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connect
 	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
-	BaseResponseStream *pOutputStream = GetOutputStream();
+	HTTPResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
 	if (contentXML->Len > 0) 
 		pOutputStream->Put(contentXML->Ptr, contentXML->Len);
@@ -363,7 +363,7 @@ QTSS_Error CServiceSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connect
 		pOutputStream->Flush();
 	}
 
-	//将对CServiceSession的引用减少一
+	//将对HTTPSession的引用减少一
 	if(fObjectHolders && decrement)
 		DecrementObjectHolderCount();
 
@@ -377,7 +377,7 @@ QTSS_Error CServiceSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connect
 	Content报文读取与解析
 	同步进行报文处理，构造回复报文
 */
-QTSS_Error CServiceSession::SetupRequest()
+QTSS_Error HTTPSession::SetupRequest()
 {
     //解析请求报文
     QTSS_Error theErr = fRequest->Parse();
@@ -404,7 +404,7 @@ QTSS_Error CServiceSession::SetupRequest()
     theContentLenParser.ConsumeWhitespace();
     UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
        
-	qtss_printf("ServiceSession read content-length:%d \n", content_length);
+	qtss_printf("HTTPSession read content-length:%d \n", content_length);
 
     if (content_length <= 0) return QTSS_BadArgument;
 
@@ -500,7 +500,7 @@ QTSS_Error CServiceSession::SetupRequest()
 	return QTSS_NoErr;
 }
 
-void CServiceSession::CleanupRequest()
+void HTTPSession::CleanupRequest()
 {
     if (fRequest != NULL)
     {
@@ -518,7 +518,7 @@ void CServiceSession::CleanupRequest()
     this->SetRequestBodyLength(-1);
 }
 
-Bool16 CServiceSession::OverMaxConnections(UInt32 buffer)
+Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
 {
     QTSServerInterface* theServer = QTSServerInterface::GetServer();
     SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
@@ -536,7 +536,7 @@ Bool16 CServiceSession::OverMaxConnections(UInt32 buffer)
 }
 
 
-QTSS_Error CServiceSession::DumpRequestData()
+QTSS_Error HTTPSession::DumpRequestData()
 {
     char theDumpBuffer[EASY_REQUEST_BUFFER_SIZE_LEN];
     
@@ -550,7 +550,7 @@ QTSS_Error CServiceSession::DumpRequestData()
 //
 //MSG_DEV_CMS_REGISTER_REQ消息处理
 //
-QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
+QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 {	
 	QTSS_Error theErr = QTSS_NoErr;		
 
@@ -633,7 +633,7 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
-	BaseResponseStream *pOutputStream = GetOutputStream();
+	HTTPResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
 	
 	//Push HTTP Content to OutputBuffer
@@ -646,7 +646,7 @@ QTSS_Error CServiceSession::ExecNetMsgDevRegisterReq(const char* json)
 //
 //MSG_NGX_CMS_NEED_STREAM_REQ消息处理
 //
-QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
+QTSS_Error HTTPSession::ExecNetMsgNgxStreamReq(const char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -729,7 +729,7 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
-	BaseResponseStream *pOutputStream = GetOutputStream();
+	HTTPResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
 	if (msgJson.Len > 0) 
 		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
@@ -737,12 +737,12 @@ QTSS_Error CServiceSession::ExecNetMsgNgxStreamReq(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error CServiceSession::ExecNetMsgDefaultReqHandler(const char* json)
+QTSS_Error HTTPSession::ExecNetMsgDefaultReqHandler(const char* json)
 {
 	return QTSS_NoErr;
 }
 
-QTSS_Error CServiceSession::ExecNetMsgSnapUpdateReq(const char* json)
+QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 	bool close = false;
@@ -779,7 +779,7 @@ QTSS_Error CServiceSession::ExecNetMsgSnapUpdateReq(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error CServiceSession::ExecNetMsgGetDeviceListReq()
+QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReq()
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -803,7 +803,7 @@ QTSS_Error CServiceSession::ExecNetMsgGetDeviceListReq()
     for (OSRefHashTableIter theIter(devMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
     {
         OSRef* theRef = theIter.GetCurrent();
-        CServiceSession* theSession = (CServiceSession*)theRef->GetObject();
+        HTTPSession* theSession = (HTTPSession*)theRef->GetObject();
 
 		EasyDarwinDevice device;
 		device.DeviceName = string(theSession->GetDeviceSerial());
@@ -832,7 +832,7 @@ QTSS_Error CServiceSession::ExecNetMsgGetDeviceListReq()
 	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
-	BaseResponseStream *pOutputStream = GetOutputStream();
+	HTTPResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
 	if (msgJson.Len > 0) 
 		pOutputStream->Put(msgJson.Ptr, msgJson.Len);

@@ -29,12 +29,12 @@
 	Website: http://www.EasyDarwin.org
 */
 /*
-    File:       BaseSessionInterface.cpp
-    Contains:   Implementation of BaseSessionInterface object.
+    File:       HTTPSessionInterface.cpp
+    Contains:   Implementation of HTTPSessionInterface object.
 */
 
 #include "atomic.h"
-#include "BaseSessionInterface.h"
+#include "HTTPSessionInterface.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
 #include "RTSPProtocol.h"
@@ -49,9 +49,9 @@
     #define RTSP_SESSION_INTERFACE_DEBUGGING 0
 #endif
 
-unsigned int            BaseSessionInterface::sSessionIndexCounter = kFirstCMSSessionID;
+unsigned int            HTTPSessionInterface::sSessionIndexCounter = kFirstCMSSessionID;
 
-QTSSAttrInfoDict::AttrInfo  BaseSessionInterface::sAttributes[] = 
+QTSSAttrInfoDict::AttrInfo  HTTPSessionInterface::sAttributes[] = 
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
     /* 0 */ { "qtssEasySesIndex",            NULL,          qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
     /* 1 */ { "qtssRTSPSesLocalAddr",       SetupParams,    qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
@@ -76,7 +76,7 @@ QTSSAttrInfoDict::AttrInfo  BaseSessionInterface::sAttributes[] =
 };
 
 
-void    BaseSessionInterface::Initialize()
+void    HTTPSessionInterface::Initialize()
 {
     for (UInt32 x = 0; x < qtssRTSPSesNumParams; x++)
         QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kRTSPSessionDictIndex)->
@@ -84,7 +84,7 @@ void    BaseSessionInterface::Initialize()
 	
 }
 
-BaseSessionInterface::BaseSessionInterface() 
+HTTPSessionInterface::HTTPSessionInterface() 
 :   QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kRTSPSessionDictIndex)),
     Task(), 
     fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetSessionTimeoutInSecs() * 1000),
@@ -130,7 +130,7 @@ BaseSessionInterface::BaseSessionInterface()
 }
 
 
-BaseSessionInterface::~BaseSessionInterface()
+HTTPSessionInterface::~HTTPSessionInterface()
 {
     // If the input socket is != output socket, the input socket was created dynamically
     if (fInputSocketP != fOutputSocketP) 
@@ -138,7 +138,7 @@ BaseSessionInterface::~BaseSessionInterface()
 	this->UnRegDevSession();
 }
 
-void BaseSessionInterface::DecrementObjectHolderCount()
+void HTTPSessionInterface::DecrementObjectHolderCount()
 {
 
 //#if __Win32__
@@ -152,12 +152,12 @@ void BaseSessionInterface::DecrementObjectHolderCount()
 
 }
 
-QTSS_Error BaseSessionInterface::Write(void* inBuffer, UInt32 inLength,
+QTSS_Error HTTPSessionInterface::Write(void* inBuffer, UInt32 inLength,
                                             UInt32* outLenWritten, UInt32 inFlags)
 {
-    UInt32 sendType = BaseResponseStream::kDontBuffer;
+    UInt32 sendType = HTTPResponseStream::kDontBuffer;
     if ((inFlags & qtssWriteFlagsBufferData) != 0)
-        sendType = BaseResponseStream::kAlwaysBuffer;
+        sendType = HTTPResponseStream::kAlwaysBuffer;
     
     iovec theVec[2];
     theVec[1].iov_base = (char*)inBuffer;
@@ -165,12 +165,12 @@ QTSS_Error BaseSessionInterface::Write(void* inBuffer, UInt32 inLength,
     return fOutputStream.WriteV(theVec, 2, inLength, outLenWritten, sendType);
 }
 
-QTSS_Error BaseSessionInterface::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength, UInt32* outLenWritten)
+QTSS_Error HTTPSessionInterface::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength, UInt32* outLenWritten)
 {
-    return fOutputStream.WriteV(inVec, inNumVectors, inTotalLength, outLenWritten, BaseResponseStream::kDontBuffer);
+    return fOutputStream.WriteV(inVec, inNumVectors, inTotalLength, outLenWritten, HTTPResponseStream::kDontBuffer);
 }
 
-QTSS_Error BaseSessionInterface::Read(void* ioBuffer, UInt32 inLength, UInt32* outLenRead)
+QTSS_Error HTTPSessionInterface::Read(void* ioBuffer, UInt32 inLength, UInt32* outLenRead)
 {
     //
     // Don't let callers of this function accidently creep past the end of the
@@ -194,7 +194,7 @@ QTSS_Error BaseSessionInterface::Read(void* ioBuffer, UInt32 inLength, UInt32* o
     return theErr;
 }
 
-QTSS_Error BaseSessionInterface::RequestEvent(QTSS_EventType inEventMask)
+QTSS_Error HTTPSessionInterface::RequestEvent(QTSS_EventType inEventMask)
 {
     if (inEventMask & QTSS_ReadableEvent)
         fInputSocketP->RequestEvent(EV_RE);
@@ -210,7 +210,7 @@ QTSS_Error BaseSessionInterface::RequestEvent(QTSS_EventType inEventMask)
     
 */
 
-void    BaseSessionInterface::SnarfInputSocket( BaseSessionInterface* fromRTSPSession )
+void    HTTPSessionInterface::SnarfInputSocket( HTTPSessionInterface* fromRTSPSession )
 {
     Assert( fromRTSPSession != NULL );
     Assert( fromRTSPSession->fOutputSocketP != NULL );
@@ -229,9 +229,9 @@ void    BaseSessionInterface::SnarfInputSocket( BaseSessionInterface* fromRTSPSe
 }
 
 
-void* BaseSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*outLen*/)
+void* HTTPSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*outLen*/)
 {
-    BaseSessionInterface* theSession = (BaseSessionInterface*)inSession;
+    HTTPSessionInterface* theSession = (HTTPSessionInterface*)inSession;
  
     theSession->fLocalAddr = theSession->fSocket.GetLocalAddr();
     theSession->fRemoteAddr = theSession->fSocket.GetRemoteAddr();
@@ -261,12 +261,12 @@ void* BaseSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*out
 
 
 
-QTSS_Error BaseSessionInterface::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
+QTSS_Error HTTPSessionInterface::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
 	return QTSS_NoErr;
 }
 
-QTSS_Error BaseSessionInterface::RegDevSession(const char* serial, UInt32 serailLen)
+QTSS_Error HTTPSessionInterface::RegDevSession(const char* serial, UInt32 serailLen)
 {
 	if((::strlen(serial) == 0) || (serailLen == 0))
 		return QTSS_ValueNotFound;
@@ -276,25 +276,25 @@ QTSS_Error BaseSessionInterface::RegDevSession(const char* serial, UInt32 serail
 	fDevSerialPtr.Set( fSerial, serailLen);
 	fDevRef.Set( fDevSerialPtr, this);
 	OS_Error theErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(GetRef());
-	//printf("[line:%d]BaseSessionInterface::RegDevSession theErr = %d\n",__LINE__, theErr);
+	//printf("[line:%d]HTTPSessionInterface::RegDevSession theErr = %d\n",__LINE__, theErr);
 	if(theErr == OS_NoErr)
 		fAuthenticated = true;
 	return theErr;
 }
 
-QTSS_Error BaseSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg)
+QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg)
 {
 	if(!fAuthenticated) return QTSS_NoErr;
 	return QTSS_NoErr;
 }
 
-void BaseSessionInterface::UnRegDevSession()
+void HTTPSessionInterface::UnRegDevSession()
 {
 	if(fAuthenticated)
 		QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(GetRef());
 }
 
-QTSS_Error BaseSessionInterface::UpdateDevRedis()
+QTSS_Error HTTPSessionInterface::UpdateDevRedis()
 {
 	return QTSS_NoErr;
 }
