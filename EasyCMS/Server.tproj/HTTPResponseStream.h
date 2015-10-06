@@ -39,26 +39,26 @@
                 stream buffer. The buffer may grow infinitely.
 */
 
-#ifndef __BASE_RESPONSE_STREAM_H__
-#define __BASE_RESPONSE_STREAM_H__
+#ifndef __HTTP_RESPONSE_STREAM_H__
+#define __HTTP_RESPONSE_STREAM_H__
 
 #include "ResizeableStringFormatter.h"
 #include "TCPSocket.h"
 #include "TimeoutTask.h"
 #include "QTSS.h"
 
-class BaseResponseStream : public ResizeableStringFormatter
+class HTTPResponseStream : public ResizeableStringFormatter
 {
     public:
     
         // This object provides some flow control buffering services.
         // It also refreshes the timeout whenever there is a successful write
         // on the socket.
-        BaseResponseStream(TCPSocket* inSocket, TimeoutTask* inTimeoutTask)
+        HTTPResponseStream(TCPSocket* inSocket, TimeoutTask* inTimeoutTask)
             :   ResizeableStringFormatter(fOutputBuf, kOutputBufferSizeInBytes),
                 fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask),fPrintMSG(false) {}
         
-        virtual ~BaseResponseStream() {}
+        virtual ~HTTPResponseStream() {}
 
         // WriteV
         //
@@ -114,4 +114,4 @@ class BaseResponseStream : public ResizeableStringFormatter
 };
 
 
-#endif // __BASE_RESPONSE_STREAM_H__
+#endif // __HTTP_RESPONSE_STREAM_H__

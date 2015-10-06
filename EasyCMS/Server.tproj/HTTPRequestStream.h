@@ -29,7 +29,7 @@
 	Website: http://www.EasyDarwin.org
 */
 /*
-    File:       BaseRequestStream.h
+    File:       HTTPRequestStream.h
 
     Contains:   Provides a stream abstraction for RTSP. Given a socket, this object
                 can read in data until an entire RTSP request header is available.
@@ -39,8 +39,8 @@
                     
 */
 
-#ifndef __BASEREQUESTSTREAM_H__
-#define __BASEREQUESTSTREAM_H__
+#ifndef __HTTPREQUESTSTREAM_H__
+#define __HTTPREQUESTSTREAM_H__
 
 
 //INCLUDES
@@ -48,15 +48,15 @@
 #include "TCPSocket.h"
 #include "QTSS.h"
 
-class BaseRequestStream
+class HTTPRequestStream
 {
 public:
 
     //CONSTRUCTOR / DESTRUCTOR
-    BaseRequestStream(TCPSocket* sock);
+    HTTPRequestStream(TCPSocket* sock);
     
     // We may have to delete this memory if it was allocated due to base64 decoding
-    ~BaseRequestStream() { if (fRequest.Ptr != &fRequestBuffer[0]) delete [] fRequest.Ptr; }
+    ~HTTPRequestStream() { if (fRequest.Ptr != &fRequestBuffer[0]) delete [] fRequest.Ptr; }
 
     //ReadRequest
     //This function will not block.
@@ -92,7 +92,7 @@ public:
     StrPtrLen*  GetRequestBuffer()  { return fRequestPtr; }
     Bool16      IsDataPacket()      { return fIsDataPacket; }
     void        ShowMSG(Bool16 enable) {fPrintMSG = enable; }     
-    void SnarfRetreat( BaseRequestStream &fromRequest );
+    void SnarfRetreat( HTTPRequestStream &fromRequest );
         
 private:
     // Base64 decodes into fRequest.Ptr, updates fRequest.Len, and returns the amount

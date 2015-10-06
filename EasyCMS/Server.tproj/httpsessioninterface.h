@@ -29,32 +29,32 @@
 	Website: http://www.EasyDarwin.org
 */
 /*
-    File:       BaseSessionInterface.h
+    File:       HTTPSessionInterface.h
 
     Contains:   Presents an API for session-wide resources for modules to use.
                 Implements the CMS Session dictionary for QTSS API. 
 */
 
-#ifndef __BASESESSIONINTERFACE_H__
-#define __BASESESSIONINTERFACE_H__
+#ifndef __HTTPSESSIONINTERFACE_H__
+#define __HTTPSESSIONINTERFACE_H__
 
-#include "BaseRequestStream.h"
-#include "BaseResponseStream.h"
+#include "HTTPRequestStream.h"
+#include "HTTPResponseStream.h"
 #include "Task.h"
 #include "QTSS.h"
 #include "QTSSDictionary.h"
 #include "atomic.h"
 #include "base64.h"
 
-class BaseSessionInterface : public QTSSDictionary, public Task
+class HTTPSessionInterface : public QTSSDictionary, public Task
 {
 public:
 
     //Initialize must be called right off the bat to initialize dictionary resources
     static void     Initialize();
     
-    BaseSessionInterface();
-    virtual ~BaseSessionInterface();
+    HTTPSessionInterface();
+    virtual ~HTTPSessionInterface();
     
     //Is this session alive? If this returns false, clean up and begone as
     //fast as possible
@@ -75,8 +75,8 @@ public:
     //Two main things are persistent through the course of a session, not
     //associated with any one request. The RequestStream (which can be used for
     //getting data from the client), and the socket. OOps, and the ResponseStream
-    BaseRequestStream*  GetInputStream()    { return &fInputStream; }
-    BaseResponseStream* GetOutputStream()   { return &fOutputStream; }
+    HTTPRequestStream*  GetInputStream()    { return &fInputStream; }
+    HTTPResponseStream* GetOutputStream()   { return &fOutputStream; }
     TCPSocket*          GetSocket()         { return &fSocket; }
     OSMutex*            GetSessionMutex()   { return &fSessionMutex; }
     
@@ -134,8 +134,8 @@ protected:
 
     TimeoutTask         fTimeoutTask;//allows the session to be timed out
     
-    BaseRequestStream   fInputStream;
-    BaseResponseStream  fOutputStream;
+    HTTPRequestStream   fInputStream;
+    HTTPResponseStream  fOutputStream;
     
     // Any RTP session sending interleaved data on this RTSP session must
     // be prevented from writing while an RTSP request is in progress
@@ -147,7 +147,7 @@ protected:
     TCPSocket*          fOutputSocketP;
     TCPSocket*          fInputSocketP;  // <-- usually same as fSocketP, unless we're HTTP Proxying
     
-    void        SnarfInputSocket( BaseSessionInterface* fromRTSPSession );
+    void        SnarfInputSocket( HTTPSessionInterface* fromRTSPSession );
     
     // What session type are we?
     QTSS_SessionType    fSessionType;
@@ -171,5 +171,5 @@ protected:
     
     static QTSSAttrInfoDict::AttrInfo   sAttributes[];
 };
-#endif // __BASESESSIONINTERFACE_H__
+#endif // __HTTPSESSIONINTERFACE_H__
 

@@ -324,19 +324,23 @@
 				Name="Core"
 				>
 				<File
-					RelativePath="..\Server.tproj\BaseRequestStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\BaseResponseStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\BaseSessionInterface.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\GenerateXMLPrefs.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPRequestStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPResponseStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPSession.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPSessionInterface.cpp"
 					>
 				</File>
 				<File
@@ -397,10 +401,6 @@
 				</File>
 				<File
 					RelativePath="..\Server.tproj\RunServer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\ServiceSession.cpp"
 					>
 				</File>
 				<File

@@ -68,8 +68,8 @@
 #endif
 
 //具体上层协议类
-#include "BaseSessionInterface.h"
-#include "ServiceSession.h"
+#include "HTTPSessionInterface.h"
+#include "HTTPSession.h"
 #include "QTSSFile.h"
 
 // CLASS DEFINITIONS
@@ -134,7 +134,7 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     QTSSModule::Initialize();
     QTSServerPrefs::Initialize();
     QTSSMessages::Initialize();
-    BaseSessionInterface::Initialize();
+    HTTPSessionInterface::Initialize();
     QTSSFile::Initialize();
     
     //
@@ -920,7 +920,7 @@ Task*   ServiceListenerSocket::GetSessionTask(TCPSocket** outSocket)
 {
     Assert(outSocket != NULL);
     
-    CServiceSession* theTask = NEW CServiceSession();
+    HTTPSession* theTask = NEW HTTPSession();
     *outSocket = theTask->GetSocket();  // out socket is not attached to a unix socket yet.
 
     if (this->OverMaxConnections(0))

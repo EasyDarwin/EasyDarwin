@@ -19,10 +19,10 @@
   \defgroup 服务单元网络事件处理流程
 */
 
-#ifndef __SERVICESESSION_H__
-#define __SERVICESESSION_H__
+#ifndef __HTTP_SESSION_H__
+#define __HTTP_SESSION_H__
 
-#include "BaseSessionInterface.h"
+#include "HTTPSessionInterface.h"
 #include "HTTPRequest.h"
 #include "TimeoutTask.h"
 #include "QTSSModule.h"
@@ -33,11 +33,11 @@
 using namespace EasyDarwin::Protocol;
 using namespace std;
 
-class CServiceSession : public BaseSessionInterface
+class HTTPSession : public HTTPSessionInterface
 {
     public:
-        CServiceSession();
-        virtual ~CServiceSession();
+        HTTPSession();
+        virtual ~HTTPSession();
 		
 		////发送HTTP响应报文
 		virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
@@ -90,5 +90,5 @@ class CServiceSession : public BaseSessionInterface
 		char* fDeviceSnap;
 
 };
-#endif // __SERVICESESSION_H__
+#endif // __HTTP_SESSION_H__
 

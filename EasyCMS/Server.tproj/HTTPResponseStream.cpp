@@ -29,12 +29,12 @@
 	Website: http://www.EasyDarwin.org
 */
 /*
-    File:       BaseResponseStream.cpp
+    File:       HTTPResponseStream.cpp
 
     Contains:   Impelementation of object in .h
 */
 
-#include "BaseResponseStream.h"
+#include "HTTPResponseStream.h"
 #include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include "StringTranslator.h"
@@ -42,7 +42,7 @@
 
 #include <errno.h>
 
-QTSS_Error BaseResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength,
+QTSS_Error HTTPResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength,
                                             UInt32* outLengthSent, UInt32 inSendType)
 {
     QTSS_Error theErr = QTSS_NoErr;
@@ -152,7 +152,7 @@ QTSS_Error BaseResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 
     return QTSS_NoErr;
 }
 
-QTSS_Error BaseResponseStream::Flush()
+QTSS_Error HTTPResponseStream::Flush()
 {
     UInt32 amtInBuffer = this->GetCurrentOffset() - fBytesSentInBuffer;
     if (amtInBuffer > 0)
