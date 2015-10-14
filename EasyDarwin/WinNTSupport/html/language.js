@@ -22,7 +22,8 @@ if (language == '1') {
     document.write('<script src="english/language.js"><\/script>');
 }
 else {
-    document.write('<script src="chinese/language.js"><\/script>');
+    
+	document.write('<script src="chinese/language.js"><\/script>');
 }
 /// <summary>
 /// 建立XMLHttpRequest请求(AJAX)
