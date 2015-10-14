@@ -235,8 +235,6 @@ QTSS_Error  QTSS_Advise(QTSS_StreamRef inRef, UInt64 inPosition, UInt32 inAdvise
     return (sCallbacks->addr [kAdviseCallback]) (inRef, inPosition, inAdviseSize);      
 }
 
-
-
 // SERVICE ROUTINES
 
 QTSS_Error QTSS_AddService(const char* inServiceName, QTSS_ServiceFunctionPtr inFunctionPtr)
@@ -297,7 +295,6 @@ QTSS_Error QTSS_RefreshTimeOut(QTSS_ClientSessionObject inClientSession)
 {
     return (sCallbacks->addr [kRefreshTimeOutCallback]) (inClientSession);
 }
-
 
 // FILE SYSTEM ROUTINES
 

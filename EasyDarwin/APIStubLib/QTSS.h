@@ -690,22 +690,22 @@ enum
     
     // These parameters ARE pre-emptive safe.
     
-    qtssServerAPIVersion            = 0,    //read  //UInt32            //The API version supported by this server (format 0xMMMMmmmm, where M=major version, m=minor version)
-    qtssSvrDefaultDNSName           = 1,    //read  //char array        //The "default" DNS name of the server
-    qtssSvrDefaultIPAddr            = 2,    //read  //UInt32            //The "default" IP address of the server
-    qtssSvrServerName               = 3,    //read  //char array        //Name of the server
-    qtssSvrServerVersion            = 4,    //read  //char array        //Version of the server
-    qtssSvrServerBuildDate          = 5,    //read  //char array        //When was the server built?
-    qtssSvrRTSPPorts                = 6,    //read  // NOT PREEMPTIVE SAFE!//UInt16         //Indexed parameter: all the ports the server is listening on
-    qtssSvrRTSPServerHeader         = 7,    //read  //char array        //Server: header that the server uses to respond to RTSP clients
+    qtssServerAPIVersion            = 0,    //read		//UInt32            //The API version supported by this server (format 0xMMMMmmmm, where M=major version, m=minor version)
+    qtssSvrDefaultDNSName           = 1,    //read		//char array        //The "default" DNS name of the server
+    qtssSvrDefaultIPAddr            = 2,    //read		//UInt32            //The "default" IP address of the server
+    qtssSvrServerName               = 3,    //read		//char array        //Name of the server
+    qtssSvrServerVersion            = 4,    //read		//char array        //Version of the server
+    qtssSvrServerBuildDate          = 5,    //read		//char array        //When was the server built?
+    qtssSvrRTSPPorts                = 6,    //read		// NOT PREEMPTIVE SAFE!//UInt16         //Indexed parameter: all the ports the server is listening on
+    qtssSvrRTSPServerHeader         = 7,    //read		//char array        //Server: header that the server uses to respond to RTSP clients
 
     // These parameters are NOT pre-emptive safe, they cannot be accessed
     // via. QTSS_GetValuePtr. Some exceptions noted below
     
-    qtssSvrState                    = 8,    //r/w   //QTSS_ServerState  //The current state of the server. If a module sets the server state, the server will respond in the appropriate fashion. Setting to qtssRefusingConnectionsState causes the server to refuse connections, setting to qtssFatalErrorState or qtssShuttingDownState causes the server to quit.
-    qtssSvrIsOutOfDescriptors       = 9,    //read  //Bool16            //true if the server has run out of file descriptors, false otherwise
-    qtssRTSPCurrentSessionCount     = 10,   //read  //UInt32            //Current number of connected clients over standard RTSP
-    qtssRTSPHTTPCurrentSessionCount = 11,   //read  //UInt32            //Current number of connected clients over RTSP / HTTP
+    qtssSvrState                    = 8,    //r/w		//QTSS_ServerState  //The current state of the server. If a module sets the server state, the server will respond in the appropriate fashion. Setting to qtssRefusingConnectionsState causes the server to refuse connections, setting to qtssFatalErrorState or qtssShuttingDownState causes the server to quit.
+    qtssSvrIsOutOfDescriptors       = 9,    //read		//Bool16            //true if the server has run out of file descriptors, false otherwise
+    qtssRTSPCurrentSessionCount     = 10,   //read		//UInt32            //Current number of connected clients over standard RTSP
+    qtssRTSPHTTPCurrentSessionCount = 11,   //read		//UInt32            //Current number of connected clients over RTSP / HTTP
 
     qtssRTPSvrNumUDPSockets         = 12,   //read      //UInt32    //Number of UDP sockets currently being used by the server
     qtssRTPSvrCurConn               = 13,   //read      //UInt32    //Number of clients currently connected to the server
@@ -717,7 +717,7 @@ enum
     qtssRTPSvrTotalPackets          = 19,   //read      //UInt64    //Total number of bytes served since startup
     
     qtssSvrHandledMethods           = 20,   //r/w       //QTSS_RTSPMethod   //The methods that the server supports. Modules should append the methods they support to this attribute in their QTSS_Initialize_Role.
-    qtssSvrModuleObjects            = 21,   //read  // this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
+    qtssSvrModuleObjects            = 21,   //read		//this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
     qtssSvrStartupTime              = 22,   //read      //QTSS_TimeVal  //Time the server started up
     qtssSvrGMTOffsetInHrs           = 23,   //read      //SInt32        //Server time zone (offset from GMT in hours)
     qtssSvrDefaultIPAddrStr         = 24,   //read      //char array    //The "default" IP address of the server as a string
@@ -781,9 +781,9 @@ enum
     qtssPrefsScreenLogging          = 18,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
     qtssPrefsErrorLogEnabled        = 19,   //"error_logging"               //Bool16        //Is error logging enabled?
 
-    qtssPrefsDropVideoAllPacketsDelayInMsec = 20,   //"drop_all_video_delay"    //SInt32 // Don't send video packets later than this
-    qtssPrefsStartThinningDelayInMsec       = 21,   //"start_thinning_delay"    //SInt32 // lateness at which we might start thinning
-    qtssPrefsLargeWindowSizeInK             = 22,   //"large_window_size"  // UInt32    //default size that will be used for high bitrate movies
+    qtssPrefsDropVideoAllPacketsDelayInMsec = 20,   //"drop_all_video_delay"//SInt32 // Don't send video packets later than this
+    qtssPrefsStartThinningDelayInMsec       = 21,   //"start_thinning_delay"//SInt32 // lateness at which we might start thinning
+    qtssPrefsLargeWindowSizeInK             = 22,   //"large_window_size"	// UInt32    //default size that will be used for high bitrate movies
     qtssPrefsWindowSizeThreshold            = 23,   //"window_size_threshold"  // UInt32    //bitrate at which we switch to larger window size
     
     qtssPrefsMinTCPBufferSizeInBytes        = 24,   //"min_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the minimum size the TCP socket send buffer can be set to
@@ -1045,23 +1045,23 @@ enum
     QTSS_RTSPIncomingData_Role =     FOUR_CHARS_TO_INT('i', 'c', 'm', 'd'), //icmd //Incoming interleaved RTP data on this RTSP connection
 
     //RTP-specific
-    QTSS_RTPSendPackets_Role =           FOUR_CHARS_TO_INT('s', 'e', 'n', 'd'), //send //Send RTP packets to the client
-    QTSS_ClientSessionClosing_Role =     FOUR_CHARS_TO_INT('d', 'e', 's', 's'), //dess //Client session is going away
+    QTSS_RTPSendPackets_Role =			FOUR_CHARS_TO_INT('s', 'e', 'n', 'd'), //send //Send RTP packets to the client
+    QTSS_ClientSessionClosing_Role =	FOUR_CHARS_TO_INT('d', 'e', 's', 's'), //dess //Client session is going away
     
     //RTCP-specific
-    QTSS_RTCPProcess_Role =          FOUR_CHARS_TO_INT('r', 't', 'c', 'p'), //rtcp //Process all RTCP packets sent to the server
+    QTSS_RTCPProcess_Role =				FOUR_CHARS_TO_INT('r', 't', 'c', 'p'), //rtcp //Process all RTCP packets sent to the server
 
     //File system roles
-    QTSS_OpenFilePreProcess_Role =  FOUR_CHARS_TO_INT('o', 'p', 'p', 'r'),  //oppr
-    QTSS_OpenFile_Role =            FOUR_CHARS_TO_INT('o', 'p', 'f', 'l'),  //opfl
-    QTSS_AdviseFile_Role =          FOUR_CHARS_TO_INT('a', 'd', 'f', 'l'),  //adfl
-    QTSS_ReadFile_Role =            FOUR_CHARS_TO_INT('r', 'd', 'f', 'l'),  //rdfl
-    QTSS_CloseFile_Role =           FOUR_CHARS_TO_INT('c', 'l', 'f', 'l'),  //clfl
-    QTSS_RequestEventFile_Role =    FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
+    QTSS_OpenFilePreProcess_Role =		FOUR_CHARS_TO_INT('o', 'p', 'p', 'r'),  //oppr
+    QTSS_OpenFile_Role =				FOUR_CHARS_TO_INT('o', 'p', 'f', 'l'),  //opfl
+    QTSS_AdviseFile_Role =				FOUR_CHARS_TO_INT('a', 'd', 'f', 'l'),  //adfl
+    QTSS_ReadFile_Role =				FOUR_CHARS_TO_INT('r', 'd', 'f', 'l'),  //rdfl
+    QTSS_CloseFile_Role =				FOUR_CHARS_TO_INT('c', 'l', 'f', 'l'),  //clfl
+    QTSS_RequestEventFile_Role =		FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
 
 	//HLS Session
-	Easy_HLSOpen_Role	=	FOUR_CHARS_TO_INT('h', 'l', 's', 'o'),  //hlso
-	Easy_HLSClose_Role	=	FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
+	Easy_HLSOpen_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'o'),  //hlso
+	Easy_HLSClose_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
 };
 typedef UInt32 QTSS_Role;

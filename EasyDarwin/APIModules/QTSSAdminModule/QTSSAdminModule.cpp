@@ -88,7 +88,7 @@ class mongooseThread;
 // STATIC DATA
 //**************************************************
 #if DEBUG_ADMIN_MODULE
-static UInt32                   sRequestCount= 0;
+static UInt32	sRequestCount = 0;
 #endif
 
 static mongooseThread*		sMongooseThread = NULL;
@@ -134,7 +134,7 @@ static AuthorizationItem    sRight = { sSecurityServerAuthKey, 0, NULL, 0 };
 static AuthorizationRights  sRightSet = { 1, &sRight };
 #endif
 
-// ATTRIBUTES
+//ATTRIBUTES
 //**************************************************
 enum 
 { 
@@ -152,7 +152,6 @@ static Bool16 sDefaultLocalLoopBackOnlyEnabled = true;
 
 static Bool16 sEnableRemoteAdmin = true;
 static Bool16 sDefaultEnableRemoteAdmin = true;
-
 
 static QTSS_AttributeID sIPAccessListID = qtssIllegalAttrID;
 static char*            sIPAccessList = NULL;
@@ -187,12 +186,11 @@ static QTSS_Error FilterRequest(QTSS_Filter_Params* inParams);
 static QTSS_Error RereadPrefs();
 static QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request);
 static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
-static Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword);
 
 
-//***************************************************
-//EasyDarwin WEB管理
-
+//***********************EasyDarwin WEB管理***********************
+//用户认证
+static	Bool16	EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword);
 //获取RTSP端口
 static  UInt16	EasyAdmin_GetRTSPort();
 //设置RTSP端口
@@ -546,7 +544,8 @@ QTSS_Error  QTSSAdminModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
         case QTSS_Initialize_Role:
             return Initialize(&inParams->initParams);
         case QTSS_RTSPFilter_Role:
-        {   if (!sEnableRemoteAdmin) 
+        {
+			if (!sEnableRemoteAdmin) 
                 break;
             return FilterRequest(&inParams->rtspFilterParams);
         }
@@ -633,13 +632,12 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	RereadPrefs();
     
-	//创建Mongoose线程、启动
+	//create Mongoose thread,start
 	sMongooseThread = NEW mongooseThread();
 	sMongooseThread->Start();
     
     return QTSS_NoErr;
 }
-
     
 void ReportErr(QTSS_Filter_Params* inParams, UInt32 err)
 {   
@@ -1251,8 +1249,9 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
 
 }
 
-//登录用户验证
-Bool16 Easy_UserAuthentication(const char* inUserName, const char* inPassword)
+//*****************************************
+
+Bool16 EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword)
 {
 	qtss_printf("User:%s Password:%s Authenticated!\n");
 	return true;
