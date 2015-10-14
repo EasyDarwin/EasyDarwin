@@ -61,6 +61,7 @@
 #include "OSMemory.h"
 #include "md5.h"
 #include "md5digest.h"
+#include "OS.h"
 
 #include "mongoose.h"
 #include "frozen.h"
@@ -218,6 +219,8 @@ static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
 static	UInt16	EasyAdmin_GetMongoosePort();
 //设置WEB Admin端口
 static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
+//获取服务累计运行时间(单位毫秒ms)
+static	SInt64	EasyAdmin_GetServiceRunTime();
 
 static void check_auth(struct mg_connection *conn) {
 	char name[100], password[100];
@@ -338,6 +341,8 @@ void mongooseThread::Entry()
 
 	////修改配置后重启
 	//EasyAdmin_Restart();
+
+	//printf("EasyAdmin RunTime:%ld \n", EasyAdmin_GetServiceRunTime());
 //**********************************************************
 
 	//run server
@@ -1333,4 +1338,15 @@ UInt16 EasyAdmin_GetMongoosePort()
 void EasyAdmin_SetMongoosePort(UInt16 port)
 {
 	QTSSModuleUtils::CreateAttribute(sModulePrefs, "http_port", qtssAttrDataTypeUInt16, &port, sizeof(UInt16));
+}
+
+SInt64 EasyAdmin_GetServiceRunTime()
+{
+	SInt64 timeNow = OS::Milliseconds();
+
+	SInt64 startupTime = 0;
+	UInt32 startupTimeSize = sizeof(startupTime);
+	(void)QTSS_GetValue(sServer, qtssSvrStartupTime, 0, &startupTime, &startupTimeSize);
+
+	return (timeNow - startupTime);
 }

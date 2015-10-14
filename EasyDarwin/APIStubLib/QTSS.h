@@ -742,7 +742,7 @@ enum
     qtssSvrServerPlatform           = 39,   //read      //char array //Platform (OS) of the server
     qtssSvrRTSPServerComment        = 40,   //read      //char array //RTSP comment for the server header    
     qtssSvrNumThinned               = 41,   //read      //SInt32    //Number of thinned sessions
-    qtssSvrNumThreads               = 42,   //read     //UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
+    qtssSvrNumThreads               = 42,   //read		//UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
     qtssSvrNumParams                = 43
 };
 typedef UInt32 QTSS_ServerAttributes;
