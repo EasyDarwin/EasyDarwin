@@ -220,53 +220,63 @@ static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
 //获取服务累计运行时间(单位毫秒ms)
 static	SInt64	EasyAdmin_GetServiceRunTime();
 
-static void check_auth(struct mg_connection *conn) {
-	char name[100], password[100];
-	// Get form variables
+//++++++++++++++++++++++++++++++++++++++++++++++++++++add arno
+static const char *s_secret = ":-)";
+static void generate_ssid(const char *user_name, const char *expiration_date,
+						  char *ssid, size_t ssid_size) {
+							  char hash[33];
+							  mg_md5(hash, user_name, ":", expiration_date, ":", s_secret, NULL);
+							  _snprintf(ssid, ssid_size, "%s|%s|%s", user_name, expiration_date, hash);
+}
+static int check_auth(struct mg_connection *conn) {
+	char name[100], password[100], ssid[100], expire[100], expire_epoch[100];
 	mg_get_var(conn, "name", name, sizeof(name));
 	mg_get_var(conn, "password", password, sizeof(password));
-	if (strcmp(name, "1") == 0 && strcmp(password, "1") == 0) {
-		mg_send_file(conn, "index.html", NULL);
+	if (strcmp(name, "admin") == 0 && strcmp(password, "admin") == 0) {
+		time_t t = time(NULL) + 300; 
+		_snprintf(expire_epoch, sizeof(expire_epoch), "%lu", (unsigned long) t);
+		strftime(expire, sizeof(expire), "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
+		generate_ssid(name, expire_epoch, ssid, sizeof(ssid));
+		mg_printf(conn,
+			"HTTP/1.1 302 Moved\r\n"
+			"Set-Cookie: ssid=%s; expire=\"%s\"; http-only; HttpOnly;\r\n"
+			"Content-Length: 0\r\n"
+			"Location: /\r\n\r\n",
+			ssid, expire);
+		return MG_TRUE;
 	}
 	else
 	{
-		mg_send_file(conn, "loginerror.html", NULL);
+		mg_printf(conn, "HTTP/1.1 302 Moved\r\nLocation: %s\r\n\r\n","loginerror.html");
+		return MG_FALSE;
 	}
 }
-
+static int cookie_auth(struct mg_connection *conn) {
+	char ssid[100], calculated_ssid[100], name[100], expire[100];
+	if (strcmp(conn->uri, "/login.html") == 0||
+		strcmp(conn->uri, "/loginerror.html") == 0||
+		strstr(conn->uri,".js")!=NULL||
+		strstr(conn->uri,".css")!=NULL||
+		strstr(conn->uri,"images")!=NULL
+		) {
+			return MG_TRUE;
+	}
+	mg_parse_header(mg_get_header(conn, "Cookie"), "ssid", ssid, sizeof(ssid));
+	if (sscanf(ssid, "%[^|]|%[^|]|", name, expire) == 2) {
+		generate_ssid(name, expire, calculated_ssid, sizeof(calculated_ssid));
+		if (strcmp(ssid, calculated_ssid) == 0) {
+			return MG_TRUE;
+		}
+	}	
+	mg_printf(conn, "HTTP/1.1 302 Moved\r\nLocation: %s\r\n\r\n", "login.html");
+	return MG_FALSE;
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static int serve_request(struct mg_connection *conn) 
 {
-	char htmlPath[256] = { 0 };
-	sprintf(htmlPath, "%s%s", sDocumentRoot, conn->uri);
-
-	if(strcmp(conn->uri, "/EasyHLSModule") == 0)
-	{
-		mg_easy_send(conn);
-		return MG_TRUE;
-	}
-	if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/") == 0&&strcmp(conn->request_method, "POST") == 0)) {
-		check_auth(conn);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/")||!strcmp(conn->uri,"/login.html"))
-	{
-		mg_send_file(conn, (const char*)htmlPath, NULL);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/language.js"))
-	{
-		mg_send_file(conn, (const char*)htmlPath, NULL);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/english/language.js"))
-	{
-		mg_send_file(conn, (const char*)htmlPath, NULL);
-		return MG_MORE;
-	}
-	if(!strcmp(conn->uri,"/chinese/language.js"))
-	{
-		mg_send_file(conn, (const char*)htmlPath, NULL);
-		return MG_MORE;
+	printf("%s\n",conn->uri);
+	if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/loginerror.html") == 0&&strcmp(conn->request_method, "POST") == 0)) {
+		return  check_auth(conn);
 	}
 	return MG_FALSE; 
 }
@@ -274,7 +284,7 @@ static int serve_request(struct mg_connection *conn)
 static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
 	switch (ev) {
 		case MG_AUTH:
-			return MG_TRUE;
+			return cookie_auth(conn);
 		case MG_REQUEST: 
 			return serve_request(conn);
 		default: return MG_FALSE;
