@@ -170,12 +170,12 @@ class QTSServerInterface : public QTSSDictionary
         void                SetDebugLevel(UInt32 debugLevel)    { fDebugLevel = debugLevel; }
         void                SetDebugOptions(UInt32 debugOptions){ fDebugOptions = debugOptions; }
         
-        SInt64          GetMaxLate()                { return fMaxLate; };
-        SInt64          GetTotalLate()              { return fTotalLate; };
-        SInt64          GetCurrentMaxLate()         { return fCurrentMaxLate; };
-        SInt64          GetTotalQuality()           { return fTotalQuality; };
-        SInt32          GetNumThinned()             { return fNumThinned; };
-        UInt32          GetNumThreads()             { return fNumThreads; };
+        SInt64				GetMaxLate()                { return fMaxLate; };
+        SInt64				GetTotalLate()              { return fTotalLate; };
+        SInt64				GetCurrentMaxLate()         { return fCurrentMaxLate; };
+        SInt64				GetTotalQuality()           { return fTotalQuality; };
+        SInt32				GetNumThinned()             { return fNumThinned; };
+        UInt32				GetNumThreads()             { return fNumThreads; };
 
         //
         //
@@ -236,16 +236,16 @@ class QTSServerInterface : public QTSSDictionary
         
         // Allows the caller to iterate over all modules that act in a given role           
         static QTSSModule*  GetModule(QTSSModule::RoleIndex inRole, UInt32 inIndex)
-                                {   Assert(inRole < QTSSModule::kNumRoles);
-                                    Assert(inIndex < sNumModulesInRole[inRole]);
-                                    if (inRole >= QTSSModule::kNumRoles) //index out of bounds, shouldn't happen
-                                    {    return NULL;
-                                    }
-                                    if (inIndex >= sNumModulesInRole[inRole]) //index out of bounds, shouldn't happen
-                                    {   return NULL;
-                                    }
-                                    return sModuleArray[inRole][inIndex];
-                                }
+                {   Assert(inRole < QTSSModule::kNumRoles);
+                    Assert(inIndex < sNumModulesInRole[inRole]);
+                    if (inRole >= QTSSModule::kNumRoles) //index out of bounds, shouldn't happen
+                    {    return NULL;
+                    }
+                    if (inIndex >= sNumModulesInRole[inRole]) //index out of bounds, shouldn't happen
+                    {   return NULL;
+                    }
+                    return sModuleArray[inRole][inIndex];
+                }
 
         //
         // We need to override this. This is how we implement the QTSS_StateChange_Role
@@ -294,8 +294,8 @@ class QTSServerInterface : public QTSSDictionary
         UInt32                      fNumListeners; // Number of elements in the array
         
         // startup time
-        SInt64              fStartupTime_UnixMilli;
-        SInt32              fGMTOffset;
+        SInt64						fStartupTime_UnixMilli;
+        SInt32						fGMTOffset;
 
         static ResizeableStringFormatter    sPublicHeaderFormatter;
         static StrPtrLen                    sPublicHeaderStr;
@@ -431,7 +431,4 @@ class RTPStatsUpdaterTask : public Task
         SInt64 fLastTotalMP3Bytes;
 };
 
-
-
 #endif // __QTSSERVERINTERFACE_H__
-
