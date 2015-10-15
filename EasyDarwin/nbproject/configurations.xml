@@ -144,6 +144,19 @@
         <itemPath>Include/EasyNVSourceAPI.h</itemPath>
         <itemPath>Include/EasyPusherAPI.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="ParseDeviceConfig"
+                     displayName="ParseDeviceConfig"
+                     projectFiles="true">
+        <itemPath>../ParseDeviceConfig/ParseDevice.cpp</itemPath>
+        <itemPath>../ParseDeviceConfig/ParseDevice.h</itemPath>
+        <itemPath>../ParseDeviceConfig/commonplatform_types.h</itemPath>
+        <itemPath>../ParseDeviceConfig/tinystr.cpp</itemPath>
+        <itemPath>../ParseDeviceConfig/tinystr.h</itemPath>
+        <itemPath>../ParseDeviceConfig/tinyxml.cpp</itemPath>
+        <itemPath>../ParseDeviceConfig/tinyxml.h</itemPath>
+        <itemPath>../ParseDeviceConfig/tinyxmlerror.cpp</itemPath>
+        <itemPath>../ParseDeviceConfig/tinyxmlparser.cpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="PrefsSourceLib"
                      displayName="PrefsSourceLib"
                      projectFiles="true">
@@ -350,6 +363,7 @@
     <Elem>../HTTPUtilitiesLib</Elem>
     <Elem>.</Elem>
     <Elem>../HTTPUtilitiesLib</Elem>
+    <Elem>../ParseDeviceConfig</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -391,6 +405,7 @@
             <pElem>Include</pElem>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
+            <pElem>../ParseDeviceConfig</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -426,6 +441,36 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/commonplatform_types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlerror.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlparser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1167,6 +1212,7 @@
             <pElem>../Include</pElem>
             <pElem>../EasyProtocol/Include</pElem>
             <pElem>../EasyProtocol/jsoncpp/include</pElem>
+            <pElem>../ParseDeviceConfig</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -1210,6 +1256,36 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/commonplatform_types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlerror.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlparser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1948,6 +2024,7 @@
             <pElem>Include</pElem>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
+            <pElem>../ParseDeviceConfig</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -1991,6 +2068,36 @@
             flavor2="9">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/commonplatform_types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlerror.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlparser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -2732,6 +2839,7 @@
             <pElem>../Include</pElem>
             <pElem>../EasyProtocol/Include</pElem>
             <pElem>../EasyProtocol/jsoncpp/include</pElem>
+            <pElem>../ParseDeviceConfig</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -2775,6 +2883,36 @@
             flavor2="9">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/ParseDevice.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/commonplatform_types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinystr.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxml.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlerror.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../ParseDeviceConfig/tinyxmlparser.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
       </item>
