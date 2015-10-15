@@ -220,6 +220,12 @@ int select_modwatch(struct eventreq *req, int which)
         // done atomically wrt setting the fd in the set. Otherwise, it is
         // possible to have a NULL cookie on a fd.
         Assert(req->er_handle < (int)(sizeof(fd_set) * 8));
+		if(req->er_handle >= (int)(sizeof(fd_set) * 8))
+		{
+			char msg[200] = { 0 };
+			sprintf(msg,"req->er_handle=%d, sizeof(fd_set)=%d", req->er_handle, (int)(sizeof(fd_set) * 8));
+			AssertE(false, msg);
+		}
         Assert(req->er_data != NULL);
         sCookieArray[req->er_handle] = req->er_data;
     }
