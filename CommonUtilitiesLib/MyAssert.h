@@ -57,6 +57,16 @@ void SetAssertLogger(AssertLogger* theLogger);
             MyAssert(s);                                        \
         }   }
 
+    #define AssertE(condition,msg)    {                              \
+                                                            \
+    if (!(condition))                                       \
+    {                                                       \
+        char s[kAssertBuffSize];                            \
+        s[kAssertBuffSize -1] = 0;                          \
+		qtss_snprintf (s,kAssertBuffSize -1, "_Assert: %s, %d, Msg:%s ",__FILE__, __LINE__, msg ); \
+        MyAssert(s);                                        \
+    }   }
+
 
     #define AssertV(condition,errNo)    {                                   \
         if (!(condition))                                                   \

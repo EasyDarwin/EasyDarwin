@@ -26,9 +26,6 @@
     File:       EventContext.cpp
 
     Contains:   Impelments object in .h file
-                    
-    
-    
 */
 
 #include "EventContext.h"
