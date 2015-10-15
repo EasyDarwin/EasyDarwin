@@ -53,25 +53,20 @@
 ## EasyDarwin部署视频广场 ##
 
 
-### 
 - 部署EasyCMS接入服务器 
-###
+
 按照文档[《EasyCMS编译部署文档》](http://doc.easydarwin.org/EasyCMS/README/ "EasyCMS编译部署文档")编译、配置并部署EasyCMS；
 
 
-### 
 - 部署EasyDarwin流媒体服务器 
-
 
 按照文档[《EasyDarwin编译部署文档》](http://doc.easydarwin.org/EasyDarwin/README/#_1 "EasyDarwin编译部署文档")编译、配置并部署EasyDarwin；
 
-### 
 - 部署EasyCamera设备端 
 
 
 按照文档[《EasyCamera编译部署文档》](http://doc.easydarwin.org/EasyCamera/README/#_1 "EasyCamera编译部署文档")编译、配置并部署EasyCamera；
 
-### 
 - 整体串联 
 
 **列表页**：js调用EasyCMS获取设备列表接口，html展示在线设备列表（[可参考EasyDarwin视频广场页面](http://www.easydarwin.org/article/video/ "EasyDarwin视频广场")）；
