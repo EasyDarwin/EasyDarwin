@@ -226,7 +226,7 @@ static void generate_ssid(const char *user_name, const char *expiration_date,
 						  char *ssid, size_t ssid_size) {
 							  char hash[33];
 							  mg_md5(hash, user_name, ":", expiration_date, ":", s_secret, NULL);
-							  _snprintf(ssid, ssid_size, "%s|%s|%s", user_name, expiration_date, hash);
+							  qtss_snprintf(ssid, ssid_size, "%s|%s|%s", user_name, expiration_date, hash);
 }
 static int check_auth(struct mg_connection *conn) {
 	char name[100], password[100], ssid[100], expire[100], expire_epoch[100];
@@ -234,7 +234,7 @@ static int check_auth(struct mg_connection *conn) {
 	mg_get_var(conn, "password", password, sizeof(password));
 	if (strcmp(name, "admin") == 0 && strcmp(password, "admin") == 0) {
 		time_t t = time(NULL) + 300; 
-		_snprintf(expire_epoch, sizeof(expire_epoch), "%lu", (unsigned long) t);
+		qtss_snprintf(expire_epoch, sizeof(expire_epoch), "%lu", (unsigned long) t);
 		strftime(expire, sizeof(expire), "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
 		generate_ssid(name, expire_epoch, ssid, sizeof(ssid));
 		mg_printf(conn,
