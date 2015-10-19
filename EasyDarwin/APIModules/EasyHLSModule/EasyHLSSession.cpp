@@ -76,6 +76,7 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
     fTotalPlayTime(0),
 	fLastStatPlayTime(0),
 	fLastStatBitrate(0),
+	fBitrateStat0Times(0),
 	fNumPacketsReceived(0),
 	fLastNumPacketsReceived(0),
 	fNumBytesReceived(0),
@@ -141,7 +142,16 @@ SInt64 EasyHLSSession::Run()
 		UInt64 durationTime	= curTime - fLastStatPlayTime;
 
 		if(durationTime)
+		{
 			fLastStatBitrate = (bytesReceived*1000)/(durationTime);
+			if(fLastStatBitrate)
+				fBitrateStat0Times = 0;
+			else
+				fBitrateStat0Times++;
+
+			if(fBitrateStat0Times > 300)
+				return -1;
+		}
 
 		fLastNumBytesReceived = fNumBytesReceived;
 		fLastStatPlayTime = curTime;
