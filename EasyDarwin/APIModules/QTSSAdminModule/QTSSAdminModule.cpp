@@ -232,7 +232,7 @@ static int check_auth(struct mg_connection *conn) {
 	char name[100], password[100], ssid[100], expire[100], expire_epoch[100];
 	mg_get_var(conn, "name", name, sizeof(name));
 	mg_get_var(conn, "password", password, sizeof(password));
-	if (strcmp(name, "admin") == 0 && strcmp(password, "admin") == 0) {
+	if(EasyAdmin_UserAuthentication(name,password)) {
 		time_t t = time(NULL) + 300; 
 		qtss_snprintf(expire_epoch, sizeof(expire_epoch), "%lu", (unsigned long) t);
 		strftime(expire, sizeof(expire), "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
@@ -271,16 +271,60 @@ static int cookie_auth(struct mg_connection *conn) {
 	mg_printf(conn, "HTTP/1.1 302 Moved\r\nLocation: %s\r\n\r\n", "login.html");
 	return MG_FALSE;
 }
+void transform_msec(SInt64 msec, char *output, size_t size)
+{
+
+	SInt64 sec = msec / 1000;
+	SInt64 day=sec / (60*60*24); 
+	sec -= day * 60*60*24; 
+	SInt64 hour=sec / (60*60);
+	sec -= hour * 60*60; 
+	SInt64 min = sec / 60; 
+	sec -= min * 60; 
+	_snprintf(output, size, "%lld|%lld|%lld|%lld",day,hour, min, sec);
+
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 static int serve_request(struct mg_connection *conn) 
 {
-	printf("%s\n",conn->uri);
 	if ((strcmp(conn->uri, "/login.html") == 0&&strcmp(conn->request_method, "POST") == 0)||(strcmp(conn->uri, "/loginerror.html") == 0&&strcmp(conn->request_method, "POST") == 0)) {
 		return  check_auth(conn);
 	}
+	if(strcmp(conn->uri, "/api/getServiceRunTime") == 0)
+	{
+		char output[128]={0};
+		char sAjax[1024]={0};
+		transform_msec(EasyAdmin_GetServiceRunTime(), output, sizeof(output));
+		sprintf(sAjax, "{ \"RunTime\": \"%s\" }",output);
+		mg_printf_data(conn,sAjax);
+		return MG_TRUE;
+	}
+	if(strcmp(conn->uri, "/api/setPort") == 0)
+	{
+		char n1[100];
+		int re=0;
+		mg_get_var(conn,"n1",n1,sizeof(n1));
+		EasyAdmin_SetMongoosePort(atoi(n1));
+		mg_printf_data(conn,"{\"result\": %d}",re);
+		return MG_TRUE;
+	}
+	if(strcmp(conn->uri, "/api/getPort") == 0)
+	{
+		char sAjax[1024]={0};
+		sprintf(sAjax, "{ \"MongoosePort\": %d }",EasyAdmin_GetMongoosePort());
+		mg_printf_data(conn,sAjax);
+		return MG_TRUE;
+	}
+	if(strcmp(conn->uri, "/api/restart") == 0)
+	{
+
+		int re=0;
+		EasyAdmin_Restart();
+		mg_printf_data(conn,"{\"result\": %d}",re);
+		return MG_TRUE;
+	}
 	return MG_FALSE; 
 }
-
 static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
 	switch (ev) {
 		case MG_AUTH:
