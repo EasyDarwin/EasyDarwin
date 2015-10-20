@@ -27,6 +27,7 @@
 #include "QTSServerInterface.h"
 
 #include "ParseDevice.h"
+#include <libEasyHttp.h>
 
 class HLSSessionCheckingTask : public Task
 {
@@ -169,7 +170,9 @@ QTSS_Error RereadPrefs()
 
 SInt64 HLSSessionCheckingTask::Run()
 {
-	if(uIndex >= sDeviceNum)
+	EasyHttp_Get("http://111.1.6.132:11000/AppCamera/CheckDevStateRestaurant?count=10000&isBuildIn=1");
+        
+    if(uIndex >= sDeviceNum)
 		return -1;
 
 	DeviceInfo* pDeviceInfo = parseDevice->GetDeviceInfoByIdIndex(uIndex);
