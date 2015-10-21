@@ -193,7 +193,7 @@ static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 //用户认证
 static	Bool16	EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword);
 
-//===============系统配置S===============
+//===============全局配置S===============
 //获取RTSP端口
 static  UInt16	EasyAdmin_GetRTSPort();
 //设置RTSP端口
@@ -216,7 +216,7 @@ static	void	EasyAdmin_SetErrorLogFolder(char* folder);
 static	UInt16	EasyAdmin_GetMongoosePort();
 //设置WEB Admin端口
 static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
-//===============系统配置E===============
+//===============全局配置E===============
 
 //===============流媒体转发配置S===============
 //转发缓冲时间获取
@@ -445,10 +445,26 @@ void mongooseThread::Entry()
 
 	//printf("EasyAdmin RunTime:%ld \n", EasyAdmin_GetServiceRunTime());
 
-	printf("Get Reflector HLS Output Enable:%d \n", EasyAdmin_GetReflectHLSOutput());
-	EasyAdmin_SetReflectHLSOutput(true);
+	//printf("Get Reflector HLS Output Enable:%d \n", EasyAdmin_GetReflectHLSOutput());
+	//EasyAdmin_SetReflectHLSOutput(true);
 
+	////获取HLS分发的http服务地址
+	//char* hlsHttpRoot = EasyAdmin_GetHlsHttpRoot();
+	//printf("HLS HTTP Root:%s \n", hlsHttpRoot);
+	//delete hlsHttpRoot;
 
+	////设置HLS分发的http服务地址
+	//EasyAdmin_SetHlsHttpRoot("http://8.8.8.8/888");
+
+	////获取HLS单个ts切片的时长
+	//printf("HLS TS Duration: %d \n",EasyAdmin_GetHlsTsDuration());
+	////设置HLS单个ts切片的时长
+	//EasyAdmin_SetHlsTsDuration(8);
+
+	////获取HLS ts切片数
+	//printf("HLS TS Capacity: %d \n",EasyAdmin_GetHlsTsCapacity());
+	////设置HLS ts切片数
+	//EasyAdmin_SetHlsTsCapacity(9);
 //**********************************************************
 
 	//run server
