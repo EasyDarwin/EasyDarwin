@@ -1479,3 +1479,32 @@ void EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput)
 	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutput, sizeof(Bool16));
 }
 
+char* EasyAdmin_GetHlsHttpRoot()
+{
+	return NULL;
+}
+
+void EasyAdmin_SetHlsHttpRoot(char* httpRoot)
+{
+
+}
+
+UInt32 EasyAdmin_GetHlsTsDuration()
+{
+	return 0;
+}
+
+void EasyAdmin_SetHlsTsDuration(UInt32 secs)
+{
+	;
+}
+
+UInt32 EasyAdmin_GetHlsTsCapacity()
+{
+	return 0;
+}
+
+void EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity)
+{
+	;
+}
