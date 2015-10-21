@@ -111,9 +111,10 @@ static char* sAuthResourceLocalPath = "/modules/admin/";
 
 static QTSS_ServerObject        sServer = NULL;
 static QTSS_ModuleObject        sModule = NULL;
-static QTSS_ModulePrefsObject   sModulePrefs = NULL;
+static QTSS_ModulePrefsObject   sAdminPrefs = NULL;
 static QTSS_ModulePrefsObject   sAccessLogPrefs = NULL;
 static QTSS_ModulePrefsObject   sReflectorPrefs = NULL;
+static QTSS_ModulePrefsObject	sHLSModulePrefs = NULL;
 
 static QTSS_PrefsObject         sServerPrefs = NULL;
 static AdminClass               *sAdminPtr = NULL;
@@ -191,6 +192,8 @@ static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 //***********************EasyDarwin WEB管理***********************
 //用户认证
 static	Bool16	EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword);
+
+//===============系统配置S===============
 //获取RTSP端口
 static  UInt16	EasyAdmin_GetRTSPort();
 //设置RTSP端口
@@ -209,16 +212,42 @@ static	void	EasyAdmin_SetMoviesFolder(char* folder);
 static	char*	EasyAdmin_GetErrorLogFolder();
 //设置日志文件目录
 static	void	EasyAdmin_SetErrorLogFolder(char* folder);
-//转发缓冲时间获取
-static	UInt32	EasyAdmin_GetReflectBufferSecs();
-//设置缓冲时间
-static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
 //获取WEB Admin端口
 static	UInt16	EasyAdmin_GetMongoosePort();
 //设置WEB Admin端口
 static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
+//===============系统配置E===============
+
+//===============流媒体转发配置S===============
+//转发缓冲时间获取
+static	UInt32	EasyAdmin_GetReflectBufferSecs();
+//设置缓冲时间
+static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
+//是否同步输出HLS
+static	bool	EasyAdmin_GetReflectHLSOutput();
+//设置是否同步输出HLS
+static	void	EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput);
+//===============流媒体转发配置E===============
+
+//===============HLS设置S===============
+//获取HLS分发的http服务地址
+static	char*	EasyAdmin_GetHlsHttpRoot();
+//设置HLS分发的http服务地址
+static	void	EasyAdmin_SetHlsHttpRoot(char* httpRoot);
+//获取HLS单个ts切片的时长
+static	UInt32	EasyAdmin_GetHlsTsDuration();
+//设置HLS单个ts切片的时长
+static	void	EasyAdmin_SetHlsTsDuration(UInt32 secs);
+//获取HLS ts切片数
+static	UInt32	EasyAdmin_GetHlsTsCapacity();
+//设置HLS ts切片数
+static	void	EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity);
+//===============HLS设置E===============
+
+//===============信息获取S===============
 //获取服务累计运行时间(单位毫秒ms)
 static	SInt64	EasyAdmin_GetServiceRunTime();
+//===============信息获取E===============
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++add arno
 static const char *s_secret = ":-)";
@@ -415,6 +444,11 @@ void mongooseThread::Entry()
 	//EasyAdmin_Restart();
 
 	//printf("EasyAdmin RunTime:%ld \n", EasyAdmin_GetServiceRunTime());
+
+	printf("Get Reflector HLS Output Enable:%d \n", EasyAdmin_GetReflectHLSOutput());
+	EasyAdmin_SetReflectHLSOutput(true);
+
+
 //**********************************************************
 
 	//run server
@@ -540,7 +574,7 @@ void APITests_DEBUG()
             QTSS_Error  err = 0;
             
             UInt32      numAttr = 1;
-            err = QTSS_GetNumAttributes (sModulePrefs, &numAttr);
+            err = QTSS_GetNumAttributes (sAdminPrefs, &numAttr);
             qtss_printf("Admin Module Num preference attributes = %"_U32BITARG_" err = %"_S32BITARG_"\n", numAttr, err);
                 
             QTSS_Object theAttributeInfo;
@@ -551,7 +585,7 @@ void APITests_DEBUG()
             UInt32 i = 0;
             qtss_printf("first pass over preferences\n");
             for ( i = 0; i < numAttr; i++)
-            {   err = QTSS_GetAttrInfoByIndex(sModulePrefs, i, &theAttributeInfo);
+            {   err = QTSS_GetAttrInfoByIndex(sAdminPrefs, i, &theAttributeInfo);
                 nameBuff[0] = 0;len = 127;
                 err = QTSS_GetValue (theAttributeInfo, qtssAttrName,0, nameBuff,&len);
                 nameBuff[len]=0;
@@ -561,9 +595,9 @@ void APITests_DEBUG()
                 qtss_printf("found preference=%s \n",nameBuff);
             }
             valueBuff[0] = 0;len = 512;
-            err = QTSS_GetValue (sModulePrefs, theID,0, valueBuff,&len);valueBuff[len] = 0;
+            err = QTSS_GetValue (sAdminPrefs, theID,0, valueBuff,&len);valueBuff[len] = 0;
             qtss_printf("Admin Module QTSS_GetValue name = %s id = %"_S32BITARG_" value=%s err = %"_S32BITARG_"\n", nameBuff,theID, valueBuff, err);
-            err = QTSS_SetValue (sModulePrefs,theID,0, valueBuff,len);
+            err = QTSS_SetValue (sAdminPrefs,theID,0, valueBuff,len);
             qtss_printf("Admin Module QTSS_SetValue name = %s id = %"_S32BITARG_" value=%s err = %"_S32BITARG_"\n", nameBuff,theID, valueBuff, err);
             
             {   QTSS_ServiceID id;
@@ -572,14 +606,14 @@ void APITests_DEBUG()
             }
 
             valueBuff[0] = 0;len = 512;
-            err = QTSS_GetValue (sModulePrefs, theID,0, valueBuff,&len);valueBuff[len] = 0;
+            err = QTSS_GetValue (sAdminPrefs, theID,0, valueBuff,&len);valueBuff[len] = 0;
             qtss_printf("Admin Module QTSS_GetValue name = %s id = %"_S32BITARG_" value=%s err = %"_S32BITARG_"\n", nameBuff,theID, valueBuff, err);
-            err = QTSS_SetValue (sModulePrefs,theID,0, valueBuff,len);
+            err = QTSS_SetValue (sAdminPrefs,theID,0, valueBuff,len);
             qtss_printf("Admin Module QTSS_SetValue name = %s id = %"_S32BITARG_" value=%s err = %"_S32BITARG_"\n", nameBuff,theID, valueBuff, err);
                 
             qtss_printf("second pass over preferences\n");
             for ( i = 0; i < numAttr; i++)
-            {   err = QTSS_GetAttrInfoByIndex(sModulePrefs, i, &theAttributeInfo);
+            {   err = QTSS_GetAttrInfoByIndex(sAdminPrefs, i, &theAttributeInfo);
                 nameBuff[0] = 0;len = 127;
                 err = QTSS_GetValue (theAttributeInfo, qtssAttrName,0, nameBuff,&len);
                 nameBuff[len]=0;
@@ -660,21 +694,21 @@ QTSS_Error RereadPrefs()
     sVersionHeader = QTSSModuleUtils::GetStringAttribute(sServer, "qtssSvrRTSPServerHeader", kDefaultHeader);
 
     delete [] sIPAccessList;
-    sIPAccessList = QTSSModuleUtils::GetStringAttribute(sModulePrefs, "IPAccessList", sLocalLoopBackAddress);
-    sIPAccessListID = QTSSModuleUtils::GetAttrID(sModulePrefs, "IPAccessList");
+    sIPAccessList = QTSSModuleUtils::GetStringAttribute(sAdminPrefs, "IPAccessList", sLocalLoopBackAddress);
+    sIPAccessListID = QTSSModuleUtils::GetAttrID(sAdminPrefs, "IPAccessList");
 
-    QTSSModuleUtils::GetAttribute(sModulePrefs, "Authenticate",     qtssAttrDataTypeBool16, &sAuthenticationEnabled, &sDefaultAuthenticationEnabled, sizeof(sAuthenticationEnabled));
-    QTSSModuleUtils::GetAttribute(sModulePrefs, "LocalAccessOnly",  qtssAttrDataTypeBool16, &sLocalLoopBackOnlyEnabled, &sDefaultLocalLoopBackOnlyEnabled, sizeof(sLocalLoopBackOnlyEnabled));
-    QTSSModuleUtils::GetAttribute(sModulePrefs, "RequestTimeIntervalMilli",     qtssAttrDataTypeUInt32, &sRequestTimeIntervalMilli, &sDefaultRequestTimeIntervalMilli, sizeof(sRequestTimeIntervalMilli));
-    QTSSModuleUtils::GetAttribute(sModulePrefs, "enable_remote_admin",  qtssAttrDataTypeBool16, &sEnableRemoteAdmin, &sDefaultEnableRemoteAdmin, sizeof(sDefaultEnableRemoteAdmin));
+    QTSSModuleUtils::GetAttribute(sAdminPrefs, "Authenticate",     qtssAttrDataTypeBool16, &sAuthenticationEnabled, &sDefaultAuthenticationEnabled, sizeof(sAuthenticationEnabled));
+    QTSSModuleUtils::GetAttribute(sAdminPrefs, "LocalAccessOnly",  qtssAttrDataTypeBool16, &sLocalLoopBackOnlyEnabled, &sDefaultLocalLoopBackOnlyEnabled, sizeof(sLocalLoopBackOnlyEnabled));
+    QTSSModuleUtils::GetAttribute(sAdminPrefs, "RequestTimeIntervalMilli",     qtssAttrDataTypeUInt32, &sRequestTimeIntervalMilli, &sDefaultRequestTimeIntervalMilli, sizeof(sRequestTimeIntervalMilli));
+    QTSSModuleUtils::GetAttribute(sAdminPrefs, "enable_remote_admin",  qtssAttrDataTypeBool16, &sEnableRemoteAdmin, &sDefaultEnableRemoteAdmin, sizeof(sDefaultEnableRemoteAdmin));
 
-	QTSSModuleUtils::GetAttribute(sModulePrefs, "http_port",     qtssAttrDataTypeUInt16, &sHttpPort, &sDefaultHttpPort, sizeof(sHttpPort));
+	QTSSModuleUtils::GetAttribute(sAdminPrefs, "http_port",     qtssAttrDataTypeUInt16, &sHttpPort, &sDefaultHttpPort, sizeof(sHttpPort));
 
 	delete [] sDocumentRoot;
-    sDocumentRoot = QTSSModuleUtils::GetStringAttribute(sModulePrefs, "document_root", sDefaultDocumentRoot);
+    sDocumentRoot = QTSSModuleUtils::GetStringAttribute(sAdminPrefs, "document_root", sDefaultDocumentRoot);
     
     delete [] sAdministratorGroup;
-    sAdministratorGroup = QTSSModuleUtils::GetStringAttribute(sModulePrefs, "AdministratorGroup", sDefaultAdministratorGroup);
+    sAdministratorGroup = QTSSModuleUtils::GetStringAttribute(sAdminPrefs, "AdministratorGroup", sDefaultAdministratorGroup);
     
     if (sRequestTimeIntervalMilli > kMaxRequestTimeIntervalMilli) 
     {   
@@ -700,8 +734,9 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	
 	sAccessLogPrefs = QTSSModuleUtils::GetModulePrefsObject(QTSSModuleUtils::GetModuleObjectByName("QTSSAccessLogModule"));
     sReflectorPrefs = QTSSModuleUtils::GetModulePrefsObject(QTSSModuleUtils::GetModuleObjectByName("QTSSReflectorModule"));
+	sHLSModulePrefs = QTSSModuleUtils::GetModulePrefsObject(QTSSModuleUtils::GetModuleObjectByName("EasyHLSModule"));
 
-    sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(sModule);
+    sAdminPrefs = QTSSModuleUtils::GetModulePrefsObject(sModule);
     sServerPrefs = inParams->inPrefs;
 
 	RereadPrefs();
@@ -748,7 +783,7 @@ inline Bool16 AcceptAddress(StrPtrLen *theAddressPtr)
      if (sLocalLoopBackOnlyEnabled && !isLocalRequest)
         return false;
     
-    if  (QTSSModuleUtils::AddressInList(sModulePrefs, sIPAccessListID, theAddressPtr))
+    if  (QTSSModuleUtils::AddressInList(sAdminPrefs, sIPAccessListID, theAddressPtr))
         return true;
 
     return false;
@@ -1393,6 +1428,9 @@ void EasyAdmin_SetErrorLogFolder(char* folder)
 
 UInt32 EasyAdmin_GetReflectBufferSecs()
 {
+	if(sReflectorPrefs == NULL)
+		return 0;
+
 	UInt32 reflectBufferSecs = 0;
 	QTSSModuleUtils::GetAttribute(sReflectorPrefs, "reflector_buffer_size_sec", qtssAttrDataTypeUInt32, &reflectBufferSecs, NULL, sizeof(reflectBufferSecs));
 	return reflectBufferSecs;
@@ -1400,6 +1438,8 @@ UInt32 EasyAdmin_GetReflectBufferSecs()
 
 void EasyAdmin_SetReflectBufferSecs(UInt32 secs)
 {
+	if(sReflectorPrefs == NULL)
+		return ;
 	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "reflector_buffer_size_sec", qtssAttrDataTypeUInt32, &secs, sizeof(UInt32));
 }
 
@@ -1410,7 +1450,7 @@ UInt16 EasyAdmin_GetMongoosePort()
 
 void EasyAdmin_SetMongoosePort(UInt16 port)
 {
-	QTSSModuleUtils::CreateAttribute(sModulePrefs, "http_port", qtssAttrDataTypeUInt16, &port, sizeof(UInt16));
+	QTSSModuleUtils::CreateAttribute(sAdminPrefs, "http_port", qtssAttrDataTypeUInt16, &port, sizeof(UInt16));
 }
 
 SInt64 EasyAdmin_GetServiceRunTime()
@@ -1423,3 +1463,19 @@ SInt64 EasyAdmin_GetServiceRunTime()
 
 	return (timeNow - startupTime);
 }
+
+bool EasyAdmin_GetReflectHLSOutput()
+{
+	if(sReflectorPrefs == NULL)
+		return false;
+
+	Bool16 hlsOutputEnabled = false;
+	QTSSModuleUtils::GetAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutputEnabled, NULL, sizeof(hlsOutputEnabled));
+	return hlsOutputEnabled;
+}
+
+void EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput)
+{
+	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutput, sizeof(Bool16));
+}
+
