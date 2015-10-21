@@ -1481,30 +1481,50 @@ void EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput)
 
 char* EasyAdmin_GetHlsHttpRoot()
 {
-	return NULL;
+	if(sHLSModulePrefs == NULL)
+		return NULL;
+
+	char* hlsHTTPRoot = NULL;
+	hlsHTTPRoot = QTSSModuleUtils::GetStringAttribute(sHLSModulePrefs, "HTTP_ROOT_DIR", NULL);
+
+	return hlsHTTPRoot;
 }
 
 void EasyAdmin_SetHlsHttpRoot(char* httpRoot)
 {
-
+	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "HTTP_ROOT_DIR", qtssAttrDataTypeCharArray, httpRoot, strlen(httpRoot));
 }
 
 UInt32 EasyAdmin_GetHlsTsDuration()
 {
-	return 0;
+	if(sHLSModulePrefs == NULL)
+		return 0;
+
+	UInt32 hlsDurationSec = 0;
+	QTSSModuleUtils::GetAttribute(sHLSModulePrefs, "TARGET_DURATION", qtssAttrDataTypeUInt32, &hlsDurationSec, NULL, sizeof(hlsDurationSec));
+	return hlsDurationSec;
 }
 
 void EasyAdmin_SetHlsTsDuration(UInt32 secs)
 {
-	;
+	if(sHLSModulePrefs == NULL)
+		return ;
+	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "TARGET_DURATION", qtssAttrDataTypeUInt32, &secs, sizeof(UInt32));
 }
 
 UInt32 EasyAdmin_GetHlsTsCapacity()
 {
-	return 0;
+	if(sHLSModulePrefs == NULL)
+		return 0;
+
+	UInt32 hlsCapacity = 0;
+	QTSSModuleUtils::GetAttribute(sHLSModulePrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32, &hlsCapacity, NULL, sizeof(hlsCapacity));
+	return hlsCapacity;
 }
 
 void EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity)
 {
-	;
+	if(sHLSModulePrefs == NULL)
+		return ;
+	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32, &uCapacity, sizeof(UInt32));
 }
