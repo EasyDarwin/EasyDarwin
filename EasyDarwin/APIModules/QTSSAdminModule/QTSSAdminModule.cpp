@@ -301,18 +301,38 @@ static int serve_request(struct mg_connection *conn)
 	}
 	if(strcmp(conn->uri, "/api/setPort") == 0)
 	{
-		char n1[100];
+		char n1[100],n2[100],n3[100],n4[100],n5[100],n6[100];
 		int re=0;
 		mg_get_var(conn,"n1",n1,sizeof(n1));
+		mg_get_var(conn,"n2",n2,sizeof(n2));
+		mg_get_var(conn,"n3",n3,sizeof(n3));
+		mg_get_var(conn,"n4",n4,sizeof(n4));
+		mg_get_var(conn,"n5",n5,sizeof(n5));
+		mg_get_var(conn,"n6",n6,sizeof(n6));
 		EasyAdmin_SetMongoosePort(atoi(n1));
+		EasyAdmin_SetRTSPort(atoi(n2));
+		EasyAdmin_SetHTTPServicePort(atoi(n3));
+		EasyAdmin_SetReflectBufferSecs(atoi(n4));
+		EasyAdmin_SetMoviesFolder(n5);
+		EasyAdmin_SetErrorLogFolder(n6);
 		mg_printf_data(conn,"{\"result\": %d}",re);
 		return MG_TRUE;
 	}
 	if(strcmp(conn->uri, "/api/getPort") == 0)
 	{
 		char sAjax[1024]={0};
-		sprintf(sAjax, "{ \"MongoosePort\": %d }",EasyAdmin_GetMongoosePort());
+		char* moviesFolder = EasyAdmin_GetMoviesFolder();
+		char* logFolder = EasyAdmin_GetErrorLogFolder();
+		sprintf(sAjax, "{ \"MongoosePort\": %d , \"RTSPPort\": %d , \"HTTPPort\": %d,\"reflectbuffer\":%d,\"moviesfolder\":\"%s\",\"logfolder\":\"%s\"}",
+			EasyAdmin_GetMongoosePort(),
+			EasyAdmin_GetRTSPort(),
+			EasyAdmin_GetHTTPServicePort(),
+			EasyAdmin_GetReflectBufferSecs(),
+			moviesFolder,
+			logFolder);
 		mg_printf_data(conn,sAjax);
+		delete moviesFolder;
+		delete logFolder;
 		return MG_TRUE;
 	}
 	if(strcmp(conn->uri, "/api/restart") == 0)
