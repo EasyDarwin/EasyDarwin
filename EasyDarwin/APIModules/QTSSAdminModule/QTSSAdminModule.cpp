@@ -190,10 +190,16 @@ static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 
 
 //***********************EasyDarwin WEB管理***********************
+
 //用户认证
 static	Bool16	EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword);
 
-//===============全局配置S===============
+//获取服务累计运行时间(单位毫秒ms)
+static	SInt64	EasyAdmin_GetServiceRunTime();
+
+//===============配置栏S===============
+
+//---------------------------全局配置S---------------------------
 //获取RTSP端口
 static  UInt16	EasyAdmin_GetRTSPort();
 //设置RTSP端口
@@ -216,9 +222,9 @@ static	void	EasyAdmin_SetErrorLogFolder(char* folder);
 static	UInt16	EasyAdmin_GetMongoosePort();
 //设置WEB Admin端口
 static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
-//===============全局配置E===============
+//---------------------------全局配置E---------------------------
 
-//===============流媒体转发配置S===============
+//---------------------------流媒体转发配置S---------------------------
 //转发缓冲时间获取
 static	UInt32	EasyAdmin_GetReflectBufferSecs();
 //设置缓冲时间
@@ -227,9 +233,9 @@ static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
 static	bool	EasyAdmin_GetReflectHLSOutput();
 //设置是否同步输出HLS
 static	void	EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput);
-//===============流媒体转发配置E===============
+//---------------------------流媒体转发配置E---------------------------
 
-//===============HLS设置S===============
+//---------------------------HLS配置S---------------------------
 //获取HLS分发的http服务地址
 static	char*	EasyAdmin_GetHlsHttpRoot();
 //设置HLS分发的http服务地址
@@ -242,12 +248,21 @@ static	void	EasyAdmin_SetHlsTsDuration(UInt32 secs);
 static	UInt32	EasyAdmin_GetHlsTsCapacity();
 //设置HLS ts切片数
 static	void	EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity);
-//===============HLS设置E===============
+//---------------------------HLS配置E---------------------------
 
-//===============信息获取S===============
-//获取服务累计运行时间(单位毫秒ms)
-static	SInt64	EasyAdmin_GetServiceRunTime();
-//===============信息获取E===============
+//===============配置栏E===============
+
+
+//===============HLS直播栏S===============
+
+//新增一路HLS直播
+static	bool	EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout);
+//结束一路HLS直播
+static	bool	EasyAdmin_StopHLSession(char* inSessionName);
+//获取HLS直播列表(json)
+static	char*	EasyAdmin_GetHLSessions();
+
+//===============HLS直播栏E===============
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++add arno
 static const char *s_secret = ":-)";
@@ -681,7 +696,6 @@ QTSS_Error  QTSSAdminModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
     return QTSS_NoErr;
 }
 
-
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
     // Do role & attribute setup
@@ -834,7 +848,8 @@ inline void ParseAuthNameAndPassword(StrPtrLen *codedStrPtr, StrPtrLen* namePtr,
  {
     
     if (!codedStrPtr || (codedStrPtr->Len >= kAuthNameAndPasswordBuffSize) ) 
-    {   return; 
+    {  
+		return; 
     }
     
     StrPtrLen   codedLineStr;
@@ -950,9 +965,7 @@ inline Bool16 HasAuthentication(StringParser *theFullRequestPtr, StrPtrLen* name
             passwordPtr->Set(authString.Ptr, authString.Len);
             hasAuthentication = true;
             break;
-        }
-        
-        
+        } 
     };
     
     return hasAuthentication;
@@ -1543,4 +1556,22 @@ void EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity)
 	if(sHLSModulePrefs == NULL)
 		return ;
 	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32, &uCapacity, sizeof(UInt32));
+}
+
+//新增一路HLS直播
+bool EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout)
+{
+	Easy_StartHLSession(inSessionName, inRTSPUrl, inTimeout, NULL);
+	return true;
+}
+
+bool EasyAdmin_StopHLSession(char* inSessionName)
+{
+	Easy_StopHLSession(inSessionName);
+	return true;
+}
+
+char*	EasyAdmin_GetHLSessions()
+{
+	return NULL;
 }

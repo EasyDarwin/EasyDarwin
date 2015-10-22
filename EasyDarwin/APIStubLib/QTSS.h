@@ -2055,9 +2055,9 @@ void        QTSS_UnlockStdLib();
 
 // EasyHLSModule
 // Start HLS Session
-QTSS_Error	Easy_StartHLSSession(const char* inSessionName, const char* inURL, UInt32 inTimeout, char* outURL);
+QTSS_Error	Easy_StartHLSession(const char* inSessionName, const char* inURL, UInt32 inTimeout, char* outURL);
 // Stop HLS Session
-QTSS_Error	Easy_StopHLSSession(const char* inSessionName);
+QTSS_Error	Easy_StopHLSession(const char* inSessionName);
 
 #ifdef QTSS_OLDROUTINENAMES
 
