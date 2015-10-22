@@ -26,10 +26,6 @@
     File:       ev.cpp
 
     Contains:   POSIX select implementation of MacOS X event queue functions.
-
-
-    
-
 */
 
 #if !MACOSXEVENTQUEUE
@@ -41,6 +37,8 @@
 		#define FD_SETSIZE SET_SELECT_SIZE
 	#endif 
 #endif
+
+#define FD_SETSIZE	1024
 
     #include <sys/time.h>
     #include <sys/types.h>
