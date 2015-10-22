@@ -29,26 +29,30 @@
 #include "ParseDevice.h"
 #include <libEasyHttp.h>
 
-class HLSSessionCheckingTask : public Task
+
+class HLSSessionCheckingTask : public OSThread
 {
     public:
         // Task that just polls on all the sockets in the pool, sending data on all available sockets
-        HLSSessionCheckingTask() : Task() 
+        HLSSessionCheckingTask() : OSThread() 
 		{
-			this->SetTaskName("HLSSessionCheckingTask");  
-			uIndex = 0;
-			this->Signal(Task::kStartEvent); 
+			//this->SetTaskName("HLSSessionCheckingTask");  
+			//uIndex = 0;
+			//this->Signal(Task::kStartEvent); 
 		}
         virtual ~HLSSessionCheckingTask() {}
+
+	private:
+        void Entry();
     
-    private:
-        virtual SInt64 Run();
-        
-		UInt32 uIndex;
-        enum
-        {
-            kProxyTaskPollIntervalMsec = 1000
-        };
+  //  private:
+  //      virtual SInt64 Run();
+  //      
+		//UInt32 uIndex;
+  //      enum
+  //      {
+  //          kProxyTaskPollIntervalMsec = 1000
+  //      };
 };
 
 // STATIC DATA
@@ -141,6 +145,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	RereadPrefs();
 
     sCheckingTask = NEW HLSSessionCheckingTask();
+	sCheckingTask->Start();
 
     return QTSS_NoErr;
 }
@@ -168,20 +173,22 @@ QTSS_Error RereadPrefs()
 }
 
 
-SInt64 HLSSessionCheckingTask::Run()
+SInt64 HLSSessionCheckingTask::Entry()
 {
 	EasyHttp_Get("http://111.1.6.132:11000/AppCamera/CheckDevStateRestaurant?count=10000&isBuildIn=1");
+
+	return 0;
         
-    if(uIndex >= sDeviceNum)
-		return -1;
+ //   if(uIndex >= sDeviceNum)
+	//	return -1;
 
-	DeviceInfo* pDeviceInfo = parseDevice->GetDeviceInfoByIdIndex(uIndex);
-	qtss_printf("%d/%d name=%s url=%s\n", uIndex, sDeviceNum, pDeviceInfo->m_szIdname, pDeviceInfo->m_szSourceUrl);
+	//DeviceInfo* pDeviceInfo = parseDevice->GetDeviceInfoByIdIndex(uIndex);
+	//qtss_printf("%d/%d name=%s url=%s\n", uIndex, sDeviceNum, pDeviceInfo->m_szIdname, pDeviceInfo->m_szSourceUrl);
 
-	Easy_StartHLSSession(pDeviceInfo->m_szIdname, pDeviceInfo->m_szSourceUrl, 0, NULL);
+	//Easy_StartHLSSession(pDeviceInfo->m_szIdname, pDeviceInfo->m_szSourceUrl, 0, NULL);
 
-	uIndex ++;
-	return kProxyTaskPollIntervalMsec;
+	//uIndex ++;
+	//return kProxyTaskPollIntervalMsec;
 }
 
 QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
