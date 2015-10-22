@@ -310,7 +310,7 @@ void transform_msec(SInt64 msec, char *output, size_t size)
 	sec -= hour * 60*60; 
 	SInt64 min = sec / 60; 
 	sec -= min * 60; 
-	_snprintf(output, size, "%lld|%lld|%lld|%lld",day,hour, min, sec);
+	qtss_snprintf(output, size, "%lld|%lld|%lld|%lld",day,hour, min, sec);
 
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
