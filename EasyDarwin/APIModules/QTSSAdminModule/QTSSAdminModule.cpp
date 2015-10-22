@@ -197,70 +197,81 @@ static	Bool16	EasyAdmin_UserAuthentication(const char* inUserName, const char* i
 //获取服务累计运行时间(单位毫秒ms)
 static	SInt64	EasyAdmin_GetServiceRunTime();
 
-//===============配置栏S===============
+//===============系统栏S===============
 
-//---------------------------全局配置S---------------------------
-//获取RTSP端口
-static  UInt16	EasyAdmin_GetRTSPort();
-//设置RTSP端口
-static	void	EasyAdmin_SetRTSPort(UInt16 uPort);
-//重启EasyDarwin服务
-static	void	EasyAdmin_Restart();
-//获取HTTP服务端口
-static	UInt16	EasyAdmin_GetHTTPServicePort();
-//设置HTTP服务端口
-static	void	EasyAdmin_SetHTTPServicePort(UInt16 uPort);
-//获取流媒体文件目录
-static	char*	EasyAdmin_GetMoviesFolder();
-//设置流媒体文件目录
-static	void	EasyAdmin_SetMoviesFolder(char* folder);
-//获取日志文件目录
-static	char*	EasyAdmin_GetErrorLogFolder();
-//设置日志文件目录
-static	void	EasyAdmin_SetErrorLogFolder(char* folder);
-//获取WEB Admin端口
-static	UInt16	EasyAdmin_GetMongoosePort();
-//设置WEB Admin端口
-static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
-//---------------------------全局配置E---------------------------
+	//---------------------------全局配置S---------------------------
+	//获取RTSP端口
+	static  UInt16	EasyAdmin_GetRTSPort();
+	//设置RTSP端口
+	static	void	EasyAdmin_SetRTSPort(UInt16 uPort);
+	//获取HTTP服务端口
+	static	UInt16	EasyAdmin_GetHTTPServicePort();
+	//设置HTTP服务端口
+	static	void	EasyAdmin_SetHTTPServicePort(UInt16 uPort);
+	//获取流媒体文件目录
+	static	char*	EasyAdmin_GetMoviesFolder();
+	//设置流媒体文件目录
+	static	void	EasyAdmin_SetMoviesFolder(char* folder);
+	//获取日志文件目录
+	static	char*	EasyAdmin_GetErrorLogFolder();
+	//设置日志文件目录
+	static	void	EasyAdmin_SetErrorLogFolder(char* folder);
+	//获取WEB Admin端口
+	static	UInt16	EasyAdmin_GetMongoosePort();
+	//设置WEB Admin端口
+	static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
+	//---------------------------全局配置E---------------------------
 
-//---------------------------流媒体转发配置S---------------------------
-//转发缓冲时间获取
-static	UInt32	EasyAdmin_GetReflectBufferSecs();
-//设置缓冲时间
-static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
-//是否同步输出HLS
-static	bool	EasyAdmin_GetReflectHLSOutput();
-//设置是否同步输出HLS
-static	void	EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput);
-//---------------------------流媒体转发配置E---------------------------
+	//---------------------------全局控制S---------------------------
+	//重启EasyDarwin服务
+	static	void	EasyAdmin_Restart();
+	//---------------------------全局控制S---------------------------
 
-//---------------------------HLS配置S---------------------------
-//获取HLS分发的http服务地址
-static	char*	EasyAdmin_GetHlsHttpRoot();
-//设置HLS分发的http服务地址
-static	void	EasyAdmin_SetHlsHttpRoot(char* httpRoot);
-//获取HLS单个ts切片的时长
-static	UInt32	EasyAdmin_GetHlsTsDuration();
-//设置HLS单个ts切片的时长
-static	void	EasyAdmin_SetHlsTsDuration(UInt32 secs);
-//获取HLS ts切片数
-static	UInt32	EasyAdmin_GetHlsTsCapacity();
-//设置HLS ts切片数
-static	void	EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity);
-//---------------------------HLS配置E---------------------------
+//===============系统栏E===============
 
-//===============配置栏E===============
+
+//===============RTSP直播栏S===============
+
+	//---------------------------RTSP转发配置S---------------------------
+	//转发缓冲时间获取
+	static	UInt32	EasyAdmin_GetReflectBufferSecs();
+	//设置缓冲时间
+	static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
+	//是否同步输出HLS
+	static	bool	EasyAdmin_GetReflectHLSOutput();
+	//设置是否同步输出HLS
+	static	void	EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput);
+	//---------------------------RTSP转发配置E---------------------------
+
+//===============RTSP直播栏E===============
 
 
 //===============HLS直播栏S===============
 
-//新增一路HLS直播
-static	bool	EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout);
-//结束一路HLS直播
-static	bool	EasyAdmin_StopHLSession(char* inSessionName);
-//获取HLS直播列表(json)
-static	char*	EasyAdmin_GetHLSessions();
+//---------------------------HLS配置S---------------------------
+
+	//获取HLS分发的http服务地址
+	static	char*	EasyAdmin_GetHlsHttpRoot();
+	//设置HLS分发的http服务地址
+	static	void	EasyAdmin_SetHlsHttpRoot(char* httpRoot);
+	//获取HLS单个ts切片的时长
+	static	UInt32	EasyAdmin_GetHlsTsDuration();
+	//设置HLS单个ts切片的时长
+	static	void	EasyAdmin_SetHlsTsDuration(UInt32 secs);
+	//获取HLS ts切片数
+	static	UInt32	EasyAdmin_GetHlsTsCapacity();
+	//设置HLS ts切片数
+	static	void	EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity);
+	//---------------------------HLS配置E---------------------------
+
+	//---------------------------HLS列表S---------------------------
+	//新增一路HLS直播
+	static	bool	EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout);
+	//结束一路HLS直播
+	static	bool	EasyAdmin_StopHLSession(char* inSessionName);
+	//获取HLS直播列表(json)
+	static	char*	EasyAdmin_GetHLSessions();
+	//---------------------------HLS列表E---------------------------
 
 //===============HLS直播栏E===============
 
