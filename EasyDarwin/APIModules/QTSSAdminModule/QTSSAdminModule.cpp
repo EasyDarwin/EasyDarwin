@@ -480,6 +480,17 @@ void mongooseThread::Entry()
 	//printf("HLS TS Capacity: %d \n",EasyAdmin_GetHlsTsCapacity());
 	////设置HLS ts切片数
 	//EasyAdmin_SetHlsTsCapacity(9);
+
+	////启动一路HLS直播
+	//EasyAdmin_StartHLSession("test", "rtsp://admin:admin@192.168.66.186/", 0);
+
+	////获取HLS直播列表
+	//char* sessionsJSON = EasyAdmin_GetHLSessions();
+	//printf(sessionsJSON);
+	//delete[] sessionsJSON;
+
+	////停止一路HLS直播
+	//EasyAdmin_StopHLSession("test");
 //**********************************************************
 
 	//run server
@@ -846,7 +857,6 @@ inline Bool16 IsAdminRequest(StringParser *theFullRequestPtr)
 
 inline void ParseAuthNameAndPassword(StrPtrLen *codedStrPtr, StrPtrLen* namePtr, StrPtrLen* passwordPtr)
  {
-    
     if (!codedStrPtr || (codedStrPtr->Len >= kAuthNameAndPasswordBuffSize) ) 
     {  
 		return; 
@@ -1558,7 +1568,6 @@ void EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity)
 	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32, &uCapacity, sizeof(UInt32));
 }
 
-//新增一路HLS直播
 bool EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout)
 {
 	Easy_StartHLSession(inSessionName, inRTSPUrl, inTimeout, NULL);
@@ -1571,7 +1580,7 @@ bool EasyAdmin_StopHLSession(char* inSessionName)
 	return true;
 }
 
-char*	EasyAdmin_GetHLSessions()
+char* EasyAdmin_GetHLSessions()
 {
-	return NULL;
+	return (char*)Easy_GetHLSessions();
 }

@@ -162,6 +162,8 @@ class QTSSCallbacks
 		static QTSS_Error	Easy_StartHLSession(const char* inSessionName, const char* inURL, UInt32 inTimeout, char* outURL);
 		// Stop HLS Session
 		static QTSS_Error	Easy_StopHLSession(const char* inSessionName);
+
+		static void* Easy_GetHLSessions();
 };
 
 #endif //__QTSSCALLBACKS_H__
