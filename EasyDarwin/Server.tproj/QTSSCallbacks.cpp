@@ -26,10 +26,9 @@
     File:       QTSSCallbacks.cpp
 
     Contains:   Implements QTSS Callback functions.
-                    
-    
 */
 
+#undef COMMON_UTILITIES_LIB
 #include "QTSSCallbacks.h"
 #include "QTSSDictionary.h"
 #include "QTSSStream.h"
@@ -46,6 +45,14 @@
 #include "QTSSModule.h"
 
 #include <errno.h>
+
+#include "EasyProtocolDef.h"
+#include "EasyProtocol.h"
+
+#include "EasyHLSSession.h"
+
+using namespace EasyDarwin::Protocol;
+using namespace std;
 
 #define __QTSSCALLBACKS_DEBUG__ 0
 #define debug_printf if (__QTSSCALLBACKS_DEBUG__) qtss_printf
@@ -956,7 +963,6 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
 
 QTSS_Error QTSSCallbacks::Easy_StartHLSession(const char* inSessionName, const char* inURL, UInt32 inTimeout, char* outURL)
 {
-	//Æô¶¯HLS Module
 	QTSS_RoleParams packetParams;
 	packetParams.easyHLSOpenParams.inStreamName = (char*)inSessionName;
 	packetParams.easyHLSOpenParams.inRTSPUrl = (char*)inURL;
@@ -977,7 +983,6 @@ QTSS_Error QTSSCallbacks::Easy_StartHLSession(const char* inSessionName, const c
 
 QTSS_Error QTSSCallbacks::Easy_StopHLSession(const char* inSessionName)
 {
-	//¹Ø±ÕHLS Module
 	QTSS_RoleParams packetParams;
 	packetParams.easyHLSCloseParams.inStreamName = (char*)inSessionName;
 
@@ -991,4 +996,43 @@ QTSS_Error QTSSCallbacks::Easy_StopHLSession(const char* inSessionName)
 	}
 	
 	return QTSS_RequestFailed;
+}
+
+void* QTSSCallbacks::Easy_GetHLSessions()
+{
+	OSRefTable* hlsMap = QTSServerInterface::GetServer()->GetHLSSessionMap();
+
+	EasyDarwinHLSessionListAck ack;
+	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
+	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
+	char count[16] = { 0 };
+	sprintf(count,"%d", hlsMap->GetNumRefsInTable());
+	ack.SetBodyValue("SessionCount", count );
+
+	OSRef* theSesRef = NULL;
+
+	UInt32 uIndex= 0;
+	OSMutexLocker locker(hlsMap->GetMutex());
+	for (OSRefHashTableIter theIter(hlsMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+	{
+		OSRef* theRef = theIter.GetCurrent();
+		EasyHLSSession* theSession = (EasyHLSSession*)theRef->GetObject();
+
+		EasyDarwinHLSession session;
+		session.index = uIndex;
+		session.SessionName = string(theSession->GetSessionID()->Ptr);
+		session.HlsUrl = string(theSession->GetHLSURL());
+		session.sourceUrl = string(theSession->GetSourceURL());
+		session.bitrate = theSession->GetLastStatBitrate();
+		ack.AddSession(session);
+		uIndex++;
+	}   
+
+	string msg = ack.GetMsg();
+
+	UInt32 theMsgLen = strlen(msg.c_str());
+	char* retMsg = new char[theMsgLen+1];
+	retMsg[theMsgLen] = '\0';
+	strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
+	return (void*)retMsg;
 }

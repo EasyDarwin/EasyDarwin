@@ -47,8 +47,7 @@ static StrPtrLen	sGetHLSSessions("api/gethlssessions");
 #define QUERY_STREAM_CMD_STOP	"stop"
 
 
-//解url编码实现 
-
+//decode url
 unsigned char* urldecode(unsigned char* encd,unsigned char* decd) 
 { 
     int j,i; 
@@ -691,54 +690,9 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 	QTSS_Error theErr = QTSS_NoErr;
 
 	do{
-		StrPtrLen theQueryString(queryString);
+		char* msgContent = (char*)Easy_GetHLSessions();
 
-		QueryParamList parList(queryString);
-
-		//const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
-		//if(sName == NULL)
-		//{
-		//	theErr = QTSS_Unimplemented;
-		//	break;
-		//}
-
-		OSRefTable* hlsMap = QTSServerInterface::GetServer()->GetHLSSessionMap();
-		if(hlsMap->GetNumRefsInTable() == 0 )
-		{
-			theErr = QTSS_FileNotFound;
-		}
-
-		EasyDarwinHLSessionListAck ack;
-		ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-		ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
-		char count[16] = { 0 };
-		sprintf(count,"%d", hlsMap->GetNumRefsInTable());
-		ack.SetBodyValue("SessionCount", count );
-
-		OSRef* theSesRef = NULL;
-
-		UInt32 uIndex= 0;
-		OSMutexLocker locker(hlsMap->GetMutex());
-		for (OSRefHashTableIter theIter(hlsMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
-		{
-			OSRef* theRef = theIter.GetCurrent();
-			EasyHLSSession* theSession = (EasyHLSSession*)theRef->GetObject();
-
-			EasyDarwinHLSession session;
-			session.index = uIndex;
-			session.SessionName = string(theSession->GetSessionID()->Ptr);
-			session.HlsUrl = string(theSession->GetHLSURL());
-			session.sourceUrl = string(theSession->GetSourceURL());
-			session.bitrate = theSession->GetLastStatBitrate();
-			ack.AddSession(session);
-			uIndex++;
-		}   
-
-		string msg = ack.GetMsg();
-
-		printf(msg.c_str());
-
-		StrPtrLen msgJson((char*)msg.c_str());
+		StrPtrLen msgJson(msgContent);
 
 		//构造响应报文(HTTP头)
 		HTTPRequest httpAck(&sServiceStr);
@@ -759,6 +713,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 		if (msgJson.Len > 0) 
 			pOutputStream->Put(msgJson.Ptr, msgJson.Len);
 
+		delete[] msgContent;
 	}while(0);
 
 	return theErr;
