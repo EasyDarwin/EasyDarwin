@@ -173,7 +173,7 @@ QTSS_Error RereadPrefs()
 }
 
 
-SInt64 HLSSessionCheckingTask::Entry()
+void HLSSessionCheckingTask::Entry()
 {
 	EasyHttp_Get("http://111.1.6.132:11000/AppCamera/CheckDevStateRestaurant?count=10000&isBuildIn=1");
 
