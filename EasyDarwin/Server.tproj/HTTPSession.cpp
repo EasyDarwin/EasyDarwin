@@ -629,7 +629,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 
 		if(bStop)
 		{
-			Easy_StopHLSSession(sName);
+			Easy_StopHLSession(sName);
 		}
 		else
 		{
@@ -650,7 +650,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 			qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession::ExecNetMsgEasyHLSModuleReq name=%s,url=%s,time=%d", sName, sURL, iTIMEOUT);
 			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
-			Easy_StartHLSSession(sName, sURL, iTIMEOUT, hlsURL );
+			Easy_StartHLSession(sName, sURL, iTIMEOUT, hlsURL );
 		}
 	}while(0);
 

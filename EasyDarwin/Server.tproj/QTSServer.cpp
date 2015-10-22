@@ -893,8 +893,8 @@ void    QTSServer::InitCallbacks()
     sCallbacks.addr[kLockStdLibCallback] =                  (QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_LockStdLib;
     sCallbacks.addr[kUnlockStdLibCallback] =                (QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_UnlockStdLib;
 
-	sCallbacks.addr[kStartHLSSessionCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_StartHLSSession;
-	sCallbacks.addr[kStopHLSSessionCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_StopHLSSession;
+	sCallbacks.addr[kStartHLSSessionCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_StartHLSession;
+	sCallbacks.addr[kStopHLSSessionCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_StopHLSession;
 	
 }
 
