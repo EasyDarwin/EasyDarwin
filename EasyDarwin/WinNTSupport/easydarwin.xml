@@ -48,7 +48,7 @@
 		<PREF NAME="break_on_assert" TYPE="Bool16" >false</PREF>
 		<PREF NAME="bind_ip_addr" >0</PREF>
 		<PREF NAME="movie_folder" >./Movies/</PREF>
-		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
+		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >1024000</PREF>
 		<PREF NAME="maximum_connections" TYPE="SInt32" >10000</PREF>
 		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
 		<PREF NAME="real_rtsp_timeout" TYPE="UInt32" >30</PREF>
