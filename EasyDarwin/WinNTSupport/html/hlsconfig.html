@@ -21,7 +21,7 @@
 	<!-- Graph JavaScript -->
 	
 </head>
-<body  onload="fLoad();getPort()">
+<body  onload="fLoad();getHLS()">
 <div id="wrapper">
      <!-- Navigation -->
 <script type="text/javascript">document.write(navigation);</script> 
@@ -34,42 +34,43 @@
 					
 					<!---主体部分-->
 					  <div class="m-content">
-					   <h3><script type="text/javascript">document.write(str_set_port);</script></h3>
+					   <h3><script type="text/javascript">document.write(str_hls_live_config);</script></h3>
 
 										 <div class="tab-content">
 											<div class="tab-pane active" id="horizontal-form">
 												<form class="form-horizontal">
 													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_Mongoose_port);</script></label>
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_http_root);</script></label>
 														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txtport"  >
+															<input type="text" class="form-control1" id="txthttproot"  >
 														</div>
 														<div class="col-sm-2">
 															<p class="help-block"></p>
 														</div>
 													</div>
 													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_RTSP_port);</script></label>
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_live_tsduration);</script></label>
 														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txtrtspport"  >
+															<input type="text" class="form-control1" id="txttsd"  >
 														</div>
 														<div class="col-sm-2">
 															<p class="help-block"></p>
 														</div>
 													</div>
 													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_HTTP_port);</script></label>
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_live_tscapacity);</script></label>
 														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txthttpport"  >
+															<input type="text" class="form-control1" id="txttsc"  >
 														</div>
 														<div class="col-sm-2">
 															<p class="help-block"></p>
 														</div>
 													</div>
+													
 													 <div class="form-group">
 														<div class="row">
 														<div class="col-sm-8 col-sm-offset-2">
-														<button class="btn-success btn" onclick="setPort()"><script type="text/javascript">document.write(str_save);</script></button>
+														<button class="btn-success btn" onclick="setHLS()"><script type="text/javascript">document.write(str_save);</script></button>
 														</div>
 														</div>
 													</div>

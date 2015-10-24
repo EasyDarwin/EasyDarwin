@@ -132,3 +132,137 @@ function restart()
 				{	alert(str_warn_s);}
             });
 }
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++
+//hls设置
+function setHLS()
+{
+	
+	if($('#txthttproot').val()==null||$('#txthttproot').val()=='')
+	{
+		alert(str_hls_http_root_warn);
+		return false;
+	}
+	if($('#txttsd').val()==null||$('#txttsd').val()=='')
+	{
+		alert(str_hls_live_tsduration_warn);
+		return false;
+	}
+	if($('#txttsc').val()==null||$('#txttsc').val()=='')
+	{
+		alert(str_hls_live_tscapacity_warn);
+		return false;
+	}
+	
+	if(!istime($('#txttsd').val(),str_hls_live_tsduration_warn1))
+		return false;
+	if(!istime($('#txttsc').val(),str_hls_live_tscapacity_warn1))
+		return false;
+	$.ajax({
+                url: '/api/setHLS',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: {n1: $('#txthttproot').val(),n2:$("#txttsd").val(),n3:$("#txttsc").val()},
+                success: function (json) {
+					
+					 alert(str_warn_s);
+					 window.location.reload();
+                },
+				error:function(msg)
+				{	alert("error");}
+            });
+}
+function getHLS()
+{
+	
+	$.ajax({
+                url: '/api/getHLS',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: { },
+                success: function (json) {
+					$("#txthttproot").val(json.httproot);
+					$("#txttsd").val(json.tsd);
+					$("#txttsc").val(json.tsc);
+					
+                },
+				error:function(msg)
+				{	alert(textStatus);}
+            });
+}
+//++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++
+//hls设置
+function setRTSP()
+{
+	var out=$("input[type='checkbox']").is(':checked');
+	if(out==true)
+	{
+		out=1;
+	}
+	else{
+		out=0;
+	}
+	if($('#txtbuffersecs').val()==null||$('#txtbuffersecs').val()=='')
+	{
+		alert(str_rtsp_buffersecs_warn);
+		return false;
+	}
+	if(!istime($('#txtbuffersecs').val(),str_rtsp_buffersecs_warn1))
+		return false;
+	$.ajax({
+                url: '/api/setRTSP',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: {n1: $('#txtbuffersecs').val(),n2:out},
+                success: function (json) {
+					
+					 alert(str_warn_s);
+					 window.location.reload();
+                },
+				error:function(msg)
+				{	alert("error");}
+            });
+}
+function getRTSP()
+{
+	
+	$.ajax({
+                url: '/api/getRTSP',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: { },
+                success: function (json) {
+					
+					$("#txtbuffersecs").val(json.buffersecs);
+					if(json.out==1)
+					{
+						$("[name = chkItem]:checkbox").attr("checked", true);
+						
+					}
+					
+					  
+					
+                },
+				error:function(msg)
+				{	alert(textStatus);}
+            });
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++

@@ -9,11 +9,22 @@ navigation+="<li class=\"nav-list\"><a href=\"index.html\"><script type=\"text/j
 navigation+="<li class=\"nav-list\"><a href=\"restart.html\"><script type=\"text/javascript\">document.write(str_reboot);</script></a></li>";
 navigation+="</ul></li>";
 
-navigation+="<li><a href=\"#\" class=\"nav-title\"><i class=\"fa fa-envelope nav_icon\">|</i>Test<span class=\"fa arrow\"></span></a>";
+navigation+="<li><a href=\"#\" class=\"nav-title\"><i class=\"fa fa-envelope nav_icon\">|</i><script type=\"text/javascript\">document.write(str_hls_live);</script><span class=\"fa arrow\"></span></a>";
 navigation+="<ul class=\"nav nav-second-level\">";
-navigation+="<li class=\"nav-list\"><a href=\"#\">Test</a></li>";
-//navigation+="<li class=\"nav-list\"><a href=\"#\"><script type=\"text/javascript\">document.write(aaa);</script> </a></li>";
+navigation+="<li class=\"nav-list\"><a href=\"hlsconfig.html\"><script type=\"text/javascript\">document.write(str_hls_live_config);</script></a></li>";
+navigation+="<li class=\"nav-list\"><a href=\"not.html\"><script type=\"text/javascript\">document.write(str_hls_live_list);</script></a></li>";
 navigation+="</ul></li>";
+
+navigation+="<li><a href=\"#\" class=\"nav-title\"><i class=\"fa fa-envelope nav_icon\">|</i><script type=\"text/javascript\">document.write(str_rtsp_live);</script><span class=\"fa arrow\"></span></a>";
+navigation+="<ul class=\"nav nav-second-level\">";
+navigation+="<li class=\"nav-list\"><a href=\"rtspconfig.html\"><script type=\"text/javascript\">document.write(str_rtsp_live_config);</script></a></li>";
+navigation+="<li class=\"nav-list\"><a href=\"not1.html\"><script type=\"text/javascript\">document.write(str_rtsp_live_list);</script></a></li>";
+navigation+="</ul></li>";
+
+
+
+
+
 //++++++++++++++++++++++
 navigation+="</ul></div></div>";
 
