@@ -202,7 +202,7 @@ function getHLS()
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++
-//hls设置
+//rtsp设置
 function setRTSP()
 {
 	var out=$("input[type='checkbox']").is(':checked');
@@ -265,4 +265,95 @@ function getRTSP()
             });
 }
 
+//++++++++++++++++++++++++++++++++++++++++++++++
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++
+//hls直播列表
+function gotoAddHlsList()
+{
+	window.location.href='addhlslist.html';
+	return false;
+}
+function gotoHlsList()
+{
+	window.location.href='hlslist.html';
+	return false;
+}
+function getHLSList()
+{
+	$.ajax({
+                url: '/api/getHLSList',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: { },
+                success: function (json) {
+					var pagecount=json.EasyDarwin.Body.SessionCount;
+					//var pagecount=siteList.EasyDarwin.Body.SessionCount;
+					if(pagecount=="0")
+					{
+						var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th><th>Bitrate</th><th>Option</th></tr></thead><tbody>";
+						html+="</tbody></table></div>";
+						document.getElementById("divload").innerHTML= html;
+					}
+					else{
+							OutputHtml(parseInt(pagecount),1);
+					}
+				
+                },
+				error:function(msg)
+				{	alert(textStatus);}
+            });
+}
+function addHLSList()
+{
+	
+	if($('#txtname').val()==null||$('#txtname').val()=='')
+	{
+		alert("名称不能为空");
+		return false;
+	}
+	if($('#txturl').val()==null||$('#txturl').val()=='')
+	{
+		alert("URL不能为空");
+		return false;
+	}
+	if($('#txttimeout').val()==null||$('#txttimeout').val()=='')
+	{
+		alert("超时时间不能为空");
+		return false;
+	}
+	//if(!istime($('#txtbuffersecs').val(),str_rtsp_buffersecs_warn1))
+		//return false;
+	$.ajax({
+                url: '/api/addHLSList',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: {n1: $('#txtname').val(),n2: $('#txturl').val(),n3: $('#txttimeout').val()},
+                success: function (json) {
+					
+					 if(json.result=="1")
+					 {
+						 alert("操作成功");
+						 window.location.href='hlslist.html';
+						 
+					 }
+					 else{
+						 alert("操作失败");
+						 window.location.reload();
+					 }
+					 
+                },
+				error:function(msg)
+				{	alert("error");}
+            });
+			return false;
+	
+}
 //++++++++++++++++++++++++++++++++++++++++++++++
