@@ -10,10 +10,10 @@ ul, ol {margin: 0;}
 p {margin: 0;}
 
 html, body{
-  	font-family:Î¢ÈíÑÅºÚ;
     font-size: 100%;
   	background:#212121;
   	overflow-x: hidden;
+      font-family:Arial;
 }
 body a{
 	transition:0.5s all;
@@ -244,7 +244,6 @@ body a{
 }
 .navbar-default.sidebar {
   background-color: #212121;
-  font-family:"Î¢ÈíÑÅºÚ";
   }
 nav.top1.navbar.navbar-default.navbar-static-top {
   background-color:rgb(6, 217, 149);
@@ -1203,9 +1202,7 @@ select[multiple] {
   padding:2em;
   margin: 2em 0 0 0;
 }
-.panel-warning {
-  margin-top: 2em;
-}
+
 .panel.panel-midnightblue {
   border-color: #263238;
 }
@@ -1214,9 +1211,7 @@ select[multiple] {
   background-color: #37474f;
   border-color: #263238;
 }
-.panel.panel-warning {
-  border-color: #fdd835;
-}
+
 .panel.panel-warning .panel-heading {
   color: #fffde7;
   background-color: #ffc107;
@@ -1499,6 +1494,7 @@ div.checker input {
 }
 .table td, .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
   padding:15px !important;
+  line-height:25px;
 }
 .table > thead > tr > th {
   border-bottom: 1px solid #ddd !important;
@@ -1507,6 +1503,7 @@ div.checker input {
   border-color: #ef553a;
   background: #ef553a;
   padding:8.5px 12px;
+  
 }
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
   color: #fff;

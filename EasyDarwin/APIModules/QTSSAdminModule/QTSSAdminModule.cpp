@@ -445,6 +445,26 @@ static int serve_request(struct mg_connection *conn)
 		mg_printf_data(conn,sAjax);
 		return MG_TRUE;
 	}
+	if(strcmp(conn->uri, "/api/getHLSList") == 0)
+	{
+		char* sessionsJSON = EasyAdmin_GetHLSessions();
+		mg_printf_data(conn,sessionsJSON);
+		return MG_TRUE;
+	}
+	if(strcmp(conn->uri, "/api/addHLSList") == 0)
+	{
+		char n1[100],n2[100],n3[100];
+		int re=0;
+		mg_get_var(conn,"n1",n1,sizeof(n1));
+		mg_get_var(conn,"n2",n2,sizeof(n2));
+		mg_get_var(conn,"n3",n3,sizeof(n3));
+		if(EasyAdmin_StartHLSession(n1, n2, atoi(n3)))
+		{
+			re=1;
+		}
+		mg_printf_data(conn,"{\"result\": %d}",re);
+		return MG_TRUE;
+	}
 	return MG_FALSE; 
 }
 static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
