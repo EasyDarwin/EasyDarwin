@@ -22,7 +22,6 @@
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
