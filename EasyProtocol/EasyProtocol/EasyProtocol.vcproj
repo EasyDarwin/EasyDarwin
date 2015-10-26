@@ -48,7 +48,7 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/EasyDSSProtocol.pch"
+				PrecompiledHeaderFile=".\Release/EasyProtocol.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Release\SafeInternalStdLib.lib"
+				OutputFile=".\Release\EasyProtocol.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -119,7 +119,7 @@
 				AdditionalIncludeDirectories="../Include/;../jsoncpp/include/"
 				PreprocessorDefinitions="_LIB"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/EasyDSSProtocol.pch"
+				PrecompiledHeaderFile=".\Debug/EasyProtocol.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -142,8 +142,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Debug\EasyDSSProtocol.lib"
-				AdditionalLibraryDirectories="../libavsxmlutil/Debug"
+				OutputFile=".\Debug\EasyProtocol.lib"
+				AdditionalLibraryDirectories=""
 				SuppressStartupBanner="true"
 			/>
 			<Tool
