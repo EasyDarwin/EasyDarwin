@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../Include/"
+				AdditionalIncludeDirectories="../../Include/;../../jsoncpp/include/"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="1"
@@ -58,10 +58,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="json_vc90_libmtd.lib ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib $(NOINHERIT)"
 				OutputFile="..\..\..\Bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\Bin\;../../lib"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -114,7 +114,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../Include/"
+				AdditionalIncludeDirectories="../../Include/;../../jsoncpp/include/"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -131,10 +131,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="json_vc90_libmt.lib ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\..\..\Bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\Bin\;../../lib"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
