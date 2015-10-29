@@ -300,7 +300,7 @@ function getHLSList()
 						document.getElementById("divload").innerHTML= html;
 					}
 					else{
-							OutputHtml(parseInt(pagecount),1);
+							OutputHtml(parseInt(pagecount),1,json);
 					}
 				
                 },
