@@ -187,5 +187,47 @@
       <item path="src/lib_json/version.h.in" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
+    <conf name="hisiv100" type="3">
+      <toolsSet>
+        <compilerSet>hisiv100|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+          <output>${CND_CONF}/libjsoncpp.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="src/lib_json/json_reader.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="src/lib_json/json_tool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/lib_json/json_value.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="src/lib_json/json_valueiterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/lib_json/json_writer.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="src/lib_json/version.h.in" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
   </confs>
 </configurationDescriptor>

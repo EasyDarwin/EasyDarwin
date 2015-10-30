@@ -51,14 +51,15 @@
     <logicalFolder name="Server.tproj"
                    displayName="Server.tproj"
                    projectFiles="true">
-      <itemPath>Server.tproj/BaseRequestStream.cpp</itemPath>
-      <itemPath>Server.tproj/BaseRequestStream.h</itemPath>
-      <itemPath>Server.tproj/BaseResponseStream.cpp</itemPath>
-      <itemPath>Server.tproj/BaseResponseStream.h</itemPath>
-      <itemPath>Server.tproj/BaseSessionInterface.cpp</itemPath>
-      <itemPath>Server.tproj/BaseSessionInterface.h</itemPath>
       <itemPath>Server.tproj/GenerateXMLPrefs.cpp</itemPath>
       <itemPath>Server.tproj/GenerateXMLPrefs.h</itemPath>
+      <itemPath>Server.tproj/HTTPRequestStream.cpp</itemPath>
+      <itemPath>Server.tproj/HTTPRequestStream.h</itemPath>
+      <itemPath>Server.tproj/HTTPResponseStream.cpp</itemPath>
+      <itemPath>Server.tproj/HTTPResponseStream.h</itemPath>
+      <itemPath>Server.tproj/HTTPSession.cpp</itemPath>
+      <itemPath>Server.tproj/HTTPSession.h</itemPath>
+      <itemPath>Server.tproj/HTTPSessionInterface.cpp</itemPath>
       <itemPath>Server.tproj/QTSSCallbacks.cpp</itemPath>
       <itemPath>Server.tproj/QTSSCallbacks.h</itemPath>
       <itemPath>Server.tproj/QTSSDataConverter.cpp</itemPath>
@@ -90,9 +91,7 @@
       <itemPath>Server.tproj/RTSPProtocol.h</itemPath>
       <itemPath>Server.tproj/RunServer.cpp</itemPath>
       <itemPath>Server.tproj/RunServer.h</itemPath>
-      <itemPath>Server.tproj/ServiceSession.cpp</itemPath>
       <itemPath>Server.tproj/main.cpp</itemPath>
-      <itemPath>Server.tproj/servicesession.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles" displayName="头文件" projectFiles="true">
     </logicalFolder>
@@ -228,30 +227,29 @@
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/BaseRequestStream.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseRequestStream.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseResponseStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseResponseStream.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseSessionInterface.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseSessionInterface.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPRequestStream.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPRequestStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPResponseStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -324,11 +322,7 @@
       </item>
       <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/ServiceSession.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/servicesession.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -446,30 +440,29 @@
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/BaseRequestStream.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseRequestStream.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseResponseStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseResponseStream.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseSessionInterface.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseSessionInterface.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPRequestStream.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPRequestStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPResponseStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -542,11 +535,7 @@
       </item>
       <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/ServiceSession.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/servicesession.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="x64" type="1">
@@ -663,30 +652,29 @@
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/BaseRequestStream.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseRequestStream.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseResponseStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseResponseStream.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseSessionInterface.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="Server.tproj/BaseSessionInterface.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPRequestStream.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPRequestStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPResponseStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/HTTPSessionInterface.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -759,11 +747,7 @@
       </item>
       <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/ServiceSession.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/servicesession.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

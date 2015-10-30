@@ -46,10 +46,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLParser.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o \
-	${OBJECTDIR}/Server.tproj/BaseRequestStream.o \
-	${OBJECTDIR}/Server.tproj/BaseResponseStream.o \
-	${OBJECTDIR}/Server.tproj/BaseSessionInterface.o \
 	${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o \
+	${OBJECTDIR}/Server.tproj/HTTPRequestStream.o \
+	${OBJECTDIR}/Server.tproj/HTTPResponseStream.o \
+	${OBJECTDIR}/Server.tproj/HTTPSession.o \
+	${OBJECTDIR}/Server.tproj/HTTPSessionInterface.o \
 	${OBJECTDIR}/Server.tproj/QTSSCallbacks.o \
 	${OBJECTDIR}/Server.tproj/QTSSDataConverter.o \
 	${OBJECTDIR}/Server.tproj/QTSSDictionary.o \
@@ -65,7 +66,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Server.tproj/QTSServerPrefs.o \
 	${OBJECTDIR}/Server.tproj/RTSPProtocol.o \
 	${OBJECTDIR}/Server.tproj/RunServer.o \
-	${OBJECTDIR}/Server.tproj/ServiceSession.o \
 	${OBJECTDIR}/Server.tproj/main.o
 
 
@@ -148,25 +148,30 @@ ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o: PrefsSourceLib/XMLPrefsParser.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
 
-${OBJECTDIR}/Server.tproj/BaseRequestStream.o: Server.tproj/BaseRequestStream.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/BaseRequestStream.o Server.tproj/BaseRequestStream.cpp
-
-${OBJECTDIR}/Server.tproj/BaseResponseStream.o: Server.tproj/BaseResponseStream.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/BaseResponseStream.o Server.tproj/BaseResponseStream.cpp
-
-${OBJECTDIR}/Server.tproj/BaseSessionInterface.o: Server.tproj/BaseSessionInterface.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/BaseSessionInterface.o Server.tproj/BaseSessionInterface.cpp
-
 ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o: Server.tproj/GenerateXMLPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o Server.tproj/GenerateXMLPrefs.cpp
+
+${OBJECTDIR}/Server.tproj/HTTPRequestStream.o: Server.tproj/HTTPRequestStream.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Server.tproj
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPRequestStream.o Server.tproj/HTTPRequestStream.cpp
+
+${OBJECTDIR}/Server.tproj/HTTPResponseStream.o: Server.tproj/HTTPResponseStream.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Server.tproj
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPResponseStream.o Server.tproj/HTTPResponseStream.cpp
+
+${OBJECTDIR}/Server.tproj/HTTPSession.o: Server.tproj/HTTPSession.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Server.tproj
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPSession.o Server.tproj/HTTPSession.cpp
+
+${OBJECTDIR}/Server.tproj/HTTPSessionInterface.o: Server.tproj/HTTPSessionInterface.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Server.tproj
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPSessionInterface.o Server.tproj/HTTPSessionInterface.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSCallbacks.o: Server.tproj/QTSSCallbacks.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
@@ -242,11 +247,6 @@ ${OBJECTDIR}/Server.tproj/RunServer.o: Server.tproj/RunServer.cpp
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/RunServer.o Server.tproj/RunServer.cpp
-
-${OBJECTDIR}/Server.tproj/ServiceSession.o: Server.tproj/ServiceSession.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/ServiceSession.o Server.tproj/ServiceSession.cpp
 
 ${OBJECTDIR}/Server.tproj/main.o: Server.tproj/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
