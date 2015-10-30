@@ -89,3 +89,20 @@ var str_rtsp_buffersecs="ReflectBufferSecs"
 var str_rtsp_Output="ReflectHLSOutput"
 var str_rtsp_buffersecs_warn="The ReflectBufferSecs can not be empty!"
 var str_rtsp_buffersecs_warn1="The ReflectBufferSecs format is not correct!"
+
+var str_return="Return"
+var str_add="Add"
+var str_hls_live_add="Add HLS Live"
+
+
+var str_hls_list_name="Name"
+var str_hls_list_url="RTSP URL"
+var str_hls_list_timeout="Timeout"
+
+var str_hls_list_name_warn="The name can not be empty!"
+var str_hls_list_name_warn1="The name cannot be repeated"
+
+var str_hls_list_url_warn="The RTSP URL can not be empty!"
+var str_hls_list_timeout_warn="The timeout can not be empty!"
+var str_hls_list_timeout_warn1="The timeout format is not correct!"
+var str_confirm_delete="Confirm to delete the data?";

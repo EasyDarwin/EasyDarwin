@@ -87,3 +87,21 @@ var str_rtsp_buffersecs="转发缓冲时间"
 var str_rtsp_Output="是否同步输出"
 var str_rtsp_buffersecs_warn="转发缓冲时间不能为空!"
 var str_rtsp_buffersecs_warn1="转发缓冲时间格式不正确"
+
+
+var str_return="返回"
+var str_add="增加"
+var str_hls_live_add="增加HLS直播"
+
+
+var str_hls_list_name="名称"
+var str_hls_list_url="RTSP地址"
+var str_hls_list_timeout="超时时间"
+
+var str_hls_list_name_warn="名称不能为空"
+var str_hls_list_name_warn1="名称不能重复"
+
+var str_hls_list_url_warn="RTSP地址不能为空"
+var str_hls_list_timeout_warn="超时时间不能为空"
+var str_hls_list_timeout_warn1="超时时间格式不正确"
+var str_confirm_delete="确认删除数据吗？";
