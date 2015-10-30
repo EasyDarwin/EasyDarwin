@@ -62,7 +62,7 @@ function OutputHtml(PageCount,type,json){
 		var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th><th>Bitrate</th><th>Option</th></tr></thead><tbody>";
 		for(var i = BeginNO - 1;i < EndNO;i ++)
 		{
-			html+="<tr><td>"+i+"</td><td>"+json.EasyDarwin.Body.Sessions[i].name+"</td><td>"+json.EasyDarwin.Body.Sessions[i].source+"</td><td>"+json.EasyDarwin.Body.Sessions[i].url+"</td><td>"+json.EasyDarwin.Body.Sessions[i].Bitrate+"</td><td>Play</td></tr>"
+			html+="<tr><td>"+i+"</td><td>"+json.EasyDarwin.Body.Sessions[i].name+"</td><td>"+json.EasyDarwin.Body.Sessions[i].source+"</td><td>"+json.EasyDarwin.Body.Sessions[i].url+"</td><td>"+json.EasyDarwin.Body.Sessions[i].Bitrate+"</td><td><a href=\"play.html?name="+json.EasyDarwin.Body.Sessions[i].name+"\">Play</a> <a href=\"#\" onclick=\"deleteHLSList('"+json.EasyDarwin.Body.Sessions[i].name+"')\">Delete</a></td></tr>"
 		}
 		html+="</tbody></table></div>";
 		document.getElementById("divload").innerHTML= html;

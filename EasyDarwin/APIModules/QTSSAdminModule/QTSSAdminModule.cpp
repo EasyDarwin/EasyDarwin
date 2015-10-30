@@ -465,6 +465,18 @@ static int serve_request(struct mg_connection *conn)
 		mg_printf_data(conn,"{\"result\": %d}",re);
 		return MG_TRUE;
 	}
+	if(strcmp(conn->uri, "/api/StopHLS") == 0)
+	{
+		char n1[100],n2[100],n3[100];
+		int re=0;
+		mg_get_var(conn,"n1",n1,sizeof(n1));
+		if(EasyAdmin_StopHLSession(n1))
+		{
+			re=1;
+		}
+		mg_printf_data(conn,"{\"result\": %d}",re);
+		return MG_TRUE;
+	}
 	return MG_FALSE; 
 }
 static int ev_handler(struct mg_connection *conn, enum mg_event ev) {

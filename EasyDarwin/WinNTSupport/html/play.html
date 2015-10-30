@@ -14,15 +14,14 @@
 	<script src="js/metisMenu.min.js"></script>
 	<script src="js/custom.js"></script>
 	<script src="language.js" type="text/javascript"></script>
-	<script src="js/test.js"></script>
-	<script src="js/hlslisttable.js"></script>
 	<script src="js/navigation.js"></script>
 	<script src="js/ajaxhandle.js" ></script>
 	<script src="js/verify.js"></script>
-	 
-
+	  <script type="text/javascript" src="ckplayer/ckplayer.js" charset="utf-8"></script>
+	<!-- Graph JavaScript -->
+	
 </head>
-<body  onload="fLoad();getHLSList()">
+<body onload="fLoad();getpar()">
 <div id="wrapper">
      <!-- Navigation -->
 <script type="text/javascript">document.write(navigation);</script> 
@@ -35,21 +34,17 @@
 					
 					<!---主体部分-->
 					  <div class="m-content">
-					   <h3><script type="text/javascript">document.write(str_hls_live_list);</script></h3>
-
-										 <div class="tab-content">
+					   <h3><script type="text/javascript">document.write(str_hls_live);</script> </h3>
+					
+							 <div class="tab-content">
 											<div class="tab-pane active" id="horizontal-form">
-												<form class="form-horizontal">
-													
-													 <button class="btn-success btn"  onclick="return gotoAddHlsList()"><script type="text/javascript">document.write(str_add);</script></button>
-													    <div class="panel panel-warning" data-widget="{&quot;draggable&quot;: &quot;false&quot;}" data-widget-static="">
-														<div id="divload"></div>
-														 
-						                           </div>
-														<div  id="pagelist"></div>
-												</form>
+												
+													 <button class="btn-success btn"  onclick="return gotolist()"><script type="text/javascript">document.write(str_return);</script></button>
+													    
+													<div style="margin:5px; height: 600px; width: 1200px;" id="dvplay"></div>
+											
 											</div>
-										</div>
+										</div>			
 					  </div>
 					<!---/主体部分---->
 								
@@ -62,6 +57,5 @@
     <!-- /#wrapper -->
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-	
 </body>
 </html>

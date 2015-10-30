@@ -308,27 +308,65 @@ function getHLSList()
 				{	alert(textStatus);}
             });
 }
+function BHLSNameRepeat()
+{
+	var re=false;
+	$.ajax({
+                url: '/api/getHLSList',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: { },
+                success: function (json) {
+					var pagecount=json.EasyDarwin.Body.SessionCount;
+					for(var i = 0;i < pagecount;i ++)
+					{
+						if($('#txtname').val()==json.EasyDarwin.Body.Sessions[i].name)
+						{
+							re=true;
+							
+							break;
+						}
+					}
+					
+                },
+				error:function(msg)
+				{	}
+            });
+	
+	return re;
+}
 function addHLSList()
 {
 	
 	if($('#txtname').val()==null||$('#txtname').val()=='')
 	{
-		alert("名称不能为空");
+		alert(str_hls_list_name_warn);
 		return false;
 	}
 	if($('#txturl').val()==null||$('#txturl').val()=='')
 	{
-		alert("URL不能为空");
+		alert(str_hls_list_url_warn);
 		return false;
 	}
 	if($('#txttimeout').val()==null||$('#txttimeout').val()=='')
 	{
-		alert("超时时间不能为空");
+		alert(str_hls_list_timeout_warn);
 		return false;
 	}
-	//if(!istime($('#txtbuffersecs').val(),str_rtsp_buffersecs_warn1))
-		//return false;
-	$.ajax({
+	if(!istime($('#txttimeout').val(),str_hls_list_timeout_warn1))
+		return false;
+	
+	if(BHLSNameRepeat()==true)
+	{
+		
+		alert(str_hls_list_name_warn1);
+		return false;
+	}
+	else{
+		$.ajax({
                 url: '/api/addHLSList',
 				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
                 method: 'POST',
@@ -340,12 +378,12 @@ function addHLSList()
 					
 					 if(json.result=="1")
 					 {
-						 alert("操作成功");
+						 alert(str_warn_s);
 						 window.location.href='hlslist.html';
 						 
 					 }
 					 else{
-						 alert("操作失败");
+						 alert(str_warn_f);
 						 window.location.reload();
 					 }
 					 
@@ -354,6 +392,96 @@ function addHLSList()
 				{	alert("error");}
             });
 			return false;
+	}
+	
 	
 }
 //++++++++++++++++++++++++++++++++++++++++++++++
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+
+function load(seturl) {
+           
+            var url = seturl;
+             var snap = '';
+             var flashvars = {
+                 f: 'm3u8.swf',
+                 a: url,
+                 c: 0,
+                 s: 4,
+                 lv: 0,
+                 p:1
+               
+             };
+             var params = { bgcolor: '#FFF', allowFullScreen: true, allowScriptAccess: 'always' }; //这里定义播放器的其它参数如背景色（跟flashvars中的b不同），是否支持全屏，是否支持交互
+             var video = [url , url , url ];
+             
+             CKobject.embed('ckplayer/ckplayer.swf', 'dvplay', 'ckplayer_dvplay', '100%', '100%', false, flashvars, video, params);
+        }
+		
+		function getpar()
+		{
+			var name=GetQueryString("name");
+			var url=null;
+			$.ajax({
+                url: '/api/getHLSList',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: { },
+                success: function (json) {
+					var pagecount=json.EasyDarwin.Body.SessionCount;
+					for(var i = 0;i < pagecount;i ++)
+					{
+						if(name==json.EasyDarwin.Body.Sessions[i].name)
+						{
+							url=json.EasyDarwin.Body.Sessions[i].url;
+							
+							break;
+						}
+					}
+					
+                },
+				error:function(msg)
+				{	}
+            });
+			load(url);
+		}
+//++++++++++++++++++++++++++++
+function deleteHLSList(name)
+{
+if(confirm(str_confirm_delete))
+ {
+ $.ajax({
+                url: '/api/StopHLS',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: {n1: name},
+                success: function (json) {
+					alert(str_warn_s);
+					 window.location.reload();
+					 
+                },
+				error:function(msg)
+				{	alert("error");}
+            });
+ }
+
+		
+			
+}
+function gotolist()
+{	
+			
+	window.location.href='hlslist.html';
+	return false;
+}

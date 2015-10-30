@@ -35,13 +35,13 @@
 					
 					<!---主体部分-->
 					  <div class="m-content">
-					   <h3>增加HLS直播</h3>
+					   <h3><script type="text/javascript">document.write(str_hls_live_add);</script> </h3>
 
 										 <div class="tab-content">
 											<div class="tab-pane active" id="horizontal-form">
 												<form class="form-horizontal">
 													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label">Name</script></label>
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_list_name);</script></label>
 														<div class="col-sm-4">
 															<input type="text" class="form-control1" id="txtname"  >
 														</div>
@@ -50,7 +50,7 @@
 														</div>
 													</div>
 													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label">RTSP URL</script></label>
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_list_url);</script></label>
 														<div class="col-sm-4">
 															<input type="text" class="form-control1" id="txturl"  >
 														</div>
@@ -59,7 +59,7 @@
 														</div>
 													</div>
 													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label">超时时间</script></label>
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_list_timeout);</script></label>
 														<div class="col-sm-4">
 															<input type="text" class="form-control1" id="txttimeout"  >
 														</div>
@@ -71,7 +71,7 @@
 														<div class="row">
 														<div class="col-sm-8 col-sm-offset-2">
 														<button class="btn-success btn" onclick="return addHLSList()"><script type="text/javascript">document.write(str_save);</script></button>
-														<button class="btn btn-default" onclick="return gotoHlsList()">返回</button>
+														<button class="btn btn-default" onclick="return gotoHlsList()"><script type="text/javascript">document.write(str_return);</script></button>
 														</div>
 														</div>
 													</div>
