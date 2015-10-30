@@ -38,6 +38,14 @@ CND_ARTIFACT_PATH_x64=x64/libCommonUtilitiesLib.a
 CND_PACKAGE_DIR_x64=dist/x64/GNU-Linux-x86/package
 CND_PACKAGE_NAME_x64=CommonUtilitiesLib.tar
 CND_PACKAGE_PATH_x64=dist/x64/GNU-Linux-x86/package/CommonUtilitiesLib.tar
+# hisiv100 configuration
+CND_PLATFORM_hisiv100=hisiv100-Linux-x86
+CND_ARTIFACT_DIR_hisiv100=hisiv100
+CND_ARTIFACT_NAME_hisiv100=libCommonUtilitiesLib.a
+CND_ARTIFACT_PATH_hisiv100=hisiv100/libCommonUtilitiesLib.a
+CND_PACKAGE_DIR_hisiv100=dist/hisiv100/hisiv100-Linux-x86/package
+CND_PACKAGE_NAME_hisiv100=CommonUtilitiesLib.tar
+CND_PACKAGE_PATH_hisiv100=dist/hisiv100/hisiv100-Linux-x86/package/CommonUtilitiesLib.tar
 #
 # include compiler specific variables
 #
