@@ -1491,7 +1491,7 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
 
 Bool16 EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword)
 {
-	qtss_printf("User:%s Password:%s Authenticated!\n");
+	qtss_printf("User:%s Password:%s Authenticated!\n", inUserName, inPassword);
 	return true;
 }
 
