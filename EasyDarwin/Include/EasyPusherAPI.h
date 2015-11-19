@@ -15,6 +15,8 @@ typedef struct __EASY_AV_Frame
     Easy_U32    u32AVFrameLen;		/* 帧的长度 */
     Easy_U32    u32VFrameType;		/* 视频的类型，I帧或P帧 */
     Easy_U8     *pBuffer;			/* 数据 */
+	Easy_U32	u32TimestampSec;	/* 时间戳(秒)*/
+	Easy_U32	u32TimestampUsec;	/* 时间戳(微秒) */
 }EASY_AV_Frame;
 
 /* 推送事件类型定义 */
@@ -46,8 +48,8 @@ extern "C"
     /* 设置流传输事件回调 userptr传输自定义对象指针*/
     Easy_API Easy_U32 Easy_APICALL EasyPusher_SetEventCallback(Easy_Pusher_Handle handle,  EasyPusher_Callback callback, int id, void *userptr);
 
-	/* 开始流传输 serverAddr:流媒体服务器地址、port:流媒体端口、streamName:流名称<xxx.sdp>、username/password:推送携带的用户名密码、pstruStreamInfo:推送的媒体定义、bufferKSize:以k为单位的缓冲区大小<512~2048之间,默认512> */
-	Easy_API Easy_U32 Easy_APICALL EasyPusher_StartStream(Easy_Pusher_Handle handle, char* serverAddr, Easy_U16 port, char* streamName, char *username, char *password, EASY_MEDIA_INFO_T*  pstruStreamInfo, Easy_U32 bufferKSize);
+	/* 开始流传输 serverAddr:流媒体服务器地址、port:流媒体端口、streamName:流名称<xxx.sdp>、username/password:推送携带的用户名密码、pstruStreamInfo:推送的媒体定义、bufferKSize:以k为单位的缓冲区大小<512~2048之间,默认512> bool createlogfile:创建日志文件*/
+	Easy_API Easy_U32 Easy_APICALL EasyPusher_StartStream(Easy_Pusher_Handle handle, char* serverAddr, Easy_U16 port, char* streamName, char *username, char *password, EASY_MEDIA_INFO_T*  pstruStreamInfo, Easy_U32 bufferKSize, Easy_Bool createlogfile );
 
 	/* 停止流传输 */
 	Easy_API Easy_U32 Easy_APICALL EasyPusher_StopStream(Easy_Pusher_Handle handle);
