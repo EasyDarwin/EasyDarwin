@@ -24,6 +24,7 @@ typedef unsigned char           Easy_U8;
 typedef unsigned char           Easy_UChar;
 typedef unsigned short          Easy_U16;
 typedef unsigned int            Easy_U32;
+typedef unsigned char			Easy_Bool;
 
 enum
 {
@@ -56,28 +57,28 @@ enum
 typedef int Easy_Error;
 
 /* 视频编码 */
-#define EASY_SDK_VIDEO_CODEC_H264	0x01000001		/* H264  */
-#define	EASY_SDK_VIDEO_CODEC_MJPEG	0x01000002		/* MJPEG */
-#define	EASY_SDK_VIDEO_CODEC_MPEG4	0x01000004		/* MPEG4 */
+#define EASY_SDK_VIDEO_CODEC_H264	0x1C		/* H264  */
+#define	EASY_SDK_VIDEO_CODEC_MJPEG	0x08		/* MJPEG */
+#define	EASY_SDK_VIDEO_CODEC_MPEG4	0x0D		/* MPEG4 */
 
 /* 音频编码 */
-#define EASY_SDK_AUDIO_CODEC_AAC	0x01000011		/* AAC */
-#define EASY_SDK_AUDIO_CODEC_G711A	0x01000012		/* G711 alaw*/
-#define EASY_SDK_AUDIO_CODEC_G711U	0x01000014		/* G711 ulaw*/
-#define EASY_SDK_AUDIO_CODEC_G726	0x01000018		/* G726 */
+#define EASY_SDK_AUDIO_CODEC_AAC	0x15002		/* AAC */
+#define EASY_SDK_AUDIO_CODEC_G711U	0x10006		/* G711 ulaw*/
+#define EASY_SDK_AUDIO_CODEC_G711A	0x10007		/* G711 alaw*/
+
 
 /* 音视频帧标识 */
-#define EASY_SDK_VIDEO_FRAME_FLAG	0x02000001		/* 视频帧标志 */
-#define EASY_SDK_AUDIO_FRAME_FLAG	0x02000002		/* 音频帧标志 */
-#define EASY_SDK_EVENT_FRAME_FLAG	0x02000004		/* 事件帧标志 */
-#define EASY_SDK_RTP_FRAME_FLAG		0x02000008		/* RTP帧标志 */
-#define EASY_SDK_SDP_FRAME_FLAG		0x02000010		/* SDP帧标志 */
-#define EASY_SDK_MEDIA_INFO_FLAG	0x02000012		/* 媒体类型标志*/
+#define EASY_SDK_VIDEO_FRAME_FLAG	0x00000001		/* 视频帧标志 */
+#define EASY_SDK_AUDIO_FRAME_FLAG	0x00000002		/* 音频帧标志 */
+#define EASY_SDK_EVENT_FRAME_FLAG	0x00000004		/* 事件帧标志 */
+#define EASY_SDK_RTP_FRAME_FLAG		0x00000008		/* RTP帧标志 */
+#define EASY_SDK_SDP_FRAME_FLAG		0x00000010		/* SDP帧标志 */
+#define EASY_SDK_MEDIA_INFO_FLAG	0x00000020		/* 媒体类型标志*/
 
 /* 视频关键字标识 */
-#define EASY_SDK_VIDEO_FRAME_I		0x03000001		/* I帧 */
-#define EASY_SDK_VIDEO_FRAME_P		0x03000002		/* P帧 */
-#define EASY_SDK_VIDEO_FRAME_B		0x03000004		/* B帧 */
+#define EASY_SDK_VIDEO_FRAME_I		0x01		/* I帧 */
+#define EASY_SDK_VIDEO_FRAME_P		0x02		/* P帧 */
+#define EASY_SDK_VIDEO_FRAME_B		0x03		/* B帧 */
 
 /* 连接类型 */
 typedef enum __RTP_CONNECT_TYPE
