@@ -55,7 +55,6 @@ static QTSS_AttributeID         sCantBindReflectorSocketErr = qtssIllegalAttrID;
 static QTSS_AttributeID         sCantJoinMulticastGroupErr  = qtssIllegalAttrID;
 
 // PREFS
-
 static UInt32                   sDefaultOverBufferInSec             = 10; 
 static UInt32                   sDefaultBucketDelayInMsec           = 73;
 static Bool16                   sDefaultUsePacketReceiveTime        = false; 
