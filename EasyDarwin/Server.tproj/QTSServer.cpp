@@ -370,7 +370,13 @@ Bool16 QTSServer::SetDefaultIPAddr()
     return true;
 }               
 
-
+/*
+*
+*	DESCRIBE:	Add HTTP Port Listening,Total Port Listening=RTSP Port listening + HTTP Port Listening
+*	Author:		Babosa@easydarwin.org
+*	Date:		2015/11/22
+*
+*/
 Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride)
 {
     struct PortTracking
@@ -393,6 +399,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
     UInt32* theIPAddrs = this->GetRTSPIPAddrs(inPrefs, &theNumAddrs);   
     UInt32 index = 0;
     
+	// Stat Total Num of RTSP Port
     if ( inPortOverride != 0)
     {
         theTotalRTSPPortTrackers = theNumAddrs; // one port tracking struct for each IP addr
@@ -426,7 +433,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
 		delete [] thePorts;
     }
 
-	//HTTP¼àÌý¶Ë¿Ú
+	// Stat Total Num of HTTP Port
 	{
 		theTotalHTTPPortTrackers = theNumAddrs;
 		theHTTPPortTrackers = NEW PortTracking[theTotalHTTPPortTrackers];
@@ -449,6 +456,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
     TCPListenerSocket** newListenerArray = NEW TCPListenerSocket*[theTotalRTSPPortTrackers + theTotalHTTPPortTrackers];
     UInt32 curPortIndex = 0;
     
+	// RTSPPortTrackers check
     for (UInt32 count = 0; count < theTotalRTSPPortTrackers; count++)
     {
         for (UInt32 count2 = 0; count2 < fNumListeners; count2++)
@@ -464,22 +472,23 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
         }
     }
 
-    for (UInt32 count = 0; count < theTotalHTTPPortTrackers; count++)
-    {
-        for (UInt32 count2 = 0; count2 < fNumListeners; count2++)
-        {
-            if ((fListeners[count2]->GetLocalPort() == theHTTPPortTrackers[count].fPort) &&
-                (fListeners[count2]->GetLocalAddr() == theHTTPPortTrackers[count].fIPAddr))
-            {
-                theHTTPPortTrackers[count].fNeedsCreating = false;
-                newListenerArray[curPortIndex++] = fListeners[count2];
-                Assert(curPortIndex <= theTotalHTTPPortTrackers);
-                break;
-            }
-        }
-    }
+	// HTTPPortTrackers check
+	for (UInt32 count = 0; count < theTotalHTTPPortTrackers; count++)
+	{
+		for (UInt32 count2 = 0; count2 < fNumListeners; count2++)
+		{
+			if ((fListeners[count2]->GetLocalPort() == theHTTPPortTrackers[count].fPort) &&
+				(fListeners[count2]->GetLocalAddr() == theHTTPPortTrackers[count].fIPAddr))
+			{
+				theHTTPPortTrackers[count].fNeedsCreating = false;
+				newListenerArray[curPortIndex++] = fListeners[count2];
+				Assert(curPortIndex <= theTotalRTSPPortTrackers+theTotalHTTPPortTrackers);
+				break;
+			}
+		}
+	}
 
-    // Create any new listeners we need
+    // Create any new <RTSP> listeners we need
     for (UInt32 count3 = 0; count3 < theTotalRTSPPortTrackers; count3++)
     {
         if (theRTSPPortTrackers[count3].fNeedsCreating)
@@ -512,7 +521,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
         }
     }
     
-    // Create any new listeners we need
+    // Create any new <HTTP> listeners we need
     for (UInt32 count3 = 0; count3 < theTotalHTTPPortTrackers; count3++)
     {
         if (theHTTPPortTrackers[count3].fNeedsCreating)
