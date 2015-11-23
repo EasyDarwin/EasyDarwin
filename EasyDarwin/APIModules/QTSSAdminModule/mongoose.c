@@ -1063,7 +1063,8 @@ static void ns_handle_udp(struct ns_connection *ls) {
 }
 
 static void ns_add_to_set(sock_t sock, fd_set *set, sock_t *max_fd) {
-  if ( (sock != INVALID_SOCKET) && (sock < FD_SETSIZE) ) {
+  //if ( (sock != INVALID_SOCKET) && (sock < FD_SETSIZE) ) {
+  if ( sock != INVALID_SOCKET ) {
     FD_SET(sock, set);
     if (*max_fd == INVALID_SOCKET || sock > *max_fd) {
       *max_fd = sock;
