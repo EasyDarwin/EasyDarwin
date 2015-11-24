@@ -213,9 +213,9 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
         OSMemory::SetMemoryError(ENOMEM);
     }
 
-    // SWITCH TO RUN USER AND GROUP ID
-    if (!sServer->SwitchPersonality())
-        theServerState = qtssFatalErrorState;
+    //// SWITCH TO RUN USER AND GROUP ID
+    //if (!sServer->SwitchPersonality())
+    //    theServerState = qtssFatalErrorState;
 
     // Tell the caller whether the server started up or not
     return theServerState;
