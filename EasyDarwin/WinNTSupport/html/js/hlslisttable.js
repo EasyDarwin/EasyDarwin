@@ -1,6 +1,7 @@
-function GotoPage(num,PageCount,type,json){ //跳转页
+var gJson;
+function GotoPage(num,PageCount,type){ //跳转页
 	Page = num;
-	OutputHtml(PageCount,type,json);
+	OutputHtml(PageCount,type,gJson);
 } 
 
 var PageSize = 5; //每页个数
@@ -11,6 +12,8 @@ var Page = 1; //当前页码
 //type=1时表示hls直播列表页面
 //++++++++++++++++++++
 function OutputHtml(PageCount,type,json){
+
+	gJson=json;
 	var Pages = Math.floor((PageCount - 1) / PageSize) + 1; //获取分页总数
 	if(Page < 1)Page = 1;  //如果当前页码小于1
 	if(Page > Pages)Page = Pages; //如果当前页码大于总数
@@ -62,7 +65,7 @@ function OutputHtml(PageCount,type,json){
 		var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th><th>Bitrate(KBps)</th><th>Option</th></tr></thead><tbody>";
 		for(var i = BeginNO - 1;i < EndNO;i ++)
 		{
-			html+="<tr><td>"+i+"</td><td>"+json.EasyDarwin.Body.Sessions[i].name+"</td><td>"+json.EasyDarwin.Body.Sessions[i].source+"</td><td>"+json.EasyDarwin.Body.Sessions[i].url+"</td><td>"+json.EasyDarwin.Body.Sessions[i].Bitrate+"</td><td><a href=\"play.html?name="+json.EasyDarwin.Body.Sessions[i].name+"\">Play</a> <a href=\"#\" onclick=\"deleteHLSList('"+json.EasyDarwin.Body.Sessions[i].name+"')\">Delete</a></td></tr>"
+			html+="<tr><td>"+i+"</td><td>"+gJson.EasyDarwin.Body.Sessions[i].name+"</td><td>"+gJson.EasyDarwin.Body.Sessions[i].source+"</td><td>"+gJson.EasyDarwin.Body.Sessions[i].url+"</td><td>"+gJson.EasyDarwin.Body.Sessions[i].Bitrate+"</td><td><a href=\"play.html?name="+gJson.EasyDarwin.Body.Sessions[i].name+"\">Play</a> <a href=\"#\" onclick=\"deleteHLSList('"+gJson.EasyDarwin.Body.Sessions[i].name+"')\">Delete</a></td></tr>"
 		}
 		html+="</tbody></table></div>";
 		document.getElementById("divload").innerHTML= html;

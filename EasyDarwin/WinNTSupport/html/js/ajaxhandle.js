@@ -292,10 +292,11 @@ function getHLSList()
                 data: { },
                 success: function (json) {
 					var pagecount=json.EasyDarwin.Body.SessionCount;
+					//json=siteList;
 					//var pagecount=siteList.EasyDarwin.Body.SessionCount;
 					if(pagecount=="0")
 					{
-						var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th><th>Bitrate</th><th>Option</th></tr></thead><tbody>";
+						var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th><th>Bitrate(KBps)</th><th>Option</th></tr></thead><tbody>";
 						html+="</tbody></table></div>";
 						document.getElementById("divload").innerHTML= html;
 					}
