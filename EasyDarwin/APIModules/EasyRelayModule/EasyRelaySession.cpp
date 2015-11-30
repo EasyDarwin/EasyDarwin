@@ -42,9 +42,10 @@ int __EasyPusher_Callback(int _id, EASY_PUSH_STATE_T _state, EASY_AV_Frame *_fra
     return 0;
 }
 
-EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName)
+EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName, const char *inServerAddr)
 :   fStreamName(NULL),
 	fURL(NULL),
+	fPushServerAddr(NULL),
 	fRTSPClientHandle(NULL),
 	fPusherHandle(NULL)
 {
@@ -70,6 +71,13 @@ EasyRelaySession::EasyRelaySession(char* inURL, ClientType inClientType, const c
 		fRef.Set(fStreamName, this);
     }
 
+	if ( (NULL != inServerAddr) && ((int)strlen(inServerAddr)>0))
+	{
+		fPushServerAddr = NEW char[::strlen(inServerAddr) + 1];
+		::memset(fPushServerAddr, 0x00, strlen(inServerAddr) + 1);
+		::memcpy(fPushServerAddr, inServerAddr, strlen(inServerAddr));
+	}
+
 	qtss_printf("\nNew Connection %s:%s\n",fStreamName.Ptr,fURL);
 }
 
@@ -79,6 +87,7 @@ EasyRelaySession::~EasyRelaySession()
 
 	this->RelaySessionRelease();
 
+	delete []fPushServerAddr;
 	delete [] fStreamName.Ptr;
 	delete [] fURL;
 
@@ -175,7 +184,7 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 		char sdpName[QTSS_MAX_URL_LENGTH] = { 0 };
 		sprintf(sdpName, "%s.sdp", fStreamName.Ptr);
 
-		EasyPusher_StartStream(fPusherHandle, "127.0.0.1", thePort, sdpName, "", "", &mediainfo, 512, false);
+		EasyPusher_StartStream(fPusherHandle, NULL!=fPushServerAddr?fPushServerAddr:"127.0.0.1", thePort, sdpName, "", "", &mediainfo, 512, false);
 	}
 
 	return QTSS_NoErr;

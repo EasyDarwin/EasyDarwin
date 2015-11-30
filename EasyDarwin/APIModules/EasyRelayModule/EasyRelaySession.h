@@ -37,7 +37,7 @@ class EasyRelaySession : public Task
         };
         typedef UInt32 ClientType;
     
-        EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName);
+        EasyRelaySession(char* inURL, ClientType inClientType, const char* streamName, const char *serverAddr);
 
         virtual ~EasyRelaySession();
 
@@ -55,6 +55,7 @@ class EasyRelaySession : public Task
 		StrPtrLen		fStreamName;
 		char*			fURL;
 		OSMutex			fMutex;
+		char			*fPushServerAddr;
 
 		//RTSPClient Handle
 		Easy_RTSP_Handle	fRTSPClientHandle;
