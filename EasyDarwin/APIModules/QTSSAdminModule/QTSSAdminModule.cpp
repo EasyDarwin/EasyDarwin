@@ -58,14 +58,15 @@
 #include "OSRef.h"
 #include "AdminElementNode.h"
 #include "base64.h"
-#include "OSMemory.h"
+
 #include "md5.h"
 #include "md5digest.h"
 #include "OS.h"
-
+//#include "Markup.h"
 #include "mongoose.h"
 #include "frozen.h"
-
+//#include "Markup.h" 
+#include "OSMemory.h"
 #include "QTSServerInterface.h"
 
 #if __MacOSX__
@@ -267,6 +268,10 @@ static	SInt64	EasyAdmin_GetServiceRunTime();
 	//---------------------------HLS列表S---------------------------
 	//新增一路HLS直播
 	static	bool	EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout);
+	//added by guoyunkai 
+	static  bool    EasyAdmin_SaveHlsSession(char* inSessionName);
+	static  bool    EasyAdmin_ReadHlsSession();
+	//end----------
 	//结束一路HLS直播
 	static	bool	EasyAdmin_StopHLSession(char* inSessionName);
 	//获取HLS直播列表(json)
@@ -449,6 +454,7 @@ static int serve_request(struct mg_connection *conn)
 	{
 		char* sessionsJSON = EasyAdmin_GetHLSessions();
 		mg_printf_data(conn,sessionsJSON);
+		//EasyAdmin_SaveHlsSession(sessionsJSON);
 		return MG_TRUE;
 	}
 	if(strcmp(conn->uri, "/api/addHLSList") == 0)
@@ -461,6 +467,8 @@ static int serve_request(struct mg_connection *conn)
 		if(EasyAdmin_StartHLSession(n1, n2, atoi(n3)))
 		{
 			re=1;
+			char* sessionsJSON = EasyAdmin_GetHLSessions();
+			EasyAdmin_SaveHlsSession(sessionsJSON);
 		}
 		mg_printf_data(conn,"{\"result\": %d}",re);
 		return MG_TRUE;
@@ -473,6 +481,8 @@ static int serve_request(struct mg_connection *conn)
 		if(EasyAdmin_StopHLSession(n1))
 		{
 			re=1;
+			char* sessionsJSON = EasyAdmin_GetHLSessions();
+			EasyAdmin_SaveHlsSession(sessionsJSON);
 		}
 		mg_printf_data(conn,"{\"result\": %d}",re);
 		return MG_TRUE;
@@ -867,11 +877,15 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sReflectorPrefs = QTSSModuleUtils::GetModulePrefsObject(QTSSModuleUtils::GetModuleObjectByName("QTSSReflectorModule"));
 	sHLSModulePrefs = QTSSModuleUtils::GetModulePrefsObject(QTSSModuleUtils::GetModuleObjectByName("EasyHLSModule"));
 
+
     sAdminPrefs = QTSSModuleUtils::GetModulePrefsObject(sModule);
     sServerPrefs = inParams->inPrefs;
 
 	RereadPrefs();
     
+	//added by guoyunkai 
+	EasyAdmin_ReadHlsSession();
+	//end---------------------------------------
 	//create Mongoose thread,start
 	sMongooseThread = NEW mongooseThread();
 	sMongooseThread->Start();
@@ -1580,6 +1594,7 @@ UInt16 EasyAdmin_GetMongoosePort()
 void EasyAdmin_SetMongoosePort(UInt16 port)
 {
 	QTSSModuleUtils::CreateAttribute(sAdminPrefs, "http_port", qtssAttrDataTypeUInt16, &port, sizeof(UInt16));
+	//sHttpPort = port;
 }
 
 SInt64 EasyAdmin_GetServiceRunTime()
@@ -1622,6 +1637,7 @@ char* EasyAdmin_GetHlsHttpRoot()
 void EasyAdmin_SetHlsHttpRoot(char* httpRoot)
 {
 	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "HTTP_ROOT_DIR", qtssAttrDataTypeCharArray, httpRoot, strlen(httpRoot));
+	//hlsHTTPRoot = httpRoot;
 }
 
 UInt32 EasyAdmin_GetHlsTsDuration()
@@ -1673,4 +1689,103 @@ bool EasyAdmin_StopHLSession(char* inSessionName)
 char* EasyAdmin_GetHLSessions()
 {
 	return (char*)Easy_GetHLSessions();
+}
+
+bool    EasyAdmin_SaveHlsSession(char* inSessionName)
+{
+	
+	//CMarkup xmlWrite;
+	//xmlWrite.ResetMainPos();
+	//xmlWrite.AddElem("HLS_LST");
+	//xmlWrite.IntoElem();
+
+	XMLParser *xmlParser = new XMLParser("./hlsLst.xml");
+	XMLTag* root = NEW XMLTag("HLS_LST");
+	xmlParser->SetRootTag(root);
+
+	json_token * pJson = parse_json2(inSessionName, strlen(inSessionName));
+	pJson = find_json_token(pJson,"EasyDarwin");
+	pJson = find_json_token(pJson,"Body");
+	pJson = find_json_token(pJson,"Sessions");
+	if(pJson)
+	{
+		int iIndex = 0;
+		json_token * pname = NULL;
+		json_token * psource = NULL;
+		json_token * purl  = NULL;
+		char strbuf[200];
+		//pJson = find_json_token(pJson,"[]");
+		while(pJson)
+		{	
+			sprintf(strbuf,"[%d]",iIndex++);
+			json_token * pNodeJson = find_json_token(pJson,strbuf);
+			
+			if(pNodeJson)
+			{
+				 pname = find_json_token(pNodeJson,"name");
+				 psource = find_json_token(pNodeJson,"source");
+				 purl = find_json_token(pNodeJson,"url");
+
+				 XMLTag* node = NEW XMLTag("hls");
+				 //xmlWrite.AddElem("hls");
+				 
+				 json_emit_unquoted_str(strbuf,200,pname->ptr,pname->len);
+				 node->AddAttribute("name",strbuf);
+				 //xmlWrite.AddAttrib("name",strbuf);
+
+				json_emit_unquoted_str(strbuf,200,psource->ptr,psource->len);
+				 //xmlWrite.AddAttrib("source",strbuf);
+				node->AddAttribute("source",strbuf);
+
+				json_emit_unquoted_str(strbuf,200,purl->ptr,purl->len);
+				 //xmlWrite.AddAttrib("url",strbuf);
+				node->AddAttribute("url",strbuf);
+				root->AddEmbeddedTag(node);
+	
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	//xmlWrite.Save("hlsLst.xml");
+	
+
+	 char theBuffer[8192];
+    ResizeableStringFormatter formatter(theBuffer, 8192);
+
+
+    FILE* theFile = ::fopen("./hlsLst.xml", "w");
+    if (theFile == NULL)
+        return false; 
+	root->FormatData(&formatter, 0);
+    formatter.PutTerminator();
+    qtss_fprintf(theFile, "%s", formatter.GetBufPtr());
+    ::fclose(theFile);
+
+	delete xmlParser;
+	//xmlParser->WriteToFile("hlsLst.xml");
+
+	return true;
+}
+bool   EasyAdmin_ReadHlsSession()
+{
+	XMLParser *xmlParser = new XMLParser("hlsLst.xml");
+	//XMLTag* head = NEW XMLTag("HLS_LST");
+	xmlParser->ParseFile();
+	XMLTag* Root = xmlParser->GetRootTag();
+	if(Root && strcmp(Root->GetTagName(),"HLS_LST") == 0)
+	{
+		for(int i = 0; i< Root->GetNumEmbeddedTags();i++)
+		{
+			XMLTag * hls		=	Root->GetEmbeddedTag(i);
+			char* strname		=	hls->GetAttributeValue("name");
+			char* strsource		=	hls->GetAttributeValue("source");
+			char* strurl		=	hls->GetAttributeValue("url");
+			EasyAdmin_StartHLSession((char*)strname,strsource,0);
+		}
+	}
+	delete xmlParser;
+	return true;
 }
