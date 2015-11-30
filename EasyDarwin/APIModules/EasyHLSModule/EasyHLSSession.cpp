@@ -35,8 +35,6 @@ UInt32                          EasyHLSSession::sTargetDuration		= 4;
 UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
 char*							EasyHLSSession::sHTTPRootDir		= NULL;
 
-FILE* fAAC;
-
 void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 {
 	delete [] sHTTPRootDir;
@@ -100,7 +98,6 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 	fSourceURL[0] = '\0';
 
 	this->Signal(Task::kStartEvent);
-	fAAC = fopen("./aac.aac","wb");
 }
 
 
@@ -194,9 +191,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 		printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
 
 		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC)
-		{
-			::fwrite(pbuf, 1, frameinfo->length, fAAC);
-			
+		{	
 			EasyHLS_AudioMux(fHLSHandle, (unsigned char*)pbuf, frameinfo->length, llPTS*90, llPTS*90);
 		}
 	}
