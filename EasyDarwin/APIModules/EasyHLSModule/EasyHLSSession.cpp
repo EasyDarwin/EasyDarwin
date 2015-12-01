@@ -171,6 +171,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 		//printf("Get %s Video \tLen:%d \ttm:%u.%u \t%u\n",frameinfo->type==EASY_SDK_VIDEO_FRAME_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
 
 		unsigned int uiFrameType = 0;
+		printf("Get Video \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
 		if (frameinfo->type == EASY_SDK_VIDEO_FRAME_I)
 		{
 			uiFrameType = TS_TYPE_PES_VIDEO_I_FRAME;
