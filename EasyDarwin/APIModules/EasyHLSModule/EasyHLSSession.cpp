@@ -73,10 +73,11 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 	fHLSHandle(NULL),
 	tsTimeStampMSsec(0),
 	fPlayTime(0),
+	fSessionTimeoutTime(0),
+	fBitrateStat0Times(0),
     fTotalPlayTime(0),
 	fLastStatPlayTime(0),
 	fLastStatBitrate(0),
-	fBitrateStat0Times(0),
 	fNumPacketsReceived(0),
 	fLastNumPacketsReceived(0),
 	fNumBytesReceived(0),
@@ -143,14 +144,26 @@ SInt64 EasyHLSSession::Run()
 
 		if(durationTime)
 		{
-			fLastStatBitrate = (bytesReceived*1000)/(durationTime);
+			fLastStatBitrate = ((bytesReceived*1000)/(durationTime))/(1024*8);
+			
 			if(fLastStatBitrate)
 				fBitrateStat0Times = 0;
 			else
 				fBitrateStat0Times++;
 
-			if(fBitrateStat0Times > 300)
-				return -1;
+			if(fBitrateStat0Times > 15)
+			{
+				//ÊÍ·Åsink
+				if(fHLSHandle)
+				{
+					EasyHLS_Session_Release(fHLSHandle);
+					fHLSHandle = NULL;
+					fHLSURL[0] = '\0';
+ 				}
+				
+				HLSSessionStart(fSourceURL, fSessionTimeoutTime);
+				fBitrateStat0Times = 0;
+			}
 		}
 
 		fLastNumBytesReceived = fNumBytesReceived;
@@ -175,7 +188,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	{
 		unsigned long long llPTS = (frameinfo->timestamp_sec%1000000)*1000 + frameinfo->timestamp_usec/1000;	
 
-		printf("Get %s Video \tLen:%d \ttm:%u.%u \t%u\n",frameinfo->type==EASY_SDK_VIDEO_FRAME_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
+		//printf("Get %s Video \tLen:%d \ttm:%u.%u \t%u\n",frameinfo->type==EASY_SDK_VIDEO_FRAME_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
 
 		unsigned int uiFrameType = 0;
 		if (frameinfo->type == EASY_SDK_VIDEO_FRAME_I)
@@ -201,7 +214,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 		printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
 
 		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC)
-		{
+		{	
 			EasyHLS_AudioMux(fHLSHandle, (unsigned char*)pbuf, frameinfo->length, llPTS*90, llPTS*90);
 		}
 	}
@@ -277,7 +290,8 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 					
 			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", sHTTPRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr);
 		}
-		
+
+		fSessionTimeoutTime = inTimeout;
 		fTimeoutTask.SetTimeout(inTimeout * 1000);
 	}while(0);
 

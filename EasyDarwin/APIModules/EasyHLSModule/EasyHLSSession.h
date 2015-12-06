@@ -91,7 +91,9 @@ class EasyHLSSession : public Task
         SInt64			fLastNumBytesReceived;	//上一次统计收到的数据总量
 
 		UInt32			fLastStatBitrate;		//最后一次统计得到的比特率
-		UInt32			fBitrateStat0Times;
+
+		UInt32			fSessionTimeoutTime;	//HLS Session超过一定时间没数据就自动停止切片
+		UInt32			fBitrateStat0Times;		//HLS自动重启切片
 
 	protected:
 		TimeoutTask		fTimeoutTask;
