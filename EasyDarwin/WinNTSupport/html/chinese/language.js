@@ -84,7 +84,7 @@ var str_rtsp_live_config="RTSP直播配置"
 var str_rtsp_live_list="RTSP直播列表"
 
 var str_rtsp_buffersecs="转发缓冲时间"
-var str_rtsp_Output="是否同步输出"
+var str_rtsp_Output="是否同步输出HLS"
 var str_rtsp_buffersecs_warn="转发缓冲时间不能为空!"
 var str_rtsp_buffersecs_warn1="转发缓冲时间格式不正确"
 
