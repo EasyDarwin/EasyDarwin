@@ -72,7 +72,7 @@ class EasyHLSSession : public Task
 		EasyAACEncoder_Handle fAAChandle;
 		QTSS_Error EasyInitAACEncoder(int codec);
 		UInt8 pbAACBuffer[EASY_ACCENCODER_BUFFER_SIZE_LEN];
-		unsigned int iAACBufferLen;
+
 		//TS timestamp ms，自定义时间戳
 		int tsTimeStampMSsec;
 

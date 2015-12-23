@@ -159,12 +159,14 @@ QTSS_Error EasyHLSSession::EasyInitAACEncoder(int codec)
 		initParam.u32AudioSamplerate=8000;
 		initParam.ucAudioChannel=1;
 		initParam.u32PCMBitSize=16;
-		if(codec==EASY_SDK_AUDIO_CODEC_G711A)
+
+		if(codec == EASY_SDK_AUDIO_CODEC_G711A)
 			initParam.ucAudioCodec = Law_ALaw;
-		else if(codec==EASY_SDK_AUDIO_CODEC_G711U)
+		else if(codec == EASY_SDK_AUDIO_CODEC_G711U)
 			initParam.ucAudioCodec = Law_ULaw;
 		else
 			return QTSS_UnknowAudioCoder;
+
 		fAAChandle = Easy_AACEncoder_Init( initParam);
 	}
 	return QTSS_NoErr;
@@ -210,10 +212,10 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 		printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
 		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711A||frameinfo->codec ==EASY_SDK_AUDIO_CODEC_G711U)
 		{
-			if(EasyInitAACEncoder(frameinfo->codec)==QTSS_NoErr)
+			if(EasyInitAACEncoder(frameinfo->codec) == QTSS_NoErr)
 			{
 				memset(pbAACBuffer,0,EASY_ACCENCODER_BUFFER_SIZE_LEN);
-				iAACBufferLen=0;
+				unsigned int iAACBufferLen = 0;
 				if(Easy_AACEncoder_Encode(fAAChandle, (unsigned char*)pbuf,  frameinfo->length, pbAACBuffer, &iAACBufferLen) > 0)
 				{
 					EasyHLS_AudioMux(fHLSHandle, pbAACBuffer, iAACBufferLen, llPTS*90, llPTS*90);
