@@ -71,6 +71,7 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 :   fQueueElem(),
 	fRTSPClientHandle(NULL),
 	fHLSHandle(NULL),
+	fAAChandle(NULL),
 	tsTimeStampMSsec(0),
 	fPlayTime(0),
     fTotalPlayTime(0),
@@ -150,7 +151,25 @@ SInt64 EasyHLSSession::Run()
 
     return 2000;
 }
+QTSS_Error EasyHLSSession::EasyInitAACEncoder(int codec)
+{
+	if(fAAChandle==NULL)
+	{
+		InitParam initParam;
+		initParam.u32AudioSamplerate=8000;
+		initParam.ucAudioChannel=1;
+		initParam.u32PCMBitSize=16;
+		if(codec==EASY_SDK_AUDIO_CODEC_G711A)
+			initParam.ucAudioCodec = Law_ALaw;
+		else if(codec==EASY_SDK_AUDIO_CODEC_G711U)
+			initParam.ucAudioCodec = Law_ULaw;
+		else
+			return QTSS_UnknowAudioCoder;
+		fAAChandle = Easy_AACEncoder_Init( initParam);
+	}
+	return QTSS_NoErr;
 
+}
 QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	if(NULL == fHLSHandle) return QTSS_Unimplemented;
@@ -189,7 +208,19 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 		unsigned long long llPTS = (frameinfo->timestamp_sec%1000000)*1000 + frameinfo->timestamp_usec/1000;	
 
 		printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
-
+		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711A||frameinfo->codec ==EASY_SDK_AUDIO_CODEC_G711U)
+		{
+			if(EasyInitAACEncoder(frameinfo->codec)==QTSS_NoErr)
+			{
+				memset(pbAACBuffer,0,EASY_ACCENCODER_BUFFER_SIZE_LEN);
+				iAACBufferLen=0;
+				if(Easy_AACEncoder_Encode(fAAChandle, (unsigned char*)pbuf,  frameinfo->length, pbAACBuffer, &iAACBufferLen) > 0)
+				{
+					EasyHLS_AudioMux(fHLSHandle, pbAACBuffer, iAACBufferLen, llPTS*90, llPTS*90);
+				}
+			}
+			
+		}
 		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC)
 		{	
 			EasyHLS_AudioMux(fHLSHandle, (unsigned char*)pbuf, frameinfo->length, llPTS*90, llPTS*90);
@@ -298,7 +329,11 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 		fHLSHandle = NULL;
 		fHLSURL[0] = '\0';
  	}
-
+	if(fAAChandle)
+	{
+		Easy_AACEncoder_Release(fAAChandle);
+		fAAChandle=NULL;
+	}
 	return QTSS_NoErr;
 }
 

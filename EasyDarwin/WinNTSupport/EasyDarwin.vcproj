@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib libEasyAACEncoder.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -936,6 +936,10 @@
 				<Filter
 					Name="EasyHLSModule"
 					>
+					<File
+						RelativePath="..\Include\EasyAACEncoderAPI.h"
+						>
+					</File>
 					<File
 						RelativePath="..\Include\EasyHLSAPI.h"
 						>
