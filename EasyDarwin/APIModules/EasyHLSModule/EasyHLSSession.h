@@ -21,7 +21,7 @@
 #include "EasyHLSAPI.h"
 
 #include "TimeoutTask.h"
-
+#include "EasyAACEncoderAPI.h"
 #ifndef __EASY_HLS_SESSION__
 #define __EASY_HLS_SESSION__
 
@@ -68,7 +68,11 @@ class EasyHLSSession : public Task
 		Easy_RTSP_Handle	fRTSPClientHandle;
 		//HLS Handle
 		Easy_HLS_Handle fHLSHandle;
-		
+		//AACEncode Handle
+		EasyAACEncoder_Handle fAAChandle;
+		QTSS_Error EasyInitAACEncoder(int codec);
+		UInt8 pbAACBuffer[EASY_ACCENCODER_BUFFER_SIZE_LEN];
+		unsigned int iAACBufferLen;
 		//TS timestamp ms，自定义时间戳
 		int tsTimeStampMSsec;
 

@@ -43,7 +43,7 @@ extern "C" {
 #define QTSS_MAX_URL_LENGTH				512
 #define QTSS_MAX_FILE_NAME_LENGTH		128
 #define EASY_REQUEST_BUFFER_SIZE_LEN	512*1024
-
+#define EASY_ACCENCODER_BUFFER_SIZE_LEN	16*1024*4
 
 //*******************************
 // ENUMERATED TYPES
@@ -73,7 +73,8 @@ enum
     QTSS_NoMoreData         = -17,
     QTSS_AttrDoesntExist    = -18,
     QTSS_AttrNameExists     = -19,
-    QTSS_InstanceAttrsNotAllowed= -20
+    QTSS_InstanceAttrsNotAllowed= -20,
+	QTSS_UnknowAudioCoder   =-21
 };
 typedef SInt32 QTSS_Error;
 
