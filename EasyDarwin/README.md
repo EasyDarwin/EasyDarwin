@@ -14,15 +14,15 @@ EasyDarwin具备一套完整的网络I/O框架以及Utility，开发者很容易
 ## EasyDarwin正在进行开发的 ##
 1. HLS回放；
 1. Onvif支持；
-1. WEB配置与管理模块(集成Mongoose)；
 
 ## 编译、配置、部署的方法 ##
 
 ### 1、获取EasyDarwin最新版本 ###
 在Github：[https://github.com/EasyDarwin/EasyDarwin](https://github.com/EasyDarwin/EasyDarwin "EasyDarwin") 中获取最新的EasyDarwin版本源码，自行编译成需要的可执行文件，也可以直接在 [https://github.com/EasyDarwin/EasyDarwin/releases](https://github.com/EasyDarwin/EasyDarwin/releases "EasyDarwin Release") 中下载已经归档的相应版本进行部署；
 
-### 2、编译EasyDarwin最新版本 ###
+### 2、编译EasyDarwin最新版本(可选) ###
 
+*【如果直接下载已编译好的Release归档版本，可跳过此步骤】*  
 Windows版本编译，可以直接用**Visual Studio 2008**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe；
 
 Linux版本编译：
@@ -51,15 +51,16 @@ EasyDarwin主要的几个配置项：
 以Linux系统nginx做WEB服务器为例，比如我们将点播文件存储在/EasyDarwin/movies/目录，也就是
 
     <PREF NAME="movie_folder" >/EasyDarwin/movies/</PREF>
-Nginx的WEB地址为：http://8.8.8.8/，且WEB根目录配置为/EasyDarwin/那么我们配置：
+Nginx的WEB地址为：http://8.8.8.8/，那么我们配置：
 
-    <PREF NAME="HTTP_ROOT_DIR" >http://8.8.8.8/movies/</PREF>
-这样就能够将EasyDarwin存储的HLS文件WEB发布到公网了。
+    <PREF NAME="HTTP_ROOT_DIR" >http://8.8.8.8/</PREF>
+这样就能够将EasyDarwin存储的HLS文件WEB发布到公网了，具体配置可以参考后面HLS直播配置章节。
 
 ### 4、运行EasyDarwin ###
 Windows版本运行(控制台调试运行)：
 
-    EasyDarwin.exe -c ./easydarwin.xml -d
+    EasyDarwin.exe -c ./easydarwin.xml -d  
+> 注：需要把libEasyHLS.dll，libEasyPusher.dll，libEasyRTSPClient.dll，html文件夹和Movies文件夹拷贝到可执行程序的同目录下！
 
 Windows服务方式运行：
 
@@ -106,43 +107,22 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 
     RTSP://[ip]:[rtsp_port]/EasyRelayModule?name=[relayName]&url="[RTSP_URL]"
 
-例如EasyDarwin服务器IP地址是：8.8.8.8，RTSP端口(rtsp_port)：8554，IPCamera的RTSP地址是：rtsp://admin:admin@192.168.66.189/22，那么我们可以：
+例如EasyDarwin服务器IP地址是：8.8.8.8，RTSP端口(rtsp_port)：554，IPCamera的RTSP地址是：rtsp://admin:admin@192.168.66.189/22，那么我们可以：
 
 1、配置easydarwin.xml EasyRelayModule
 
 	<PREF NAME="local_ip_address" >8.8.8.8</PREF>
 
-2、请求转发：RTSP://8.8.8.8:8554/EasyRelayModule?name=live&url="rtsp://admin:admin@192.168.66.189/22"   （**name是定义一个拉模式转发流的唯一标识，不允许重复**）
+2、请求转发：RTSP://8.8.8.8:554/EasyRelayModule?name=live&url="rtsp://admin:admin@192.168.66.189/22"   （**name是定义一个拉模式转发流的唯一标识，不允许重复**）
 
-3、直播URL：RTSP://8.8.8.8:8554/EasyRelayModule?name=live
+3、直播URL：RTSP://8.8.8.8:554/EasyRelayModule?name=live
 
-4、请求停止转发：RTSP://8.8.8.8:8554/EasyRelayModule?name=live&cmd=stop  （**cmd=stop表示停止拉模式转发**）
+4、请求停止转发：RTSP://8.8.8.8:554/EasyRelayModule?name=live&cmd=stop  （**cmd=stop表示停止拉模式转发**）
 
 # EasyDarwin HLS直播配置 #
 
-### 1、获取EasyDarwin最新版本 ###
-在Github：[https://github.com/EasyDarwin/EasyDarwin](https://github.com/EasyDarwin/EasyDarwin "EasyDarwin") 中获取最新的EasyDarwin版本源码，自行编译成需要的可执行文件，也可以直接在 [https://github.com/EasyDarwin/EasyDarwin/releases](https://github.com/EasyDarwin/EasyDarwin/releases "EasyDarwin Release") 中下载已经归档的相应版本进行部署；
-
-### 2、编译EasyDarwin最新版本(可选) ###
-
-*【如果直接下载已编译好的Release归档版本，可跳过此步骤】*
-
-Windows版本编译：  
-> 
-可以直接用**Visual Studio 2008**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe；
-
-Linux版本编译：
-
-	cd ./EasyDarwin-master/EasyDarwin/
-	chmod +x ./Buildit
-	./Buildit	（./Buildit i386 or ./Buildit x64编译出相应版本的可执行文件）
-	cd ./x64  (or cd ./Release)
-
-### 3、运行环境准备 ###
-
-1、安装Http服务器    
-
-
+### 1、安装Http服务器 ###
+  
 Windows环境：  
 Windows下可以使用IIS或者Nginx，或者其他的Http服务器。（Windows下以IIS为例）  
 
@@ -186,43 +166,7 @@ apt-get install nginx
 </pre>
 注：Nginx配置方式在不同版本不同的系统中可能略有差异！
 
-
-
-### 4、运行EasyDarwin ###
-
-Windows版本运行(控制台调试运行)：
-
-    EasyDarwin.exe -c ./easydarwin.xml -d  
-
-> 注：需要把libEasyHLS.dll，libEasyPusher.dll，libEasyRTSPClient.dll，html文件夹和Movies文件夹拷贝到可执行程序的同目录下！
-
-Windows服务方式运行：
-
-我们提供一段脚本
-
-    cd ./
-    set curPath="%cd%"
-    echo service path：%curPath%
-    sc create EasyDarwin binPath= "%curPath%EasyDarwin.exe -c %curPath%easydarwin.xml" start= auto
-    net start EasyDarwin
-    pause
-
-将这段脚本做成bat，运行，我们就创建了一个叫做EasyDarwin的Windows服务了，通过系统服务（services.msc）可以查看到。
-
-> 注：Windows不同版本可能稍有差异，建议在命令行运行bat脚本，而不是直接双击运行，这样能看到具体出错原因！
-
-Linux版本运行（具体配置文件路径根据实际情况设置）：
-
-调试模式运行,
-
-    ./easydarwin -c ../WinNTSupport/easydarwin.xml  -d
-后台服务运行,
-
-    ./easydarwin -c ../WinNTSupport/easydarwin.xml  &
-
-> 注：如果xml配置文件路径不能确定，建议最保险的方式就是用全路径，例如 “/etc/streaming/EasyDarwin/easydarwin.xml”，这样在下一次更新服务的时候，配置文件可以保留！
-
-### 5、拉模式HLS直播配置 ###
+### 2、拉模式HLS直播配置 ###
 
 EasyDariwn项目中集成了Mongoose服务器，可以通过Web配置EasyDarwin相关参数。
 
@@ -259,7 +203,7 @@ EasyDariwn项目中集成了Mongoose服务器，可以通过Web配置EasyDarwin�
   
 ![](http://www.easydss.com:8084/10.png) 
   
-### 6、推模式HLS直播配置 ###
+### 3、推模式HLS直播配置 ###
   
 HLS直播配置，流媒体文件目录配置和拉模式HLS直播配置中的一样
   
@@ -288,14 +232,3 @@ Copyright &copy; EasyDarwin.org 2012-2015
 
 ![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
 
-## 获取更多信息 ##
-
-邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
-
-WEB：[www.EasyDarwin.org](http://www.easydarwin.org)
-
-QQ交流群：288214068
-
-Copyright &copy; EasyDarwin.org 2012-2015
-
-![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
