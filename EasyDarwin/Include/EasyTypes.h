@@ -65,7 +65,7 @@ typedef int Easy_Error;
 #define EASY_SDK_AUDIO_CODEC_AAC	0x15002		/* AAC */
 #define EASY_SDK_AUDIO_CODEC_G711U	0x10006		/* G711 ulaw*/
 #define EASY_SDK_AUDIO_CODEC_G711A	0x10007		/* G711 alaw*/
-
+#define EASY_SDK_AUDIO_CODEC_G726	0x1100B		/* G726 */
 
 /* 音视频帧标识 */
 #define EASY_SDK_VIDEO_FRAME_FLAG	0x00000001		/* 视频帧标志 */
