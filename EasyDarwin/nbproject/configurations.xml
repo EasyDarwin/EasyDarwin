@@ -1194,7 +1194,7 @@
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp -lEasyAACEncoder</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -2759,7 +2759,7 @@
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>Lib/x64</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp -lEasyAACEncoder</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
