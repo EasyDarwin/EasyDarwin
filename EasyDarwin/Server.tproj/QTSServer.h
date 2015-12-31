@@ -61,7 +61,7 @@ class QTSServer : public QTSServerInterface
         // because one of its actions is to change the server to the right UID / GID.
         // Threads will only inherit these if they are created afterwards.
         Bool16 Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource,
-                            UInt16 inPortOverride, Bool16 createListeners);
+                            UInt16 inPortOverride, Bool16 createListeners,const char*inAbsolutePath);
         
         //
         // InitModules
@@ -108,7 +108,8 @@ class QTSServer : public QTSServerInterface
         Bool16                  SetupUDPSockets();
                 
         Bool16                  SwitchPersonality();
-
+		
+		 char sAbsolutePath[MAX_PATH];
      private:
     
         //
@@ -147,7 +148,7 @@ class QTSServer : public QTSServerInterface
         // Build & destroy the optimized role / module arrays for invoking modules
         void                    BuildModuleRoleArrays();
         void                    DestroyModuleRoleArrays();
-
+		
         		
 #ifndef __Win32__
         static pid_t            sMainPid;
