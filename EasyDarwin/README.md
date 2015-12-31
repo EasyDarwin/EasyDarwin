@@ -69,9 +69,10 @@ Windows服务方式运行：
     cd ./
     set curPath="%cd%"
     echo service path：%curPath%
-    sc create EasyDarwin binPath= "%curPath%EasyDarwin.exe -c %curPath%easydarwin.xml" start= auto
+    sc create EasyDarwin binPath= "%curPath%\EasyDarwin.exe -c %curPath%\easydarwin.xml" start= auto
     net start EasyDarwin
     pause
+
 将这段脚本做成bat，运行，我们就创建了一个叫做EasyDarwin的Windows服务了，通过系统服务（services.msc）可以查看到。
 注：Windows不同版本可能稍有差异，建议在命令行运行bat脚本，而不是直接双击运行，这样能看到具体出错原因！
 
@@ -82,8 +83,9 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
     ./easydarwin -c ../WinNTSupport/easydarwin.xml  -d
 后台服务运行,
 
-    ./easydarwin -c ../WinNTSupport/easydarwin.xml  &
-注：如果xml配置文件路径不能确定，建议最保险的方式就是用全路径，例如 “/etc/streaming/EasyDarwin/easydarwin.xml”，这样在下一次更新服务的时候，配置文件可以保留！
+    ./easydarwin -c /etc/easydarwin.xml  &
+
+> **注：无论是Windows还是Linux运行EasyDarwin，以Debug模式运行时，-c后面带的配置文件路径可以是相对路径也可以是绝对路径，但是以服务/后台方式运行，就必须是用绝对路径！**
 
 ### 5、检查EasyDarwin是否部署成功 ###
 
