@@ -62,7 +62,8 @@ QTSS_ServerState StartServer(   XMLPrefsParser* inPrefsSource,
                                 QTSS_ServerState inInitialState,
 								Bool16 inDontFork,
 								UInt32 debugLevel, 
-								UInt32 debugOptions );
+								UInt32 debugOptions,
+								const char* sAbsolutePath);
 
 //
 // Call this after StartServer if it doesn't return qtssFatalError.

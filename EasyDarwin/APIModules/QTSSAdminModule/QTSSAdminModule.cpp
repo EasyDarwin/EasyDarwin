@@ -67,7 +67,7 @@
 #include "frozen.h"
 
 #include "QTSServerInterface.h"
-
+#include "QTSServer.h"
 #if __MacOSX__
 #include <Security/Authorization.h>
 #include <Security/AuthorizationTags.h>
@@ -503,6 +503,15 @@ class mongooseThread : public OSThread
 //Mongoose
 void mongooseThread::Entry()
 {
+	char sPath[MAX_PATH];
+	strcpy(sPath,((QTSServer*)sServer)->sAbsolutePath);
+	if((strlen(sPath)+strlen(sDocumentRoot))>=(MAX_PATH+1))
+	{
+		return;
+	}
+	::strncat(sPath,sDocumentRoot,strlen(sDocumentRoot));
+	//printf("%s\n",sPath);
+	
 	struct mg_server *mongooseserver;
 	// Create and configure the server
 	mongooseserver = mg_create_server((void *) "1", ::ev_handler);
@@ -510,8 +519,9 @@ void mongooseThread::Entry()
 	//WEB¼àÌý¶Ë¿Ú
 	char listening_port[6];
 	sprintf(listening_port, "%d", sHttpPort);
+	
 	mg_set_option(mongooseserver, "listening_port", listening_port);
-	mg_set_option(mongooseserver, "document_root", sDocumentRoot); //donot use it
+	mg_set_option(mongooseserver, "document_root", sPath); //donot use it
 
 	//printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
 

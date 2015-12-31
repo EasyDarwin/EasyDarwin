@@ -208,8 +208,22 @@ int main(int argc, char * argv[])
 {
     extern char* optarg;
     
-    
-
+    //Get Absolute Path
+	char sAbsolutePath[MAX_PATH];
+	int cnt = readlink("/proc/self/exe", sAbsolutePath, MAX_PATH);
+	if (cnt < 0 || cnt >= MAX_PATH)
+	{
+		printf("***Error***\n");
+		exit(-1);
+	}
+	for (int i = cnt; i >=0; --i)
+	{
+		if (sAbsolutePath[i] == '/')
+		{
+			sAbsolutePath[i+1] = '\0';
+			break;
+		}
+	}
     // on write, don't send signal for SIGPIPE, just set errno to EPIPE
     // and return -1
     //signal is a deprecated and potentially dangerous function
@@ -578,7 +592,7 @@ int main(int argc, char * argv[])
 #endif
 
     //This function starts, runs, and shuts down the server
-    if (::StartServer(&theXMLParser, &theMessagesSource, thePort, statsUpdateInterval, theInitialState, dontFork, debugLevel, debugOptions) != qtssFatalErrorState)
+    if (::StartServer(&theXMLParser, &theMessagesSource, thePort, statsUpdateInterval, theInitialState, dontFork, debugLevel, debugOptions,sAbsolutePath) != qtssFatalErrorState)
     {    ::RunServer();
          CleanPid(false);
          exit (EXIT_SUCCESS);

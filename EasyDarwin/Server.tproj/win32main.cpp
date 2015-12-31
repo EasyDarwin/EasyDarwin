@@ -34,7 +34,6 @@
 #include "QTSServer.h"
 #include "QTSSExpirationDate.h"
 #include "GenerateXMLPrefs.h"
-
 //
 // Data
 static FilePrefsSource sPrefsSource(true); // Allow dups
@@ -57,8 +56,10 @@ void WINAPI ServiceMain(DWORD argc, LPTSTR *argv);
 
 int main(int argc, char * argv[]) 
 {
+	
     extern char* optarg;
-    
+    char sAbsolutePath[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH,sAbsolutePath); 
     //First thing to do is to read command-line arguments.
     int ch;
     
@@ -230,7 +231,7 @@ int main(int argc, char * argv[])
     if (notAService)
     {
         // If we're running off the command-line, don't do the service initiation crap.
-        ::StartServer(sXMLParser, &sMessagesSource, sPort, sStatsUpdateInterval, sInitialState, false,0, kRunServerDebug_Off); // No stats update interval for now
+        ::StartServer(sXMLParser, &sMessagesSource, sPort, sStatsUpdateInterval, sInitialState, false,0, kRunServerDebug_Off,sAbsolutePath); // No stats update interval for now
         ::RunServer();
         ::exit(0);
     }
@@ -255,12 +256,47 @@ int main(int argc, char * argv[])
 
     return (0);
 }
-    
-    
+#if 0
+bool GetWindowsServiceInstallPath(char* inPath)
+{
+	HKEY hKEY;
+	if(RegOpenKey(HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Services\\EasyDarwin", &hKEY)==ERROR_SUCCESS)
+	{
+		DWORD dwType;
+		DWORD cchData;
+		dwType = REG_EXPAND_SZ;
+		char szName[MAX_PATH];
+		cchData = sizeof(szName);
+		if (RegQueryValueEx(hKEY, "ImagePath", NULL, &dwType, (LPBYTE)szName, &cchData)==ERROR_SUCCESS)
+		{
+			char* p=strstr(szName,"EasyDarwin.exe");
+			if(p!=NULL)
+			{
+				int len=p-szName;
+				memcpy(inPath,szName,p-szName);
+				inPath[len]='\0';	
+				return 1;
+			}
+		}
+		RegCloseKey(hKEY);
+	}
+	return 0;
+}
+#endif
 void __stdcall ServiceMain(DWORD /*argc*/, LPTSTR *argv)
 {
     char* theServerName = argv[0];
-
+	char sAbsolutePath[MAX_PATH];
+	:: GetModuleFileName(NULL, sAbsolutePath, MAX_PATH);
+	int cnt=strlen(sAbsolutePath);
+	for (int i = cnt; i >=0; --i)
+	{
+		if (sAbsolutePath[i] == '\\')
+		{
+			sAbsolutePath[i+1] = '\0';
+			break;
+		}
+	}
     sServiceStatusHandle = ::RegisterServiceCtrlHandler( theServerName, &ServiceControl );
     if (sServiceStatusHandle == 0)
     {
@@ -275,7 +311,7 @@ void __stdcall ServiceMain(DWORD /*argc*/, LPTSTR *argv)
 
     //
     // Start & Run the server - no stats update interval for now
-    if (::StartServer(sXMLParser, &sMessagesSource, sPort, sStatsUpdateInterval, sInitialState, false,0, kRunServerDebug_Off) != qtssFatalErrorState)
+    if (::StartServer(sXMLParser, &sMessagesSource, sPort, sStatsUpdateInterval, sInitialState, false,0, kRunServerDebug_Off,sAbsolutePath) != qtssFatalErrorState)
     {
         ::ReportStatus( SERVICE_RUNNING, NO_ERROR );
         ::RunServer(); // This function won't return until the server has died

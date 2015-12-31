@@ -191,7 +191,7 @@
     #endif
         
     #define TW0_CHARS_TO_INT( c1, c2 )  ( c1 << 8 | c2 )
-
+	#define MAX_PATH 260 
 
 
 
