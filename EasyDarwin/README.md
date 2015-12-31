@@ -83,7 +83,7 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
     ./easydarwin -c ../WinNTSupport/easydarwin.xml  -d
 后台服务运行,
 
-    ./easydarwin -c /etc/easydarwin.xml  &
+    ./easydarwin -c /etc/streaming/easydarwin.xml  &
 
 > **注：无论是Windows还是Linux运行EasyDarwin，以Debug模式运行时，-c后面带的配置文件路径可以是相对路径也可以是绝对路径，但是以服务/后台方式运行，就必须是用绝对路径！**
 
