@@ -23,7 +23,7 @@
  *
  */
 /*
-	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -176,7 +176,7 @@ static UInt16			sDefaultHttpPort = 80;
 
 //web管理静态页加载路径
 static char*			sDocumentRoot     = NULL;
-static char*			sDefaultDocumentRoot = "./";
+static char*			sDefaultDocumentRoot = "./html/";
 
 //**************************************************
 
