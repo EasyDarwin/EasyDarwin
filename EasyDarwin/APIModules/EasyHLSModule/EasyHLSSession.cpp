@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -206,7 +206,6 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	}
 	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
 	{
-
 		unsigned long long llPTS = (frameinfo->timestamp_sec%1000000)*1000 + frameinfo->timestamp_usec/1000;	
 
 		printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
@@ -221,7 +220,6 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 					EasyHLS_AudioMux(fHLSHandle, pbAACBuffer, iAACBufferLen, llPTS*90, llPTS*90);
 				}
 			}
-			
 		}
 		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC)
 		{	
