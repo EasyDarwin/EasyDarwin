@@ -197,7 +197,7 @@ EasyDariwn项目中集成了Mongoose服务器，可以通过Web配置EasyDarwin�
   
 ![](http://www.easydss.com:8084/9.png) 
 
-> 注： <font color="red">2，3步配置完成后，需要重启EasyDarwin服务器，Web配置中有重启的功能，但是功能还没有完善，目前需要用户手动重启服务器,后续会完善重启功能。</font>
+> 注： <font color="red">2，3步配置完成后，需要重启EasyDarwin服务器，Debug方式运行需要手动重启服务器，以服务/后台方式运行，可以直接使用Web端中的重启功能。</font>
   
 4、增加HLS直播  
 
