@@ -70,6 +70,7 @@ Windows服务方式运行：
     set curPath="%cd%"
     echo service path：%curPath%
     sc create EasyDarwin binPath= "%curPath%\EasyDarwin.exe -c %curPath%\easydarwin.xml" start= auto
+	sc failure EasyDarwin reset= 0 actions= restart/0
     net start EasyDarwin
     pause
 

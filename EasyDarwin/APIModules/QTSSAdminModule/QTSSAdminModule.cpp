@@ -1522,7 +1522,7 @@ void EasyAdmin_SetRTSPort(UInt16 uPort)
 
 void EasyAdmin_Restart()
 {
-	exit(0);
+	exit(-2);
 }
 
 UInt16 EasyAdmin_GetHTTPServicePort()
