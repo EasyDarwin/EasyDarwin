@@ -57,6 +57,9 @@ Nginx的WEB地址为：http://8.8.8.8/，那么我们配置：
 这样就能够将EasyDarwin存储的HLS文件WEB发布到公网了，具体配置可以参考后面HLS直播配置章节。
 
 ### 4、运行EasyDarwin ###
+
+*【前提】EasyDarwin可执行文件必须与/html/目录在同一层目录中*  
+
 Windows版本运行(控制台调试运行)：
 
     EasyDarwin.exe -c ./easydarwin.xml -d  
