@@ -220,6 +220,8 @@ static	SInt64	EasyAdmin_GetServiceRunTime();
 	static	UInt16	EasyAdmin_GetMongoosePort();
 	//设置WEB Admin端口
 	static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
+	//获取Server版本信息
+	static	char*	EasyAdmin_GetServerHeader();
 	//---------------------------全局配置E---------------------------
 
 	//---------------------------全局控制S---------------------------
@@ -544,6 +546,10 @@ void mongooseThread::Entry()
 	//char* logFolder = EasyAdmin_GetErrorLogFolder();
 	//printf("Log Folder:%s !!!!!!!!! \n", logFolder);
 	//delete logFolder;
+
+	char* serverHeader = EasyAdmin_GetServerHeader();
+	printf("%s \n", serverHeader);
+	delete serverHeader;
 
 	//EasyAdmin_SetErrorLogFolder("/etc/streaming/Logs/");
 
@@ -1590,6 +1596,14 @@ UInt16 EasyAdmin_GetMongoosePort()
 void EasyAdmin_SetMongoosePort(UInt16 port)
 {
 	QTSSModuleUtils::CreateAttribute(sAdminPrefs, "http_port", qtssAttrDataTypeUInt16, &port, sizeof(UInt16));
+}
+
+char* EasyAdmin_GetServerHeader()
+{
+	char* serverHeader = NULL;
+    (void) QTSS_GetValueAsString (sServer, qtssSvrRTSPServerHeader, 0, &serverHeader);
+    
+	return serverHeader;
 }
 
 SInt64 EasyAdmin_GetServiceRunTime()
