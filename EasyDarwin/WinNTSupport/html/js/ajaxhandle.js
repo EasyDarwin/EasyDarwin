@@ -10,8 +10,9 @@
                 success: function (json) {
 					
 					var strs=json.RunTime.split('|');
+					var version=json.version;
 					var str=str_run_time+": "+strs[0]+"D-"+strs[1]+"H-"+strs[2]+"M-"+strs[3]+"S"
-					document.getElementById('dvruntime').innerHTML=str;
+					document.getElementById('dvruntime').innerHTML=str+"  ["+version+"]";
                 },
 				error:function(msg)
 				{	alert(textStatus);}

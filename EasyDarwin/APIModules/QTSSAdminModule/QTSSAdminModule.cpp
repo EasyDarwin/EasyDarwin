@@ -351,9 +351,13 @@ static int serve_request(struct mg_connection *conn)
 	{
 		char output[128]={0};
 		char sAjax[1024]={0};
+		char* serverHeader = EasyAdmin_GetServerHeader();
+		
+
 		transform_msec(EasyAdmin_GetServiceRunTime(), output, sizeof(output));
-		sprintf(sAjax, "{ \"RunTime\": \"%s\" }",output);
+		sprintf(sAjax, "{ \"RunTime\": \"%s\", \"version\": \"%s\"}",output,serverHeader);
 		mg_printf_data(conn,sAjax);
+		delete serverHeader;
 		return MG_TRUE;
 	}
 	if(strcmp(conn->uri, "/api/setPort") == 0)
