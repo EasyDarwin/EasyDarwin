@@ -786,8 +786,8 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReq()
 	printf("Get Device List! \n");
 
 	OSRefTable* devMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
-	if(devMap->GetNumRefsInTable() == 0 )
-		return QTSS_NoErr;
+	//if(devMap->GetNumRefsInTable() == 0 )
+	//	return QTSS_NoErr;
 
 	EasyDarwinDeviceListAck req;
 	req.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
@@ -823,6 +823,10 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReq()
 	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
 	if (msgJson.Len)
 		httpAck.AppendContentLengthHeader(msgJson.Len);
+
+	//支持跨域
+	StrPtrLen allowOrigin("*");
+	httpAck.AppendResponseHeader(httpAccessControlAllowOriginHeader, &allowOrigin);
 
 	//响应完成后断开连接
 	httpAck.AppendConnectionCloseHeader();

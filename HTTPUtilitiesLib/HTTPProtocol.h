@@ -133,11 +133,13 @@ enum
     // QTSS Specific headers
     // Add headers that are not part of the HTTP spec here 
     // Make sure and up the number of headers and httpIllegalHeader number
-    httpSessionCookieHeader     = 47,           // Used for HTTP tunnelling
+    httpSessionCookieHeader     = 47,	// Used for HTTP tunnelling
     httpServerIPAddressHeader   = 48,
+	
+	httpAccessControlAllowOriginHeader	= 49,
         
-    httpNumHeaders              = 49,
-    httpIllegalHeader           = 49
+    httpNumHeaders              = 50,
+    httpIllegalHeader           = 50
 };
 typedef UInt32 HTTPHeader;
 
