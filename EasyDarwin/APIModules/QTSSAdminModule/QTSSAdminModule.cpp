@@ -551,9 +551,9 @@ void mongooseThread::Entry()
 	//printf("Log Folder:%s !!!!!!!!! \n", logFolder);
 	//delete logFolder;
 
-	char* serverHeader = EasyAdmin_GetServerHeader();
-	printf("%s \n", serverHeader);
-	delete serverHeader;
+	//char* serverHeader = EasyAdmin_GetServerHeader();
+	//printf("%s \n", serverHeader);
+	//delete serverHeader;
 
 	//EasyAdmin_SetErrorLogFolder("/etc/streaming/Logs/");
 
