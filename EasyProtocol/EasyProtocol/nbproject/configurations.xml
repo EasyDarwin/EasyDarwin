@@ -40,6 +40,7 @@
             <pElem>../jsoncpp/include</pElem>
             <pElem>../Include</pElem>
           </incDir>
+          <commandLine>-fPIC</commandLine>
         </ccTool>
         <archiverTool>
           <output>${CND_CONF}/libEasyProtocol.a</output>

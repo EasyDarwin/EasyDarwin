@@ -361,7 +361,7 @@
       </toolsSet>
       <compileType>
         <cTool>
-          <commandLine>-m32 -pipe -Wall -Wno-format-y2k</commandLine>
+          <commandLine>-pipe -Wall -Wno-format-y2k</commandLine>
         </cTool>
         <ccTool>
           <incDir>
@@ -391,11 +391,13 @@
             <pElem>Include</pElem>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-m32 -pipe -Wall -Wno-format-y2k</commandLine>
+          <commandLine>-pipe -Wall -Wno-format-y2k</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>DSS_USE_API_CALLBACKS</Elem>
@@ -403,14 +405,17 @@
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>
           </preprocessorList>
+          <useLinkerLibraries>false</useLinkerLibraries>
         </ccTool>
         <linkerTool>
           <output>${CND_CONF}/easydarwin</output>
           <linkerAddLib>
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
-            <pElem>Lib</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>Lib/x64</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp -lEasyAACEncoder</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"

@@ -125,7 +125,7 @@
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-m32 -fPIC</commandLine>
+          <commandLine>-fPIC</commandLine>
           <preprocessorList>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
@@ -143,7 +143,7 @@
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-m32 -fPIC</commandLine>
+          <commandLine>-fPIC</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>_REENTRANT</Elem>
