@@ -289,11 +289,14 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 			}
 
 			char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
-			qtss_sprintf(subDir,"%s/",fHLSSessionID.Ptr);
-			EasyHLS_ResetStreamCache(fHLSHandle, movieFolder, subDir, fHLSSessionID.Ptr, sTargetDuration);
+			qtss_sprintf(subDir,"%s/", fHLSSessionID.Ptr);
+
+			char rootDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+			qtss_sprintf(rootDir,"%s/", movieFolder);
+			EasyHLS_ResetStreamCache(fHLSHandle, rootDir, subDir, fHLSSessionID.Ptr, sTargetDuration);
 
 			char msgStr[2048] = { 0 };
-			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,movieFolder=%s,subDir=%s", fHLSSessionID.Ptr, movieFolder, subDir);
+			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,rootDir=%s,subDir=%s", fHLSSessionID.Ptr, rootDir, subDir);
 			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 					
 			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", sHTTPRootDir, fHLSSessionID.Ptr, fHLSSessionID.Ptr);
