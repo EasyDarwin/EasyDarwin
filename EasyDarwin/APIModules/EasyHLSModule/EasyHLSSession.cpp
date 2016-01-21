@@ -280,6 +280,11 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 			UInt32 pathLen = QTSS_MAX_FILE_NAME_LENGTH;
 			QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
 
+			if( (pathLen > 0)&& (movieFolder[pathLen-1] == '/') )
+			{
+				movieFolder[pathLen-1] = 0;
+			}
+
 			fHLSHandle = EasyHLS_Session_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
 
 			if (NULL == fHLSHandle)
@@ -290,6 +295,8 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 
 			char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
 			qtss_sprintf(subDir,"%s/", fHLSSessionID.Ptr);
+
+			
 
 			char rootDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
 			qtss_sprintf(rootDir,"%s/", movieFolder);
