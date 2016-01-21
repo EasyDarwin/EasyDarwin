@@ -168,20 +168,15 @@ QTSS_Error ReflectorSession::SetSessionName()
 	if (fSourceID.Len > 0)
     {
 		char movieFolder[256] = { 0 };
-		UInt32 pathLen = 256;
-		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
+		UInt32 thePathLen = 256;
+		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
 		StringParser parser(&fSourceID);
 		StrPtrLen strName;
 
-		UInt32 thePathLen = 0;
-
-#ifdef __Win32__
-	thePathLen = pathLen+1;
-#else
-	thePathLen = pathLen;
-#endif
-
 		parser.ConsumeLength(NULL,thePathLen);
+
+		// Get the crypted password
+        parser.Expect('\\');
 		parser.ConsumeUntil(&strName,'\.');
 		fSessionName = NEW char[strName.Len + 1];
 		::memcpy(fSessionName, strName.Ptr, strName.Len);
