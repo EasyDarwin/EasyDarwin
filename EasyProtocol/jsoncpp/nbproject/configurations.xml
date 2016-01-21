@@ -38,6 +38,7 @@
           <incDir>
             <pElem>include</pElem>
           </incDir>
+          <commandLine>-fPIC</commandLine>
         </ccTool>
         <archiverTool>
           <output>${CND_CONF}/libjsoncpp.a</output>
