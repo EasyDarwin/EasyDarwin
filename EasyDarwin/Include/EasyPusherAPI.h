@@ -9,6 +9,8 @@
 
 #include "EasyTypes.h"
 
+#define RTSP_CLIENT_NAME	"EasyPusher v1.16.0202"
+
 typedef struct __EASY_AV_Frame
 {
     Easy_U32    u32AVFrameFlag;		/* ÷°±Í÷æ   ”∆µ or “Ù∆µ */
