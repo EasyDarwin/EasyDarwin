@@ -75,6 +75,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/atomic.o \
 	${OBJECTDIR}/base64.o \
 	${OBJECTDIR}/ev.o \
+	${OBJECTDIR}/epollEvent.o \
 	${OBJECTDIR}/getopt.o \
 	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/md5digest.o
@@ -321,6 +322,11 @@ ${OBJECTDIR}/md5digest.o: md5digest.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5digest.o md5digest.cpp
 
+${OBJECTDIR}/epollEvent.o: epollEvent.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/epollEvent.o epollEvent.cpp
+	
 # Subprojects
 .build-subprojects:
 

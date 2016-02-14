@@ -75,6 +75,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/atomic.o \
 	${OBJECTDIR}/base64.o \
 	${OBJECTDIR}/ev.o \
+	${OBJECTDIR}/epollEvent.o \
 	${OBJECTDIR}/getopt.o \
 	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/md5digest.o
@@ -101,6 +102,7 @@ LDLIBSOPTIONS=
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libCommonUtilitiesLib.a
 
 ${CND_CONF}/libCommonUtilitiesLib.a: ${OBJECTFILES}
+	echo "fantasy##############################################"
 	${MKDIR} -p ${CND_CONF}
 	${RM} ${CND_CONF}/libCommonUtilitiesLib.a
 	${AR} -rv ${CND_CONF}/libCommonUtilitiesLib.a ${OBJECTFILES} 
