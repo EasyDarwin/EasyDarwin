@@ -58,7 +58,8 @@ CPPFILES =	atomic.cpp\
 			UserAgentParser.cpp \
 			QueryParamList.cpp \
 			md5digest.cpp \
-			SDPUtils.cpp
+			SDPUtils.cpp \
+			epollEvent.cpp
 
 all: libCommonUtilitiesLib.a
 

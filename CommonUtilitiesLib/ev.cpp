@@ -60,6 +60,12 @@
 #include "MyAssert.h"
 #include "OSThread.h"
 #include "OSMutex.h"
+#include <sys/epoll.h>
+#include <sys/time.h>
+
+
+#define MAX_CONNECTS    20000
+
 
 static fd_set   sReadSet;
 static fd_set   sWriteSet;
@@ -68,6 +74,9 @@ static fd_set   sReturnedWriteSet;
 static void**   sCookieArray = NULL;
 static int*     sFDsToCloseArray = NULL;
 static int sPipes[2];
+/*fantasy add here*/
+static int epollfd;
+/**/
 
 static int sCurrentFDPos = 0;
 static int sMaxFDPos = 0;
@@ -106,7 +115,9 @@ void select_startevents()
     //we create a pipe that gets written to from modwatch, and read when select returns
     int theErr = ::pipe((int*)&sPipes);
     Assert(theErr == 0);
-    
+
+ //   epollfd = epoll_create(MAX_CONNECTS);
+
     //Add the read end of the pipe to the read mask
     FD_SET(sPipes[0], &sReadSet);
     sMaxFDPos = sPipes[0];
@@ -123,7 +134,7 @@ int select_removeevent(int which)
     //Clear this fd out of both sets
         FD_CLR(which, &sWriteSet);
         FD_CLR(which, &sReadSet);
-        
+                
         FD_CLR(which, &sReturnedReadSet);
         FD_CLR(which, &sReturnedWriteSet);
     
@@ -371,6 +382,7 @@ int select_waitevent(struct eventreq *req, void* /*onlyForMacOSX*/)
         tv.tv_usec = 0;
 
     #if THREADING_IS_COOPERATIVE
+    slda
         tv.tv_sec = 0;
         
         if ( yieldDur > 4 )
@@ -385,10 +397,10 @@ int select_waitevent(struct eventreq *req, void* /*onlyForMacOSX*/)
         qtss_printf("waitevent: about to call select\n");
 #endif
 
-        yieldStart = OS::Milliseconds();
-        OSThread::ThreadYield();
+ //       yieldStart = OS::Milliseconds();
+ //       OSThread::ThreadYield();
         
-        yieldDur = OS::Milliseconds() - yieldStart;
+ //       yieldDur = OS::Milliseconds() - yieldStart;
 #if EV_DEBUGGING
         static SInt64   numZeroYields;
         
@@ -403,6 +415,9 @@ int select_waitevent(struct eventreq *req, void* /*onlyForMacOSX*/)
 #endif
 
         sNumFDsBackFromSelect = ::select(sMaxFDPos+1, &sReturnedReadSet, &sReturnedWriteSet, NULL, &tv);
+        timeval tvv = {0};
+        gettimeofday(&tvv,NULL);
+        printf("sec = %d usec = %ld num %d\n",tvv.tv_sec,tvv.tv_usec,sNumFDsBackFromSelect);
 
 #if EV_DEBUGGING
         qtss_printf("waitevent: back from select. Result = %d\n", sNumFDsBackFromSelect);

@@ -91,7 +91,13 @@ void EventContext::Cleanup()
             fEventThread->fRefTable.UnRegister(&fRef);
 
 #if !MACOSXEVENTQUEUE
+ //           select_removeevent(fFileDesc);//The eventqueue / select shim requires this
+        
+        #if defined(__linux__)
+            deleteEpollEvent(fFileDesc);
+        #else
             select_removeevent(fFileDesc);//The eventqueue / select shim requires this
+        #endif           
 #ifdef __Win32__
             err = ::closesocket(fFileDesc);
 #endif
@@ -166,7 +172,11 @@ void EventContext::RequestEvent(int theMask)
 #if MACOSXEVENTQUEUE
         if (modwatch(&fEventReq, theMask) != 0)
 #else
-        if (select_modwatch(&fEventReq, theMask) != 0)
+        #if defined(__linux__)
+           if (addEpollEvent(&fEventReq, theMask) != 0)
+        #else
+           if(select_modwatch(&fEventReq, theMask) != 0)
+        #endif
 #endif  
             AssertV(false, OSThread::GetErrno());
     }
@@ -205,7 +215,11 @@ void EventContext::RequestEvent(int theMask)
 #if MACOSXEVENTQUEUE
         if (watchevent(&fEventReq, theMask) != 0)
 #else
-        if (select_watchevent(&fEventReq, theMask) != 0)
+        #if defined(__linux__)
+           if (addEpollEvent(&fEventReq, theMask) != 0)
+        #else
+           if(select_modwatch(&fEventReq, theMask) != 0)
+        #endif
 #endif  
             //this should never fail, but if it does, cleanup.
             AssertV(false, OSThread::GetErrno());
@@ -226,7 +240,12 @@ void EventThread::Entry()
 #if MACOSXEVENTQUEUE
             int theReturnValue = waitevent(&theCurrentEvent, NULL);
 #else
-            int theReturnValue = select_waitevent(&theCurrentEvent, NULL);
+            
+            #if defined(__linux__)
+            int theReturnValue = epoll_waitevent(&theCurrentEvent, NULL);
+            #else
+            int theReturnValue = select_waitevent(&theCurrentEvent, NULL);            
+            #endif
 #endif  
             //Sort of a hack. In the POSIX version of the server, waitevent can return
             //an actual POSIX errorcode.
@@ -252,9 +271,7 @@ void EventThread::Entry()
                 theContext->fModwatched = false;
 #endif
                 theContext->ProcessEvent(theCurrentEvent.er_eventbits);
-                fRefTable.Release(ref);
-                
-                
+                fRefTable.Release(ref);   
             }
         }
 
@@ -262,8 +279,12 @@ void EventThread::Entry()
         SInt64  yieldStart = OS::Milliseconds();
 #endif
 
-        this->ThreadYield();
+    #if 0//defined(__linux__)
 
+    #else
+        this->ThreadYield();
+    #endif
+    
 #if EVENT_CONTEXT_DEBUG
         SInt64  yieldDur = OS::Milliseconds() - yieldStart;
         static SInt64   numZeroYields;

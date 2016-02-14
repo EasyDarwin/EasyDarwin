@@ -33,6 +33,10 @@
 #ifndef _OSQUEUE_H_
 #define _OSQUEUE_H_
 
+#ifndef __Win32__
+	#include <unistd.h>
+#endif
+
 #include "MyAssert.h"
 #include "OSHeaders.h"
 #include "OSMutex.h"
@@ -40,7 +44,7 @@
 #include "OSThread.h"
 
 #define OSQUEUETESTING 0
-
+static int queueId = 0;
 class OSQueue;
 
 class OSQueueElem {
@@ -93,7 +97,101 @@ class OSQueue {
         UInt32          fLength;
 };
 
-class OSQueueIter
+class CyclicQueue
+{//keep the read and write pointer never at the same place,do not need any Mutex
+private:
+	#define MAX_QUEUE_ELEMS	64
+	typedef struct CyclicElem_tag
+	{
+	       OSQueueElem *elem;
+	       bool valid;
+	}CyclicElem;
+	
+	int iread_pos;
+	int iwrite_pos;
+	int ivalid_elems;
+	int curId;
+	CyclicElem elems[MAX_QUEUE_ELEMS];
+public:
+	int GetLength() 
+	{
+		return ivalid_elems; 
+	}
+
+	
+	CyclicQueue()
+	{
+		iread_pos = 0;
+		iwrite_pos = 0;
+		ivalid_elems = 0;
+		
+		memset(elems,0x0,sizeof(CyclicElem)*MAX_QUEUE_ELEMS);
+	}
+	~CyclicQueue()
+	{
+
+	}
+
+	int  EnQueue(OSQueueElem* object)
+    {
+		if(ivalid_elems == MAX_QUEUE_ELEMS || object == NULL)
+		{
+			//EnQueue failed full
+//			printf("EnQueue failed reason 1\n");
+			return -1;
+		}
+//		printf("iwrite_pos== %d iread_pos == %d\n",iwrite_pos,iread_pos);
+		if(iwrite_pos < 0 || iwrite_pos >= MAX_QUEUE_ELEMS || iwrite_pos + 1 == iread_pos)
+		{
+//			printf("EnQueue failed reason 2\n");		
+			return -1;
+		}
+
+		elems[iwrite_pos].elem = object;
+		elems[iwrite_pos].valid = true;
+		iwrite_pos ++;
+		if(iwrite_pos == MAX_QUEUE_ELEMS)
+		{
+			iwrite_pos = 0;
+		}
+		ivalid_elems ++;
+		return 0;
+//printf("insert iwrite_pos == %d ivalid_elems[%d] %d\n",iwrite_pos,ivalid_elems,curId);
+	}
+
+	OSQueueElem* DeQueue()
+	{
+		OSQueueElem *object = NULL;
+
+		if(ivalid_elems == 0)
+		{
+			return NULL;
+		}
+			
+		if(iread_pos < 0 || iread_pos >= MAX_QUEUE_ELEMS)
+		{
+			return NULL;
+		}
+
+		if(elems[iread_pos].valid == true)
+		{
+			object = elems[iread_pos].elem;
+		}
+
+		elems[iread_pos].valid = false;
+		elems[iread_pos].elem = NULL;
+		iread_pos ++;
+		if(iread_pos == MAX_QUEUE_ELEMS)
+		{
+			iread_pos = 0;
+		}
+		ivalid_elems --;
+//printf("got iread_pos == %d ivalid_elems[%d] %d\n",iread_pos,ivalid_elems,curId);
+		return object;
+	}
+};
+
+class OSQueueIter//自定义迭代器
 {
     public:
         OSQueueIter(OSQueue* inQueue) : fQueueP(inQueue), fCurrentElemP(inQueue->GetHead()) {}
@@ -133,13 +231,14 @@ class OSQueue_Blocking
         void            EnQueue(OSQueueElem* obj);
         
         OSCond*         GetCond()   { return &fCond; }
-        OSQueue*        GetQueue()  { return &fQueue; }
-        
+//        OSQueue*        GetQueue()  { return &fQueue; }
+  		CyclicQueue*	GetQueue()  { return &fQueue; } 	      
     private:
 
         OSCond              fCond;
         OSMutex             fMutex;
-        OSQueue             fQueue;
+//        OSQueue             fQueue;
+		CyclicQueue			fQueue;
 };
 
 

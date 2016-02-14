@@ -35,22 +35,8 @@
 #if MACOSXEVENTQUEUE
     #include <sys/ev.h>
 #else
-	
 
-struct eventreq {
-  int      er_type;
-#define EV_FD 1    // file descriptor
-  int      er_handle;
-  void    *er_data;
-  int      er_rcnt;
-  int      er_wcnt;
-  int      er_ecnt;
-  int      er_eventbits;
-#define EV_RE  1
-#define EV_WR  2
-#define EV_EX  4
-#define EV_RM  8
-};
+#include "common.h"
 
 typedef struct eventreq *er_t;
 
