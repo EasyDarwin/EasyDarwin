@@ -74,6 +74,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/UserAgentParser.o \
 	${OBJECTDIR}/atomic.o \
 	${OBJECTDIR}/base64.o \
+	${OBJECTDIR}/epollEvent.o \
 	${OBJECTDIR}/ev.o \
 	${OBJECTDIR}/getopt.o \
 	${OBJECTDIR}/md5.o \
@@ -300,6 +301,11 @@ ${OBJECTDIR}/base64.o: base64.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/base64.o base64.c
+
+${OBJECTDIR}/epollEvent.o: epollEvent.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/epollEvent.o epollEvent.cpp
 
 ${OBJECTDIR}/ev.o: ev.cpp 
 	${MKDIR} -p ${OBJECTDIR}
