@@ -1,5 +1,9 @@
-/*epollEvent.h
-auth:fantasy
+/*
+	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+	Author: Fantasy@EasyDarwin.org
 */
 
 #ifndef _EPOLLEVENT_H__
