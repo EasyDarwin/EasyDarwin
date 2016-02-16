@@ -92,7 +92,13 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     SocketUtils::Initialize(!inDontFork);
 
 #if !MACOSXEVENTQUEUE
-    ::select_startevents();//initialize the select() implementation of the event queue
+	#ifndef __Win32__    
+	printf("epollInit once\n");
+    ::epollInit();
+    #else
+	printf("select_startevents once\n");
+    ::select_startevents();//initialize the select() implementation of the event queue        
+    #endif
 #endif
     
 	//初始化系统属性字典
