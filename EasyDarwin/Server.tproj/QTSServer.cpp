@@ -907,6 +907,7 @@ void    QTSServer::InitCallbacks()
 	sCallbacks.addr[kStartHLSessionCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_StartHLSession;
 	sCallbacks.addr[kStopHLSessionCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_StopHLSession;
 	sCallbacks.addr[kGetHLSessionsCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_GetHLSessions;
+	sCallbacks.addr[kGetRTSPSessionsCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_GetRTSPSessions;
 }
 
 void QTSServer::LoadModules(QTSServerPrefs* inPrefs)

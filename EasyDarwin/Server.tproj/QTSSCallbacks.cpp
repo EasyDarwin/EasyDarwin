@@ -1036,3 +1036,39 @@ void* QTSSCallbacks::Easy_GetHLSessions()
 	strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
 	return (void*)retMsg;
 }
+void* QTSSCallbacks::Easy_GetRTSPSessions()
+{
+	OSRefTable* rtpMap = QTSServerInterface::GetServer()->GetRTPSessionMap();
+	EasyDarwinRTSPSessionListAck ack;
+	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
+	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
+	char count[16] = { 0 };
+	sprintf(count,"%d", rtpMap->GetNumRefsInTable());
+	ack.SetBodyValue("SessionCount", count );
+	UInt32 uIndex= 0;
+	OSMutexLocker locker(rtpMap->GetMutex());
+	for (OSRefHashTableIter theIter(rtpMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+	{
+		OSRef* theRef = theIter.GetCurrent();
+		RTPSession* theSession = (RTPSession*)theRef->GetObject();
+
+		EasyDarwinRTSPSession session;
+		session.index = uIndex;
+		char* fullRequestURL = NULL;
+		char* fRequestHostName = NULL;
+		theSession->GetValueAsString(qtssCliSesFullURL,0,&fullRequestURL);
+		theSession->GetValueAsString(qtssCliSesHostName,0,&fRequestHostName);
+		session.Url=fullRequestURL;
+		session.Name=fRequestHostName;
+		ack.AddSession(session);
+		uIndex++;
+	}   
+
+	string msg = ack.GetMsg();
+
+	UInt32 theMsgLen = strlen(msg.c_str());
+	char* retMsg = new char[theMsgLen+1];
+	retMsg[theMsgLen] = '\0';
+	strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
+	return (void*)retMsg;
+}

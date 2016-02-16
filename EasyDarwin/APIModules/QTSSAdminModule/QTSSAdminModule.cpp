@@ -273,6 +273,8 @@ static	SInt64	EasyAdmin_GetServiceRunTime();
 	static	bool	EasyAdmin_StopHLSession(char* inSessionName);
 	//获取HLS直播列表(json)
 	static	char*	EasyAdmin_GetHLSessions();
+	//获取RTSP推送列表(json)
+	static	char*	EasyAdmin_GetRTSPSessions();
 	//---------------------------HLS列表E---------------------------
 
 //===============HLS直播栏E===============
@@ -451,10 +453,19 @@ static int serve_request(struct mg_connection *conn)
 		mg_printf_data(conn,sAjax);
 		return MG_TRUE;
 	}
+	
 	if(strcmp(conn->uri, "/api/getHLSList") == 0)
 	{
 		char* sessionsJSON = EasyAdmin_GetHLSessions();
 		mg_printf_data(conn,sessionsJSON);
+		delete sessionsJSON;
+		return MG_TRUE;
+	}
+	if(strcmp(conn->uri, "/api/getRTSPList") == 0)
+	{
+		char* sessionsJSON = EasyAdmin_GetRTSPSessions();
+		mg_printf_data(conn,sessionsJSON);
+		delete sessionsJSON;
 		return MG_TRUE;
 	}
 	if(strcmp(conn->uri, "/api/addHLSList") == 0)
@@ -1701,4 +1712,8 @@ bool EasyAdmin_StopHLSession(char* inSessionName)
 char* EasyAdmin_GetHLSessions()
 {
 	return (char*)Easy_GetHLSessions();
+}
+char* EasyAdmin_GetRTSPSessions()
+{
+	return (char*)Easy_GetRTSPSessions();
 }

@@ -106,3 +106,4 @@ var str_hls_list_url_warn="The RTSP URL can not be empty!"
 var str_hls_list_timeout_warn="The timeout can not be empty!"
 var str_hls_list_timeout_warn1="The timeout format is not correct!"
 var str_confirm_delete="Confirm to delete the data?";
+var str_rtsp_live_list="RTSP List"

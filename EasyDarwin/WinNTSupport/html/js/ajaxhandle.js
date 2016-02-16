@@ -10,9 +10,8 @@
                 success: function (json) {
 					
 					var strs=json.RunTime.split('|');
-					var version=json.version;
 					var str=str_run_time+": "+strs[0]+"D-"+strs[1]+"H-"+strs[2]+"M-"+strs[3]+"S"
-					document.getElementById('dvruntime').innerHTML=str+"  ["+version+"]";
+					document.getElementById('dvruntime').innerHTML=str;
                 },
 				error:function(msg)
 				{	alert(textStatus);}
@@ -293,11 +292,10 @@ function getHLSList()
                 data: { },
                 success: function (json) {
 					var pagecount=json.EasyDarwin.Body.SessionCount;
-					//json=siteList;
 					//var pagecount=siteList.EasyDarwin.Body.SessionCount;
 					if(pagecount=="0")
 					{
-						var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th><th>Bitrate(KBps)</th><th>Option</th></tr></thead><tbody>";
+						var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th><th>Bitrate</th><th>Option</th></tr></thead><tbody>";
 						html+="</tbody></table></div>";
 						document.getElementById("divload").innerHTML= html;
 					}
@@ -415,7 +413,7 @@ function load(seturl) {
                  a: url,
                  c: 0,
                  s: 4,
-                 lv: 1,
+                 lv: 0,
                  p:1
                
              };
@@ -486,4 +484,35 @@ function gotolist()
 			
 	window.location.href='hlslist.html';
 	return false;
+}
+
+function getRTSPList()
+{
+	
+	$.ajax({
+                url: '/api/getRTSPList',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8', 
+                method: 'POST',
+                dataType: 'json',
+				cache: false,
+				async: false,
+                data: { },
+                success: function (json) {
+					var pagecount=json.EasyDarwin.Body.SessionCount;
+					//var pagecount=siteList.EasyDarwin.Body.SessionCount;
+					if(pagecount=="0")
+					{
+						var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Source</th><th>Url</th></tr></thead><tbody>";
+						html+="</tbody></table></div>";
+						document.getElementById("divload").innerHTML= html;
+					}
+					else{
+							OutputHtml(parseInt(pagecount),1,json);
+					}
+					
+				
+                },
+				error:function(msg)
+				{	alert(textStatus);}
+            });
 }
