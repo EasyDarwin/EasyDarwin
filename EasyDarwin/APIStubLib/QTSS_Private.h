@@ -122,7 +122,8 @@ enum
 	kStartHLSessionCallback			= 61,
 	kStopHLSessionCallback			= 62,
 	kGetHLSessionsCallback			= 63,
-    kLastCallback                   = 64
+	kGetRTSPSessionsCallback		= 64,
+	kLastCallback                   = 65
 };
 
 typedef struct {

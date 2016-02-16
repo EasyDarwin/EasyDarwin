@@ -2060,7 +2060,7 @@ QTSS_Error	Easy_StartHLSession(const char* inSessionName, const char* inURL, UIn
 QTSS_Error	Easy_StopHLSession(const char* inSessionName);
 // Get HLS Sessions(json)
 void*	Easy_GetHLSessions();
-
+void*	Easy_GetRTSPSessions();
 #ifdef QTSS_OLDROUTINENAMES
 
 //

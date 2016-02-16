@@ -59,7 +59,17 @@ public:
 	std::string sourceUrl;
 	int bitrate;
 };
+class EasyDarwinRTSPSession
+{
+public:
+	EasyDarwinRTSPSession(){}
+	~EasyDarwinRTSPSession(){}
 
+public:
+	int index;
+	std::string Url;
+	std::string Name;
+};
 class EASYDARWIN_API EasyDarwinDeviceListAck : public EasyProtocol
 {
 public:
@@ -124,6 +134,20 @@ private:
 	std::list<EasyDarwinHLSession> sessions;
 };
 
+class EASYDARWIN_API EasyDarwinRTSPSessionListAck : public EasyProtocol
+{
+public:
+	EasyDarwinRTSPSessionListAck();
+	EasyDarwinRTSPSessionListAck(const char* msg);
+	virtual ~EasyDarwinRTSPSessionListAck(){}
 
+public:
+	bool AddSession(EasyDarwinRTSPSession &session);
+	//int StartGetDevice();
+	//bool GetNextDevice(EasyDarwinDevice &device);
+
+private:
+	std::list<EasyDarwinRTSPSession> sessions;
+};
 }}//namespace
 #endif
