@@ -10,6 +10,7 @@
 - EasyDarwin开源吗？
 
 	开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、任务队列调度)和上层(RESTful接口、WEB管理、多平台编译)的优化，这些部分都是完全开源的；
+
 	EasyDarwin有两个私有自定义的Module：拉模式转发模块**EasyRelayModule**和HLS直播模块**EasyHLSModule**，这里用到的**libEasyRTSPClient**、**libEasyPusher**、**libEasyHLS**三个库文件都是没有开源的，但这些都是完全免费使用的，如果您觉得这几个Module对您没有作用，可以在代码中删除或者在调用入口QTSServer::LoadCompiledInModules()中注释掉：
 
 		//QTSSModule* theOnDemandRelayModule = new QTSSModule("EasyRelayModule");
@@ -19,10 +20,6 @@
 		//QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
 		//(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
 		//(void)AddModule(theHLSModule);
-
-
-- EasyDarwin会做多久？
-	
 
 
 ## 云平台结构 ##
