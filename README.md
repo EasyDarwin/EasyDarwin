@@ -1,6 +1,29 @@
 # EasyDarwin开源流媒体平台 #
 
-**EasyDarwin**是由国内开源流媒体团队开发和维护的一款开源流媒体平台框架，从2012年12月创建并发展至今，从原有的单服务的流媒体服务器形式，扩展成现在的云平台架构的开源项目，更好地帮助广大流媒体开发者和创业型企业快速构建流媒体服务平台，更快、更简单地实现最新的移动互联网(安卓、IOS、微信)流媒体直播与点播的需求，尤其是安防行业与互联网行业的衔接；
+**EasyDarwin**是由国内开源流媒体团队维护的一款开源流媒体平台框架，从2012年12月创建并发展至今，从原有的单服务的流媒体服务器形式，扩展成现在的云平台架构的开源项目，更好地帮助广大流媒体开发者和创业型企业快速构建流媒体服务平台，更快、更简单地实现最新的移动互联网(安卓、IOS、微信)流媒体直播与点播的需求，尤其是安防行业与互联网行业的衔接；
+
+## 答疑解问 ##
+- 使用EasyDarwin收费吗？
+
+	免费，EasyDarwin是在Apple开源项目Darwin Streaming Server的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用；
+
+- EasyDarwin开源吗？
+
+	开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、任务队列调度)和上层(RESTful接口、WEB管理、多平台编译)的优化，这些部分都是完全开源的；
+	EasyDarwin有两个私有自定义的Module：拉模式转发模块**EasyRelayModule**和HLS直播模块**EasyHLSModule**，这里用到的**libEasyRTSPClient**、**libEasyPusher**、**libEasyHLS**三个库文件都是没有开源的，但这些都是完全免费使用的，如果您觉得这几个Module对您没有作用，可以在代码中删除或者在调用入口QTSServer::LoadCompiledInModules()中注释掉：
+
+		//QTSSModule* theOnDemandRelayModule = new QTSSModule("EasyRelayModule");
+		//(void)theOnDemandRelayModule->SetupModule(&sCallbacks, &EasyRelayModule_Main);
+		//(void)AddModule(theOnDemandRelayModule);
+
+		//QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
+		//(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
+		//(void)AddModule(theHLSModule);
+
+
+- EasyDarwin会做多久？
+	
+
 
 ## 云平台结构 ##
 
