@@ -175,7 +175,6 @@ QTSS_Error ReflectorSession::SetSessionName()
 
 		parser.ConsumeLength(NULL,thePathLen);
 
-		// Get the crypted password
         parser.Expect('\\');
 		parser.ConsumeUntil(&strName,'\.');
 		fSessionName = NEW char[strName.Len + 1];
@@ -339,6 +338,7 @@ void ReflectorSession::AddBroadcasterClientSession(QTSS_StandardRTSP_Params* inP
     }
     fBroadcasterSession = inParams->inClientSession;
 }
+
 void    ReflectorSession::FormatHTML(StrPtrLen* inURL)
 {
     // Begin writing our source description HTML (used by the relay)
