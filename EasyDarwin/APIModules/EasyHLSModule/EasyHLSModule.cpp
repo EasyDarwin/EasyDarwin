@@ -46,6 +46,8 @@ class HLSSessionCheckingTask : public Task
 static QTSS_PrefsObject         sServerPrefs		= NULL;
 static HLSSessionCheckingTask*	sCheckingTask		= NULL;
 
+static OSRefTable*				sHLSSessionMap		= NULL;
+
 static QTSS_ServerObject sServer					= NULL;
 static QTSS_ModulePrefsObject       sModulePrefs	= NULL;
 
@@ -112,6 +114,8 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     // Setup module utils
     QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
 
+	sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
+
     // Setup global data structures
     sServerPrefs = inParams->inPrefs;
     sCheckingTask = NEW HLSSessionCheckingTask();
@@ -140,9 +144,7 @@ SInt64 HLSSessionCheckingTask::Run()
 }
 
 QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
-{	
-	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
-
+{
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
 	EasyHLSSession* session = NULL;
@@ -178,8 +180,6 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 
 QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 {
-	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
-
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
 	//首先查找Map里面是否已经有了对应的流

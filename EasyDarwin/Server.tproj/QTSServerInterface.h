@@ -188,6 +188,8 @@ class QTSServerInterface : public QTSSDictionary
         OSRefTable*         GetRTPSessionMap()          { return fRTPMap; }
 
 		OSRefTable*			GetHLSSessionMap()			{ return fHLSMap; }
+
+		OSRefTable*			GetReflectorSessionMap()	{ return fReflectorSessionMap; }
     
         //Server provides a statically created & bound UDPSocket / Demuxer pair
         //for each IP address setup to serve RTP. You access those pairs through
@@ -279,6 +281,8 @@ class QTSServerInterface : public QTSSDictionary
         OSRefTable*                 fRTPMap;
 
 		OSRefTable*					fHLSMap;
+
+		OSRefTable*					fReflectorSessionMap;
         
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;

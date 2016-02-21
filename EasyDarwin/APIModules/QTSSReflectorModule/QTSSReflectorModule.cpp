@@ -31,6 +31,7 @@
     
 */
 
+#include "QTSServerInterface.h"
 #include "QTSSReflectorModule.h"
 #include "QTSSModuleUtils.h"
 #include "ReflectorSession.h"
@@ -384,7 +385,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
 	QTSS3GPPModuleUtils::Initialize(inParams);
     QTAccessFile::Initialize();
-    sSessionMap = NEW OSRefTable();
+    sSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
     sServerPrefs = inParams->inPrefs;
     sServer = inParams->inServer;
 #if QTSS_REFLECTOR_EXTERNAL_MODULE
