@@ -93,6 +93,23 @@
 **播放页**：html播放页面用调用ckplayer等m3u8播放器（[可参考EasyDarwin视频播放页面](http://www.easydarwin.org/article/hlsplayer/ "EasyDarwin视频播放")）；
 
 
+## 捐赠您自己的项目 ##
+
+**EasyDarwin**从发展至今，从最初单纯的流媒体服务器EasyDarwin，已经发展成为一个非常丰富的流媒体开源社区了，目前EasyDarwin Github所有的开源项目，有EasyDarwin开源团队开发，也有外部开发者贡献给EasyDarwin社区的，并由原始作者和EasyDarwin开源团队一起进行后续的开发和维护；
+
+### 捐赠的好处 ###
+
+捐赠进入EasyDarwin社区的开源项目，必须命名以Easy前缀打头，项目捐赠进入EasyDarwin开源社区，会有非常庞大的流媒体社区用户使用，帮助您修复项目bug，快速进行功能迭代，并且有开源团队和开源社区的大牛来帮助您解决诸多棘手的问题，对提升项目和个人技术水平，都是非常有益的；
+
+### 捐赠的方法 ###
+
+捐赠渠道：
+
+1. 发送邮件到：support@easydarwin.org or  babosa@easydarwin.org；
+2. 加EasyDarwin项目创始人QQ：289042893 沟通；
+
+记得附上项目具体说明；
+
 ## 获取更多信息 ##
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
