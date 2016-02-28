@@ -118,7 +118,7 @@
 
 WEB：[www.EasyDarwin.org](http://www.easydarwin.org)
 
-QQ交流群：288214068 / 496258327
+QQ交流群：[288214068](http://jq.qq.com/?_wv=1027&k=2Dlyhr7 "EasyDarwin交流群1") / [496258327](http://jq.qq.com/?_wv=1027&k=2Hyz2ea "EasyDarwin交流群2")
 
 Copyright &copy; EasyDarwin.org 2012-2015
 
