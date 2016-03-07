@@ -81,7 +81,8 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 	fLastNumPacketsReceived(0),
 	fNumBytesReceived(0),
 	fLastNumBytesReceived(0),
-	fTimeoutTask(NULL, 60*1000)
+	fTimeoutTask(NULL, 60*1000),
+	fLastAudioPTS(0)
 {
     fTimeoutTask.SetTask(this);
     fQueueElem.SetEnclosingObject(this);
@@ -156,9 +157,9 @@ QTSS_Error EasyHLSSession::EasyInitAACEncoder(int codec)
 	if(fAAChandle==NULL)
 	{
 		InitParam initParam;
-		initParam.u32AudioSamplerate=8000;
-		initParam.ucAudioChannel=1;
-		initParam.u32PCMBitSize=16;
+		initParam.u32AudioSamplerate = 8000;
+		initParam.ucAudioChannel = 1;
+		initParam.u32PCMBitSize = 16;
 
 		if(codec == EASY_SDK_AUDIO_CODEC_G711A)
 			initParam.ucAudioCodec = Law_ALaw;
@@ -217,10 +218,17 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 				unsigned int iAACBufferLen = 0;
 				if(Easy_AACEncoder_Encode(fAAChandle, (unsigned char*)pbuf,  frameinfo->length, pbAACBuffer, &iAACBufferLen) > 0)
 				{
-					EasyHLS_AudioMux(fHLSHandle, pbAACBuffer, iAACBufferLen, llPTS*90, llPTS*90);
+					EasyHLS_AudioMux(fHLSHandle, pbAACBuffer, iAACBufferLen, fLastAudioPTS*90, fLastAudioPTS*90);
+					fLastAudioPTS = 0;
+				}
+				
+				if( fLastAudioPTS == 0)
+				{
+					fLastAudioPTS = llPTS;
 				}
 			}
 		}
+
 		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC)
 		{	
 			EasyHLS_AudioMux(fHLSHandle, (unsigned char*)pbuf, frameinfo->length, llPTS*90, llPTS*90);
@@ -343,6 +351,7 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 	{
 		Easy_AACEncoder_Release(fAAChandle);
 		fAAChandle=NULL;
+		fLastAudioPTS = 0;
 	}
 	return QTSS_NoErr;
 }

@@ -70,6 +70,9 @@ class EasyHLSSession : public Task
 		Easy_HLS_Handle fHLSHandle;
 		//AACEncode Handle
 		EasyAACEncoder_Handle fAAChandle;
+		//Last Audio PTS
+		unsigned long long fLastAudioPTS;
+
 		QTSS_Error EasyInitAACEncoder(int codec);
 		UInt8 pbAACBuffer[EASY_ACCENCODER_BUFFER_SIZE_LEN];
 
