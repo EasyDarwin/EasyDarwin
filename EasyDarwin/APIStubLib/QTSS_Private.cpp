@@ -410,7 +410,8 @@ void* Easy_GetHLSessions()
 {
 	return (void *) ((QTSS_CallbackPtrProcPtr) sCallbacks->addr [kGetHLSessionsCallback]) ();
 }
-void*	Easy_GetRTSPSessions()
+
+void* Easy_GetRTSPPushSessions()
 {
 	return (void *) ((QTSS_CallbackPtrProcPtr) sCallbacks->addr [kGetRTSPSessionsCallback]) ();
 }

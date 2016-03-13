@@ -165,7 +165,7 @@ class QTSSCallbacks
 
 		static void* Easy_GetHLSessions();
 
-		static void* Easy_GetRTSPSessions();
+		static void* Easy_GetRTSPPushSessions();
 };
 
 #endif //__QTSSCALLBACKS_H__

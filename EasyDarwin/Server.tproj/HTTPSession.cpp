@@ -38,6 +38,7 @@ using namespace std;
 static StrPtrLen	sServiceStr("EasyDarwin");
 static StrPtrLen	sEasyHLSModule("api/easyhlsmodule");
 static StrPtrLen	sGetHLSSessions("api/gethlssessions");
+static StrPtrLen	sGetRTSPPushSessions("api/getrtsppushsessions");
 
 #define	QUERY_STREAM_NAME		"name"
 #define QUERY_STREAM_URL		"url"
@@ -441,6 +442,11 @@ QTSS_Error HTTPSession::SetupRequest()
 		{
 			return ExecNetMsgGetHlsSessionsReq(fRequest->GetQueryString(), NULL);
 		}
+
+		if (theFullPath.Equal(sGetRTSPPushSessions))
+		{
+			return ExecNetMsgGetRTSPPushSessionsReq(fRequest->GetQueryString(), NULL);
+		}
 	}
 
 	//获取具体Content json数据部分
@@ -691,6 +697,41 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 
 	do{
 		char* msgContent = (char*)Easy_GetHLSessions();
+
+		StrPtrLen msgJson(msgContent);
+
+		//构造响应报文(HTTP头)
+		HTTPRequest httpAck(&sServiceStr);
+		httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
+		if (msgJson.Len)
+			httpAck.AppendContentLengthHeader(msgJson.Len);
+
+		//响应完成后断开连接
+		httpAck.AppendConnectionCloseHeader();
+
+		//Push MSG to OutputBuffer
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+		
+		RTSPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (msgJson.Len > 0) 
+			pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+
+		delete[] msgContent;
+	}while(0);
+
+	return theErr;
+}
+
+
+QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char* json)
+{	
+	QTSS_Error theErr = QTSS_NoErr;
+
+	do{
+		char* msgContent = (char*)Easy_GetRTSPPushSessions();
 
 		StrPtrLen msgJson(msgContent);
 

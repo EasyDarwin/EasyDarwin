@@ -50,6 +50,7 @@
 #include "EasyProtocol.h"
 
 #include "EasyHLSSession.h"
+#include "ReflectorSession.h"
 
 using namespace EasyDarwin::Protocol;
 using namespace std;
@@ -1036,30 +1037,36 @@ void* QTSSCallbacks::Easy_GetHLSessions()
 	strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
 	return (void*)retMsg;
 }
-void* QTSSCallbacks::Easy_GetRTSPSessions()
+void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 {
-	OSRefTable* rtpMap = QTSServerInterface::GetServer()->GetRTPSessionMap();
+	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
+
 	EasyDarwinRTSPSessionListAck ack;
 	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
 	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
 	char count[16] = { 0 };
-	sprintf(count,"%d", rtpMap->GetNumRefsInTable());
+	sprintf(count,"%d", reflectorSessionMap->GetNumRefsInTable());
 	ack.SetBodyValue("SessionCount", count );
+
 	UInt32 uIndex= 0;
-	OSMutexLocker locker(rtpMap->GetMutex());
-	for (OSRefHashTableIter theIter(rtpMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+	OSMutexLocker locker(reflectorSessionMap->GetMutex());
+
+	for (OSRefHashTableIter theIter(reflectorSessionMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
 	{
 		OSRef* theRef = theIter.GetCurrent();
-		RTPSession* theSession = (RTPSession*)theRef->GetObject();
+		ReflectorSession* theSession = (ReflectorSession*)theRef->GetObject();
 
 		EasyDarwinRTSPSession session;
 		session.index = uIndex;
 		char* fullRequestURL = NULL;
-		char* fRequestHostName = NULL;
-		theSession->GetValueAsString(qtssCliSesFullURL,0,&fullRequestURL);
-		theSession->GetValueAsString(qtssCliSesHostName,0,&fRequestHostName);
-		session.Url=fullRequestURL;
-		session.Name=fRequestHostName;
+
+		RTPSession* clientSession = (RTPSession*) theSession->GetBroadcasterSession();
+
+		if(clientSession == NULL) continue;
+
+		clientSession->GetValueAsString(qtssCliSesFullURL,0,&fullRequestURL);
+		session.Url = fullRequestURL;
+		session.Name = theSession->GetSessionName();
 		ack.AddSession(session);
 		uIndex++;
 	}   
