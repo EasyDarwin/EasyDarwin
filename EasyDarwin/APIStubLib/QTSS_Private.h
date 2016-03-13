@@ -122,7 +122,7 @@ enum
 	kStartHLSessionCallback			= 61,
 	kStopHLSessionCallback			= 62,
 	kGetHLSessionsCallback			= 63,
-	kGetRTSPSessionsCallback		= 64,
+	kGetRTSPPushSessionsCallback		= 64,
 	kLastCallback                   = 65
 };
 
