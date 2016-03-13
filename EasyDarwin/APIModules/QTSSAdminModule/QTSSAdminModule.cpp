@@ -1715,5 +1715,5 @@ char* EasyAdmin_GetHLSessions()
 }
 char* EasyAdmin_GetRTSPSessions()
 {
-	return (char*)Easy_GetRTSPSessions();
+	return (char*)Easy_GetRTSPPushSessions();
 }

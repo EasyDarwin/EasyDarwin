@@ -132,6 +132,9 @@ class ReflectorSession
         StrPtrLen*      GetLocalSDP()       { return &fLocalSDP; }
         StrPtrLen*      GetSourcePath()     { return &fSourceID; }
         Bool16          IsSetup()           { return fIsSetup; }
+
+		char*			GetSessionName()	{ return fSessionName; }
+
         ReflectorStream*GetStreamByIndex(UInt32 inIndex) { return fStreamArray[inIndex]; }
         void AddBroadcasterClientSession(QTSS_StandardRTSP_Params* inParams);
         QTSS_ClientSessionObject GetBroadcasterSession() { return fBroadcasterSession;}
@@ -166,7 +169,7 @@ class ReflectorSession
         
         SInt64  GetInitTimeMS()   { return fInitTimeMS; }
 
-       void SetHasBufferedStreams(Bool16 enableBuffer) { fHasBufferedStreams = enableBuffer; } 
+		void	SetHasBufferedStreams(Bool16 enableBuffer) { fHasBufferedStreams = enableBuffer; } 
      
     private:
     
