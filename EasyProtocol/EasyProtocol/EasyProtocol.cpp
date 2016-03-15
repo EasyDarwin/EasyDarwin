@@ -176,17 +176,17 @@ bool EasyDarwinHLSessionListAck::AddSession(EasyDarwinHLSession &session)
 	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Sessions"].append(value);
 	return true;
 }
-EasyDarwinRTSPSessionListAck::EasyDarwinRTSPSessionListAck()
-: EasyProtocol(MSG_CLI_SMS_HLS_LIST_ACK)
+EasyDarwinRTSPPushSessionListAck::EasyDarwinRTSPPushSessionListAck()
+: EasyProtocol(MSG_CLI_SMS_PUSH_SESSION_LIST_ACK)
 {
 }
 
-EasyDarwinRTSPSessionListAck::EasyDarwinRTSPSessionListAck(const char* msg)
-: EasyProtocol(msg, MSG_CLI_SMS_HLS_LIST_ACK)
+EasyDarwinRTSPPushSessionListAck::EasyDarwinRTSPPushSessionListAck(const char* msg)
+: EasyProtocol(msg, MSG_CLI_SMS_PUSH_SESSION_LIST_ACK)
 {
 }
 
-bool EasyDarwinRTSPSessionListAck::AddSession(EasyDarwinRTSPSession &session)
+bool EasyDarwinRTSPPushSessionListAck::AddSession(EasyDarwinRTSPSession &session)
 {	
 	Json::Value value;
 	value["index"] = session.index;

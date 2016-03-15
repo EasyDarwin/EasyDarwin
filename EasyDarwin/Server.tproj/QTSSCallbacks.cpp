@@ -1041,12 +1041,10 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 {
 	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 
-	EasyDarwinRTSPSessionListAck ack;
+	EasyDarwinRTSPPushSessionListAck ack;
 	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
 	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
-	char count[16] = { 0 };
-	sprintf(count,"%d", reflectorSessionMap->GetNumRefsInTable());
-	ack.SetBodyValue("SessionCount", count );
+
 
 	UInt32 uIndex= 0;
 	OSMutexLocker locker(reflectorSessionMap->GetMutex());
@@ -1069,7 +1067,11 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 		session.Name = theSession->GetSessionName();
 		ack.AddSession(session);
 		uIndex++;
-	}   
+	}  
+
+	char count[16] = { 0 };
+	sprintf(count,"%d", uIndex);
+	ack.SetBodyValue("SessionCount", count );
 
 	string msg = ack.GetMsg();
 
