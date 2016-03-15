@@ -134,12 +134,12 @@ private:
 	std::list<EasyDarwinHLSession> sessions;
 };
 
-class EASYDARWIN_API EasyDarwinRTSPSessionListAck : public EasyProtocol
+class EASYDARWIN_API EasyDarwinRTSPPushSessionListAck : public EasyProtocol
 {
 public:
-	EasyDarwinRTSPSessionListAck();
-	EasyDarwinRTSPSessionListAck(const char* msg);
-	virtual ~EasyDarwinRTSPSessionListAck(){}
+	EasyDarwinRTSPPushSessionListAck();
+	EasyDarwinRTSPPushSessionListAck(const char* msg);
+	virtual ~EasyDarwinRTSPPushSessionListAck(){}
 
 public:
 	bool AddSession(EasyDarwinRTSPSession &session);
