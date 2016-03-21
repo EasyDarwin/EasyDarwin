@@ -405,7 +405,7 @@ function GetQueryString(name)
      if(r!=null)return  unescape(r[2]); return null;
 }
 
-function load(seturl) {
+/*function load(seturl) {
            
             var url = seturl;
              var snap = '';
@@ -422,7 +422,7 @@ function load(seturl) {
              var video = [url , url , url ];
              
              CKobject.embed('ckplayer/ckplayer.swf', 'dvplay', 'ckplayer_dvplay', '100%', '100%', false, flashvars, video, params);
-        }
+        }*/
 		
 		function getpar()
 		{

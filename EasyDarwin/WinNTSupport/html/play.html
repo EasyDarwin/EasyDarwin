@@ -18,6 +18,7 @@
 	<script src="js/ajaxhandle.js" ></script>
 	<script src="js/verify.js"></script>
 	  <script type="text/javascript" src="ckplayer/ckplayer.js" charset="utf-8"></script>
+	   <script type="text/javascript" src="js/cyberplayer.js" charset="utf-8"></script>
 	<!-- Graph JavaScript -->
 	
 </head>
@@ -40,7 +41,8 @@
 											<div class="tab-pane active" id="horizontal-form">
 												
 													 <button class="btn-success btn"  onclick="return gotolist()"><script type="text/javascript">document.write(str_return);</script></button>
-													    
+													    <br/>
+														 <br/>
 													<div style="margin:5px; height: 600px; width: 1200px;" id="dvplay"></div>
 											
 											</div>
@@ -58,4 +60,23 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 </body>
+<script language="javascript" type="text/javascript">
+function load(seturl) {
+           var divs = document.getElementById("dvplay");
+            var url = seturl;
+			 var player = cyberplayer("dvplay").setup({
+		flashplayer:"cyberplayer.flash.swf",
+            stretching: "uniform",
+            file: url ,
+	   width:divs.scrollWidth,
+            height: divs.scrollHeight,
+            autostart: true,
+            repeat: false,
+            volume: 100,
+            controls: true,
+            ak: '515d61b893134f40bd4297b75a03494b' // 公有云平台注册即可获得accessKey
+        });
+            
+        }
+</script>
 </html>
