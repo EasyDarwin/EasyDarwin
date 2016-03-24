@@ -33,41 +33,11 @@
 
 1. **EasyPlayer** RTSP流媒体播放客户端，目前只支持Windows桌面版本，后续将陆续支持Android、IOS版本，详细方案见[https://github.com/EasyDarwin/EasyPlayer](https://github.com/EasyDarwin/EasyPlayer)；
 
+## 平台架构 ##
+![](http://www.easydarwin.org/skin/easydarwin/images/platform20160325.png)
 
 ## 基本流程 ##
 ![](http://www.easydarwin.org/skin/easydarwin/images/architecture20150825.png)
-
-
-## 直播流程 ##
-
-<pre>
-
-          +---------+         +----------+        +------------+        +------------+
-          +  Client +         +  EasyCMS +        + EasyCamera +        + EasyDarwin +
-          +---|-----+         +----|-----+        +----|-------+        +------|-----+
-    +---------+--------------------+-------------------+-----------------------+---------+
-    |         |                    |<-Register Online--+                       |         |
-    +---------+--------------------+-------------------+-----------------------+---------+
-    |         +--Get Device List-->|                   |                       |         |
-    |         |                    |                   |                       |         |
-    |         |<-Device List Json--|                   |                       |         |
-    +---------+--------------------+-------------------+-----------------------+---------+
-    |         |                    |                   |                       |         |
-    |         +-Get Device Stream->|                   |                       |         |
-    |         |    (Device SN)     |                   |                       |         |
-    |         |                    +--request stream-->|                       |         |
-    |         |                    | (EasyDarwin Addr) |                       |         |
-    |         |                    |                   +---RTSP Stream Push--->|         |
-    |         |                    |                   +====RTP Streaming=====>|         |
-    |         |                    |                   |                       |         |
-    |         |                    |<---Streaming OK---+                       |         |
-    |         |<--live stream url--+                   |                       |         |
-    |         |                    |                   |                       |         |
-    |         +-------------------HTTP or RTSP Streaming---------------------->|         |
-    |         |                    |                   |                       |         |
-    +---------+--------------------+-------------------+-----------------------+---------+
-
-</pre>
 
 ## EasyDarwin部署视频广场 ##
 
