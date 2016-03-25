@@ -20,6 +20,8 @@
 #define Easy_RTSP_Handle void*
 #define Easy_Pusher_Handle void*
 
+typedef int						Easy_I32;
+
 typedef unsigned char           Easy_U8;
 typedef unsigned char           Easy_UChar;
 typedef unsigned short          Easy_U16;
@@ -65,6 +67,7 @@ typedef int Easy_Error;
 #define EASY_SDK_AUDIO_CODEC_AAC	0x15002		/* AAC */
 #define EASY_SDK_AUDIO_CODEC_G711U	0x10006		/* G711 ulaw*/
 #define EASY_SDK_AUDIO_CODEC_G711A	0x10007		/* G711 alaw*/
+#define EASY_SDK_AUDIO_CODEC_G726	0x1100B		/* G726 */
 
 
 /* 音视频帧标识 */
@@ -92,10 +95,15 @@ typedef struct __EASY_MEDIA_INFO_T
 {
 	Easy_U32 u32VideoCodec;			/* 视频编码类型 */
 	Easy_U32 u32VideoFps;			/* 视频帧率 */
-	
+
 	Easy_U32 u32AudioCodec;			/* 音频编码类型 */
 	Easy_U32 u32AudioSamplerate;	/* 音频采样率 */
 	Easy_U32 u32AudioChannel;		/* 音频通道数 */
+
+	Easy_U32 u32H264SpsLength;
+	Easy_U32 u32H264PpsLength;
+	Easy_U8	 u8H264Sps[128];
+	Easy_U8	 u8H264Pps[36];
 }EASY_MEDIA_INFO_T;
 
 /* 帧信息 */

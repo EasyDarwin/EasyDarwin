@@ -17,11 +17,20 @@
 #include "QueryParamList.h"
 #include "OSRef.h"
 #include "StringParser.h"
+
+#include "EasyRTSPClientAPI.h"
+#include "EasyPusherAPI.h"
 #include "EasyRelaySession.h"
 
 #ifndef __Win32__
     #include <unistd.h>
 	#include <netdb.h>
+#endif
+
+#ifdef __Win32__
+#define EasyPusher_KEY "6A34714D6C3469576B5A7541662F52577151742F4576464659584E355247467964326C754C6D56345A536C5737366F412F704A6C59584E35"
+#else
+#define EasyPusher_KEY "6A34714D6C354F576B597141662F52577151742F4576566C59584E355A47467964326C754B5662767167442B6B6D566863336B3D"
 #endif
 
 // STATIC DATA
@@ -75,6 +84,33 @@ QTSS_Error  EasyRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
+	//加载前进行授权验证
+	int isActivated = EasyPusher_Activate(EasyPusher_KEY);
+	switch(isActivated)
+	{
+	case EASY_ACTIVATE_INVALID_KEY:
+		printf("KEY is EASY_ACTIVATE_INVALID_KEY!\n");
+		break;
+	case EASY_ACTIVATE_TIME_ERR:
+		printf("KEY is EASY_ACTIVATE_TIME_ERR!\n");
+		break;
+	case EASY_ACTIVATE_PROCESS_NAME_LEN_ERR:
+		printf("KEY is EASY_ACTIVATE_PROCESS_NAME_LEN_ERR!\n");
+		break;
+	case EASY_ACTIVATE_PROCESS_NAME_ERR:
+		printf("KEY is EASY_ACTIVATE_PROCESS_NAME_ERR!\n");
+		break;
+	case EASY_ACTIVATE_VALIDITY_PERIOD_ERR:
+		printf("KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
+		break;
+	case EASY_ACTIVATE_SUCCESS:
+		printf("KEY is EASY_ACTIVATE_SUCCESS!\n");
+		break;
+	}
+
+	if(EASY_ACTIVATE_SUCCESS != isActivated)
+		return QTSS_RequestFailed;
+
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RTSPPreProcessor_Role);

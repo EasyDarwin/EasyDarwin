@@ -1031,7 +1031,16 @@ Bool16 QTSServer::AddModule(QTSSModule* inModule)
     
     // If the module returns an error from the QTSS_Register role, don't put it anywhere
     if (inModule->CallDispatch(QTSS_Register_Role, &theRegParams) != QTSS_NoErr)
+	{
+		//Log 
+		char msgStr[2048];
+		char* moduleName = NULL;
+		(void)inModule->GetValueAsString (qtssModName, 0, &moduleName);
+		qtss_snprintf(msgStr, sizeof(msgStr), "Loading Module [%s] Failed!", moduleName);
+		delete moduleName;
+		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
         return false;
+	}
         
     OSThread::SetMainThreadData(NULL);
     
