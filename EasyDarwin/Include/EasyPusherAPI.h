@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -9,7 +9,18 @@
 
 #include "EasyTypes.h"
 
-#define RTSP_CLIENT_NAME	"EasyPusher v1.16.0202"
+#define RTSP_CLIENT_NAME	"EasyPusher v1.16.0325"
+
+typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
+{
+	EASY_ACTIVATE_INVALID_KEY		=		-1,			//无效Key
+	EASY_ACTIVATE_TIME_ERR			=		-2,			//时间错误
+	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			//进程名称长度不匹配
+	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			//进程名称不匹配
+	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			//有效期校验不一致
+	EASY_ACTIVATE_SUCCESS			=		0,			//激活成功
+
+}EASY_ACTIVATE_ERR_CODE_ENUM;
 
 typedef struct __EASY_AV_Frame
 {
@@ -40,6 +51,8 @@ typedef int (*EasyPusher_Callback)(int _id, EASY_PUSH_STATE_T _state, EASY_AV_Fr
 extern "C"
 {
 #endif
+	/* 激活推送库，成功返回0，失败查看具体错误码EASY_ACTIVATE_ERR_CODE_ENUM */
+	Easy_API Easy_I32 Easy_APICALL EasyPusher_Activate(char *license);
 
 	/* 创建推送句柄  返回为句柄值 */
 	Easy_API Easy_Pusher_Handle Easy_APICALL EasyPusher_Create();

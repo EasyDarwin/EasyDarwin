@@ -101,19 +101,20 @@ SInt64 EasyRelaySession::Run()
 QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	if(NULL == fPusherHandle) return QTSS_Unimplemented;
+
 	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
 	{
 		printf("Get video Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
 
 		if(frameinfo && frameinfo->length)
 		{
-				EASY_AV_Frame  avFrame;
-				memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-				avFrame.u32AVFrameFlag	=	EASY_SDK_VIDEO_FRAME_FLAG;
-				avFrame.u32AVFrameLen = frameinfo->length;
-				avFrame.pBuffer = (unsigned char*)pbuf;
-				avFrame.u32VFrameType = (frameinfo->type==EASY_SDK_VIDEO_FRAME_I)?EASY_SDK_VIDEO_FRAME_I:EASY_SDK_VIDEO_FRAME_P;
-				EasyPusher_PushFrame(fPusherHandle, &avFrame);
+			EASY_AV_Frame  avFrame;
+			memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+			avFrame.u32AVFrameFlag	=	EASY_SDK_VIDEO_FRAME_FLAG;
+			avFrame.u32AVFrameLen = frameinfo->length;
+			avFrame.pBuffer = (unsigned char*)pbuf;
+			avFrame.u32VFrameType = (frameinfo->type==EASY_SDK_VIDEO_FRAME_I)?EASY_SDK_VIDEO_FRAME_I:EASY_SDK_VIDEO_FRAME_P;
+			EasyPusher_PushFrame(fPusherHandle, &avFrame);
 		}
 	}
 	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)

@@ -165,7 +165,7 @@ QTSS_Error  QTSSModule::SetupModule(QTSS_CallbacksPtr inCallbacks, QTSS_MainEntr
     char msgStr[2048];
     char* moduleName = NULL;
     (void)this->GetValueAsString (qtssModName, 0, &moduleName);
-    qtss_snprintf(msgStr, sizeof(msgStr), "Module Loaded...%s [%s]", moduleName, (fFragment==NULL)?"static":"dynamic");
+    qtss_snprintf(msgStr, sizeof(msgStr), "Loading Module...%s [%s]", moduleName, (fFragment==NULL)?"static":"dynamic");
     delete moduleName;
     QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 	
