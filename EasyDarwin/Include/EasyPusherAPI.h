@@ -11,17 +11,6 @@
 
 #define RTSP_CLIENT_NAME	"EasyPusher v1.16.0325"
 
-typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
-{
-	EASY_ACTIVATE_INVALID_KEY		=		-1,			//无效Key
-	EASY_ACTIVATE_TIME_ERR			=		-2,			//时间错误
-	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			//进程名称长度不匹配
-	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			//进程名称不匹配
-	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			//有效期校验不一致
-	EASY_ACTIVATE_SUCCESS			=		0,			//激活成功
-
-}EASY_ACTIVATE_ERR_CODE_ENUM;
-
 typedef struct __EASY_AV_Frame
 {
     Easy_U32    u32AVFrameFlag;		/* 帧标志  视频 or 音频 */

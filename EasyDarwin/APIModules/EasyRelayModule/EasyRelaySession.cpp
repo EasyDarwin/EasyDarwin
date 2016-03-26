@@ -153,7 +153,7 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 		//mediaType |= EASY_SDK_AUDIO_FRAME_FLAG;	//»»ÎªRTSPClient, ÆÁ±ÎÉùÒô
 
 		EasyRTSP_SetCallback(fRTSPClientHandle, __EasyRTSPClientCallBack);
-		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0);
+		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0);
 	}
 
 	if(NULL == fPusherHandle)
