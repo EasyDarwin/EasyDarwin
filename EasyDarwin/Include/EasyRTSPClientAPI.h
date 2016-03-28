@@ -27,7 +27,7 @@ extern "C"
 	/* 获取最后一次错误的错误码 */
 	Easy_API int Easy_APICALL EasyRTSP_GetErrCode();
 
-	/* 激活SDK库，成功返回0，失败查看具体错误码EASY_ACTIVATE_ERR_CODE_ENUM */
+	//激活
 	Easy_API int Easy_APICALL EasyRTSP_Activate(char *license);
 
 	/* 创建RTSPClient句柄  返回0表示成功，返回非0表示失败 */
