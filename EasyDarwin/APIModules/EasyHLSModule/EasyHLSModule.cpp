@@ -14,6 +14,12 @@
 #include <netdb.h>
 #endif
 
+#ifdef __Win32__
+#define EasyHLS_KEY "333565546A4969576B5A7341645068577151654B6B76464659584E355247467964326C754C6D56345A536C5737366F412F704A6C59584E35"
+#else
+#define EasyHLS_KEY "333565546A4A4F576B596F41645068577151654B6B76566C59584E355A47467964326C75766C62767167442B6B6D566863336B3D"
+#endif
+
 #include "EasyHLSModule.h"
 #include "QTSSModuleUtils.h"
 #include "OSArrayObjectDeleter.h"
@@ -96,6 +102,34 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
+
+	int isEasyHLSActivated = EasyHLS_Activate(EasyHLS_KEY);
+	switch(isEasyHLSActivated)
+	{
+	case EASY_ACTIVATE_INVALID_KEY:
+		printf("EasyHLS_KEY is EASY_ACTIVATE_INVALID_KEY!\n");
+		break;
+	case EASY_ACTIVATE_TIME_ERR:
+		printf("EasyHLS_KEY is EASY_ACTIVATE_TIME_ERR!\n");
+		break;
+	case EASY_ACTIVATE_PROCESS_NAME_LEN_ERR:
+		printf("EasyHLS_KEY is EASY_ACTIVATE_PROCESS_NAME_LEN_ERR!\n");
+		break;
+	case EASY_ACTIVATE_PROCESS_NAME_ERR:
+		printf("EasyHLS_KEY is EASY_ACTIVATE_PROCESS_NAME_ERR!\n");
+		break;
+	case EASY_ACTIVATE_VALIDITY_PERIOD_ERR:
+		printf("EasyHLS_KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
+		break;
+	case EASY_ACTIVATE_SUCCESS:
+		printf("EasyHLS_KEY is EASY_ACTIVATE_SUCCESS!\n");
+		break;
+	}
+
+	if(EASY_ACTIVATE_SUCCESS != isEasyHLSActivated)
+		return QTSS_RequestFailed;
+
+
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);   

@@ -19,6 +19,7 @@
 // Handle¿‡–Õ
 #define Easy_RTSP_Handle void*
 #define Easy_Pusher_Handle void*
+#define Easy_HLS_Handle void*
 
 typedef int						Easy_I32;
 
