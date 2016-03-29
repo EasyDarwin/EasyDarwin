@@ -51,3 +51,4 @@ Movies*/
 /EasyProtocol/jsoncpp/build/
 /EasyProtocol/EasyProtocol/build/
 *.dep.inc
+*.opensdf
