@@ -126,9 +126,11 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //58 monitor_lan_ip
     { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //59 monitor_wan_ip
     { kDontAllowMultipleValues, "true",     NULL                     }, //60 enable_allow_guest_default
-    { kDontAllowMultipleValues, "2",        NULL                     }  //61 run_num_msg_threads
+    { kDontAllowMultipleValues, "2",        NULL                     }, //61 run_num_msg_threads
+	{ kDontAllowMultipleValues , "121.41.73.249", NULL				 }, //62 dss_ip
+	{ kDontAllowMultipleValues , "554",		NULL					 }	//63 dss_port
 };
-
+ 
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
     /* 0 */ { "rtsp_timeout",                           NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -194,7 +196,9 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 58 */ { "monitor_lan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 59 */ { "monitor_wan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 60 */ { "enable_allow_guest_default",  NULL,                             qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 61 */ { "run_num_msg_threads",  NULL,									qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
+    /* 61 */ { "run_num_msg_threads",  NULL,									qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 62 */ {"dss_ip",					NULL,									qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
+	/* 63 */ {"dss_port",				NULL,									qtssAttrDataTypeUInt16,		qtssAttrModeRead | qtssAttrModeWrite }
 };
 
 
@@ -322,7 +326,9 @@ void QTSServerPrefs::SetupAttributes()
 	
     this->SetVal(qtssPrefsEnableAllowGuestDefault,      &fAllowGuestAuthorizeDefault,   sizeof(fAllowGuestAuthorizeDefault)); //enable_allow_guest_authorize_default
     this->SetVal(qtssPrefsNumMsgThreads,				&fNumMsgThreads,               sizeof(fNumMsgThreads));
-
+	
+	this->SetVal(qtssPrefsDssIP, &fDssIP, sizeof(fDssIP));
+	this->SetVal(qtssPrefsDssPort, &fDssPort, sizeof(fDssPort));
 }
 
 

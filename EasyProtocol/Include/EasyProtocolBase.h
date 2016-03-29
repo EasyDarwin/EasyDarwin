@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -16,6 +16,7 @@
 
 #include <EasyProtocolDef.h>
 #include <json/json.h>
+#include <boost/lexical_cast.hpp>
 
 namespace EasyDarwin { namespace Protocol
 {
@@ -54,8 +55,19 @@ public:
     void Reset();
     
 public:
-	bool SetHeaderValue(const char* tag, const char* value);
-	bool SetBodyValue(const char* tag, const char* value);
+	template <class type>
+	bool SetHeaderValue(const char* tag, type value)
+	{
+		root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][tag] = boost::lexical_cast<std::string>(value);
+		return true;
+	}
+	
+	template <class type>
+	bool SetBodyValue(const char* tag, type value)
+	{
+		root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY][tag] = boost::lexical_cast<std::string>(value);;
+		return true;
+	}
 
 	std::string GetHeaderValue(const char* tag);
 	std::string GetBodyValue(const char* tag);

@@ -241,6 +241,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\SafeStdLib\InternalStdLib.cpp"
 				>
 			</File>

@@ -45,6 +45,15 @@
 #include "QTSSDictionary.h"
 #include "atomic.h"
 #include "base64.h"
+#include <string>
+#include <boost/thread/condition.hpp>
+
+#include "EasyProtocolDef.h"
+#include "EasyProtocol.h"
+#include <map>
+
+using namespace EasyDarwin::Protocol;
+using namespace std;
 
 class HTTPSessionInterface : public QTSSDictionary, public Task
 {
@@ -90,7 +99,7 @@ public:
     void                SetRequestBodyLength(SInt32 inLength)   { fRequestBodyLen = inLength; }
     SInt32              GetRemainingReqBodyLen()                { return fRequestBodyLen; }
 
-	OSRef*	GetRef()	{return &fDevRef; }
+	//OSRef*	GetRef()	{return &fDevRef; }
 	QTSS_Error RegDevSession(const char* serial, UInt32 serailLen);
 	QTSS_Error UpdateDevRedis();
 	QTSS_Error UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg);
@@ -114,6 +123,12 @@ public:
         kMaxUserPasswordLen     = 32
     };
 
+	UInt32 GetStreamReqCount(string camera);
+	void IncrementStreamReqCount(string camera);
+	void DecrementStreamReqCount(string camera);
+
+	void PushNVRMessage(EasyNVRMessage &msg) { fNVRMessageQueue.push_back(msg); }
+
 protected:
     enum
     {
@@ -127,10 +142,15 @@ protected:
     char                fSessionID[QTSS_MAX_SESSION_ID_LENGTH];
 	char				fLastSMSSessionID[QTSS_MAX_SESSION_ID_LENGTH];
 
-	char				fSerial[EASY_MAX_SERIAL_LENGTH];
-	StrPtrLen			fDevSerialPtr;
-
-	OSRef				fDevRef;
+	//char				fSerial[EASY_MAX_SERIAL_LENGTH];
+	//StrPtrLen			fDevSerialPtr;
+	string				fDevSerial;
+	map<string, int>	fStreamReqCount;	//记录客户端请求打开视频次数
+	boost::mutex		fNVROperatorMutex;
+	boost::mutex		fStreamReqCountMutex;
+	boost::condition_variable fCond;
+	EasyNVRMessageQueue fNVRMessageQueue;
+	//OSRef				fDevRef;
 
     TimeoutTask         fTimeoutTask;//allows the session to be timed out
     

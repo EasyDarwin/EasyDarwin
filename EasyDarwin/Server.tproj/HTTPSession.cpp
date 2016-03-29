@@ -391,7 +391,7 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 		httpAck.AppendConnectionCloseHeader();
 
 	char respHeader[2048] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
 	RTSPResponseStream *pOutputStream = GetOutputStream();
@@ -679,7 +679,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 
 	//Push MSG to OutputBuffer
 	char respHeader[2048] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 	
 	RTSPResponseStream *pOutputStream = GetOutputStream();
@@ -711,7 +711,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 
 		//Push MSG to OutputBuffer
 		char respHeader[2048] = { 0 };
-		StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 		
 		RTSPResponseStream *pOutputStream = GetOutputStream();
@@ -746,7 +746,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char
 
 		//Push MSG to OutputBuffer
 		char respHeader[2048] = { 0 };
-		StrPtrLen* ackPtr = httpAck.GetCompleteResponseHeader();
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 		
 		RTSPResponseStream *pOutputStream = GetOutputStream();

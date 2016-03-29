@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="95">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="APICommonCode"
                    displayName="APICommonCode"
@@ -154,7 +154,7 @@
             <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp</commandLine>
+          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -325,7 +325,7 @@
       <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
-    <conf name="Release" type="1">
+    <conf name="i386" type="1">
       <toolsSet>
         <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
@@ -366,8 +366,9 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../Lib/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp</commandLine>
+          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -578,8 +579,9 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../Lib/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp</commandLine>
+          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"

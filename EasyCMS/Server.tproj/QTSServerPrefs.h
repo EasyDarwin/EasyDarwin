@@ -184,6 +184,9 @@ class QTSServerPrefs : public QTSSPrefs
 		char* GetSnapWebPath()		{ return this->GetStringPref(qtssPrefsSnapWebPath); }
        
         Bool16 GetAllowGuestDefault()               { return fAllowGuestAuthorizeDefault; }
+
+		char* GetDssIP() { return this->GetStringPref(qtssPrefsDssIP); }
+		UInt16 GetDssPort() { return fDssPort; }
         
     private:
 
@@ -231,6 +234,8 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  fEnableCMSServerInfo;
         UInt32  fNumThreads;
         UInt32  fNumMsgThreads;
+		char	fDssIP[20];
+		UInt16	fDssPort;
         
         Bool16  fEnableMonitorStatsFile;
         UInt32  fStatsFileIntervalSeconds;

@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=hisiv100-Linux-x86
+CND_PLATFORM=hisiv100-Linux
 CND_DLIB_EXT=so
 CND_CONF=hisiv100
 CND_DISTDIR=dist

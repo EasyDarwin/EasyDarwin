@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -19,13 +19,13 @@
 \defgroup EasyDarwin_Live_Type_Define
 \defgroup EasyProtocolBase
 \defgroup MSG_DEV_CMS_REGISTER_REQ
-\defgroup MSG_DEV_CMS_REGISTER_ACK
+\defgroup MSG_DEV_CMS_REGISTER_RSP
 \defgroup MSG_CMS_DEV_STREAM_START_REQ
-\defgroup MSG_CMS_DEV_STREAM_START_ACK
+\defgroup MSG_CMS_DEV_STREAM_START_RSP
 \defgroup MSG_CMS_DEV_STREAM_STOP_REQ
-\defgroup MSG_CMS_DEV_STREAM_STOP_ACK
-\defgroup MSG_NGX_CMS_NEED_STREAM_REQ
-\defgroup MSG_NGX_CMS_NEED_STREAM_ACK
+\defgroup MSG_CMS_DEV_STREAM_STOP_RSP
+\defgroup MSG_CLI_CMS_DEVICE_LIST_REQ
+\defgroup MSG_CLI_CMS_DEVICE_LIST_RSP
 */
 
 #ifndef EASYDARWIN_PROTOCOL_DEF_H
@@ -125,23 +125,26 @@
 \{
 */
 #define MSG_DEV_CMS_REGISTER_REQ							0x0001
-#define MSG_DEV_CMS_REGISTER_ACK							0xe002
+#define MSG_DEV_CMS_REGISTER_RSP							0xe002
 #define MSG_CMS_DEV_STREAM_START_REQ						0x0003
-#define MSG_CMS_DEV_STREAM_START_ACK						0xe004
+#define MSG_CMS_DEV_STREAM_START_RSP						0xe004
 #define MSG_CMS_DEV_STREAM_STOP_REQ							0x0005
-#define MSG_CMS_DEV_STREAM_STOP_ACK							0xe006
-#define MSG_NGX_CMS_NEED_STREAM_REQ							0x0007
-#define MSG_NGX_CMS_NEED_STREAM_ACK							0xe008
-#define MSG_CLI_CMS_DEVICE_LIST_REQ							0x0009
-#define MSG_CLI_CMS_DEVICE_LIST_ACK							0xe009
-#define MSG_DEV_CMS_SNAP_UPDATE_REQ							0x0010
-#define MSG_DEV_CMS_SNAP_UPDATE_ACK							0xe010
+#define MSG_CMS_DEV_STREAM_STOP_RSP							0xe006
+#define MSG_CLI_CMS_DEVICE_LIST_REQ							0x0007
+#define MSG_CLI_CMS_DEVICE_LIST_RSP							0xe008
+#define MSG_CLI_CMS_CAMERA_LIST_REQ							0x0009
+#define MSG_CLI_CMS_CAMERA_LIST_RSP							0xe009
+#define MSG_CLI_CMS_STREAM_START_REQ						0x0010
+#define MSG_CLI_CMS_STREAM_START_RSP						0xe010
+#define	MSG_CLI_CMS_STREAM_STOP_REQ							0x0011
+#define MSG_CLI_CMS_STREAM_STOP_RSP							0xe011
+#define	MSG_DEV_CMS_UPDATE_SNAP_REQ							0x0012
+#define MSG_DEV_CMS_UPDATE_SNAP_RSP							0xe012
+#define	MSG_CLI_SMS_HLS_ACK									0xe013
+#define MSG_CLI_SMS_HLS_LIST_ACK							0xe014
+#define	MSG_CLI_SMS_PUSH_SESSION_LIST_ACK					0xe015
 
-#define	MSG_CLI_SMS_HLS_ACK									0xe011
-
-#define MSG_CLI_SMS_HLS_LIST_ACK							0xe012
-
-#define	MSG_CLI_SMS_PUSH_SESSION_LIST_ACK					0xe013
+#define MSG_CLI_CMS_EXCEPTION								0xeeee
 
 /*!
 \}

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 Github: https://github.com/EasyDarwin
 WEChat: EasyDarwin
 Website: http://www.easydarwin.org
@@ -20,17 +20,22 @@ namespace EasyDarwin { namespace Protocol
 
 EasyProtocol::MsgType EasyProtocol::MsgTypeMap[] = {
 	MSG_DEV_CMS_REGISTER_REQ,						"MSG_DEV_CMS_REGISTER_REQ",
-	MSG_DEV_CMS_REGISTER_ACK,						"MSG_DEV_CMS_REGISTER_ACK",
+	MSG_DEV_CMS_REGISTER_RSP,						"MSG_DEV_CMS_REGISTER_RSP",
 	MSG_CMS_DEV_STREAM_START_REQ,					"MSG_CMS_DEV_STREAM_START_REQ",
-	MSG_CMS_DEV_STREAM_START_ACK,					"MSG_CMS_DEV_STREAM_START_ACK",
+	MSG_CMS_DEV_STREAM_START_RSP,					"MSG_CMS_DEV_STREAM_START_RSP",
 	MSG_CMS_DEV_STREAM_STOP_REQ,					"MSG_CMS_DEV_STREAM_STOP_REQ",
-	MSG_CMS_DEV_STREAM_STOP_ACK,					"MSG_CMS_DEV_STREAM_STOP_ACK",
-	MSG_NGX_CMS_NEED_STREAM_REQ,					"MSG_NGX_CMS_NEED_STREAM_REQ",
-	MSG_NGX_CMS_NEED_STREAM_ACK,					"MSG_NGX_CMS_NEED_STREAM_ACK",
+	MSG_CMS_DEV_STREAM_STOP_RSP,					"MSG_CMS_DEV_STREAM_STOP_RSP",
 	MSG_CLI_CMS_DEVICE_LIST_REQ,					"MSG_CLI_CMS_DEVICE_LIST_REQ",
-	MSG_CLI_CMS_DEVICE_LIST_ACK,					"MSG_CLI_CMS_DEVICE_LIST_ACK",
-	MSG_DEV_CMS_SNAP_UPDATE_REQ,					"MSG_DEV_CMS_SNAP_UPDATE_REQ",
-	MSG_DEV_CMS_SNAP_UPDATE_ACK,					"MSG_DEV_CMS_SNAP_UPDATE_ACK",
+	MSG_CLI_CMS_DEVICE_LIST_RSP,					"MSG_CLI_CMS_DEVICE_LIST_RSP",
+	MSG_CLI_CMS_CAMERA_LIST_REQ,					"MSG_CLI_CMS_CAMERA_LIST_REQ",
+	MSG_CLI_CMS_CAMERA_LIST_RSP,					"MSG_CLI_CMS_CAMERA_LIST_RSP",
+	MSG_CLI_CMS_STREAM_START_REQ,					"MSG_CLI_CMS_STREAM_START_REQ",
+	MSG_CLI_CMS_STREAM_START_RSP,					"MSG_CLI_CMS_STREAM_START_RSP",
+	MSG_CLI_CMS_STREAM_STOP_REQ,					"MSG_CLI_CMS_STREAM_STOP_REQ",
+	MSG_CLI_CMS_STREAM_STOP_RSP,					"MSG_CLI_CMS_STREAM_STOP_RSP",
+	MSG_DEV_CMS_UPDATE_SNAP_REQ,					"MSG_DEV_CMS_UPDATE_SNAP_REQ",
+	MSG_DEV_CMS_UPDATE_SNAP_RSP,					"MSG_DEV_CMS_UPDATE_SNAP_RSP",
+	MSG_CLI_CMS_EXCEPTION,							"MSG_CLI_CMS_EXCEPTION",
 	MSG_CLI_SMS_HLS_ACK,							"MSG_CLI_SMS_HLS_ACK",
 	MSG_CLI_SMS_HLS_LIST_ACK,						"MSG_CLI_SMS_HLS_LIST_ACK",
 	MSG_CLI_SMS_PUSH_SESSION_LIST_ACK,				"MSG_CLI_SMS_PUSH_SESSION_LIST_ACK"
@@ -100,6 +105,8 @@ EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
 EasyProtocol::EasyProtocol(int iMsgType)
 :fMsgType(iMsgType)
 {	
+	SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][EASYDARWIN_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);	
 }
 
 EasyProtocol::EasyProtocol(const std::string msg, int iMsgType)
@@ -310,8 +317,7 @@ std::string EasyProtocol::GetTerminalTypeString(int iTerminalType)
 }
 
 std::string EasyProtocol::GetMsg()
-{   	
-	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][EASYDARWIN_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);	
+{   		
     return writer.write(root);;
 }
 
@@ -327,7 +333,7 @@ bool EasyProtocol::GetMsg(char *dest, int size)
 	return true;
 }
 
-
+/*
 bool EasyProtocol::SetHeaderValue(const char* tag, const char* value){
 	
 	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][tag] = value;
@@ -339,7 +345,7 @@ bool EasyProtocol::SetBodyValue(const char* tag, const char* value){
 	
 	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY][tag] = value;
 	return true;
-}
+}*/
 
 std::string EasyProtocol::GetHeaderValue(const char* tag)
 {

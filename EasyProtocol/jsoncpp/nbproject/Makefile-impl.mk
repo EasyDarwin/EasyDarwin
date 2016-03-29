@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release x64 ARM hisiv100 
+ALLCONFS=Debug i386 x64 arm hisiv100 ti 
 
 
 # build
@@ -76,7 +76,7 @@ ALLCONFS=Debug Release x64 ARM hisiv100
 .depcheck-impl:
 	@echo "# This code depends on make tool being used" >.dep.inc
 	@if [ -n "${MAKE_VERSION}" ]; then \
-	    echo "DEPFILES=\$$(wildcard \$$(addsuffix .d, \$${OBJECTFILES}))" >>.dep.inc; \
+	    echo "DEPFILES=\$$(wildcard \$$(addsuffix .d, \$${OBJECTFILES} \$${TESTOBJECTFILES}))" >>.dep.inc; \
 	    echo "ifneq (\$${DEPFILES},)" >>.dep.inc; \
 	    echo "include \$${DEPFILES}" >>.dep.inc; \
 	    echo "endif" >>.dep.inc; \

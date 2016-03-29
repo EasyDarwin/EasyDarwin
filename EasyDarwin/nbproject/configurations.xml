@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="95">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="EasyDarwin" displayName="EasyDarwin" projectFiles="true">
       <logicalFolder name="APICommonCode"
@@ -138,6 +138,10 @@
         <itemPath>../HTTPUtilitiesLib/HTTPProtocol.h</itemPath>
         <itemPath>../HTTPUtilitiesLib/HTTPRequest.cpp</itemPath>
         <itemPath>../HTTPUtilitiesLib/HTTPRequest.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequestStream.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequestStream.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPResponseStream.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPResponseStream.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Include" displayName="Include" projectFiles="true">
         <itemPath>Include/EasyHLSAPI.h</itemPath>
@@ -431,6 +435,26 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1130,7 +1154,7 @@
       <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
-    <conf name="Release" type="1">
+    <conf name="i386" type="1">
       <toolsSet>
         <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
@@ -1215,6 +1239,26 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1996,6 +2040,26 @@
             flavor2="9">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -2780,6 +2844,26 @@
             flavor2="9">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
       </item>

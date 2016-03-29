@@ -50,3 +50,4 @@ Movies*/
 /EasyCMS/build/
 /EasyProtocol/jsoncpp/build/
 /EasyProtocol/EasyProtocol/build/
+*.dep.inc

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -27,6 +27,9 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/archive/iterators/base64_from_binary.hpp>  
+#include <boost/archive/iterators/binary_from_base64.hpp>  
+#include <boost/archive/iterators/transform_width.hpp>   
 
 std::string EasyUtil::TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time)
 {
@@ -145,3 +148,77 @@ int EasyUtil::String2Int(std::string value)
 		return -1;
 	}	
 }
+
+std::string EasyUtil::Int2String(int value)
+{
+	try
+	{
+		return boost::lexical_cast<std::string>(value);
+	}
+	catch (std::exception &e)
+	{
+		printf("EasyUtil::String2Int error: %s\n", e.what());		
+	}
+	return std::string();
+}
+
+bool EasyUtil::Base64Decode(string& sInput, string& sOutput)
+{
+	typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<string::const_iterator>, 8, 6> Base64DecodeIterator;
+	stringstream result;
+	try
+	{
+		copy(Base64DecodeIterator(sInput.begin()), Base64DecodeIterator(sInput.end()), ostream_iterator<char>(result));
+	}
+	catch (...)
+	{
+		return false;
+	}
+	sOutput = result.str();
+
+	return !sOutput.empty();
+}
+
+bool EasyUtil::Base64Encode(string& sInput, string& sOutput)
+{
+	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<string::const_iterator, 6, 8> > Base64EncodeIterator;
+	stringstream result;
+	copy(Base64EncodeIterator(sInput.begin()), Base64EncodeIterator(sInput.end()), ostream_iterator<char>(result));
+	size_t equal_count = (3 - sInput.length() % 3) % 3;
+	for (size_t i = 0; i < equal_count; i++)
+	{
+		result.put('=');
+	}
+	sOutput = result.str();
+
+	return !sOutput.empty();
+}
+
+string EasyUtil::Base64Encode(const char* src, size_t len)
+{
+	string sInput, sOutput;
+	sInput.assign(src, len);
+	Base64Encode(sInput, sOutput);
+	return sOutput;
+}
+
+string EasyUtil::Base64Decode(const char* src, size_t len)
+{
+	try
+	{
+		string sInput, sOutput;
+		sInput.assign(src, len);
+		Base64Decode(sInput, sOutput);
+		return sOutput;
+	}
+	catch (std::exception &e)
+	{
+		printf("util::Base64Decode error: %s\n", e.what());
+	}
+	catch (...)
+	{
+		printf("util::Base64Decode error\n");
+	}
+	return std::string();
+}
+

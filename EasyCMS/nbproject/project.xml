@@ -7,7 +7,7 @@
             <c-extensions/>
             <cpp-extensions>cpp</cpp-extensions>
             <header-extensions>h</header-extensions>
-            <sourceEncoding>UTF-8</sourceEncoding>
+            <sourceEncoding>GB2312</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>APICommonCode</sourceRootElem>
@@ -25,7 +25,7 @@
                     <type>1</type>
                 </confElem>
                 <confElem>
-                    <name>Release</name>
+                    <name>i386</name>
                     <type>1</type>
                 </confElem>
                 <confElem>
