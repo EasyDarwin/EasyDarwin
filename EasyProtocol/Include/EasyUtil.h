@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -16,6 +16,7 @@
 
 #include <EasyProtocolDef.h>
 #include <string>
+using namespace std;
 
 class EASYDARWIN_API EasyUtil
 {
@@ -35,6 +36,14 @@ public:
 	static std::string GetUUID();
 
 	static int String2Int(std::string value);
+
+	static std::string Int2String(int value);
+
+	static string Base64Encode(const char* src, size_t len);
+	static string Base64Decode(const char* src, size_t len);
+
+	static bool Base64Encode(string &sInput, string &sOutput);
+	static bool Base64Decode(string &sInput, string &sOutput);
     
 };
 

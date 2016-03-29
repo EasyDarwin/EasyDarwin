@@ -26,8 +26,20 @@ int main(int argc, char** argv)
 	//test.TestEasyDSSSnapUpdateReq();
 	//test.TestEasyDSSSnapUpdateAck();
 	test.TestRegisterReq();
+	test.TestRegisterRsp();
+	test.TestDeviceStreamReq();
+	test.TestDeviceStreamRsp();
+
+	test.TestDeviceStreamStopReq();
+	test.TestDeviceStreamStopRsp();
+	
 	test.TestDeviceListRsp();
+	test.TestCameraListRsp();
+	test.TestClientStartStreamRsp();
+	
 	test.TestDeviceSnapReq();
+	test.TestDeviceSnapRsp();
+
 	getchar();
     return 0;
 }

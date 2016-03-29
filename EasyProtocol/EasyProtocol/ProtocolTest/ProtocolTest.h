@@ -27,10 +27,21 @@ public:
     //void TestCreateSessionReq();
     //void TestCreateSessionAck();
 	void TestRegisterReq();
+	void TestRegisterRsp();
+
+	void TestDeviceStreamReq();
+	void TestDeviceStreamRsp();
+
+	void TestDeviceStreamStopReq();
+	void TestDeviceStreamStopRsp();
 
 	void TestDeviceListRsp();
+	void TestCameraListRsp();
+
+	void TestClientStartStreamRsp();
 
 	void TestDeviceSnapReq();
+	void TestDeviceSnapRsp();
 
 private:
     void PrintMsg(const char *msg);

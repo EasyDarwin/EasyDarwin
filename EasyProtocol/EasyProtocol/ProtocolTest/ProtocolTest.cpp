@@ -79,130 +79,282 @@ void ProtocolTest::PrintMsg(const char* msg)
 
 void ProtocolTest::TestRegisterReq()
 {
-	EasyDarwinRegisterReq req;
+	EasyDevices channels;
 
-	///we should move this to class EasyDarwinRegisterReq
-	req.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-	req.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
-	req.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
+	for(int i = 0; i < 5; i++)
+	{		
+		char name[20];
+		sprintf(name, "camera00%i", i + 1);
+		EasyDevice camera(name, name, "online");
+		channels.push_back(camera);
+	}
+
+	EasyNVR nvr("nvr001", "nvr001_", "123456", channels);
 	
-	req.SetBodyValue("SerialNumber", "SerialNumber_abcdefg");
-	req.SetBodyValue("AuthCode", "AuthCode_pwd123");
-	req.SetBodyValue("LiveStatus", "1");
-	req.SetBodyValue("DssIP", "darwin.org");
-	//////
+
+	EasyDarwinRegisterReq req(nvr);
+
 
 	string msg = req.GetMsg();
 
 	PrintMsg(msg.c_str());
 
-	/*
-	AVSXmlUtil xml;
-	if (!xml.Read(msg))
-	{
-		printf("AVSXmlUtil read xml errror\n");
-	}
-
-	AVSXmlObject obj = xml.GetChild("EasyDarwin");
-	if (obj == NULL)
-	{
-		printf("not found EasyDarwin\n");
-		return;
-	}
-
-	AVSXmlUtil easydarwin(obj);
-
-	obj = easydarwin.GetChild("Header");
-	if (obj == NULL)
-	{
-		printf("not found Header\n");
-		return;
-	}
-	AVSXmlUtil header(obj);
-	string value;
-	header.GetValueAsString("Version", value);
-	printf("header.version = %s\n", value.c_str());
-	header.GetValueAsString("TerminalType", value);
-	printf("header.TerminalType = %s\n", value.c_str());
-	AVSXmlUtil body = easydarwin.GetChild("Body");
-
-	body.GetValueAsString("SerialNumber", value);
-	printf("body.SerialNumber = %s\n", value.c_str());
-	*/
-
+	
 	EasyDarwinRegisterReq parse(msg.c_str());
 
-	///we should move this to class EasyDarwinRegisterReq
+	
 	cout << "header.version = " << parse.GetHeaderValue(EASYDARWIN_TAG_VERSION) << endl;
 	cout << "header.TerminialType = " << parse.GetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE) << endl;
 	cout << "header.MessageType = " << parse.GetMessageType() << ", " << EasyProtocol::GetMsgTypeString(parse.GetMessageType()) << endl;
 	
-	cout << "body.SerialNumber = " << parse.GetBodyValue("SerialNumber") << endl;
-	cout << "body.DssIP = " << parse.GetBodyValue("DssIP") << endl;
-	cout << "body.AuthCode = " << parse.GetBodyValue("AuthCode") << endl;
+	cout << "body.SerialNumber = " << parse.GetNVR().serial_ << endl;
+	cout << "body.CameraCount = " << parse.GetNVR().channels_.size() << endl;
+	cout << "body.AuthCode = " << parse.GetNVR().password_ << endl;
+	cout << "body.camera1 = " << parse.GetNVR().channels_[0].name_ << endl;
 	//////
 
 }
 
+void ProtocolTest::TestRegisterRsp()
+{
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["SessionID"] = "a939cd77c7cb4af6b2bd8f2090562b91";
+	EasyDarwinRegisterRSP rsp(body, 1, 200);
+
+	string msg = rsp.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	
+	EasyDarwinRegisterRSP rsp_parse(msg.c_str());
+
+	cout << "session id = " << rsp_parse.GetBodyValue("SessionID") << endl;
+	cout << "device serial = " << rsp_parse.GetBodyValue("DeviceSerial") << endl;
+
+}
+
+void ProtocolTest::TestDeviceStreamReq()
+{
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["CameraSerial"] = "CameraSerial_01";
+	body["StreamID"] = 2;
+	body["Protocol"] = "RTSP";
+	body["DssIP"] = "112.42.1.2";
+	body["DssPort"] = 554;
+	
+	EasyDarwinDeviceStreamReq req(body, 1);
+	
+
+	string msg = req.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	EasyDarwinDeviceStreamReq rsp_parse(msg.c_str());
+	cout << "DssIP = " << rsp_parse.GetBodyValue("DssIP") << endl;
+	cout << "CameraSerial = " << rsp_parse.GetBodyValue("CameraSerial") << endl;
+	cout << "StreamID = " << rsp_parse.GetBodyValue("StreamID") << endl;
+	cout << "DssPort = " << rsp_parse.GetBodyValue("DssPort") << endl;
+}
+
 void ProtocolTest::TestDeviceListRsp()
 {
-	EasyDarwinDeviceListAck req;
-	req.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-	req.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
-	req.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
-	req.SetBodyValue("DeviceCount", "5");
+	
+	EasyDevices devices;
 	char n[10];
 	for(int i = 0; i < 5; i++)
 	{
 		sprintf(n, "%02d", i + 1);
-		EasyDarwinDevice device;
-		device.DeviceName = string("device") + n;
-		device.DeviceSerial = string("serial") + n;
-		device.DeviceSnap = device.DeviceName+"_snap.jpg";
-		req.AddDevice(device);
+		EasyDevice device;
+		device.name_ = string("device") + n;
+		device.serial_ = string("serial") + n;
+		
+		devices.push_back(device);
 	}
+
+	EasyDarwinDeviceListRsp req(devices);
+	
+	
 
 	string msg = req.GetMsg();
 
 	PrintMsg(msg.c_str());
 
-	EasyDarwinDeviceListAck parse(msg.c_str());
+	EasyDarwinDeviceListRsp parse(msg.c_str());
 	
-	cout << "header.version = " << parse.GetHeaderValue(EASYDARWIN_TAG_VERSION) << endl;
-	int count = parse.StartGetDevice();
+	devices.clear();
+
+	devices = parse.GetDevices();
+		
 	cout << "body.device_count = " << parse.GetBodyValue("DeviceCount") << endl;
-	EasyDarwinDevice device;
-	
-	while(parse.GetNextDevice(device))
+
+	for (EasyDevices::iterator it = devices.begin(); it != devices.end(); it++)
 	{
-		cout << device.DeviceName << "," << device.DeviceSerial << ", " << device.DeviceSnap<<endl;
+		cout << it->name_ << "," << it->serial_ << endl;
+	}
+}
+
+void ProtocolTest::TestCameraListRsp()
+{
+	
+	EasyDevices devices;
+	char n[10];
+	for(int i = 0; i < 5; i++)
+	{
+		sprintf(n, "%02d", i + 1);
+		EasyDevice device;
+		device.name_ = string("camera") + n;
+		device.serial_ = string("serial") + n;
+		
+		devices.push_back(device);
 	}
 
+	EasyDarwinCameraListRsp req(devices, "nvr00001");
+	
+	
 
+	string msg = req.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	EasyDarwinCameraListRsp parse(msg.c_str());
+	
+	devices.clear();
+
+	devices = parse.GetCameras();
+		
+	cout << "body.device_count = " << parse.GetBodyValue("CameraCount") << ", " << devices.size()<< endl;
+
+	for (EasyDevices::iterator it = devices.begin(); it != devices.end(); it++)
+	{
+		cout << it->name_ << "," << it->serial_ << endl;
+	}
+}
+
+void ProtocolTest::TestClientStartStreamRsp()
+{
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["CameraSerial"] = "CameraSerial_01";
+	body["URL"] = "112.42.1.2";
+	body["Protocol"] = "RTSP";		
+	body["StreamID"] = 2;
+	EasyDarwinClientStartStreamRsp req(body, 1, 200);
+
+
+	string msg = req.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	EasyDarwinDeviceStreamReq rsp_parse(msg.c_str());
+	cout << "URL = " << rsp_parse.GetBodyValue("URL") << endl;
+	cout << "DeviceSerial = " << rsp_parse.GetBodyValue("DeviceSerial") << endl;
+	cout << "CameraSerial = " << rsp_parse.GetBodyValue("CameraSerial") << endl;
+	cout << "StreamID = " << rsp_parse.GetBodyValue("StreamID") << endl;
+	cout << "Protocol = " << rsp_parse.GetBodyValue("Protocol") << endl;
+}
+
+void ProtocolTest::TestDeviceStreamRsp()
+{
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["CameraSerial"] = "CameraSerial_01";
+	body["StreamID"] = 0;
+
+	EasyDarwinDeviceStreamRsp rsp(body, 1, 200);
+
+	string msg = rsp.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	EasyDarwinDeviceStreamRsp rsp_parse(msg.c_str());
+	
+	cout << "Error: " << rsp_parse.GetHeaderValue("ErrorNum")<< ", " << rsp_parse.GetHeaderValue("ErrorString") << endl;
+	cout << "CameraSerial = " << rsp_parse.GetBodyValue("CameraSerial") << endl;
+	cout << "DeviceSerial = " << rsp_parse.GetBodyValue("DeviceSerial") << endl;
+
+}
+
+void ProtocolTest::TestDeviceStreamStopReq()
+{
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["CameraSerial"] = "CameraSerial_01";
+	body["StreamID"] = 1;	 
+
+	EasyDarwinDeviceStreamStop req(body, 1);
+
+	string msg = req.GetMsg();
+
+	PrintMsg(msg.c_str());
+	
+	EasyDarwinDeviceStreamStop parse(msg.c_str());
+
+	cout << "StreamID: " << parse.GetBodyValue("StreamID") << endl;
+	cout << "CameraSerial = " << parse.GetBodyValue("CameraSerial") << endl;
+	cout << "DeviceSerial = " << parse.GetBodyValue("DeviceSerial") << endl;
+
+}
+
+void ProtocolTest::TestDeviceStreamStopRsp()
+{
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["CameraSerial"] = "CameraSerial_01";
+	body["StreamID"] = 0;
+
+	EasyDarwinDeviceStreamStopRsp rsp(body, 1, 404);
+
+	string msg = rsp.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	EasyDarwinDeviceStreamStopRsp rsp_parse(msg.c_str());
+	
+	cout << "Error: " << rsp_parse.GetHeaderValue("ErrorNum")<< ", " << rsp_parse.GetHeaderValue("ErrorString") << endl;
+	cout << "CameraSerial = " << rsp_parse.GetBodyValue("CameraSerial") << endl;
+	cout << "DeviceSerial = " << rsp_parse.GetBodyValue("DeviceSerial") << endl;
 }
 
 void ProtocolTest::TestDeviceSnapReq()
 {
-	EasyDarwinDeviceSnapUpdateReq req;
-	req.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-	req.SetHeaderValue(EASYDARWIN_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(EASYDARWIN_TERMINAL_TYPE_CAMERA).c_str());
-	req.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
-
-	req.SetBodyValue("Time", EasyUtil::TimeT2String(EASYDARWIN_TIME_FORMAT_YYYYMMDDHHMMSS, EasyUtil::NowTime()).c_str());
-	req.SetBodyValue("Img", "Base64ImageData===========");
-
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["CameraSerial"] = "CameraSerial_01";
+	body["Type"] = "JPEG";
+	body["Time"] = "2015-07-20 12:55:30";
+	body["Image"] = "Base64Encode_Image_Data";
+	EasyDarwinDeviceUpdateSnapReq req(body, 1);
+	
 	string msg = req.GetMsg();
+
 	PrintMsg(msg.c_str());
 
-	EasyDarwinDeviceSnapUpdateReq parse(msg.c_str());
+	EasyDarwinDeviceUpdateSnapReq rsp_parse(msg.c_str());
 	
-	//get image method 1
-	string image;
-	parse.GetImageData(image);
+	cout << "DeviceSerial = " << rsp_parse.GetBodyValue("DeviceSerial") << endl;
+	cout << "CameraSerial = " << rsp_parse.GetBodyValue("CameraSerial") << endl;
+	cout << "Type = " << rsp_parse.GetBodyValue("Type") << endl;
+	cout << "Time = " << rsp_parse.GetBodyValue("Time") << endl;
+	cout << "Image = " << rsp_parse.GetBodyValue("Image") << endl;
+}
 
-	//get image method 2
-	string img = parse.GetBodyValue("Img");
-	cout << image << "\n\n" <<endl;
+void ProtocolTest::TestDeviceSnapRsp()
+{
+	EasyJsonValue body;
+	body["DeviceSerial"] = "000000000001";
+	body["CameraSerial"] = "CameraSerial_01";
 
-	cout << img << endl;
+	EasyDarwinDeviceUpdateSnapRsp rsp(body, 1, 200);
+
+	string msg = rsp.GetMsg();
+
+	PrintMsg(msg.c_str());
+
+	EasyDarwinDeviceUpdateSnapRsp rsp_parse(msg.c_str());
+
+	cout << "Error: " << rsp_parse.GetHeaderValue("ErrorNum") << ", " << rsp_parse.GetHeaderValue("ErrorString") << endl;
+	cout << "CameraSerial = " << rsp_parse.GetBodyValue("CameraSerial") << endl;
+	cout << "DeviceSerial = " << rsp_parse.GetBodyValue("DeviceSerial") << endl;
 }

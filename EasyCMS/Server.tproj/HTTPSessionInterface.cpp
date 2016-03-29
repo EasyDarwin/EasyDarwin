@@ -84,28 +84,28 @@ void    HTTPSessionInterface::Initialize()
 	
 }
 
-HTTPSessionInterface::HTTPSessionInterface() 
-:   QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kRTSPSessionDictIndex)),
-    Task(), 
-    fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetSessionTimeoutInSecs() * 1000),
-    fInputStream(&fSocket),
-    fOutputStream(&fSocket, &fTimeoutTask),
-    fSessionMutex(),
-    fSocket(NULL, Socket::kNonBlockingSocketType),
-    fOutputSocketP(&fSocket),
-    fInputSocketP(&fSocket),
-    fSessionType(qtssNormalSession),
-    fLiveSession(true),
-    fObjectHolders(0),
+HTTPSessionInterface::HTTPSessionInterface()
+	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kRTSPSessionDictIndex)),
+	Task(),
+	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetSessionTimeoutInSecs() * 1000),
+	fInputStream(&fSocket),
+	fOutputStream(&fSocket, &fTimeoutTask),
+	fSessionMutex(),
+	fSocket(NULL, Socket::kNonBlockingSocketType),
+	fOutputSocketP(&fSocket),
+	fInputSocketP(&fSocket),
+	fSessionType(qtssNormalSession),
+	fLiveSession(true),
+	fObjectHolders(0),
 	fRequestBodyLen(-1),
 	fAuthenticated(false)
 {
-
+	fStreamReqCount.clear();
     fTimeoutTask.SetTask(this);
     fSocket.SetTask(this);
 
-	fSerial[0] = 0;
-	::memset(fSerial, 0, EASY_MAX_SERIAL_LENGTH);
+	//fSerial[0] = 0;
+	//::memset(fSerial, 0, EASY_MAX_SERIAL_LENGTH);
 	//fDevSerialPtr.Set( fSerial, ::strlen(fSerial));
 	//fDevRef.Set( fDevSerialPtr, this);
 
@@ -114,7 +114,7 @@ HTTPSessionInterface::HTTPSessionInterface()
 
     this->SetVal(qtssRTSPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));
     this->SetVal(qtssRTSPSesType, &fSessionType, sizeof(fSessionType));
-	this->SetEmptyVal(qtssEasySesSerial, &fSerial[0], EASY_MAX_SERIAL_LENGTH);
+	//this->SetEmptyVal(qtssEasySesSerial, &fSerial[0], EASY_MAX_SERIAL_LENGTH);
 
     this->SetEmptyVal(qtssRTSPSesLastUserName, &fUserNameBuf[0], kMaxUserNameLen);
     this->SetEmptyVal(qtssRTSPSesLastUserPassword, &fUserPasswordBuf[0], kMaxUserPasswordLen);
@@ -268,18 +268,19 @@ QTSS_Error HTTPSessionInterface::SendHTTPPacket(StrPtrLen* contentXML, Bool16 co
 
 QTSS_Error HTTPSessionInterface::RegDevSession(const char* serial, UInt32 serailLen)
 {
-	if((::strlen(serial) == 0) || (serailLen == 0))
-		return QTSS_ValueNotFound;
-	fSessionType = qtssDeviceSession;
-	QTSS_SetValue(this, qtssEasySesSerial, 0, serial, serailLen);
+	//if((::strlen(serial) == 0) || (serailLen == 0))
+	//	return QTSS_ValueNotFound;
+	//fSessionType = qtssDeviceSession;
+	//QTSS_SetValue(this, qtssEasySesSerial, 0, serial, serailLen);
 
-	fDevSerialPtr.Set( fSerial, serailLen);
-	fDevRef.Set( fDevSerialPtr, this);
-	OS_Error theErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(GetRef());
-	//printf("[line:%d]HTTPSessionInterface::RegDevSession theErr = %d\n",__LINE__, theErr);
-	if(theErr == OS_NoErr)
-		fAuthenticated = true;
-	return theErr;
+	//fDevSerialPtr.Set( fSerial, serailLen);
+	//fDevRef.Set( fDevSerialPtr, this);
+	//OS_Error theErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(GetRef());
+	////printf("[line:%d]HTTPSessionInterface::RegDevSession theErr = %d\n",__LINE__, theErr);
+	//if(theErr == OS_NoErr)
+	//	fAuthenticated = true;
+	//return theErr;
+	return QTSS_Unimplemented;
 }
 
 QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg)
@@ -290,11 +291,39 @@ QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const cha
 
 void HTTPSessionInterface::UnRegDevSession()
 {
-	if(fAuthenticated)
-		QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(GetRef());
+	if (fAuthenticated)
+	{
+		EasyNVRs &nvrs = QTSServerInterface::GetServer()->GetRegisterNVRs();		
+		EasyNVRs::iterator nvr = nvrs.find(fDevSerial);
+		if (nvr != nvrs.end())
+		{
+			nvrs.erase(nvr);
+		}
+		//QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(GetRef());
+	}
 }
 
 QTSS_Error HTTPSessionInterface::UpdateDevRedis()
 {
 	return QTSS_NoErr;
 }
+
+UInt32 HTTPSessionInterface::GetStreamReqCount(string camera)
+{
+	boost::mutex::scoped_lock lock(fStreamReqCountMutex);
+	return fStreamReqCount[camera];
+}
+
+void HTTPSessionInterface::IncrementStreamReqCount(string camera)
+{
+	boost::mutex::scoped_lock lock(fStreamReqCountMutex);
+	fStreamReqCount[camera]++;
+}
+
+void HTTPSessionInterface::DecrementStreamReqCount(string camera)
+{
+	boost::mutex::scoped_lock lock(fStreamReqCountMutex);
+	fStreamReqCount[camera]--;
+	if (fStreamReqCount[camera] < 0) fStreamReqCount[camera] = 0;
+}
+

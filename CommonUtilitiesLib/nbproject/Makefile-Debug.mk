@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
 CND_CONF=Debug
 CND_DISTDIR=dist
@@ -35,8 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/540968335/OSMemory.o \
-	${OBJECTDIR}/_ext/873319650/InternalStdLib.o \
+	${OBJECTDIR}/_ext/dfc17a71/OSMemory.o \
+	${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o \
 	${OBJECTDIR}/ConfParser.o \
 	${OBJECTDIR}/DateTranslator.o \
 	${OBJECTDIR}/EventContext.o \
@@ -107,15 +107,15 @@ ${CND_CONF}/libCommonUtilitiesLib.a: ${OBJECTFILES}
 	${AR} -rv ${CND_CONF}/libCommonUtilitiesLib.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libCommonUtilitiesLib.a
 
-${OBJECTDIR}/_ext/540968335/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/540968335
+${OBJECTDIR}/_ext/dfc17a71/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/dfc17a71
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/540968335/OSMemory.o ../OSMemoryLib/OSMemory.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o ../OSMemoryLib/OSMemory.cpp
 
-${OBJECTDIR}/_ext/873319650/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/873319650
+${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/cbf2331e
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/873319650/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
 
 ${OBJECTDIR}/ConfParser.o: ConfParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}

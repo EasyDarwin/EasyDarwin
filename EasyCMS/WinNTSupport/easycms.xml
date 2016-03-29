@@ -1,7 +1,7 @@
 <CONFIGURATION>
 	<SERVER>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
-		<PREF NAME="session_timeout" TYPE="UInt32" >180</PREF>
+		<PREF NAME="session_timeout" TYPE="UInt32" >1800</PREF>
 		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
 		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
 		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
@@ -62,6 +62,8 @@
 		<PREF NAME="monitor_wan_ip" >0.0.0.0</PREF>
 		<PREF NAME="enable_allow_guest_default" TYPE="Bool16" >true</PREF>
 		<PREF NAME="run_num_msg_threads" TYPE="UInt32" >2</PREF>
+		<PREF NAME="dss_ip" >101.201.147.46</PREF>
+		<PREF NAME="dss_port" TYPE="UInt16" >554</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 </CONFIGURATION>

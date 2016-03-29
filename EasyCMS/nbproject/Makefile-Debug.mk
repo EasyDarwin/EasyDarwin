@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
 CND_CONF=Debug
 CND_DISTDIR=dist
@@ -35,10 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/1174643662/HTTPProtocol.o \
-	${OBJECTDIR}/_ext/1174643662/HTTPRequest.o \
-	${OBJECTDIR}/_ext/540968335/OSMemory.o \
-	${OBJECTDIR}/_ext/873319650/InternalStdLib.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o \
+	${OBJECTDIR}/_ext/dfc17a71/OSMemory.o \
+	${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o \
 	${OBJECTDIR}/APICommonCode/QTAccessFile.o \
 	${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o \
 	${OBJECTDIR}/APICommonCode/QTSSRollingLog.o \
@@ -91,27 +91,27 @@ LDLIBSOPTIONS=-L../CommonUtilitiesLib/${CND_CONF} -L../EasyProtocol/EasyProtocol
 
 ${CND_CONF}/easycms: ${OBJECTFILES}
 	${MKDIR} -p ${CND_CONF}
-	${LINK.cc} -o ${CND_CONF}/easycms ${OBJECTFILES} ${LDLIBSOPTIONS} -lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp
+	${LINK.cc} -o ${CND_CONF}/easycms ${OBJECTFILES} ${LDLIBSOPTIONS} -lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system
 
-${OBJECTDIR}/_ext/1174643662/HTTPProtocol.o: ../HTTPUtilitiesLib/HTTPProtocol.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1174643662
+${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o: ../HTTPUtilitiesLib/HTTPProtocol.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1174643662/HTTPProtocol.o ../HTTPUtilitiesLib/HTTPProtocol.cpp
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o ../HTTPUtilitiesLib/HTTPProtocol.cpp
 
-${OBJECTDIR}/_ext/1174643662/HTTPRequest.o: ../HTTPUtilitiesLib/HTTPRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1174643662
+${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o: ../HTTPUtilitiesLib/HTTPRequest.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1174643662/HTTPRequest.o ../HTTPUtilitiesLib/HTTPRequest.cpp
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o ../HTTPUtilitiesLib/HTTPRequest.cpp
 
-${OBJECTDIR}/_ext/540968335/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/540968335
+${OBJECTDIR}/_ext/dfc17a71/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/dfc17a71
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/540968335/OSMemory.o ../OSMemoryLib/OSMemory.cpp
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o ../OSMemoryLib/OSMemory.cpp
 
-${OBJECTDIR}/_ext/873319650/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/873319650
+${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/cbf2331e
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/873319650/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
+	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
 
 ${OBJECTDIR}/APICommonCode/QTAccessFile.o: APICommonCode/QTAccessFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode

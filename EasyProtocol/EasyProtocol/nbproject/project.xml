@@ -16,15 +16,19 @@
                     <type>3</type>
                 </confElem>
                 <confElem>
-                    <name>Release</name>
+                    <name>i386</name>
                     <type>3</type>
                 </confElem>
                 <confElem>
-                    <name>ARM</name>
+                    <name>arm</name>
                     <type>3</type>
                 </confElem>
                 <confElem>
                     <name>x64</name>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>ti</name>
                     <type>3</type>
                 </confElem>
             </confList>

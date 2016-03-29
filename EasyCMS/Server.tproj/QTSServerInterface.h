@@ -53,6 +53,9 @@
 #include "Task.h"
 #include "TCPListenerSocket.h"
 #include "ResizeableStringFormatter.h"
+#include <EasyProtocol.h>
+
+using namespace EasyDarwin::Protocol;
 
 // OSRefTable;
 class QTSServerPrefs;
@@ -146,6 +149,8 @@ class QTSServerInterface : public QTSSDictionary
         //Allows you to map RTP session IDs (strings) to actual RTP session objects
         OSRefTable*         GetDeviceSessionMap()          { return fDeviceSessionMap; }
 
+		EasyNVRs &GetRegisterNVRs() { return fRegisterNVRs; }
+
         QTSServerPrefs*     GetPrefs()                  { return fSrvrPrefs; }
         QTSSMessages*       GetMessages()               { return fSrvrMessages; }
         
@@ -215,6 +220,8 @@ class QTSServerInterface : public QTSSDictionary
         //所有服务单元Hash表，以ServiceType区分不同功能单元
         OSRefTable*                 fDeviceSessionMap;
         
+		EasyNVRs fRegisterNVRs;
+
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;
 
