@@ -2085,12 +2085,12 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
 				}
 			}  
             
-            if (theSessionRef->GetRefCount() == 0)
-            {   
-                //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
-                sSessionMap->UnRegister(theSessionRef);
-                delete inSession;
-            }
+            //if (theSessionRef->GetRefCount() == 0)
+            //{   
+            //    //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
+            //    sSessionMap->UnRegister(theSessionRef);
+            //    delete inSession;
+            //}
 
         }
     }
