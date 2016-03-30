@@ -1169,7 +1169,12 @@ OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput,
 				err = theOutput->WritePacket(&tmpptr, fStream, fWriteFlag, packetLateness, &timeToSendPacket,&thePacket->fStreamCountID,&thePacket->fTimeArrived, firstPacket );
 				if(err == QTSS_WouldBlock)
 				{
+					#if defined(__linux__)
 					usleep(2000);
+					#else
+					Sleep(2);
+					#endif
+					
 					theOutput->WritePacket(&tmpptr, fStream, fWriteFlag, packetLateness, &timeToSendPacket,&thePacket->fStreamCountID,&thePacket->fTimeArrived, firstPacket );
 				}
 				offset += pkglen + 4;
