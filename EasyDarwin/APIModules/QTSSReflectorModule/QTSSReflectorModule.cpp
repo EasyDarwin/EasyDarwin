@@ -59,6 +59,7 @@
 #include "SDPSourceInfo.h"
 
 #include "SDPUtils.h"
+#include "sdpCache.h"
 
 #ifndef __Win32__
     #include <unistd.h>
@@ -1085,19 +1086,24 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
    // sortedSDP.GetSessionHeaders()->PrintStrEOL();
    // sortedSDP.GetMediaHeaders()->PrintStrEOL();
 
-    // write the file !! need error reporting
-    FILE* theSDPFile= ::fopen(theFullPath.Ptr, "wb");//open 
-    if (theSDPFile != NULL)
-    {  
-        qtss_fprintf(theSDPFile, "%s", sessionHeaders);
-        qtss_fprintf(theSDPFile, "%s", mediaHeaders);
-        ::fflush(theSDPFile);
-        ::fclose(theSDPFile);   
-    }
-    else
-    {   return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientForbidden,0);
-    }
-    
+#if 0
+	   // write the file !! need error reporting
+	   FILE* theSDPFile= ::fopen(theFullPath.Ptr, "wb");//open 
+	   if (theSDPFile != NULL)
+	   {  
+		   qtss_fprintf(theSDPFile, "%s", sessionHeaders);
+		   qtss_fprintf(theSDPFile, "%s", mediaHeaders);
+		   ::fflush(theSDPFile);
+		   ::fclose(theSDPFile);   
+	   }
+	   else
+	   {   return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientForbidden,0);
+	   }
+#endif 
+	   char sdpContext[1024] = {0};
+	   sprintf(sdpContext,"%s%s",sessionHeaders,mediaHeaders);
+	   CSdpCache::GetInstance()->setSdpMap(theFullPath.Ptr,sdpContext);
+	   
 
     //qtss_printf("QTSSReflectorModule:DoAnnounce SendResponse OK=200\n");
     

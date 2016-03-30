@@ -75,6 +75,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/atomic.o \
 	${OBJECTDIR}/base64.o \
 	${OBJECTDIR}/epollEvent.o \
+	${OBJECTDIR}/keyframecache.o \
+	${OBJECTDIR}/sdpCache.o \	
 	${OBJECTDIR}/ev.o \
 	${OBJECTDIR}/getopt.o \
 	${OBJECTDIR}/md5.o \

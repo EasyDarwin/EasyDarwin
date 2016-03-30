@@ -68,7 +68,36 @@ class ReflectorOutput
         QTSS_TimeVal        fLastIntervalMilliSec;
         QTSS_TimeVal        fLastPacketTransmitTime;
 		OSMutex             fMutex;
-       
+ //add by fantasy		
+private:       
+        bool              fNewOutput;
+		unsigned long long ullseq;
+public:
+		unsigned long long outPutSeq()
+		{
+			return ullseq;
+		}
+
+		bool addSeq()
+		{
+			ullseq ++;
+			if(ullseq == 0xffffffffffffffff)
+			{
+				ullseq = 0;
+			}
+			return true;
+		}
+		
+		bool getNewFlag()
+		{
+			return fNewOutput;
+		}
+
+		bool setNewFlag(bool flag)
+		{
+			fNewOutput = flag;
+		}
+//end add	      
         Bool16              fNewOutput;
 inline  OSQueueElem*    GetBookMarkedPacket(OSQueue *thePacketQueue);
 inline  Bool16          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);

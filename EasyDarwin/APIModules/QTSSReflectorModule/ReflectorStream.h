@@ -56,11 +56,31 @@
 #include "ReflectorOutput.h"
 #include "atomic.h"
 
+/*fantasy add this*/
+#include "keyframecache.h"
+
 //This will add some printfs that are useful for checking the thinning
 #define REFLECTOR_THINNING_DEBUGGING 0 
+#define MAX_CACHE_SIZE  1024*1024*2
 
 //Define to use new potential workaround for NAT problems
 #define NAT_WORKAROUND 1
+
+typedef struct FU_Indicator_tag
+{
+    unsigned char F:1;
+    unsigned char nRI:2;
+    unsigned char type:5;//
+}FAU_Indicator;
+
+typedef struct FU_Head_tag
+{
+    unsigned char nalu_type:5;//little 5 bit
+    unsigned char r:1; 
+    unsigned char e:1;    
+    unsigned char s:1;//high bit    
+}FU_Head;
+
 
 class ReflectorPacket;
 class ReflectorSender;
@@ -512,6 +532,9 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         
         friend class ReflectorSocket;
         friend class ReflectorSender;
+
+public:
+		CKeyFrameCache    *pkeyFrameCache;		
 };
 
 
