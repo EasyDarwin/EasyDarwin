@@ -47,9 +47,9 @@
 
 class ReflectorOutput
 {
-    public:
+	public:
     
-        ReflectorOutput() : fBookmarkedPacketsElemsArray(NULL), fNumBookmarks(0), fAvailPosition(0), fLastIntervalMilliSec(5), fLastPacketTransmitTime(0) {}   
+		ReflectorOutput() : fBookmarkedPacketsElemsArray(NULL), fNumBookmarks(0), fAvailPosition(0), fLastIntervalMilliSec(5), fLastPacketTransmitTime(0) {}   
 
         virtual ~ReflectorOutput() 
         {
@@ -68,37 +68,39 @@ class ReflectorOutput
         QTSS_TimeVal        fLastIntervalMilliSec;
         QTSS_TimeVal        fLastPacketTransmitTime;
 		OSMutex             fMutex;
- //add by fantasy		
-private:       
-        bool              fNewOutput;
-		unsigned long long ullseq;
-public:
-		unsigned long long outPutSeq()
+
+	//add by fantasy		
+	private:
+		UInt64			fU64Seq;
+		Bool16			fNewOutput;
+	public:
+		UInt64 outPutSeq()
 		{
-			return ullseq;
+			return fU64Seq;
 		}
 
 		bool addSeq()
 		{
-			ullseq ++;
-			if(ullseq == 0xffffffffffffffff)
+			fU64Seq ++;
+			if(fU64Seq == 0xffffffffffffffff)
 			{
-				ullseq = 0;
+				fU64Seq = 0;
 			}
 			return true;
 		}
 		
-		bool getNewFlag()
+		Bool16 getNewFlag()
 		{
 			return fNewOutput;
 		}
 
-		bool setNewFlag(bool flag)
+		void setNewFlag(Bool16 flag)
 		{
 			fNewOutput = flag;
 		}
-//end add	      
-        Bool16              fNewOutput;
+//end add
+
+
 inline  OSQueueElem*    GetBookMarkedPacket(OSQueue *thePacketQueue);
 inline  Bool16          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
         

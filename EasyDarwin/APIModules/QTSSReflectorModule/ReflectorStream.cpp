@@ -1070,7 +1070,7 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 			{                  
 				packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
 				firstPacket = true;
-				theOutput->fNewOutput = false;    
+				theOutput->setNewFlag(false);    
 			}
 
 			//->geyijyn@20150427
@@ -1143,7 +1143,7 @@ OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput,
 		char onePkg[2048] = {0};
 		int pkglen = 0;
 	
-		StrPtrLen tmpptr = {0};
+		StrPtrLen tmpptr;
 		while(theOutput->getNewFlag())
 		{
 			if(theOutput->getNewFlag() == false)

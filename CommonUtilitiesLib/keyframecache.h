@@ -1,9 +1,7 @@
 #ifndef _KEYFRAMECACHE_H__
 #define _KEYFRAMECACHE_H__
-#include <arpa/inet.h>
-#include <string.h>
+#include "OSHeaders.h"
 #include <stdlib.h>
-#include <cstdio>
 #define BUF_STX 0x28
 #define BUF_ETX 0x29
 typedef struct FrameBuffer_tag

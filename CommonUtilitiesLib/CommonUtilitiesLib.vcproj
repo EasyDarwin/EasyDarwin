@@ -363,6 +363,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\keyframecache.cpp"
+				>
+			</File>
+			<File
 				RelativePath="md5.c"
 				>
 				<FileConfiguration
@@ -729,6 +733,10 @@
 						ForcedIncludeFiles=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\sdpCache.cpp"
+				>
 			</File>
 			<File
 				RelativePath="SDPUtils.cpp"
