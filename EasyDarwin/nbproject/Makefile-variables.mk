@@ -23,13 +23,13 @@ CND_PACKAGE_DIR_i386=dist/i386/GNU-Linux/package
 CND_PACKAGE_NAME_i386=easydarwin.tar
 CND_PACKAGE_PATH_i386=dist/i386/GNU-Linux/package/easydarwin.tar
 # ARM configuration
-CND_PLATFORM_ARM=GM8126-Linux-x86
+CND_PLATFORM_ARM=GM8126-Linux
 CND_ARTIFACT_DIR_ARM=ARM
 CND_ARTIFACT_NAME_ARM=easydarwin
 CND_ARTIFACT_PATH_ARM=ARM/easydarwin
-CND_PACKAGE_DIR_ARM=dist/ARM/GM8126-Linux-x86/package
+CND_PACKAGE_DIR_ARM=dist/ARM/GM8126-Linux/package
 CND_PACKAGE_NAME_ARM=easydarwin.tar
-CND_PACKAGE_PATH_ARM=dist/ARM/GM8126-Linux-x86/package/easydarwin.tar
+CND_PACKAGE_PATH_ARM=dist/ARM/GM8126-Linux/package/easydarwin.tar
 # x64 configuration
 CND_PLATFORM_x64=GNU-Linux
 CND_ARTIFACT_DIR_x64=x64

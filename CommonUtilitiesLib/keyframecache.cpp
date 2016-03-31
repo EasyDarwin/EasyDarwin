@@ -1,5 +1,6 @@
 #include "keyframecache.h"
 #include <cstdio>
+
 bool CKeyFrameCache::PutOnePacket(char *buf,int len,int nalutype,int start)
 {
     if(buf == NULL || len == 0)

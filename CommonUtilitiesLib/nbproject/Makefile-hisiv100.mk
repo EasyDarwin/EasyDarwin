@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=hisiv100-Linux-x86
+CND_PLATFORM=hisiv100-Linux
 CND_DLIB_EXT=so
 CND_CONF=hisiv100
 CND_DISTDIR=dist
@@ -35,8 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/540968335/OSMemory.o \
-	${OBJECTDIR}/_ext/873319650/InternalStdLib.o \
+	${OBJECTDIR}/_ext/dfc17a71/OSMemory.o \
+	${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o \
 	${OBJECTDIR}/ConfParser.o \
 	${OBJECTDIR}/DateTranslator.o \
 	${OBJECTDIR}/EventContext.o \
@@ -77,8 +77,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/epollEvent.o \
 	${OBJECTDIR}/ev.o \
 	${OBJECTDIR}/getopt.o \
+	${OBJECTDIR}/keyframecache.o \
 	${OBJECTDIR}/md5.o \
-	${OBJECTDIR}/md5digest.o
+	${OBJECTDIR}/md5digest.o \
+	${OBJECTDIR}/sdpCache.o
 
 
 # C Compiler Flags
@@ -107,15 +109,15 @@ ${CND_CONF}/libCommonUtilitiesLib.a: ${OBJECTFILES}
 	${AR} -rv ${CND_CONF}/libCommonUtilitiesLib.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libCommonUtilitiesLib.a
 
-${OBJECTDIR}/_ext/540968335/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/540968335
+${OBJECTDIR}/_ext/dfc17a71/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/dfc17a71
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/540968335/OSMemory.o ../OSMemoryLib/OSMemory.cpp
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o ../OSMemoryLib/OSMemory.cpp
 
-${OBJECTDIR}/_ext/873319650/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/873319650
+${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/cbf2331e
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/873319650/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
 
 ${OBJECTDIR}/ConfParser.o: ConfParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -317,6 +319,11 @@ ${OBJECTDIR}/getopt.o: getopt.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/getopt.o getopt.c
 
+${OBJECTDIR}/keyframecache.o: keyframecache.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyframecache.o keyframecache.cpp
+
 ${OBJECTDIR}/md5.o: md5.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -326,6 +333,11 @@ ${OBJECTDIR}/md5digest.o: md5digest.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5digest.o md5digest.cpp
+
+${OBJECTDIR}/sdpCache.o: sdpCache.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sdpCache.o sdpCache.cpp
 
 # Subprojects
 .build-subprojects:

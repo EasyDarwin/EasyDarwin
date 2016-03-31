@@ -9,7 +9,6 @@
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-      <itemPath>../OSMemoryLib/OSMemory.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -39,6 +38,7 @@
       <itemPath>OSFileSource.h</itemPath>
       <itemPath>OSHeap.cpp</itemPath>
       <itemPath>OSHeap.h</itemPath>
+      <itemPath>../OSMemoryLib/OSMemory.cpp</itemPath>
       <itemPath>OSMutex.cpp</itemPath>
       <itemPath>OSMutex.h</itemPath>
       <itemPath>OSMutexRW.cpp</itemPath>
@@ -95,10 +95,14 @@
       <itemPath>ev.h</itemPath>
       <itemPath>getopt.c</itemPath>
       <itemPath>getopt.h</itemPath>
+      <itemPath>keyframecache.cpp</itemPath>
+      <itemPath>keyframecache.h</itemPath>
       <itemPath>md5.c</itemPath>
       <itemPath>md5.h</itemPath>
       <itemPath>md5digest.cpp</itemPath>
       <itemPath>md5digest.h</itemPath>
+      <itemPath>sdpCache.cpp</itemPath>
+      <itemPath>sdpCache.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -324,6 +328,10 @@
       </item>
       <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="keyframecache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="keyframecache.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="md5.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
@@ -331,6 +339,10 @@
       <item path="md5digest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sdpCache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sdpCache.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="3">
@@ -551,6 +563,10 @@
       </item>
       <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="keyframecache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="keyframecache.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="md5.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
@@ -558,6 +574,10 @@
       <item path="md5digest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sdpCache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sdpCache.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="ARM" type="3">
@@ -778,6 +798,10 @@
       </item>
       <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="keyframecache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="keyframecache.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="md5.c" ex="false" tool="0" flavor2="9">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
@@ -785,6 +809,10 @@
       <item path="md5digest.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sdpCache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sdpCache.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="x64" type="3">
@@ -1005,6 +1033,10 @@
       </item>
       <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="keyframecache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="keyframecache.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="md5.c" ex="false" tool="0" flavor2="9">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
@@ -1012,6 +1044,10 @@
       <item path="md5digest.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sdpCache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sdpCache.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="hisiv100" type="3">
@@ -1232,6 +1268,10 @@
       </item>
       <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="keyframecache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="keyframecache.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="md5.c" ex="false" tool="0" flavor2="9">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
@@ -1239,6 +1279,10 @@
       <item path="md5digest.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sdpCache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sdpCache.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="i386" type="3">
@@ -1459,6 +1503,10 @@
       </item>
       <item path="getopt.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="keyframecache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="keyframecache.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="md5.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="md5.h" ex="false" tool="3" flavor2="0">
@@ -1466,6 +1514,10 @@
       <item path="md5digest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="md5digest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sdpCache.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sdpCache.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

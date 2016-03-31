@@ -77,8 +77,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/epollEvent.o \
 	${OBJECTDIR}/ev.o \
 	${OBJECTDIR}/getopt.o \
+	${OBJECTDIR}/keyframecache.o \
 	${OBJECTDIR}/md5.o \
-	${OBJECTDIR}/md5digest.o
+	${OBJECTDIR}/md5digest.o \
+	${OBJECTDIR}/sdpCache.o
 
 
 # C Compiler Flags
@@ -317,6 +319,11 @@ ${OBJECTDIR}/getopt.o: getopt.c
 	${RM} "$@.d"
 	$(COMPILE.c) -g -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/getopt.o getopt.c
 
+${OBJECTDIR}/keyframecache.o: keyframecache.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/keyframecache.o keyframecache.cpp
+
 ${OBJECTDIR}/md5.o: md5.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -326,6 +333,11 @@ ${OBJECTDIR}/md5digest.o: md5digest.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/md5digest.o md5digest.cpp
+
+${OBJECTDIR}/sdpCache.o: sdpCache.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sdpCache.o sdpCache.cpp
 
 # Subprojects
 .build-subprojects:

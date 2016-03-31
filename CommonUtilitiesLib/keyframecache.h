@@ -2,6 +2,11 @@
 #define _KEYFRAMECACHE_H__
 #include "OSHeaders.h"
 #include <stdlib.h>
+#include <string.h>
+#ifndef _WIN32
+#include <netinet/in.h>
+#endif
+
 #define BUF_STX 0x28
 #define BUF_ETX 0x29
 typedef struct FrameBuffer_tag
