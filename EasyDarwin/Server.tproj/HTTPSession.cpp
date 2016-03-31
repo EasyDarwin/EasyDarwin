@@ -736,7 +736,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char
 		StrPtrLen msgJson(msgContent);
 
 		//构造响应报文(HTTP头)
-		HTTPRequest httpAck(&sServiceStr);
+		HTTPRequest httpAck(&sServiceStr,httpResponseType);
 		httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
 		if (msgJson.Len)
 			httpAck.AppendContentLengthHeader(msgJson.Len);
