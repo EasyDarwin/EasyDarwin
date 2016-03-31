@@ -8,6 +8,9 @@
     File:       HTTPResponseStream.cpp
     Contains:   Impelementation of object in .h
 */
+/*
+用于响应HTTP流数据
+*/
 
 #include "HTTPResponseStream.h"
 #include "OSMemory.h"
