@@ -65,6 +65,8 @@
     #include <unistd.h>
 #endif
 
+#define REFLECTORSESSION_DEBUG 1
+
 #if DEBUG
 #define REFLECTOR_MODULE_DEBUGGING 0
 #else
@@ -726,7 +728,8 @@ QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
     RTPSessionOutput** theOutput = NULL;
     QTSS_Error theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
     if ((theErr != QTSS_NoErr) || (theLen != sizeof(RTPSessionOutput*))) // a broadcaster push session
-    {   if (*theMethod == qtssPlayMethod || *theMethod == qtssRecordMethod)
+    {   
+		if (*theMethod == qtssPlayMethod || *theMethod == qtssRecordMethod)
             return DoPlay(inParams, NULL);
         else
             return QTSS_RequestFailed;
@@ -1257,8 +1260,11 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
     QTSSModuleUtils::SendDescribeResponse(inParams->inRTSPRequest, inParams->inClientSession,
                                             &theDescribeVec[0], 3, sessLen + mediaLen ); 
 
-	// Release Describe Reference
 	sSessionMap->Release(theSession->GetRef());
+
+#ifdef REFLECTORSESSION_DEBUG
+	qtss_printf("QTSSReflectorModule.cpp:DoDescribe Session =%p refcount=%"_U32BITARG_"\n", theSession->GetRef(), theSession->GetRef()->GetRefCount() ) ;
+#endif
 
     return QTSS_NoErr;
 }
@@ -1387,8 +1393,8 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
         theErr = sSessionMap->Register(theSession->GetRef());
         Assert(theErr == QTSS_NoErr);
 
-        //unless we do this, the refcount won't increment (and we'll delete the session prematurely
-        if (!isPush)
+        // unless we do this, the refcount won't increment (and we'll delete the session prematurely
+        //if (!isPush)
         {   OSRef* debug = sSessionMap->Resolve(inPath);
             Assert(debug == theSession->GetRef());
         }
@@ -1444,9 +1450,9 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
             
     Assert(theSession != NULL);
 
-	//// Turn off overbuffering if the "disable_overbuffering" pref says so
-	//if (sDisableOverbuffering)
-	//	(void)QTSS_SetValue(inParams->inClientSession, qtssCliSesOverBufferEnabled, 0, &sFalse, sizeof(sFalse));
+	// Turn off overbuffering if the "disable_overbuffering" pref says so
+	if (sDisableOverbuffering)
+		(void)QTSS_SetValue(inParams->inClientSession, qtssCliSesOverBufferEnabled, 0, &sFalse, sizeof(sFalse));
 
     return theSession;
 }
@@ -1498,31 +1504,26 @@ QTSS_Error AddRTPStream(ReflectorSession* theSession,QTSS_StandardRTSP_Params* i
 QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 {
     ReflectorSession* theSession = NULL;
-    //qtss_printf("QTSSReflectorModule.cpp:DoSetup \n");
 
-    // See if this is a push from a Broadcaster
+    // 首先通过SETUP报文中mode=record/receive字段判断是否为推送端
     UInt32 theLen = 0;
     UInt32 *transportModePtr = NULL;
     QTSS_Error theErr  = QTSS_GetValuePtr(inParams->inRTSPRequest, qtssRTSPReqTransportMode, 0, (void**)&transportModePtr, &theLen);
 	Bool16 isPush = (transportModePtr != NULL && *transportModePtr == qtssRTPTransportModeRecord) ? true : false;
     Bool16 foundSession = false;
     
-    // Check to see if we have a RTPSessionOutput for this Client Session. If we don't,
-    // we should make one
+    // 根据RTPSessionOutput属性判断是否为客户端
     RTPSessionOutput** theOutput = NULL;
     theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
     if (theLen != sizeof(RTPSessionOutput*))
     {
-        //
-        // This may be an incoming data session. If that's the case, there will be a Reflector
-        // Session in the ClientSession
         //theLen = sizeof(theSession);
         //theErr = QTSS_GetValue(inParams->inClientSession, sSessionAttr, 0, &theSession, &theLen);
-        
+
+        // 如果没有RTPSessionOutput属性,就会有两种可能,一种为首次SETUP的客户端,另一种为推送端        
         if (theErr != QTSS_NoErr  && !isPush)
         {
-            // This is not an incoming data session...
-            // Do the standard ReflectorSession setup, create an RTPSessionOutput
+            // 如果为客户端,那么NEW RTPSessionOutput,并进行属性设置
             theSession = DoSessionSetup(inParams, qtssRTSPReqFilePathTrunc);
             if (theSession == NULL)
                 return QTSS_RequestFailed;
@@ -1532,15 +1533,27 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
             (void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theNewOutput, sizeof(theNewOutput));
         }
         else 
-        {           
-            theSession = DoSessionSetup(inParams, qtssRTSPReqFilePathTrunc,isPush,&foundSession); 
-            if (theSession == NULL)
-                return QTSS_RequestFailed;  
+        {    
+			UInt32 theLen = sizeof(theSession);
+			QTSS_Error theErr = QTSS_GetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &theSession, &theLen);
+			if (theSession == NULL)
+			{
+				// 如果为推送端,且还未进行过Track SETUP,那么我们就需要设置sClientBroadcastSessionAttr属性
+				theSession = DoSessionSetup(inParams, qtssRTSPReqFilePathTrunc,isPush,&foundSession); 
+				if (theSession == NULL)
+					return QTSS_RequestFailed;  
+			}
+			else
+			{
+				// 推送端在之前的SETUP命令中已经设置过了sClientBroadcastSessionAttr属性
+				;
+			}
                 
-            // This is an incoming data session. Set the Reflector Session in the ClientSession
+            // 获取到ReflectorSession,设置推送端RTSPSession的sClientBroadcastSessionAttr属性
             theErr = QTSS_SetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &theSession, sizeof(theSession));
             Assert(theErr == QTSS_NoErr);
-            //qtss_printf("QTSSReflectorModule.cpp:SETsession    sClientBroadcastSessionAttr=%"_U32BITARG_" theSession=%"_U32BITARG_" err=%"_S32BITARG_" \n",(UInt32)sClientBroadcastSessionAttr, (UInt32) theSession,theErr);
+            
+			//qtss_printf("QTSSReflectorModule.cpp:SET Session sClientBroadcastSessionAttr=%"_U32BITARG_" theSession=%"_U32BITARG_" err=%"_S32BITARG_" \n",(UInt32)sClientBroadcastSessionAttr, (UInt32) theSession,theErr);
             (void) QTSS_SetValue(inParams->inClientSession, qtssCliSesTimeoutMsec, 0, &sBroadcasterSessionTimeoutMilliSecs, sizeof(sBroadcasterSessionTimeoutMilliSecs));
        }
     }
@@ -1564,9 +1577,7 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
     
     UInt32 theTrackID = ::strtol(theDigitStr, NULL, 10);
     
-    //
-    // If this is an incoming data session, skip everything having to do with setting up a new
-    // RTP Stream. 
+    // 如果是推送端,需要NEW RTPStream对象并进行设置
     if (isPush)
     {
         //qtss_printf("QTSSReflectorModule.cpp:DoSetup is push setup\n");
@@ -1615,6 +1626,10 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
             
         if (theSession != NULL)
             theSession->AddBroadcasterClientSession(inParams);
+
+#ifdef REFLECTORSESSION_DEBUG
+	qtss_printf("QTSSReflectorModule.cpp:DoSetup Session =%p refcount=%"_U32BITARG_"\n", theSession->GetRef(), theSession->GetRef()->GetRefCount() ) ;
+#endif
             
         return QTSS_NoErr;      
     }
@@ -1689,6 +1704,11 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
     (void)QTSS_AppendRTSPHeader(inParams->inRTSPRequest, qtssCacheControlHeader,
                                 kCacheControlHeader.Ptr, kCacheControlHeader.Len);
     (void)QTSS_SendStandardRTSPResponse(inParams->inRTSPRequest, newStream, qtssSetupRespDontWriteSSRC);
+
+#ifdef REFLECTORSESSION_DEBUG
+	qtss_printf("QTSSReflectorModule.cpp:DoSetup Session =%p refcount=%"_U32BITARG_"\n", theSession->GetRef(), theSession->GetRef()->GetRefCount() ) ;
+#endif
+
     return QTSS_NoErr;
 }
 
@@ -1769,8 +1789,9 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
     UInt32 theLen = 0;
     Bool16 rtpInfoEnabled = false; 
     
-    if (inSession == NULL) // it is a broadcast session so store the broadcast session.
-    {   if (!sDefaultBroadcastPushEnabled)
+    if (inSession == NULL)	// 推送端
+    {   
+		if (!sDefaultBroadcastPushEnabled)
             return QTSS_RequestFailed;
 
         theLen = sizeof(inSession);
@@ -1820,30 +1841,27 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
                 thePathPtr.Len -= sSDPSuffix.Len;
             }
         }
-
-         // do all above so we can add the session to the map with Resolve here.
-        // we must only do this once.
-        OSRef* debug = sSessionMap->Resolve(&thePathPtr);
-        if (debug != inSession->GetRef())
-        {   
-             return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientBadRequest, 0);
-        }
+ 
+		//// do all above so we can add the session to the map with Resolve here.
+		//// we must only do this once.
+		//OSRef* debug = sSessionMap->Resolve(&thePathPtr);
+		//if (debug != inSession->GetRef())
+		//{   
+		//	 return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientBadRequest, 0);
+		//}
     
         KeepSession(inParams->inRTSPRequest,true);
         //qtss_printf("QTSSReflectorModule.cpp:DoPlay (PUSH) inRTSPSession=%"_U32BITARG_" inClientSession=%"_U32BITARG_"\n",(UInt32)inParams->inRTSPSession,(UInt32)inParams->inClientSession);
     }
-    else// it is NOT a broadcaster session
-    {  
-    
+    else	// 客户端
+    {
         RTPSessionOutput**  theOutput = NULL;
         theLen = 0;
         theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
         if ((theErr != QTSS_NoErr) || (theLen != sizeof(RTPSessionOutput*)) || (theOutput == NULL))
             return QTSS_RequestFailed;
         (*theOutput)->InitializeStreams();
-   
-    
-    
+
         // Tell the session what the bitrate of this reflection is. This is nice for logging,
         // it also allows the server to scale the TCP buffer size appropriately if we are
         // interleaving the data over TCP. This must be set before calling QTSS_Play so the
@@ -1857,9 +1875,7 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
             theErr = QTSS_GetValuePtr(inParams->inClientSession, sRTPInfoWaitTimeAttr, 0, (void**) &temp.Ptr, &temp.Len);
             if (theErr != QTSS_NoErr)
                 QTSS_AppendRTSPHeader(inParams->inRTSPRequest, qtssRangeHeader,sTheNowRangeHeader.Ptr, sTheNowRangeHeader.Len);
-  
         }
-        
      
         if (sPlayerCompatibility )
             rtpInfoEnabled = QTSSModuleUtils::HavePlayerProfile(sServerPrefs,inParams, QTSSModuleUtils::kRequiresRTPInfoSeqAndTime);
@@ -1881,7 +1897,6 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
                 QTSS_Error theErr = QTSS_Play(inParams->inClientSession, inParams->inRTSPRequest, qtssPlayRespWriteTrackInfo);
                 if (theErr != QTSS_NoErr)
                     return theErr;
-            
             }
             else
             {   
@@ -1901,13 +1916,10 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
                 }
                 
                 //qtss_printf("QTSSReflectorModule:DoPlay  wait 100ms waitTimeLoopCount=%ld\n", waitTimeLoopCount);
-
                 SInt64 interval = 1 * 100; // 100 millisecond
                 QTSS_SetIdleTimer( interval );
                 return QTSS_NoErr;
             }
-            
- 
         }
         else
         {
@@ -1919,8 +1931,12 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
   
     }
     
-
     (void)QTSS_SendStandardRTSPResponse(inParams->inRTSPRequest, inParams->inClientSession, flags);
+
+#ifdef REFLECTORSESSION_DEBUG
+	qtss_printf("QTSSReflectorModule.cpp:DoPlay Session =%p refcount=%"_U32BITARG_"\n", inSession->GetRef(), inSession->GetRef()->GetRefCount() ) ;
+#endif
+
     return QTSS_NoErr;
 }
 
@@ -1968,7 +1984,7 @@ void KillCommandPathInList()
     }
     
 }
- 
+
 QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 {
     RTPSessionOutput**  theOutput = NULL;
@@ -1980,7 +1996,8 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
     UInt32 theLen = sizeof(theSession);
     QTSS_Error theErr = QTSS_GetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &theSession, &theLen);
     //qtss_printf("QTSSReflectorModule.cpp:DestroySession    sClientBroadcastSessionAttr=%"_U32BITARG_" theSession=%"_U32BITARG_" err=%"_S32BITARG_" \n",(UInt32)sClientBroadcastSessionAttr, (UInt32)theSession,theErr);
-    if (theSession != NULL) // it is a broadcaster session
+    
+	if (theSession != NULL)	// 推送端
     {   
         ReflectorSession*   deletedSession = NULL;
         theErr = QTSS_SetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &deletedSession, sizeof(deletedSession));
@@ -2002,7 +2019,6 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
         UInt32 theLen = sizeof(killClients);
         (void) QTSS_GetValue(inParams->inClientSession, sKillClientsEnabledAttr, 0, &killClients, &theLen);
 
-
         //qtss_printf("QTSSReflectorModule.cpp:DestroySession broadcaster theSession=%"_U32BITARG_"\n", (UInt32) theSession);
         theSession->RemoveSessionFromOutput(inParams->inClientSession);
 
@@ -2011,7 +2027,7 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 
         RemoveOutput(NULL, theSession, killClients);
     }
-    else
+    else // 客户端
     {
         theLen = 0;
         theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
@@ -2027,7 +2043,6 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
             RemoveOutput(outputPtr, theSession, false);
             RTPSessionOutput* theOutput = NULL;
             (void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theOutput, sizeof(theOutput));
-            
         }
                 
     }
@@ -2037,18 +2052,18 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 
 void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16 killClients)
 {
-    //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput\n");
-    //This function removes the output from the ReflectorSession, then
+    // 对ReflectorSession的引用继续处理,包括推送端和客户端
     Assert(inSession);
     if (inSession != NULL)
     {
         if (inOutput != NULL)
-        {   
+        {
+			// ReflectorSession移除客户端
             inSession->RemoveOutput(inOutput,true);
         }
         else
-        {   // it is a Broadcaster session
-            //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput it is a broadcaster session\n");
+        {
+			// 推送端
             SourceInfo* theInfo = inSession->GetSourceInfo();         
             Assert(theInfo);
             
@@ -2058,49 +2073,42 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
             //}
             //    
         
-            //if (killClients || sTearDownClientsOnDisconnect)
-            //{    
-            //    inSession->TearDownAllOutputs();
-            //}
+            if (killClients || sTearDownClientsOnDisconnect)
+            {    
+                inSession->TearDownAllOutputs();
+            }
         }
-        
-        //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput refcount =%"_U32BITARG_"\n", inSession->GetRef()->GetRefCount() );
-        
-        //check if the ReflectorSession should be deleted
-        //it should if its ref count has dropped to 0
+
+#ifdef REFLECTORSESSION_DEBUG
+	qtss_printf("QTSSReflectorModule.cpp:RemoveOutput Session =%p refcount=%"_U32BITARG_"\n", inSession->GetRef(), inSession->GetRef()->GetRefCount() ) ;       
+#endif
+        // 检测推送端或者客户端退出时,ReflectorSession是否需要退出
         OSRef* theSessionRef = inSession->GetRef();
         if (theSessionRef != NULL) 
         {               
             //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister session =%p refcount=%"_U32BITARG_"\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
-           
-			if(inOutput != NULL) //for Output session  
+			if(inOutput != NULL)
 			{  
 				if (theSessionRef->GetRefCount() > 0)  
-						sSessionMap->Release(theSessionRef);           
+					sSessionMap->Release(theSessionRef);           
 			}  
-			else // for Broadcaster session 
-			{  
-				for (UInt32 x = 0; x < inSession->GetNumStreams(); x++)
-				{
-					if (inSession->GetStreamByIndex(x) == NULL)
-						continue; 
-	                    
-					Assert(theSessionRef->GetRefCount() > 0) //this shouldn't happen.
-					if (theSessionRef->GetRefCount() > 0)
-						sSessionMap->Release(theSessionRef); //  one of the sessions on the ref is ending so decrement the count for each valid stream
-				}
+			else
+			{
+				if (theSessionRef->GetRefCount() > 0)
+					sSessionMap->Release(theSessionRef);
 			}  
             
-            //if (theSessionRef->GetRefCount() == 0)
-            //{   
-            //    //qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
-            //    sSessionMap->UnRegister(theSessionRef);
-            //    delete inSession;
-            //}
+            if (theSessionRef->GetRefCount() == 0)
+            {
 
+#ifdef REFLECTORSESSION_DEBUG
+	qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
+#endif
+				sSessionMap->UnRegister(theSessionRef);
+                delete inSession;
+            }
         }
     }
-
     delete inOutput;
 }
 
