@@ -382,7 +382,7 @@ SInt64 HTTPSession::Run()
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
 	//构造响应报文(HTTP头)
-	HTTPRequest httpAck(&sServiceStr);
+	HTTPRequest httpAck(&sServiceStr, httpResponseType);
 	httpAck.CreateResponseHeader(contentXML->Len?httpOK:httpNotImplemented);
 	if (contentXML->Len)
 		httpAck.AppendContentLengthHeader(contentXML->Len);
@@ -669,7 +669,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	StrPtrLen msgJson((char*)msg.c_str());
 
 	//构造响应报文(HTTP头)
-	HTTPRequest httpAck(&sServiceStr);
+	HTTPRequest httpAck(&sServiceStr, httpResponseType);
 	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
 	if (msgJson.Len)
 		httpAck.AppendContentLengthHeader(msgJson.Len);
@@ -701,7 +701,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 		StrPtrLen msgJson(msgContent);
 
 		//构造响应报文(HTTP头)
-		HTTPRequest httpAck(&sServiceStr);
+		HTTPRequest httpAck(&sServiceStr, httpResponseType);
 		httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
 		if (msgJson.Len)
 			httpAck.AppendContentLengthHeader(msgJson.Len);
