@@ -154,7 +154,7 @@ ReflectorSession::~ReflectorSession()
             fStreamArray[x] = NULL;
         }   
     }
-	SdpCache::getInstance()->eraseSdpMap(GetSourcePath()->GetAsCString());  
+	CSdpCache::GetInstance()->eraseSdpMap(GetSourcePath()->GetAsCString());  
     // We own this object when it is given to us, so delete it now
     delete [] fStreamArray;
     delete fSourceInfo;
