@@ -910,7 +910,6 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
     if (!sAnnounceEnabled)
         return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssPreconditionFailed, sAnnounceDisabledNameErr);
 
-    //
     // If this is SDP data, the reflector has the ability to write the data
     // to the file system location specified by the URL.
     
@@ -1270,14 +1269,16 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 }
 
 Bool16 InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, StrPtrLen* inPath)
-{   // Check the ports based on the Pref whether to enforce a static SDP port range.
-
+{   
+	// Check the ports based on the Pref whether to enforce a static SDP port range.
     Bool16 isOK = true;
 
     if (sEnforceStaticSDPPortRange)
-    {   UInt16 theInfoPort = 0;
+    {
+		UInt16 theInfoPort = 0;
         for (UInt32 x = 0; x < theInfo->GetNumStreams(); x++)
-        {   theInfoPort = theInfo->GetStreamInfo(x)->fPort;
+        {  
+			theInfoPort = theInfo->GetStreamInfo(x)->fPort;
             QTSS_AttributeID theErrorMessageID = qtssIllegalAttrID;
             if (theInfoPort != 0)
             {   if  (theInfoPort < sMinimumStaticSDPPort) 
@@ -1312,30 +1313,35 @@ Bool16 InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, S
 }
 
 ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData, Bool16 isPush, Bool16 *foundSessionPtr)
-{   
-    // This function assumes that inPath is NULL terminated
-    // Ok, look for a reflector session matching this full path as the ID
+{  
+    // 根据inPath查找ReflectorSession
     OSMutexLocker locker(sSessionMap->GetMutex());
     OSRef* theSessionRef = sSessionMap->Resolve(inPath);
     ReflectorSession* theSession = NULL;
      
     if (theSessionRef == NULL)
     {
-        //If this URL doesn't already have a reflector session, we must make a new
-        //one. The first step is to create an SDPSourceInfo object.
+        // 未查找到ReflectorSession,则根据sdp信息创建
+		// 注意:只有推送isPush=true才进行ReflectorSession创建
+
+		if(!isPush)
+		{
+			return NULL;
+		}
         
         StrPtrLen theFileData;
         StrPtrLen theFileDeleteData;
         
-        //
-        // If no file data is provided by the caller, read the file data out of the file.
-        // If file data is provided, use that as our SDP data
+        // 读取SDPCache中缓存的sdp信息
         if (inData == NULL)
-        {   (void)QTSSModuleUtils::ReadEntireFile(inPath->Ptr, &theFileDeleteData);
+        {   
+			(void)QTSSModuleUtils::ReadEntireFile(inPath->Ptr, &theFileDeleteData);
             theFileData = theFileDeleteData;
         }
         else
+		{
             theFileData = *inData;
+		}
         OSCharArrayDeleter fileDataDeleter(theFileDeleteData.Ptr); 
             
         if (theFileData.Len <= 0)
@@ -1344,21 +1350,22 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
         SDPSourceInfo* theInfo = NEW SDPSourceInfo(theFileData.Ptr, theFileData.Len); // will make a copy
             
         if (!theInfo->IsReflectable())
-        {   delete theInfo;
+        {   
+			delete theInfo;
             return NULL;
         }
         
         
         if (!InfoPortsOK(inParams, theInfo, inPath))
-        {   delete theInfo;
+        {   
+			delete theInfo;
             return NULL;
         }
        
         // Check if broadcast is allowed before doing anything else
         // At this point we know it is a definitely a reflector session
         // It is either incoming automatic broadcast setup or a client setup to view broadcast
-        // In either case, verify whether the broadcast is allowed, and send forbidden response
-        // back
+        // In either case, verify whether the broadcast is allowed, and send forbidden response back
         if (!AllowBroadcast(inParams->inRTSPRequest))
         {
             (void) QTSSModuleUtils::SendErrorResponseWithMessage(inParams->inRTSPRequest, qtssClientForbidden, &sBroadcastNotAllowed);
@@ -1375,7 +1382,8 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
         
         theSession = NEW ReflectorSession(inPath);
 		if (theSession == NULL)
-		{	return NULL;
+		{	
+			return NULL;
 		}
 		
 		theSession->SetHasBufferedStreams(true); // buffer the incoming streams for clients
@@ -1384,7 +1392,8 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
         // deleting the session will delete the info.
         QTSS_Error theErr = theSession->SetupReflectorSession(theInfo, inParams, theSetupFlag,sOneSSRCPerStream, sTimeoutSSRCSecs);
         if (theErr != QTSS_NoErr)
-        {   delete theSession;
+        {   
+			delete theSession;
             return NULL;
         }
         
@@ -1395,7 +1404,8 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 
         // unless we do this, the refcount won't increment (and we'll delete the session prematurely
         //if (!isPush)
-        {   OSRef* debug = sSessionMap->Resolve(inPath);
+        {   
+			OSRef* debug = sSessionMap->Resolve(inPath);
             Assert(debug == theSession->GetRef());
         }
     }
@@ -1532,7 +1542,7 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
             theSession->AddOutput(theNewOutput,true);
             (void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theNewOutput, sizeof(theNewOutput));
         }
-        else 
+        else
         {    
 			UInt32 theLen = sizeof(theSession);
 			QTSS_Error theErr = QTSS_GetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &theSession, &theLen);

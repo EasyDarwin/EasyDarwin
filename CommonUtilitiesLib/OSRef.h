@@ -167,7 +167,7 @@ class OSRefTable
     
         enum
         {
-            kDefaultTableSize = 1193 //UInt32
+            kDefaultTableSize = 5000 //UInt32
         };
     
         //tableSize doesn't indicate the max number of Refs that can be added
