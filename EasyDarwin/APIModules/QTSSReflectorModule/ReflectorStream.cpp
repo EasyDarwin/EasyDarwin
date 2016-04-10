@@ -388,7 +388,8 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
             // Set the transport Type a Broadcaster
     QTSS_RTPTransportType transportType = qtssRTPTransportTypeUDP;
     if (inParams != NULL)
-    {   UInt32 theLen = sizeof(transportType);
+    {   
+		UInt32 theLen = sizeof(transportType);
         (void) QTSS_GetValue(inParams->inRTSPRequest, qtssRTSPReqTransportType, 0, (void*)&transportType, &theLen);
     }
     
@@ -400,33 +401,48 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
     
     // changing INADDR_ANY to fStreamInfo.fDestIPAddr to deal with NATs (need to track this change though)
     // change submitted by denis@berlin.ccc.de
-    Bool16 isMulticastDest = (SocketUtils::IsMulticastIPAddr(fStreamInfo.fDestIPAddr));
-    if (isMulticastDest) {
-        fSockets = sSocketPool.GetUDPSocketPair(INADDR_ANY, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
-    } else {
-        fSockets = sSocketPool.GetUDPSocketPair(fStreamInfo.fDestIPAddr, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
-    }   
-    
-    if ((fSockets == NULL) && fStreamInfo.fSetupToReceive)
-    {
-        fStreamInfo.fPort = 0;
-        if (isMulticastDest) {
-            fSockets = sSocketPool.GetUDPSocketPair(INADDR_ANY, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
-        } else {
-            fSockets = sSocketPool.GetUDPSocketPair(fStreamInfo.fDestIPAddr, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
-        }       
-    }
+
+	Bool16 isMulticastDest = (SocketUtils::IsMulticastIPAddr(fStreamInfo.fDestIPAddr));
+
+	// Babosa修改:当RTSP TCP推送的时候,直接创建SocketPair,不经过UDPSocketPool
+	if(qtssRTPTransportTypeTCP == transportType)
+	{
+		fSockets = sSocketPool.ConstructUDPSocketPair();
+	}
+	else
+	{
+		if (isMulticastDest) 
+		{
+			fSockets = sSocketPool.GetUDPSocketPair(INADDR_ANY, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
+		} 
+		else 
+		{
+			fSockets = sSocketPool.GetUDPSocketPair(fStreamInfo.fDestIPAddr, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
+		}
+	    
+		if ((fSockets == NULL) && fStreamInfo.fSetupToReceive)
+		{
+			fStreamInfo.fPort = 0;
+			if (isMulticastDest) 
+			{
+				fSockets = sSocketPool.GetUDPSocketPair(INADDR_ANY, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
+			} 
+			else 
+			{
+				fSockets = sSocketPool.GetUDPSocketPair(fStreamInfo.fDestIPAddr, fStreamInfo.fPort, fStreamInfo.fSrcIPAddr, 0);
+			}       
+		}
+	}
+
     if (fSockets == NULL)
-        return QTSSModuleUtils::SendErrorResponse(inRequest, qtssServerInternal,
-                                                    sCantBindReflectorSocketErr);
+		return QTSSModuleUtils::SendErrorResponse(inRequest, qtssServerInternal, sCantBindReflectorSocketErr);
 
     // If we know the source IP address of this broadcast, we can demux incoming traffic
     // on the same port by that source IP address. If we don't know the source IP addr,
     // it is impossible for us to demux, and therefore we shouldn't allow multiple
     // broadcasts on the same port.
     if (((ReflectorSocket*)fSockets->GetSocketA())->HasSender() && (fStreamInfo.fSrcIPAddr == 0))
-        return QTSSModuleUtils::SendErrorResponse(inRequest, qtssServerInternal,
-                                                    sCantBindReflectorSocketErr);
+        return QTSSModuleUtils::SendErrorResponse(inRequest, qtssServerInternal, sCantBindReflectorSocketErr);
     
     //also put this stream onto the socket's queue of streams
     ((ReflectorSocket*)fSockets->GetSocketA())->AddSender(&fRTPSender);
@@ -434,7 +450,8 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
 
     // A broadcaster is setting up a UDP session so let the sockets update the session
     if (fStreamInfo.fSetupToReceive &&  qtssRTPTransportTypeUDP == transportType && inParams != NULL)
-    {   ((ReflectorSocket*)fSockets->GetSocketA())->AddBroadcasterSession(inParams->inClientSession);
+    {   
+		((ReflectorSocket*)fSockets->GetSocketA())->AddBroadcasterSession(inParams->inClientSession);
         ((ReflectorSocket*)fSockets->GetSocketB())->AddBroadcasterSession(inParams->inClientSession);
     }
     
@@ -462,8 +479,7 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
         if (err == QTSS_NoErr)
             (void)fSockets->GetSocketB()->SetTtl(fStreamInfo.fTimeToLive);
         if (err != QTSS_NoErr)
-            return QTSSModuleUtils::SendErrorResponse(inRequest, qtssServerInternal,
-                                                        sCantJoinMulticastGroupErr);
+            return QTSSModuleUtils::SendErrorResponse(inRequest, qtssServerInternal, sCantJoinMulticastGroupErr);
     }
     
     // If the port is 0, update the port to be the actual port value
