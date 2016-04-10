@@ -79,16 +79,9 @@ FileDeleter::~FileDeleter()
     fFilePath.Len = 0;
 }
 
-
-
-static OSRefTable*      sStreamMap = NULL;
-
-
-
 void ReflectorSession::Initialize()
 {
-    if (sStreamMap == NULL)
-        sStreamMap = NEW OSRefTable();
+	;
 }
 
 ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo)
@@ -130,30 +123,15 @@ ReflectorSession::~ReflectorSession()
 #endif
 
     // For each stream, check to see if the ReflectorStream should be deleted
-    OSMutexLocker locker (sStreamMap->GetMutex());
     for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
     {
         if (fStreamArray[x] == NULL)
             continue;
-        
-        UInt32 refCount = fStreamArray[x]->GetRef()->GetRefCount();
-        Bool16 unregisterNow = (refCount == 1) ? true : false;
-        
-        //qtss_printf("ReflectorSession::~ReflectorSession stream index=%"_U32BITARG_" refcount=%"_U32BITARG_"\n",x,refCount);
-        //decrement the ref count
-        
-        if (refCount > 0) // Refcount may be 0 if there was some error setting up the stream
-            sStreamMap->Release(fStreamArray[x]->GetRef()); // decrement the refcount
-            
-        refCount = fStreamArray[x]->GetRef()->GetRefCount();
-        if (refCount == 0)
-        {   // Delete this stream if the refcount has dropped to 0
-            if (unregisterNow)
-                sStreamMap->UnRegister(fStreamArray[x]->GetRef()); // Refcount may be 0 if there was some error setting up the stream
-            delete fStreamArray[x];
-            fStreamArray[x] = NULL;
-        }   
+
+        delete fStreamArray[x];
+        fStreamArray[x] = NULL;
     }
+
 	CSdpCache::GetInstance()->eraseSdpMap(GetSourcePath()->GetAsCString());  
     // We own this object when it is given to us, so delete it now
     delete [] fStreamArray;
@@ -224,99 +202,50 @@ QTSS_Error ReflectorSession::StopHLSSession()
 	return theErr;
 }
 
-
 QTSS_Error ReflectorSession::SetupReflectorSession(SourceInfo* inInfo, QTSS_StandardRTSP_Params* inParams, UInt32 inFlags, Bool16 filterState, UInt32 filterTimeout)
-{   
-    if (inInfo == NULL) // use the current SourceInfo
+{
+	// use the current SourceInfo
+    if (inInfo == NULL) 
         inInfo = fSourceInfo;
         
     // Store a reference to this sourceInfo permanently
     Assert((fSourceInfo == NULL) || (inInfo == fSourceInfo));
     fSourceInfo = inInfo;
-    
-    fLocalSDP.Delete();// this must be set to the new SDP.
+
+    // this must be set to the new SDP.
+    fLocalSDP.Delete();
     fLocalSDP.Ptr = inInfo->GetLocalSDP(&fLocalSDP.Len);
 
-    // Allocate all our ReflectorStreams, using the SourceInfo
-    
+    // 全部重新构造ReflectorStream
     if (fStreamArray != NULL)
-    {   for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
-            if (fSourceInfo->GetStreamInfo(x)->fPort > 0 && fStreamArray[x] != NULL)
-                sStreamMap->Release(fStreamArray[x]->GetRef()); 
+    {   
+		delete fStreamArray; // keep the array list synchronized with the source info.
     }
-    delete fStreamArray; // keep the array list synchronized with the source info.
+
     fStreamArray = NEW ReflectorStream*[fSourceInfo->GetNumStreams()];
     ::memset(fStreamArray, 0, fSourceInfo->GetNumStreams() * sizeof(ReflectorStream*));
     
     for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
     {
-        // For each ReflectorStream, check and see if there is one that matches
-        // this stream ID
-        char theStreamID[ReflectorStream::kStreamIDSize];
-        StrPtrLen theStreamIDPtr(theStreamID, ReflectorStream::kStreamIDSize);
-        ReflectorStream::GenerateSourceID(fSourceInfo->GetStreamInfo(x), &theStreamID[0]);
-        
-        OSMutexLocker locker(sStreamMap->GetMutex());
-        OSRef* theStreamRef = NULL;
-        
-        if (false && (inFlags & kIsPushSession)) // always setup our own ports when pushed.
-            fSourceInfo->GetStreamInfo(x)->fPort = 0;
-        else
-        // If the port # of this stream is 0, that means "any port".
-        // We don't know what the dest port of this stream is yet (this
-        // can happen while acting as an RTSP client). Never share these streams.
-        // This can also happen if the incoming data is interleaved in the TCP connection or a dynamic UDP port is requested
-        if (fSourceInfo->GetStreamInfo(x)->fPort > 0)
-        {   theStreamRef = sStreamMap->Resolve(&theStreamIDPtr);
-            #if REFLECTOR_SESSION_DEBUGGING
-            if (theStreamRef != NULL)
-            {
-                ReflectorStream* theRef = (ReflectorStream*)theStreamRef->GetObject();
-                UInt32 refCount = theRef->GetRef()->GetRefCount();
-                qtss_printf("stream has port stream index=%"_U32BITARG_" refcount=%"_U32BITARG_"\n",x,refCount);
-            }
-            #endif
+        fStreamArray[x] = NEW ReflectorStream(fSourceInfo->GetStreamInfo(x));
+        // Obviously, we may encounter an error binding the reflector sockets.
+        // If that happens, we'll just abort here, which will leave the ReflectorStream
+        // array in an inconsistent state, so we need to make sure in our cleanup
+        // code to check for NULL.
+        QTSS_Error theError = fStreamArray[x]->BindSockets(inParams,inFlags, filterState, filterTimeout);
+        if (theError != QTSS_NoErr)
+        {   
+            delete fStreamArray[x];
+            fStreamArray[x] = NULL;
+            return theError;
         }
-
-        if (theStreamRef == NULL)
-        {
-            fStreamArray[x] = NEW ReflectorStream(fSourceInfo->GetStreamInfo(x));
-            // Obviously, we may encounter an error binding the reflector sockets.
-            // If that happens, we'll just abort here, which will leave the ReflectorStream
-            // array in an inconsistent state, so we need to make sure in our cleanup
-            // code to check for NULL.
-            QTSS_Error theError = fStreamArray[x]->BindSockets(inParams,inFlags, filterState, filterTimeout);
-            if (theError != QTSS_NoErr)
-            {   
-                delete fStreamArray[x];
-                fStreamArray[x] = NULL;
-                return theError;
-            }
-            fStreamArray[x]->SetEnableBuffer(this->fHasBufferedStreams);// buffering is done by the stream's sender
-                
-            // If the port was 0, update it to reflect what the actual RTP port is.
-            fSourceInfo->GetStreamInfo(x)->fPort = fStreamArray[x]->GetStreamInfo()->fPort;
-            //qtss_printf("ReflectorSession::SetupReflectorSession fSourceInfo->GetStreamInfo(x)->fPort= %u\n",fSourceInfo->GetStreamInfo(x)->fPort);
+        fStreamArray[x]->SetEnableBuffer(this->fHasBufferedStreams);// buffering is done by the stream's sender
             
-            ReflectorStream::GenerateSourceID(fSourceInfo->GetStreamInfo(x), &theStreamID[0]);
+        // If the port was 0, update it to reflect what the actual RTP port is.
+        fSourceInfo->GetStreamInfo(x)->fPort = fStreamArray[x]->GetStreamInfo()->fPort;
+        //qtss_printf("ReflectorSession::SetupReflectorSession fSourceInfo->GetStreamInfo(x)->fPort= %u\n",fSourceInfo->GetStreamInfo(x)->fPort);   
+	}
 
-            theError = sStreamMap->Register(fStreamArray[x]->GetRef());
-            Assert(theError == QTSS_NoErr);
-
-            //unless we do this, the refcount won't increment (and we'll delete the session prematurely
-            OSRef* debug = sStreamMap->Resolve(&theStreamIDPtr);
-            Assert(debug == fStreamArray[x]->GetRef());
-
-            //UInt32 refCount = fStreamArray[x]->GetRef()->GetRefCount();
-            //qtss_printf("stream index=%"_U32BITARG_" refcount=%"_U32BITARG_"\n",x,refCount);
-        
-        }
-        else    
-            fStreamArray[x] = (ReflectorStream*)theStreamRef->GetObject();   
-
-    }
-    
-    
     if (inFlags & kMarkSetup)
         fIsSetup = true;
 

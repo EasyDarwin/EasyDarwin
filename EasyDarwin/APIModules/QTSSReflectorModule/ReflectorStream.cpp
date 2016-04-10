@@ -230,15 +230,15 @@ ReflectorStream::~ReflectorStream()
         //now release the socket pair
         sSocketPool.ReleaseUDPSocketPair(fSockets);
     }
-
+	
+	// ÊÍ·Å¹Ø¼üÖ¡»º³åÇø
     if(pkeyFrameCache)
     {
         delete pkeyFrameCache;
         pkeyFrameCache = NULL;
     }		
-        //qtss_printf("Deleting stream %x\n", this);
 
-    //delete every client Bucket
+	//delete every client Bucket
     for (UInt32 y = 0; y < fNumBuckets; y++)
         delete [] fOutputArray[y];
     delete [] fOutputArray;
@@ -472,11 +472,7 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
     //finally, register these sockets for events
     fSockets->GetSocketA()->RequestEvent(EV_RE);
     fSockets->GetSocketB()->RequestEvent(EV_RE);
-            
-    // Copy the source ID and setup the ref
-    StrPtrLen theSourceID(fSourceIDBuf, kStreamIDSize);
-    ReflectorStream::GenerateSourceID(&fStreamInfo, fSourceIDBuf);
-    fRef.Set(theSourceID, this);
+
     return QTSS_NoErr;
 }
 
@@ -500,17 +496,19 @@ void ReflectorStream::SendReceiverReport()
 }
 
 void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
-	{	 
+	{
 		FU_Head *head = (FU_Head*)&packet[13];
 	
 		if (packetLen > 0)
 		{	
 			ReflectorPacket* thePacket = NULL;
 			if (isRTCP)
-			{	//qtss_printf("ReflectorStream::PushPacket RTCP packetlen = %"_U32BITARG_"\n",packetLen);
+			{	
+				//qtss_printf("ReflectorStream::PushPacket RTCP packetlen = %"_U32BITARG_"\n",packetLen);
 				thePacket = ((ReflectorSocket*)fSockets->GetSocketB())->GetPacket();
 				if (thePacket == NULL)
-				{	//qtss_printf("ReflectorStream::PushPacket RTCP GetPacket() is NULL\n");
+				{	
+					//qtss_printf("ReflectorStream::PushPacket RTCP GetPacket() is NULL\n");
 					return;
 				}
 				
@@ -520,22 +518,25 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
 				((ReflectorSocket*)fSockets->GetSocketB())->Signal(Task::kIdleEvent);
 			}
 			else
-			{	//qtss_printf("ReflectorStream::PushPacket RTP packetlen = %"_U32BITARG_"\n",packetLen);
+			{	
+				//qtss_printf("ReflectorStream::PushPacket RTP packetlen = %"_U32BITARG_"\n",packetLen);
 				thePacket =  ((ReflectorSocket*)fSockets->GetSocketA())->GetPacket();
 				if (thePacket == NULL)
-				{	//qtss_printf("ReflectorStream::PushPacket GetPacket() is NULL\n");
+				{	
+					//qtss_printf("ReflectorStream::PushPacket GetPacket() is NULL\n");
 					return;
 				}
 		
 				OSMutexLocker locker(((ReflectorSocket*)(fSockets->GetSocketA()))->GetDemuxer()->GetMutex());
 				thePacket->SetPacketData(packet, packetLen);
+
 				if(head->nalu_type != 0)
 				{
 					pkeyFrameCache->PutOnePacket(packet,packetLen,head->nalu_type,head->s);
 				}
 	
-				 ((ReflectorSocket*)fSockets->GetSocketA())->ProcessPacket(OS::Milliseconds(),thePacket,0,0);
-				 ((ReflectorSocket*)fSockets->GetSocketA())->Signal(Task::kIdleEvent);
+				((ReflectorSocket*)fSockets->GetSocketA())->ProcessPacket(OS::Milliseconds(),thePacket,0,0);
+				((ReflectorSocket*)fSockets->GetSocketA())->Signal(Task::kIdleEvent);
 			}
 		}
 	}

@@ -411,8 +411,7 @@ class ReflectorStream
         //
         // ACCESSORS
         
-        OSRef*                  GetRef()            { return &fRef; }
-        UInt32                  GetBitRate()        { return fCurrentBitRate; }
+		UInt32                  GetBitRate()        { return fCurrentBitRate; }
         SourceInfo::StreamInfo* GetStreamInfo()     { return &fStreamInfo; }
         OSMutex*                GetMutex()          { return &fBucketMutex; }
         void*                   GetStreamCookie()   { return this; }
@@ -454,9 +453,6 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         void    SendReceiverReport();
         void    AllocateBucketArray(UInt32 inNumBuckets);
         SInt32  FindBucket();
-        // Unique ID & OSRef. ReflectorStreams can be mapped & shared
-        OSRef               fRef;
-        char                fSourceIDBuf[kStreamIDSize];
         
         // Reflector sockets, retrieved from the socket pool
         UDPSocketPair*      fSockets;

@@ -209,7 +209,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	{
 		unsigned long long llPTS = (frameinfo->timestamp_sec%1000000)*1000 + frameinfo->timestamp_usec/1000;	
 
-		printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
+		//printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
 		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711A||frameinfo->codec ==EASY_SDK_AUDIO_CODEC_G711U)
 		{
 			if(EasyInitAACEncoder(frameinfo->codec) == QTSS_NoErr)
