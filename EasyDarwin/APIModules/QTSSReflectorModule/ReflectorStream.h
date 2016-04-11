@@ -126,7 +126,7 @@ inline  SInt64  GetPacketNTPTime();
 
         enum
         {
-            kMaxReflectorPacketSize = 10240    //jm 5/02 increased from 2048 by 12 bytes for test bytes appended to packets
+            kMaxReflectorPacketSize = 2060    //jm 5/02 increased from 2048 by 12 bytes for test bytes appended to packets
         };
 
         UInt32      fBucketsSeenThisPacket;
