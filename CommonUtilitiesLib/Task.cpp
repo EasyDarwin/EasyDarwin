@@ -69,16 +69,14 @@ void Task::SetTaskName(char* name)
 
 Bool16 Task::Valid()
 {
-    if  (   (this->fTaskName == NULL)
-         || (0 != ::strncmp(sTaskStateStr,this->fTaskName, 5))
-         )
-     {
-        if (TASK_DEBUG) qtss_printf(" Task::Valid Found invalid task = %p\n", (void *)this);
-        
-        return false;
-     }
+	if ( (this->fTaskName == NULL) || (0 != ::strncmp(sTaskStateStr,this->fTaskName, 5)) )
+	{
+		if (TASK_DEBUG) qtss_printf("Task::Valid Found invalid task = %p\n", (void *)this);
+	    
+		return false;
+	 }
     
-    return true;
+	return true;
 }
 
 Task::EventFlags Task::GetEvents()
@@ -105,18 +103,17 @@ void Task::Signal(EventFlags events)
         if (fDefaultThread != NULL && fUseThisThread == NULL)
             fUseThisThread = fDefaultThread;
 
-        if (fUseThisThread != NULL)
-            // Task needs to be placed on a particular thread.
-         {
+        if (fUseThisThread != NULL)// Task needs to be placed on a particular thread.
+		{
                 
             if (TASK_DEBUG) 
             {
-                if (fTaskName[0] == 0) ::strcpy(fTaskName, " corrupt task");
-                qtss_printf("Task::Signal enque TaskName=%s fUseThisThread=%p q elem=%p enclosing=%p\n", fTaskName, (void *) fUseThisThread, (void *) &fTaskQueueElem, (void *) this);
+                if (fTaskName[0] == 0) ::strcpy(fTaskName, " _Corrupt_Task");
+                qtss_printf("Task::Signal EnQueue TaskName=%s fUseThisThread=%p q_elem=%p enclosing=%p\n", fTaskName, (void *) fUseThisThread, (void *) &fTaskQueueElem, (void *) this);
                 if (TaskThreadPool::sTaskThreadArray[0] == fUseThisThread) qtss_printf("Task::Signal  RTSP Thread running  TaskName=%s \n", fTaskName);
             }
             
-            fUseThisThread->fTaskQueue.EnQueue(&fTaskQueueElem);
+			fUseThisThread->fTaskQueue.EnQueue(&fTaskQueueElem);
         }
         else
         {
@@ -127,34 +124,33 @@ void Task::Signal(EventFlags events)
             {
                 theThreadIndex %= TaskThreadPool::sNumShortTaskThreads;
                 
-                if (TASK_DEBUG)  qtss_printf("Task::Signal enque TaskName=%s using Task::sShortTaskThreadPicker=%u numShortTaskThreads=%"_U32BITARG_" short task range=[0-%"_U32BITARG_"] thread index =%u \n",fTaskName, Task::sShortTaskThreadPicker, TaskThreadPool::sNumShortTaskThreads,TaskThreadPool::sNumShortTaskThreads -1, theThreadIndex);
+                if (TASK_DEBUG)  qtss_printf("Task::Signal EnQueue TaskName=%s using Task::sShortTaskThreadPicker=%u numShortTaskThreads=%"_U32BITARG_" short task range=[0-%"_U32BITARG_"] thread index =%u \n",fTaskName, Task::sShortTaskThreadPicker, TaskThreadPool::sNumShortTaskThreads,TaskThreadPool::sNumShortTaskThreads -1, theThreadIndex);
             }
             else if (&Task::sBlockingTaskThreadPicker == pickerToUse)
             {
                 theThreadIndex %= TaskThreadPool::sNumBlockingTaskThreads;
                 theThreadIndex += TaskThreadPool::sNumShortTaskThreads; //don't pick from lower non-blocking (short task) threads.
                 
-                if (TASK_DEBUG)  qtss_printf("Task::Signal enque TaskName=%s using Task::sBlockingTaskThreadPicker=%u numBlockingThreads=%"_U32BITARG_" blocking thread range=[%"_U32BITARG_"-%"_U32BITARG_"] thread index =%u \n",fTaskName, Task::sBlockingTaskThreadPicker, TaskThreadPool::sNumBlockingTaskThreads, TaskThreadPool::sNumShortTaskThreads, TaskThreadPool::sNumBlockingTaskThreads+TaskThreadPool::sNumShortTaskThreads-1,  theThreadIndex);
+                if (TASK_DEBUG)  qtss_printf("Task::Signal EnQueue TaskName=%s using Task::sBlockingTaskThreadPicker=%u numBlockingThreads=%"_U32BITARG_" blocking thread range=[%"_U32BITARG_"-%"_U32BITARG_"] thread index =%u \n",fTaskName, Task::sBlockingTaskThreadPicker, TaskThreadPool::sNumBlockingTaskThreads, TaskThreadPool::sNumShortTaskThreads, TaskThreadPool::sNumBlockingTaskThreads+TaskThreadPool::sNumShortTaskThreads-1,  theThreadIndex);
             }
             else
             {  
-                if (TASK_DEBUG) if (fTaskName[0] == 0) ::strcpy(fTaskName, " corrupt task");
+                if (TASK_DEBUG) if (fTaskName[0] == 0) ::strcpy(fTaskName, " _Corrupt_Task");
             
                 return;
             }
             
             
-            if (TASK_DEBUG) if (fTaskName[0] == 0) ::strcpy(fTaskName, " corrupt task");
-            if (TASK_DEBUG) qtss_printf("Task::Signal enque TaskName=%s theThreadIndex=%u thread=%p q elem=%p enclosing=%p\n", fTaskName,theThreadIndex,  (void *)TaskThreadPool::sTaskThreadArray[theThreadIndex],(void *) &fTaskQueueElem,(void *) this);
-           
-            
+            if (TASK_DEBUG) if (fTaskName[0] == 0) ::strcpy(fTaskName, " _Corrupt_Task");
+
+			if (TASK_DEBUG) qtss_printf("Task::Signal EnQueue B TaskName=%s theThreadIndex=%u thread=%p fTaskQueue.GetLength(%"_U32BITARG_") q_elem=%p enclosing=%p\n", fTaskName,theThreadIndex,  (void *)TaskThreadPool::sTaskThreadArray[theThreadIndex],TaskThreadPool::sTaskThreadArray[theThreadIndex]->fTaskQueue.GetQueue()->GetLength(), (void *) &fTaskQueueElem,(void *) this);
             TaskThreadPool::sTaskThreadArray[theThreadIndex]->fTaskQueue.EnQueue(&fTaskQueueElem);
+            if (TASK_DEBUG) qtss_printf("Task::Signal EnQueue A TaskName=%s theThreadIndex=%u thread=%p fTaskQueue.GetLength(%"_U32BITARG_") q_elem=%p enclosing=%p\n", fTaskName,theThreadIndex,  (void *)TaskThreadPool::sTaskThreadArray[theThreadIndex],TaskThreadPool::sTaskThreadArray[theThreadIndex]->fTaskQueue.GetQueue()->GetLength(), (void *) &fTaskQueueElem,(void *) this);
+
         }
     }
     else
-        if (TASK_DEBUG) qtss_printf("Task::Signal sent to dead TaskName=%s  q elem=%p  enclosing=%p\n",  fTaskName, (void *) &fTaskQueueElem, (void *) this);
-        
-
+        if (TASK_DEBUG) qtss_printf("Task::Signal Sent to dead TaskName=%s  q_elem=%p  enclosing=%p\n",  fTaskName, (void *) &fTaskQueueElem, (void *) this);
 }
 
 
@@ -172,7 +168,7 @@ void    Task::SetThreadPicker(unsigned int* picker)
     Assert(pickerToUse != NULL);
     if (TASK_DEBUG)
     {
-        if (fTaskName[0] == 0) ::strcpy(fTaskName, " corrupt task");
+        if (fTaskName[0] == 0) ::strcpy(fTaskName, " _Corrupt_Task");
         
         if (&Task::sShortTaskThreadPicker == pickerToUse)
         {

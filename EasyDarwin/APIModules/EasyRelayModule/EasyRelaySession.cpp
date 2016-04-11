@@ -184,8 +184,6 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 
 QTSS_Error	EasyRelaySession::RelaySessionRelease()
 {
-	qtss_printf("HLSSession Release....\n");
-	
 	// Õ∑≈source
 	if(fRTSPClientHandle)
 	{

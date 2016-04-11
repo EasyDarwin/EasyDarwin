@@ -122,7 +122,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 		printf("EasyHLS_KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
 		break;
 	case EASY_ACTIVATE_SUCCESS:
-		printf("EasyHLS_KEY is EASY_ACTIVATE_SUCCESS!\n");
+		//printf("EasyHLS_KEY is EASY_ACTIVATE_SUCCESS!\n");
 		break;
 	}
 

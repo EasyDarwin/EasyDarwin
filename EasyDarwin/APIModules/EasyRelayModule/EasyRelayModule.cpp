@@ -106,7 +106,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 		printf("EasyPusher_KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
 		break;
 	case EASY_ACTIVATE_SUCCESS:
-		printf("EasyPusher_KEY is EASY_ACTIVATE_SUCCESS!\n");
+		//printf("EasyPusher_KEY is EASY_ACTIVATE_SUCCESS!\n");
 		break;
 	}
 
@@ -132,7 +132,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 		printf("EasyRTSPClient_KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
 		break;
 	case EASY_ACTIVATE_SUCCESS:
-		printf("EasyRTSPClient_KEY is EASY_ACTIVATE_SUCCESS!\n");
+		//printf("EasyRTSPClient_KEY is EASY_ACTIVATE_SUCCESS!\n");
 		break;
 	}
 

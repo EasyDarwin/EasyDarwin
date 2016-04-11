@@ -792,9 +792,9 @@ void    QTSServer::LoadCompiledInModules()
     (void)theAdminModule->SetupModule(&sCallbacks, &QTSSAdminModule_Main);
     (void)AddModule(theAdminModule);
 
-    QTSSModule* theMP3StreamingModule = new QTSSModule("QTSSMP3StreamingModule");
-    (void)theMP3StreamingModule->SetupModule(&sCallbacks, &QTSSMP3StreamingModule_Main);
-    (void)AddModule(theMP3StreamingModule);
+    //QTSSModule* theMP3StreamingModule = new QTSSModule("QTSSMP3StreamingModule");
+    //(void)theMP3StreamingModule->SetupModule(&sCallbacks, &QTSSMP3StreamingModule_Main);
+    //(void)AddModule(theMP3StreamingModule);
 
 #if MEMORY_DEBUGGING
     QTSSModule* theWebDebug = new QTSSModule("QTSSWebDebugModule");

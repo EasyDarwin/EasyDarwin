@@ -329,8 +329,6 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 
 QTSS_Error	EasyHLSSession::HLSSessionRelease()
 {
-	qtss_printf("HLSSession Release....\n");
-	
 	// Õ∑≈source
 	if(fRTSPClientHandle)
 	{
