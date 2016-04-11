@@ -229,20 +229,15 @@ void OSQueueIter::Next()
 
 OSQueueElem* OSQueue_Blocking::DeQueueBlocking(OSThread* inCurThread, SInt32 inTimeoutInMilSecs)
 {
-    
+    OSMutexLocker theLocker(&fMutex);
 #ifdef __Win32_
      if (fQueue.GetLength() == 0) 
-	 {
-	    OSMutexLocker theLocker(&fMutex);
-	    fCond.Wait(&fMutex, inTimeoutInMilSecs);
+	 {	fCond.Wait(&fMutex, inTimeoutInMilSecs);
 		return NULL;
 	 }
 #else
-    if (fQueue.GetLength() == 0)
-    {//lock inside,
-        OSMutexLocker theLocker(&fMutex);    
-        fCond.Wait(&fMutex, inTimeoutInMilSecs);   
-    }
+    if (fQueue.GetLength() == 0) 
+        fCond.Wait(&fMutex, inTimeoutInMilSecs);
 #endif
 
     OSQueueElem* retval = fQueue.DeQueue();
