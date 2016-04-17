@@ -6,7 +6,7 @@
 */
 /*
     File:       EasyRelaySession.cpp
-    Contains:   RTSP Relay Client
+    Contains:   RTSP Relay Session
 */
 
 #include "EasyRelaySession.h"
@@ -81,8 +81,6 @@ EasyRelaySession::~EasyRelaySession()
 
 	delete [] fStreamName.Ptr;
 	delete [] fURL;
-
-	qtss_printf("Disconnect complete\n");
 }
 
 SInt64 EasyRelaySession::Run()
@@ -100,12 +98,11 @@ SInt64 EasyRelaySession::Run()
 
 QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
-	if(NULL == fPusherHandle) return QTSS_Unimplemented;
-
 	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
 	{
-		printf("Get video Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
+		//printf("Get video Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
 
+		if(fPusherHandle == 0 ) return 0;
 		if(frameinfo && frameinfo->length)
 		{
 			EASY_AV_Frame  avFrame;
@@ -119,8 +116,42 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, R
 	}
 	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
 	{
-		printf("Get Audio Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
-		// 暂时不对音频进行处理
+		//printf("Get Audio Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
+		if(fPusherHandle == 0 ) return 0;
+
+		if(frameinfo && frameinfo->length)
+		{
+			EASY_AV_Frame  avFrame;
+			memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+			avFrame.u32AVFrameLen = frameinfo->length;
+			avFrame.pBuffer = (unsigned char*)pbuf;
+			avFrame.u32VFrameType = frameinfo->type;
+			avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
+			avFrame.u32TimestampSec = frameinfo->timestamp_sec;
+			avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
+			EasyPusher_PushFrame(fPusherHandle, &avFrame);
+		}	
+	}
+	else if (mediatype == EASY_SDK_MEDIA_INFO_FLAG)
+	{
+		if((NULL == fPusherHandle) && (pbuf != NULL) )
+		{
+			fPusherHandle = EasyPusher_Create();
+
+			EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
+
+			// Get the ip addr out of the prefs dictionary
+			UInt16 thePort = 554;
+			UInt32 theLen = sizeof(UInt16);
+			QTSS_Error theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
+			Assert(theErr == QTSS_NoErr);
+
+			char sdpName[QTSS_MAX_URL_LENGTH] = { 0 };
+			sprintf(sdpName, "%s.sdp", fStreamName.Ptr);
+
+			EasyPusher_StartStream(fPusherHandle, "127.0.0.1", thePort, sdpName, "", "", (EASY_MEDIA_INFO_T*)pbuf, 1024, false);
+		}
+
 	}
 	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)
 	{
@@ -144,39 +175,15 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 {
 	if(NULL == fRTSPClientHandle)
 	{
-		//创建RTSPClient
+		//创建EasyRTSPClient
 		EasyRTSP_Init(&fRTSPClientHandle);
 
 		if (NULL == fRTSPClientHandle) return QTSS_Unimplemented;
 
-		unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG;
-		//mediaType |= EASY_SDK_AUDIO_FRAME_FLAG;	//换为RTSPClient, 屏蔽声音
+		unsigned int mediaType =  EASY_SDK_VIDEO_FRAME_FLAG | EASY_SDK_AUDIO_FRAME_FLAG;
 
 		EasyRTSP_SetCallback(fRTSPClientHandle, __EasyRTSPClientCallBack);
 		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fURL, RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0);
-	}
-
-	if(NULL == fPusherHandle)
-	{
-		EASY_MEDIA_INFO_T	mediainfo;
-		memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
-		mediainfo.u32VideoCodec =   EASY_SDK_VIDEO_CODEC_H264;
-		mediainfo.u32VideoFps = 20;
-
-		fPusherHandle = EasyPusher_Create();
-
-		EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
-
-		// Get the ip addr out of the prefs dictionary
-		UInt16 thePort = 554;
-		UInt32 theLen = sizeof(UInt16);
-		QTSS_Error theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
-		Assert(theErr == QTSS_NoErr);
-
-		char sdpName[QTSS_MAX_URL_LENGTH] = { 0 };
-		sprintf(sdpName, "%s.sdp", fStreamName.Ptr);
-
-		EasyPusher_StartStream(fPusherHandle, "127.0.0.1", thePort, sdpName, "", "", &mediainfo, 512, false);
 	}
 
 	return QTSS_NoErr;
@@ -184,7 +191,7 @@ QTSS_Error	EasyRelaySession::RelaySessionStart()
 
 QTSS_Error	EasyRelaySession::RelaySessionRelease()
 {
-	//释放source
+	//释放Source
 	if(fRTSPClientHandle)
 	{
 		EasyRTSP_CloseStream(fRTSPClientHandle);
@@ -192,7 +199,7 @@ QTSS_Error	EasyRelaySession::RelaySessionRelease()
 		fRTSPClientHandle = NULL;
 	}
 
-	//释放sink
+	//释放Sink
 	if(fPusherHandle)
 	{
 		EasyPusher_StopStream(fPusherHandle);
