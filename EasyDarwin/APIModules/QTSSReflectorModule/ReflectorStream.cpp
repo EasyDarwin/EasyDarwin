@@ -228,7 +228,8 @@ ReflectorStream::~ReflectorStream()
             fSockets->GetSocketB()->LeaveMulticast(fStreamInfo.fDestIPAddr);
         }
         //now release the socket pair
-        sSocketPool.ReleaseUDPSocketPair(fSockets);
+        //sSocketPool.ReleaseUDPSocketPair(fSockets);
+		sSocketPool.DestructUDPSocketPair(fSockets);
     }
 	
 	// ÊÍ·Å¹Ø¼üÖ¡»º³åÇø
@@ -461,8 +462,8 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
 #if 1 
 	// Always set the Rcv buf size for the sockets. This is important because the
 	// server is going to be getting many packets on these sockets.
-	fSockets->GetSocketA()->SetSocketRcvBufSize(512 * 1024);
-	fSockets->GetSocketB()->SetSocketRcvBufSize(512 * 1024);
+	////fSockets->GetSocketA()->SetSocketRcvBufSize(512 * 1024);
+	////fSockets->GetSocketB()->SetSocketRcvBufSize(512 * 1024);
 #endif
     
     //If the broadcaster is sending RTP directly to us, we don't
@@ -486,8 +487,8 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
     fStreamInfo.fPort = fSockets->GetSocketA()->GetLocalPort();
 
     //finally, register these sockets for events
-    fSockets->GetSocketA()->RequestEvent(EV_RE);
-    fSockets->GetSocketB()->RequestEvent(EV_RE);
+    ////fSockets->GetSocketA()->RequestEvent(EV_RE);
+    ////fSockets->GetSocketB()->RequestEvent(EV_RE);
 
     return QTSS_NoErr;
 }
