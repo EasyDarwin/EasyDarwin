@@ -3,7 +3,7 @@ function GotoPage(num,PageCount,type,json){ //跳转页
 	OutputHtml(PageCount,type,json);
 } 
 
-var PageSize = 5; //每页个数
+var PageSize = 50; //每页个数
 var Page = 1; //当前页码
 //++++++++++++++++++++
 //PageCount==数据源总数
