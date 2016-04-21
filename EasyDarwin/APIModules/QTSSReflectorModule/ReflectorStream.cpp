@@ -145,7 +145,8 @@ ReflectorStream::ReflectorStream(SourceInfo::StreamInfo* inInfo)
     fEnableBuffer(false),
     fEyeCount(0),
     fFirst_RTCP_RTP_Time(0),
-    fFirst_RTCP_Arrival_Time(0)
+    fFirst_RTCP_Arrival_Time(0),
+	fTransportType(qtssRTPTransportTypeUDP)
 {
 
     fRTPSender.fStream = this;
@@ -228,8 +229,10 @@ ReflectorStream::~ReflectorStream()
             fSockets->GetSocketB()->LeaveMulticast(fStreamInfo.fDestIPAddr);
         }
         //now release the socket pair
-        //sSocketPool.ReleaseUDPSocketPair(fSockets);
-		sSocketPool.DestructUDPSocketPair(fSockets);
+		if (qtssRTPTransportTypeUDP == fTransportType)
+			sSocketPool.ReleaseUDPSocketPair(fSockets);
+		else if (qtssRTPTransportTypeTCP == fTransportType)
+			sSocketPool.DestructUDPSocketPair(fSockets);
     }
 	
 	// 释放关键帧缓冲区
@@ -386,12 +389,11 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
     if (inParams != NULL)
         inRequest = inParams->inRTSPRequest;
     
-            // Set the transport Type a Broadcaster
-    QTSS_RTPTransportType transportType = qtssRTPTransportTypeUDP;
+	// Set the transport Type a Broadcaster
     if (inParams != NULL)
     {   
-		UInt32 theLen = sizeof(transportType);
-        (void) QTSS_GetValue(inParams->inRTSPRequest, qtssRTSPReqTransportType, 0, (void*)&transportType, &theLen);
+		UInt32 theLen = sizeof(fTransportType);
+        (void) QTSS_GetValue(inParams->inRTSPRequest, qtssRTSPReqTransportType, 0, (void*)&fTransportType, &theLen);
     }
     
     // get a pair of sockets. The socket must be bound on INADDR_ANY because we don't know
@@ -406,7 +408,7 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
 	Bool16 isMulticastDest = (SocketUtils::IsMulticastIPAddr(fStreamInfo.fDestIPAddr));
 
 	// Babosa修改:当RTSP TCP推送的时候,直接创建SocketPair,不经过UDPSocketPool
-	if(qtssRTPTransportTypeTCP == transportType)
+	if(qtssRTPTransportTypeTCP == fTransportType)
 	{
 		fSockets = sSocketPool.ConstructUDPSocketPair();
 	}
@@ -450,7 +452,7 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
     ((ReflectorSocket*)fSockets->GetSocketB())->AddSender(&fRTCPSender);
 
     // A broadcaster is setting up a UDP session so let the sockets update the session
-    if (fStreamInfo.fSetupToReceive &&  qtssRTPTransportTypeUDP == transportType && inParams != NULL)
+    if (fStreamInfo.fSetupToReceive &&  qtssRTPTransportTypeUDP == fTransportType && inParams != NULL)
     {   
 		((ReflectorSocket*)fSockets->GetSocketA())->AddBroadcasterSession(inParams->inClientSession);
         ((ReflectorSocket*)fSockets->GetSocketB())->AddBroadcasterSession(inParams->inClientSession);
@@ -462,8 +464,11 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
 #if 1 
 	// Always set the Rcv buf size for the sockets. This is important because the
 	// server is going to be getting many packets on these sockets.
-	////fSockets->GetSocketA()->SetSocketRcvBufSize(512 * 1024);
-	////fSockets->GetSocketB()->SetSocketRcvBufSize(512 * 1024);
+	if(qtssRTPTransportTypeUDP == fTransportType)
+	{
+		fSockets->GetSocketA()->SetSocketRcvBufSize(1024 * 1024);
+		fSockets->GetSocketB()->SetSocketRcvBufSize(1024 * 1024);
+	}
 #endif
     
     //If the broadcaster is sending RTP directly to us, we don't
@@ -487,8 +492,11 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
     fStreamInfo.fPort = fSockets->GetSocketA()->GetLocalPort();
 
     //finally, register these sockets for events
-    ////fSockets->GetSocketA()->RequestEvent(EV_RE);
-    ////fSockets->GetSocketB()->RequestEvent(EV_RE);
+	if(qtssRTPTransportTypeUDP == fTransportType)
+	{
+		fSockets->GetSocketA()->RequestEvent(EV_RE);
+		fSockets->GetSocketB()->RequestEvent(EV_RE);
+	}
 
     return QTSS_NoErr;
 }

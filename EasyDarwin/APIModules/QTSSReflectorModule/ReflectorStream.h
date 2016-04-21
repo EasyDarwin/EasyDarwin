@@ -402,13 +402,13 @@ class ReflectorStream
         // Removes the specified output from this ReflectorStream.
         void    RemoveOutput(ReflectorOutput* inOutput); // Removes this output from all tracks
         
-        void  TearDownAllOutputs(); // causes a tear down and then a remove
+        void	TearDownAllOutputs(); // causes a tear down and then a remove
 
         // If the incoming data is RTSP interleaved, packets for this stream are identified
         // by channel numbers
-        void                    SetRTPChannelNum(SInt16 inChannel) { fRTPChannel = inChannel; }
-        void                    SetRTCPChannelNum(SInt16 inChannel) { fRTCPChannel = inChannel; }
-        void                    PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP);
+        void	SetRTPChannelNum(SInt16 inChannel) { fRTPChannel = inChannel; }
+        void	SetRTCPChannelNum(SInt16 inChannel) { fRTCPChannel = inChannel; }
+        void	PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP);
         
         //
         // ACCESSORS
@@ -459,6 +459,8 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         // Reflector sockets, retrieved from the socket pool
         UDPSocketPair*      fSockets;
 
+		QTSS_RTPTransportType fTransportType;
+
         ReflectorSender     fRTPSender;
         ReflectorSender     fRTCPSender;
         SequenceNumberMap   fSequenceNumberMap; //for removing duplicate packets
@@ -475,7 +477,6 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         };
     
         // BUCKET ARRAY
-        
         //ReflectorOutputs are kept in a 2-dimensional array, "Buckets"
         typedef ReflectorOutput** Bucket;
         Bucket*     fOutputArray;
@@ -532,7 +533,7 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         friend class ReflectorSender;
 
 public:
-		CKeyFrameCache    *pkeyFrameCache;		
+		CKeyFrameCache    *pkeyFrameCache;
 };
 
 

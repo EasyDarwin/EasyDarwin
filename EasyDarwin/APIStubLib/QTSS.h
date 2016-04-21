@@ -207,7 +207,7 @@ enum
     qtssRTPTransportTypeUDP         = 0,
     qtssRTPTransportTypeReliableUDP = 1,
     qtssRTPTransportTypeTCP         = 2,
-    qtssRTPTransportType3GPPUDP     = 3
+    qtssRTPTransportTypeUnknown     = 3
 };
 typedef UInt32 QTSS_RTPTransportType;
 
