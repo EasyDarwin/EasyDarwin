@@ -1,34 +1,30 @@
 /*
- *
- * @APPLE_LICENSE_HEADER_START@
- *
- * Copyright (c) 1999-2008 Apple Inc.  All Rights Reserved.
- *
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this
- * file.
- * 
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- * 
- * @APPLE_LICENSE_HEADER_END@
- *
- */
+*
+* @APPLE_LICENSE_HEADER_START@
+*
+* Copyright (c) 1999-2008 Apple Inc.  All Rights Reserved.
+*
+* This file contains Original Code and/or Modifications of Original Code
+* as defined in and that are subject to the Apple Public Source License
+* Version 2.0 (the 'License'). You may not use this file except in
+* compliance with the License. Please obtain a copy of the License at
+* http://www.opensource.apple.com/apsl/ and read it before using this
+* file.
+* 
+* The Original Code and all software distributed under the License are
+* distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+* EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
+* INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
+* Please see the License for the specific language governing rights and
+* limitations under the License.
+* 
+* @APPLE_LICENSE_HEADER_END@
+*
+*/
 /*
     File:       QTSSReflectorModule.cpp
-
     Contains:   Implementation of QTSSReflectorModule class. 
-                    
-    
-    
 */
 
 #include "QTSServerInterface.h"
@@ -52,10 +48,7 @@
 #include "QTSSModuleUtils.h"
 #include "QTSS3GPPModuleUtils.h"
 
-//ReflectorOutput objects
 #include "RTPSessionOutput.h"
-
-//SourceInfo objects
 #include "SDPSourceInfo.h"
 
 #include "SDPUtils.h"
@@ -74,34 +67,34 @@
 #endif
 
 // ATTRIBUTES
-static QTSS_AttributeID         sOutputAttr                 =   qtssIllegalAttrID;
-static QTSS_AttributeID         sSessionAttr                =   qtssIllegalAttrID;
-static QTSS_AttributeID         sStreamCookieAttr           =   qtssIllegalAttrID;
-static QTSS_AttributeID         sRequestBodyAttr            =   qtssIllegalAttrID;
-static QTSS_AttributeID         sBufferOffsetAttr           =   qtssIllegalAttrID;
-static QTSS_AttributeID         sExpectedDigitFilenameErr   =   qtssIllegalAttrID;
-static QTSS_AttributeID         sReflectorBadTrackIDErr     =   qtssIllegalAttrID;
-static QTSS_AttributeID         sDuplicateBroadcastStreamErr=   qtssIllegalAttrID;
-static QTSS_AttributeID         sClientBroadcastSessionAttr =   qtssIllegalAttrID;
-static QTSS_AttributeID         sRTSPBroadcastSessionAttr   =   qtssIllegalAttrID;
-static QTSS_AttributeID         sAnnounceRequiresSDPinNameErr  = qtssIllegalAttrID;
-static QTSS_AttributeID         sAnnounceDisabledNameErr    = qtssIllegalAttrID;
-static QTSS_AttributeID         sSDPcontainsInvalidMinimumPortErr  = qtssIllegalAttrID;
-static QTSS_AttributeID         sSDPcontainsInvalidMaximumPortErr  = qtssIllegalAttrID;
-static QTSS_AttributeID         sStaticPortsConflictErr  = qtssIllegalAttrID;
-static QTSS_AttributeID         sInvalidPortRangeErr  = qtssIllegalAttrID;
+static QTSS_AttributeID         sOutputAttr							=   qtssIllegalAttrID;
+static QTSS_AttributeID         sSessionAttr						=   qtssIllegalAttrID;
+static QTSS_AttributeID         sStreamCookieAttr					=   qtssIllegalAttrID;
+static QTSS_AttributeID         sRequestBodyAttr					=   qtssIllegalAttrID;
+static QTSS_AttributeID         sBufferOffsetAttr					=   qtssIllegalAttrID;
+static QTSS_AttributeID         sExpectedDigitFilenameErr			=   qtssIllegalAttrID;
+static QTSS_AttributeID         sReflectorBadTrackIDErr				=   qtssIllegalAttrID;
+static QTSS_AttributeID         sDuplicateBroadcastStreamErr		=   qtssIllegalAttrID;
+static QTSS_AttributeID         sClientBroadcastSessionAttr			=   qtssIllegalAttrID;
+static QTSS_AttributeID         sRTSPBroadcastSessionAttr			=	qtssIllegalAttrID;
+static QTSS_AttributeID         sAnnounceRequiresSDPinNameErr		=	qtssIllegalAttrID;
+static QTSS_AttributeID         sAnnounceDisabledNameErr			=	qtssIllegalAttrID;
+static QTSS_AttributeID         sSDPcontainsInvalidMinimumPortErr	=	qtssIllegalAttrID;
+static QTSS_AttributeID         sSDPcontainsInvalidMaximumPortErr	=	qtssIllegalAttrID;
+static QTSS_AttributeID         sStaticPortsConflictErr				=	qtssIllegalAttrID;
+static QTSS_AttributeID         sInvalidPortRangeErr				=	qtssIllegalAttrID;
 
-static QTSS_AttributeID         sKillClientsEnabledAttr  = qtssIllegalAttrID;
-static QTSS_AttributeID         sRTPInfoWaitTimeAttr  =   qtssIllegalAttrID;
+static QTSS_AttributeID         sKillClientsEnabledAttr				=	qtssIllegalAttrID;
+static QTSS_AttributeID         sRTPInfoWaitTimeAttr				=	qtssIllegalAttrID;
 
 // STATIC DATA
 
 // ref to the prefs dictionary object
-static OSRefTable*      sSessionMap = NULL;
+static OSRefTable*      sSessionMap		= NULL;
 static const StrPtrLen  kCacheControlHeader("no-cache");
-static QTSS_PrefsObject sServerPrefs = NULL;
-static QTSS_ServerObject sServer = NULL;
-static QTSS_ModulePrefsObject       sPrefs = NULL;
+static QTSS_PrefsObject sServerPrefs	= NULL;
+static QTSS_ServerObject sServer		= NULL;
+static QTSS_ModulePrefsObject sPrefs	= NULL;
 
 //
 // Prefs
@@ -204,8 +197,6 @@ static StrPtrLen    sBroadcastNotAllowed("Broadcast is not allowed.");
 static StrPtrLen    sBroadcastNotActive("Broadcast is not active.");
 static StrPtrLen    sTheNowRangeHeader("npt=now-");
 
-const int kBuffLen = 512;
-
 // FUNCTION PROTOTYPES
 
 static QTSS_Error QTSSReflectorModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -234,15 +225,14 @@ static Bool16 AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest);
 static Bool16 InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest);
 static Bool16 IsAbsolutePath(StrPtrLen *inPathPtr);
 
+
 inline void KeepSession(QTSS_RTSPRequestObject theRequest,Bool16 keep)
 {
     (void)QTSS_SetValue(theRequest, qtssRTSPReqRespKeepAlive, 0, &keep, sizeof(keep));
 }
 
-    
 
 // FUNCTION IMPLEMENTATIONS
-
 QTSS_Error QTSSReflectorModule_Main(void* inPrivateArgs)
 {
     return _stublibrary_main(inPrivateArgs, QTSSReflectorModuleDispatch);
@@ -289,8 +279,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
     (void)QTSS_AddRole(QTSS_RTSPAuthorize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
     (void)QTSS_AddRole(QTSS_RTSPRoute_Role);
-    
-    
+
     // Add text messages attributes
     static char*        sExpectedDigitFilenameName      = "QTSSReflectorModuleExpectedDigitFilename";
     static char*        sReflectorBadTrackIDErrName     = "QTSSReflectorModuleBadTrackID";
@@ -329,7 +318,6 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
     static char* sInvalidPortRangeErrName   = "QTSSReflectorModuleStaticPortPrefsBadRange";
     (void)QTSS_AddStaticAttribute(qtssTextMessagesObjectType, sInvalidPortRangeErrName, NULL, qtssAttrDataTypeCharArray);
     (void)QTSS_IDForAttr(qtssTextMessagesObjectType, sInvalidPortRangeErrName, &sInvalidPortRangeErr);
-    
     
     // Add an RTP session attribute for tracking ReflectorSession objects
     static char*        sOutputName         = "QTSSReflectorModuleOutput";
@@ -545,7 +533,6 @@ QTSS_Error RereadPrefs()
     if (sBroadcastsRedirectDir && sBroadcastsRedirectDir[0] != kPathDelimiterChar)
         SetMoviesRelativeDir();   
 
-        
     delete [] QTSSModuleUtils::GetStringAttribute(sPrefs, "broadcast_dir_list", sDefaultBroadcastsDir); // initialize if there isn't one
     sBroadcastDirListID = QTSSModuleUtils::GetAttrID(sPrefs, "broadcast_dir_list");
  
@@ -555,8 +542,6 @@ QTSS_Error RereadPrefs()
 
 
     sBroadcasterSessionTimeoutMilliSecs = sBroadcasterSessionTimeoutSecs * 1000;
-    
-
 
     if (sEnforceStaticSDPPortRange)
     {   Bool16 reportErrors = false;
@@ -647,11 +632,9 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
     Assert(theSoureInfo != NULL);
     if (theSoureInfo == NULL)
         return QTSS_NoErr;
-            
 
     UInt32  numStreams = theSession->GetNumStreams();
     //qtss_printf("QTSSReflectorModule.cpp:ProcessRTPData numStreams=%"_U32BITARG_"\n",numStreams);
-
 {
 /*
    Stream data such as RTP packets is encapsulated by an ASCII dollar
@@ -699,11 +682,11 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
                 //qtss_printf("QTSSReflectorModule.cpp:ProcessRTPData Send RTSP packet channel=%u to UDP localServerAddr=%"_U32BITARG_" serverReceivePort=%"_U32BITARG_" packetDataLen=%u \n", (UInt16) packetChannel, localServerAddr, serverReceivePort,packetDataLen);
             }
         }
-    }
-    
+	} 
 }
     return theErr;
 }
+
 
 QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 {
@@ -774,7 +757,6 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
             return NULL;
         }
     }
-
 
     if (sAllowNonSDPURLs && !isPush)
     {
@@ -901,8 +883,6 @@ void DoAnnounceAddRequiredSDPLines(QTSS_StandardRTSP_Params* inParams, Resizeabl
     }
 
     editedSDP->Put(theSDPPtr);
-
-
 }
 
 
@@ -940,7 +920,6 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
         }
      }
 
-
     // Check for a .sdp at the end
      if (!pathOK)
      {
@@ -949,12 +928,9 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
             StrPtrLen endOfPath(theFullPath.Ptr + (theFullPath.Len - sSDPSuffix.Len), sSDPSuffix.Len);
             if (!endOfPath.Equal(sSDPSuffix))
                 return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssPreconditionFailed, sAnnounceRequiresSDPinNameErr);
-
         }       
      }
 
-    
-    //
     // Ok, this is an sdp file. Retreive the entire contents of the SDP.
     // This has to be done asynchronously (in case the SDP stuff is fragmented across
     // multiple packets. So, we have to have a simple state machine.
