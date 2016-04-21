@@ -632,7 +632,8 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
     ReflectorSession* theSession = NULL;
     UInt32 theLen = sizeof(theSession);
     QTSS_Error theErr = QTSS_GetValue(inParams->inRTSPSession, sRTSPBroadcastSessionAttr, 0, &theSession, &theLen);
-    //qtss_printf("QTSSReflectorModule.cpp:ProcessRTPData    sClientBroadcastSessionAttr=%"_U32BITARG_" theSession=%"_U32BITARG_" err=%"_S32BITARG_" \n",sClientBroadcastSessionAttr, theSession,theErr);
+    
+	//qtss_printf("QTSSReflectorModule.cpp:ProcessRTPData    sClientBroadcastSessionAttr=%"_U32BITARG_" theSession=%"_U32BITARG_" err=%"_S32BITARG_" \n",sClientBroadcastSessionAttr, theSession,theErr);
     if (theSession == NULL || theErr != QTSS_NoErr) 
         return QTSS_NoErr;
     

@@ -312,9 +312,8 @@ class ReflectorSender : public UDPDemuxerTask
     OSQueueElem* GetClientBufferStartPacketOffset(SInt64 offsetMsec,Bool16 needKeyFrameFirstPacket=false); 
     OSQueueElem* GetClientBufferStartPacket() { return this->GetClientBufferStartPacketOffset(0); };
 
-    //->geyijyn@20150427
-    //--ÖØÐÂ¶¨Î»ÊéÇ©Î»ÖÃ
-    //<-
+    // ->geyijyn@20150427
+    // 关键帧索引及丢帧方案
     Bool16 NeedRelocateBookMark(OSQueueElem* currentElem);
     OSQueueElem* GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem,SInt64 offsetMsec);
     Bool16 IsKeyFrameFirstPacket(ReflectorPacket* thePacket);
@@ -327,13 +326,16 @@ class ReflectorSender : public UDPDemuxerTask
     OSQueue         fPacketQueue;
     OSQueueElem*    fFirstNewPacketInQueue;
     OSQueueElem*    fFirstPacketInQueueForNewOutput;
+	OSQueueElem*	fKeyFrameStartPacketElementPointer;//最新关键帧指针
     
     //these serve as an optimization, keeping track of when this
     //sender needs to run so it doesn't run unnecessarily
 
-   inline void SetNextTimeToRun(SInt64 nextTime) { fNextTimeToRun = nextTime;
-                                                    //qtss_printf("SetNextTimeToRun =%"_64BITARG_"d\n", fNextTimeToRun);
-                                                  }
+   inline void SetNextTimeToRun(SInt64 nextTime) 
+   { 
+		fNextTimeToRun = nextTime;
+		//qtss_printf("SetNextTimeToRun =%"_64BITARG_"d\n", fNextTimeToRun);
+	}
 
     Bool16      fHasNewPackets;
     SInt64      fNextTimeToRun;
