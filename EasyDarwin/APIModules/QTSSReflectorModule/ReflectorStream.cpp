@@ -1043,8 +1043,10 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
     // Check to see if we should update the session's bitrate average
     fStream->UpdateBitRate(currentTime);
 
-    // 视频数据流，最好直接定位到第一个关键帧起始包
-    // 这样出视频的时间会更快一些。
+    // 视频数据流，最好直接定位到第一个关键帧起始包这样出视频的时间会更快一些
+	
+	fFirstPacketInQueueForNewOutput = NULL;
+
     if(fKeyFrameStartPacketElementPointer)
     {	
 		fFirstPacketInQueueForNewOutput = fKeyFrameStartPacketElementPointer;		
@@ -1090,8 +1092,11 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 						firstPacket = true;
 						theOutput->setNewFlag(false);
 
-						ReflectorPacket* packet = (ReflectorPacket*)packetElem->GetEnclosingObject();
-						printf("New Output Packet: %s \n", this->IsKeyFrameFirstPacket(packet)?"I":"P");
+						if(packetElem)
+						{
+							ReflectorPacket* packet = (ReflectorPacket*)packetElem->GetEnclosingObject();
+							printf("New Output Packet: %s \n", this->IsKeyFrameFirstPacket(packet)?"I":"P");
+						}
 
 					}
 
@@ -1208,8 +1213,7 @@ OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput,
 
 
 OSQueueElem* ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetMsec,Bool16 needKeyFrameFirstPacket)
-{
-        
+{     
     OSQueueIter qIter(&fPacketQueue);// start at oldest packet in q
     SInt64 theCurrentTime = OS::Milliseconds();
     SInt64 packetDelay = 0;
@@ -1231,21 +1235,12 @@ OSQueueElem* ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetMsec
             
         if ( packetDelay <= (ReflectorStream::sOverBufferInMsec - offsetMsec) ) 
         {   
-        	if(needKeyFrameFirstPacket)
-			{
-				if(IsKeyFrameFirstPacket(thePacket))
-				{
-					oldestPacketInClientBufferTime = &thePacket->fQueueElem;
-					break;
-				}	
-			}
-			else
-			{
-				oldestPacketInClientBufferTime = &thePacket->fQueueElem;
-		        break; // found the packet we need: done processing			
-			}
+            oldestPacketInClientBufferTime = &thePacket->fQueueElem;
+            break; // found the packet we need: done processing
         }
+        
     }
+    
     return oldestPacketInClientBufferTime;
 }
 
