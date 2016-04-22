@@ -1043,13 +1043,14 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
     // Check to see if we should update the session's bitrate average
     fStream->UpdateBitRate(currentTime);
 
-    //视频数据流，最好直接定位到第一个关键帧起始包
-    //这样出视频的时间会更快一些。
+    // 视频数据流，最好直接定位到第一个关键帧起始包
+    // 这样出视频的时间会更快一些。
     if(fKeyFrameStartPacketElementPointer)
     {	
 		fFirstPacketInQueueForNewOutput = fKeyFrameStartPacketElementPointer;		
     }
-    else
+    
+	if(fFirstPacketInQueueForNewOutput == NULL)
     {
        	// where to start new clients in the q
 		fFirstPacketInQueueForNewOutput = this->GetClientBufferStartPacketOffset(0); 
@@ -1088,6 +1089,10 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 						packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
 						firstPacket = true;
 						theOutput->setNewFlag(false);
+
+						ReflectorPacket* packet = (ReflectorPacket*)packetElem->GetEnclosingObject();
+						printf("New Output Packet: %s \n", this->IsKeyFrameFirstPacket(packet)?"I":"P");
+
 					}
 
 					//->geyijyn@20150427
@@ -1869,6 +1874,7 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
 			// 2、在这里判断上面插入的thePacket是否为关键帧起始RTP包，如果是，这记录thePacket->fQueueElem
 			if(theSender->IsKeyFrameFirstPacket(thePacket))
 			{
+				printf("\nI");
 				//3、取消原来的fKeyFrameStartPacketElementPointer
 				if(theSender->fKeyFrameStartPacketElementPointer)
 				{
@@ -1883,6 +1889,10 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
 					//更新最新的关键帧开始包
 					theSender->fKeyFrameStartPacketElementPointer = &thePacket->fQueueElem; 
 				}
+			}
+			else if(theSender->IsFrameFirstPacket(thePacket))
+			{
+				printf("P");
 			}
 		}
 
