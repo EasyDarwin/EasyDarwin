@@ -1282,8 +1282,10 @@ void    ReflectorSender::RemoveOldPackets(OSQueue* inFreeQueue)
         else   
         {   // we want to keep all of these but we should reset the ones that should be aged out unless marked
             // as need the next time through reflect packets.
-            
-            thePacket->fNeededByOutput = false; //mark not needed.. will be set next time through reflect packets
+            if(IsKeyFrameFirstPacket(thePacket))
+				break;
+
+			thePacket->fNeededByOutput = false; //mark not needed.. will be set next time through reflect packets
             if (packetDelay <= currentMaxPacketDelay)  // this packet is going to be kept around as well as the ones that follow.
                 break;
         }   
