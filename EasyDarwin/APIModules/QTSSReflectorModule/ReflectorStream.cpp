@@ -555,9 +555,12 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
 			OSMutexLocker locker(((ReflectorSocket*)(fSockets->GetSocketA()))->GetDemuxer()->GetMutex());
 			thePacket->SetPacketData(packet, packetLen);
 
-			//if(head->nalu_type != 0)
+			//if(this->fStreamInfo.fPayloadName.Equal("H264/90000"))
 			//{
-			//	pkeyFrameCache->PutOnePacket(packet,packetLen,head->nalu_type,head->s);
+			//	if(head->nalu_type != 0)
+			//	{
+			//		pkeyFrameCache->PutOnePacket(packet,packetLen,head->nalu_type,head->s);
+			//	}
 			//}
 
 			((ReflectorSocket*)fSockets->GetSocketA())->ProcessPacket(OS::Milliseconds(),thePacket,0,0);

@@ -1,6 +1,8 @@
 #include "keyframecache.h"
 #include <cstdio>
+#include "OSMutex.h"
 
+static OSMutex sMaxFDPosMutex;		//锁
 bool CKeyFrameCache::PutOnePacket(char *buf,int len,int nalutype,int start)
 {
     if(buf == NULL || len == 0)
@@ -16,6 +18,37 @@ bool CKeyFrameCache::PutOnePacket(char *buf,int len,int nalutype,int start)
     {
         curdatalen = 0;
     }
+
+    const unsigned char nalu_head_byte_I = 0x67;
+    const unsigned char nalu_head_byte_P = 0x41;
+
+    OSMutexLocker locker(&sMaxFDPosMutex);
+    FILE *fp = fopen("data.264","ab+");
+    if(fp)
+    {
+        
+        fseek(fp,0,SEEK_END);
+        if(start == 1)
+        {
+            if(nalutype == 7)
+            {
+                buf[13] = nalu_head_byte_I;
+            }
+            else
+            {
+                buf[13] = nalu_head_byte_P;
+            }
+            char head[4] = {0x00,0x00,0x00,0x01}; 
+            fwrite(head,4,1,fp);
+            fwrite(buf+13,len-13,1,fp);
+        }
+        else
+        {
+            fwrite(buf+14,len-14,1,fp);
+        }
+        fclose(fp);
+    }
+   
 
     FrameBuffer frame_elem = {0};
     frame_elem.STX = BUF_STX;
