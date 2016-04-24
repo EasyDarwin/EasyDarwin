@@ -1095,11 +1095,11 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 						firstPacket = true;
 						theOutput->setNewFlag(false);
 
-						if(packetElem)
-						{
-							ReflectorPacket* packet = (ReflectorPacket*)packetElem->GetEnclosingObject();
-							printf("New Output Packet: %s \n", this->IsKeyFrameFirstPacket(packet)?"I":"P");
-						}
+						//if(packetElem)
+						//{
+						//	ReflectorPacket* packet = (ReflectorPacket*)packetElem->GetEnclosingObject();
+						//	printf("New Output Packet: %s \n", this->IsKeyFrameFirstPacket(packet)?"I":"P");
+						//}
 
 					}
 
@@ -1874,7 +1874,7 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
 			// 2、在这里判断上面插入的thePacket是否为关键帧起始RTP包，如果是，这记录thePacket->fQueueElem
 			if(theSender->IsKeyFrameFirstPacket(thePacket))
 			{
-				printf("\nI");
+				//printf("\nI");
 				//3、取消原来的fKeyFrameStartPacketElementPointer
 				if(theSender->fKeyFrameStartPacketElementPointer)
 				{
@@ -1890,10 +1890,10 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
 					theSender->fKeyFrameStartPacketElementPointer = &thePacket->fQueueElem; 
 				}
 			}
-			else if(theSender->IsFrameFirstPacket(thePacket))
-			{
-				printf("P");
-			}
+			//else if(theSender->IsFrameFirstPacket(thePacket))
+			//{
+			//	printf("P");
+			//}
 		}
 
         if ( theSender->fFirstNewPacketInQueue == NULL )
