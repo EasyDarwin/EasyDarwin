@@ -88,6 +88,7 @@ class OSQueue {
 #endif
 
     protected:
+		OSMutex 			fMutex;
 
         OSQueueElem     fSentinel;
         UInt32          fLength;

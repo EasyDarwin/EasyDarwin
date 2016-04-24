@@ -41,6 +41,8 @@ OSQueue::OSQueue() : fLength(0)
 
 void OSQueue::EnQueue(OSQueueElem* elem)
 {
+	OSMutexLocker theLocker(&fMutex);
+
     Assert(elem != NULL);
     if (elem->fQueue == this)
         return;
@@ -55,6 +57,8 @@ void OSQueue::EnQueue(OSQueueElem* elem)
 
 OSQueueElem* OSQueue::DeQueue()
 {
+	OSMutexLocker theLocker(&fMutex);
+
     if (fLength > 0)
     {
         OSQueueElem* elem = fSentinel.fPrev;
@@ -71,6 +75,8 @@ OSQueueElem* OSQueue::DeQueue()
 
 void OSQueue::Remove(OSQueueElem* elem)
 {
+	OSMutexLocker theLocker(&fMutex);
+
     Assert(elem != NULL);
     Assert(elem != &fSentinel);
     
