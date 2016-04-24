@@ -261,6 +261,7 @@ public:
 	int index;
 	std::string Url;
 	std::string Name;
+	int numOutputs;
 };
 
 class EASYDARWIN_API EasyDarwinEasyHLSAck : public EasyProtocol

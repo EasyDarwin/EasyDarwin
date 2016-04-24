@@ -1065,6 +1065,7 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 		clientSession->GetValueAsString(qtssCliSesFullURL,0,&fullRequestURL);
 		session.Url = fullRequestURL;
 		session.Name = theSession->GetSessionName();
+		session.numOutputs = theSession->GetNumOutputs();
 		ack.AddSession(session);
 		uIndex++;
 	}  

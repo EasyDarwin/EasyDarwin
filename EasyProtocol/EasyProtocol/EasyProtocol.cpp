@@ -474,6 +474,7 @@ bool EasyDarwinRTSPPushSessionListAck::AddSession(EasyDarwinRTSPSession &session
 	value["index"] = session.index;
 	value["url"] = session.Url;
 	value["name"] = session.Name;
+	value["AudienceNum"] = session.numOutputs;
 	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Sessions"].append(value);
 	return true;
 }
