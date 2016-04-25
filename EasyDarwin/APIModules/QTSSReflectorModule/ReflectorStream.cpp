@@ -1590,16 +1590,16 @@ void ReflectorSocketPool::DestructUDPSocket(ReflectorSocket* socket)
 {
     if (socket) // allocated
     {
-        if (socket->GetLocalPort() > 0) // bound and active
-        {   //The socket's run function may be executing RIGHT NOW! So we can't
+        //if (socket->GetLocalPort() > 0) // bound and active
+        //{   //The socket's run function may be executing RIGHT NOW! So we can't
             //just delete the thing, we need to send the sockets kill events.
             //qtss_printf("ReflectorSocketPool::DestructUDPSocketPair Signal kKillEvent socket=%p\n",socket);
             socket->Signal(Task::kKillEvent);
-        }
-        else // not bound ok to delete
-        {   //qtss_printf("ReflectorSocketPool::DestructUDPSocketPair delete socket=%p\n",socket);
-            delete socket;
-        }  
+        //}
+        //else // not bound ok to delete
+        //{   //qtss_printf("ReflectorSocketPool::DestructUDPSocketPair delete socket=%p\n",socket);
+        //    delete socket;
+        //}  
     }
 }
 
