@@ -133,6 +133,7 @@ StrPtrLen   RTSPSession::sHTTPResponseNoServerHeaderPtr(sHTTPResponseNoServerHea
 char*       RTSPSession::sHTTPResponseFormatStr =  "HTTP/1.0 200 OK\r\n%s%s%s%s\r\nConnection: close\r\nDate: Thu, 19 Aug 1982 18:30:00 GMT\r\nCache-Control: no-store\r\nPragma: no-cache\r\nContent-Type: application/x-rtsp-tunnelled\r\n\r\n";
 char*       RTSPSession::sHTTPNoServerResponseFormatStr =  "HTTP/1.0 200 OK\r\n%s%s%s%sConnection: close\r\nDate: Thu, 19 Aug 1982 18:30:00 GMT\r\nCache-Control: no-store\r\nPragma: no-cache\r\nContent-Type: application/x-rtsp-tunnelled\r\n\r\n";
 
+//RTSP会话初始化
 void RTSPSession::Initialize()
 {
     sHTTPProxyTunnelMap = new OSRefTable(OSRefTable::kDefaultTableSize);
@@ -221,7 +222,7 @@ RTSPSession::~RTSPSession()
         sHTTPProxyTunnelMap->UnRegister( &fProxyRef );  
     }
 }
-
+//RTSP会话用状态机处理RTSP请求中的各种报文
 SInt64 RTSPSession::Run()
 {
     EventFlags events = this->GetEvents();
@@ -233,6 +234,7 @@ SInt64 RTSPSession::Run()
     OSThreadDataSetter theSetter(&fModuleState, NULL);
         
     //check for a timeout or a kill. If so, just consider the session dead
+	//检查超时和我
     if ((events & Task::kTimeoutEvent) || (events & Task::kKillEvent))
         fLiveSession = false;
     
@@ -267,6 +269,7 @@ SInt64 RTSPSession::Run()
                     break;
                 }
 
+				//此时收到完整报文
                 if (err == QTSS_RequestArrived)
                     fState = kHTTPFilteringRequest;
                 // If we get an E2BIG, it means our buffer was overfilled.
