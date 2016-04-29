@@ -86,6 +86,7 @@ class ReflectorPacket;
 class ReflectorSender;
 class ReflectorStream;
 class RTPSessionOutput;
+class ReflectorSession;
 
 class ReflectorPacket
 {
@@ -412,7 +413,6 @@ class ReflectorStream
         
         //
         // ACCESSORS
-        
 		UInt32                  GetBitRate()        { return fCurrentBitRate; }
         SourceInfo::StreamInfo* GetStreamInfo()     { return &fStreamInfo; }
         OSMutex*                GetMutex()          { return &fBucketMutex; }
@@ -448,6 +448,9 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         void                    IncEyeCount()                           { OSMutexLocker locker(&fBucketMutex); fEyeCount ++; }
         void                    DecEyeCount()                           { OSMutexLocker locker(&fBucketMutex); fEyeCount --; }
         UInt32                  GetEyeCount()                           { OSMutexLocker locker(&fBucketMutex); return fEyeCount; }
+
+		void					SetMyReflectorSession(ReflectorSession* reflector)	{ fMyReflectorSession = reflector; }
+		ReflectorSession*		GetMyReflectorSession()	{ return fMyReflectorSession; }
 
     private:
     
@@ -516,6 +519,8 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         
         UInt32              fFirst_RTCP_RTP_Time;
         SInt64              fFirst_RTCP_Arrival_Time;
+
+		ReflectorSession*	fMyReflectorSession;
     
         static UInt32       sBucketSize;
         static UInt32       sMaxPacketAgeMSec;
@@ -533,7 +538,7 @@ inline  void                    UpdateBitRate(SInt64 currentTime);
         friend class ReflectorSender;
 
 public:
-		CKeyFrameCache    *pkeyFrameCache;
+		CKeyFrameCache*		pkeyFrameCache;
 };
 
 

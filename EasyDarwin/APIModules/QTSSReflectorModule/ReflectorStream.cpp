@@ -146,7 +146,8 @@ ReflectorStream::ReflectorStream(SourceInfo::StreamInfo* inInfo)
     fEyeCount(0),
     fFirst_RTCP_RTP_Time(0),
     fFirst_RTCP_Arrival_Time(0),
-	fTransportType(qtssRTPTransportTypeUDP)
+	fTransportType(qtssRTPTransportTypeUDP),
+	fMyReflectorSession(NULL)
 {
 
     fRTPSender.fStream = this;
@@ -1285,8 +1286,16 @@ void    ReflectorSender::RemoveOldPackets(OSQueue* inFreeQueue)
         else   
         {   // we want to keep all of these but we should reset the ones that should be aged out unless marked
             // as need the next time through reflect packets.
-            if(IsKeyFrameFirstPacket(thePacket))
-				break;
+
+			if(fKeyFrameStartPacketElementPointer)
+			{
+				ReflectorPacket* keyPacket = (ReflectorPacket*)(fKeyFrameStartPacketElementPointer->GetEnclosingObject());
+				if(keyPacket == thePacket)
+					break;
+			}
+
+			//if(IsKeyFrameFirstPacket(thePacket))
+			//	break;
 
 			thePacket->fNeededByOutput = false; //mark not needed.. will be set next time through reflect packets
             if (packetDelay <= currentMaxPacketDelay)  // this packet is going to be kept around as well as the ones that follow.
@@ -1866,7 +1875,7 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
         thePacket->fTimeArrived = inMilliseconds;
         theSender->fPacketQueue.EnQueue(&thePacket->fQueueElem);
 
-		// TODO:对RTP包进行关键帧过滤，保存最新关键帧首个RTP包指针
+		// TODO:A、对H264视频RTP包进行关键帧过滤，保存最新关键帧首个RTP包指针
 		// 1、判断是否为视频H.264 RTP
 		SourceInfo::StreamInfo* streamInfo = theSender->fStream->GetStreamInfo();
 		if(!(thePacket->IsRTCP()) &&(streamInfo->fPayloadType == qtssVideoPayloadType) && (streamInfo->fPayloadName.Equal("H264/90000")))
@@ -1889,12 +1898,44 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
 					//更新最新的关键帧开始包
 					theSender->fKeyFrameStartPacketElementPointer = &thePacket->fQueueElem; 
 				}
+
+				//5、设置ReflectorSession标志位，Notify有新视频关键帧，提醒音频队列更新
+				{
+					theSender->fStream->GetMyReflectorSession()->SetHasVideoKeyFrameUpdate(true);
+				}
 			}
 			//else if(theSender->IsFrameFirstPacket(thePacket))
 			//{
 			//	printf("P");
 			//}
 		}
+
+		// TODO:B、如果视频关键帧有更新，音频也根据视频的更新立即进行更新
+		// 1、判断是否为音频RTP且有视频关键帧更新Notify
+		if(!(thePacket->IsRTCP()) &&(streamInfo->fPayloadType == qtssAudioPayloadType) && (theSender->fStream->GetMyReflectorSession()->HasVideoKeyFrameUpdate()))
+		{
+			//2、取消原来音频的fKeyFrameStartPacketElementPointer
+			if(theSender->fKeyFrameStartPacketElementPointer)
+			{
+				ReflectorPacket* oldKeyFramePacket = (ReflectorPacket*)theSender->fKeyFrameStartPacketElementPointer->GetEnclosingObject();
+				oldKeyFramePacket->fNeededByOutput = false;
+			}
+
+			//4、设置最新的音频fKeyFrameStartPacketElementPointer
+			{
+				//锁定关键帧不会被Remove
+				thePacket->fNeededByOutput = true;
+				//更新最新的关键帧开始包
+				theSender->fKeyFrameStartPacketElementPointer = &thePacket->fQueueElem; 
+			}
+
+			//5、设置ReflectorSession标志位，Notify有新视频关键帧，提醒音频队列更新
+			{
+				theSender->fStream->GetMyReflectorSession()->SetHasVideoKeyFrameUpdate(false);
+			}
+		}
+
+
 
         if ( theSender->fFirstNewPacketInQueue == NULL )
             theSender->fFirstNewPacketInQueue = &thePacket->fQueueElem;                 

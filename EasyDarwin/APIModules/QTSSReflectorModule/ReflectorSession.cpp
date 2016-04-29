@@ -97,7 +97,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo)
     fHasBufferedStreams(false),
 	fRTSPRelaySession(NULL),
 	fSessionName(NULL),
-	fHLSLive(false)
+	fHLSLive(false),
+	fHasVideoKeyFrameUpdate(false)
 {
 
     fQueueElem.SetEnclosingObject(this);
@@ -127,6 +128,8 @@ ReflectorSession::~ReflectorSession()
     {
         if (fStreamArray[x] == NULL)
             continue;
+
+		fStreamArray[x]->SetMyReflectorSession(NULL);
 
         delete fStreamArray[x];
         fStreamArray[x] = NULL;
@@ -239,6 +242,8 @@ QTSS_Error ReflectorSession::SetupReflectorSession(SourceInfo* inInfo, QTSS_Stan
             fStreamArray[x] = NULL;
             return theError;
         }
+		fStreamArray[x]->SetMyReflectorSession(this);
+
         fStreamArray[x]->SetEnableBuffer(this->fHasBufferedStreams);// buffering is done by the stream's sender
             
         // If the port was 0, update it to reflect what the actual RTP port is.

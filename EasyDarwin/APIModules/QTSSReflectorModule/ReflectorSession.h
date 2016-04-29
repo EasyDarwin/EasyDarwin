@@ -133,9 +133,11 @@ class ReflectorSession
         StrPtrLen*      GetSourcePath()     { return &fSourceID; }
         Bool16          IsSetup()           { return fIsSetup; }
 
+		Bool16			HasVideoKeyFrameUpdate()	{ return fHasVideoKeyFrameUpdate; }
+
 		char*			GetSessionName()	{ return fSessionName; }
 
-        ReflectorStream*GetStreamByIndex(UInt32 inIndex) { return fStreamArray[inIndex]; }
+        ReflectorStream*	GetStreamByIndex(UInt32 inIndex) { return fStreamArray[inIndex]; }
         void AddBroadcasterClientSession(QTSS_StandardRTSP_Params* inParams);
         QTSS_ClientSessionObject GetBroadcasterSession() { return fBroadcasterSession;}
 
@@ -169,7 +171,8 @@ class ReflectorSession
         
         SInt64  GetInitTimeMS()   { return fInitTimeMS; }
 
-		void	SetHasBufferedStreams(Bool16 enableBuffer) { fHasBufferedStreams = enableBuffer; } 
+		void	SetHasBufferedStreams(Bool16 enableBuffer) { fHasBufferedStreams = enableBuffer; }
+		void	SetHasVideoKeyFrameUpdate(Bool16 indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
      
     private:
     
@@ -204,7 +207,9 @@ class ReflectorSession
         QTSS_ClientSessionObject fBroadcasterSession;
         SInt64      fInitTimeMS;
 
-        Bool16      fHasBufferedStreams;   
+        Bool16      fHasBufferedStreams; 
+
+		Bool16		fHasVideoKeyFrameUpdate;
 
 	private:
 		QTSS_Object fRTSPRelaySession;
