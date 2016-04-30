@@ -2279,6 +2279,10 @@ QTSS_Error RTSPSession::DumpRequestData()
     return theErr;
 }
 
+/*
+ *	函数名：HandleIncomingDataPacket
+ 功能：处理到来的数据包
+ */
 void RTSPSession::HandleIncomingDataPacket()
 {
     
@@ -2293,6 +2297,7 @@ void RTSPSession::HandleIncomingDataPacket()
         theSessionID = &fLastRTPSessionIDPtr;
     }
     
+	// RTP会话表中功能查找SessionID对应的引用
     OSRefTable* theMap = QTSServerInterface::GetServer()->GetRTPSessionMap();
     OSRef* theRef = theMap->Resolve(theSessionID);
     
@@ -2306,7 +2311,9 @@ void RTSPSession::HandleIncomingDataPacket()
     
     OSMutexLocker locker(fRTPSession->GetMutex());
     fRTPSession->RefreshTimeout();
+	// 通过packetChannel找到对应的RTP流数据
     RTPStream* theStream = fRTPSession->FindRTPStreamForChannelNum(packetChannel);
+	//解析RTP流数据
     theStream->ProcessIncomingInterleavedData(packetChannel, this, &packetWithoutHeaders);
 
     //
@@ -2318,11 +2325,13 @@ void RTSPSession::HandleIncomingDataPacket()
     packetParams.rtspIncomingDataParams.inPacketData = fInputStream.GetRequestBuffer()->Ptr;
     packetParams.rtspIncomingDataParams.inPacketLen = fInputStream.GetRequestBuffer()->Len;
     
+	//调用所有注册了kRTSPIncomingDataRole角色的模块
     UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPIncomingDataRole);
     for (; fCurrentModule < numModules; fCurrentModule++)
     {
         QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRTSPIncomingDataRole, fCurrentModule);
         (void)theModule->CallDispatch(QTSS_RTSPIncomingData_Role, &packetParams);
     }
+	//将当前模块数置0
     fCurrentModule = 0;
 }
