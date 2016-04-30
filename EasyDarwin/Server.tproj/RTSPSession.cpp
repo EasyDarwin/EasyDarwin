@@ -1348,12 +1348,12 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
     "pre" filter the request looking for the HTTP Proxy
     tunnel HTTP requests, merge the 2 sessions
     into one, let the donor Session die.
-    
-
 */
 
 /*
- *	函数功能:预先过滤请求,查找HTTP Proxy tunnel 请求,合并两个会话为一个,杀掉donor session会话
+ *
+ 函数功能:预先过滤请求,查找HTTP Proxy tunnel 请求,
+ 合并两个会话为一个,杀掉donor session会话
  */
 QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 {
@@ -1504,7 +1504,13 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     theOtherSession->fReadMutex.Unlock();
     return QTSS_NoErr;
 }
-
+/*
+ *	功能:注册会话到map表中
+ 返回值:
+1.注册成功,则返回当前会话的fProxyRef
+2.如果逻辑数和会话类型相同,则返回另一个会话的fProxyRef
+3.如果一个会话的逻辑数相同,但是无法解析,则返回NULL
+ */
 OSRef* RTSPSession::RegisterRTSPSessionIntoHTTPProxyTunnelMap(QTSS_RTSPSessionType inSessionType)
 {
     // This function attempts to register the current session's fProxyRef into the map, and
