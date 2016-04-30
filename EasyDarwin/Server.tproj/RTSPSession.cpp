@@ -1748,7 +1748,6 @@ void RTSPSession::Process3GPPData()
 
 void RTSPSession::SetupRequest()
 {
-    //
     // First parse the request
     QTSS_Error theErr = fRequest->Parse();
     if (theErr != QTSS_NoErr)
@@ -1757,6 +1756,7 @@ void RTSPSession::SetupRequest()
    // let's also refresh RTP session timeout so that it's kept alive in sync with the RTSP session.
     //
     // Attempt to find the RTP session for this request.
+	//从RTP会话表中查找RTP会话
     OSRefTable* theMap = QTSServerInterface::GetServer()->GetRTPSessionMap();
     theErr = this->FindRTPSession(theMap);
     
@@ -1764,6 +1764,7 @@ void RTSPSession::SetupRequest()
     {        
         OSMutexLocker locker(fRTPSession->GetMutex());
 
+		//刷新RTPSession超时器
         fRTPSession->RefreshTimeout();
         UInt32 headerBits = fRequest->GetBandwidthHeaderBits();
         if (headerBits != 0)
@@ -1774,16 +1775,15 @@ void RTSPSession::SetupRequest()
     QTSS_RTSPStatusCode statusCode = qtssSuccessOK;
     char *body = NULL;
     UInt32 bodySizeBytes = 0;
-    
 
     //
     // If this is an OPTIONS request, don't even bother letting modules see it. Just
     // send a standard OPTIONS response, and be done.
-    if (fRequest->GetMethod() == qtssOptionsMethod)
+    if (fRequest->GetMethod() == qtssOptionsMethod)//OPTIONS请求
     {
     
     
-    
+		
         this->Process3GPPData();
         
         StrPtrLen* cSeqPtr = fRequest->GetHeaderDictionary()->GetValue(qtssCSeqHeader);
@@ -1809,7 +1809,7 @@ void RTSPSession::SetupRequest()
         } 
 		
 		
-		
+		//发送标准OPTIONS响应报文
 		fRequest->SendHeader();
 	    
 	    // now write the body if there is one
@@ -1821,7 +1821,7 @@ void RTSPSession::SetupRequest()
 
     //
 	// If this is a SET_PARAMETER request, don't let modules see it.
-	if (fRequest->GetMethod() == qtssSetParameterMethod)
+	if (fRequest->GetMethod() == qtssSetParameterMethod)//SET_PARAMETER请求
 	{
          
  
@@ -1874,6 +1874,7 @@ void RTSPSession::SetupRequest()
     // If we don't have an RTP session yet, create one...
     if (fRTPSession == NULL)
     {
+		//创建新的RTPSession
         theErr = this->CreateNewRTPSession(theMap);
         if (theErr != QTSS_NoErr)
             return;
@@ -1906,16 +1907,19 @@ void RTSPSession::SetupRequest()
     fRoleParams.rtspRequestParams.inClientSession = fRTPSession;
     
     // Setup Authorization params;
-    fRequest->ParseAuthHeader();    
+    fRequest->ParseAuthHeader();
     
         
 }
-
+/*
+ *	RTSPSession资源的释放，以及参数的重置
+ */
 void RTSPSession::CleanupRequest()
 {
     if (fRTPSession != NULL)
     {
         // Release the ref.
+		//释放RTP会话表的引用
         OSRefTable* theMap = QTSServerInterface::GetServer()->GetRTPSessionMap();
         theMap->Release(fRTPSession->GetRef());
         
@@ -1924,6 +1928,7 @@ void RTSPSession::CleanupRequest()
         fRoleParams.rtspRequestParams.inClientSession = NULL;
     }
      
+	//清空fLastRTPSessionID数组，置零
     if (this->IsLiveSession() == false) //clear out the ID so it can't be re-used.
     {   fLastRTPSessionID[0] = 0;
         fLastRTPSessionIDPtr.Set( fLastRTPSessionID, 0 );
@@ -1937,12 +1942,14 @@ void RTSPSession::CleanupRequest()
             delete [] fRequest->GetValue(qtssRTSPReqFullRequest)->Ptr;
             
         // NULL out any references to the current request
+		// 释放申请的fRequest，并将参数赋值为NULL
         delete fRequest;
         fRequest = NULL;
         fRoleParams.rtspRequestParams.inRTSPRequest = NULL;
         fRoleParams.rtspRequestParams.inRTSPHeaders = NULL;
     }
     
+	//解锁操作
     fSessionMutex.Unlock();
     fReadMutex.Unlock();
     
