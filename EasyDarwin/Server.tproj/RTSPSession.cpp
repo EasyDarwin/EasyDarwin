@@ -2188,7 +2188,10 @@ Bool16 RTSPSession::OverMaxConnections(UInt32 buffer)
     return overLimit;
      
 }
-
+/*
+ *	函数名：IsOkToAddNewRTPSession
+ 功能：询问服务器是否可以增加RTP会话，如果出错，发送响应信息反馈给客户端
+ */
 QTSS_Error RTSPSession::IsOkToAddNewRTPSession()
 {
     QTSServerInterface* theServer = QTSServerInterface::GetServer();
@@ -2196,6 +2199,7 @@ QTSS_Error RTSPSession::IsOkToAddNewRTPSession()
     
     //we may want to deny this connection for a couple of different reasons
     //if the server is refusing new connections
+	// 当服务器状态为以下状态时，服务器拒绝新连接，并发送“拒绝连接”信息给客户端
     if ((theServerState == qtssRefusingConnectionsState) ||
         (theServerState == qtssIdleState) ||
         (theServerState == qtssFatalErrorState) ||
@@ -2203,12 +2207,14 @@ QTSS_Error RTSPSession::IsOkToAddNewRTPSession()
         return QTSSModuleUtils::SendErrorResponse(fRequest, qtssServerUnavailable,
                                                     qtssMsgRefusingConnections);
 
-    //if the max connection limit has been hit    
+    //if the max connection limit has been hit 
+	// 如果服务器已经达到最大连接数，发送“无足够带宽”信息给客户端
     if  ( this->OverMaxConnections(0)) 
         return QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientNotEnoughBandwidth,
                                                     qtssMsgTooManyClients);
 
     //if the max bandwidth limit has been hit
+	// 如果服务器已经达到了最大带宽限制，发送“无足够带宽”信息给客户端
     SInt32 maxKBits = theServer->GetPrefs()->GetMaxKBitsBandwidth();
     if ( (maxKBits > -1) && (theServer->GetCurBandwidthInBits() >= ((UInt32)maxKBits*1024)) )
         return QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientNotEnoughBandwidth,
