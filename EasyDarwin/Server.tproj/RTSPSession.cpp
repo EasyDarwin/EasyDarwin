@@ -1505,7 +1505,9 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     return QTSS_NoErr;
 }
 /*
- *	功能:注册会话到map表中
+ *	
+ 名称:RegisterRTSPSessionIntoHTTPProxyTunnelMap
+ 功能:注册会话到map表中
  返回值:
 1.注册成功,则返回当前会话的fProxyRef
 2.如果逻辑数和会话类型相同,则返回另一个会话的fProxyRef
@@ -1534,7 +1536,10 @@ OSRef* RTSPSession::RegisterRTSPSessionIntoHTTPProxyTunnelMap(QTSS_RTSPSessionTy
     }
     return theRef;
 }
-
+/*
+ *	名称:CheckAuthentication
+ 功能:RTSP会话的验证模块,基础验证和MD5验证
+ */
 void RTSPSession::CheckAuthentication() {
     
     QTSSUserProfile* profile = fRequest->GetUserProfile();
@@ -1543,10 +1548,12 @@ void RTSPSession::CheckAuthentication() {
     Bool16 authenticated = true;
  
     // Check if authorization information returned by the client is for the scheme that the server sent the challenge
+	//客户端和服务器的验证方式是否一致,如不一致则验证失败
     if(scheme != (fRTPSession->GetAuthScheme())) {
         authenticated = false;
     }
-    else if(scheme == qtssAuthBasic) {  
+    else if(scheme == qtssAuthBasic) { 
+		//普通验证,验证模块返回加密后的密码
         // For basic authentication, the authentication module returns the crypt of the password, 
         // so compare crypt of qtssRTSPReqUserPassword and the text in qtssUserPassword
         StrPtrLen* reqPassword = fRequest->GetValue(qtssRTSPReqUserPassword);
@@ -1577,7 +1584,8 @@ void RTSPSession::CheckAuthentication() {
         delete [] reqPasswdStr;
         reqPasswdStr = NULL;        // deleting allocated memory
     }
-    else if(scheme == qtssAuthDigest) { // For digest authentication, md5 digest comparison
+    else if(scheme == qtssAuthDigest) { //md5验证
+		// For digest authentication, md5 digest comparison
         // The text returned by the authentication module in qtssUserPassword is MD5 hash of (username:realm:password)
         
         UInt32 qop = fRequest->GetAuthQop();
