@@ -2163,10 +2163,14 @@ UInt32 RTSPSession::GenerateNewSessionID(char* ioBuffer)
     return ::strlen(ioBuffer);
 }
 
+/*
+ *	函数名：OverMaxConnections
+ 功能：是否超过服务器最大连接数
+ */
 Bool16 RTSPSession::OverMaxConnections(UInt32 buffer)
 {
     QTSServerInterface* theServer = QTSServerInterface::GetServer();
-    SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
+    SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();// 获取最大连接数
     Bool16 overLimit = false;
     
     if (maxConns > -1) // limit connections
