@@ -2045,7 +2045,10 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
     
     return QTSS_NoErr;
 }
-
+/*
+ *	函数名：SetupClientSessionAttrs
+ 功能：设置客户端会话属性信息
+ */
 void RTSPSession::SetupClientSessionAttrs()
 {
     // get and pass presentation url
