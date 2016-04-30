@@ -146,9 +146,7 @@ void RTSPSession::Initialize()
     qtss_sprintf(sHTTPResponseNoServerHeaderBuf, sHTTPNoServerResponseFormatStr, "","","","");
     sHTTPResponseNoServerHeaderPtr.Len = ::strlen(sHTTPResponseNoServerHeaderBuf);
     Assert(sHTTPResponseNoServerHeaderPtr.Len < kMaxHTTPResponseLen);
-        
 }
-
 
 RTSPSession::RTSPSession( Bool16 doReportHTTPConnectionAddress )
 : RTSPSessionInterface(),
@@ -222,11 +220,11 @@ RTSPSession::~RTSPSession()
         sHTTPProxyTunnelMap->UnRegister( &fProxyRef );  
     }
 }
-/*
-函数名：Run()
- *	功能：状态机处理RTSP请求中的各种报文
- */
 
+/*
+*	函数名：Run()
+*	功能：状态机处理RTSP请求中的各种报文
+*/
 SInt64 RTSPSession::Run()
 {
     EventFlags events = this->GetEvents();
@@ -320,7 +318,7 @@ SInt64 RTSPSession::Run()
             }
             
             case kWaitingToBindHTTPTunnel:
-                //flush the GET response, if it's there
+                // flush the GET response, if it's there
                 err = fOutputStream.Flush();
                 if (err == EAGAIN)
                 {
@@ -983,9 +981,7 @@ SInt64 RTSPSession::Run()
                         return fModuleState.idleTime; // If the module has requested idle time...
                     }
                 }
-                
 
-                
                 if (!fRequest->HasResponseBeenSent())
                 {
                     // no modules took this one so send back a parameter error
@@ -1164,24 +1160,22 @@ SInt64 RTSPSession::Run()
     return 0;
 }
 
-/************************************************************************/
-/*  功能：识别出请求中GET或者POST请求， 如果是HTTP请求，
-则查找是否有SessionCookie字段和Accept字段
-返回值：Bool16型，返回是否是HTTP请求
+/*  
+*	功能：识别出请求中GET或者POST请求， 如果是HTTP请求，
+*	则查找是否有SessionCookie字段和Accept字段
+*	返回值：Bool16型，返回是否是HTTP请求
 */
-/************************************************************************/
 Bool16 RTSPSession::ParseProxyTunnelHTTP()
 {
-    /*
-        if it's an HTTP request
-        parse the interesing parts from the request
-        
-        - check for GET or POST, set fHTTPMethod
-        - checck for HTTP protocol, set fWasHTTPRequest
-        - check for SessionID header, set fProxySessionID char array
-        - check for accept "application/x-rtsp-tunnelled.
-        
-    */
+	/*
+		if it's an HTTP request
+		parse the interesing parts from the request
+	    
+		- check for GET or POST, set fHTTPMethod
+		- checck for HTTP protocol, set fWasHTTPRequest
+		- check for SessionID header, set fProxySessionID char array
+		- check for accept "application/x-rtsp-tunnelled.
+	*/
     
     Bool16          isHTTPRequest = false;
     StrPtrLen       *splRequest;
@@ -1219,8 +1213,7 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
         
         HTTP_VTRACE( "request method: \n" )
         HTTP_VTRACE_SPL( &theParsedData )
-        
-        // does first line begin with POST or GET?
+
 		// 识别是GET请求还是POST请求
         if (theParsedData.EqualIgnoreCase("post", 4 ))
         {   
@@ -1255,7 +1248,7 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
         
         }
         
-        // fWasHTTPRequest 为true
+        // fWasHTTPRequest为true
         if ( fWasHTTPRequest )
         {
             // it's HTTP and one of the methods we like....
@@ -1344,21 +1337,18 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
         isHTTPRequest = true;
         
     return isHTTPRequest;
-    
 }
 
-/*
 
+/*
     "pre" filter the request looking for the HTTP Proxy
     tunnel HTTP requests, merge the 2 sessions
     into one, let the donor Session die.
 */
-
 /*
- *
- 函数功能:预先过滤请求,查找HTTP Proxy tunnel 请求,
- 合并两个会话为一个,杀掉donor session会话
- */
+*	函数功能:预先过滤请求,查找HTTP Proxy tunnel 请求,
+*	合并两个会话为一个,杀掉donor session会话
+*/
 QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 {
     // returns true if it's an HTTP request that can tunnel
@@ -1508,15 +1498,15 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     theOtherSession->fReadMutex.Unlock();
     return QTSS_NoErr;
 }
+
 /*
- *	
- 名称:RegisterRTSPSessionIntoHTTPProxyTunnelMap
- 功能:注册会话到map表中
- 返回值:
-1.注册成功,则返回当前会话的fProxyRef
-2.如果逻辑数和会话类型相同,则返回另一个会话的fProxyRef
-3.如果一个会话的逻辑数相同,但是无法解析,则返回NULL
- */
+*	名称:RegisterRTSPSessionIntoHTTPProxyTunnelMap
+*	功能:注册会话到Map表中
+*	返回值:
+*	1.注册成功,则返回当前会话的fProxyRef
+*	2.如果逻辑数和会话类型相同,则返回另一个会话的fProxyRef
+*	3.如果一个会话的逻辑数相同,但是无法解析,则返回NULL
+*/
 OSRef* RTSPSession::RegisterRTSPSessionIntoHTTPProxyTunnelMap(QTSS_RTSPSessionType inSessionType)
 {
     // This function attempts to register the current session's fProxyRef into the map, and
@@ -1540,9 +1530,10 @@ OSRef* RTSPSession::RegisterRTSPSessionIntoHTTPProxyTunnelMap(QTSS_RTSPSessionTy
     }
     return theRef;
 }
+
 /*
  *	名称:CheckAuthentication
- 功能:RTSP会话的验证模块,基础验证和MD5验证
+ *	功能:RTSP会话的验证模块,基础验证和MD5验证
  */
 void RTSPSession::CheckAuthentication() {
     
@@ -1694,9 +1685,10 @@ void RTSPSession::CheckAuthentication() {
         }
     }
 }
+
 /*
  *	函数名：ParseOptionsResponse
- 功能：解析响应报文中是否为RTSP协议
+ *	功能：解析响应报文中是否为RTSP协议
  */
 Bool16 RTSPSession::ParseOptionsResponse()
 {
@@ -1915,6 +1907,7 @@ void RTSPSession::SetupRequest()
     
         
 }
+
 /*
  *	RTSPSession资源的释放，以及参数的重置
  */
@@ -1991,7 +1984,7 @@ QTSS_Error  RTSPSession::FindRTPSession(OSRefTable* inRefTable)
 
 /*
  *	函数名：CreateNewRTPSession
- 功能：创建一个RTP会话，并激活它
+ *	功能：创建一个RTP会话，并激活它
  */
 QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
 {
@@ -2049,9 +2042,10 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
     
     return QTSS_NoErr;
 }
+
 /*
  *	函数名：SetupClientSessionAttrs
- 功能：设置客户端会话属性信息
+ *	功能：设置客户端会话属性信息
  */
 void RTSPSession::SetupClientSessionAttrs()
 {
@@ -2102,8 +2096,8 @@ void RTSPSession::SetupClientSessionAttrs()
 }
 
 /*
- *函数名：GenerateNewSessionID
- 功能：生成新会话ID
+ *	函数名：GenerateNewSessionID
+ *	功能：生成新会话ID
  */
 UInt32 RTSPSession::GenerateNewSessionID(char* ioBuffer)
 {
@@ -2165,7 +2159,7 @@ UInt32 RTSPSession::GenerateNewSessionID(char* ioBuffer)
 
 /*
  *	函数名：OverMaxConnections
- 功能：是否超过服务器最大连接数
+ *	功能：是否超过服务器最大连接数
  */
 Bool16 RTSPSession::OverMaxConnections(UInt32 buffer)
 {
@@ -2188,9 +2182,10 @@ Bool16 RTSPSession::OverMaxConnections(UInt32 buffer)
     return overLimit;
      
 }
+
 /*
  *	函数名：IsOkToAddNewRTPSession
- 功能：询问服务器是否可以增加RTP会话，如果出错，发送响应信息反馈给客户端
+ *	功能：询问服务器是否可以增加RTP会话，如果出错，发送响应信息反馈给客户端
  */
 QTSS_Error RTSPSession::IsOkToAddNewRTPSession()
 {
@@ -2228,7 +2223,7 @@ QTSS_Error RTSPSession::IsOkToAddNewRTPSession()
 
 /*
  *	函数名：SaveRequestAuthorizationParams
- 功能：保存请求中的验证相关参数
+ *	功能：保存请求中的验证相关参数
  */
 void RTSPSession::SaveRequestAuthorizationParams(RTSPRequest *theRTSPRequest)
 {
@@ -2281,7 +2276,7 @@ QTSS_Error RTSPSession::DumpRequestData()
 
 /*
  *	函数名：HandleIncomingDataPacket
- 功能：处理到来的数据包
+ *	功能：处理到来的数据包
  */
 void RTSPSession::HandleIncomingDataPacket()
 {
