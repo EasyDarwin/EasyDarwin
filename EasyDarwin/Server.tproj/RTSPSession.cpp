@@ -222,7 +222,7 @@ RTSPSession::~RTSPSession()
         sHTTPProxyTunnelMap->UnRegister( &fProxyRef );  
     }
 }
-//RTSP会话用状态机处理RTSP请求中的各种报文
+// 状态机处理RTSP请求中的各种报文
 SInt64 RTSPSession::Run()
 {
     EventFlags events = this->GetEvents();
@@ -230,11 +230,12 @@ SInt64 RTSPSession::Run()
     QTSSModule* theModule = NULL;
     UInt32 numModules = 0;
     Assert(fLastRTPSessionIDPtr.Ptr == &fLastRTPSessionID[0]);
+
     // Some callbacks look for this struct in the thread object
     OSThreadDataSetter theSetter(&fModuleState, NULL);
         
     //check for a timeout or a kill. If so, just consider the session dead
-	//检查超时和我
+	// 检查超时事件和Kill事件，如果为真，则RTSPSession会话已结束
     if ((events & Task::kTimeoutEvent) || (events & Task::kKillEvent))
         fLiveSession = false;
     
@@ -246,19 +247,24 @@ SInt64 RTSPSession::Run()
         
         switch (fState)
         {
-            case kReadingFirstRequest:
+            case kReadingFirstRequest:// 第一次对请求报文进行处理
             {
                 if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
                 {
                     // If the RequestStream returns QTSS_NoErr, it means
                     // that we've read all outstanding data off the socket,
                     // and still don't have a full request. Wait for more data.
+					
+					// QTSS_NoErr：已经收到该socket的完整数据，但是没有收集到本次请求的全部数据
+					// 这时需要接着请求监听读事件，获取更多数据组成完整的RTSP请求消息。
                     
                     //+rt use the socket that reads the data, may be different now.
                     fInputSocketP->RequestEvent(EV_RE);
                     return 0;
                 }
                 
+				// QTSS_RequestArrived：接收到完整请求报文，可以进入下一状态
+				// E2BIG：缓冲区已溢出，默认缓存区的大小为（ kRequestBufferSizeInBytes = 4096）
                 if ((err != QTSS_RequestArrived) && (err != E2BIG))
                 {
                     // Any other error implies that the client has gone away. At this point,
@@ -276,20 +282,24 @@ SInt64 RTSPSession::Run()
                 // In that case, we can just jump into the following state, and
                 // the code their does a check for this error and returns an error.
                 if (err == E2BIG)
+					//进入kHaveNonTunnelMessage状态机，再响应该E2BIG错误
                     fState = kHaveNonTunnelMessage;
             }
             continue;
             
-            case kHTTPFilteringRequest:
+            case kHTTPFilteringRequest://对报文内容进行过滤
             {   
             
                 HTTP_TRACE( "RTSPSession::Run kHTTPFilteringRequest\n" )
             
+				//初始化状态为非tunnel消息
                 fState = kHaveNonTunnelMessage; // assume it's not a tunnel setup message
                                                 // prefilter will set correct tunnel state if it is.
-
+				
+				//检测是否为RTSP-over-HTTP tunneling
                 QTSS_Error  preFilterErr = this->PreFilterForHTTPProxyTunnel();
-                                
+                
+				//判断preFilterErr值并输出打印信息
                 if ( preFilterErr == QTSS_NoErr )
                 {   
                     HTTP_TRACE( "RTSPSession::Run kHTTPFilteringRequest\n" )
@@ -317,7 +327,7 @@ SInt64 RTSPSession::Run()
                 return 0;
                 //continue;
             
-            case kSocketHasBeenBoundIntoHTTPTunnel:
+            case kSocketHasBeenBoundIntoHTTPTunnel:// RTSP-over-HTTP状态处理流程
             
                 // DMS - Can this execute either? I don't think so... this one
                 // we may not need...
@@ -374,13 +384,14 @@ SInt64 RTSPSession::Run()
                 // fall thru to kHaveNonTunnelMessage
             }
             
-            case kHaveNonTunnelMessage:
+            case kHaveNonTunnelMessage:// 说明请求报文格式是正确的，请求已进入受理状态
             {   
                 // should only get here when fInputStream has a full message built.
                 
                 Assert( fInputStream.GetRequestBuffer() );
                 
                 Assert(fRequest == NULL);
+				// 创建RTSPRequest对象，用于解析RTSP消息
                 fRequest = NEW RTSPRequest(this);
                 fRoleParams.rtspRequestParams.inRTSPRequest = fRequest;
                 fRoleParams.rtspRequestParams.inRTSPHeaders = fRequest->GetHeaderDictionary();
@@ -390,6 +401,8 @@ SInt64 RTSPSession::Run()
                 // be allowed to do so until we are done sending our response
                 // We also make sure that a POST session can't snarf in while we're
                 // processing the request.
+				//开始处理RTSP请求，禁止在发送RTSP响应报文时，其他人发送interleaved数据
+				//同时禁止在处理请求时
                 fReadMutex.Lock();
                 fSessionMutex.Lock();
                 
@@ -397,9 +410,11 @@ SInt64 RTSPSession::Run()
                 // count the # of bytes for this RTSP response. So, at
                 // this point, reset it to 0 (we can then just let it increment
                 // until the next request comes in)
+				//重置响应缓冲区，并进入下一状态kFilteringRequest
                 fOutputStream.ResetBytesWritten();
                 
                 // Check for an overfilled buffer, and return an error.
+				//检测缓冲区溢出错误
                 if (err == E2BIG)
                 {
                     (void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest,
@@ -408,6 +423,7 @@ SInt64 RTSPSession::Run()
                     break;
                 }
                 // Check for a corrupt base64 error, return an error
+				//检测参数错误
                 if (err == QTSS_BadArgument)
                 {
                     (void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest,
@@ -417,6 +433,7 @@ SInt64 RTSPSession::Run()
                 }
 
                 Assert(err == QTSS_RequestArrived);
+				//状态机跳转到kFilteringRequest
                 fState = kFilteringRequest;
                 
                 // Note that there is no break here. We'd like to continue onto the next
@@ -428,6 +445,8 @@ SInt64 RTSPSession::Run()
                 // We received something so auto refresh
                 // The need to auto refresh is because the api doesn't allow a module to refresh at this point
                 // 
+
+				// 刷新超时任务fTimeoutTask，运转RTSP会话的超时机制
                 fTimeoutTask.RefreshTimeout();
 
                 //
@@ -435,6 +454,7 @@ SInt64 RTSPSession::Run()
                 // in which case this isn't an RTSP request, so we don't need to go
                 // through any of the remaining steps
                 
+				//判断当前数据是否是一个数据包，而不是一个RTSP请求
                 if (fInputStream.IsDataPacket()) // can this interfere with MP3?
                 {
                     this->HandleIncomingDataPacket();
@@ -455,6 +475,7 @@ SInt64 RTSPSession::Run()
                 theFilterParams.rtspFilterParams.outNewRequest = &theReplacedRequest;
                 
                 // Invoke filter modules
+				//获取注册kRTSPFilterRole角色的模块数量
                 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPFilterRole);
                 for (; (fCurrentModule < numModules) && ((!fRequest->HasResponseBeenSent()) || fModuleState.eventRequested); fCurrentModule++)
                 {
@@ -465,6 +486,7 @@ SInt64 RTSPSession::Run()
                         fModuleState.isGlobalLocked = true;
                     }
                     
+					//获取所有注册RTSP Filter角色的模块并调用，并将RTSP请求对象（theFilterParams）作为参数传递给它
                     theModule = QTSServerInterface::GetModule(QTSSModule::kRTSPFilterRole, fCurrentModule);
                     (void)theModule->CallDispatch(QTSS_RTSPFilter_Role, &theFilterParams);
                     fModuleState.isGlobalLocked = false;
@@ -488,6 +510,7 @@ SInt64 RTSPSession::Run()
                         if (oldReplacedRequest != NULL)
                             delete [] oldReplacedRequest;
                         
+						//改变qtssRTSPReqFullRequest属性的值
                         fRequest->SetVal(qtssRTSPReqFullRequest, theReplacedRequest, ::strlen(theReplacedRequest));
                         oldReplacedRequest = theReplacedRequest;
                         theReplacedRequest = NULL;
@@ -511,21 +534,23 @@ SInt64 RTSPSession::Run()
                 }
                 else	
                 // Otherwise, this is a normal request, so parse it and get the RTPSession.
-                    this->SetupRequest();
+                    this->SetupRequest();//普通请求，创建RTPSession会话
                 
                 
                 // This might happen if there is some syntax or other error,
                 // or if it is an OPTIONS request
+				// 服务器根据被调用的模块是否对请求做了应答来决定后面的调用
                 if (fRequest->HasResponseBeenSent())
                 {
                     fState = kPostProcessingRequest;
                     break;
                 }
-                fState = kRoutingRequest;
+                fState = kRoutingRequest;//转到kRoutingRequest状态
             }
             case kRoutingRequest:
             {
                 // Invoke router modules
+				//所有注册了kRTSPRouteRole角色的模块数量
                 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPRouteRole);
                 {
                     // Manipulation of the RTPSession from the point of view of
@@ -542,6 +567,7 @@ SInt64 RTSPSession::Run()
                             fModuleState.isGlobalLocked = true;
                         } 
                         
+						//调用所有注册了RTSP Route角色的模块
                         theModule = QTSServerInterface::GetModule(QTSSModule::kRTSPRouteRole, fCurrentModule);
                         (void)theModule->CallDispatch(QTSS_RTSPRoute_Role, &fRoleParams);
                         fModuleState.isGlobalLocked = false;
@@ -864,6 +890,7 @@ SInt64 RTSPSession::Run()
             case kPreprocessingRequest:
             {
                 // Invoke preprocessor modules
+				// 遍历调用所有注册了QTSS_RTSPPreProcessor_Role角色的模块
                 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPPreProcessorRole);
                 {
                     // Manipulation of the RTPSession from the point of view of
@@ -904,6 +931,7 @@ SInt64 RTSPSession::Run()
                 fCurrentModule = 0;
                 if (fRequest->HasResponseBeenSent())
                 {
+					// 进入下一状态kPostProcessingRequest
                     fState = kPostProcessingRequest;
                     break;
                 }
@@ -929,6 +957,7 @@ SInt64 RTSPSession::Run()
                         fModuleState.isGlobalLocked = true;
                     } 
 
+					//RTSP Request角色对请求进行处理之后，服务器就调用注册了kRTSPRequestRole角色的模块
                     theModule = QTSServerInterface::GetModule(QTSSModule::kRTSPRequestRole, 0);
                     (void)theModule->CallDispatch(QTSS_RTSPRequest_Role, &fRoleParams);
                     fModuleState.isGlobalLocked = false;
@@ -1331,13 +1360,13 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     fState = kWaitingToBindHTTPTunnel;
     QTSS_RTSPSessionType theOtherSessionType = qtssRTSPSession;
 
-    if ( fHTTPMethod == kHTTPMethodPost )
+    if ( fHTTPMethod == kHTTPMethodPost )//HTTP Post请求
     {
         HTTP_TRACE( "RTSPSession is a POST request.\n" )
         fSessionType            = qtssRTSPHTTPInputSession;
         theOtherSessionType     = qtssRTSPHTTPSession;
     }
-	else if ( fHTTPMethod == kHTTPMethodGet )
+	else if ( fHTTPMethod == kHTTPMethodGet )//HTTP Get请求
     {
         HTTP_TRACE( "RTSPSession is a GET request.\n" )
         // we're session O (outptut)  the POST half is session 1 ( input )
