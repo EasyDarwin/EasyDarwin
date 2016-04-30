@@ -1037,14 +1037,14 @@ void* QTSSCallbacks::Easy_GetHLSessions()
 	strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
 	return (void*)retMsg;
 }
+
 void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 {
 	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 
 	EasyDarwinRTSPPushSessionListAck ack;
 	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
-
+	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");
 
 	UInt32 uIndex= 0;
 	OSMutexLocker locker(reflectorSessionMap->GetMutex());
@@ -1072,7 +1072,7 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 
 	char count[16] = { 0 };
 	sprintf(count,"%d", uIndex);
-	ack.SetBodyValue("SessionCount", count );
+	ack.SetBodyValue("SessionCount", count);
 
 	string msg = ack.GetMsg();
 

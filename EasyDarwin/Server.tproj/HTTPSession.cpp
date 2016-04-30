@@ -108,7 +108,7 @@ HTTPSession::~HTTPSession()
 	QTSS_GetValue(this, easyHTTPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
 
 	char msgStr[2048] = { 0 };
-	qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession Offline from ip[%s]",remoteAddress);
+	qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession offline from ip[%s]",remoteAddress);
 	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
     // Invoke the session closing modules
     QTSS_RoleParams theParams;
@@ -148,10 +148,7 @@ SInt64 HTTPSession::Run()
 
 	if(events & Task::kTimeoutEvent)
 	{
-		//客户端Session超时，暂时不处理 
-		char msgStr[512];
-		qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession Timeout Release");
-		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+		// Session超时,释放Session 
 		return -1;
 	}
 
