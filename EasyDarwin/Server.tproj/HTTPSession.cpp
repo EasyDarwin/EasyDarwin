@@ -35,7 +35,6 @@ using namespace std;
     #include <crypt.h>
 #endif
 
-static StrPtrLen	sServiceStr("EasyDarwin");
 static StrPtrLen	sEasyHLSModule("api/easyhlsmodule");
 static StrPtrLen	sGetHLSSessions("api/gethlssessions");
 static StrPtrLen	sGetRTSPPushSessions("api/getrtsppushsessions");
@@ -231,7 +230,7 @@ SInt64 HTTPSession::Run()
                 
                 Assert(fRequest == NULL);
 				//根据具体请求报文构造HTTPRequest请求类
-				fRequest = NEW HTTPRequest(&sServiceStr, fInputStream.GetRequestBuffer());
+				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 				//在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
 				//在此过程中，此Session的Socket不进行任何网络数据的读/写；
@@ -382,7 +381,7 @@ SInt64 HTTPSession::Run()
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
 	//构造响应报文(HTTP头)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(contentXML->Len?httpOK:httpNotImplemented);
 	if (contentXML->Len)
 		httpAck.AppendContentLengthHeader(contentXML->Len);
@@ -669,7 +668,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	StrPtrLen msgJson((char*)msg.c_str());
 
 	//构造响应报文(HTTP头)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
 	if (msgJson.Len)
 		httpAck.AppendContentLengthHeader(msgJson.Len);
@@ -701,7 +700,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 		StrPtrLen msgJson(msgContent);
 
 		//构造响应报文(HTTP头)
-		HTTPRequest httpAck(&sServiceStr, httpResponseType);
+		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 		httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
 		if (msgJson.Len)
 			httpAck.AppendContentLengthHeader(msgJson.Len);
@@ -731,24 +730,26 @@ QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char
 	QTSS_Error theErr = QTSS_NoErr;
 
 	do{
+		// 获取响应Content
 		char* msgContent = (char*)Easy_GetRTSPPushSessions();
 
 		StrPtrLen msgJson(msgContent);
 
-		//构造响应报文(HTTP头)
-		HTTPRequest httpAck(&sServiceStr,httpResponseType);
+		// 构造响应报文(HTTP头)
+		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 		httpAck.CreateResponseHeader(msgJson.Len?httpOK:httpNotImplemented);
 		if (msgJson.Len)
 			httpAck.AppendContentLengthHeader(msgJson.Len);
 
-		//响应完成后断开连接
+		// 响应完成后断开连接
 		httpAck.AppendConnectionCloseHeader();
 
-		//Push MSG to OutputBuffer
+		// HTTP响应Body
 		char respHeader[2048] = { 0 };
 		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 		
+		// HTTP响应Content
 		RTSPResponseStream *pOutputStream = GetOutputStream();
 		pOutputStream->Put(respHeader);
 		if (msgJson.Len > 0) 
