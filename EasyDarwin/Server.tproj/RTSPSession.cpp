@@ -2226,7 +2226,10 @@ QTSS_Error RTSPSession::IsOkToAddNewRTPSession()
     return QTSS_NoErr;                                                  
 }
 
-
+/*
+ *	函数名：SaveRequestAuthorizationParams
+ 功能：保存请求中的验证相关参数
+ */
 void RTSPSession::SaveRequestAuthorizationParams(RTSPRequest *theRTSPRequest)
 {
     // Set the RTSP session's copy of the user name
