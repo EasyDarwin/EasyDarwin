@@ -26,8 +26,6 @@
     File:       RTSPSession.cpp
 
     Contains:   Implemenation of RTSPSession objects
-    
-    
 */
 #define __RTSP_HTTP_DEBUG__ 0
 #define __RTSP_HTTP_VERBOSE__ 0
@@ -84,8 +82,6 @@
     #define HTTP_VTRACE_TWO(s, one, two );
 #endif
 
-
-
 #if  __RTSP_HTTP_DEBUG__ || __RTSP_HTTP_VERBOSE__
 
 static void PrintfStrPtrLen( StrPtrLen *splRequest )
@@ -103,10 +99,9 @@ static void PrintfStrPtrLen( StrPtrLen *splRequest )
 }
 #endif
 
-//hack stuff
+// hack stuff
 static char*                    sBroadcasterSessionName="QTSSReflectorModuleBroadcasterSession";
 static QTSS_AttributeID         sClientBroadcastSessionAttr =   qtssIllegalAttrID;
-
 
 static StrPtrLen    sVideoStr("video");
 static StrPtrLen    sAudioStr("audio");
@@ -133,7 +128,7 @@ StrPtrLen   RTSPSession::sHTTPResponseNoServerHeaderPtr(sHTTPResponseNoServerHea
 char*       RTSPSession::sHTTPResponseFormatStr =  "HTTP/1.0 200 OK\r\n%s%s%s%s\r\nConnection: close\r\nDate: Thu, 19 Aug 1982 18:30:00 GMT\r\nCache-Control: no-store\r\nPragma: no-cache\r\nContent-Type: application/x-rtsp-tunnelled\r\n\r\n";
 char*       RTSPSession::sHTTPNoServerResponseFormatStr =  "HTTP/1.0 200 OK\r\n%s%s%s%sConnection: close\r\nDate: Thu, 19 Aug 1982 18:30:00 GMT\r\nCache-Control: no-store\r\nPragma: no-cache\r\nContent-Type: application/x-rtsp-tunnelled\r\n\r\n";
 
-//RTSP会话初始化
+// RTSPSession全局初始化,在QTSServer中调用一次
 void RTSPSession::Initialize()
 {
     sHTTPProxyTunnelMap = new OSRefTable(OSRefTable::kDefaultTableSize);
@@ -517,7 +512,6 @@ SInt64 RTSPSession::Run()
                         oldReplacedRequest = theReplacedRequest;
                         theReplacedRequest = NULL;
                     }
-                    
                 }
                 
                 fCurrentModule = 0;
@@ -535,9 +529,8 @@ SInt64 RTSPSession::Run()
                     break;
                 }
                 else	
-                // Otherwise, this is a normal request, so parse it and get the RTPSession.
+					// Otherwise, this is a normal request, so parse it and get the RTPSession.
                     this->SetupRequest();// 普通请求，创建RTPSession会话
-                
                 
                 // This might happen if there is some syntax or other error,
                 // or if it is an OPTIONS request
@@ -1161,7 +1154,7 @@ SInt64 RTSPSession::Run()
 }
 
 /*  
-*	功能：识别出请求中GET或者POST请求， 如果是HTTP请求，
+*	功能：识别出请求中GET或者POST请求，如果是HTTP请求，
 *	则查找是否有SessionCookie字段和Accept字段
 *	返回值：Bool16型，返回是否是HTTP请求
 */
@@ -1772,7 +1765,6 @@ void RTSPSession::SetupRequest()
     char *body = NULL;
     UInt32 bodySizeBytes = 0;
 
-    //
     // If this is an OPTIONS request, don't even bother letting modules see it. Just
     // send a standard OPTIONS response, and be done.
     if (fRequest->GetMethod() == qtssOptionsMethod)// OPTIONS请求
@@ -1804,7 +1796,6 @@ void RTSPSession::SetupRequest()
             fRequest->AppendContentLength(bodySizeBytes);
         } 
 		
-		
 		// 发送标准OPTIONS响应报文
 		fRequest->SendHeader();
 	    
@@ -1815,7 +1806,6 @@ void RTSPSession::SetupRequest()
         return;
     }
 
-    //
 	// If this is a SET_PARAMETER request, don't let modules see it.
 	if (fRequest->GetMethod() == qtssSetParameterMethod)// SET_PARAMETER请求
 	{
@@ -1853,7 +1843,6 @@ void RTSPSession::SetupRequest()
         
 	}
 
-	//
     // If this is a DESCRIBE request, make sure there is no SessionID. This is not allowed,
     // and may screw up modules if we let them see this request.
     if (fRequest->GetMethod() == qtssDescribeMethod)
@@ -1865,8 +1854,6 @@ void RTSPSession::SetupRequest()
         }
     }
     
-    
-    //
     // If we don't have an RTP session yet, create one...
     if (fRTPSession == NULL)
     {
@@ -1885,8 +1872,7 @@ void RTSPSession::SetupRequest()
 	// If it's a play request and the late tolerance is sent in the request use this value
 	if ((fRequest->GetMethod() == qtssPlayMethod) && (fRequest->GetLateToleranceInSec() != -1))
 		fRTPSession->SetStreamThinningParams(fRequest->GetLateToleranceInSec());
-	
-    //
+
     // Check to see if this is a "ping" PLAY request (a PLAY request while already
     // playing with no Range header). If so, just send back a 200 OK response and do nothing.
     // No need to go to modules to do this, because this is an RFC documented behavior  
@@ -1898,14 +1884,11 @@ void RTSPSession::SetupRequest()
         return;
     }
 
-        
     Assert(fRTPSession != NULL); // At this point, we must have one!
     fRoleParams.rtspRequestParams.inClientSession = fRTPSession;
     
     // Setup Authorization params;
-    fRequest->ParseAuthHeader();
-    
-        
+    fRequest->ParseAuthHeader();  
 }
 
 /*
