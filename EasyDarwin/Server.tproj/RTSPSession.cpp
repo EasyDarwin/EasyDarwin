@@ -1345,13 +1345,16 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
 
 /*
 
-    "pre" filter the request looking for the HHTP Proxy
+    "pre" filter the request looking for the HTTP Proxy
     tunnel HTTP requests, merge the 2 sessions
     into one, let the donor Session die.
     
 
 */
 
+/*
+ *	函数功能:预先过滤请求,查找HTTP Proxy tunnel 请求,合并两个会话为一个,杀掉donor session会话
+ */
 QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 {
     // returns true if it's an HTTP request that can tunnel
@@ -1360,6 +1363,7 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     
     // This is an RTSP / HTTP session, so decrement the total RTSP sessions
     // and increment the total HTTP sessions
+	//这是一个RTSP / HTTP 会话，所以RTSP会话总数减1，HTTP会话总数+1
     Assert(fSessionType == qtssRTSPSession);
     QTSServerInterface::GetServer()->SwapFromRTSPToHTTP();
     
@@ -1372,13 +1376,13 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     fState = kWaitingToBindHTTPTunnel;
     QTSS_RTSPSessionType theOtherSessionType = qtssRTSPSession;
 
-    if ( fHTTPMethod == kHTTPMethodPost )//HTTP Post请求
+    if ( fHTTPMethod == kHTTPMethodPost )//HTTP POST请求
     {
         HTTP_TRACE( "RTSPSession is a POST request.\n" )
         fSessionType            = qtssRTSPHTTPInputSession;
         theOtherSessionType     = qtssRTSPHTTPSession;
     }
-	else if ( fHTTPMethod == kHTTPMethodGet )//HTTP Get请求
+	else if ( fHTTPMethod == kHTTPMethodGet )//HTTP GET请求
     {
         HTTP_TRACE( "RTSPSession is a GET request.\n" )
         // we're session O (outptut)  the POST half is session 1 ( input )
@@ -1387,17 +1391,21 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
         
         Bool16 showServerInfo = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPServerInfoEnabled();
         if (fDoReportHTTPConnectionAddress )
-        {   // contruct a 200 OK header with an "x-server-ip-address" header
+        {   
+			// contruct a 200 OK header with an "x-server-ip-address" header
         
             char        responseHeaderBuf[kMaxHTTPResponseLen];
             char        localIPAddrBuf[20] = { 0 };
             StrPtrLen   localIPAddr(localIPAddrBuf, 19);
             
             // get a copy of the local IP address from the dictionary
+			//从字典中得到本地ip地址
+
             this->GetValue(qtssRTSPSesLocalAddrStr, 0, localIPAddr.Ptr, &localIPAddr.Len);
             Assert( localIPAddr.Len < sizeof( localIPAddrBuf ) );
             localIPAddrBuf[localIPAddr.Len] = 0;
             
+			//使用"x-server-ip-address" 头部字段,构造响应报文
             char *headerFieldPtr = "";
             if(showServerInfo)
             {
@@ -1407,15 +1415,14 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
             else
             {
                 qtss_sprintf( responseHeaderBuf, sHTTPNoServerResponseFormatStr, "X-server-ip-address: ", localIPAddrBuf, "\r\n", headerFieldPtr);
-                
-            }          
+            }
             Assert(::strlen(responseHeaderBuf) < kMaxHTTPResponseLen);
-            fOutputStream.Put(responseHeaderBuf); 
-            
-
+            fOutputStream.Put(responseHeaderBuf);
         }
         else // use the premade stopck version
-        {   if (showServerInfo)
+        {   
+			//添加200 OK信息
+			if (showServerInfo)
                 fOutputStream.Put(sHTTPResponseHeaderPtr);  // 200 OK just means we connected...
             else
                 fOutputStream.Put(sHTTPResponseNoServerHeaderPtr);  // 200 OK just means we connected...
@@ -1428,6 +1435,8 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     // This function attempts to register our Ref into the map. If there is another
     // session with a matching magic number, it resolves it and returns that Ref.
     // If it returns NULL, something bad has happened, and we should just kill the session.
+
+	//注册RTSPSession到Map中
     OSRef* rtspSessionRef = this->RegisterRTSPSessionIntoHTTPProxyTunnelMap(theOtherSessionType);
 
     // Something went wrong (usually we get here because there is a session with this magic
@@ -1439,6 +1448,7 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     }
 
     // We registered ourselves into the map (we are the first half), so wait for our other half
+	//前一半注册到map中,等待后一半
     if (rtspSessionRef == &fProxyRef)
     {
         HTTP_TRACE("Registered this session into map. Waiting to bind\n");
@@ -1451,6 +1461,8 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
     // We must lock down this session, for we (may) be manipulating its socket & input
     // stream, and therefore it cannot be in the process of reading data or processing a request.
     // If it is, well, safest thing to do is probably just deny this attempt to bind.
+	
+	//Session加锁,因为在操作其socket和输入流,所以此时不能读取数据或处理请求
     if (!theOtherSession->fReadMutex.TryLock())
     {
         HTTP_TRACE("Found another session in map, but couldn't grab fReadMutex. Abort.\n");
@@ -1488,6 +1500,7 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
         theOtherSession->Signal(Task::kKillEvent);
     }
     
+	//Session 解锁
     theOtherSession->fReadMutex.Unlock();
     return QTSS_NoErr;
 }
