@@ -1985,6 +1985,10 @@ QTSS_Error  RTSPSession::FindRTPSession(OSRefTable* inRefTable)
     return QTSS_NoErr;
 }
 
+/*
+ *	函数名：CreateNewRTPSession
+ 功能：创建一个RTP会话，并激活它
+ */
 QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
 {
     Assert(fLastRTPSessionIDPtr.Ptr == &fLastRTPSessionID[0]);
@@ -1994,11 +1998,13 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
     // Then, we need to pass the session onto one of the modules
 
     // First of all, ask the server if it's ok to add a new session
+	//询问服务器是否能够增加新会话
     QTSS_Error theErr = this->IsOkToAddNewRTPSession();
     if (theErr != QTSS_NoErr)
         return theErr;
 
     // Create the RTPSession object
+	//创建RTPSession对象
     Assert(fRTPSession == NULL);
     fRTPSession = NEW RTPSession();
     
@@ -2006,6 +2012,7 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
         //
         // Lock the RTP session down so that it won't delete itself in the
         // unusual event there is a timeout while we are doing this.
+		//为RTP会话加锁，以防特定事件下RTP会话删除自身
         OSMutexLocker locker(fRTPSession->GetSessionMutex());
 
         // Because this is a new RTP session, setup some dictionary attributes
@@ -2013,6 +2020,7 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
         this->SetupClientSessionAttrs();    
         
         // So, generate a session ID for this session
+		//为会话生成一个会话ID
         QTSS_Error activationError = EPERM;
         while (activationError == EPERM)
         {
@@ -2021,6 +2029,7 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
             //ok, some module has bound this session, we can activate it.
             //At this point, we may find out that this new session ID is a duplicate.
             //If that's the case, we'll simply retry until we get a unique ID
+			//很多模块绑定了此会话，激活它
             activationError = fRTPSession->Activate(fLastRTPSessionID);
         }
         Assert(activationError == QTSS_NoErr);
@@ -2030,6 +2039,7 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
     // Activate adds this session into the RTP session map. We need to therefore
     // make sure to resolve the RTPSession object out of the map, even though
     // we don't actually need to pointer.
+	//将会话添加到RTP会话表中
     OSRef* theRef = inRefTable->Resolve(&fLastRTPSessionIDPtr);
     Assert(theRef != NULL);
     
