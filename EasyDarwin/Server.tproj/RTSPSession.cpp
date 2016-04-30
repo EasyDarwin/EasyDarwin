@@ -402,7 +402,7 @@ SInt64 RTSPSession::Run()
                 // We also make sure that a POST session can't snarf in while we're
                 // processing the request.
 				//开始处理RTSP请求，禁止在发送RTSP响应报文时，其他人发送interleaved数据
-				//同时禁止在处理请求时
+				//同时在处理请求时，禁止POST会话
                 fReadMutex.Lock();
                 fSessionMutex.Lock();
                 
@@ -1160,8 +1160,12 @@ SInt64 RTSPSession::Run()
     return 0;
 }
 
-
-
+/************************************************************************/
+/*  功能：识别出请求中GET或者POST请求， 如果是HTTP请求，
+则查找是否有SessionCookie字段和Accept字段
+返回值：Bool16型，返回是否是HTTP请求
+*/
+/************************************************************************/
 Bool16 RTSPSession::ParseProxyTunnelHTTP()
 {
     /*
@@ -1179,6 +1183,7 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
     StrPtrLen       *splRequest;
     
     HTTP_VTRACE( "ParseProxyTunnelHTTP\n" ) 
+	//获取请求缓冲区指针
     splRequest = fInputStream.GetRequestBuffer();
     
     
@@ -1188,7 +1193,7 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
     
     if ( splRequest )
     {
-        
+        //初始化fHTTPMethod
         fHTTPMethod = kHTTPMethodUnknown;
     
     #if __RTSP_HTTP_DEBUG__ 
@@ -1212,13 +1217,13 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
         HTTP_VTRACE_SPL( &theParsedData )
         
         // does first line begin with POST or GET?
+		//识别是GET请求还是POST请求
         if (theParsedData.EqualIgnoreCase("post", 4 ))
         {   
             fHTTPMethod = kHTTPMethodPost;
         }
         else if (theParsedData.EqualIgnoreCase("get", 3 ))
         {
-    
             fHTTPMethod = kHTTPMethodGet;
         }
         
@@ -1237,21 +1242,23 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
             HTTP_VTRACE_SPL( &theParsedData )
             
             // DMS - why use NumEqualIgnoreCase? Wouldn't EqualIgnoreCase do the trick here?
+			//识别是否有http字段
             if (theParsedData.NumEqualIgnoreCase("http", 4 ))
-            {   HTTP_TRACE( "ParseProxyTunnelHTTP found HTTP\n" )
+            {   
+				HTTP_TRACE( "ParseProxyTunnelHTTP found HTTP\n" )
                 fWasHTTPRequest = true;
             }
         
         }
         
-        
+        // fWasHTTPRequest 为true
         if ( fWasHTTPRequest )
         {
             // it's HTTP and one of the methods we like....
             // now, find the Session ID and Accept headers
-            const char* kSessionHeaderName = "X-SessionCookie:";
+            const char* kSessionHeaderName = "X-SessionCookie:";// SessionCookie字段
             const int   kSessionHeaderNameLen = ::strlen(kSessionHeaderName);
-            const char* kAcceptHeaderName = "Accept:";
+            const char* kAcceptHeaderName = "Accept:";// Accept字段
             const int   kAcceptHeaderNameLen = ::strlen(kAcceptHeaderName);
             //const char* kAcceptData = "application/x-rtsp-tunnelled";
             //const int kAcceptDataLen = ::strlen(kAcceptData);
@@ -1262,11 +1269,12 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
             
                 parser.ConsumeUntilWhitespace( &theParsedData ); // theParsedData now contains the URL and CGI params ( we don't need yet );
             
+				// 匹配SessionCookie字段
                 if ( theParsedData.EqualIgnoreCase( kSessionHeaderName, kSessionHeaderNameLen ) )
                 {
                     // we got a weener!
                     if ( parser.GetDataRemaining() > 0 )
-                        parser.ConsumeWhitespace();
+                        parser.ConsumeWhitespace();//去掉空格
                     
                     if ( parser.GetDataRemaining() > 0 )
                     {   
@@ -1277,6 +1285,7 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
                         // cache the ID so we can use it to remove ourselves from the map
                         if ( sessionID.Len < QTSS_MAX_SESSION_ID_LENGTH )
                         {   
+							//将sessionID内容拷贝到fProxySessionID
                             ::memcpy( fProxySessionID, sessionID.Ptr,  sessionID.Len );
                             fProxySessionID[sessionID.Len] = 0;
                             fProxySessionIDPtr.Set( fProxySessionID, ::strlen(fProxySessionID) );
@@ -1284,6 +1293,7 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
                         }
                     }
                 }
+				// 匹配Accept字段
                 else if ( theParsedData.EqualIgnoreCase( kAcceptHeaderName, kAcceptHeaderNameLen ) )
                 {
                     StrPtrLen   hTTPAcceptHeader;
@@ -1309,7 +1319,9 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
                         #endif
                             
                         // we really don't need to check thisif ( theParsedData.EqualIgnoreCase( kAcceptData, kAcceptDataLen ) ) 
-                        {   fFoundValidAccept = true;
+                        {   
+							//标识找到Accept字段
+							fFoundValidAccept = true;
                             
                             HTTP_VTRACE( "found valid accept\n" )
                         }
