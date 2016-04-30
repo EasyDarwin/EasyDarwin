@@ -1690,7 +1690,10 @@ void RTSPSession::CheckAuthentication() {
         }
     }
 }
-
+/*
+ *	函数名：ParseOptionsResponse
+ 功能：解析响应报文中是否为RTSP协议
+ */
 Bool16 RTSPSession::ParseOptionsResponse()
 {
 	StringParser parser(fRequest->GetValue(qtssRTSPReqFullRequest));
