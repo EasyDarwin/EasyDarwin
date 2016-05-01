@@ -43,7 +43,7 @@
 		<PREF NAME="module_folder" >./QTSSModules</PREF>
 		<PREF NAME="safe_play_duration" TYPE="UInt32" >600</PREF>
 		<PREF NAME="average_bandwidth_update" TYPE="UInt32" >60</PREF>
-		<PREF NAME="total_bytes_update" TYPE="UInt32" >1</PREF>
+		<PREF NAME="total_bytes_update" TYPE="UInt32" >15</PREF>
 		<PREF NAME="auto_restart" TYPE="Bool16" >true</PREF>
 		<PREF NAME="break_on_assert" TYPE="Bool16" >false</PREF>
 		<PREF NAME="bind_ip_addr" >0</PREF>
@@ -85,7 +85,7 @@
 		<PREF NAME="RTSP_error_message" TYPE="Bool16" >false</PREF>
 		<PREF NAME="run_num_threads" TYPE="UInt32" >10</PREF>
 		<PREF NAME="overbuffer_rate" TYPE="Float32" >2.0</PREF>
-		<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >true</PREF>
+		<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >false</PREF>
 		<PREF NAME="enable_monitor_stats_file" TYPE="Bool16" >true</PREF>
 		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="monitor_stats_file_name" >server_status</PREF>
@@ -197,7 +197,7 @@
 		<PREF NAME="use_one_SSRC_per_stream" TYPE="Bool16" >true</PREF>
 		<PREF NAME="kill_clients_when_broadcast_stops" TYPE="Bool16" >false</PREF>
 		<PREF NAME="reflector_bucket_offset_delay_msec" TYPE="UInt32" >73</PREF>
-		<PREF NAME="reflector_buffer_size_sec" TYPE="UInt32" >1</PREF>
+		<PREF NAME="reflector_buffer_size_sec" TYPE="UInt32" >0</PREF>
 		<PREF NAME="reflector_use_in_packet_receive_time" TYPE="Bool16" >false</PREF>
 		<PREF NAME="reflector_in_packet_max_receive_sec" TYPE="UInt32" >60</PREF>
 		<PREF NAME="enable_rtp_play_info" TYPE="Bool16" >false</PREF>
