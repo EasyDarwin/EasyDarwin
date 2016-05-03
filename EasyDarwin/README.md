@@ -101,7 +101,7 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 ### MP4点播 ###
 我们将经过Hint处理过的mp4文件存在movie_folder目录中，访问RTSP地址：
 
-    rtsp:://[ip]:[rtsp_port]/[filename]
+    rtsp://[ip]:[rtsp_port]/[filename]
 例如EasyDarwin服务器地址：8.8.8.8，rtsp_port配置为：8554，MP4文件名：demo.mp4，用vlc或者ffplay等播放器访问：rtsp://8.8.8.8:8554/demo.mp4；
 
 ### 推模式转发 ###
