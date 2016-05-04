@@ -117,6 +117,7 @@ QTSS_Error EasyRelaySession::ProcessData(int _chid, int mediatype, char *pbuf, R
 	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
 	{
 		//printf("Get Audio Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
+
 		if(fPusherHandle == 0 ) return 0;
 
 		if(frameinfo && frameinfo->length)

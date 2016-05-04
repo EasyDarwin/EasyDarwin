@@ -16,7 +16,7 @@
 #define Easy_APICALL 
 #endif
 
-// Handle类型
+// Handle Type
 #define Easy_RTSP_Handle void*
 #define Easy_Pusher_Handle void*
 #define Easy_HLS_Handle void*
@@ -67,6 +67,8 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			//进程名称长度不匹配
 	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			//进程名称不匹配
 	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			//有效期校验不一致
+	EASY_ACTIVATE_PLATFORM_ERR		=		-6,			//平台不匹配
+	EASY_ACTIVATE_COMPANY_ID_LEN_ERR=		-7,			//授权使用商不匹配
 	EASY_ACTIVATE_SUCCESS			=		0,			//激活成功
 
 }EASY_ACTIVATE_ERR_CODE_ENUM;
@@ -74,6 +76,7 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 
 /* 视频编码 */
 #define EASY_SDK_VIDEO_CODEC_H264	0x1C		/* H264  */
+#define EASY_SDK_VIDEO_CODEC_H265	0x48323635	/* 1211250229 */
 #define	EASY_SDK_VIDEO_CODEC_MJPEG	0x08		/* MJPEG */
 #define	EASY_SDK_VIDEO_CODEC_MPEG4	0x0D		/* MPEG4 */
 
@@ -96,6 +99,7 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 #define EASY_SDK_VIDEO_FRAME_I		0x01		/* I帧 */
 #define EASY_SDK_VIDEO_FRAME_P		0x02		/* P帧 */
 #define EASY_SDK_VIDEO_FRAME_B		0x03		/* B帧 */
+#define EASY_SDK_VIDEO_FRAME_J		0x04		/* JPEG */
 
 /* 连接类型 */
 typedef enum __RTP_CONNECT_TYPE
@@ -107,41 +111,43 @@ typedef enum __RTP_CONNECT_TYPE
 /* 媒体信息 */
 typedef struct __EASY_MEDIA_INFO_T
 {
-	Easy_U32 u32VideoCodec;			/* 视频编码类型 */
-	Easy_U32 u32VideoFps;			/* 视频帧率 */
+	Easy_U32 u32VideoCodec;				/* 视频编码类型 */
+	Easy_U32 u32VideoFps;				/* 视频帧率 */
 
-	Easy_U32 u32AudioCodec;			/* 音频编码类型 */
-	Easy_U32 u32AudioSamplerate;	/* 音频采样率 */
-	Easy_U32 u32AudioChannel;		/* 音频通道数 */
+	Easy_U32 u32AudioCodec;				/* 音频编码类型 */
+	Easy_U32 u32AudioSamplerate;		/* 音频采样率 */
+	Easy_U32 u32AudioChannel;			/* 音频通道数 */
+	Easy_U32 u32AudioBitsPerSample;		/* 音频采样精度 */
 
-	Easy_U32 u32H264SpsLength;
-	Easy_U32 u32H264PpsLength;
-	Easy_U8	 u8H264Sps[128];
-	Easy_U8	 u8H264Pps[36];
+	Easy_U32 u32H264SpsLength;			/* 视频sps帧长度 */
+	Easy_U32 u32H264PpsLength;			/* 视频pps帧长度 */
+	Easy_U8	 u8H264Sps[128];			/* 视频sps帧内容 */
+	Easy_U8	 u8H264Pps[36];				/* 视频sps帧内容 */
 }EASY_MEDIA_INFO_T;
 
 /* 帧信息 */
 typedef struct 
 {
-	unsigned int	codec;			/* 音视频格式 */
+	unsigned int	codec;				/* 音视频格式 */
 
-	unsigned int	type;			/* 视频帧类型 */
-	unsigned char	fps;			/* 视频帧率 */
-	unsigned short	width;			/* 视频宽 */
-	unsigned short  height;			/* 视频高 */
+	unsigned int	type;				/* 视频帧类型 */
+	unsigned char	fps;				/* 视频帧率 */
+	unsigned short	width;				/* 视频宽 */
+	unsigned short  height;				/* 视频高 */
 
-	unsigned int	reserved1;		/* 保留参数1 */
-	unsigned int	reserved2;		/* 保留参数2 */
+	unsigned int	reserved1;			/* 保留参数1 */
+	unsigned int	reserved2;			/* 保留参数2 */
 
-	unsigned int	sample_rate;	/* 音频采样率 */
-	unsigned int	channels;		/* 音频声道数 */
+	unsigned int	sample_rate;		/* 音频采样率 */
+	unsigned int	channels;			/* 音频声道数 */
+	unsigned int	bits_per_sample;	/* 音频采样精度 */
 
-	unsigned int	length;			/* 音视频帧大小 */
-	unsigned int    timestamp_usec;	/* 时间戳,微妙 */
-	unsigned int	timestamp_sec;	/* 时间戳 秒 */
+	unsigned int	length;				/* 音视频帧大小 */
+	unsigned int    timestamp_usec;		/* 时间戳,微妙 */
+	unsigned int	timestamp_sec;		/* 时间戳 秒 */
 	
-	float			bitrate;		/* 比特率 */
-	float			losspacket;		/* 丢包率 */
+	float			bitrate;			/* 比特率 */
+	float			losspacket;			/* 丢包率 */
 }RTSP_FRAME_INFO;
 
 #endif
