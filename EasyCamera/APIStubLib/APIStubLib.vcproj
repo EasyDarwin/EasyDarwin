@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..;../CommonUtilitiesLib/"
+				AdditionalIncludeDirectories="..;../../CommonUtilitiesLib/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/APIStubLib.pch"
@@ -127,7 +127,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
