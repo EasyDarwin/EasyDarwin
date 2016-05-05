@@ -1,13 +1,13 @@
 <CONFIGURATION>
 	<SERVER>
 		<PREF NAME="connection_timeout" TYPE="UInt32" >0</PREF>
-		<PREF NAME="cms_addr" >www.easydarwin.org</PREF>
+		<PREF NAME="cms_addr" >www.easydss.com</PREF>
 		<PREF NAME="cms_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="local_camera_addr" >192.168.66.189</PREF>
 		<PREF NAME="local_camera_port" TYPE="UInt16" >80</PREF>
-		<PREF NAME="serial_number" >000000000000</PREF>
+		<PREF NAME="serial_number" >cam_00000001</PREF>
 		<PREF NAME="camera_stream_type" TYPE="UInt32" >0</PREF>
-		<PREF NAME="rtsp_server_addr" >115.29.139.20</PREF>
+		<PREF NAME="rtsp_server_addr" >www.easydss.com</PREF>
 		<PREF NAME="rtsp_server_port" TYPE="UInt16" >554</PREF>
 		<PREF NAME="error_logfile_name" >easycamera</PREF>
 		<PREF NAME="error_logfile_dir" >./Logs/</PREF>
