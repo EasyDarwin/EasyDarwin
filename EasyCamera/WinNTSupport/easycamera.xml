@@ -24,4 +24,13 @@
 		<PREF NAME="run_num_blocking_threads" TYPE="UInt32" >2</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
+	<MODULE NAME="EasyCMSModule" >
+		<PREF NAME="easycms_ip" >127.0.0.1</PREF>
+		<PREF NAME="easycms_port" TYPE="UInt16" >10000</PREF>
+		<PREF NAME="device_serial" >NVR00000001</PREF>
+		<PREF NAME="device_name" >EasyNVR001</PREF>
+		<PREF NAME="device_key" >123456</PREF>
+		<PREF NAME="device_tag" >EasyNVRTag001</PREF>
+		<PREF NAME="keep_alive_interval" TYPE="UInt32" >60</PREF>
+	</MODULE>
 </CONFIGURATION>

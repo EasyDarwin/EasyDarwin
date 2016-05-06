@@ -347,8 +347,7 @@ void WINAPI ServiceControl(DWORD inControlCode)
     if (theServer != NULL)
     {
         theState = theServer->GetServerState();
-        
-        //
+
         // Convert a QTSS state to a Win32 Service state
         switch (theState)
         {

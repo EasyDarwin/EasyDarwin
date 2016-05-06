@@ -24,7 +24,6 @@
  */
 /*
     File:       QTSServer.cpp
-
     Contains:   Implements object defined in QTSServer.h
 */
 
@@ -55,6 +54,7 @@
 
 //Compile time modules
 #include "QTSSErrorLogModule.h"
+#include "EasyCMSModule.h"
 
 #include "QTSSFile.h"
 #include "OS.h"
@@ -206,9 +206,9 @@ void QTSServer::StartTasks()
 	//	EasyCMS_Login(fCMSHandle,cmsIP, cmsPort, serial, password);
 	//}
 
-	//CMS Session 必须创建在API调用之后
-	fMediaSource = new EasyMediaSource();
-	fMediaSource->StartStreaming();
+	////CMS Session 必须创建在API调用之后
+	//fMediaSource = new EasyMediaSource();
+	//fMediaSource->StartStreaming();
 
     // Start listening
     for (UInt32 x = 0; x < fNumListeners; x++)
@@ -228,6 +228,11 @@ void    QTSServer::LoadCompiledInModules()
     // The following modules are all compiled into the server. 
 
 #endif //DSS_DYNAMIC_MODULES_ONLY
+
+	QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");
+    (void)theCMSModule->SetupModule(&sCallbacks, &EasyCMSModule_Main);
+    (void)AddModule(theCMSModule);
+
 }
 
 void    QTSServer::InitCallbacks()

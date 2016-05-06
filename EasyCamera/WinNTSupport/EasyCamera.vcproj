@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/"
+				AdditionalIncludeDirectories="../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/EasyCMSModule/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/EasyDarwin.pch"
@@ -228,100 +228,76 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
-			<File
-				RelativePath="..\PrefsSourceLib\FilePrefsSource.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\SafeStdLib\InternalStdLib.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\PrefsSourceLib\XMLParser.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\PrefsSourceLib\XMLPrefsParser.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-			</File>
 			<Filter
 				Name="API Modules"
 				>
+				<Filter
+					Name="EasyCMSModule"
+					>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyCMSModule.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyCMSModule.h"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyCMSSession.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyCMSSession.h"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyHTTPClient.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyHTTPClient.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Core"
 				>
 				<File
+					RelativePath="..\Server.tproj\ClientSocket.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\ClientSocket.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\EasyMediaSource.cpp"
 					>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\FilePrefsSource.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\Server.tproj\GenerateXMLPrefs.cpp"
@@ -346,6 +322,34 @@
 							ForcedIncludeFiles=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPRequestStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPRequestStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPResponseStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPResponseStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\SafeStdLib\InternalStdLib.cpp"
+					>
 				</File>
 				<File
 					RelativePath="..\..\OSMemoryLib\OSMemory.cpp"
@@ -689,6 +693,54 @@
 				</File>
 				<File
 					RelativePath="..\Server.tproj\win32main.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\XMLParser.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories=""
+							PreprocessorDefinitions=""
+							ForcedIncludeFiles=""
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\XMLPrefsParser.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
