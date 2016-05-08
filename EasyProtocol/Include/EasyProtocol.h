@@ -278,23 +278,23 @@ public:
 };
 
 
-class Easy_API EasyDarwinEasyHLSAck : public EasyProtocol
+class Easy_API EasyMsgSCStartHLSACK : public EasyProtocol
 {
 public:
-	EasyDarwinEasyHLSAck();
-	EasyDarwinEasyHLSAck(const char *msg);
-	~EasyDarwinEasyHLSAck(){}
+	EasyMsgSCStartHLSACK();
+	EasyMsgSCStartHLSACK(const char *msg);
+	~EasyMsgSCStartHLSACK(){}
 
 	void SetStreamName(const char* sName);
 	void SetStreamURL(const char* sURL);
 };
 
-class Easy_API EasyDarwinHLSessionListAck : public EasyProtocol
+class Easy_API EasyMsgSCHLSessionListACK : public EasyProtocol
 {
 public:
-	EasyDarwinHLSessionListAck();
-	EasyDarwinHLSessionListAck(const char* msg);
-	virtual ~EasyDarwinHLSessionListAck(){}
+	EasyMsgSCHLSessionListACK();
+	EasyMsgSCHLSessionListACK(const char* msg);
+	virtual ~EasyMsgSCHLSessionListACK(){}
 
 public:
 	bool AddSession(EasyDarwinHLSession &session);
@@ -304,12 +304,12 @@ public:
 private:
 	list<EasyDarwinHLSession> sessions;
 };
-class Easy_API EasyDarwinRTSPPushSessionListAck : public EasyProtocol
+class Easy_API EasyMsgSCRTSPPushSessionListACK : public EasyProtocol
 {
 public:
-	EasyDarwinRTSPPushSessionListAck();
-	EasyDarwinRTSPPushSessionListAck(const char* msg);
-	virtual ~EasyDarwinRTSPPushSessionListAck(){}
+	EasyMsgSCRTSPPushSessionListACK();
+	EasyMsgSCRTSPPushSessionListACK(const char* msg);
+	virtual ~EasyMsgSCRTSPPushSessionListACK(){}
 
 public:
 	bool AddSession(EasyDarwinRTSPSession &session);

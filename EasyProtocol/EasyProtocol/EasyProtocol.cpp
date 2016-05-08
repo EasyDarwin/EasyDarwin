@@ -282,37 +282,37 @@ EasyDarwinDeviceSnapUpdateAck::EasyDarwinDeviceSnapUpdateAck(const char *msg)
 }
 */
 
-EasyDarwinEasyHLSAck::EasyDarwinEasyHLSAck()
-: EasyProtocol(MSG_CLI_SMS_HLS_ACK)
+EasyMsgSCStartHLSACK::EasyMsgSCStartHLSACK()
+: EasyProtocol(MSG_SC_START_HLS_ACK)
 {
 }
 
-EasyDarwinEasyHLSAck::EasyDarwinEasyHLSAck(const char *msg)
-: EasyProtocol(msg, MSG_CLI_SMS_HLS_ACK)
+EasyMsgSCStartHLSACK::EasyMsgSCStartHLSACK(const char *msg)
+: EasyProtocol(msg, MSG_SC_START_HLS_ACK)
 {
 }
 
-void EasyDarwinEasyHLSAck::SetStreamName(const char* sName)
+void EasyMsgSCStartHLSACK::SetStreamName(const char* sName)
 {
 	SetBodyValue("name", sName);
 }
 
-void EasyDarwinEasyHLSAck::SetStreamURL(const char* sURL)
+void EasyMsgSCStartHLSACK::SetStreamURL(const char* sURL)
 {
 	SetBodyValue("url", sURL);
 }
 
-EasyDarwinHLSessionListAck::EasyDarwinHLSessionListAck()
-: EasyProtocol(MSG_CLI_SMS_HLS_LIST_ACK)
+EasyMsgSCHLSessionListACK::EasyMsgSCHLSessionListACK()
+: EasyProtocol(MSG_SC_HLS_SESSION_LIST_ACK)
 {
 }
 
-EasyDarwinHLSessionListAck::EasyDarwinHLSessionListAck(const char* msg)
-: EasyProtocol(msg, MSG_CLI_SMS_HLS_LIST_ACK)
+EasyMsgSCHLSessionListACK::EasyMsgSCHLSessionListACK(const char* msg)
+: EasyProtocol(msg, MSG_SC_HLS_SESSION_LIST_ACK)
 {
 }
 
-bool EasyDarwinHLSessionListAck::AddSession(EasyDarwinHLSession &session)
+bool EasyMsgSCHLSessionListACK::AddSession(EasyDarwinHLSession &session)
 {	
 	Json::Value value;
 	value["index"] = session.index;
@@ -478,16 +478,16 @@ EasyMsgExceptionACK::EasyMsgExceptionACK(size_t cseq, size_t error)
 	SetHeaderValue("ErrorString", GetErrorString(error));
 }
 
-EasyDarwinRTSPPushSessionListAck::EasyDarwinRTSPPushSessionListAck()
-: EasyProtocol(MSG_CLI_SMS_PUSH_SESSION_LIST_ACK)
+EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK()
+: EasyProtocol(MSG_SC_PUSH_SESSION_LIST_ACK)
 {
 }
 
-EasyDarwinRTSPPushSessionListAck::EasyDarwinRTSPPushSessionListAck(const char* msg)
-: EasyProtocol(msg, MSG_CLI_SMS_PUSH_SESSION_LIST_ACK)
+EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK(const char* msg)
+: EasyProtocol(msg, MSG_SC_PUSH_SESSION_LIST_ACK)
 {
 }
-bool EasyDarwinRTSPPushSessionListAck::AddSession(EasyDarwinRTSPSession &session)
+bool EasyMsgSCRTSPPushSessionListACK::AddSession(EasyDarwinRTSPSession &session)
 {	
 	Json::Value value;
 	value["index"] = session.index;

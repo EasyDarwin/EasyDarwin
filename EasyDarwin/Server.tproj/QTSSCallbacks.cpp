@@ -1003,7 +1003,7 @@ void* QTSSCallbacks::Easy_GetHLSessions()
 {
 	OSRefTable* hlsMap = QTSServerInterface::GetServer()->GetHLSSessionMap();
 
-	EasyDarwinHLSessionListAck ack;
+	EasyMsgSCHLSessionListACK ack;
 	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
 	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");	
 	char count[16] = { 0 };
@@ -1042,7 +1042,7 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 {
 	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 
-	EasyDarwinRTSPPushSessionListAck ack;
+	EasyMsgSCRTSPPushSessionListACK ack;
 	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
 	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");
 

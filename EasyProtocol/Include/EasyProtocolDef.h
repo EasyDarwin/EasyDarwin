@@ -123,9 +123,9 @@
 
 
 //±£¡Ù
-#define MSG_CLI_SMS_HLS_ACK									0xeee0
-#define MSG_CLI_SMS_HLS_LIST_ACK							0xeee1
-#define MSG_CLI_SMS_PUSH_SESSION_LIST_ACK					0xeee2
+#define MSG_SC_START_HLS_ACK									0xeee0
+#define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
+#define MSG_SC_PUSH_SESSION_LIST_ACK					0xeee2
 //±£¡Ù
 
 #define MSG_SC_EXCEPTION									0xeeee
