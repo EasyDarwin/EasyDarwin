@@ -30,7 +30,6 @@ Contains:    µœ÷∂‘∑˛ŒÒµ•‘™√ø“ª∏ˆSessionª·ª∞µƒÕ¯¬Á±®Œƒ¥¶¿Ì
 
 using namespace std;
 
-static StrPtrLen	sServiceStr("EasyDarwin_CMS");
 static const int sWaitDeviceRspTimeout = 10;
 
 
@@ -189,7 +188,7 @@ SInt64 HTTPSession::Run()
 
 				Assert(fRequest == NULL);
 				//∏˘æ›æﬂÃÂ«Î«Û±®Œƒππ‘ÏHTTPRequest«Î«Û¿‡
-				fRequest = NEW HTTPRequest(&sServiceStr, fInputStream.GetRequestBuffer());
+				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 				//‘⁄’‚¿Ô£¨Œ“√«“—æ≠∂¡»°¡À“ª∏ˆÕÍ’˚µƒRequest£¨≤¢◊º±∏Ω¯––«Î«Ûµƒ¥¶¿Ì£¨÷±µΩœÏ”¶±®Œƒ∑¢≥ˆ
 				//‘⁄¥Àπ˝≥Ã÷–£¨¥ÀSessionµƒSocket≤ªΩ¯––»Œ∫ŒÕ¯¬Á ˝æ›µƒ∂¡/–¥£ª
@@ -360,7 +359,7 @@ HTTP≤ø∑÷ππ‘Ï£¨json≤ø∑÷”…∫Ø ˝¥´µ›
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(contentXML->Len?httpOK:httpNotImplemented);
 	if (contentXML->Len)
 		httpAck.AppendContentLengthHeader(contentXML->Len);
@@ -446,7 +445,7 @@ QTSS_Error HTTPSession::SetupRequest()
 			EasyDarwinExceptionRsp rsp;
 			string msg = rsp.GetMsg();
 			//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-			HTTPRequest httpAck(&sServiceStr, httpResponseType);
+			HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 			httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
 			if (!msg.empty())
 				httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -654,7 +653,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 	//StrPtrLen jsonRSP((char*)msg.c_str());
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -715,7 +714,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReq(char *queryString)
 	//StrPtrLen msgJson((char*)msg.c_str());
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -775,7 +774,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetCameraListReq(const string& device_serial, 
 	//StrPtrLen msgJson((char*)msg.c_str());
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -913,7 +912,7 @@ QTSS_Error HTTPSession::ExecNetMsgStartStreamReq(const string& device_serial, ch
 	//StrPtrLen msgJson((char*)msg.c_str());
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1063,7 +1062,7 @@ QTSS_Error HTTPSession::ExecNetMsgStopStreamReq(const string& device_serial, cha
 	//StrPtrLen msgJson((char*)msg.c_str());
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1169,7 +1168,7 @@ QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)//…Ë±∏øÏ’’«Î«Û
 
 	//QTSS_SendHTTPPacket(this, (char*)msg.c_str(), msg.length(), false, false);
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1243,7 +1242,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReqEx(const char* json)//…Ë±∏◊¢≤·»œ
 	string msg = rsp.GetMsg();
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1582,7 +1581,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStartReq(const char* json)//øÕªß∂Àø™ º¡˜
 	string msg = rsp.GetMsg();
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1689,7 +1688,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReqEx(char *queryString)//øÕªß∂Àª
 	string msg = rsp.GetMsg();
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1750,7 +1749,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReqJsonEx(const char *json)//øÕªß
 	string msg = rsp.GetMsg();
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1817,7 +1816,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetCameraListReqEx(char* queryString)
 	string msg = rsp.GetMsg();
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -1884,7 +1883,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetCameraListReqJsonEx(const char* json)
 	string msg = rsp.GetMsg();
 
 	//ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	HTTPRequest httpAck(&sServiceStr, httpResponseType);
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
 		httpAck.AppendContentLengthHeader((UInt32)msg.length());
@@ -2007,7 +2006,7 @@ QTSS_Error HTTPSession::ProcessRequest()//¥¶¿Ì«Î«Û
 		rsp.SetHead(header);
 		string msg = rsp.GetMsg();
 		//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-		HTTPRequest httpAck(&sServiceStr, httpResponseType);
+		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 		httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 		if (!msg.empty())
 			httpAck.AppendContentLengthHeader((UInt32)msg.length());
