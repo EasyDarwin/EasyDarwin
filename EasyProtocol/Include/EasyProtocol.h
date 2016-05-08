@@ -32,17 +32,17 @@ public:
 public:
 	string serial_;
 	string name_;
-	string status_;//online/offline
+	string status_;	//online/offline
 	string password_;
 	string tag_;
 	string channel_;
 };
 
-typedef vector<EasyDevice> EasyDevices;//摄像头数组
+typedef vector<EasyDevice> EasyDevices;		//摄像头数组
 typedef EasyDevices::iterator EasyDevicesIterator;
 
 typedef boost::variant<int, float, string> value_t;
-typedef map<string, value_t> EasyJsonValue;//key为string,value可以是int、float、string的一种
+typedef map<string, value_t> EasyJsonValue;	//key为string,value可以是int、float、string的一种
 typedef void* EasyObject;
 
 
@@ -81,12 +81,14 @@ public:
 };
 
 typedef map<string, EasyNVR> EasyNVRs;//维护所有的NVR
-class Easy_API EasyDarwinRegisterReq : public EasyProtocol//封装NVR的注册请求
+
+// MSG_DS_REGISTER_REQ
+class Easy_API EasyMsgDSRegisterREQ : public EasyProtocol	//封装NVR的注册请求
 {
 public:
-	EasyDarwinRegisterReq(EasyNVR &nvr, size_t cseq = 1);
-	EasyDarwinRegisterReq(const char* msg);
-	virtual ~EasyDarwinRegisterReq(){}
+	EasyMsgDSRegisterREQ(EasyNVR &nvr, size_t cseq = 1);
+	EasyMsgDSRegisterREQ(const char* msg);
+	virtual ~EasyMsgDSRegisterREQ(){}
 
 public:
 	EasyNVR& GetNVR(){ return nvr_; }
@@ -95,55 +97,58 @@ private:
 	EasyNVR nvr_;
 };
 
-
-class Easy_API EasyDarwinRegisterRSP : public EasyProtocol//封装NVR的注册回应
+// MSG_SD_REGISTER_ACK
+class Easy_API EasyMsgSDRegisterACK : public EasyProtocol	//封装NVR的注册回应
 {
 public:
-	EasyDarwinRegisterRSP(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyDarwinRegisterRSP(const char* msg);
-	virtual ~EasyDarwinRegisterRSP(){}
-};
-class EasyDarwinDeviceStreamReq : public EasyProtocol
-{
-public:
-	EasyDarwinDeviceStreamReq(EasyJsonValue &body, size_t cseq);
-	EasyDarwinDeviceStreamReq(const char* msg);
-	~EasyDarwinDeviceStreamReq(){}
+	EasyMsgSDRegisterACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
+	EasyMsgSDRegisterACK(const char* msg);
+	virtual ~EasyMsgSDRegisterACK(){}
 };
 
-class EasyDarwinDeviceStreamRsp : public EasyProtocol
+// MSG_SD_PUSH_STREAM_REQ
+class EasyMsgSDPushStreamREQ : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceStreamRsp(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyDarwinDeviceStreamRsp(const char* msg);
-	~EasyDarwinDeviceStreamRsp(){}
+	EasyMsgSDPushStreamREQ(EasyJsonValue &body, size_t cseq);
+	EasyMsgSDPushStreamREQ(const char* msg);
+	~EasyMsgSDPushStreamREQ(){}
 };
 
-
-
-class EasyDarwinDeviceStreamStop : public EasyProtocol
+// MSG_DS_PUSH_STREAM_ACK
+class EasyMsgDSPushSteamACK : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceStreamStop(EasyJsonValue &body, size_t cseq = 1);
-	EasyDarwinDeviceStreamStop(const char* msg);
-	~EasyDarwinDeviceStreamStop(){}
+	EasyMsgDSPushSteamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
+	EasyMsgDSPushSteamACK(const char* msg);
+	~EasyMsgDSPushSteamACK(){}
 };
 
-class EasyDarwinDeviceStreamStopRsp : public EasyProtocol
+// MSG_SD_STREAM_STOP_REQ
+class EasyMsgSDStopStreamREQ : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceStreamStopRsp(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyDarwinDeviceStreamStopRsp(const char* msg);
-	~EasyDarwinDeviceStreamStopRsp(){}
+	EasyMsgSDStopStreamREQ(EasyJsonValue &body, size_t cseq = 1);
+	EasyMsgSDStopStreamREQ(const char* msg);
+	~EasyMsgSDStopStreamREQ(){}
 };
 
-//nvr list response
-class EasyDarwinDeviceListRsp : public EasyProtocol
+// MSG_DS_STREAM_STOP_ACK
+class EasyMsgDSStopStreamACK : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceListRsp(EasyDevices &devices, size_t cseq = 1, size_t error = 200);
-	EasyDarwinDeviceListRsp(const char* msg);
-	~EasyDarwinDeviceListRsp(){}
+	EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
+	EasyMsgDSStopStreamACK(const char* msg);
+	~EasyMsgDSStopStreamACK(){}
+};
+
+// MSG_SC_DEVICE_LIST_ACK
+class EasyMsgSCDeviceListACK : public EasyProtocol
+{
+public:
+	EasyMsgSCDeviceListACK(EasyDevices &devices, size_t cseq = 1, size_t error = 200);
+	EasyMsgSCDeviceListACK(const char* msg);
+	~EasyMsgSCDeviceListACK(){}
 
 	EasyDevices& GetDevices() { return devices_; }
 
@@ -151,13 +156,13 @@ private:
 	EasyDevices devices_;
 };
 
-//camera list response
-class EasyDarwinCameraListRsp : public EasyProtocol
+// MSG_SC_DEVICE_INFO_ACK
+class EasyMsgSCDeviceInfoACK : public EasyProtocol
 {
 public:
-	EasyDarwinCameraListRsp(EasyDevices &cameras, string devcei_serial, size_t cseq = 1, size_t error = 200);
-	EasyDarwinCameraListRsp(const char* msg);
-	~EasyDarwinCameraListRsp() {}
+	EasyMsgSCDeviceInfoACK(EasyDevices &cameras, string devcei_serial, size_t cseq = 1, size_t error = 200);
+	EasyMsgSCDeviceInfoACK(const char* msg);
+	~EasyMsgSCDeviceInfoACK() {}
 
 	EasyDevices& GetCameras() { return cameras_; }
 
@@ -165,43 +170,47 @@ private:
 	EasyDevices cameras_;
 };
 
-class EasyDarwinClientStartStreamRsp : public EasyProtocol
+// MSG_SC_GET_STREAM_ACK
+class EasyMsgSCGetStreamACK : public EasyProtocol
 {
 public:
-	EasyDarwinClientStartStreamRsp(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyDarwinClientStartStreamRsp(const char* msg);
-	~EasyDarwinClientStartStreamRsp(){}
+	EasyMsgSCGetStreamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
+	EasyMsgSCGetStreamACK(const char* msg);
+	~EasyMsgSCGetStreamACK(){}
 };
 
-class EasyDarwinClientStopStreamRsp : public EasyProtocol
+// MSG_SC_FREE_STREAM_ACK
+class EasyMsgSCFreeStreamACK : public EasyProtocol
 {
 public:
-	EasyDarwinClientStopStreamRsp(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyDarwinClientStopStreamRsp(const char* msg);
-	~EasyDarwinClientStopStreamRsp() {}
+	EasyMsgSCFreeStreamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
+	EasyMsgSCFreeStreamACK(const char* msg);
+	~EasyMsgSCFreeStreamACK() {}
 };
 
-class EasyDarwinDeviceUpdateSnapReq : public EasyProtocol
+// MSG_DS_POST_SNAP_REQ
+class EasyMsgDSPostSnapREQ : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceUpdateSnapReq(EasyJsonValue &body, size_t cseq = 1);
-	EasyDarwinDeviceUpdateSnapReq(const char* msg);
-	~EasyDarwinDeviceUpdateSnapReq() {}
+	EasyMsgDSPostSnapREQ(EasyJsonValue &body, size_t cseq = 1);
+	EasyMsgDSPostSnapREQ(const char* msg);
+	~EasyMsgDSPostSnapREQ() {}
 };
 
-class EasyDarwinDeviceUpdateSnapRsp : public EasyProtocol
+// MSG_SD_POST_SNAP_ACK
+class EasyMsgSDPostSnapACK : public EasyProtocol
 {
 public:
-	EasyDarwinDeviceUpdateSnapRsp(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyDarwinDeviceUpdateSnapRsp(const char* msg);
-	~EasyDarwinDeviceUpdateSnapRsp() {}
+	EasyMsgSDPostSnapACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
+	EasyMsgSDPostSnapACK(const char* msg);
+	~EasyMsgSDPostSnapACK() {}
 };
 
-class EasyDarwinExceptionRsp : public EasyProtocol
+class EasyMsgExceptionACK : public EasyProtocol
 {
 public:
-	EasyDarwinExceptionRsp(size_t cseq = 1, size_t error = 400);
-	~EasyDarwinExceptionRsp() {}
+	EasyMsgExceptionACK(size_t cseq = 1, size_t error = 400);
+	~EasyMsgExceptionACK() {}
 };
 
 
