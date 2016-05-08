@@ -35,6 +35,7 @@ EasyDevice::EasyDevice(std::string channel, std::string name, std::string status
 EasyNVR::EasyNVR()
 {
 }
+
 EasyNVR::EasyNVR(std::string serial, std::string name, std::string password, string tag, EasyDevices &channel)
 : channels_(channel)
 {
@@ -44,27 +45,34 @@ EasyNVR::EasyNVR(std::string serial, std::string name, std::string password, str
 	tag_ = tag;
 }
 
-EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyNVR &nvr, size_t cseq)
+// MSG_DS_REGISTER_REQ消息报文构造
+EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, EasyDarwinAppType appType, EasyNVR &nvr, size_t cseq)
 : EasyProtocol(MSG_DS_REGISTER_REQ)
 , nvr_(nvr)
 {
 	SetHeaderValue("CSeq", cseq);
-	
-	SetBodyValue("DeviceSerial", nvr.serial_);
-	SetBodyValue("DeviceName", nvr.name_);
-	SetBodyValue("DeviceTag", nvr.tag_);
-	SetBodyValue("AuthCode", nvr.password_);
-	SetBodyValue("CameraCount", nvr.channels_.size());
-	for(EasyDevices::iterator it = nvr.channels_.begin(); it != nvr.channels_.end(); it++)
+	SetHeaderValue("AppType", EasyProtocol::GetAppTypeString(appType));
+	SetHeaderValue("TerminalType", EasyProtocol::GetTerminalTypeString(terminalType));
+
+	SetBodyValue("Serial", nvr.serial_);
+	SetBodyValue("Name", nvr.name_);
+	SetBodyValue("Tag", nvr.tag_);
+	SetBodyValue("Token", nvr.password_);
+	if(appType == EASY_APP_TYPE_NVR)
 	{
-		Json::Value value;
-		value["CameraSerial"] = it->serial_;
-		value["CameraName"] = it->name_;		
-		value["Status"] = it->status_;
-		root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].append(value);		
+		SetBodyValue("ChannelCount", nvr.channels_.size());
+		for(EasyDevices::iterator it = nvr.channels_.begin(); it != nvr.channels_.end(); it++)
+		{
+			Json::Value value;
+			value["Channel"] = it->serial_;
+			value["Name"] = it->name_;		
+			value["Status"] = it->status_;
+			root[EASY_TAG_ROOT][EASY_TAG_BODY]["Channels"].append(value);		
+		}
 	}
 }
 
+// MSG_DS_REGISTER_REQ消息报文解析
 EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 : EasyProtocol(msg, MSG_DS_REGISTER_REQ)
 {
@@ -88,7 +96,7 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 	}  
 }
 
-
+// MSG_SD_REGISTER_ACK消息构造
 EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(EasyJsonValue &body, size_t cseq, size_t error)
 : EasyProtocol(MSG_SD_REGISTER_ACK)
 {
@@ -102,11 +110,13 @@ EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(EasyJsonValue &body, size_t cseq, siz
 	}
 }
 
+// MSG_SD_REGISTER_ACK消息解析
 EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(const char* msg)
 : EasyProtocol(msg, MSG_SD_REGISTER_ACK)
 {
 }
 
+// MSG_SD_PUSH_STREAM_REQ消息构造
 EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(EasyJsonValue &body, size_t cseq)
 : EasyProtocol(MSG_SD_PUSH_STREAM_REQ)
 {
@@ -118,11 +128,13 @@ EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(EasyJsonValue &body, size_t cseq)
 	}
 }
 
+// MSG_SD_PUSH_STREAM_REQ消息解析
 EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(const char *msg)
 : EasyProtocol(msg, MSG_SD_PUSH_STREAM_REQ)
 {
 }
 
+// MSG_DS_PUSH_STREAM_ACK消息构造
 EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(EasyJsonValue &body, size_t cseq, size_t error)
 : EasyProtocol(MSG_DS_PUSH_STREAM_ACK)
 {
@@ -136,11 +148,13 @@ EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(EasyJsonValue &body, size_t cseq, s
 	}
 }
 
+// MSG_DS_PUSH_STREAM_ACK消息解析
 EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(const char *msg)
 : EasyProtocol(msg, MSG_DS_PUSH_STREAM_ACK)
 {
 }
 
+// MSG_SD_STREAM_STOP_REQ消息构造
 EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(EasyJsonValue &body, size_t cseq)
 :EasyProtocol(MSG_SD_STREAM_STOP_REQ)
 {
@@ -152,11 +166,13 @@ EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(EasyJsonValue &body, size_t cseq)
 	}
 }
 
+// MSG_SD_STREAM_STOP_REQ消息解析
 EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(const char *msg)
 : EasyProtocol(msg, MSG_SD_STREAM_STOP_REQ)
 {
 }
 
+// MSG_SD_STREAM_STOP_REQ消息构造
 EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq, size_t error)
 : EasyProtocol(MSG_SD_STREAM_STOP_REQ)
 {
@@ -170,6 +186,7 @@ EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq,
 	}
 }
 
+// MSG_SD_STREAM_STOP_REQ消息解析
 EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(const char *msg)
 : EasyProtocol(msg, MSG_SD_STREAM_STOP_REQ)
 {

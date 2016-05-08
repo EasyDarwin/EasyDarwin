@@ -31,67 +31,67 @@
 \{
 */
 #define EASY_TAG_ROOT									"EasyDarwin"
-#define EASY_TAG_HEADER								"Header"
+#define EASY_TAG_HEADER									"Header"
 #define EASY_TAG_BODY									"Body"
 #define EASY_TAG_VERSION								"Version"
-#define EASY_TAG_TERMINAL_TYPE                        "TerminalType"
-#define EASY_TAG_SESSION_ID							"SessionID"
+#define EASY_TAG_TERMINAL_TYPE							"TerminalType"
+#define EASY_TAG_SESSION_ID								"SessionID"
 #define EASY_TAG_MESSAGE_TYPE							"MessageType"
 #define EASY_TAG_CSEQ									"CSeq"
-#define EASY_TAG_ERROR_NUM							"ErrorNum"
+#define EASY_TAG_ERROR_NUM								"ErrorNum"
 #define EASY_TAG_ERROR_STRING							"ErrorString"
-#define EASY_TAG_REDIRECT                             "Redirect"
-#define EASY_TAG_SERVER_ADDRESS                       "ServerAddress"
-#define EASY_TAG_SERVER_PORT                          "ServerPort"
-#define EASY_TAG_KEY                                  "Key"
+#define EASY_TAG_REDIRECT								"Redirect"
+#define EASY_TAG_SERVER_ADDRESS							"ServerAddress"
+#define EASY_TAG_SERVER_PORT							"ServerPort"
+#define EASY_TAG_KEY									"Key"
 #define EASY_TAG_NAME									"Name"
-#define EASY_TAG_PASSWORD                             "Password"
+#define EASY_TAG_PASSWORD								"Password"
 #define EASY_TAG_LAST_LOGIN_TIME						"LastLoginTime"
-#define EASY_TAG_LAST_LOGIN_ADDRESS					"LastLoginAddress"
-#define EASY_TAG_PERMISSION							"Permission"
-#define EASY_TAG_PAGE_NUM                             "PageNum"
-#define EASY_TAG_DEVICE                               "Device"
+#define EASY_TAG_LAST_LOGIN_ADDRESS						"LastLoginAddress"
+#define EASY_TAG_PERMISSION								"Permission"
+#define EASY_TAG_PAGE_NUM								"PageNum"
+#define EASY_TAG_DEVICE									"Device"
 #define EASY_TAG_DEVICE_TYPE							"DeviceType"
-#define EASY_TAG_DEVICE_SUM_PER_PAGE                  "DeviceSumPerPage"
-#define EASY_TAG_DEVICE_SUM                           "DeviceSum"
-#define EASY_TAG_DEVICE_LIST                          "DeviceList"
-#define EASY_TAG_DEVICE_SERIAL                        "SerialNumber"
-#define EASY_TAG_DEVICE_NAME                          "DeviceName"
+#define EASY_TAG_DEVICE_SUM_PER_PAGE					"DeviceSumPerPage"
+#define EASY_TAG_DEVICE_SUM								"DeviceSum"
+#define EASY_TAG_DEVICE_LIST							"DeviceList"
+#define EASY_TAG_DEVICE_SERIAL							"SerialNumber"
+#define EASY_TAG_DEVICE_NAME							"DeviceName"
 #define EASY_TAG_INVALID_ACCESS_DATE					"InvalidAccessDate"
 #define EASY_TAG_INVALID_ACCESS_TIME					"InvalidAccessTime"
-#define EASY_TAG_FROM                                 "From"
-#define EASY_TAG_TO                                   "To"
-#define EASY_TAG_STATUS                               "Status"
-#define EASY_TAG_SNAPSHOT                             "Snapshot"
-#define EASY_TAG_DESCRIPTION                          "Description"
-#define EASY_TAG_TOKEN                                "Token"
-#define EASY_TAG_CUSTOM_FIELD                         "CustomField"
-#define EASY_TAG_ORDER                                "Order"
-#define EASY_TAG_SERVICE_TYPE                         "ServiceType"
-#define EASY_TAG_SERVICE_UNIT                         "ServiceUnit"
-#define EASY_TAG_WAN_IP                               "WanIP"
-#define EASY_TAG_LAN_IP                               "LanIP"
-#define EASY_TAG_PORT                                 "Port"
-#define EASY_TAG_LOAD                                 "Load"
+#define EASY_TAG_FROM									"From"
+#define EASY_TAG_TO										"To"
+#define EASY_TAG_STATUS									"Status"
+#define EASY_TAG_SNAPSHOT								"Snapshot"
+#define EASY_TAG_DESCRIPTION							"Description"
+#define EASY_TAG_TOKEN									"Token"
+#define EASY_TAG_CUSTOM_FIELD							"CustomField"
+#define EASY_TAG_ORDER									"Order"
+#define EASY_TAG_SERVICE_TYPE							"ServiceType"
+#define EASY_TAG_SERVICE_UNIT							"ServiceUnit"
+#define EASY_TAG_WAN_IP									"WanIP"
+#define EASY_TAG_LAN_IP									"LanIP"
+#define EASY_TAG_PORT									"Port"
+#define EASY_TAG_LOAD									"Load"
 #define EASY_TAG_USER									"User"
-#define EASY_TAG_USER_NAME							"UserName"
+#define EASY_TAG_USER_NAME								"UserName"
 #define EASY_TAG_PROTOCOL								"Protocol"
-#define EASY_TAG_AUDIO								"Audio"
-#define EASY_TAG_VIDEO								"Video"
+#define EASY_TAG_AUDIO									"Audio"
+#define EASY_TAG_VIDEO									"Video"
 #define EASY_TAG_CMD									"Command"
-#define EASY_TAG_VALUE								"Value"
-#define EASY_TAG_CLIENT_SERIAL						"ClientSerial"
-#define EASY_TAG_LIVE_STREAM_ID						"LiveStreamID"
-#define EASY_TAG_CLIENT_SESSION						"ClientSession"
-#define EASY_TAG_IP									"IP"
-#define EASY_TAG_LIVE_TYPE							"LiveType"
+#define EASY_TAG_VALUE									"Value"
+#define EASY_TAG_CLIENT_SERIAL							"ClientSerial"
+#define EASY_TAG_LIVE_STREAM_ID							"LiveStreamID"
+#define EASY_TAG_CLIENT_SESSION							"ClientSession"
+#define EASY_TAG_IP										"IP"
+#define EASY_TAG_LIVE_TYPE								"LiveType"
 #define EASY_TAG_USER_PLAY_COUNT						"UserPlayCount"
 #define EASY_TAG_PROXY_PLAY_COUNT						"ProxyPlayCount"
-#define EASY_TAG_PLAY_STREAM_ID                       "PlayStreamID"
-#define EASY_TAG_DEVICE_SERVER						"DeviceServer"
+#define EASY_TAG_PLAY_STREAM_ID							"PlayStreamID"
+#define EASY_TAG_DEVICE_SERVER							"DeviceServer"
 #define EASY_TAG_TIME									"Time"
 #define EASY_TAG_SCHEDULE								"Schedule" 
-#define EASY_TAG_STREAM_ID							"StreamID"
+#define EASY_TAG_STREAM_ID								"StreamID"
 /*!
 \}
 */
@@ -168,14 +168,14 @@
 #define EASY_ERROR_MEMCACHE_NOT_FOUND					600				///< Memcache Not Found
 #define EASY_ERROR_DATABASE_NOT_FOUND					601				///< Database Not Found
 #define EASY_ERROR_USER_NOT_FOUND						602				///< User Not Found
-#define EASY_ERROR_DEVICE_NOT_FOUND					603				///< Device Not Found
+#define EASY_ERROR_DEVICE_NOT_FOUND						603				///< Device Not Found
 #define EASY_ERROR_SESSION_NOT_FOUND					604				///< Session Not Found
 #define EASY_ERROR_SERVICE_NOT_FOUND					605				///< Service Not Found
 #define EASY_ERROR_PASSWORD_ERROR						620				///< Password Error
-#define EASY_ERROR_XML_PARSE_ERROR					621				///< XML Parse Error
-#define EASY_ERROR_PERMISSION_ERROR					622				///< Permission Error
-#define EASY_ERROR_LOCAL_SYSTEM_ERROR                 623             ///< Local System Error
-#define EASY_ERROR_PARAM_ERROR                        624             ///< Param Error
+#define EASY_ERROR_XML_PARSE_ERROR						621				///< XML Parse Error
+#define EASY_ERROR_PERMISSION_ERROR						622				///< Permission Error
+#define EASY_ERROR_LOCAL_SYSTEM_ERROR					623             ///< Local System Error
+#define EASY_ERROR_PARAM_ERROR							624             ///< Param Error
 
 /*!
 \}
@@ -228,19 +228,36 @@ enum EasyDarwinProtocolType
 enum EasyDarwinMediaEncodeType
 {
 	EASY_MEDIA_ENCODE_AUDIO_AAC = 1,			///< AAC
-	EASY_MEDIA_ENCODE_VIDEO_H264			///< H264
+	EASY_MEDIA_ENCODE_VIDEO_H264				///< H264
 };
 /*!
 \}
 */
 
 /*!
-\ingroup EasyDarwin_Device_Type_Define
+\ingroup EasyDarwin_Terminal_Type_Define
 \{
 */
 enum EasyDarwinTerminalType
 {
-	EASY_TERMINAL_TYPE_CAMERA = 1					///< Camera	
+	EASY_TERMINAL_TYPE_ARM = 1,				///< ARM	
+	EASY_TERMINAL_TYPE_Android = 2,			///< ANDROID
+	EASY_TERMINAL_TYPE_IOS = 3,				///< IOS
+	EASY_TERMINAL_TYPE_WEB = 4,				///< WEB
+	EASY_TERMINAL_TYPE_PC					///< PC
+};
+/*!
+\}
+*/
+
+/*!
+\ingroup EasyDarwin_App_Type_Define
+\{
+*/
+enum EasyDarwinAppType
+{
+	EASY_APP_TYPE_CAMERA = 1,					///< EasyCamera
+	EASY_APP_TYPE_NVR							///< EasyNVR
 };
 /*!
 \}

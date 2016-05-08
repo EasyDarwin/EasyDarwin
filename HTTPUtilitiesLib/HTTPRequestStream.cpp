@@ -9,8 +9,6 @@
 
     Contains:   Implementation of HTTPRequestStream class. 
 */
-
-
 #include "HTTPRequestStream.h"
 #include "StringParser.h"
 #include "OSMemory.h"

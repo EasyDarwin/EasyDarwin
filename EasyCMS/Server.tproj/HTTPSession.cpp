@@ -40,7 +40,7 @@ HTTPSession::HTTPSession( )
 	fCurrentModule(0),
 	fState(kReadingFirstRequest)
 {
-	this->SetTaskName("CMSSession");
+	this->SetTaskName("HTTPSession");
 
 	//在全局服务对象中Session数增长一个,一个HTTPSession代表了一个连接
 	QTSServerInterface::GetServer()->AlterCurrentServiceSessionCount(1);
@@ -392,8 +392,7 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 }
 
 /*
-Content报文读取与解析
-同步进行报文处理，构造回复报文
+	Content报文读取与解析同步进行报文处理，构造回复报文
 */
 QTSS_Error HTTPSession::SetupRequest()
 {
@@ -441,16 +440,17 @@ QTSS_Error HTTPSession::SetupRequest()
 					return 0;
 				}
 			}
-			//执行到这的都说明需要进行异常处理
+
+			// 执行到这的都说明需要进行异常处理
 			EasyMsgExceptionACK rsp;
 			string msg = rsp.GetMsg();
-			//构造响应报文(HTTP Header)
+			// 构造响应报文(HTTP Header)
 			HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 			httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
 			if (!msg.empty())
 				httpAck.AppendContentLengthHeader((UInt32)msg.length());
 
-			//判断是否需要关闭当前Session连接
+			// 判断是否需要关闭当前Session连接
 			//if(connectionClose)
 			httpAck.AppendConnectionCloseHeader();
 
@@ -470,7 +470,7 @@ QTSS_Error HTTPSession::SetupRequest()
 		}		
 	}
 
-	QTSS_RTSPStatusCode statusCode = qtssSuccessOK;
+	HTTPStatusCode statusCode = httpOK;
 	char *body = NULL;
 	UInt32 bodySizeBytes = 0;
 
@@ -487,11 +487,9 @@ QTSS_Error HTTPSession::SetupRequest()
 
 	if (content_length <= 0)
 	{
-
 		return QTSS_BadArgument;
 	}
 
-	//
 	// Check for the existence of 2 attributes in the request: a pointer to our buffer for
 	// the request body, and the current offset in that buffer. If these attributes exist,
 	// then we've already been here for this request. If they don't exist, add them.

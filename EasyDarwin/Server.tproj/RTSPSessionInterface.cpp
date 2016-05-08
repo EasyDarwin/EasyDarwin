@@ -26,9 +26,6 @@
     File:       RTSPSessionInterface.cpp
 
     Contains:   Implementation of RTSPSessionInterface object.
-    
-    
-
 */
 
 #include "atomic.h"
@@ -419,7 +416,6 @@ void    RTSPSessionInterface::SnarfInputSocket( RTSPSessionInterface* fromRTSPSe
     // fInputStream, meet your new input socket
     fInputStream.AttachToSocket( fInputSocketP );
 }
-
 
 void* RTSPSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*outLen*/)
 {

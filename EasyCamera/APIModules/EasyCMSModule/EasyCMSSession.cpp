@@ -328,41 +328,30 @@ SInt64 EasyCMSSession::Run()
 // HTTPRequest类区分httpRequestType/httpResponseType
 QTSS_Error EasyCMSSession::Register()
 {
-	//EasyDevices channels;
-	//easy_channel_t *pChannels = (easy_channel_t *)QTSServerInterface::GetServer()->GetEasyNVRChannelPtr();
-	//if (NULL == pChannels)		return QTSS_BadArgument;
-	//
-	//for (int i=0; i< EASYNVR_MAX_CHANNEL; i++)
-	//{
-	//	if (pChannels[i].enable)		//仅上报enable的通道
-	//	{
-	//		EasyDevice camera(pChannels[i].usn.data(), pChannels[i].usn.data(), pChannels[i].online==0x00?"offline":"online");
-	//		channels.push_back(camera);
-	//	}
-	//}
+	EasyDevices channels;
 
-	//EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
-	//EasyMsgDSRegisterREQ req(nvr);
-	//string msg = req.GetMsg();
+	EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
 
-	//StrPtrLen jsonContent((char*)msg.data());
+	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr);
+	string msg = req.GetMsg();
 
-	//// 构造HTTP注册报文,提交给fOutputStream进行发送
-	//HTTPRequest httpReq(&sServiceStr, httpRequestType);
+	StrPtrLen jsonContent((char*)msg.data());
 
-	//if(!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
+	// 构造HTTP注册报文,提交给fOutputStream进行发送
+	HTTPRequest httpReq(&sServiceStr, httpRequestType);
 
-	//if (jsonContent.Len)
-	//	httpReq.AppendContentLengthHeader(jsonContent.Len);
+	if(!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
 
-	//char respHeader[2048] = { 0 };
-	//StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
-	//strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
-	//	
-	//fOutputStream.Put(respHeader);
-	//if (jsonContent.Len > 0) 
-	//	fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+	if (jsonContent.Len)
+		httpReq.AppendContentLengthHeader(jsonContent.Len);
 
+	char respHeader[2048] = { 0 };
+	StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
+	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+		
+	fOutputStream.Put(respHeader);
+	if (jsonContent.Len > 0) 
+		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
 
 	return QTSS_NoErr;
 }

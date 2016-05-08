@@ -86,7 +86,7 @@ typedef map<string, EasyNVR> EasyNVRs;//维护所有的NVR
 class Easy_API EasyMsgDSRegisterREQ : public EasyProtocol	//封装NVR的注册请求
 {
 public:
-	EasyMsgDSRegisterREQ(EasyNVR &nvr, size_t cseq = 1);
+	EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, EasyDarwinAppType appType, EasyNVR &nvr, size_t cseq = 1);
 	EasyMsgDSRegisterREQ(const char* msg);
 	virtual ~EasyMsgDSRegisterREQ(){}
 

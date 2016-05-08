@@ -30,7 +30,6 @@
                 (do this by calling ReadRequest). It handles RTSP pipelining (request
                 headers are produced serially even if multiple headers arrive simultaneously),
                 & RTSP request data.
-                    
 */
 
 #ifndef __RTSPREQUESTSTREAM_H__

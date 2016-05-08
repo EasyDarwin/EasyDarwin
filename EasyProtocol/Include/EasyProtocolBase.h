@@ -99,6 +99,10 @@ public:
 	static int GetTerminalType(std::string sTerminalType);
 	static std::string GetTerminalTypeString(int iTerminalType);
 
+	//enum EasyDarwinAppType
+	static int GetAppType(std::string sAppType);
+	static std::string GetAppTypeString(int iAppType);
+
     //common json tag define
 protected:  
 	Json::Value root;
@@ -117,6 +121,7 @@ private:
 	static MsgType MediaEncodeTypeMap[];
 	static MsgType DeviceTypeMap[];
 	static MsgType TerminalTypeMap[];
+	static MsgType AppTypeMap[];
 	static MsgType LiveTypeMap[];
 
 	Json::Reader reader;

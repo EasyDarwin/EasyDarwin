@@ -25,9 +25,7 @@
 /*
     File:       RTSPClient.cpp
 
-    Contains:   .  
-                    
-    
+    Contains:
 */
 
 #ifndef __Win32__
@@ -36,16 +34,13 @@
 #include <netinet/in.h>
 #include <sys/uio.h>
 #include <unistd.h>
-
 #endif
-
 
 #include "RTSPClient.h"
 #include "StringParser.h"
 #include "OSMemory.h"
 #include "OSHeaders.h"
 #include "OSArrayObjectDeleter.h"
-
 #include <errno.h>
 
 #define ENABLE_AUTHENTICATION 1
@@ -73,12 +68,12 @@ static char * STRTOCHAR(StrPtrLen *theStr)
 static UInt8 sWhiteQuoteOrEOLorEqual[] =
 {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, //0-9     // \t is a stop
-    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, //10-19    //'\r' & '\n' are stop conditions
+    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, //10-19	//'\r' & '\n' are stop conditions
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //20-29
     0, 0, 1, 0, 1, 0, 0, 0, 0, 0, //30-39   ' ' , '"' is a stop
     0, 0, 0, 0, 1, 0, 0, 0, 0, 0, //40-49   ',' is a stop
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //50-59
-    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, //60-69  '=' is a stop
+    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, //60-69	'=' is a stop
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //70-79
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //80-89
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //90-99
