@@ -42,30 +42,17 @@
 ## 基本流程 ##
 ![](http://www.easydarwin.org/skin/easydarwin/images/architecture20150825.png)
 
-## EasyDarwin部署视频广场 ##
 
+## 商务合作 ##
+#### 我们欢迎的合作模式： ####
 
-- 部署EasyCMS接入服务器 
+越来越多的企业选择EasyDarwin开源平台作为他们产品和项目的基础，从而也产生了越来越多各种各样的需求，EasyDarwin开源团队接受与企业的项目合作：
 
-按照文档[《EasyCMS编译部署文档》](http://doc.easydarwin.org/EasyCMS/README/ "EasyCMS编译部署文档")编译、配置并部署EasyCMS；
+- EasyDarwin平台现有项目的技术咨询与培训合作；
+- EasyDarwin平台大方向上新项目/新技术的拓展合作；
 
-
-- 部署EasyDarwin流媒体服务器 
-
-按照文档[《EasyDarwin编译部署文档》](http://doc.easydarwin.org/EasyDarwin/README/#_1 "EasyDarwin编译部署文档")编译、配置并部署EasyDarwin；
-
-- 部署EasyCamera设备端 
-
-
-按照文档[《EasyCamera编译部署文档》](http://doc.easydarwin.org/EasyCamera/README/#_1 "EasyCamera编译部署文档")编译、配置并部署EasyCamera；
-
-- 整体串联 
-
-**列表页**：js调用EasyCMS获取设备列表接口，html展示在线设备列表（[可参考EasyDarwin视频广场页面](http://www.easydarwin.org/article/video/ "EasyDarwin视频广场")）；
-
-**播放页**：html播放页面用调用ckplayer等m3u8播放器（[可参考EasyDarwin视频播放页面](http://www.easydarwin.org/article/hlsplayer/ "EasyDarwin视频播放")）；
-
-
+#### 技术合作找Babosa@EasyDarwin.org： ####
+- 邮件:Babosa@EasyDarwin.org
 
 ## 捐赠您自己的项目 ##
 
