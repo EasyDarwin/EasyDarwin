@@ -4,8 +4,8 @@
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-#ifndef EASYDARWIN_PROTOCOL
-#define	EASYDARWIN_PROTOCOL
+#ifndef EASY_PROTOCOL_H
+#define	EASY_PROTOCOL_H
 
 
 #include <EasyProtocolBase.h>

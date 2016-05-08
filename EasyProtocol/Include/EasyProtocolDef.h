@@ -28,8 +28,8 @@
 \defgroup MSG_CLI_CMS_DEVICE_LIST_RSP
 */
 
-#ifndef EASYDARWIN_PROTOCOL_DEF_H
-#define	EASYDARWIN_PROTOCOL_DEF_H
+#ifndef EASY_PROTOCOL_DEF_H
+#define	EASY_PROTOCOL_DEF_H
 
 #if (defined(_WIN32))
 #ifndef _DLL_
@@ -269,4 +269,4 @@ enum EasyDarwinTerminalType
 \}
 */
     
-#endif	/* EASYDARWIN_PROTOCOL_DEF_H */
+#endif	/* EASY_PROTOCOL_DEF_H */

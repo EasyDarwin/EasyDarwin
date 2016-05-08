@@ -11,8 +11,8 @@
  * Created on 2014年11月22日, 上午10:16
  */
 
-#ifndef EASYDARWIN_UTIL_H
-#define	EASYDARWIN_UTIL_H
+#ifndef EASY_UTIL_H
+#define	EASY_UTIL_H
 
 #include <EasyProtocolDef.h>
 #include <string>
@@ -47,4 +47,4 @@ public:
     
 };
 
-#endif	/* EASYDARWIN_UTIL_H */
+#endif	/* EASY_UTIL_H */
