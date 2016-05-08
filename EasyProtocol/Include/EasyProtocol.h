@@ -21,7 +21,7 @@ using namespace std;
 namespace EasyDarwin { namespace Protocol
 {
 
-class EASYDARWIN_API EasyDevice//摄像头信息类
+class Easy_API EasyDevice//摄像头信息类
 {
 public:
 	EasyDevice();
@@ -68,7 +68,7 @@ public:
 	string operator()(string value) const { return value; }
 };
 
-class EASYDARWIN_API EasyNVR : public EasyDevice//NVR类型
+class Easy_API EasyNVR : public EasyDevice//NVR类型
 {
 public:
 	EasyNVR();
@@ -81,7 +81,7 @@ public:
 };
 
 typedef map<string, EasyNVR> EasyNVRs;//维护所有的NVR
-class EASYDARWIN_API EasyDarwinRegisterReq : public EasyProtocol//封装NVR的注册请求
+class Easy_API EasyDarwinRegisterReq : public EasyProtocol//封装NVR的注册请求
 {
 public:
 	EasyDarwinRegisterReq(EasyNVR &nvr, size_t cseq = 1);
@@ -96,7 +96,7 @@ private:
 };
 
 
-class EASYDARWIN_API EasyDarwinRegisterRSP : public EasyProtocol//封装NVR的注册回应
+class Easy_API EasyDarwinRegisterRSP : public EasyProtocol//封装NVR的注册回应
 {
 public:
 	EasyDarwinRegisterRSP(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
@@ -206,7 +206,7 @@ public:
 
 
 /*
-class EASYDARWIN_API EasyDarwinDeviceListAck : public EasyProtocol
+class Easy_API EasyDarwinDeviceListAck : public EasyProtocol
 {
 public:
 	EasyDarwinDeviceListAck();
@@ -222,7 +222,7 @@ private:
 	list<EasyDarwinDevice> devices;
 };
 
-class EASYDARWIN_API EasyDarwinDeviceSnapUpdateReq : public EasyProtocol
+class Easy_API EasyDarwinDeviceSnapUpdateReq : public EasyProtocol
 {
 public:
 	EasyDarwinDeviceSnapUpdateReq();
@@ -234,7 +234,7 @@ public:
 	bool GetImageData(string &sImageBase64Data);
 };
 
-class EASYDARWIN_API EasyDarwinDeviceSnapUpdateAck : public EasyProtocol
+class Easy_API EasyDarwinDeviceSnapUpdateAck : public EasyProtocol
 {
 public:
 	EasyDarwinDeviceSnapUpdateAck();
@@ -269,7 +269,7 @@ public:
 };
 
 
-class EASYDARWIN_API EasyDarwinEasyHLSAck : public EasyProtocol
+class Easy_API EasyDarwinEasyHLSAck : public EasyProtocol
 {
 public:
 	EasyDarwinEasyHLSAck();
@@ -280,7 +280,7 @@ public:
 	void SetStreamURL(const char* sURL);
 };
 
-class EASYDARWIN_API EasyDarwinHLSessionListAck : public EasyProtocol
+class Easy_API EasyDarwinHLSessionListAck : public EasyProtocol
 {
 public:
 	EasyDarwinHLSessionListAck();
@@ -295,7 +295,7 @@ public:
 private:
 	list<EasyDarwinHLSession> sessions;
 };
-class EASYDARWIN_API EasyDarwinRTSPPushSessionListAck : public EasyProtocol
+class Easy_API EasyDarwinRTSPPushSessionListAck : public EasyProtocol
 {
 public:
 	EasyDarwinRTSPPushSessionListAck();
@@ -312,7 +312,7 @@ private:
 };
 
 
-class EASYDARWIN_API EasyDarwinRecordListAck : public EasyProtocol
+class Easy_API EasyDarwinRecordListAck : public EasyProtocol
 {
 public:
 	EasyDarwinRecordListAck();
@@ -373,14 +373,14 @@ public:
 	EasyDSSAppType eAppType;//App类型
 };
 
-class EASYDARWIN_API EasyDarwinRSP : public EasyProtocol//封装CMS的一般回应的JSON部分
+class Easy_API EasyDarwinRSP : public EasyProtocol//封装CMS的一般回应的JSON部分
 {
 public:
 	EasyDarwinRSP(int iMsgType):EasyProtocol(iMsgType){}
 	void SetHead(EasyJsonValue& header);//设置头部
 	void SetBody(EasyJsonValue& body);//设置JSON
 };
-class EASYDARWIN_API EasyDarwinRecordListRSP : public EasyDarwinRSP//封装录像列表回应
+class Easy_API EasyDarwinRecordListRSP : public EasyDarwinRSP//封装录像列表回应
 {
 public:
 	EasyDarwinRecordListRSP(int iMsgType):EasyDarwinRSP(iMsgType){}

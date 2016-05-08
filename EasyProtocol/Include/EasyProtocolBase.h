@@ -27,7 +27,7 @@ class EasyDarwinDeviceInfo;
 \brief EasyDarwin Protocol base class
 \ingroup EasyProtocolBase
 */
-class EASYDARWIN_API EasyProtocol
+class Easy_API EasyProtocol
 {
 public:
 	EasyProtocol(int iMsgType);

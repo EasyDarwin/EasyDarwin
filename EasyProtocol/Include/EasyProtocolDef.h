@@ -33,18 +33,18 @@
 
 #if (defined(_WIN32))
 #ifndef _DLL_
-#define EASYDARWIN_API
+#define Easy_API
 #else
 #ifdef EASYDARWIN_API_EXPORTS
-#define EASYDARWIN_API __declspec(dllexport) 
+#define Easy_API __declspec(dllexport) 
 #else  
-#define EASYDARWIN_API __declspec(dllimport)
+#define Easy_API __declspec(dllimport)
 #endif
 #endif
 #elif defined(__linux__)
-#define EASYDARWIN_API
+#define Easy_API
 #endif
-//#define EASYDARWIN_API
+//#define Easy_API
 #define EASYDARWIN_PROTOCOL_VERSION                         "1.0"
 #define EASYDARWIN_PROTOCOL_STREAM_MAIN						"0"
 #define EASYDARWIN_PROTOCOL_STREAM_SUB						"1"

@@ -18,7 +18,7 @@
 #include <string>
 using namespace std;
 
-class EASYDARWIN_API EasyUtil
+class Easy_API EasyUtil
 {
 public:
     static std::string TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time);
