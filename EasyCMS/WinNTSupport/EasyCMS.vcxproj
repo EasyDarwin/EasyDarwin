@@ -144,6 +144,7 @@
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
     <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
     <ClCompile Include="..\..\redis\win32fixes.c" />
+    <ClCompile Include="..\APIModules\QTSSAuthModule\QTSSAuthModule.cpp" />
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -173,7 +174,6 @@
     <ClCompile Include="..\Server.tproj\HTTPResponseStream.cpp" />
     <ClCompile Include="..\Server.tproj\HTTPSession.cpp" />
     <ClCompile Include="..\Server.tproj\HTTPSessionInterface.cpp" />
-    <ClCompile Include="..\Server.tproj\QTSSAuthModule.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSCallbacks.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSDataConverter.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSDictionary.cpp" />
@@ -190,9 +190,6 @@
     <ClCompile Include="..\Server.tproj\RTSPProtocol.cpp" />
     <ClCompile Include="..\Server.tproj\RunServer.cpp" />
     <ClCompile Include="..\Server.tproj\win32main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Server.tproj\QTSSAuthModule.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcxproj">
@@ -213,6 +210,9 @@
     <ProjectReference Include="..\APIStubLib\APIStubLib.vcxproj">
       <Project>{21898038-6830-4b4d-be2c-e32641f253bc}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\APIModules\QTSSAuthModule\QTSSAuthModule.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

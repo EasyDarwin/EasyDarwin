@@ -8,17 +8,11 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{ee137a72-14d2-4be8-9033-4810addc85d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\API Modules">
+      <UniqueIdentifier>{620e669a-44f1-4367-a960-56120a7934b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\PrefsSourceLib\XMLPrefsParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Server.tproj\GenerateXMLPrefs.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -82,25 +76,34 @@
     <ClCompile Include="..\Server.tproj\win32main.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\XMLPrefsParser.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\redis\win32fixes.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Server.tproj\QTSSAuthModule.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\redis\win32fixes.c">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\QTSSAuthModule\QTSSAuthModule.cpp">
+      <Filter>Source Files\API Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Server.tproj\QTSSAuthModule.h">
-      <Filter>Source Files\Core</Filter>
+    <ClInclude Include="..\APIModules\QTSSAuthModule\QTSSAuthModule.h">
+      <Filter>Source Files\API Modules</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
