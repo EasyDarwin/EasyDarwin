@@ -36,7 +36,6 @@
     
 
 */
-
 #include <string.h>
 #include "QTSSErrorLogModule.h"
 #include "QTSSMessages.h"

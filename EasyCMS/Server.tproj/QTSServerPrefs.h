@@ -170,24 +170,24 @@ class QTSServerPrefs : public QTSSPrefs
 
         UInt16  GetMonitorLANPort()			{ return fMonitorLANPort; }       
         UInt16  GetMonitorWANPort()         { return fMonitorWANPort; }  
-		UInt16	GetRedisPort()				{ return fRedisPort; }
             
         char* GetMonitorLANIP()    { return this->GetStringPref(qtssPrefsMonitorLANIPAddr); }
         
         char* GetMonitorWANIP()     { return this->GetStringPref(qtssPrefsMonitorWANIPAddr); }
 
 		char* GetCMSIP()			{ return this->GetStringPref(qtssPrefsCMSIPAddr); }
-
-		char* GetRedisIP()			{ return this->GetStringPref(qtssPrefsRedisIPAddr); }
-
 		char* GetSnapLocalPath()	{ return this->GetStringPref(qtssPrefsSnapLocalPath); }
 		char* GetSnapWebPath()		{ return this->GetStringPref(qtssPrefsSnapWebPath); }
        
         Bool16 GetAllowGuestDefault()               { return fAllowGuestAuthorizeDefault; }
 
-		char* GetDssIP() { return this->GetStringPref(qtssPrefsDssIP); }
+		char* GetDssIP() {  char *c =fDssIP;return this->GetStringPref(qtssPrefsDssIP); }
 		UInt16 GetDssPort() { return fDssPort; }
-        
+
+		char* GetRedisIP()			{return this->GetStringPref(qtssPrefsRedisIPAddr); }
+        UInt16 GetRedisPort(){return fRedisPort;}
+
+
     private:
 
         UInt32      fRTSPTimeoutInSecs;

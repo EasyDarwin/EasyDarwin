@@ -72,6 +72,7 @@ public:
 	std::string GetHeaderValue(const char* tag);
 	std::string GetBodyValue(const char* tag);
 
+	Json::Value * GetRoot(){return &root;}
 public:
 	static std::string GetErrorString(int error);
 	

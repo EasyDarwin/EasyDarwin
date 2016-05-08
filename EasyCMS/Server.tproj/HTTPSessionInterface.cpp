@@ -98,7 +98,9 @@ HTTPSessionInterface::HTTPSessionInterface()
 	fLiveSession(true),
 	fObjectHolders(0),
 	fRequestBodyLen(-1),
-	fAuthenticated(false)
+	fAuthenticated(false),
+	fRequestBody(NULL),//add
+	fCSeq(1)//add
 {
 	fStreamReqCount.clear();
     fTimeoutTask.SetTask(this);
@@ -126,7 +128,17 @@ HTTPSessionInterface::HTTPSessionInterface()
     
     fInputStream.ShowMSG(QTSServerInterface::GetServer()->GetPrefs()->GetMSGDebugPrintfs());
     fOutputStream.ShowMSG(QTSServerInterface::GetServer()->GetPrefs()->GetMSGDebugPrintfs());
-
+	//add
+	fInfo.cWaitingState=0;//初始为处理第一次请求状态
+	fInfo.uWaitingTime=0;//初始为不用等待回应
+	/*
+	HTTPSessionInterface * p=this;
+	int iSize=sizeof(QTSSDictionary)+sizeof(Task)+sizeof(fUserNameBuf)+sizeof(fUserPasswordBuf)+sizeof(fSessionID)+sizeof(fLastSMSSessionID)
+		+sizeof(fDevSerial)+sizeof(fStreamReqCount)+sizeof(fNVROperatorMutex)+sizeof(fStreamReqCountMutex)+sizeof(fCond)+sizeof(fNVRMessageQueue)
+		+sizeof(fTimeoutTask)+sizeof(fInputStream)+sizeof(fOutputStream)+sizeof(fSessionMutex)+sizeof(fSocket)+sizeof(fOutputSocketP)+sizeof(fInputSocketP)
+		+sizeof(fSessionType)+sizeof(fLiveSession)+sizeof(fObjectHolders)+sizeof(fSessionIndex)+sizeof(fLocalAddr)+sizeof(fRemoteAddr)+sizeof(fAuthenticated)
+		+sizeof(sSessionIndexCounter)+sizeof(sAttributes)+sizeof(fDevice)+sizeof(fRequestBody)+sizeof(fMutexCSeq)+sizeof(fCSeq)+sizeof(fMsgMap)+sizeof(fin);
+	iSize=sizeof(HTTPSessionInterface);*/
 }
 
 
@@ -135,7 +147,33 @@ HTTPSessionInterface::~HTTPSessionInterface()
     // If the input socket is != output socket, the input socket was created dynamically
     if (fInputSocketP != fOutputSocketP) 
         delete fInputSocketP;
-	this->UnRegDevSession();
+	
+	char remoteAddress[20] = {0};
+	StrPtrLen theIPAddressStr(remoteAddress,sizeof(remoteAddress));
+	QTSS_GetValue(this, qtssRTSPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
+	char msgStr[2048] = { 0 };
+	
+	//客户端连接断开时，进行自动停止推流处理，放到对fSessionType类型判断里面更好
+	AutoStopStreamJudge();
+	//客户端连接断开时，进行自动停止推流处理
+	switch(fSessionType)
+	{
+	case qtssDeviceSession://设备
+		this->UnRegDevSession();
+		this->ReleaseMsgMap();//释放
+		qtss_snprintf(msgStr, sizeof(msgStr), "Device session offline from ip[%s], device_serial[%s]",remoteAddress, fDevice.serial_.c_str());
+		break;
+	case qtssClientSession://客户端
+		qtss_snprintf(msgStr, sizeof(msgStr), "Client session offline from ip[%s]",remoteAddress);
+		break;
+	case qtssNormalSession://一般客户端
+		qtss_snprintf(msgStr, sizeof(msgStr), "Unknown session offline from ip[%s]",remoteAddress);
+		break;
+	default:
+		qtss_snprintf(msgStr, sizeof(msgStr), "Unknown session offline from ip[%s]",remoteAddress);
+		break;
+	}
+	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 }
 
 void HTTPSessionInterface::DecrementObjectHolderCount()
@@ -293,13 +331,17 @@ void HTTPSessionInterface::UnRegDevSession()
 {
 	if (fAuthenticated)
 	{
+		/*
 		EasyNVRs &nvrs = QTSServerInterface::GetServer()->GetRegisterNVRs();		
 		EasyNVRs::iterator nvr = nvrs.find(fDevSerial);
 		if (nvr != nvrs.end())
 		{
 			nvrs.erase(nvr);
 		}
-		//QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(GetRef());
+		*/
+		QTSServerInterface::GetServer()->GetDeviceMap()->UnRegister(fDevice.serial_);//add
+		//在redis上删除设备
+		QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
 	}
 }
 
@@ -326,4 +368,75 @@ void HTTPSessionInterface::DecrementStreamReqCount(string camera)
 	fStreamReqCount[camera]--;
 	if (fStreamReqCount[camera] < 0) fStreamReqCount[camera] = 0;
 }
+//add
+void HTTPSessionInterface::InsertToSet(string &strCameraSerial,void * pObject)//加入到set中
+{
+	OSMutexLocker MutexLocker(&fMutexSet);
+	DevMapItera it=fDevmap.find(strCameraSerial);
+	if(it==fDevmap.end())//表示这是对当前设备这个摄像头的第一次直播
+	{
+		DevSet setTemp;
+		setTemp.insert(pObject);
+		fDevmap[strCameraSerial]=setTemp;
+	}
+	else//之间已经创建了
+	{
+		DevSet *setTemp=&(it->second);//获取当前摄像头直播列表
+		setTemp->insert(pObject);
+	}
+}
+bool HTTPSessionInterface::EraseInSet(string &strCameraSerial,void *pObject)//删除元素，并判断是否为空，为空返回true,失败返回false
+{
+	OSMutexLocker MutexLocker(&fMutexSet);
+	DevMapItera it=fDevmap.find(strCameraSerial);
+	if(it==fDevmap.end())
+	{
+		return false;
+	}
+	else
+	{
+		DevSet *setTemp=&(it->second);//获取当前摄像头直播列表
+		setTemp->erase(pObject);
+		return setTemp->empty();
+	}
+}
+void HTTPSessionInterface::AutoStopStreamJudge()
+{
+	OSMutexLocker MutexLocker(&fMutexSet);
+	CliStreamMapItera it;
+	stStreamInfo stTemp;
+	OSRefTableEx* DeviceMap=QTSServerInterface::GetServer()->GetDeviceMap();
+	OSRefTableEx::OSRefEx* theDevRef;
+	for(it=fClientStreamMap.begin();it!=fClientStreamMap.end();it++)
+	{
+		stTemp=it->second;
+		theDevRef=DeviceMap->Resolve(stTemp.strDeviceSerial);////////////////////////////////++
+		if(theDevRef==NULL)
+			continue;
+		//走到这说明存在指定设备
+		HTTPSessionInterface *pDevSession=(HTTPSessionInterface *)theDevRef->GetObjectPtr();//获得当前设备会话
+		if(pDevSession->EraseInSet(stTemp.strCameraSerial,this))//当前摄像头的拉流客户端为空，则向设备发出停止推流请求
+		{
+			EasyDarwin::Protocol::EasyDarwinRSP		reqreq(MSG_SD_STREAM_STOP_REQ);
+			EasyJsonValue headerheader,bodybody;
 
+			char chTemp[16]={0};
+			UInt32 uDevCseq=pDevSession->GetCSeq();
+			sprintf(chTemp,"%d",uDevCseq);
+			headerheader["CSeq"]	=string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+			headerheader[EASYDARWIN_TAG_VERSION]=		EASYDARWIN_PROTOCOL_VERSION;
+
+			bodybody["DeviceSerial"]	=	stTemp.strDeviceSerial;
+			bodybody["CameraSerial"]	=	stTemp.strCameraSerial;
+			bodybody["StreamID"]		=   stTemp.strStreamID;
+			bodybody["Protocol"]		=	stTemp.strProtocol;
+
+			reqreq.SetHead(headerheader);
+			reqreq.SetBody(bodybody);
+
+			string buffer = reqreq.GetMsg();
+			QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
+		}
+		DeviceMap->Release(stTemp.strDeviceSerial);
+	}
+}

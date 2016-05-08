@@ -55,7 +55,15 @@
 #include "ResizeableStringFormatter.h"
 #include <EasyProtocol.h>
 
+#include"OSMapEx.h"
+#include"OSRefTableEx.h"//引用表
 using namespace EasyDarwin::Protocol;
+
+
+//redis
+#include"hiredis.h"
+//#include"win32fixes.h"
+
 
 // OSRefTable;
 class QTSServerPrefs;
@@ -150,6 +158,7 @@ class QTSServerInterface : public QTSSDictionary
         OSRefTable*         GetDeviceSessionMap()          { return fDeviceSessionMap; }
 
 		EasyNVRs &GetRegisterNVRs() { return fRegisterNVRs; }
+		OSRefTableEx*        GetDeviceMap()          { return &fDeviceMap; }//add
 
         QTSServerPrefs*     GetPrefs()                  { return fSrvrPrefs; }
         QTSSMessages*       GetMessages()               { return fSrvrMessages; }
@@ -221,6 +230,7 @@ class QTSServerInterface : public QTSSDictionary
         OSRefTable*                 fDeviceSessionMap;
         
 		EasyNVRs fRegisterNVRs;
+		OSRefTableEx fDeviceMap;//add,维护所有的注册设备
 
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;
@@ -304,6 +314,31 @@ class QTSServerInterface : public QTSSDictionary
         static QTSSAttrInfoDict::AttrInfo   sConnectedUserAttributes[];
 
 		char* GetDMSServiceID() { return fDMSServiceID; }
+		
+		//redis
+		public:
+
+			bool ConRedis();//连接redis
+			bool RedisInit();//redis初始化，连接redis成功之后调用该函数执行一些初始化的工作
+			bool RedisCommand(const char * strCommand);//执行一些我们并不关注结果的redisCommand，主要是一些写操作
+			bool RedisTTL();//保活
+			bool RedisAddDevName(const char * strPushNmae);//增加推流名称
+			bool RedisDelDevName(const char * strPushNmae);//删除推流名称
+			bool RedisGetBestDarWin(string& strDssIP,string& strDssPort);//获得RTP连接数最小的EasyDarWin
+			bool RedisGetAssociatedDarWin(string& strDeviceSerial,string &strCameraSerial,string& strDssIP,string& strDssPort);//获得正在接受设备推流的EasyDarWin
+			bool RedisGetBestRms(string& strRmsIP,string& strRmsPort);//获得当前录像数量最小的EasyDarWin
+			bool RedisGetAssociatedRms(string& strDeviceSerial,string &strCameraSerial,string& strRmsIP,string& strRmsPort);//获得正在对设备进行录像的RMS
+			bool RedisGenSession(string& strSessioionID,UInt32 iTimeoutMil=0);//超时时间0表示永不超时
+		protected:
+			redisContext *fRedisCon;//所有线程公用一个连接
+			bool fIfConSucess;//redis是否连接成功
+			OSMutex fRedisMutex;
+
+			string fRedisIP;
+			UInt16 fRedisPort;
+			string fCMSIP;
+			UInt16 fCMSPort;
+		//redis
 };
 
 #endif // __QTSSERVERINTERFACE_H__

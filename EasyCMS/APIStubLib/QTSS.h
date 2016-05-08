@@ -33,7 +33,6 @@
 #define QTSS_H
 #include "OSHeaders.h"
 #include "QTSSRTSPProtocol.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -41,14 +40,13 @@ extern "C" {
 #ifndef __Win32__
 #include <sys/uio.h>
 #endif
-
 #define QTSS_API_VERSION                0x00050000
 #define QTSS_MAX_MODULE_NAME_LENGTH     64
 #define QTSS_MAX_SESSION_ID_LENGTH      64
 #define QTSS_MAX_ATTRIBUTE_NAME_SIZE    64
-#define EASYDARWIN_MAX_URL_LENGTH			512
+#define EASYDARWIN_MAX_URL_LENGTH		512
 #define EASY_MAX_SERIAL_LENGTH			32
-#define EASY_REQUEST_BUFFER_SIZE_LEN	512*1024
+#define EASY_REQUEST_BUFFER_SIZE_LEN	64*1024//512*1024
 
 
 //*******************************
@@ -177,7 +175,8 @@ typedef UInt32  QTSS_AuthScheme;
 enum
 {
     qtssNormalSession         = 0,	//普通Socket Session
-	qtssDeviceSession		  = 1	//已登录Device Session
+	qtssDeviceSession		  = 1,	//已登录Device Session,NVR
+	qtssClientSession         = 2   //客户端Session
 };
 typedef UInt32 QTSS_SessionType;
 
@@ -766,7 +765,9 @@ enum
     QTSS_ReadFile_Role =            FOUR_CHARS_TO_INT('r', 'd', 'f', 'l'),  //rdfl
     QTSS_CloseFile_Role =           FOUR_CHARS_TO_INT('c', 'l', 'f', 'l'),  //clfl
     QTSS_RequestEventFile_Role =    FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
-    
+    //add,角色的添加
+	QTSS_NONCE_ROLE    =            FOUR_CHARS_TO_INT('o','n','c','e'),//once
+	QTSS_AUTH_ROLE     =            FOUR_CHARS_TO_INT('a','u','t','r')//autr,auth已经使用
 };
 typedef UInt32 QTSS_Role;
 
@@ -927,6 +928,11 @@ typedef struct
 	QTSS_Object					inRTSPSession;
 	QTSS_Object					inStreamingParam;
 } QTSS_Streaing_Params;
+typedef struct//add  
+{
+	char *pNonce;//用于存放随机数
+	char *pResult;//存放验证随机数的结构
+}QTSS_Nonce_Params;
 
 typedef struct
 {
@@ -963,7 +969,7 @@ typedef union
 	// EasyDarwin
 	QTSS_Streaing_Params				StreamingParams;
 	QTSS_Sync_Params					SyncParams;
-    
+    QTSS_Nonce_Params                   NonceParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 typedef struct

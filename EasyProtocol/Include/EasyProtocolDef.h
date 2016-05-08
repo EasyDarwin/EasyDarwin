@@ -124,27 +124,34 @@
 \ingroup EasyDarwin_Message_Type_Define
 \{
 */
-#define MSG_DEV_CMS_REGISTER_REQ							0x0001
-#define MSG_DEV_CMS_REGISTER_RSP							0xe002
-#define MSG_CMS_DEV_STREAM_START_REQ						0x0003
-#define MSG_CMS_DEV_STREAM_START_RSP						0xe004
-#define MSG_CMS_DEV_STREAM_STOP_REQ							0x0005
-#define MSG_CMS_DEV_STREAM_STOP_RSP							0xe006
-#define MSG_CLI_CMS_DEVICE_LIST_REQ							0x0007
-#define MSG_CLI_CMS_DEVICE_LIST_RSP							0xe008
-#define MSG_CLI_CMS_CAMERA_LIST_REQ							0x0009
-#define MSG_CLI_CMS_CAMERA_LIST_RSP							0xe009
-#define MSG_CLI_CMS_STREAM_START_REQ						0x0010
-#define MSG_CLI_CMS_STREAM_START_RSP						0xe010
-#define	MSG_CLI_CMS_STREAM_STOP_REQ							0x0011
-#define MSG_CLI_CMS_STREAM_STOP_RSP							0xe011
-#define	MSG_DEV_CMS_UPDATE_SNAP_REQ							0x0012
-#define MSG_DEV_CMS_UPDATE_SNAP_RSP							0xe012
-#define	MSG_CLI_SMS_HLS_ACK									0xe013
-#define MSG_CLI_SMS_HLS_LIST_ACK							0xe014
-#define	MSG_CLI_SMS_PUSH_SESSION_LIST_ACK					0xe015
+#define MSG_DS_REGISTER_REQ									0x0001//设备注册
+#define MSG_SD_REGISTER_ACK									0xe001
+#define MSG_SD_PUSH_STREAM_REQ								0x0002//CMS请求设备开始推流
+#define MSG_DS_PUSH_STREAM_ACK								0xe002
+#define MSG_SD_STREAM_STOP_REQ								0x0003//CMS请求设备停止推流
+#define MSG_DS_STREAM_STOP_ACK								0xe003
+#define MSG_CS_DEVICE_LIST_REQ								0x0004//客户端向CMS请求设备列表
+#define MSG_SC_DEVICE_LIST_ACK								0xe004
+#define MSG_CS_CAMERA_LIST_REQ								0x0005//客户端向CMS请求摄像机列表
+#define MSG_SC_CAMERA_LIST_ACK								0xe005
+#define MSG_CS_GET_STREAM_REQ								0x0006//客户端向CMS请求流
+#define MSG_SC_GET_STREAM_ACK								0xe006
+#define MSG_CS_FREE_STREAM_REQ								0x0007//客户端向CMS请求释放流
+#define MSG_SC_FREE_STREAM_ACK								0xe007
+#define MSG_DS_POST_SNAP_REQ								0x0008//设备向CMS上传快照
+#define MSG_SD_POST_SNAP_ACK								0xe008
 
-#define MSG_CLI_CMS_EXCEPTION								0xeeee
+#define MSG_SC_LIST_RECORD_ACK								0xe009
+
+
+
+//保留
+#define MSG_CLI_SMS_HLS_ACK									0xeee0
+#define MSG_CLI_SMS_HLS_LIST_ACK							0xeee1
+#define MSG_CLI_SMS_PUSH_SESSION_LIST_ACK					0xeee2
+//保留
+
+#define MSG_SC_EXCEPTION									0xeeee
 
 /*!
 \}

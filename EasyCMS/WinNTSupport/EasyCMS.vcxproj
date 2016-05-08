@@ -60,7 +60,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSAuthModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/CMS.pch</PrecompiledHeaderOutputFile>
@@ -78,10 +78,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;hiredis.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\WinNTSupport\Debug\EasyCMS.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>../../Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../Lib;../../redis;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/CMS.pdb</ProgramDatabaseFile>
@@ -140,34 +140,10 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcxproj">
-      <Project>{14f332e3-1771-4908-8850-9a2581a4aed2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcxproj">
-      <Project>{b84f7231-16ce-41d8-8c08-7b523ff4225b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\APICommonCode\APICommonCode.vcxproj">
-      <Project>{eeeb3a6e-b4af-4c09-ab57-7f2576cfe38d}</Project>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\APIStubLib\APIStubLib.vcxproj">
-      <Project>{21898038-6830-4b4d-be2c-e32641f253bc}</Project>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcxproj">
-      <Project>{4e4f758c-7cb5-471c-bd61-fb70bf69d48b}</Project>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SafeStdLib\SafeInternalStdLib.vcxproj">
-      <Project>{230d5525-aea7-4037-95fe-3b45bef98e55}</Project>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp" />
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
+    <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
+    <ClCompile Include="..\..\redis\win32fixes.c" />
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -176,9 +152,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp" />
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
-    <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
     <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -200,6 +173,7 @@
     <ClCompile Include="..\Server.tproj\HTTPResponseStream.cpp" />
     <ClCompile Include="..\Server.tproj\HTTPSession.cpp" />
     <ClCompile Include="..\Server.tproj\HTTPSessionInterface.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSAuthModule.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSCallbacks.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSDataConverter.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSDictionary.cpp" />
@@ -216,6 +190,29 @@
     <ClCompile Include="..\Server.tproj\RTSPProtocol.cpp" />
     <ClCompile Include="..\Server.tproj\RunServer.cpp" />
     <ClCompile Include="..\Server.tproj\win32main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Server.tproj\QTSSAuthModule.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcxproj">
+      <Project>{4e4f758c-7cb5-471c-bd61-fb70bf69d48b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcxproj">
+      <Project>{14f332e3-1771-4908-8850-9a2581a4aed2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcxproj">
+      <Project>{b84f7231-16ce-41d8-8c08-7b523ff4225b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SafeStdLib\SafeInternalStdLib.vcxproj">
+      <Project>{230d5525-aea7-4037-95fe-3b45bef98e55}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\APICommonCode\APICommonCode.vcxproj">
+      <Project>{eeeb3a6e-b4af-4c09-ab57-7f2576cfe38d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\APIStubLib\APIStubLib.vcxproj">
+      <Project>{21898038-6830-4b4d-be2c-e32641f253bc}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

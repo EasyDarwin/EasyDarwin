@@ -17,23 +17,24 @@ EasyDevice::EasyDevice()
 {
 }
 
-EasyDevice::EasyDevice(std::string serial, std::string name)
-: serial_(serial)
+EasyDevice::EasyDevice(std::string channel, std::string name)
+: serial_(channel)
 , name_(name)
 {
+
 }
 
-EasyDevice::EasyDevice(std::string serial, std::string name, std::string status)
-: serial_(serial)
+EasyDevice::EasyDevice(std::string channel, std::string name, std::string status)
+: serial_(channel)
 , name_(name)
 , status_(status)
 {
 }
 
+
 EasyNVR::EasyNVR()
 {
 }
-
 EasyNVR::EasyNVR(std::string serial, std::string name, std::string password, string tag, EasyDevices &channel)
 : channels_(channel)
 {
@@ -44,7 +45,7 @@ EasyNVR::EasyNVR(std::string serial, std::string name, std::string password, str
 }
 
 EasyDarwinRegisterReq::EasyDarwinRegisterReq(EasyNVR &nvr, size_t cseq)
-: EasyProtocol(MSG_DEV_CMS_REGISTER_REQ)
+: EasyProtocol(MSG_DS_REGISTER_REQ)
 , nvr_(nvr)
 {
 	SetHeaderValue("CSeq", cseq);
@@ -65,7 +66,7 @@ EasyDarwinRegisterReq::EasyDarwinRegisterReq(EasyNVR &nvr, size_t cseq)
 }
 
 EasyDarwinRegisterReq::EasyDarwinRegisterReq(const char* msg)
-: EasyProtocol(msg, MSG_DEV_CMS_REGISTER_REQ)
+: EasyProtocol(msg, MSG_DS_REGISTER_REQ)
 {
 	nvr_.serial_ = GetBodyValue("DeviceSerial");
 	nvr_.name_ = GetBodyValue("DeviceName");
@@ -89,7 +90,7 @@ EasyDarwinRegisterReq::EasyDarwinRegisterReq(const char* msg)
 
 
 EasyDarwinRegisterRSP::EasyDarwinRegisterRSP(EasyJsonValue &body, size_t cseq, size_t error)
-: EasyProtocol(MSG_DEV_CMS_REGISTER_RSP)
+: EasyProtocol(MSG_SD_REGISTER_ACK)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -102,12 +103,12 @@ EasyDarwinRegisterRSP::EasyDarwinRegisterRSP(EasyJsonValue &body, size_t cseq, s
 }
 
 EasyDarwinRegisterRSP::EasyDarwinRegisterRSP(const char* msg)
-: EasyProtocol(msg, MSG_DEV_CMS_REGISTER_RSP)
+: EasyProtocol(msg, MSG_SD_REGISTER_ACK)
 {
 }
 
 EasyDarwinDeviceStreamReq::EasyDarwinDeviceStreamReq(EasyJsonValue &body, size_t cseq)
-: EasyProtocol(MSG_CMS_DEV_STREAM_START_REQ)
+: EasyProtocol(MSG_SD_PUSH_STREAM_REQ)
 {
 	SetHeaderValue("CSeq", cseq);
 
@@ -118,12 +119,12 @@ EasyDarwinDeviceStreamReq::EasyDarwinDeviceStreamReq(EasyJsonValue &body, size_t
 }
 
 EasyDarwinDeviceStreamReq::EasyDarwinDeviceStreamReq(const char *msg)
-: EasyProtocol(msg, MSG_CMS_DEV_STREAM_START_REQ)
+: EasyProtocol(msg, MSG_SD_PUSH_STREAM_REQ)
 {
 }
 
 EasyDarwinDeviceStreamRsp::EasyDarwinDeviceStreamRsp(EasyJsonValue &body, size_t cseq, size_t error)
-: EasyProtocol(MSG_CMS_DEV_STREAM_START_RSP)
+: EasyProtocol(MSG_DS_PUSH_STREAM_ACK)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -136,12 +137,12 @@ EasyDarwinDeviceStreamRsp::EasyDarwinDeviceStreamRsp(EasyJsonValue &body, size_t
 }
 
 EasyDarwinDeviceStreamRsp::EasyDarwinDeviceStreamRsp(const char *msg)
-: EasyProtocol(msg, MSG_CMS_DEV_STREAM_START_RSP)
+: EasyProtocol(msg, MSG_DS_PUSH_STREAM_ACK)
 {
 }
 
 EasyDarwinDeviceStreamStop::EasyDarwinDeviceStreamStop(EasyJsonValue &body, size_t cseq)
-:EasyProtocol(MSG_CMS_DEV_STREAM_STOP_REQ)
+:EasyProtocol(MSG_SD_STREAM_STOP_REQ)
 {
 	SetHeaderValue("CSeq", cseq);
 	
@@ -152,12 +153,12 @@ EasyDarwinDeviceStreamStop::EasyDarwinDeviceStreamStop(EasyJsonValue &body, size
 }
 
 EasyDarwinDeviceStreamStop::EasyDarwinDeviceStreamStop(const char *msg)
-: EasyProtocol(msg, MSG_CMS_DEV_STREAM_STOP_REQ)
+: EasyProtocol(msg, MSG_SD_STREAM_STOP_REQ)
 {
 }
 
 EasyDarwinDeviceStreamStopRsp::EasyDarwinDeviceStreamStopRsp(EasyJsonValue &body, size_t cseq, size_t error)
-: EasyProtocol(MSG_CMS_DEV_STREAM_STOP_RSP)
+: EasyProtocol(MSG_SD_STREAM_STOP_REQ)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -170,7 +171,7 @@ EasyDarwinDeviceStreamStopRsp::EasyDarwinDeviceStreamStopRsp(EasyJsonValue &body
 }
 
 EasyDarwinDeviceStreamStopRsp::EasyDarwinDeviceStreamStopRsp(const char *msg)
-: EasyProtocol(msg, MSG_CMS_DEV_STREAM_STOP_RSP)
+: EasyProtocol(msg, MSG_SD_STREAM_STOP_REQ)
 {
 }
 
@@ -263,6 +264,7 @@ EasyDarwinDeviceSnapUpdateAck::EasyDarwinDeviceSnapUpdateAck(const char *msg)
 {
 }
 */
+
 EasyDarwinEasyHLSAck::EasyDarwinEasyHLSAck()
 : EasyProtocol(MSG_CLI_SMS_HLS_ACK)
 {
@@ -305,8 +307,9 @@ bool EasyDarwinHLSessionListAck::AddSession(EasyDarwinHLSession &session)
 	return true;
 }
 
+
 EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(EasyDevices & devices, size_t cseq, size_t error)
-: EasyProtocol(MSG_CLI_CMS_DEVICE_LIST_RSP)
+: EasyProtocol(MSG_SC_DEVICE_LIST_ACK)
 , devices_(devices)
 {
 	SetHeaderValue("CSeq", cseq);
@@ -326,7 +329,7 @@ EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(EasyDevices & devices, size_t c
 }
 
 EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char * msg)
-: EasyProtocol(msg, MSG_CLI_CMS_DEVICE_LIST_RSP)
+: EasyProtocol(msg, MSG_SC_DEVICE_LIST_ACK)
 {
 	devices_.clear();
 	int size = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"].size();
@@ -345,7 +348,7 @@ EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char * msg)
 
 
 EasyDarwinCameraListRsp::EasyDarwinCameraListRsp(EasyDevices & cameras, string devcei_serial, size_t cseq, size_t error)
-: EasyProtocol(MSG_CLI_CMS_CAMERA_LIST_RSP)
+: EasyProtocol(MSG_SC_CAMERA_LIST_ACK)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -364,7 +367,7 @@ EasyDarwinCameraListRsp::EasyDarwinCameraListRsp(EasyDevices & cameras, string d
 }
 
 EasyDarwinCameraListRsp::EasyDarwinCameraListRsp(const char * msg)
-: EasyProtocol(msg, MSG_CLI_CMS_CAMERA_LIST_RSP)
+: EasyProtocol(msg, MSG_SC_CAMERA_LIST_ACK)
 {
 	cameras_.clear();
 	int size = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Cameras"].size();
@@ -381,7 +384,7 @@ EasyDarwinCameraListRsp::EasyDarwinCameraListRsp(const char * msg)
 }
 
 EasyDarwinClientStartStreamRsp::EasyDarwinClientStartStreamRsp(EasyJsonValue &body, size_t cseq, size_t error)
-: EasyProtocol(MSG_CLI_CMS_STREAM_START_RSP)
+: EasyProtocol(MSG_SC_GET_STREAM_ACK)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -394,12 +397,12 @@ EasyDarwinClientStartStreamRsp::EasyDarwinClientStartStreamRsp(EasyJsonValue &bo
 }
 
 EasyDarwinClientStartStreamRsp::EasyDarwinClientStartStreamRsp(const char *msg)
-: EasyProtocol(msg, MSG_CLI_CMS_STREAM_START_RSP)
+: EasyProtocol(msg, MSG_SC_GET_STREAM_ACK)
 {
 }
 
 EasyDarwinClientStopStreamRsp::EasyDarwinClientStopStreamRsp(EasyJsonValue & body, size_t cseq, size_t error)
-: EasyProtocol(MSG_CLI_CMS_STREAM_STOP_RSP)
+: EasyProtocol(MSG_SC_FREE_STREAM_ACK)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -412,12 +415,12 @@ EasyDarwinClientStopStreamRsp::EasyDarwinClientStopStreamRsp(EasyJsonValue & bod
 }
 
 EasyDarwinClientStopStreamRsp::EasyDarwinClientStopStreamRsp(const char * msg)
-: EasyProtocol(msg, MSG_CLI_CMS_STREAM_STOP_RSP)
+: EasyProtocol(msg, MSG_SC_FREE_STREAM_ACK)
 {
 }
 
 EasyDarwinDeviceUpdateSnapReq::EasyDarwinDeviceUpdateSnapReq(EasyJsonValue & body, size_t cseq)
-: EasyProtocol(MSG_DEV_CMS_UPDATE_SNAP_REQ)
+: EasyProtocol(MSG_DS_POST_SNAP_REQ)
 {
 	SetHeaderValue("CSeq", cseq);
 
@@ -428,12 +431,12 @@ EasyDarwinDeviceUpdateSnapReq::EasyDarwinDeviceUpdateSnapReq(EasyJsonValue & bod
 }
 
 EasyDarwinDeviceUpdateSnapReq::EasyDarwinDeviceUpdateSnapReq(const char * msg)
-: EasyProtocol(msg, MSG_DEV_CMS_UPDATE_SNAP_REQ)
+: EasyProtocol(msg, MSG_DS_POST_SNAP_REQ)
 {
 }
 
 EasyDarwinDeviceUpdateSnapRsp::EasyDarwinDeviceUpdateSnapRsp(EasyJsonValue & body, size_t cseq, size_t error)
-: EasyProtocol(MSG_DEV_CMS_UPDATE_SNAP_RSP)
+: EasyProtocol(MSG_SD_POST_SNAP_ACK)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -446,12 +449,12 @@ EasyDarwinDeviceUpdateSnapRsp::EasyDarwinDeviceUpdateSnapRsp(EasyJsonValue & bod
 }
 
 EasyDarwinDeviceUpdateSnapRsp::EasyDarwinDeviceUpdateSnapRsp(const char * msg)
-: EasyProtocol(msg, MSG_DEV_CMS_UPDATE_SNAP_RSP)
+: EasyProtocol(msg, MSG_SD_POST_SNAP_ACK)
 {
 }
 
 EasyDarwinExceptionRsp::EasyDarwinExceptionRsp(size_t cseq, size_t error)
-:EasyProtocol(MSG_CLI_CMS_EXCEPTION)
+:EasyProtocol(MSG_SC_EXCEPTION)
 {
 	SetHeaderValue("CSeq", cseq);
 	SetHeaderValue("ErrorNum", error);
@@ -467,18 +470,123 @@ EasyDarwinRTSPPushSessionListAck::EasyDarwinRTSPPushSessionListAck(const char* m
 : EasyProtocol(msg, MSG_CLI_SMS_PUSH_SESSION_LIST_ACK)
 {
 }
-
 bool EasyDarwinRTSPPushSessionListAck::AddSession(EasyDarwinRTSPSession &session)
 {	
 	Json::Value value;
 	value["index"] = session.index;
 	value["url"] = session.Url;
 	value["name"] = session.Name;
-	value["AudienceNum"] = session.numOutputs;
 	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Sessions"].append(value);
 	return true;
 }
 
+EasyDarwinRecordListAck::EasyDarwinRecordListAck()
+: EasyProtocol(MSG_SC_LIST_RECORD_ACK)
+{
+}
+
+EasyDarwinRecordListAck::EasyDarwinRecordListAck(const char *msg)
+: EasyProtocol(msg, MSG_SC_LIST_RECORD_ACK)
+{
+}
+
+bool EasyDarwinRecordListAck::AddRecord(std::string record)
+{
+	Json::Value value;	
+	value["url"] = record;	
+	int pos = record.find_last_of('/');	
+	value["time"] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Records"].append(value);
+	return true;
+}
+
+//add,紫光，start
+string TerminalTypeMap[] ={"EasyCamera","EasyNVR"};
+string AppType[]={"ARM_Linux","Android","IOS","WEB","PC"};
+bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
+{
+	EasyProtocol proTemp(json);
+	do 
+	{
+		string strTerminalType	=	proTemp.GetHeaderValue("TerminalType");//获取设备类型
+		string strAppType		=	proTemp.GetHeaderValue("AppType");//获取App类型
+		serial_					=	proTemp.GetBodyValue("Serial");//获取设备序列号
+
+		if(strTerminalType.size()<=0||serial_.size()<=0||strAppType.size()<=0)
+			break;
+		
+		int i=0;
+		for(;i<EASYDSS_TERMINAL_TYPE_NUM;i++)//获取设备类型
+		{
+			if(strTerminalType==TerminalTypeMap[i])
+			{
+				eDeviceType=(EasyDSSTerminalType)i;
+				break;
+			}
+		}
+		if(i>=EASYDSS_TERMINAL_TYPE_NUM)
+			break;
+		for(i=0;i<EASYDSS_APP_TYPE_NUM;i++)//获取App类型
+		{
+			if(strAppType==AppType[i])
+			{
+				eAppType=(EasyDSSAppType)i;
+				break;
+			}
+		}
+		if(i>=EASYDSS_APP_TYPE_NUM)
+			break;
+
+		name_			=	proTemp.GetBodyValue("Name");//获取设备名称
+		password_		=	proTemp.GetBodyValue("Token");//设备认证码
+		tag_			=	proTemp.GetBodyValue("Tag");//标签
+		channelCount_	=	proTemp.GetBodyValue("ChannelCount");//当前设备包含的摄像头数量
+
+		if(eDeviceType==EASYDSS_TERMINAL_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
+		{
+			cameras_.clear();
+			Json::Value *proot=proTemp.GetRoot();
+			int size = (*proot)[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Channels"].size(); //数组大小 
+
+			for(int i = 0; i < size; i++)  
+			{  
+				Json::Value &json_camera = (*proot)[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Channels"][i];  
+				EasyDevice camera;
+				camera.name_ = json_camera["Name"].asString();
+				camera.channel_ = json_camera["Channel"].asString();		
+				camera.status_ = json_camera["Status"].asString();	
+				cameras_.push_back(camera);
+			}  
+		}
+		return true;
+	} while (0);
+	//执行到这说明得到的设备信息是错误的
+	return false;
+}
+
+void EasyDarwinRSP::SetHead(EasyJsonValue &header)
+{
+	for(EasyJsonValue::iterator it = header.begin(); it != header.end(); it++)
+	{
+		SetHeaderValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+void EasyDarwinRSP::SetBody(EasyJsonValue &body)
+{
+	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+void EasyDarwinRecordListRSP::AddRecord(std::string record)
+{
+	Json::Value value;	
+	value["url"] = record;	
+	int pos = record.find_last_of('/');	
+	value["time"] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
+	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Records"].append(value);
+}
+//add,紫光，end
 }
 }//namespace
 

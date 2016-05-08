@@ -90,11 +90,19 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     Socket::Initialize();
 	//获取系统网卡数量sNumIPAddrs及对应的具体ip，存储在sIPAddrInfoArray结构体数组中
     SocketUtils::Initialize(!inDontFork);
-
+/*
 #if !MACOSXEVENTQUEUE
     ::select_startevents();//initialize the select() implementation of the event queue
 #endif
-    
+*/
+    #if !MACOSXEVENTQUEUE
+#ifndef __Win32__    
+    ::epollInit();
+#else
+    ::select_startevents();//initialize the select() implementation of the event queue        
+#endif
+
+#endif
 	//初始化系统属性字典
     QTSSDictionaryMap::Initialize();
 	//初始化Server对象属性字典，包括其他具有属性字典的类，都要先进行Initialize
@@ -624,7 +632,7 @@ void RunServer()
     Bool16 printHeader = false;
     Bool16 printStatus = false;
 
-
+	UInt32 num=0;//add
     //just wait until someone stops the server or a fatal error occurs.
     QTSS_ServerState theServerState = sServer->GetServerState();
     while ((theServerState != qtssShuttingDownState) &&
@@ -635,7 +643,14 @@ void RunServer()
 #else
         OSThread::Sleep(1000);
 #endif
-
+		//add,redis,定时保活
+		num++;
+		if(num%5==0)
+		{
+			num=0;
+			QTSServerInterface::GetServer()->RedisTTL();
+		}
+		//
         LogStatus(theServerState);
 
         if (sStatusUpdateInterval)

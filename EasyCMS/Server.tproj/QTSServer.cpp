@@ -57,20 +57,21 @@
 #include "QTSSCallbacks.h"
 #include "QTSSModuleUtils.h"
 
+//具体上层协议类
+#include "HTTPSessionInterface.h"
+#include "HTTPSession.h"
+#include "QTSSFile.h"
+
+
 //Compile time modules
 #include "QTSSErrorLogModule.h"
-
+#include"QTSSAuthModule.h"
 #if __MacOSX__
 #include "QTSSDSAuthModule.h"
 #endif
 #if MEMORY_DEBUGGING
 #include "QTSSWebDebugModule.h"
 #endif
-
-//具体上层协议类
-#include "HTTPSessionInterface.h"
-#include "HTTPSession.h"
-#include "QTSSFile.h"
 
 // CLASS DEFINITIONS
 class ServiceListenerSocket : public TCPListenerSocket
@@ -189,6 +190,21 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
             QTSSModuleUtils::LogError(qtssWarningVerbosity, qtssMsgNoPortsSucceeded, 0);
         return false;
     }
+	
+	//for redis
+	//获取redis和CMS的外部IP和端口
+	char * chTemp=fSrvrPrefs->GetRedisIP();
+	fRedisIP=chTemp;
+	delete[] chTemp;
+	fRedisPort=fSrvrPrefs->GetRedisPort();
+
+	chTemp=fSrvrPrefs->GetCMSIP();
+	fCMSIP=chTemp;
+	delete[] chTemp;
+	fCMSPort=fSrvrPrefs->GetMonitorWANPort();
+	
+	ConRedis();//连接redis
+	//for redis
 
     fServerState = qtssStartingUpState;
     return true;
@@ -540,6 +556,9 @@ Bool16  QTSServer::SwitchPersonality()
 void    QTSServer::LoadCompiledInModules()
 {
 #ifndef DSS_DYNAMIC_MODULES_ONLY
+	QTSSModule* theAuthModule = new QTSSModule("QTSSAuthModule");
+	(void)theAuthModule->SetupModule(&sCallbacks, &QTSSAuthModule_Main);
+	(void)AddModule(theAuthModule);
     // MODULE DEVELOPERS SHOULD ADD THE FOLLOWING THREE LINES OF CODE TO THIS
     // FUNCTION IF THEIR MODULE IS BEING COMPILED INTO THE SERVER.
     //
@@ -912,7 +931,6 @@ void QTSServer::DoInitRole()
             delete theModule;
         }
     }
-
     OSThread::SetMainThreadData(NULL);
 }
 

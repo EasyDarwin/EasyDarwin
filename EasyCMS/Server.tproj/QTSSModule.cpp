@@ -255,6 +255,8 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         case QTSS_RTSPIncomingData_Role:    return kRTSPIncomingDataRole    ;      
         case QTSS_StateChange_Role:         return kStateChangeRole         ;      
         case QTSS_Interval_Role:            return kTimedIntervalRole       ;
+		case QTSS_NONCE_ROLE:               return kNonceRole               ;
+		case QTSS_AUTH_ROLE:                return kAuthRole                ;
         default:
             return -1;
     }

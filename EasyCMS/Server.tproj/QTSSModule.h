@@ -148,8 +148,10 @@ class QTSSModule : public QTSSDictionary, public Task
             kRTSPIncomingDataRole =     18,
             kStateChangeRole =          19,
             kTimedIntervalRole =        20,
-            
-            kNumRoles =                 21
+            kNonceRole        =         21,//add
+			kAuthRole         =         22,//add
+
+            kNumRoles =                 23
         };
         typedef UInt32 RoleIndex;
         
