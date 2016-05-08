@@ -67,9 +67,6 @@
     <ClCompile Include="..\Server.tproj\QTSSSocket.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\Server.tproj\RTSPProtocol.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Server.tproj\RunServer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>

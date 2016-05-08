@@ -42,7 +42,7 @@
 #include "HTTPSessionInterface.h"
 
 #include "OSRef.h"
-#include "RTSPProtocol.h"
+#include "HTTPProtocol.h"
 #ifndef __MacOSX__
 #include "revision.h"
 #endif
@@ -141,7 +141,7 @@ void    QTSServerInterface::Initialize()
 
     //Write out a premade server header
     StringFormatter serverFormatter(sServerHeaderPtr.Ptr, kMaxServerHeaderLen);
-    serverFormatter.Put(RTSPProtocol::GetHeaderString(qtssServerHeader));
+	serverFormatter.Put(HTTPProtocol::GetHeaderString(httpServerHeader)->Ptr, HTTPProtocol::GetHeaderString(httpServerHeader)->Len);
     serverFormatter.Put(": ");
     serverFormatter.Put(sServerNameStr);
     serverFormatter.PutChar('/');

@@ -219,6 +219,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\ClientSocket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ClientSocket.h"
+				>
+			</File>
+			<File
 				RelativePath="ConfParser.cpp"
 				>
 				<FileConfiguration

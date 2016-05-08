@@ -22,7 +22,6 @@
 #include "StringParser.h"
 #include "QTSServerInterface.h"
 #include "QueryParamList.h"
-#include "RTSPProtocol.h"
 //add
 #define __PLACEMENT_NEW_INLINE
 #include"OSMapEx.h"

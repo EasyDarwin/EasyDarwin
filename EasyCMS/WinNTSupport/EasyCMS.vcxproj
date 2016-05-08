@@ -187,7 +187,6 @@
     <ClCompile Include="..\Server.tproj\QTSSModule.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSPrefs.cpp" />
     <ClCompile Include="..\Server.tproj\QTSSSocket.cpp" />
-    <ClCompile Include="..\Server.tproj\RTSPProtocol.cpp" />
     <ClCompile Include="..\Server.tproj\RunServer.cpp" />
     <ClCompile Include="..\Server.tproj\win32main.cpp" />
   </ItemGroup>

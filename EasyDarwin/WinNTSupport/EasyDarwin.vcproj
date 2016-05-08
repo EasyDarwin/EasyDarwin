@@ -1746,10 +1746,6 @@
 				Name="RTSPClientLib"
 				>
 				<File
-					RelativePath="..\RTSPClientLib\ClientSocket.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\RTSPClientLib\RTSPClient.cpp"
 					>
 				</File>
