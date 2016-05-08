@@ -58,14 +58,14 @@ public:
 	template <class type>
 	bool SetHeaderValue(const char* tag, type value)
 	{
-		root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_HEADER][tag] = boost::lexical_cast<std::string>(value);
+		root[EASY_TAG_ROOT][EASY_TAG_HEADER][tag] = boost::lexical_cast<std::string>(value);
 		return true;
 	}
 	
 	template <class type>
 	bool SetBodyValue(const char* tag, type value)
 	{
-		root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY][tag] = boost::lexical_cast<std::string>(value);;
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][tag] = boost::lexical_cast<std::string>(value);;
 		return true;
 	}
 

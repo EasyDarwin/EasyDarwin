@@ -424,7 +424,7 @@ void HTTPSessionInterface::AutoStopStreamJudge()
 			UInt32 uDevCseq=pDevSession->GetCSeq();
 			sprintf(chTemp,"%d",uDevCseq);
 			headerheader["CSeq"]	=string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
-			headerheader[EASYDARWIN_TAG_VERSION]=		EASYDARWIN_PROTOCOL_VERSION;
+			headerheader[EASY_TAG_VERSION]=		EASY_PROTOCOL_VERSION;
 
 			bodybody["DeviceSerial"]	=	stTemp.strDeviceSerial;
 			bodybody["CameraSerial"]	=	stTemp.strCameraSerial;

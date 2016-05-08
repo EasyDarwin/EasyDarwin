@@ -61,7 +61,7 @@ EasyDarwinRegisterReq::EasyDarwinRegisterReq(EasyNVR &nvr, size_t cseq)
 		value["CameraSerial"] = it->serial_;
 		value["CameraName"] = it->name_;		
 		value["Status"] = it->status_;
-		root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Cameras"].append(value);		
+		root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].append(value);		
 	}
 }
 
@@ -75,11 +75,11 @@ EasyDarwinRegisterReq::EasyDarwinRegisterReq(const char* msg)
 	
 	nvr_.channels_.clear();
 
-	int size = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Cameras"].size();  
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].size();  
 
 	for(int i = 0; i < size; i++)  
 	{  
-		Json::Value &json_camera = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Cameras"][i];  
+		Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"][i];  
 		EasyDevice camera;
 		camera.name_ = json_camera["CameraName"].asString();
 		camera.serial_ = json_camera["CameraSerial"].asString();		
@@ -192,7 +192,7 @@ bool EasyDarwinDeviceListAck::AddDevice(EasyDarwinDevice &device)
 	value["DeviceSerial"] = device.DeviceSerial;
 	value["DeviceName"] = device.DeviceName;
 	value["DeviceSnap"] = device.DeviceSnap;
-	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"].append(value);
+	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].append(value);
 	return true;
 }
 
@@ -200,11 +200,11 @@ int EasyDarwinDeviceListAck::StartGetDevice()
 {
 	devices.clear();	
 	
-	int size = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"].size();  
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].size();  
 
 	for(int i = 0; i < size; i++)  
 	{  
-		Json::Value &json_device = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"][i];  
+		Json::Value &json_device = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"][i];  
 		EasyDarwinDevice device;
 		device.DeviceName = json_device["DeviceName"].asString();
 		device.DeviceSerial = json_device["DeviceSerial"].asString();    
@@ -303,7 +303,7 @@ bool EasyDarwinHLSessionListAck::AddSession(EasyDarwinHLSession &session)
 	value["url"] = session.HlsUrl;
 	value["source"] = session.sourceUrl;
 	value["Bitrate"] = session.bitrate;
-	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Sessions"].append(value);
+	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Sessions"].append(value);
 	return true;
 }
 
@@ -324,7 +324,7 @@ EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(EasyDevices & devices, size_t c
 		value["DeviceName"] = it->name_;
 		value["DeviceTag"] = it->tag_;
 		//value["Status"] = it->status_;
-		root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"].append(value);
+		root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].append(value);
 	}
 }
 
@@ -332,11 +332,11 @@ EasyDarwinDeviceListRsp::EasyDarwinDeviceListRsp(const char * msg)
 : EasyProtocol(msg, MSG_SC_DEVICE_LIST_ACK)
 {
 	devices_.clear();
-	int size = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"].size();
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].size();
 
 	for (int i = 0; i < size; i++)
 	{
-		Json::Value &json_ = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Devices"][i];
+		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"][i];
 		EasyDevice device;
 		device.name_ = json_["DeviceSerial"].asString();
 		device.serial_ = json_["DeviceName"].asString();
@@ -362,7 +362,7 @@ EasyDarwinCameraListRsp::EasyDarwinCameraListRsp(EasyDevices & cameras, string d
 		value["CameraSerial"] = it->serial_;
 		value["CameraName"] = it->name_;
         value["Status"] = it->status_;
-		root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Cameras"].append(value);
+		root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].append(value);
 	}
 }
 
@@ -370,11 +370,11 @@ EasyDarwinCameraListRsp::EasyDarwinCameraListRsp(const char * msg)
 : EasyProtocol(msg, MSG_SC_CAMERA_LIST_ACK)
 {
 	cameras_.clear();
-	int size = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Cameras"].size();
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].size();
 
 	for (int i = 0; i < size; i++)
 	{
-		Json::Value &json_ = root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Cameras"][i];
+		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"][i];
 		EasyDevice camera;
 		camera.name_ = json_["CameraSerial"].asString();
 		camera.serial_ = json_["CameraName"].asString();
@@ -476,7 +476,7 @@ bool EasyDarwinRTSPPushSessionListAck::AddSession(EasyDarwinRTSPSession &session
 	value["index"] = session.index;
 	value["url"] = session.Url;
 	value["name"] = session.Name;
-	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Sessions"].append(value);
+	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Sessions"].append(value);
 	return true;
 }
 
@@ -496,7 +496,7 @@ bool EasyDarwinRecordListAck::AddRecord(std::string record)
 	value["url"] = record;	
 	int pos = record.find_last_of('/');	
 	value["time"] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
-	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Records"].append(value);
+	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Records"].append(value);
 	return true;
 }
 
@@ -546,11 +546,11 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 		{
 			cameras_.clear();
 			Json::Value *proot=proTemp.GetRoot();
-			int size = (*proot)[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Channels"].size(); //数组大小 
+			int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY]["Channels"].size(); //数组大小 
 
 			for(int i = 0; i < size; i++)  
 			{  
-				Json::Value &json_camera = (*proot)[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Channels"][i];  
+				Json::Value &json_camera = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY]["Channels"][i];  
 				EasyDevice camera;
 				camera.name_ = json_camera["Name"].asString();
 				camera.channel_ = json_camera["Channel"].asString();		
@@ -584,7 +584,7 @@ void EasyDarwinRecordListRSP::AddRecord(std::string record)
 	value["url"] = record;	
 	int pos = record.find_last_of('/');	
 	value["time"] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
-	root[EASYDARWIN_TAG_ROOT][EASYDARWIN_TAG_BODY]["Records"].append(value);
+	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Records"].append(value);
 }
 //add,紫光，end
 }
