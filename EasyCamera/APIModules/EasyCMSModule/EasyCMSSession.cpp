@@ -129,14 +129,14 @@ SInt64 EasyCMSSession::Run()
 	{
 		switch (fState)
 		{
-			case kIdle://空闲
+			case kIdle:
 				{
 					qtss_printf("kIdle state \n");
 
 					if(!IsConnected())
 					{
 						// TCPSocket未连接的情况,首先进行登录连接
-						Login();
+						Register();
 					}
 					else
 					{
@@ -145,7 +145,7 @@ SInt64 EasyCMSSession::Run()
 						{
 							// CMSSession掉线,重新进行上线动作
 							if(kSessionOffline == fSessionStatus)
-								Login();
+								Register();
 						}
 
 						if(events & Task::kReadEvent)
@@ -156,7 +156,7 @@ SInt64 EasyCMSSession::Run()
 						if(events & Task::kTimeoutEvent)
 						{
 							// 保活时间到,需要发送保活报文
-							Login();
+							Register();
 						}
 					}
 					
@@ -326,7 +326,7 @@ SInt64 EasyCMSSession::Run()
 // 
 // 构造登录注册的HTTP请求报文,并赋值给HTTPResponseStream Buffer等待发送处理
 // HTTPRequest类区分httpRequestType/httpResponseType
-QTSS_Error EasyCMSSession::Login()
+QTSS_Error EasyCMSSession::Register()
 {
 	//EasyDevices channels;
 	//easy_channel_t *pChannels = (easy_channel_t *)QTSServerInterface::GetServer()->GetEasyNVRChannelPtr();
@@ -342,7 +342,7 @@ QTSS_Error EasyCMSSession::Login()
 	//}
 
 	//EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
-	//EasyDarwinRegisterReq req(nvr);
+	//EasyMsgDSRegisterREQ req(nvr);
 	//string msg = req.GetMsg();
 
 	//StrPtrLen jsonContent((char*)msg.data());
@@ -430,7 +430,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 		{
 		case  MSG_SD_REGISTER_ACK:
 			//{	
-			//	EasyDarwinRegisterRSP rsp_parse(fContentBuffer);
+			//	EasyMsgSDRegisterACK rsp_parse(fContentBuffer);
 
 			//	qtss_printf("session id = %s\n", rsp_parse.GetBodyValue("SessionID").c_str());
 			//	qtss_printf("device serial = %s\n", rsp_parse.GetBodyValue("DeviceSerial").c_str());
@@ -438,7 +438,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
 			{
-				//EasyDarwinDeviceStreamReq	startStreamReq(fContentBuffer);
+				//EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
 				//qtss_printf("DeviceSerial = %s\n", startStreamReq.GetBodyValue("DeviceSerial").c_str());
 				//qtss_printf("CameraSerial = %s\n", startStreamReq.GetBodyValue("CameraSerial").c_str());
 				//qtss_printf("DssIP = %s\n", startStreamReq.GetBodyValue("DssIP").c_str());
@@ -474,7 +474,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 				//body["DeviceSerial"] = packetParams.easyNVRParams.inDeviceSerial;
 				//body["CameraSerial"] = packetParams.easyNVRParams.inCameraSerial;
 				//body["StreamID"] = packetParams.easyNVRParams.inStreamID;
-				//EasyDarwinDeviceStreamRsp rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				//EasyMsgDSPushSteamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
 
 				//string msg = rsp.GetMsg();
 				//StrPtrLen jsonContent((char*)msg.data());
@@ -498,7 +498,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 			break;
 		case MSG_SD_STREAM_STOP_REQ:
 			{
-				//EasyDarwinDeviceStreamStop	stopStreamReq(fContentBuffer);
+				//EasyMsgSDStopStreamREQ	stopStreamReq(fContentBuffer);
 
 				//QTSS_RoleParams packetParams;
 				//memset(&packetParams, 0x00, sizeof(QTSS_RoleParams));
@@ -528,7 +528,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 				//body["CameraSerial"] = packetParams.easyNVRParams.inCameraSerial;
 				//body["StreamID"] = packetParams.easyNVRParams.inStreamID;
 
-				//EasyDarwinDeviceStreamStopRsp rsp(body, 1, err == QTSS_NoErr ? 200 : 404);
+				//EasyMsgDSStopStreamACK rsp(body, 1, err == QTSS_NoErr ? 200 : 404);
 				//string msg = rsp.GetMsg();
 
 				////回应

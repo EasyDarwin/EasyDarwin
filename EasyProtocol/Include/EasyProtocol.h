@@ -336,7 +336,7 @@ private:
 };
 
 
-//add,紫光，start
+//add,Unisiot，start
 enum EasyDSSTerminalType//设备类型
 {
 	EASYDSS_TERMINAL_TYPE_CAMERA	= 0,//摄像机
@@ -395,6 +395,6 @@ public:
 	EasyDarwinRecordListRSP(int iMsgType):EasyDarwinRSP(iMsgType){}
 	void AddRecord(std::string record);
 };
-//add,紫光，end
+//add,Unisiot，end
 }}//namespace
 #endif

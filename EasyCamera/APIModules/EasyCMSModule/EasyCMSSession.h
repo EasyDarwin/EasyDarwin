@@ -51,15 +51,6 @@ public:
 
 	TimeoutTask fTimeoutTask;
     
-private:
-    virtual SInt64 Run();
-
-	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
-
-
-
-public:
-
 	enum
 	{
 		kSessionOffline		= 0,	
@@ -82,7 +73,9 @@ public:
 
 	SessionStatus GetSessionStatus() { return fSessionStatus; } 
 
-	QTSS_Error Login();
+	// 设备注册到EasyCMS
+	QTSS_Error Register();
+	// 设备上传快照到EasyCMS
 	QTSS_Error UploadSnapshotImage(char *deviceSerial, char *cameraSerial, char *imagedata, int imagelength);
 
 	// 处理HTTPRequest请求报文
@@ -112,6 +105,11 @@ public:
 
 	// 请求报文的Content读取偏移量,在多次读取到完整Content部分时用到
 	UInt32				fContentBufferOffset;
+
+private:
+    virtual SInt64 Run();
+
+	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
 
 };
 

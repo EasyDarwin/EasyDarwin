@@ -442,7 +442,7 @@ QTSS_Error HTTPSession::SetupRequest()
 				}
 			}
 			//执行到这的都说明需要进行异常处理
-			EasyDarwinExceptionRsp rsp;
+			EasyMsgExceptionACK rsp;
 			string msg = rsp.GetMsg();
 			//构造响应报文(HTTP Header)
 			HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
@@ -612,7 +612,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 {	
 	QTSS_Error theErr = QTSS_NoErr;		
 
-	EasyDarwin::Protocol::EasyDarwinRegisterReq req(json);
+	EasyDarwin::Protocol::EasyMsgDSRegisterREQ req(json);
 	do
 	{
 		/*if(fAuthenticated)
@@ -646,7 +646,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 	body["DeviceSerial"] = fDevSerial;
 	body["SessionID"] = fSessionID;
 
-	EasyDarwinRegisterRSP rsp(body, 1, 200);
+	EasyDarwin::Protocol::EasyMsgSDRegisterACK rsp(body, 1, 200);
 
 	string msg = rsp.GetMsg();
 
@@ -705,7 +705,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReq(char *queryString)
 		}while (0);		
 	}
 
-	EasyDarwinDeviceListRsp rsp(devices);
+	EasyMsgSCDeviceListACK rsp(devices);
 
 	string msg = rsp.GetMsg();
 
@@ -747,7 +747,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetCameraListReq(const string& device_serial, 
 		if (device_serial == NULL)
 		{
 		theErr = QTSS_ValueNotFound;
-		EasyDarwinCameraListRsp rsp(cameras, "", 1, EASY_ERROR_CLIENT_BAD_REQUEST);
+		EasyMsgSCDeviceInfoACK rsp(cameras, "", 1, EASY_ERROR_CLIENT_BAD_REQUEST);
 		msg = rsp.GetMsg();
 		qtss_printf("Get Camera List error: Not found device serial arg! \n", queryString);
 		break;
@@ -761,12 +761,12 @@ QTSS_Error HTTPSession::ExecNetMsgGetCameraListReq(const string& device_serial, 
 		if (nvr == nvrs.end())
 		{
 			theErr = QTSS_AttrDoesntExist;			
-			EasyDarwinCameraListRsp rsp(cameras, device_serial, 1, EASY_ERROR_DEVICE_NOT_FOUND);
+			EasyMsgSCDeviceInfoACK rsp(cameras, device_serial, 1, EASY_ERROR_DEVICE_NOT_FOUND);
 			msg = rsp.GetMsg();
 		}
 		else
 		{
-			EasyDarwinCameraListRsp rsp(nvr->second.channels_, device_serial);
+			EasyMsgSCDeviceInfoACK rsp(nvr->second.channels_, device_serial);
 			msg = rsp.GetMsg();
 		}
 		qtss_printf(msg.c_str());
@@ -812,7 +812,7 @@ QTSS_Error HTTPSession::ExecNetMsgStartStreamReq(const string& device_serial, ch
 		{
 			theErr = QTSS_BadArgument;
 
-			EasyDarwinClientStartStreamRsp rsp(body, 1, EASY_ERROR_CLIENT_BAD_REQUEST);
+			EasyMsgSCGetStreamACK rsp(body, 1, EASY_ERROR_CLIENT_BAD_REQUEST);
 			msg = rsp.GetMsg();
 			qtss_printf("client start stream error: bad argument[%s]! \n", queryString);
 			break;
@@ -826,7 +826,7 @@ QTSS_Error HTTPSession::ExecNetMsgStartStreamReq(const string& device_serial, ch
 		if (nvr == nvrs.end())
 		{
 			theErr = QTSS_AttrDoesntExist;
-			EasyDarwinClientStartStreamRsp rsp(body, 1, EASY_ERROR_DEVICE_NOT_FOUND);
+			EasyMsgSCGetStreamACK rsp(body, 1, EASY_ERROR_DEVICE_NOT_FOUND);
 			msg = rsp.GetMsg();
 		}
 		else
@@ -847,7 +847,7 @@ QTSS_Error HTTPSession::ExecNetMsgStartStreamReq(const string& device_serial, ch
 				body["DssIP"] = dss_ip;
 				body["DssPort"] = dss_port;
 
-				EasyDarwinDeviceStreamReq req(body, 1);
+				EasyMsgSDPushStreamREQ req(body, 1);
 				string buffer = req.GetMsg();
 
 				nvr_session->SetStreamPushInfo(body);
@@ -871,7 +871,7 @@ QTSS_Error HTTPSession::ExecNetMsgStartStreamReq(const string& device_serial, ch
 				{
 					theErr = QTSS_RequestFailed;
 					body.clear();
-					EasyDarwinClientStartStreamRsp rsp(body, 1, EASY_ERROR_REQUEST_TIMEOUT);
+					EasyMsgSCGetStreamACK rsp(body, 1, EASY_ERROR_REQUEST_TIMEOUT);
 					msg = rsp.GetMsg();
 					break;
 				}				
@@ -903,7 +903,7 @@ QTSS_Error HTTPSession::ExecNetMsgStartStreamReq(const string& device_serial, ch
 			body["URL"] = "rtsp://" + dss_ip + "/" + device_serial + "_" + camera_serial + ".sdp";
 			body["Protocol"] = protocol;
 			body["StreamID"] = stream_id;
-			EasyDarwinClientStartStreamRsp rsp(body);
+			EasyMsgSCGetStreamACK rsp(body);
 			msg = rsp.GetMsg();			
 
 		}
@@ -938,7 +938,7 @@ QTSS_Error HTTPSession::ExecNetMsgStartDeviceStreamRsp(const char * json)
 
 	//qtss_printf("%s", json);
 
-	EasyDarwinDeviceStreamRsp rsp(json);
+	EasyMsgDSPushSteamACK rsp(json);
 
 	for (EasyNVRMessageQueue::iterator it = fNVRMessageQueue.begin(); it != fNVRMessageQueue.end();)
 	{
@@ -984,7 +984,7 @@ QTSS_Error HTTPSession::ExecNetMsgStopStreamReq(const string& device_serial, cha
 		{
 			theErr = QTSS_BadArgument;
 
-			EasyDarwinClientStopStreamRsp rsp(body, 1, EASY_ERROR_CLIENT_BAD_REQUEST);
+			EasyMsgSCFreeStreamACK rsp(body, 1, EASY_ERROR_CLIENT_BAD_REQUEST);
 			msg = rsp.GetMsg();
 			qtss_printf("client start stream error: bad argument[%s]! \n", queryString);
 			break;
@@ -998,7 +998,7 @@ QTSS_Error HTTPSession::ExecNetMsgStopStreamReq(const string& device_serial, cha
 		if (nvr == nvrs.end())
 		{
 			theErr = QTSS_AttrDoesntExist;
-			EasyDarwinClientStopStreamRsp rsp(body, 1, EASY_ERROR_DEVICE_NOT_FOUND);
+			EasyMsgSCFreeStreamACK rsp(body, 1, EASY_ERROR_DEVICE_NOT_FOUND);
 			msg = rsp.GetMsg();
 		}
 		else
@@ -1012,7 +1012,7 @@ QTSS_Error HTTPSession::ExecNetMsgStopStreamReq(const string& device_serial, cha
 				body["CameraSerial"] = camera_serial;
 				body["StreamID"] = stream_id;
 
-				EasyDarwinDeviceStreamStop req(body, 1);
+				EasyMsgSDStopStreamREQ req(body, 1);
 				string buffer = req.GetMsg();
 
 				EasyNVRMessage nvr_msg;
@@ -1034,7 +1034,7 @@ QTSS_Error HTTPSession::ExecNetMsgStopStreamReq(const string& device_serial, cha
 				{
 					theErr = QTSS_RequestFailed;
 					body["PlayCount"] = (int)nvr_session->GetStreamReqCount(camera_serial);
-					EasyDarwinClientStopStreamRsp rsp(body, 1, EASY_ERROR_REQUEST_TIMEOUT);
+					EasyMsgSCFreeStreamACK rsp(body, 1, EASY_ERROR_REQUEST_TIMEOUT);
 					msg = rsp.GetMsg();
 					break;
 				}
@@ -1045,14 +1045,14 @@ QTSS_Error HTTPSession::ExecNetMsgStopStreamReq(const string& device_serial, cha
 				body["CameraSerial"] = camera_serial;
 				body["Protocol"] = protocol;
 				body["StreamID"] = stream_id;
-				EasyDarwinClientStopStreamRsp rsp(body);
+				EasyMsgSCFreeStreamACK rsp(body);
 				msg = rsp.GetMsg();
 			}
 			else
 			{
 				nvr_session->DecrementStreamReqCount(camera_serial);
 				body["PlayCount"] = (int)nvr_session->GetStreamReqCount(camera_serial);
-				EasyDarwinClientStopStreamRsp rsp(body, 1, EASY_ERROR_CONFLICT);
+				EasyMsgSCFreeStreamACK rsp(body, 1, EASY_ERROR_CONFLICT);
 				msg = rsp.GetMsg();				
 			}
 
@@ -1088,7 +1088,7 @@ QTSS_Error HTTPSession::ExecNetMsgStopDeviceStreamRsp(const char * json)
 
 	//qtss_printf("%s", json);
 
-	EasyDarwinDeviceStreamStop rsp(json);
+	EasyMsgSDStopStreamREQ rsp(json);
 
 	for (EasyNVRMessageQueue::iterator it = fNVRMessageQueue.begin(); it != fNVRMessageQueue.end();)
 	{
@@ -1124,7 +1124,7 @@ QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)//设备快照请求
 {
 	if(!fAuthenticated) return httpUnAuthorized;
 
-	EasyDarwinDeviceUpdateSnapReq parse(json);
+	EasyDarwin::Protocol::EasyMsgDSPostSnapREQ parse(json);
 
 	string image			=	parse.GetBodyValue("Image");	
 	string camer_serial		=	parse.GetBodyValue("Channel");
