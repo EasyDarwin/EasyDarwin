@@ -1004,8 +1004,8 @@ void* QTSSCallbacks::Easy_GetHLSessions()
 	OSRefTable* hlsMap = QTSServerInterface::GetServer()->GetHLSSessionMap();
 
 	EasyDarwinHLSessionListAck ack;
-	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");	
+	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
+	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");	
 	char count[16] = { 0 };
 	sprintf(count,"%d", hlsMap->GetNumRefsInTable());
 	ack.SetBodyValue("SessionCount", count );
@@ -1043,8 +1043,8 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 
 	EasyDarwinRTSPPushSessionListAck ack;
-	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
-	ack.SetHeaderValue(EASYDARWIN_TAG_CSEQ, "1");
+	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
+	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");
 
 	UInt32 uIndex= 0;
 	OSMutexLocker locker(reflectorSessionMap->GetMutex());

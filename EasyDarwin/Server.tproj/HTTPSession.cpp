@@ -657,7 +657,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 
 	//构造MSG_CLI_SMS_HLS_ACK响应报文
 	EasyDarwinEasyHLSAck ack;
-	ack.SetHeaderValue(EASYDARWIN_TAG_VERSION, "1.0");
+	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
 	if(strlen(hlsURL))
 		ack.SetStreamURL(hlsURL);
 
