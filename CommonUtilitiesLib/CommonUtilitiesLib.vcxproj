@@ -164,6 +164,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="keyframecache.cpp" />
     <ClCompile Include="md5.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -236,6 +237,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="OSMapEx.cpp" />
     <ClCompile Include="OSMutex.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -268,6 +270,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="OSRefTableEx.cpp" />
     <ClCompile Include="OSThread.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -285,6 +288,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="sdpCache.cpp" />
     <ClCompile Include="SDPUtils.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -423,7 +427,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="keyframecache.h" />
+    <ClInclude Include="OSMapEx.h" />
+    <ClInclude Include="OSRefTableEx.h" />
     <ClInclude Include="QueryParamList.h" />
+    <ClInclude Include="sdpCache.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -130,9 +130,33 @@
     <ClCompile Include="win32ev.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OSRefTableEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OSMapEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="keyframecache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sdpCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QueryParamList.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OSRefTableEx.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OSMapEx.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="keyframecache.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdpCache.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
