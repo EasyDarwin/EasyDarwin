@@ -220,7 +220,7 @@
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{14F332E3-1771-4908-8850-9A2581A4AED2}"
-			RelativePathToProject="..\..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
+			RelativePathToProject="..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
 		/>
 	</References>
 	<Files>
@@ -263,14 +263,6 @@
 			<Filter
 				Name="Core"
 				>
-				<File
-					RelativePath="..\Server.tproj\ClientSocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\ClientSocket.h"
-					>
-				</File>
 				<File
 					RelativePath="..\Server.tproj\EasyMediaSource.cpp"
 					>

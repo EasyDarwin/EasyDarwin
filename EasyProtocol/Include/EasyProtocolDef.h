@@ -5,29 +5,6 @@
 	Website: http://www.easydarwin.org
 */
 
-/*!
-\defgroup EasyDarwin_Terminal_Type_Define
-\defgroup EasyDarwin_Device_Type_Define
-\defgroup EasyDarwin_Tag_Define
-\defgroup EasyDarwin_Attruibute_Define
-\defgroup EasyDarwin_Message_Type_Define
-\defgroup EasyDarwin_Error_Define
-\defgroup EasyDarwin_Permission_Define
-\defgroup EasyDarwin_Time_Format_Define
-\defgroup EasyDarwin_Device_Status_Define
-\defgroup EasyDarwin_Protocol_Type_Define
-\defgroup EasyDarwin_Live_Type_Define
-\defgroup EasyProtocolBase
-\defgroup MSG_DEV_CMS_REGISTER_REQ
-\defgroup MSG_DEV_CMS_REGISTER_RSP
-\defgroup MSG_CMS_DEV_STREAM_START_REQ
-\defgroup MSG_CMS_DEV_STREAM_START_RSP
-\defgroup MSG_CMS_DEV_STREAM_STOP_REQ
-\defgroup MSG_CMS_DEV_STREAM_STOP_RSP
-\defgroup MSG_CLI_CMS_DEVICE_LIST_REQ
-\defgroup MSG_CLI_CMS_DEVICE_LIST_RSP
-*/
-
 #ifndef EASY_PROTOCOL_DEF_H
 #define	EASY_PROTOCOL_DEF_H
 

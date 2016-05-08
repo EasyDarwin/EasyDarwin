@@ -428,7 +428,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 		int nNetMsg = protocol.GetMessageType();
 		switch (nNetMsg)
 		{
-		case  MSG_DEV_CMS_REGISTER_RSP:
+		case  MSG_SD_REGISTER_ACK:
 			//{	
 			//	EasyDarwinRegisterRSP rsp_parse(fContentBuffer);
 
@@ -436,7 +436,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 			//	qtss_printf("device serial = %s\n", rsp_parse.GetBodyValue("DeviceSerial").c_str());
 			//}
 			break;
-		case MSG_CMS_DEV_STREAM_START_REQ:
+		case MSG_SD_PUSH_STREAM_REQ:
 			{
 				//EasyDarwinDeviceStreamReq	startStreamReq(fContentBuffer);
 				//qtss_printf("DeviceSerial = %s\n", startStreamReq.GetBodyValue("DeviceSerial").c_str());
@@ -496,7 +496,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 				//}
 			}
 			break;
-		case MSG_CMS_DEV_STREAM_STOP_REQ:
+		case MSG_SD_STREAM_STOP_REQ:
 			{
 				//EasyDarwinDeviceStreamStop	stopStreamReq(fContentBuffer);
 
