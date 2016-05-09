@@ -76,10 +76,10 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 : EasyProtocol(msg, MSG_DS_REGISTER_REQ)
 {
-	nvr_.serial_ = GetBodyValue("DeviceSerial");
-	nvr_.name_ = GetBodyValue("DeviceName");
-	nvr_.tag_ = GetBodyValue("DeviceTag");
-	nvr_.password_ = GetBodyValue("AuthCode");
+	nvr_.serial_ = GetBodyValue("Serial");
+	nvr_.name_ = GetBodyValue("Name");
+	nvr_.tag_ = GetBodyValue("Tag");
+	nvr_.password_ = GetBodyValue("Token");
 	
 	nvr_.channels_.clear();
 

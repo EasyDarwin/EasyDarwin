@@ -173,9 +173,9 @@ typedef UInt32  QTSS_AuthScheme;
 // Is this a normal RTSP session or an RTSP / HTTP session?
 enum
 {
-    qtssNormalSession         = 0,	//普通Socket Session
-	qtssDeviceSession		  = 1,	//已登录Device Session,NVR
-	qtssClientSession         = 2   //客户端Session
+    qtssNormalSession         = 0,	// 普通Socket Session
+	qtssDeviceSession		  = 1,	// 已登录Device Session,EasyNVR/EasyCamera
+	qtssClientSession         = 2   // 客户端Session
 };
 typedef UInt32 QTSS_SessionType;
 

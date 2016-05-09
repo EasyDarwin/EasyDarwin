@@ -604,8 +604,7 @@ QTSS_Error HTTPSession::DumpRequestData()
 	return theErr;
 }
 
-//消息处理
-//保留，begin
+// MSG_DS_REGISTER_REQ消息处理
 QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 {	
 	QTSS_Error theErr = QTSS_NoErr;		
@@ -613,11 +612,15 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 	EasyDarwin::Protocol::EasyMsgDSRegisterREQ req(json);
 	do
 	{
-		/*if(fAuthenticated)
-		{
-		break;
-		}*/
+		// 1、需要先确认Session是否已经验证过，如果未验证，先要进行验证
+		//if(fAuthenticated)
+		//{
+		//	break;
+		//}
+
+		// 2、这里需要对TerminalType和AppType做判断，是否为EasyCamera和EasyNVR
 		fSessionType = qtssDeviceSession;
+
 		boost::to_lower(req.GetNVR().serial_);
 		fDevSerial = req.GetNVR().serial_;
 		EasyNVRs &nvrs = QTSServerInterface::GetServer()->GetRegisterNVRs();
@@ -641,7 +644,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 
 
 	EasyJsonValue body;
-	body["DeviceSerial"] = fDevSerial;
+	body["Serial"] = fDevSerial;
 	body["SessionID"] = fSessionID;
 
 	EasyDarwin::Protocol::EasyMsgSDRegisterACK rsp(body, 1, 200);
@@ -674,6 +677,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReq(char *queryString)
 {
 	QTSS_Error theErr = QTSS_NoErr;
