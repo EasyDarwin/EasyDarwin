@@ -13,6 +13,8 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>ClientSocket.cpp</itemPath>
+      <itemPath>ClientSocket.h</itemPath>
       <itemPath>ConfParser.cpp</itemPath>
       <itemPath>ConfParser.h</itemPath>
       <itemPath>DateTranslator.cpp</itemPath>
@@ -165,6 +167,10 @@
       <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -401,6 +407,10 @@
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="ClientSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ConfParser.h" ex="false" tool="3" flavor2="0">
@@ -635,6 +645,10 @@
       <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="ClientSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -871,6 +885,10 @@
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="9">
       </item>
+      <item path="ClientSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="ConfParser.h" ex="false" tool="3" flavor2="0">
@@ -1106,6 +1124,10 @@
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="9">
       </item>
+      <item path="ClientSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="ConfParser.h" ex="false" tool="3" flavor2="0">
@@ -1340,6 +1362,10 @@
       <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ClientSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ConfParser.cpp" ex="false" tool="1" flavor2="0">
       </item>

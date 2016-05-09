@@ -368,7 +368,7 @@ void HTTPSessionInterface::DecrementStreamReqCount(string camera)
 	if (fStreamReqCount[camera] < 0) fStreamReqCount[camera] = 0;
 }
 //add
-void HTTPSessionInterface::InsertToSet(string &strCameraSerial,void * pObject)//加入到set中
+void HTTPSessionInterface::InsertToSet(const string &strCameraSerial,void * pObject)//加入到set中
 {
 	OSMutexLocker MutexLocker(&fMutexSet);
 	DevMapItera it=fDevmap.find(strCameraSerial);
@@ -384,7 +384,7 @@ void HTTPSessionInterface::InsertToSet(string &strCameraSerial,void * pObject)//
 		setTemp->insert(pObject);
 	}
 }
-bool HTTPSessionInterface::EraseInSet(string &strCameraSerial,void *pObject)//删除元素，并判断是否为空，为空返回true,失败返回false
+bool HTTPSessionInterface::EraseInSet(const string &strCameraSerial,void *pObject)//删除元素，并判断是否为空，为空返回true,失败返回false
 {
 	OSMutexLocker MutexLocker(&fMutexSet);
 	DevMapItera it=fDevmap.find(strCameraSerial);

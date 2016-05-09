@@ -87,8 +87,6 @@
       <itemPath>Server.tproj/QTSServerInterface.h</itemPath>
       <itemPath>Server.tproj/QTSServerPrefs.cpp</itemPath>
       <itemPath>Server.tproj/QTSServerPrefs.h</itemPath>
-      <itemPath>Server.tproj/RTSPProtocol.cpp</itemPath>
-      <itemPath>Server.tproj/RTSPProtocol.h</itemPath>
       <itemPath>Server.tproj/RunServer.cpp</itemPath>
       <itemPath>Server.tproj/RunServer.h</itemPath>
       <itemPath>Server.tproj/main.cpp</itemPath>
@@ -314,10 +312,6 @@
       </item>
       <item path="Server.tproj/QTSServerPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
@@ -528,10 +522,6 @@
       </item>
       <item path="Server.tproj/QTSServerPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
@@ -740,10 +730,6 @@
       <item path="Server.tproj/QTSServerPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServerPrefs.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="0">
       </item>

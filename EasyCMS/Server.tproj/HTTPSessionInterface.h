@@ -262,11 +262,11 @@ public:
 		}
 	}
 	//自动停止推流操作
-	void InsertToSet(string &strCameraSerial,void * pObject);//加入到set中
-	bool EraseInSet(string &strCameraSerial,void *pObject);//删除元素，并判断是否为空，为空返回true,失败返回false
+	void InsertToSet(const string &strCameraSerial,void * pObject);//加入到set中
+	bool EraseInSet(const string &strCameraSerial,void *pObject);//删除元素，并判断是否为空，为空返回true,失败返回false
 	void AutoStopStreamJudge();//自动停止推流判断，客户端连接断开时去判断,保证客户端直播后没有进行主动停止直播而直接断开连接这种情况不会让推流一直进行。
-	void InsertToStreamMap(string & strDeviceSerial,stStreamInfo & stTemp){OSMutexLocker MutexLocker(&fMutexSet);fClientStreamMap[strDeviceSerial]=stTemp;}
-	bool FindInStreamMap(string & strDeviceSerial,stStreamInfo & stTemp)
+	void InsertToStreamMap(const string & strDeviceSerial,stStreamInfo & stTemp){OSMutexLocker MutexLocker(&fMutexSet);fClientStreamMap[strDeviceSerial]=stTemp;}
+	bool FindInStreamMap(const string & strDeviceSerial,stStreamInfo & stTemp)
 	{
 		OSMutexLocker MutexLocker(&fMutexSet);
 		CliStreamMap::iterator it_l=fClientStreamMap.find(strDeviceSerial);

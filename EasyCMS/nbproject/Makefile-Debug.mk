@@ -64,7 +64,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Server.tproj/QTSServer.o \
 	${OBJECTDIR}/Server.tproj/QTSServerInterface.o \
 	${OBJECTDIR}/Server.tproj/QTSServerPrefs.o \
-	${OBJECTDIR}/Server.tproj/RTSPProtocol.o \
 	${OBJECTDIR}/Server.tproj/RunServer.o \
 	${OBJECTDIR}/Server.tproj/main.o
 
@@ -237,11 +236,6 @@ ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o: Server.tproj/QTSServerPrefs.cpp
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o Server.tproj/QTSServerPrefs.cpp
-
-${OBJECTDIR}/Server.tproj/RTSPProtocol.o: Server.tproj/RTSPProtocol.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/RTSPProtocol.o Server.tproj/RTSPProtocol.cpp
 
 ${OBJECTDIR}/Server.tproj/RunServer.o: Server.tproj/RunServer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj

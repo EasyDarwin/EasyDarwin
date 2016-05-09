@@ -229,8 +229,6 @@
                      projectFiles="true">
         <itemPath>RTSPClientLib/ClientSession.cpp</itemPath>
         <itemPath>RTSPClientLib/ClientSession.h</itemPath>
-        <itemPath>RTSPClientLib/ClientSocket.cpp</itemPath>
-        <itemPath>RTSPClientLib/ClientSocket.h</itemPath>
         <itemPath>RTSPClientLib/PlayerSimulator.h</itemPath>
         <itemPath>RTSPClientLib/RTPPacket.h</itemPath>
         <itemPath>RTSPClientLib/RTSPClient.cpp</itemPath>
@@ -949,10 +947,6 @@
       <item path="RTSPClientLib/ClientSession.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/ClientSocket.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/ClientSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -1754,10 +1748,6 @@
       </item>
       <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="RTSPClientLib/ClientSocket.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/ClientSocket.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RTSPClientLib/RTPPacket.h" ex="false" tool="3" flavor2="0">
@@ -2554,10 +2544,6 @@
       <item path="RTSPClientLib/ClientSession.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/ClientSocket.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="RTSPClientLib/ClientSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3358,10 +3344,6 @@
       <item path="RTSPClientLib/ClientSession.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/ClientSocket.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="RTSPClientLib/ClientSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
       </item>
