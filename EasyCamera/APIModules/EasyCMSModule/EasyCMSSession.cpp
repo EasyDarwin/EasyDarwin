@@ -11,25 +11,25 @@
 #include "EasyCMSSession.h"
 #include "EasyUtil.h"
 
-// CMS IP
+// EasyCMS IP
 static char*            sEasyCMS_IP		= NULL;
 static char*            sDefaultEasyCMS_IP_Addr = "127.0.0.1";
-// CMS Port
+// EasyCMS Port
 static UInt16			sEasyCMSPort			= 10000;
 static UInt16			sDefaultEasyCMSPort		= 10000;
 // EasyCamera Serial
 static char*            sEasy_Serial			= NULL;
-static char*            sDefaultEasy_Serial		= "NVR00000001";
+static char*            sDefaultEasy_Serial		= "CAM00000001";
 // EasyCamera Name
 static char*            sEasy_Name				= NULL;
-static char*            sDefaultEasy_Name		= "EasyNVR001";
+static char*            sDefaultEasy_Name		= "CAM001";
 // EasyCamera Secret key
 static char*            sEasy_Key				= NULL;
 static char*            sDefaultEasy_Key		= "123456";
 // EasyCamera tag name
 static char*			sEasy_Tag				= NULL;
-static char*			sDefaultEasy_Tag		= "EasyNVRTag001";
-// 保活时间间隔配置
+static char*			sDefaultEasy_Tag		= "CAMTag001";
+// EasyCMS Keep-Alive Interval
 static UInt32			sKeepAliveInterval		= 60;
 static UInt32			sDefKeepAliveInterval	= 60;
 
@@ -75,7 +75,14 @@ EasyCMSSession::EasyCMSSession()
 	UInt32 inAddr = SocketUtils::ConvertStringToAddr(sEasyCMS_IP);
 
 	if(inAddr)
+	{
 		fSocket->Set(inAddr, sEasyCMSPort);
+	}
+	else
+	{
+		//TODO:连接备用默认EasyCMS服务器
+		;
+	}
 }
 
 EasyCMSSession::~EasyCMSSession()
@@ -119,9 +126,7 @@ SInt64 EasyCMSSession::Run()
 	EventFlags events = this->GetEvents();
 
 	if(events & Task::kKillEvent)
-	{
-		qtss_printf("kill event but not handle it!\n");
-	}
+		return -1;
 
 	while(1)
 	{
@@ -138,22 +143,24 @@ SInt64 EasyCMSSession::Run()
 					}
 					else
 					{
-						// TCPSocket已连接的情况下区分具体事件类型
+						// TCPSocket已连接的情况下先区分具体事件类型
+						
 						if(events & Task::kStartEvent)
 						{
-							// CMSSession掉线,重新进行上线动作
+							// 已连接，但状态为离线,重新进行上线动作
 							if(kSessionOffline == fSessionStatus)
 								Register();
 						}
 
 						if(events & Task::kReadEvent)
 						{
-							// 对已连接的TCP进行消息读取
+							// 已连接，有新消息需要读取
 							fState = kReadingRequest;
 						}
+
 						if(events & Task::kTimeoutEvent)
 						{
-							// 保活时间到,需要发送保活报文
+							// 已连接，保活时间到需要发送保活报文
 							Register();
 						}
 					}
@@ -164,6 +171,7 @@ SInt64 EasyCMSSession::Run()
 						fState = kSendingResponse;
 					}
 
+					// 
 					if(kIdle == fState) return 0;
 
 					break;
@@ -180,7 +188,7 @@ SInt64 EasyCMSSession::Run()
 					if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
 					{
 						//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
-						//但，还不能构成一个整体报文，还要继续等待读取...
+						//但！还不能构成一个整体报文Header部分，还要继续等待读取...
 						fSocket->GetSocket()->SetTask(this);
 						fSocket->GetSocket()->RequestEvent(EV_RE);
 						return 0;
@@ -198,48 +206,44 @@ SInt64 EasyCMSSession::Run()
 						// needlessly lingering around, taking up space.
 						Assert(!fSocket->GetSocket()->IsConnected());
 						this->ResetClientSocket();
-
 						return 0;
 					}
-					fState = kProcessingRequest;
+
+					// 网络请求超过了缓冲区，返回Bad Request
+					if ( (theErr == E2BIG) || (theErr == QTSS_BadArgument) )
+					{
+						//返回HTTP报文，错误码408
+						//(void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest, qtssMsgBadBase64);
+						fState = kCleaningUp;
+					}
+					else
+					{
+						fState = kProcessingRequest;
+					}
 					break;
 				}
 			case kProcessingRequest:
 				{
 					qtss_printf("kProcessingRequest state \n");
+
 					// 处理网络报文
 					Assert( fInputStream.GetRequestBuffer() );
-                
 					Assert(fRequest == NULL);
+
 					// 根据具体请求报文构造HTTPRequest请求类
 					fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 					// 在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
-					// 在此过程中，此Session的Socket不进行任何网络数据的读/写；
+					// 在此过程中，此Session的Socket不进行任何网络数据的读/写
 					fReadMutex.Lock();
 					fSessionMutex.Lock();
                 
 					// 清空发送缓冲区
 					fOutputStream.ResetBytesWritten();
-                
-					// 网络请求超过了缓冲区，返回Bad Request
-					if (theErr == E2BIG)
-					{
-						// 返回HTTP报文，错误码408
-						//(void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest, qtssMsgRequestTooLong);
-						fState = kSendingResponse;
-						break;
-					}
-					// Check for a corrupt base64 error, return an error
-					if (theErr == QTSS_BadArgument)
-					{
-						//返回HTTP报文，错误码408
-						//(void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest, qtssMsgBadBase64);
-						fState = kSendingResponse;
-						break;
-					}
 
 					Assert(theErr == QTSS_RequestArrived);
+
+					// 处理收到的具体报文
 					ProcessRequest();
 
 					// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
@@ -321,7 +325,6 @@ SInt64 EasyCMSSession::Run()
     return 0;
 }
 
-// 
 // 构造登录注册的HTTP请求报文,并赋值给HTTPResponseStream Buffer等待发送处理
 // HTTPRequest类区分httpRequestType/httpResponseType
 QTSS_Error EasyCMSSession::Register()
@@ -354,7 +357,6 @@ QTSS_Error EasyCMSSession::Register()
 	return QTSS_NoErr;
 }
 
-// 
 // 解析HTTPRequest对象fRequest报文
 QTSS_Error EasyCMSSession::ProcessRequest()
 {
@@ -416,12 +418,12 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 		switch (nNetMsg)
 		{
 		case  MSG_SD_REGISTER_ACK:
-			//{	
-			//	EasyMsgSDRegisterACK rsp_parse(fContentBuffer);
+			{	
+				EasyMsgSDRegisterACK ack(fContentBuffer);
 
-			//	qtss_printf("session id = %s\n", rsp_parse.GetBodyValue("SessionID").c_str());
-			//	qtss_printf("device serial = %s\n", rsp_parse.GetBodyValue("DeviceSerial").c_str());
-			//}
+				qtss_printf("session id = %s\n", ack.GetBodyValue("SessionID").c_str());
+				qtss_printf("device serial = %s\n", ack.GetBodyValue("DeviceSerial").c_str());
+			}
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
 			{
@@ -550,7 +552,6 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 	return QTSS_NoErr;
 }
 
-//
 // 清除原有ClientSocket,NEW出新的ClientSocket
 // 赋值Socket连接的服务器地址和端口
 // 更新fInputSocket和fOutputSocket的fSocket对象
