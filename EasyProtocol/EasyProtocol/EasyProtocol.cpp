@@ -497,17 +497,17 @@ bool EasyMsgSCRTSPPushSessionListACK::AddSession(EasyDarwinRTSPSession &session)
 	return true;
 }
 
-EasyDarwinRecordListAck::EasyDarwinRecordListAck()
+EasyMsgSCListRecordACK::EasyMsgSCListRecordACK()
 : EasyProtocol(MSG_SC_LIST_RECORD_ACK)
 {
 }
 
-EasyDarwinRecordListAck::EasyDarwinRecordListAck(const char *msg)
+EasyMsgSCListRecordACK::EasyMsgSCListRecordACK(const char *msg)
 : EasyProtocol(msg, MSG_SC_LIST_RECORD_ACK)
 {
 }
 
-bool EasyDarwinRecordListAck::AddRecord(std::string record)
+bool EasyMsgSCListRecordACK::AddRecord(std::string record)
 {
 	Json::Value value;	
 	value["url"] = record;	

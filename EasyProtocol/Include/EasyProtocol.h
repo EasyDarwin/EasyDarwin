@@ -7,7 +7,6 @@
 #ifndef EASY_PROTOCOL_H
 #define	EASY_PROTOCOL_H
 
-
 #include <EasyProtocolBase.h>
 #include <map>
 #include <vector>
@@ -16,7 +15,6 @@
 #include <list>
 #include <set>
 using namespace std;
-
 
 namespace EasyDarwin { namespace Protocol
 {
@@ -213,44 +211,6 @@ public:
 	~EasyMsgExceptionACK() {}
 };
 
-
-/*
-class Easy_API EasyDarwinDeviceListAck : public EasyProtocol
-{
-public:
-	EasyDarwinDeviceListAck();
-	EasyDarwinDeviceListAck(const char* msg);
-	virtual ~EasyDarwinDeviceListAck(){}
-
-public:
-	bool AddDevice(EasyDarwinDevice &device);
-	int StartGetDevice();
-	bool GetNextDevice(EasyDarwinDevice &device);
-
-private:
-	list<EasyDarwinDevice> devices;
-};
-
-class Easy_API EasyDarwinDeviceSnapUpdateReq : public EasyProtocol
-{
-public:
-	EasyDarwinDeviceSnapUpdateReq();
-	EasyDarwinDeviceSnapUpdateReq(const char *msg);
-	~EasyDarwinDeviceSnapUpdateReq(){}
-
-public:
-	void SetImageData(const char* sImageBase64Data, size_t iBase64DataSize);
-	bool GetImageData(string &sImageBase64Data);
-};
-
-class Easy_API EasyDarwinDeviceSnapUpdateAck : public EasyProtocol
-{
-public:
-	EasyDarwinDeviceSnapUpdateAck();
-	EasyDarwinDeviceSnapUpdateAck(const char *msg);
-	~EasyDarwinDeviceSnapUpdateAck(){}
-};
-*/
 class EasyDarwinHLSession
 {
 public:
@@ -264,6 +224,7 @@ public:
 	std::string sourceUrl;
 	int bitrate;
 };
+
 class EasyDarwinRTSPSession
 {
 public:
@@ -277,7 +238,7 @@ public:
 	int numOutputs;
 };
 
-
+// MSG_SC_START_HLS_ACK
 class Easy_API EasyMsgSCStartHLSACK : public EasyProtocol
 {
 public:
@@ -289,6 +250,7 @@ public:
 	void SetStreamURL(const char* sURL);
 };
 
+// MSG_SC_HLS_SESSION_LIST_ACK
 class Easy_API EasyMsgSCHLSessionListACK : public EasyProtocol
 {
 public:
@@ -304,6 +266,8 @@ public:
 private:
 	list<EasyDarwinHLSession> sessions;
 };
+
+// MSG_SC_RTSP_PUSH_SESSION_LIST_ACK
 class Easy_API EasyMsgSCRTSPPushSessionListACK : public EasyProtocol
 {
 public:
@@ -320,13 +284,13 @@ private:
 	std::list<EasyDarwinRTSPSession> sessions;
 };
 
-
-class Easy_API EasyDarwinRecordListAck : public EasyProtocol
+// MSG_SC_LIST_RECORD_ACK
+class Easy_API EasyMsgSCListRecordACK : public EasyProtocol
 {
 public:
-	EasyDarwinRecordListAck();
-	EasyDarwinRecordListAck(const char* msg);
-	virtual ~EasyDarwinRecordListAck(){}
+	EasyMsgSCListRecordACK();
+	EasyMsgSCListRecordACK(const char* msg);
+	virtual ~EasyMsgSCListRecordACK(){}
 
 public:
 	bool AddRecord(std::string record);
@@ -344,6 +308,7 @@ enum EasyDSSTerminalType//设备类型
 	EASYDSS_TERMINAL_TYPE_SMARTHOST = 2,//智能主机
 	EASYDSS_TERMINAL_TYPE_NUM		= 3 //设备类型个数
 };
+
 enum EasyDSSAppType//设备类型
 {
 	EASYDSS_APP_TYPE_ARM_LINUX		= 0,//linux终端
