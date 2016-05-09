@@ -301,23 +301,6 @@ private:
 
 
 //add,Unisiot，start
-enum EasyDSSTerminalType//设备类型
-{
-	EASYDSS_TERMINAL_TYPE_CAMERA	= 0,//摄像机
-	EASYDSS_TERMINAL_TYPE_NVR		= 1,//NVR
-	EASYDSS_TERMINAL_TYPE_SMARTHOST = 2,//智能主机
-	EASYDSS_TERMINAL_TYPE_NUM		= 3 //设备类型个数
-};
-
-enum EasyDSSAppType//设备类型
-{
-	EASYDSS_APP_TYPE_ARM_LINUX		= 0,//linux终端
-	EASYDSS_APP_TYPE_ANDROID		= 1,//Andorid Cli
-	EASYDSS_APP_TYPE_IOS			= 2,//IOS Cli
-	EASYDSS_APP_TYPE_WEB			= 3,//Web Cli
-	EASYDSS_APP_TYPE_PC				= 4,//PC Cli
-	EASYDSS_APP_TYPE_NUM			= 5
-};
 typedef struct 
 {
 	string strDeviceSerial;//设备序列号
@@ -343,8 +326,8 @@ public:
 	string channelCount_;//该设备包含的摄像头个数
 
 	EasyDevices cameras_;//摄像头信息
-	EasyDSSTerminalType eDeviceType;//设备类型
-	EasyDSSAppType eAppType;//App类型
+	EasyDarwinTerminalType eDeviceType;//设备类型
+	EasyDarwinAppType eAppType;//App类型
 };
 
 class Easy_API EasyDarwinRSP : public EasyProtocol//封装CMS的一般回应的JSON部分

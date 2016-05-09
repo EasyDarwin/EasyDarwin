@@ -518,8 +518,6 @@ bool EasyMsgSCListRecordACK::AddRecord(std::string record)
 }
 
 //add,紫光，start
-string TerminalTypeMap[] ={"EasyCamera","EasyNVR"};
-string AppType[]={"ARM_Linux","Android","IOS","WEB","PC"};
 bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 {
 	EasyProtocol proTemp(json);
@@ -532,26 +530,11 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 		if(strTerminalType.size()<=0||serial_.size()<=0||strAppType.size()<=0)
 			break;
 		
-		int i=0;
-		for(;i<EASYDSS_TERMINAL_TYPE_NUM;i++)//获取设备类型
-		{
-			if(strTerminalType==TerminalTypeMap[i])
-			{
-				eDeviceType=(EasyDSSTerminalType)i;
-				break;
-			}
-		}
-		if(i>=EASYDSS_TERMINAL_TYPE_NUM)
+		eDeviceType=(EasyDarwinTerminalType)EasyProtocol::GetTerminalType(strTerminalType);
+		if(eDeviceType==-1)
 			break;
-		for(i=0;i<EASYDSS_APP_TYPE_NUM;i++)//获取App类型
-		{
-			if(strAppType==AppType[i])
-			{
-				eAppType=(EasyDSSAppType)i;
-				break;
-			}
-		}
-		if(i>=EASYDSS_APP_TYPE_NUM)
+		eAppType=(EasyDarwinAppType)EasyProtocol::GetAppType(strAppType);
+		if(eAppType==-1)
 			break;
 
 		name_			=	proTemp.GetBodyValue("Name");//获取设备名称
@@ -559,7 +542,7 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 		tag_			=	proTemp.GetBodyValue("Tag");//标签
 		channelCount_	=	proTemp.GetBodyValue("ChannelCount");//当前设备包含的摄像头数量
 
-		if(eDeviceType==EASYDSS_TERMINAL_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
+		if(eDeviceType==EASY_APP_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
 		{
 			cameras_.clear();
 			Json::Value *proot=proTemp.GetRoot();

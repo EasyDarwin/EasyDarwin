@@ -101,8 +101,8 @@ EasyProtocol::MsgType EasyProtocol::MediaEncodeTypeMap[] = {
 };
 
 EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
-	EASY_TERMINAL_TYPE_ARM,							"ARM",	
-	EASY_TERMINAL_TYPE_Android,						"ANDROID",
+	EASY_TERMINAL_TYPE_ARM,							"ARM_Linux",	
+	EASY_TERMINAL_TYPE_Android,						"Android",
 	EASY_TERMINAL_TYPE_IOS,							"IOS",
 	EASY_TERMINAL_TYPE_WEB,							"WEB",
 	EASY_TERMINAL_TYPE_PC,							"PC"
