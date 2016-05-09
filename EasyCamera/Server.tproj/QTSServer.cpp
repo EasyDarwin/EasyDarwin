@@ -194,22 +194,6 @@ void QTSServer::InitModules(QTSS_ServerState inEndState)
 
 void QTSServer::StartTasks()
 {
-	////TODO::在这里创建libEasyCMS
-	//char cmsIP[16] = { 0 };
-	//if(QTSServerInterface::GetServer()->GetPrefs()->GetCMSIP(cmsIP))
-	//{
-	//	UInt16 cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetCMSPort();
-	//	char* serial = QTSServerInterface::GetServer()->GetPrefs()->GetDeviceSerialNumber();
-	//	char* password = QTSServerInterface::GetServer()->GetPrefs()->GetRunPassword();
-	//	
-	//	fCMSHandle = EasyCMS_Session_Create();
-	//	EasyCMS_Login(fCMSHandle,cmsIP, cmsPort, serial, password);
-	//}
-
-	////CMS Session 必须创建在API调用之后
-	//fMediaSource = new EasyMediaSource();
-	//fMediaSource->StartStreaming();
-
     // Start listening
     for (UInt32 x = 0; x < fNumListeners; x++)
         fListeners[x]->RequestEvent(EV_RE);

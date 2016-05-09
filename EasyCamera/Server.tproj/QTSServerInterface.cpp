@@ -139,8 +139,6 @@ void    QTSServerInterface::Initialize()
 
     //Write out a premade server header
     StringFormatter serverFormatter(sServerHeaderPtr.Ptr, kMaxServerHeaderLen);
-    serverFormatter.Put("EasyCamera");
-    serverFormatter.Put(": ");
     serverFormatter.Put(sServerNameStr);
     serverFormatter.PutChar('/');
     serverFormatter.Put(sServerVersionStr);

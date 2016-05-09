@@ -17,24 +17,22 @@ static char*            sDefaultEasyCMS_IP_Addr = "127.0.0.1";
 // CMS Port
 static UInt16			sEasyCMSPort			= 10000;
 static UInt16			sDefaultEasyCMSPort		= 10000;
-// EasyNVR Serial
+// EasyCamera Serial
 static char*            sEasy_Serial			= NULL;
 static char*            sDefaultEasy_Serial		= "NVR00000001";
-// EasyNVR Name
+// EasyCamera Name
 static char*            sEasy_Name				= NULL;
 static char*            sDefaultEasy_Name		= "EasyNVR001";
-// EasyNVR Secret key
+// EasyCamera Secret key
 static char*            sEasy_Key				= NULL;
 static char*            sDefaultEasy_Key		= "123456";
-//EasyNVR tag name
+// EasyCamera tag name
 static char*			sEasy_Tag				= NULL;
 static char*			sDefaultEasy_Tag		= "EasyNVRTag001";
 // 保活时间间隔配置
 static UInt32			sKeepAliveInterval		= 60;
 static UInt32			sDefKeepAliveInterval	= 60;
 
-
-static StrPtrLen		sServiceStr("EasyDarwin EasyNVR v1.0");
 
 // 初始化读取配置文件中各项配置
 void EasyCMSSession::Initialize(QTSS_ModulePrefsObject cmsModulePrefs)
@@ -214,7 +212,7 @@ SInt64 EasyCMSSession::Run()
                 
 					Assert(fRequest == NULL);
 					// 根据具体请求报文构造HTTPRequest请求类
-					fRequest = NEW HTTPRequest(&sServiceStr, fInputStream.GetRequestBuffer());
+					fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 					// 在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
 					// 在此过程中，此Session的Socket不进行任何网络数据的读/写；
@@ -338,7 +336,7 @@ QTSS_Error EasyCMSSession::Register()
 	StrPtrLen jsonContent((char*)msg.data());
 
 	// 构造HTTP注册报文,提交给fOutputStream进行发送
-	HTTPRequest httpReq(&sServiceStr, httpRequestType);
+	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
 
 	if(!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
 

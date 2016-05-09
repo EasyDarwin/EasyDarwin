@@ -16,10 +16,10 @@
 		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
 		<PREF NAME="run_user_name" >admin</PREF>
 		<PREF NAME="run_password" >admin</PREF>
-		<PREF NAME="run_num_threads" TYPE="UInt32" >3</PREF>
+		<PREF NAME="run_num_threads" TYPE="UInt32" >4</PREF>
 		<PREF NAME="pid_file" >easycamera.pid</PREF>
 		<PREF NAME="force_logs_close_on_write" TYPE="Bool16" >false</PREF>
-		<PREF NAME="run_num_blocking_threads" TYPE="UInt32" >2</PREF>
+		<PREF NAME="run_num_blocking_threads" TYPE="UInt32" >4</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="EasyCMSModule" >

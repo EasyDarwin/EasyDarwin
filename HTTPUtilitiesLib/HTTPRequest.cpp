@@ -455,7 +455,7 @@ Bool16 HTTPRequest::CreateRequestHeader(HTTPMethod method, HTTPVersion version)
     PutMethedLine(fHTTPHeaderFormatter, method, version);
     Assert(fSvrHeader.Ptr != NULL);
 
-	AppendResponseHeader(httpServerHeader,&fSvrHeader);
+	AppendResponseHeader(httpUserAgentHeader,&fSvrHeader);
     fHTTPHeader->Len = fHTTPHeaderFormatter->GetCurrentOffset();
 	return true;
 }
