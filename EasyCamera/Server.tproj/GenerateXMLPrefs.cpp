@@ -51,22 +51,16 @@ static const PrefConversionInfo kPrefs[] =
     /* 5 */ { "serial_number",					NULL,           qtssAttrDataTypeCharArray },
     /* 6 */ { "camera_stream_type",				NULL,           qtssAttrDataTypeUInt32 },
 
-    /* 7 */ { "maximum_bandwidth",              NULL,           qtssAttrDataTypeSInt32 },
+    /* 7 */ { "error_logfile_name",             NULL,			qtssAttrDataTypeCharArray },
+    /* 8 */ { "error_logfile_dir",              NULL,			qtssAttrDataTypeCharArray },
+    /* 9 */ { "error_logfile_interval",        NULL,			qtssAttrDataTypeUInt32 },
+    /* 10 */ { "error_logfile_size",			NULL,			qtssAttrDataTypeUInt32 },
+    /* 11 */ { "error_logfile_verbosity",		NULL,			qtssAttrDataTypeUInt32 },
+    /* 12 */ { "screen_logging",				NULL,			qtssAttrDataTypeBool16 },
+    /* 13 */ { "error_logging",					NULL,			qtssAttrDataTypeBool16 },
 
-
-    /* 8 */ { "rtsp_server_addr",               NULL,			qtssAttrDataTypeCharArray },
-    /* 9 */ { "rtsp_server_port",				NULL,			qtssAttrDataTypeUInt16 },
-
-    /* 10 */ { "error_logfile_name",             NULL,			qtssAttrDataTypeCharArray },
-    /* 11 */ { "error_logfile_dir",              NULL,			qtssAttrDataTypeCharArray },
-    /* 12 */ { "error_logfile_interval",        NULL,			qtssAttrDataTypeUInt32 },
-    /* 13 */ { "error_logfile_size",			NULL,			qtssAttrDataTypeUInt32 },
-    /* 14 */ { "error_logfile_verbosity",		NULL,			qtssAttrDataTypeUInt32 },
-    /* 15 */ { "screen_logging",				NULL,			qtssAttrDataTypeBool16 },
-    /* 16 */ { "error_logging",					NULL,			qtssAttrDataTypeBool16 },
-
-    /* 17 */ { "run_user_name",					NULL,			qtssAttrDataTypeCharArray },
-    /* 18 */ { "run_password",					NULL,			qtssAttrDataTypeCharArray },
+    /* 14 */ { "run_user_name",					NULL,			qtssAttrDataTypeCharArray },
+    /* 15 */ { "run_password",					NULL,			qtssAttrDataTypeCharArray },
     //
     // This element will be used if the pref is something we don't know about.
     // Just have unknown prefs default to be server prefs with a type of char

@@ -64,11 +64,7 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetConnectionTimeoutSecs()  { return fConnectionTimeoutInSecs; }
         UInt16  GetCMSPort()   { return fCMSPort; }
 
-		UInt32	GetRTSPServerPort()	{ return fRTSPServerPort; }
-
-        //
         UInt32  GetCameraStreamType()       { return fCameraStreamType; }
-                
         UInt16	GetLocalCameraPort()         { return fLocalCameraPort; }
         
         // For the compiled-in error logging module
@@ -93,10 +89,7 @@ class QTSServerPrefs : public QTSSPrefs
             { return this->GetStringPref(qtssPrefsErrorLogDir); }
         char*   GetErrorLogName()
             { return this->GetStringPref(qtssPrefsErrorLogName); }
-
-        char*   GetRTSPServerAddr()
-            { return this->GetStringPref(qtssPrefsRTSPServerAddr); }
-            
+       
         char*   GetLocalCameraAddress()
             { return this->GetStringPref(qtssPrefsLocalCameraAddress); }
 
@@ -122,8 +115,6 @@ class QTSServerPrefs : public QTSSPrefs
 		char		fCMSIPAddr[20];
         UInt16      fCMSPort;
 
-		UInt16		fRTSPServerPort;
-        
         UInt32  fCameraStreamType;
         UInt16  fLocalCameraPort;
         

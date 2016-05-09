@@ -538,31 +538,28 @@ enum
 	qtssPrefsSerialNumber				= 5,    //"serial_number"                //char array    //Path to the root movie folder
 	qtssPrefsCameraStreamType			= 6,    //"camera_stream_type"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
 
-    qtssPrefsRTSPServerAddr				= 7,   //"rtsp_server_addr"				//char array
-	qtssPrefsRTSPServerPort				= 8,   //"rtsp_server_port"				// UInt16   
-
     // There is a compiled-in error log module that loads before all the other modules
     // (so it can log errors from the get-go). It uses these prefs.
     
-    qtssPrefsErrorLogName				= 9,   //"error_logfile_name"          //char array        //Name of error log file
-    qtssPrefsErrorLogDir				= 10,   //"error_logfile_dir"           //char array        //Path to error log file directory
-    qtssPrefsErrorRollInterval			= 11,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
-    qtssPrefsMaxErrorLogSize			= 12,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
-    qtssPrefsErrorLogVerbosity			= 13,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
-    qtssPrefsScreenLogging				= 14,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
-    qtssPrefsErrorLogEnabled			= 15,   //"error_logging"               //Bool16        //Is error logging enabled?
+    qtssPrefsErrorLogName				= 7,   //"error_logfile_name"          //char array        //Name of error log file
+    qtssPrefsErrorLogDir				= 8,   //"error_logfile_dir"           //char array        //Path to error log file directory
+    qtssPrefsErrorRollInterval			= 9,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
+    qtssPrefsMaxErrorLogSize			= 10,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
+    qtssPrefsErrorLogVerbosity			= 11,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
+    qtssPrefsScreenLogging				= 12,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
+    qtssPrefsErrorLogEnabled			= 13,   //"error_logging"               //Bool16        //Is error logging enabled?
     
-    qtssPrefsRunUserName				= 16,   //"run_user_name"       //char array        //Run under this user's account
-    qtssPrefsRunPassword				= 17,   //"run_password"		//char array        //Run under this group's account
+    qtssPrefsRunUserName				= 14,   //"run_user_name"       //char array        //Run under this user's account
+    qtssPrefsRunPassword				= 15,   //"run_password"		//char array        //Run under this group's account
     
 
-	qtssPrefsRunNumThreads				= 18,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
-    qtssPrefsPidFile					= 19,    //"pid_file" //Char Array //path to pid file
-    qtssPrefsCloseLogsOnWrite			= 20,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
+	qtssPrefsRunNumThreads				= 16,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
+    qtssPrefsPidFile					= 17,    //"pid_file" //Char Array //path to pid file
+    qtssPrefsCloseLogsOnWrite			= 18,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
 
-	qtssPrefsNumBlockingThreads				= 21,   // "run_num_blocking_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
+	qtssPrefsNumBlockingThreads			= 19,   // "run_num_blocking_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 	
-    qtssPrefsNumParams					= 22
+    qtssPrefsNumParams					= 20
 };
 
 typedef UInt32 QTSS_PrefsAttributes;

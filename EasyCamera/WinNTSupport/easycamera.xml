@@ -7,8 +7,6 @@
 		<PREF NAME="local_camera_port" TYPE="UInt16" >80</PREF>
 		<PREF NAME="serial_number" >cam_00000001</PREF>
 		<PREF NAME="camera_stream_type" TYPE="UInt32" >0</PREF>
-		<PREF NAME="rtsp_server_addr" >www.easydss.com</PREF>
-		<PREF NAME="rtsp_server_port" TYPE="UInt16" >554</PREF>
 		<PREF NAME="error_logfile_name" >easycamera</PREF>
 		<PREF NAME="error_logfile_dir" >./Logs/</PREF>
 		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
