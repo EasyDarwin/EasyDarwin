@@ -479,12 +479,12 @@ EasyMsgExceptionACK::EasyMsgExceptionACK(size_t cseq, size_t error)
 }
 
 EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK()
-: EasyProtocol(MSG_SC_PUSH_SESSION_LIST_ACK)
+: EasyProtocol(MSG_SC_RTSP_PUSH_SESSION_LIST_ACK)
 {
 }
 
 EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK(const char* msg)
-: EasyProtocol(msg, MSG_SC_PUSH_SESSION_LIST_ACK)
+: EasyProtocol(msg, MSG_SC_RTSP_PUSH_SESSION_LIST_ACK)
 {
 }
 bool EasyMsgSCRTSPPushSessionListACK::AddSession(EasyDarwinRTSPSession &session)
