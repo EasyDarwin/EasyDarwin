@@ -9,7 +9,7 @@
  * Author: wellsen
  *
  * Created on 2014年11月22日, 上午10:16
- */
+*/
 
 #ifndef EASY_UTIL_H
 #define	EASY_UTIL_H

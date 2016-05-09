@@ -9,7 +9,7 @@ Website: http://www.easydarwin.org
  * Author: wellsen
  * 
  * Created on 2014年11月15日, 下午5:21
- */
+*/
 
 #include <EasyProtocolBase.h>
 #include <string.h>

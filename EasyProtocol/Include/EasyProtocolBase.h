@@ -9,7 +9,7 @@
  * Author: wellsen
  *
  * Created on 2014年11月15日, 下午5:21
- */
+*/
 
 #ifndef EASY_PROTOCOL_BASE_H
 #define	EASY_PROTOCOL_BASE_H
