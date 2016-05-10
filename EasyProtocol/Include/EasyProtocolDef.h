@@ -35,6 +35,7 @@
 #define EASY_TAG_BODY									"Body"
 #define EASY_TAG_VERSION								"Version"
 #define EASY_TAG_TERMINAL_TYPE							"TerminalType"
+#define EASY_TAG_APP_TYPE								"AppType"
 #define EASY_TAG_SESSION_ID								"SessionID"
 #define EASY_TAG_MESSAGE_TYPE							"MessageType"
 #define EASY_TAG_CSEQ									"CSeq"

@@ -198,6 +198,20 @@ int EasyProtocol::GetMessageType()
 	return GetMsgType(sMessageType);
 }
 
+int EasyProtocol::GetAppType()
+{
+	std::string sAppType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_APP_TYPE].asString();	
+
+	return GetAppType(sAppType);
+}
+
+int EasyProtocol::GetTerminalType()
+{
+	std::string sTerminalType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_TERMINAL_TYPE].asString();	
+
+	return GetTerminalType(sTerminalType);
+}
+
 std::string EasyProtocol::GetErrorString(int error)
 {
 	for (int i = 0; i < sizeof(ErrorMap) / sizeof(MsgType); i++)
