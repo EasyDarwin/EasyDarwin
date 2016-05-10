@@ -31,8 +31,8 @@ class HTTPResponseStream : public ResizeableStringFormatter
         // It also refreshes the timeout whenever there is a successful write
         // on the socket.
         HTTPResponseStream(ClientSocket* inSocket, TimeoutTask* inTimeoutTask)
-            :   ResizeableStringFormatter(fOutputBuf, kOutputBufferSizeInBytes),
-                fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask),fPrintHTTP(false) {}
+            :   ResizeableStringFormatter(fOutputBuf, EASY_REQUEST_BUFFER_SIZE_LEN),
+                fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask),fPrintHTTP(true) {}
         
         virtual ~HTTPResponseStream() {}
 
@@ -72,18 +72,12 @@ class HTTPResponseStream : public ResizeableStringFormatter
 		// this will be used by RTSPSessionInterface::SnarfInputSocket
 		void                AttachToSocket(ClientSocket* sock) { fSocket = sock; }
 
-    private:
-    
-        enum
-        {
-            kOutputBufferSizeInBytes = 64*1024  //64k Buffer UInt32
-        };
-        
+    private:       
         //The default buffer size is allocated inline as part of the object. Because this size
         //is good enough for 99.9% of all requests, we avoid the dynamic memory allocation in most
         //cases. But if the response is too big for this buffer, the BufferIsFull function will
         //allocate a larger buffer.
-        char                    fOutputBuf[kOutputBufferSizeInBytes];
+        char                    fOutputBuf[EASY_REQUEST_BUFFER_SIZE_LEN];
         ClientSocket*			fSocket;
         UInt32                  fBytesSentInBuffer;
         TimeoutTask*            fTimeoutTask;

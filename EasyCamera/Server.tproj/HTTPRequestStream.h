@@ -69,15 +69,7 @@ public:
     void        ShowHTTP(Bool16 enable) {fPrintHTTP = enable; }     
     void SnarfRetreat( HTTPRequestStream &fromRequest );
         
-private:
-
-        
-    //CONSTANTS:
-    enum
-    {
-        kRequestBufferSizeInBytes = 64*1024        //64k Buffer UInt32
-    };
-    
+private:  
     // Base64 decodes into fRequest.Ptr, updates fRequest.Len, and returns the amount
     // of data left undecoded in inSrcData
     QTSS_Error              DecodeIncomingData(char* inSrcData, UInt32 inSrcDataLen);
@@ -86,7 +78,8 @@ private:
     UInt32                  fRetreatBytes;
 	UInt32                  fRetreatBytesRead; // Used by Read() when it is reading RetreatBytes
     
-    char                    fRequestBuffer[kRequestBufferSizeInBytes];
+    char                    fRequestBuffer[EASY_REQUEST_BUFFER_SIZE_LEN];
+
     UInt32                  fCurOffset; // tracks how much valid data is in the above buffer
     UInt32                  fEncodedBytesRemaining; // If we are decoding, tracks how many encoded bytes are in the buffer
     
