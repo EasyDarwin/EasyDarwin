@@ -325,39 +325,6 @@ SInt64 EasyCMSSession::Run()
     return 0;
 }
 
-// 构造登录注册的HTTP请求报文,并赋值给HTTPResponseStream Buffer等待发送处理
-// HTTPRequest类区分httpRequestType/httpResponseType
-QTSS_Error EasyCMSSession::DSRegister()
-{
-	EasyDevices channels;
-
-	EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
-
-	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr);
-	string msg = req.GetMsg();
-
-	StrPtrLen jsonContent((char*)msg.data());
-
-	// 构造HTTP注册报文,提交给fOutputStream进行发送
-	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
-
-	if(!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
-
-	if (jsonContent.Len)
-		httpReq.AppendContentLengthHeader(jsonContent.Len);
-
-	char respHeader[2048] = { 0 };
-	StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
-	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
-		
-	fOutputStream.Put(respHeader);
-	if (jsonContent.Len > 0) 
-		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
-
-	return QTSS_NoErr;
-}
-
-// 解析HTTPRequest对象fRequest报文
 QTSS_Error EasyCMSSession::ProcessMessage()
 {
 	if(NULL == fRequest) return QTSS_BadArgument;
@@ -555,6 +522,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 	return QTSS_NoErr;
 }
 
+//
 // 清除原有ClientSocket,NEW出新的ClientSocket
 // 赋值Socket连接的服务器地址和端口
 // 更新fInputSocket和fOutputSocket的fSocket对象
@@ -573,4 +541,74 @@ void EasyCMSSession::ResetClientSocket()
 	fInputStream.AttachToSocket(fSocket);
 	fOutputStream.AttachToSocket(fSocket);
 	fState = kIdle;
+}
+
+
+QTSS_Error EasyCMSSession::DSRegister()
+{
+	EasyDevices channels;
+
+	EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
+
+	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr);
+	string msg = req.GetMsg();
+
+	StrPtrLen jsonContent((char*)msg.data());
+
+	// 构造HTTP注册报文,提交给fOutputStream进行发送
+	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
+
+	if(!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
+
+	if (jsonContent.Len)
+		httpReq.AppendContentLengthHeader(jsonContent.Len);
+
+	char respHeader[2048] = { 0 };
+	StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
+	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+		
+	fOutputStream.Put(respHeader);
+	if (jsonContent.Len > 0) 
+		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+
+	return QTSS_NoErr;
+}
+
+
+QTSS_Error EasyCMSSession::DSPostSnap(char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
+{
+	char szTime[32] = {0,};
+
+	EasyJsonValue body;
+	body["Serial"] = sEasy_Serial;
+
+	const char* type = EasyProtocol::GetSnapTypeString(snapType).c_str();
+
+	body["Type"] = type?type:"JPEG";
+	body["Time"] = szTime;	
+	body["Image"] = EasyUtil::Base64Encode(snapPtr, snapLen);
+	EasyMsgDSPostSnapREQ req(body, 1);
+	
+	string msg = req.GetMsg();
+
+	//请求上传快照
+	StrPtrLen jsonContent((char*)msg.data());
+	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
+
+	if(httpReq.CreateRequestHeader())
+	{
+		if (jsonContent.Len)
+			httpReq.AppendContentLengthHeader(jsonContent.Len);
+
+		//Push msg to OutputBuffer
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
+		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+		
+		fOutputStream.Put(respHeader);
+		if (jsonContent.Len > 0) 
+			fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+	}
+
+	return QTSS_NoErr;
 }

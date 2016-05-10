@@ -124,11 +124,9 @@
 
 
 //±£¡Ù
-#define MSG_SC_START_HLS_ACK									0xeee0
+#define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
 #define MSG_SC_RTSP_PUSH_SESSION_LIST_ACK					0xeee2
-//±£¡Ù
-
 #define MSG_SC_EXCEPTION									0xeeee
 
 /*!
@@ -216,7 +214,7 @@ enum EasyDarwinDeviceStatus
 enum EasyDarwinProtocolType
 {
 	EASY_PROTOCOL_TYPE_RTSP = 1,			///< RTSP
-	EASY_PROTOCOL_TYPE_HLS				///< HLS
+	EASY_PROTOCOL_TYPE_HLS					///< HLS
 };
 /*!
 \}
@@ -259,6 +257,19 @@ enum EasyDarwinAppType
 {
 	EASY_APP_TYPE_CAMERA = 1,					///< EasyCamera
 	EASY_APP_TYPE_NVR							///< EasyNVR
+};
+/*!
+\}
+*/
+
+/*!
+\ingroup EasyDarwin_Snap_Type_Define
+\{
+*/
+enum EasyDarwinSnapType
+{
+	EASY_SNAP_TYPE_JPEG = 1,					///< JPEG
+	EASY_SNAP_TYPE_IDR							///< IDR
 };
 /*!
 \}

@@ -5,7 +5,7 @@
 		<PREF NAME="cms_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="local_camera_addr" >192.168.66.189</PREF>
 		<PREF NAME="local_camera_port" TYPE="UInt16" >80</PREF>
-		<PREF NAME="serial_number" >cam_00000001</PREF>
+		<PREF NAME="serial_number" >010100000001</PREF>
 		<PREF NAME="camera_stream_type" TYPE="UInt32" >0</PREF>
 		<PREF NAME="error_logfile_name" >easycamera</PREF>
 		<PREF NAME="error_logfile_dir" >./Logs/</PREF>

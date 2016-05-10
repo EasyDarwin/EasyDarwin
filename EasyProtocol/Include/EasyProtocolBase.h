@@ -106,6 +106,10 @@ public:
 	static int GetAppType(std::string sAppType);
 	static std::string GetAppTypeString(int iAppType);
 
+	//enum EasyDarwinSnapType
+	static int GetSnapType(std::string sSnapType);
+	static std::string GetSnapTypeString(int iSnapType);
+
     //common json tag define
 protected:  
 	Json::Value root;
@@ -126,6 +130,7 @@ private:
 	static MsgType TerminalTypeMap[];
 	static MsgType AppTypeMap[];
 	static MsgType LiveTypeMap[];
+	static MsgType SnapTypeMap[];
 
 	Json::Reader reader;
 	Json::StyledWriter writer;//or StyledWriter FastWriter

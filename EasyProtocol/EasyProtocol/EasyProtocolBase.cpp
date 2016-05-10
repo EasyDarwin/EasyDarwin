@@ -114,6 +114,12 @@ EasyProtocol::MsgType EasyProtocol::AppTypeMap[] = {
 	EASY_APP_TYPE_NVR,								"EasyNVR"
 };
 
+EasyProtocol::MsgType EasyProtocol::SnapTypeMap[] = {
+	EASY_SNAP_TYPE_JPEG,							"JPEG",
+	EASY_SNAP_TYPE_IDR,								"IDR"
+};
+
+
 EasyProtocol::EasyProtocol(int iMsgType)
 :fMsgType(iMsgType)
 {	
@@ -364,6 +370,34 @@ std::string EasyProtocol::GetAppTypeString(int iAppType)
 		if (iAppType == AppTypeMap[i].value)
 		{
 			return std::string(AppTypeMap[i].str);
+		}
+	}
+
+	return std::string();
+}
+
+
+int EasyProtocol::GetSnapType(std::string sSnapType)
+{
+	for (int i = 0; i < sizeof(SnapTypeMap) / sizeof(MsgType); i++)
+	{
+		if (sSnapType.compare(SnapTypeMap[i].str) == 0)
+		{
+			return SnapTypeMap[i].value;
+		}
+	}
+
+	return -1;
+}
+
+
+std::string EasyProtocol::GetSnapTypeString(int iSnapType)
+{
+	for (int i = 0; i < sizeof(SnapTypeMap) / sizeof(MsgType); i++)
+	{
+		if (iSnapType == SnapTypeMap[i].value)
+		{
+			return std::string(SnapTypeMap[i].str);
 		}
 	}
 

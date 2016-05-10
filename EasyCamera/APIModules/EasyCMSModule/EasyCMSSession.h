@@ -75,8 +75,9 @@ public:
 
 	// 设备注册到EasyCMS
 	QTSS_Error DSRegister();
-	// 设备上传快照到EasyCMS
-	QTSS_Error UploadSnapshotImage(char *deviceSerial, char *cameraSerial, char *imagedata, int imagelength);
+
+	// 上传快照图片到EasyCMS
+	QTSS_Error DSPostSnap(char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
 
 	// 处理HTTPRequest请求报文
 	QTSS_Error ProcessMessage();
