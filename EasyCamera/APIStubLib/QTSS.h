@@ -848,7 +848,7 @@ typedef struct
 {
 	int							snapType;
 	int							snapLen;
-	char*						snapPtr;
+	unsigned char*				snapPtr;
 }Easy_PostSnap_Params;
 
 typedef union

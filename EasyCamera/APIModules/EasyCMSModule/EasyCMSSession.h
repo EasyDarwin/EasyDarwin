@@ -77,7 +77,7 @@ public:
 	QTSS_Error DSRegister();
 
 	// 上传快照图片到EasyCMS
-	QTSS_Error DSPostSnap(char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
+	QTSS_Error DSPostSnap(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
 
 	// 处理HTTPRequest请求报文
 	QTSS_Error ProcessMessage();

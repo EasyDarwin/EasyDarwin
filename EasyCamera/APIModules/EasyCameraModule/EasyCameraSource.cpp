@@ -6,7 +6,7 @@
 */
 #include "EasyCameraSource.h"
 #include "QTSServerInterface.h"
-#include "QTSServer.h"
+#include "EasyProtocolDef.h"
 
 static unsigned int sLastVPTS = 0;
 static unsigned int sLastAPTS = 0;
@@ -255,9 +255,18 @@ SInt64 EasyCameraSource::Run()
 			break;
 		}
 
-		QTSServer* svr = (QTSServer*)QTSServerInterface::GetServer();
-
-		//EasyCMS_UpdateSnap(svr->GetCMSHandle(), (const char*)sData, snapBufLen);
+		QTSS_RoleParams params;
+		params.postSnapParams.snapLen = snapBufLen;
+		params.postSnapParams.snapPtr = sData;
+		params.postSnapParams.snapType = EASY_SNAP_TYPE_JPEG;
+		UInt32 fCurrentModule = 0;
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kPostSnapRole);
+		for (; fCurrentModule < numModules; fCurrentModule++)
+		{
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kPostSnapRole, fCurrentModule);
+			(void)theModule->CallDispatch(Easy_PostSnap_Role, &params);	
+			return QTSS_NoErr;
+		}
 
 	}while(0);
 

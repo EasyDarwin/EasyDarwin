@@ -575,7 +575,7 @@ QTSS_Error EasyCMSSession::DSRegister()
 }
 
 
-QTSS_Error EasyCMSSession::DSPostSnap(char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
+QTSS_Error EasyCMSSession::DSPostSnap(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
 {
 	char szTime[32] = {0,};
 
@@ -586,7 +586,7 @@ QTSS_Error EasyCMSSession::DSPostSnap(char *snapPtr, int snapLen, EasyDarwinSnap
 
 	body["Type"] = type?type:"JPEG";
 	body["Time"] = szTime;	
-	body["Image"] = EasyUtil::Base64Encode(snapPtr, snapLen);
+	body["Image"] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
 	EasyMsgDSPostSnapREQ req(body, 1);
 	
 	string msg = req.GetMsg();
