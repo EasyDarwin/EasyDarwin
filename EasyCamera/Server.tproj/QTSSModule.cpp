@@ -39,10 +39,7 @@
 #include "Socket.h"
 #include "QTSServerInterface.h"
 
-
-Bool16  QTSSModule::sHasRTSPRequestModule = false;
 Bool16  QTSSModule::sHasOpenFileModule = false;
-Bool16  QTSSModule::sHasRTSPAuthenticateModule = false;
 
 QTSSAttrInfoDict::AttrInfo  QTSSModule::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
@@ -228,14 +225,6 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         // in the role array
         case QTSS_Initialize_Role:          return kInitializeRole          ;
         case QTSS_Shutdown_Role:            return kShutdownRole            ;
-        case QTSS_RTSPFilter_Role:          return kRTSPFilterRole          ;
-        case QTSS_RTSPRoute_Role:           return kRTSPRouteRole           ;
-        case QTSS_RTSPAuthenticate_Role:    return kRTSPAthnRole            ;
-        case QTSS_RTSPAuthorize_Role:       return kRTSPAuthRole            ;
-        case QTSS_RTSPPreProcessor_Role:    return kRTSPPreProcessorRole    ;
-        case QTSS_RTSPRequest_Role:         return kRTSPRequestRole         ;
-        case QTSS_RTSPPostProcessor_Role:   return kRTSPPostProcessorRole   ;
-        case QTSS_RTSPSessionClosing_Role:  return kRTSPSessionClosingRole  ;
 
 		case QTSS_ErrorLog_Role:            return kErrorLogRole            ;
         case QTSS_RereadPrefs_Role:         return kRereadPrefsRole         ;
@@ -245,7 +234,6 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         case QTSS_ReadFile_Role:            return kReadFileRole            ;
         case QTSS_CloseFile_Role:           return kCloseFileRole           ;
         case QTSS_RequestEventFile_Role:    return kRequestEventFileRole    ;
-        case QTSS_RTSPIncomingData_Role:    return kRTSPIncomingDataRole    ;  
 
 		case QTSS_StateChange_Role:         return kStateChangeRole         ;      
         case QTSS_Interval_Role:            return kTimedIntervalRole       ;      
@@ -257,9 +245,6 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
 
 QTSS_Error  QTSSModule::AddRole(QTSS_Role inRole)
 {
-    // There can only be one QTSS_RTSPRequest processing module
-    if ((inRole == QTSS_RTSPRequest_Role) && (sHasRTSPRequestModule))
-        return QTSS_RequestFailed;
     if ((inRole == QTSS_OpenFilePreProcess_Role) && (sHasOpenFileModule))
         return QTSS_RequestFailed;
         
@@ -275,12 +260,8 @@ QTSS_Error  QTSSModule::AddRole(QTSS_Role inRole)
       
 	fRoleArray[arrayID] = true;
 
-    if (inRole == QTSS_RTSPRequest_Role)
-        sHasRTSPRequestModule = true;
     if (inRole == QTSS_OpenFile_Role)
         sHasOpenFileModule = true;
-    if (inRole == QTSS_RTSPAuthenticate_Role)
-        sHasRTSPAuthenticateModule = true;
         
     //
     // Add this role to the array of roles attribute
