@@ -964,18 +964,18 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
 
 QTSS_Error QTSSCallbacks::Easy_StartHLSession(const char* inSessionName, const char* inURL, UInt32 inTimeout, char* outURL)
 {
-	QTSS_RoleParams packetParams;
-	packetParams.easyHLSOpenParams.inStreamName = (char*)inSessionName;
-	packetParams.easyHLSOpenParams.inRTSPUrl = (char*)inURL;
-	packetParams.easyHLSOpenParams.inTimeout = inTimeout;
-	packetParams.easyHLSOpenParams.outHLSUrl = outURL;
+	QTSS_RoleParams params;
+	params.easyHLSOpenParams.inStreamName = (char*)inSessionName;
+	params.easyHLSOpenParams.inRTSPUrl = (char*)inURL;
+	params.easyHLSOpenParams.inTimeout = inTimeout;
+	params.easyHLSOpenParams.outHLSUrl = outURL;
 
 	UInt32 fCurrentModule = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
 	for (; fCurrentModule < numModules; fCurrentModule++)
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSOpenRole, fCurrentModule);
-		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &packetParams);	
+		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &params);	
 		return QTSS_NoErr;
 	}
 	
