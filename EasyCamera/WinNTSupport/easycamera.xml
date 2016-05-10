@@ -31,4 +31,5 @@
 		<PREF NAME="device_tag" >dev</PREF>
 		<PREF NAME="keep_alive_interval" TYPE="UInt32" >60</PREF>
 	</MODULE>
+	<MODULE NAME="EasyCameraModule" ></MODULE>
 </CONFIGURATION>

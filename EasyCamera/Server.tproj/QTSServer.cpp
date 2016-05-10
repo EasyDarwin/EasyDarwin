@@ -55,6 +55,7 @@
 //Compile time modules
 #include "QTSSErrorLogModule.h"
 #include "EasyCMSModule.h"
+#include "EasyCameraModule.h"
 
 #include "QTSSFile.h"
 #include "OS.h"
@@ -214,6 +215,10 @@ void    QTSServer::LoadCompiledInModules()
 	QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");
     (void)theCMSModule->SetupModule(&sCallbacks, &EasyCMSModule_Main);
     (void)AddModule(theCMSModule);
+
+	QTSSModule* theCameraModule = new QTSSModule("EasyCameraModule");
+    (void)theCameraModule->SetupModule(&sCallbacks, &EasyCameraModule_Main);
+    (void)AddModule(theCameraModule);
 
 }
 
