@@ -92,7 +92,6 @@ QTSServer::~QTSServer()
     delete locker;
     delete serverlocker;
     delete fSrvrPrefs;
-	if(fMediaSource) delete fMediaSource;
 }
 
 Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, Bool16 createListeners)
@@ -102,7 +101,6 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     sMessagesSource = inMessagesSource;
     this->InitCallbacks();
 
-	fMediaSource = NULL;
     //
     // DICTIONARY INITIALIZATION
 

@@ -259,14 +259,30 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="EasyCameraModule"
+					>
+					<File
+						RelativePath="..\APIModules\EasyCameraModule\EasyCameraModule.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCameraModule\EasyCameraModule.h"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCameraModule\EasyCameraSource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCameraModule\EasyCameraSource.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Core"
 				>
-				<File
-					RelativePath="..\Server.tproj\EasyMediaSource.cpp"
-					>
-				</File>
 				<File
 					RelativePath="..\PrefsSourceLib\FilePrefsSource.cpp"
 					>

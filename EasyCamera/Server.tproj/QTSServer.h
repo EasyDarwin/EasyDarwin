@@ -37,7 +37,6 @@
 
 #include "QTSServerInterface.h"
 #include "Task.h"
-#include "EasyMediaSource.h"
 
 class QTSServer : public QTSServerInterface
 {
@@ -91,7 +90,6 @@ class QTSServer : public QTSServerInterface
     
         //
         // GLOBAL TASKS
-		EasyMediaSource*	fMediaSource;
         static char*        sPortPrefString;
         static XMLPrefsParser* sPrefsSource;
         static PrefsSource* sMessagesSource;

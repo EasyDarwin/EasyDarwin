@@ -16,11 +16,11 @@
 
 #define EASY_SNAP_BUFFER_SIZE 1024*1024
 
-class EasyMediaSource : public Task
+class EasyCameraSource : public Task
 {
 public:
-	EasyMediaSource();
-	~EasyMediaSource(void);
+	EasyCameraSource();
+	~EasyCameraSource(void);
 
 	bool CameraLogin();
 

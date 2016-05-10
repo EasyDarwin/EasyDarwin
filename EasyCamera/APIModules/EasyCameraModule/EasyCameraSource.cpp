@@ -4,7 +4,7 @@
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-#include "EasyMediaSource.h"
+#include "EasyCameraSource.h"
 #include "QTSServerInterface.h"
 #include "QTSServer.h"
 
@@ -33,7 +33,7 @@ HI_S32 NETSDK_APICALL OnStreamCallback(	HI_U32 u32Handle,		/* 句柄 */
 {
 	HI_S_AVFrame* pstruAV = HI_NULL;
 	HI_S_SysHeader* pstruSys = HI_NULL;
-	EasyMediaSource* pThis = (EasyMediaSource*)pUserData;
+	EasyCameraSource* pThis = (EasyCameraSource*)pUserData;
 
 	if (u32DataType == HI_NET_DEV_AV_DATA)
 	{
@@ -90,7 +90,7 @@ HI_S32 NETSDK_APICALL OnDataCallback(	HI_U32 u32Handle,		/* 句柄 */
 }
 
 
-EasyMediaSource::EasyMediaSource()
+EasyCameraSource::EasyCameraSource()
 :	Task(),
 	m_u32Handle(0),
 	fCameraLogin(false),//是否已登录标识
@@ -103,9 +103,9 @@ EasyMediaSource::EasyMediaSource()
 	this->Signal(Task::kStartEvent);
 }
 
-EasyMediaSource::~EasyMediaSource(void)
+EasyCameraSource::~EasyCameraSource(void)
 {
-	qtss_printf("~EasyMediaSource\n");
+	qtss_printf("~EasyCameraSource\n");
 	
 	//先停止Stream，内部有是否在Stream的判断
 	NetDevStopStream();
@@ -117,7 +117,7 @@ EasyMediaSource::~EasyMediaSource(void)
 	HI_NET_DEV_DeInit();
 }
 
-bool EasyMediaSource::CameraLogin()
+bool EasyCameraSource::CameraLogin()
 {
 	//如果已登录，返回true
 	if(fCameraLogin) return true;
@@ -144,7 +144,7 @@ bool EasyMediaSource::CameraLogin()
 	return true;
 }
 
-QTSS_Error EasyMediaSource::NetDevStartStream()
+QTSS_Error EasyCameraSource::NetDevStartStream()
 {
 	//如果未登录,返回失败
 	if(!CameraLogin()) return QTSS_RequestFailed;
@@ -180,7 +180,7 @@ QTSS_Error EasyMediaSource::NetDevStartStream()
 	return QTSS_NoErr;
 }
 
-void EasyMediaSource::NetDevStopStream()
+void EasyCameraSource::NetDevStopStream()
 {
 	if( m_bStreamFlag )
 	{
@@ -191,16 +191,16 @@ void EasyMediaSource::NetDevStopStream()
 	}
 }
 
-void EasyMediaSource::handleClosure(void* clientData) 
+void EasyCameraSource::handleClosure(void* clientData) 
 {
 	if(clientData != NULL)
 	{
-		EasyMediaSource* source = (EasyMediaSource*)clientData;
+		EasyCameraSource* source = (EasyCameraSource*)clientData;
 		source->handleClosure();
 	}
 }
 
-void EasyMediaSource::handleClosure() 
+void EasyCameraSource::handleClosure() 
 {
 	if (fOnCloseFunc != NULL) 
 	{
@@ -208,20 +208,20 @@ void EasyMediaSource::handleClosure()
 	}
 }
 
-void EasyMediaSource::stopGettingFrames() 
+void EasyCameraSource::stopGettingFrames() 
 {
 	OSMutexLocker locker(this->GetMutex());
 	fOnCloseFunc = NULL;
 	doStopGettingFrames();
 }
 
-void EasyMediaSource::doStopGettingFrames() 
+void EasyCameraSource::doStopGettingFrames() 
 {
 	qtss_printf("doStopGettingFrames()\n");
 	NetDevStopStream();
 }
 
-bool EasyMediaSource::GetSnapData(unsigned char* pBuf, UInt32 uBufLen, int* uSnapLen)
+bool EasyCameraSource::GetSnapData(unsigned char* pBuf, UInt32 uBufLen, int* uSnapLen)
 {
 	//如果摄像机未登录，返回false
 	if(!CameraLogin()) return false;
@@ -237,7 +237,7 @@ bool EasyMediaSource::GetSnapData(unsigned char* pBuf, UInt32 uBufLen, int* uSna
 	return false;
 }
 
-SInt64 EasyMediaSource::Run()
+SInt64 EasyCameraSource::Run()
 {
 	QTSS_Error nRet = QTSS_NoErr;
 
@@ -268,7 +268,7 @@ SInt64 EasyMediaSource::Run()
 }
 
 
-QTSS_Error EasyMediaSource::StartStreaming()
+QTSS_Error EasyCameraSource::StartStreaming()
 {
 	if(NULL == fPusherHandle)
 	{
@@ -295,7 +295,7 @@ QTSS_Error EasyMediaSource::StartStreaming()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyMediaSource::StopStreaming()
+QTSS_Error EasyCameraSource::StopStreaming()
 {
 	if(fPusherHandle)
 	{
@@ -309,7 +309,7 @@ QTSS_Error EasyMediaSource::StopStreaming()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyMediaSource::PushFrame(unsigned char* frame, int len)
+QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 {	
 	if(fPusherHandle == NULL) return QTSS_Unimplemented;
 
