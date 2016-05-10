@@ -62,9 +62,9 @@ public:
 	enum
     {
 		kIdle						= 0,
-		kReadingRequest				= 1,
-		kProcessingRequest          = 2,
-		kSendingResponse            = 3,
+		kReadingMessage				= 1,
+		kProcessingMessage          = 2,
+		kSendingMessage            = 3,
 		kCleaningUp                 = 4
     };
 	UInt32 fState;
@@ -74,7 +74,7 @@ public:
 	SessionStatus GetSessionStatus() { return fSessionStatus; } 
 
 	// 设备注册到EasyCMS
-	QTSS_Error Register();
+	QTSS_Error DSRegister();
 	// 设备上传快照到EasyCMS
 	QTSS_Error UploadSnapshotImage(char *deviceSerial, char *cameraSerial, char *imagedata, int imagelength);
 

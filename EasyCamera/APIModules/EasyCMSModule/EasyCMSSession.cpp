@@ -139,7 +139,7 @@ SInt64 EasyCMSSession::Run()
 					if(!IsConnected())
 					{
 						// TCPSocket未连接的情况,首先进行登录连接
-						Register();
+						DSRegister();
 					}
 					else
 					{
@@ -149,26 +149,26 @@ SInt64 EasyCMSSession::Run()
 						{
 							// 已连接，但状态为离线,重新进行上线动作
 							if(kSessionOffline == fSessionStatus)
-								Register();
+								DSRegister();
 						}
 
 						if(events & Task::kReadEvent)
 						{
 							// 已连接，有新消息需要读取
-							fState = kReadingRequest;
+							fState = kReadingMessage;
 						}
 
 						if(events & Task::kTimeoutEvent)
 						{
 							// 已连接，保活时间到需要发送保活报文
-							Register();
+							DSRegister();
 						}
 					}
 					
 					// 如果有消息需要发送则进入发送流程
 					if (fOutputStream.GetBytesWritten() > 0)
 					{
-						fState = kSendingResponse;
+						fState = kSendingMessage;
 					}
 
 					// 
@@ -177,9 +177,9 @@ SInt64 EasyCMSSession::Run()
 					break;
 				}
 
-			case kReadingRequest:
+			case kReadingMessage:
 				{
-					qtss_printf("kReadingRequest state \n");
+					qtss_printf("kReadingMessage state \n");
 
 					// 读取锁,已经在处理一个报文包时,不进行新网络报文的读取和处理
 					OSMutexLocker readMutexLocker(&fReadMutex);
@@ -218,13 +218,13 @@ SInt64 EasyCMSSession::Run()
 					}
 					else
 					{
-						fState = kProcessingRequest;
+						fState = kProcessingMessage;
 					}
 					break;
 				}
-			case kProcessingRequest:
+			case kProcessingMessage:
 				{
-					qtss_printf("kProcessingRequest state \n");
+					qtss_printf("kProcessingMessage state \n");
 
 					// 处理网络报文
 					Assert( fInputStream.GetRequestBuffer() );
@@ -249,7 +249,7 @@ SInt64 EasyCMSSession::Run()
 					// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
 					if (fOutputStream.GetBytesWritten() > 0)
 					{
-						fState = kSendingResponse;
+						fState = kSendingMessage;
 					}
 					else
 					{
@@ -257,9 +257,9 @@ SInt64 EasyCMSSession::Run()
 					}
 					break;
 				}
-			case kSendingResponse:
+			case kSendingMessage:
 				{
-					qtss_printf("kSendingResponse state \n");
+					qtss_printf("kSendingMessage state \n");
 
 					// 响应报文发送，确保完全发送
 					// Assert(fRequest != NULL);
@@ -327,7 +327,7 @@ SInt64 EasyCMSSession::Run()
 
 // 构造登录注册的HTTP请求报文,并赋值给HTTPResponseStream Buffer等待发送处理
 // HTTPRequest类区分httpRequestType/httpResponseType
-QTSS_Error EasyCMSSession::Register()
+QTSS_Error EasyCMSSession::DSRegister()
 {
 	EasyDevices channels;
 
@@ -410,8 +410,11 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 		}
 
 		Assert(theErr == QTSS_NoErr);
+
 	    // 处理完成报文后会自动进行Delete处理
 		OSCharArrayDeleter charArrayPathDeleter(fContentBuffer);
+
+		qtss_printf("EasyCMSSession::ProcessRequest() Get Complete Msg:\n%s", fContentBuffer);
 
 		EasyProtocol protocol(fContentBuffer);
 		int nNetMsg = protocol.GetMessageType();
