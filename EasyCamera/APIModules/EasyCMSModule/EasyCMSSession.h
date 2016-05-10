@@ -79,7 +79,7 @@ public:
 	QTSS_Error UploadSnapshotImage(char *deviceSerial, char *cameraSerial, char *imagedata, int imagelength);
 
 	// 处理HTTPRequest请求报文
-	QTSS_Error ProcessRequest();
+	QTSS_Error ProcessMessage();
 	
 	// 重置客户端参数
 	void ResetClientSocket();

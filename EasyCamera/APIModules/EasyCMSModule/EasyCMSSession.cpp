@@ -154,7 +154,7 @@ SInt64 EasyCMSSession::Run()
 
 						if(events & Task::kReadEvent)
 						{
-							// 已连接，有新消息需要读取
+							// 已连接，有新消息需要读取(数据或者断开)
 							fState = kReadingMessage;
 						}
 
@@ -244,7 +244,7 @@ SInt64 EasyCMSSession::Run()
 					Assert(theErr == QTSS_RequestArrived);
 
 					// 处理收到的具体报文
-					ProcessRequest();
+					ProcessMessage();
 
 					// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
 					if (fOutputStream.GetBytesWritten() > 0)
@@ -358,7 +358,7 @@ QTSS_Error EasyCMSSession::DSRegister()
 }
 
 // 解析HTTPRequest对象fRequest报文
-QTSS_Error EasyCMSSession::ProcessRequest()
+QTSS_Error EasyCMSSession::ProcessMessage()
 {
 	if(NULL == fRequest) return QTSS_BadArgument;
 
@@ -374,7 +374,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 
     if (content_length)
 	{	
-		qtss_printf("EasyCMSSession::ProcessRequest read content-length:%d \n", content_length);
+		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%d \n", content_length);
 		// 检查content的fContentBuffer和fContentBufferOffset是否有值存在,如果存在，说明我们已经开始
 		// 进行content请求处理,如果不存在,我们需要创建并初始化fContentBuffer和fContentBufferOffset
 		if (fContentBuffer == NULL)
@@ -398,7 +398,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 			return QTSS_RequestFailed;
 		}
 	    
-		qtss_printf("EasyCMSSession::ProcessRequest() Add Len:%d \n", theLen);
+		qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%d \n", theLen);
 		if ((theErr == QTSS_WouldBlock) || (theLen < ( content_length - fContentBufferOffset)))
 		{
 			//
@@ -414,7 +414,7 @@ QTSS_Error EasyCMSSession::ProcessRequest()
 	    // 处理完成报文后会自动进行Delete处理
 		OSCharArrayDeleter charArrayPathDeleter(fContentBuffer);
 
-		qtss_printf("EasyCMSSession::ProcessRequest() Get Complete Msg:\n%s", fContentBuffer);
+		qtss_printf("EasyCMSSession::ProcessMessage() Get Complete Msg:\n%s", fContentBuffer);
 
 		EasyProtocol protocol(fContentBuffer);
 		int nNetMsg = protocol.GetMessageType();
