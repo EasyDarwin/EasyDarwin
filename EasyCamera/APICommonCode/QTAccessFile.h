@@ -85,8 +85,7 @@ class QTAccessFile
         // returns the auth scheme
         static QTSS_AuthScheme FindUsersAndGroupsFilesAndAuthScheme(char* inAccessFilePath, QTSS_ActionFlags inAction, char** outUsersFilePath, char** outGroupsFilePath);
                 
-        QTSS_Error AuthorizeRequest(QTSS_StandardRTSP_Params* inParams, Bool16 allowNoAccessFiles, QTSS_ActionFlags noAction, QTSS_ActionFlags authorizeAction,  Bool16 *outAuthorizedPtr, Bool16* outAllowAnyUserPtr = NULL);
-        virtual ~QTAccessFile() {};
+		virtual ~QTAccessFile() {};
         
     private:    
         static char* sQTAccessFileName; // managed by the QTAccess module

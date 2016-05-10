@@ -724,7 +724,6 @@ enum
     QTSS_ErrorLog_Role =             FOUR_CHARS_TO_INT('e', 'l', 'o', 'g'), //elog //This gets called when the server wants to log an error.
     QTSS_RereadPrefs_Role =          FOUR_CHARS_TO_INT('p', 'r', 'e', 'f'), //pref //This gets called when the server rereads preferences.
     QTSS_StateChange_Role =          FOUR_CHARS_TO_INT('s', 't', 'a', 't'), //stat //This gets called whenever the server changes state.
-    
     QTSS_Interval_Role =             FOUR_CHARS_TO_INT('t', 'i', 'm', 'r'), //timr //This gets called whenever the module's interval timer times out calls.
     
     //File system roles
@@ -734,6 +733,11 @@ enum
     QTSS_ReadFile_Role =            FOUR_CHARS_TO_INT('r', 'd', 'f', 'l'),  //rdfl
     QTSS_CloseFile_Role =           FOUR_CHARS_TO_INT('c', 'l', 'f', 'l'),  //clfl
     QTSS_RequestEventFile_Role =    FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
+
+	//EasyCamera Role
+	Easy_StartStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'o'),  //camo
+	Easy_StopStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'c'),  //camc
+	Easy_PostSnap_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),  //cams
     
 };
 typedef UInt32 QTSS_Role;
@@ -742,12 +746,12 @@ typedef UInt32 QTSS_Role;
 //***********************************************/
 // TYPEDEFS
 
-typedef void*           QTSS_StreamRef;
-typedef void*           QTSS_Object;
-typedef void*           QTSS_ServiceFunctionArgsPtr;
-typedef SInt32          QTSS_AttributeID;
-typedef SInt32          QTSS_ServiceID;
-typedef SInt64          QTSS_TimeVal;
+typedef void*					QTSS_StreamRef;
+typedef void*					QTSS_Object;
+typedef void*					QTSS_ServiceFunctionArgsPtr;
+typedef SInt32					QTSS_AttributeID;
+typedef SInt32					QTSS_ServiceID;
+typedef SInt64					QTSS_TimeVal;
 
 typedef QTSS_Object             QTSS_RTPStreamObject;
 typedef QTSS_Object             QTSS_RTSPSessionObject;
@@ -806,23 +810,6 @@ typedef struct
     QTSS_ServerState            inNewState;
 } QTSS_StateChange_Params;
 
-typedef struct 
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-    QTSS_RTSPRequestObject      inRTSPRequest;
-    QTSS_RTSPHeaderObject       inRTSPHeaders;
-    QTSS_ClientSessionObject    inClientSession;
-
-} QTSS_StandardRTSP_Params;
-
-typedef struct 
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-    QTSS_RTSPRequestObject      inRTSPRequest;
-    char**                      outNewRequest;
-
-} QTSS_Filter_Params;
-
 typedef struct
 {
     char*                       inPath;
@@ -857,21 +844,28 @@ typedef struct
     QTSS_EventType              inEventMask;
 } QTSS_RequestEventFile_Params;
 
+typedef struct
+{
+	int							snapType;
+	int							snapLen;
+	char*						snapPtr;
+}Easy_PostSnap_Params;
+
 typedef union
 {
     QTSS_Register_Params                regParams;
     QTSS_Initialize_Params              initParams;
     QTSS_ErrorLog_Params                errorParams;
     QTSS_StateChange_Params             stateChangeParams;
-
-    QTSS_Filter_Params                  rtspFilterParams;
     
     QTSS_OpenFile_Params                openFilePreProcessParams;
     QTSS_OpenFile_Params                openFileParams;
     QTSS_AdviseFile_Params              adviseFileParams;
     QTSS_ReadFile_Params                readFileParams;
     QTSS_CloseFile_Params               closeFileParams;
-    QTSS_RequestEventFile_Params        reqEventFileParams;    
+    QTSS_RequestEventFile_Params        reqEventFileParams; 
+
+	Easy_PostSnap_Params				postSnapParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 typedef struct

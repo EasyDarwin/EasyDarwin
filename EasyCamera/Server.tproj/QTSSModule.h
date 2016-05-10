@@ -134,8 +134,13 @@ class QTSSModule : public QTSSDictionary, public Task
             kRequestEventFileRole =     9,
             kStateChangeRole =          10,
             kTimedIntervalRole =        11,
+
+			//EasyCamera Role
+			kStartStreamRole =			12,
+			kStopStreamRole =			13,
+			kPostSnapRole =				14,
             
-            kNumRoles =                 12
+            kNumRoles =                 15
         };
         typedef UInt32 RoleIndex;
         
