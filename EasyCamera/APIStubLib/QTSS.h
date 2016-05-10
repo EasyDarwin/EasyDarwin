@@ -40,7 +40,7 @@ extern "C" {
 #define QTSS_MAX_MODULE_NAME_LENGTH     64
 #define QTSS_MAX_SESSION_ID_LENGTH      32
 #define QTSS_MAX_ATTRIBUTE_NAME_SIZE    64
-#define EASY_REQUEST_BUFFER_SIZE_LEN	1024*1024
+#define EASY_REQUEST_BUFFER_SIZE_LEN	64*1024
 
 
 //*******************************
