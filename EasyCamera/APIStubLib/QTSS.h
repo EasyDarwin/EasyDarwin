@@ -850,7 +850,9 @@ typedef struct
 	const char*						inSerial;
 	const char*						inProtocol;
 	const char*						inIP;
-	UInt16						inPort;
+	const char*						inStreamID;
+	const char*						inChannel;
+	UInt16							inPort;
 }Easy_StartStream_Params;
 
 typedef struct

@@ -31,7 +31,7 @@ public:
 
 
 
-	QTSS_Error StartStreaming(const char* inSerial, const char* inProtocol, const char* inIP, UInt16 inPort);
+	QTSS_Error StartStreaming(const char* inSerial, const char* inChannel, const char* inStreamID, const char* inProtocol, const char* inIP, UInt16 inPort);
 	
 	QTSS_Error StopStreaming();
 

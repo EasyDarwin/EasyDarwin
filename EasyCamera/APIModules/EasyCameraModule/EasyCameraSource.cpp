@@ -273,11 +273,11 @@ SInt64 EasyCameraSource::Run()
 	//free((void*)sData);
 	//sData = NULL;
 
-	return 0;
+	return 10000000000000000;
 }
 
 
-QTSS_Error EasyCameraSource::StartStreaming(const char* inSerial, const char* inProtocol, const char* inIP, UInt16 inPort)
+QTSS_Error EasyCameraSource::StartStreaming(const char* inSerial, const char* inChannel, const char* inStreamID, const char* inProtocol, const char* inIP, UInt16 inPort)
 {
 	if(NULL == fPusherHandle)
 	{
@@ -294,7 +294,7 @@ QTSS_Error EasyCameraSource::StartStreaming(const char* inSerial, const char* in
 		EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
 
 		char sdpName[64] = { 0 };
-		sprintf(sdpName,"%s.sdp", inSerial); 
+		sprintf(sdpName,"%s/%s/%s.sdp", inStreamID, inSerial, inChannel); 
 
 		EasyPusher_StartStream(fPusherHandle, (char*)inIP, inPort, sdpName, "", "", &mediainfo, 1024, 0);
 	}
