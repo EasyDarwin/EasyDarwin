@@ -93,7 +93,7 @@ private:
     //CONSTANTS:
     enum
     {
-        kRequestBufferSizeInBytes = 2048        //UInt32
+        kRequestBufferSizeInBytes = QTSS_MAX_REQUEST_BUFFER_SIZE        //UInt32
     };
     
     // Base64 decodes into fRequest.Ptr, updates fRequest.Len, and returns the amount
@@ -102,7 +102,7 @@ private:
 
     TCPSocket*              fSocket;
     UInt32                  fRetreatBytes;
-        UInt32                  fRetreatBytesRead; // Used by Read() when it is reading RetreatBytes
+	UInt32                  fRetreatBytesRead; // Used by Read() when it is reading RetreatBytes
     
     char                    fRequestBuffer[kRequestBufferSizeInBytes];
     UInt32                  fCurOffset; // tracks how much valid data is in the above buffer

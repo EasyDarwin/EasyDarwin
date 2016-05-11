@@ -91,7 +91,7 @@ class RTSPResponseStream : public ResizeableStringFormatter
     
         enum
         {
-            kOutputBufferSizeInBytes = 512  //UInt32
+            kOutputBufferSizeInBytes = QTSS_MAX_REQUEST_BUFFER_SIZE  //UInt32
         };
         
         //The default buffer size is allocated inline as part of the object. Because this size
