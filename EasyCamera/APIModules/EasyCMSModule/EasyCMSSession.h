@@ -102,7 +102,7 @@ public:
     OSMutex             fReadMutex;
 
 	// Session锁
-	OSMutex             fSessionMutex;
+	OSMutex             fMutex;
 
 	// 请求报文的Content部分
 	char*				fContentBuffer;

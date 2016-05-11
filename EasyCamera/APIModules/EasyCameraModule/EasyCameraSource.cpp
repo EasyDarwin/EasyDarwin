@@ -241,43 +241,43 @@ SInt64 EasyCameraSource::Run()
 {
 	QTSS_Error nRet = QTSS_NoErr;
 
-	//向设备获取快照数据
-	unsigned char *sData = (unsigned char*)malloc(EASY_SNAP_BUFFER_SIZE);
-	int snapBufLen = 0;
+	////向设备获取快照数据
+	//unsigned char *sData = (unsigned char*)malloc(EASY_SNAP_BUFFER_SIZE);
+	//int snapBufLen = 0;
 
-	do{
-		//如果获取到摄像机快照数据，Base64编码/发送
-		if(!GetSnapData(sData, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
-		{
-			//未获取到数据
-			qtss_printf("EasyDeviceCenter::UpdateDeviceSnap => Get Snap Data Fail \n");
-			nRet = QTSS_ValueNotFound;
-			break;
-		}
+	//do{
+	//	//如果获取到摄像机快照数据，Base64编码/发送
+	//	if(!GetSnapData(sData, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
+	//	{
+	//		//未获取到数据
+	//		qtss_printf("EasyDeviceCenter::UpdateDeviceSnap => Get Snap Data Fail \n");
+	//		nRet = QTSS_ValueNotFound;
+	//		break;
+	//	}
 
-		QTSS_RoleParams params;
-		params.postSnapParams.snapLen = snapBufLen;
-		params.postSnapParams.snapPtr = sData;
-		params.postSnapParams.snapType = EASY_SNAP_TYPE_JPEG;
-		UInt32 fCurrentModule = 0;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kPostSnapRole);
-		for (; fCurrentModule < numModules; fCurrentModule++)
-		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kPostSnapRole, fCurrentModule);
-			(void)theModule->CallDispatch(Easy_PostSnap_Role, &params);	
-			return QTSS_NoErr;
-		}
+	//	QTSS_RoleParams params;
+	//	params.postSnapParams.snapLen = snapBufLen;
+	//	params.postSnapParams.snapPtr = sData;
+	//	params.postSnapParams.snapType = EASY_SNAP_TYPE_JPEG;
+	//	UInt32 fCurrentModule = 0;
+	//	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kPostSnapRole);
+	//	for (; fCurrentModule < numModules; fCurrentModule++)
+	//	{
+	//		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kPostSnapRole, fCurrentModule);
+	//		(void)theModule->CallDispatch(Easy_PostSnap_Role, &params);	
+	//		return 2*60*1000;
+	//	}
 
-	}while(0);
+	//}while(0);
 
-	free((void*)sData);
-	sData = NULL;
+	//free((void*)sData);
+	//sData = NULL;
 
-	return 2*60*1000;
+	return 0;
 }
 
 
-QTSS_Error EasyCameraSource::StartStreaming()
+QTSS_Error EasyCameraSource::StartStreaming(const char* inSerial, const char* inProtocol, const char* inIP, UInt16 inPort)
 {
 	if(NULL == fPusherHandle)
 	{
@@ -294,9 +294,9 @@ QTSS_Error EasyCameraSource::StartStreaming()
 		EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
 
 		char sdpName[64] = { 0 };
-		sprintf(sdpName,"%s.sdp",QTSServerInterface::GetServer()->GetPrefs()->GetDeviceSerialNumber()); 
+		sprintf(sdpName,"%s.sdp", inSerial); 
 
-		EasyPusher_StartStream(fPusherHandle, "www.easydss.com", 554, sdpName, "", "", &mediainfo, 1024, 0);
+		EasyPusher_StartStream(fPusherHandle, (char*)inIP, inPort, sdpName, "", "", &mediainfo, 1024, 0);
 	}
 
 	NetDevStartStream();

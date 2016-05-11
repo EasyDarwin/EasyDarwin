@@ -844,6 +844,20 @@ typedef struct
     QTSS_EventType              inEventMask;
 } QTSS_RequestEventFile_Params;
 
+
+typedef struct
+{
+	const char*						inSerial;
+	const char*						inProtocol;
+	const char*						inIP;
+	UInt16						inPort;
+}Easy_StartStream_Params;
+
+typedef struct
+{
+	char*						inSerial[36];
+}Easy_StopStream_Params;
+
 typedef struct
 {
 	int							snapType;
@@ -865,6 +879,8 @@ typedef union
     QTSS_CloseFile_Params               closeFileParams;
     QTSS_RequestEventFile_Params        reqEventFileParams; 
 
+	Easy_StartStream_Params				startStreaParams;
+	Easy_StopStream_Params				stopStreamParams;
 	Easy_PostSnap_Params				postSnapParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 

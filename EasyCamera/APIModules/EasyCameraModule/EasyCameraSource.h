@@ -29,7 +29,9 @@ public:
 	QTSS_Error NetDevStartStream();
 	void NetDevStopStream();
 
-	QTSS_Error StartStreaming();
+
+
+	QTSS_Error StartStreaming(const char* inSerial, const char* inProtocol, const char* inIP, UInt16 inPort);
 	
 	QTSS_Error StopStreaming();
 
