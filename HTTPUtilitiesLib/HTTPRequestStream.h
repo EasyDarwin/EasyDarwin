@@ -66,27 +66,20 @@ public:
         //RequestArrived).
     StrPtrLen*  GetRequestBuffer()  { return fRequestPtr; }
     Bool16      IsDataPacket()      { return fIsDataPacket; }
-    void        ShowHTTP(Bool16 enable) {fPrintHTTP = enable; }     
+    void        ShowMsg(Bool16 enable) {fPrintMsg = enable; }     
     void SnarfRetreat( HTTPRequestStream &fromRequest );
         
-private:
-
-        
+private:      
     //CONSTANTS:
-    enum
-    {
-        kRequestBufferSizeInBytes = 64*1024        //64k Buffer UInt32
-    };
-    
     // Base64 decodes into fRequest.Ptr, updates fRequest.Len, and returns the amount
     // of data left undecoded in inSrcData
     QTSS_Error              DecodeIncomingData(char* inSrcData, UInt32 inSrcDataLen);
 
-    ClientSocket*              fSocket;
+    ClientSocket*			fSocket;
     UInt32                  fRetreatBytes;
 	UInt32                  fRetreatBytesRead; // Used by Read() when it is reading RetreatBytes
     
-    char                    fRequestBuffer[kRequestBufferSizeInBytes];
+    char                    fRequestBuffer[QTSS_MAX_REQUEST_BUFFER_SIZE];
     UInt32                  fCurOffset; // tracks how much valid data is in the above buffer
     UInt32                  fEncodedBytesRemaining; // If we are decoding, tracks how many encoded bytes are in the buffer
     
@@ -94,7 +87,7 @@ private:
     StrPtrLen*              fRequestPtr;    // pointer to a request header
     Bool16                  fDecode;        // should we base 64 decode?
     Bool16                  fIsDataPacket;  // is this a data packet? Like for a record?
-    Bool16                  fPrintHTTP;     // debugging printfs
+    Bool16                  fPrintMsg;     // debugging printfs
     
 };
 
