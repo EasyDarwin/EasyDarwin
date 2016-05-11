@@ -68,7 +68,8 @@ EasyCMSSession::EasyCMSSession()
 	fRequest(NULL),
 	fReadMutex(),
 	fContentBufferOffset(0),
-	fContentBuffer(NULL)
+	fContentBuffer(NULL),
+	fSnapReq(NULL)
 {
 	this->SetTaskName("EasyCMSSession");
 
@@ -112,10 +113,7 @@ void EasyCMSSession::CleanupRequest()
         delete fRequest;
         fRequest = NULL;
     }
-    
-    fSessionMutex.Unlock();
-    fReadMutex.Unlock();
-    
+
 	//清空发送缓冲区
 	fOutputStream.ResetBytesWritten();
 }
@@ -161,7 +159,13 @@ SInt64 EasyCMSSession::Run()
 						if(events & Task::kTimeoutEvent)
 						{
 							// 已连接，保活时间到需要发送保活报文
-							DSRegister();
+							DSPostSnap();
+						}
+
+						if(events & Task::kUpdateEvent)
+						{
+							//已连接，发送快照更新
+							DSPostSnap();
 						}
 					}
 					
@@ -172,18 +176,18 @@ SInt64 EasyCMSSession::Run()
 					}
 
 					// 
-					if(kIdle == fState) return 0;
+					if(kIdle == fState)
+					{
+						fReadMutex.Unlock();
+						fSessionMutex.Unlock();
+						return 0;
+					}
 
 					break;
 				}
 
 			case kReadingMessage:
 				{
-					qtss_printf("kReadingMessage state \n");
-
-					// 读取锁,已经在处理一个报文包时,不进行新网络报文的读取和处理
-					OSMutexLocker readMutexLocker(&fReadMutex);
-
 					// 网络请求报文存储在fInputStream中
 					if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
 					{
@@ -232,11 +236,6 @@ SInt64 EasyCMSSession::Run()
 
 					// 根据具体请求报文构造HTTPRequest请求类
 					fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
-
-					// 在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
-					// 在此过程中，此Session的Socket不进行任何网络数据的读/写
-					fReadMutex.Lock();
-					fSessionMutex.Lock();
                 
 					// 清空发送缓冲区
 					fOutputStream.ResetBytesWritten();
@@ -392,7 +391,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				EasyMsgSDRegisterACK ack(fContentBuffer);
 
 				qtss_printf("session id = %s\n", ack.GetBodyValue("SessionID").c_str());
-				qtss_printf("device serial = %s\n", ack.GetBodyValue("DeviceSerial").c_str());
+				qtss_printf("device serial = %s\n", ack.GetBodyValue("Serial").c_str());
 			}
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
@@ -574,40 +573,54 @@ QTSS_Error EasyCMSSession::DSRegister()
 	return QTSS_NoErr;
 }
 
-
-QTSS_Error EasyCMSSession::DSPostSnap(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
+QTSS_Error EasyCMSSession::UpdateSnapCache(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
 {
-	char szTime[32] = {0,};
-
-	EasyJsonValue body;
-	body["Serial"] = sEasy_Serial;
-
-	const char* type = EasyProtocol::GetSnapTypeString(snapType).c_str();
-
-	body["Type"] = type?type:"JPEG";
-	body["Time"] = szTime;	
-	body["Image"] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
-	EasyMsgDSPostSnapREQ req(body, 1);
-	
-	string msg = req.GetMsg();
-
-	//请求上传快照
-	StrPtrLen jsonContent((char*)msg.data());
-	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
-
-	if(httpReq.CreateRequestHeader())
+	if(fSnapReq == NULL)
 	{
-		if (jsonContent.Len)
-			httpReq.AppendContentLengthHeader(jsonContent.Len);
+		char szTime[32] = {0,};
+		EasyJsonValue body;
+		body["Serial"] = sEasy_Serial;
 
-		//Push msg to OutputBuffer
-		char respHeader[2048] = { 0 };
-		StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
-		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+		string type = EasyProtocol::GetSnapTypeString(snapType);
+
+		body["Type"] = type.c_str();
+		body["Time"] = szTime;	
+		body["Image"] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
 		
-		fOutputStream.Put(respHeader);
-		if (jsonContent.Len > 0) 
-			fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+		fSnapReq = new EasyMsgDSPostSnapREQ(body,1);
+
+		this->Signal(Task::kUpdateEvent);
+	}
+	return QTSS_NoErr;
+}
+
+QTSS_Error EasyCMSSession::DSPostSnap()
+{
+	if(fSnapReq)
+	{
+		string msg = fSnapReq->GetMsg();
+
+		//请求上传快照
+		StrPtrLen jsonContent((char*)msg.data());
+		HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
+
+		if(httpReq.CreateRequestHeader())
+		{
+			if (jsonContent.Len)
+				httpReq.AppendContentLengthHeader(jsonContent.Len);
+
+			//Push msg to OutputBuffer
+			char respHeader[2048] = { 0 };
+			StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
+			strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+			
+			fOutputStream.Put(respHeader);
+			if (jsonContent.Len > 0) 
+				fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+		}
+
+		delete fSnapReq;
+		fSnapReq = NULL;
 	}
 
 	return QTSS_NoErr;

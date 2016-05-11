@@ -77,7 +77,10 @@ public:
 	QTSS_Error DSRegister();
 
 	// 上传快照图片到EasyCMS
-	QTSS_Error DSPostSnap(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
+	QTSS_Error DSPostSnap();
+
+	// 更新最新快照缓存
+	QTSS_Error UpdateSnapCache(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
 
 	// 处理HTTPRequest请求报文
 	QTSS_Error ProcessMessage();
@@ -112,6 +115,8 @@ private:
 
 	// 初步判断Session Socket是否已连接
 	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
+
+	EasyMsgDSPostSnapREQ* fSnapReq;
 
 };
 
