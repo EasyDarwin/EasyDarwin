@@ -30,8 +30,8 @@ static char*            sDefaultEasy_Key		= "123456";
 static char*			sEasy_Tag				= NULL;
 static char*			sDefaultEasy_Tag		= "CAMTag001";
 // EasyCMS Keep-Alive Interval
-static UInt32			sKeepAliveInterval		= 60;
-static UInt32			sDefKeepAliveInterval	= 60;
+static UInt32			sKeepAliveInterval		= 30;
+static UInt32			sDefKeepAliveInterval	= 30;
 
 
 // 初始化读取配置文件中各项配置
@@ -85,6 +85,9 @@ EasyCMSSession::EasyCMSSession()
 		//TODO:连接备用默认EasyCMS服务器
 		;
 	}
+
+	fTimeoutTask.RefreshTimeout();
+
 }
 
 EasyCMSSession::~EasyCMSSession()
@@ -121,13 +124,19 @@ void EasyCMSSession::CleanupRequest()
 
 SInt64 EasyCMSSession::Run()
 {	
-	OSMutexLocker locker(&fMutex);
+	//OSMutexLocker locker(&fMutex);
 
 	OS_Error theErr = OS_NoErr;
 	EventFlags events = this->GetEvents();
 
-	if(events & Task::kKillEvent)
-		return -1;
+	//if(events & Task::kKillEvent)
+	//	return -1;
+
+	if(events & Task::kTimeoutEvent)
+	{
+		printf("Timeout task!\n");
+		fTimeoutTask.RefreshTimeout();
+	}
 
 	while(1)
 	{
@@ -163,6 +172,7 @@ SInt64 EasyCMSSession::Run()
 						{
 							// 已连接，保活时间到需要发送保活报文
 							DSRegister();
+							fTimeoutTask.RefreshTimeout();
 						}
 
 						if(events & Task::kUpdateEvent)
@@ -189,6 +199,7 @@ SInt64 EasyCMSSession::Run()
 
 			case kReadingMessage:
 				{
+					qtss_printf("kReadingMessage state \n");
 					// 网络请求报文存储在fInputStream中
 					if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
 					{
@@ -196,6 +207,8 @@ SInt64 EasyCMSSession::Run()
 						//但！还不能构成一个整体报文Header部分，还要继续等待读取...
 						fSocket->GetSocket()->SetTask(this);
 						fSocket->GetSocket()->RequestEvent(EV_RE);
+
+						fState = kIdle;
 						return 0;
 					}
                 
@@ -266,6 +279,8 @@ SInt64 EasyCMSSession::Run()
 
 					//发送响应报文
 					theErr = fOutputStream.Flush();
+
+					qtss_printf("kSendingMessage fOutputStream.Flush(%d) \n", theErr);
                 
 					if (theErr == EAGAIN || theErr == EINPROGRESS)
 					{
@@ -315,8 +330,9 @@ SInt64 EasyCMSSession::Run()
 					
 					if(IsConnected())
 					{
+						printf("fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask(%d))\n", fSocket->GetEventMask());
 						fSocket->GetSocket()->SetTask(this);
-						fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask());
+						fSocket->GetSocket()->RequestEvent(EV_RE | EV_WR);
 					}
 					return 0;
 				}
@@ -416,6 +432,12 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				params.startStreaParams.inSerial = serial.c_str();
 				string protocol = startStreamReq.GetBodyValue("Protocol");
 				params.startStreaParams.inProtocol = protocol.c_str();
+
+				string channel = startStreamReq.GetBodyValue("Channel");
+				params.startStreaParams.inChannel = channel.c_str();
+
+				string streamID = startStreamReq.GetBodyValue("SessionID");
+				params.startStreaParams.inStreamID = streamID.c_str();
 
 				QTSS_Error	errCode = QTSS_NoErr;
 				UInt32 fCurrentModule=0;
