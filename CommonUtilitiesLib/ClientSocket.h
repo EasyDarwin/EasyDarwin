@@ -97,7 +97,7 @@ class ClientSocket
 
         enum
         {
-            kSendBufferLen = 64*1024
+            kSendBufferLen = 2048
         };
         
         // Buffer for sends.
