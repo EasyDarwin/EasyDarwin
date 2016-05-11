@@ -191,6 +191,7 @@ QTSS_Error HTTPResponseStream::Flush()
 			// We were able to send all the data in the buffer. Great. Flush it.
 			this->Reset();
 			fBytesSentInBuffer = 0;
+			break;
 		}
 	}
     return theErr;
