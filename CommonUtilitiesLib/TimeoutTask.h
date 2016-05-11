@@ -63,7 +63,7 @@ class TimeoutTaskThread : public IdleTask
         //this thread runs every minute and checks for timeouts
         enum
         {
-            kIntervalSeconds = 60   //UInt32
+            kIntervalSeconds = 15   //UInt32
         };
 
         virtual SInt64          Run();
@@ -84,7 +84,7 @@ class TimeoutTask
         static  void Initialize();
         //Pass in the task you'd like to send timeouts to. 
         //Also pass in the timeout you'd like to use. By default, the timeout is 0 (NEVER).
-        TimeoutTask(Task* inTask, SInt64 inTimeoutInMilSecs = 30);
+        TimeoutTask(Task* inTask, SInt64 inTimeoutInMilSecs = 15);
         ~TimeoutTask();
         
         //MODIFIERS
