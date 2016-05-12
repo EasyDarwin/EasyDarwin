@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -30,8 +30,8 @@ static char*            sDefaultEasy_Key		= "123456";
 static char*			sEasy_Tag				= NULL;
 static char*			sDefaultEasy_Tag		= "CAMTag001";
 // EasyCMS Keep-Alive Interval
-static UInt32			sKeepAliveInterval		= 60;
-static UInt32			sDefKeepAliveInterval	= 60;
+static UInt32			sKeepAliveInterval		= 30;
+static UInt32			sDefKeepAliveInterval	= 30;
 
 
 // 初始化读取配置文件中各项配置
@@ -67,8 +67,10 @@ EasyCMSSession::EasyCMSSession()
 	fState(kIdle),
 	fRequest(NULL),
 	fReadMutex(),
+	fMutex(),
 	fContentBufferOffset(0),
-	fContentBuffer(NULL)
+	fContentBuffer(NULL),
+	fSnapReq(NULL)
 {
 	this->SetTaskName("EasyCMSSession");
 
@@ -83,6 +85,9 @@ EasyCMSSession::EasyCMSSession()
 		//TODO:连接备用默认EasyCMS服务器
 		;
 	}
+
+	fTimeoutTask.RefreshTimeout();
+
 }
 
 EasyCMSSession::~EasyCMSSession()
@@ -112,21 +117,17 @@ void EasyCMSSession::CleanupRequest()
         delete fRequest;
         fRequest = NULL;
     }
-    
-    fSessionMutex.Unlock();
-    fReadMutex.Unlock();
-    
+
 	//清空发送缓冲区
 	fOutputStream.ResetBytesWritten();
 }
 
 SInt64 EasyCMSSession::Run()
 {	
+	//OSMutexLocker locker(&fMutex);
+
 	OS_Error theErr = OS_NoErr;
 	EventFlags events = this->GetEvents();
-
-	if(events & Task::kKillEvent)
-		return -1;
 
 	while(1)
 	{
@@ -162,6 +163,13 @@ SInt64 EasyCMSSession::Run()
 						{
 							// 已连接，保活时间到需要发送保活报文
 							DSRegister();
+							fTimeoutTask.RefreshTimeout();
+						}
+
+						if(events & Task::kUpdateEvent)
+						{
+							//已连接，发送快照更新
+							DSPostSnap();
 						}
 					}
 					
@@ -172,7 +180,10 @@ SInt64 EasyCMSSession::Run()
 					}
 
 					// 
-					if(kIdle == fState) return 0;
+					if(kIdle == fState)
+					{
+						return 0;
+					}
 
 					break;
 				}
@@ -180,10 +191,6 @@ SInt64 EasyCMSSession::Run()
 			case kReadingMessage:
 				{
 					qtss_printf("kReadingMessage state \n");
-
-					// 读取锁,已经在处理一个报文包时,不进行新网络报文的读取和处理
-					OSMutexLocker readMutexLocker(&fReadMutex);
-
 					// 网络请求报文存储在fInputStream中
 					if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
 					{
@@ -191,6 +198,8 @@ SInt64 EasyCMSSession::Run()
 						//但！还不能构成一个整体报文Header部分，还要继续等待读取...
 						fSocket->GetSocket()->SetTask(this);
 						fSocket->GetSocket()->RequestEvent(EV_RE);
+
+						fState = kIdle;
 						return 0;
 					}
                 
@@ -232,11 +241,6 @@ SInt64 EasyCMSSession::Run()
 
 					// 根据具体请求报文构造HTTPRequest请求类
 					fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
-
-					// 在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
-					// 在此过程中，此Session的Socket不进行任何网络数据的读/写
-					fReadMutex.Lock();
-					fSessionMutex.Lock();
                 
 					// 清空发送缓冲区
 					fOutputStream.ResetBytesWritten();
@@ -260,9 +264,6 @@ SInt64 EasyCMSSession::Run()
 			case kSendingMessage:
 				{
 					qtss_printf("kSendingMessage state \n");
-
-					// 响应报文发送，确保完全发送
-					// Assert(fRequest != NULL);
 
 					//发送响应报文
 					theErr = fOutputStream.Flush();
@@ -316,7 +317,7 @@ SInt64 EasyCMSSession::Run()
 					if(IsConnected())
 					{
 						fSocket->GetSocket()->SetTask(this);
-						fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask());
+						fSocket->GetSocket()->RequestEvent(EV_RE | EV_WR);
 					}
 					return 0;
 				}
@@ -392,122 +393,121 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				EasyMsgSDRegisterACK ack(fContentBuffer);
 
 				qtss_printf("session id = %s\n", ack.GetBodyValue("SessionID").c_str());
-				qtss_printf("device serial = %s\n", ack.GetBodyValue("DeviceSerial").c_str());
+				qtss_printf("device serial = %s\n", ack.GetBodyValue("Serial").c_str());
 			}
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
 			{
-				//EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
-				//qtss_printf("DeviceSerial = %s\n", startStreamReq.GetBodyValue("DeviceSerial").c_str());
-				//qtss_printf("CameraSerial = %s\n", startStreamReq.GetBodyValue("CameraSerial").c_str());
-				//qtss_printf("DssIP = %s\n", startStreamReq.GetBodyValue("DssIP").c_str());
+				EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
+				qtss_printf("Serial = %s\n", startStreamReq.GetBodyValue("Serial").c_str());
+				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue("Server_IP").c_str());
+				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue("Server_Port").c_str());
 
+				QTSS_RoleParams params;
 
-				//char szIP[16] = {0,};
-				//strcpy(szIP, (char*)startStreamReq.GetBodyValue("DssIP").c_str());
-				//qtss_printf("szIP = %s\n", szIP);
-				//char *ip = (char*)startStreamReq.GetBodyValue("DssIP").c_str();
-				//qtss_printf("ip = %s\n", ip);
+				string ip = startStreamReq.GetBodyValue("Server_IP");
+				params.startStreaParams.inIP = ip.c_str();
+				string port = startStreamReq.GetBodyValue("Server_PORT");
+				params.startStreaParams.inPort = atoi(port.c_str());
+				string serial = startStreamReq.GetBodyValue("Serial");
+				params.startStreaParams.inSerial = serial.c_str();
+				string protocol = startStreamReq.GetBodyValue("Protocol");
+				params.startStreaParams.inProtocol = protocol.c_str();
 
-				//QTSS_RoleParams packetParams;
-				//memset(&packetParams, 0x00, sizeof(QTSS_RoleParams));
-				//strcpy(packetParams.easyNVRParams.inNVRSerialNumber, (char*)sEasy_Serial);
-				//strcpy(packetParams.easyNVRParams.inDeviceSerial, (char*)startStreamReq.GetBodyValue("DeviceSerial").c_str());
-				//strcpy(packetParams.easyNVRParams.inCameraSerial, (char*)startStreamReq.GetBodyValue("CameraSerial").c_str());
-				//packetParams.easyNVRParams.inStreamID = atoi(startStreamReq.GetBodyValue("StreamID").c_str());
-				//strcpy(packetParams.easyNVRParams.inProtocol, (char*)startStreamReq.GetBodyValue("Protocol").c_str());
-				//strcpy(packetParams.easyNVRParams.inDssIP, (char*)startStreamReq.GetBodyValue("DssIP").c_str());
-				//packetParams.easyNVRParams.inDssPort =atoi(startStreamReq.GetBodyValue("DssPort").c_str());
+				string channel = startStreamReq.GetBodyValue("Channel");
+				params.startStreaParams.inChannel = channel.c_str();
 
-				//QTSS_Error	errCode = QTSS_NoErr;
-				//UInt32 fCurrentModule=0;
-				//UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStartStreamRole);
-				//for (; fCurrentModule < numModules; fCurrentModule++)
-				//{
-				//	QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStartStreamRole, fCurrentModule);
-				//	errCode = theModule->CallDispatch(Easy_NVRStartStream_Role, &packetParams);
-				//}
-				//fCurrentModule = 0;
+				string streamID = startStreamReq.GetBodyValue("SessionID");
+				params.startStreaParams.inStreamID = streamID.c_str();
 
-				//EasyJsonValue body;
-				//body["DeviceSerial"] = packetParams.easyNVRParams.inDeviceSerial;
-				//body["CameraSerial"] = packetParams.easyNVRParams.inCameraSerial;
-				//body["StreamID"] = packetParams.easyNVRParams.inStreamID;
-				//EasyMsgDSPushSteamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				QTSS_Error	errCode = QTSS_NoErr;
+				UInt32 fCurrentModule=0;
+				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStartStreamRole);
+				for (; fCurrentModule < numModules; fCurrentModule++)
+				{
+					QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStartStreamRole, fCurrentModule);
+					errCode = theModule->CallDispatch(Easy_StartStream_Role, &params);
+				}
+				fCurrentModule = 0;
 
-				//string msg = rsp.GetMsg();
-				//StrPtrLen jsonContent((char*)msg.data());
-				//HTTPRequest httpAck(&sServiceStr, httpResponseType);
+				EasyJsonValue body;
+				body["Serial"] = params.startStreaParams.inSerial;
+				body["Protocol"] = params.startStreaParams.inProtocol;
+				body["Server_IP"] = params.startStreaParams.inIP;
+				body["Server_Port"] = params.startStreaParams.inPort;
 
-				//if(httpAck.CreateResponseHeader())
-				//{
-				//	if (jsonContent.Len)
-				//		httpAck.AppendContentLengthHeader(jsonContent.Len);
+				EasyMsgDSPushSteamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
 
-				//	//Push msg to OutputBuffer
-				//	char respHeader[2048] = { 0 };
-				//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-				//	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+				string msg = rsp.GetMsg();
+				StrPtrLen jsonContent((char*)msg.data());
+				HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+
+				if(httpAck.CreateResponseHeader())
+				{
+					if (jsonContent.Len)
+						httpAck.AppendContentLengthHeader(jsonContent.Len);
+
+					//Push msg to OutputBuffer
+					char respHeader[2048] = { 0 };
+					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+					strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 		
-				//	fOutputStream.Put(respHeader);
-				//	if (jsonContent.Len > 0) 
-				//		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
-				//}
+					fOutputStream.Put(respHeader);
+					if (jsonContent.Len > 0) 
+						fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+				}
 			}
 			break;
 		case MSG_SD_STREAM_STOP_REQ:
 			{
-				//EasyMsgSDStopStreamREQ	stopStreamReq(fContentBuffer);
+				EasyMsgSDStopStreamREQ	stopStreamReq(fContentBuffer);
 
-				//QTSS_RoleParams packetParams;
-				//memset(&packetParams, 0x00, sizeof(QTSS_RoleParams));
-				//strcpy(packetParams.easyNVRParams.inNVRSerialNumber, (char*)sEasy_Serial);
-				//strcpy(packetParams.easyNVRParams.inDeviceSerial, (char*)stopStreamReq.GetBodyValue("DeviceSerial").data());
-				//strcpy(packetParams.easyNVRParams.inCameraSerial, (char*)stopStreamReq.GetBodyValue("CameraSerial").data());
-				//packetParams.easyNVRParams.inStreamID = atoi(stopStreamReq.GetBodyValue("StreamID").data());
-				//strcpy(packetParams.easyNVRParams.inProtocol, "");
-				//strcpy(packetParams.easyNVRParams.inDssIP, "");
-				//packetParams.easyNVRParams.inDssPort = 0;
+				QTSS_RoleParams params;
 
-				//// 需要先判断DeviceSerial与当前设备的sEasy_Serial是否一致
-				//// TODO::
+				string serial = stopStreamReq.GetBodyValue("Serial");
+				params.stopStreamParams.inSerial = serial.c_str();
+				string protocol = stopStreamReq.GetBodyValue("Protocol");
+				params.stopStreamParams.inProtocol = protocol.c_str();
+				string channel = stopStreamReq.GetBodyValue("Channel");
+				params.stopStreamParams.inChannel = channel.c_str();
 
-				//UInt32 fCurrentModule=0;
-				//QTSS_Error err = QTSS_NoErr;
-				//UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
-				//for (; fCurrentModule < numModules; fCurrentModule++)
-				//{
-				//	QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
-				//	err = theModule->CallDispatch(Easy_NVRStopStream_Role, &packetParams);
-				//}
-				//fCurrentModule = 0;
 
-				//EasyJsonValue body;
-				//body["DeviceSerial"] = packetParams.easyNVRParams.inDeviceSerial;
-				//body["CameraSerial"] = packetParams.easyNVRParams.inCameraSerial;
-				//body["StreamID"] = packetParams.easyNVRParams.inStreamID;
+				QTSS_Error	errCode = QTSS_NoErr;
+				UInt32 fCurrentModule=0;
+				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
+				for (; fCurrentModule < numModules; fCurrentModule++)
+				{
+					QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
+					errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
+				}
+				fCurrentModule = 0;
 
-				//EasyMsgDSStopStreamACK rsp(body, 1, err == QTSS_NoErr ? 200 : 404);
-				//string msg = rsp.GetMsg();
+				EasyJsonValue body;
+				body["Serial"] = params.stopStreamParams.inSerial;
+				body["Channel"] = params.stopStreamParams.inChannel;
+				body["Protocol"] = params.stopStreamParams.inProtocol;
 
-				////回应
-				//StrPtrLen jsonContent((char*)msg.data());
-				//HTTPRequest httpAck(&sServiceStr, httpResponseType);
+				EasyMsgDSStopStreamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				string msg = rsp.GetMsg();
 
-				//if(httpAck.CreateResponseHeader())
-				//{
-				//	if (jsonContent.Len)
-				//		httpAck.AppendContentLengthHeader(jsonContent.Len);
+				//回应
+				StrPtrLen jsonContent((char*)msg.data());
+				HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 
-				//	//Push msg to OutputBuffer
-				//	char respHeader[2048] = { 0 };
-				//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-				//	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+				if(httpAck.CreateResponseHeader())
+				{
+					if (jsonContent.Len)
+						httpAck.AppendContentLengthHeader(jsonContent.Len);
+
+					//Push msg to OutputBuffer
+					char respHeader[2048] = { 0 };
+					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+					strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 		
-				//	fOutputStream.Put(respHeader);
-				//	if (jsonContent.Len > 0) 
-				//		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
-				//}
+					fOutputStream.Put(respHeader);
+					if (jsonContent.Len > 0) 
+						fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+				}
 			}
 			break;
 		default:
@@ -574,40 +574,54 @@ QTSS_Error EasyCMSSession::DSRegister()
 	return QTSS_NoErr;
 }
 
-
-QTSS_Error EasyCMSSession::DSPostSnap(char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
+QTSS_Error EasyCMSSession::UpdateSnapCache(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
 {
-	char szTime[32] = {0,};
-
-	EasyJsonValue body;
-	body["Serial"] = sEasy_Serial;
-
-	const char* type = EasyProtocol::GetSnapTypeString(snapType).c_str();
-
-	body["Type"] = type?type:"JPEG";
-	body["Time"] = szTime;	
-	body["Image"] = EasyUtil::Base64Encode(snapPtr, snapLen);
-	EasyMsgDSPostSnapREQ req(body, 1);
-	
-	string msg = req.GetMsg();
-
-	//请求上传快照
-	StrPtrLen jsonContent((char*)msg.data());
-	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
-
-	if(httpReq.CreateRequestHeader())
+	if(fSnapReq == NULL)
 	{
-		if (jsonContent.Len)
-			httpReq.AppendContentLengthHeader(jsonContent.Len);
+		char szTime[32] = {0,};
+		EasyJsonValue body;
+		body["Serial"] = sEasy_Serial;
 
-		//Push msg to OutputBuffer
-		char respHeader[2048] = { 0 };
-		StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
-		strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+		string type = EasyProtocol::GetSnapTypeString(snapType);
+
+		body["Type"] = type.c_str();
+		body["Time"] = szTime;	
+		body["Image"] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
 		
-		fOutputStream.Put(respHeader);
-		if (jsonContent.Len > 0) 
-			fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+		fSnapReq = new EasyMsgDSPostSnapREQ(body,1);
+
+		this->Signal(Task::kUpdateEvent);
+	}
+	return QTSS_NoErr;
+}
+
+QTSS_Error EasyCMSSession::DSPostSnap()
+{
+	if(fSnapReq)
+	{
+		string msg = fSnapReq->GetMsg();
+
+		//请求上传快照
+		StrPtrLen jsonContent((char*)msg.data());
+		HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
+
+		if(httpReq.CreateRequestHeader())
+		{
+			if (jsonContent.Len)
+				httpReq.AppendContentLengthHeader(jsonContent.Len);
+
+			//Push msg to OutputBuffer
+			char respHeader[2048] = { 0 };
+			StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
+			strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+			
+			fOutputStream.Put(respHeader);
+			if (jsonContent.Len > 0) 
+				fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+		}
+
+		delete fSnapReq;
+		fSnapReq = NULL;
 	}
 
 	return QTSS_NoErr;

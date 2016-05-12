@@ -373,18 +373,15 @@ class QTSSDictionaryMap
             kPrefsDictIndex                 = 1,
             kTextMessagesDictIndex          = 2,
             kServiceDictIndex               = 3,
-            
-            kRTSPSessionDictIndex           = 4,
-            kRTSPRequestDictIndex           = 5,
-            kRTSPHeaderDictIndex            = 6,
-            kFileDictIndex                  = 7,
-            kModuleDictIndex                = 8,
-            kModulePrefsDictIndex           = 9,
-            kAttrInfoDictIndex              = 10,
-            kQTSSUserProfileDictIndex       = 11,
-            kQTSSConnectedUserDictIndex     = 12,
 
-            kNumDictionaries                = 13,
+            kFileDictIndex                  = 4,
+            kModuleDictIndex                = 5,
+            kModulePrefsDictIndex           = 6,
+            kAttrInfoDictIndex              = 7,
+            kQTSSUserProfileDictIndex       = 8,
+            kQTSSConnectedUserDictIndex     = 9,
+
+            kNumDictionaries                = 10,
             
             kNumDynamicDictionaryTypes      = 500,
             kIllegalDictionary              = kNumDynamicDictionaryTypes + kNumDictionaries

@@ -250,14 +250,6 @@
 						RelativePath="..\APIModules\EasyCMSModule\EasyCMSSession.h"
 						>
 					</File>
-					<File
-						RelativePath="..\APIModules\EasyCMSModule\EasyHTTPClient.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyCMSModule\EasyHTTPClient.h"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="EasyCameraModule"
@@ -330,30 +322,6 @@
 							ForcedIncludeFiles=""
 						/>
 					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\HTTPRequestStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\HTTPRequestStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\HTTPResponseStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\HTTPResponseStream.h"
-					>
 				</File>
 				<File
 					RelativePath="..\..\SafeStdLib\InternalStdLib.cpp"
@@ -770,6 +738,42 @@
 							ForcedIncludeFiles=""
 						/>
 					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="HTTPUtilitiesLib"
+				>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.h"
+					>
 				</File>
 			</Filter>
 		</Filter>

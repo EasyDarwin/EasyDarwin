@@ -48,12 +48,6 @@ class QTSSModuleUtils
         // This function allocates memory for the file data.
         static QTSS_Error   ReadEntireFile(char* inPath, StrPtrLen* outData, QTSS_TimeVal inModDate = -1, QTSS_TimeVal* outModDate = NULL);
 
-        // If your module supports RTSP methods, call this function from your QTSS_Initialize
-        // role to tell the server what those methods are.
-        static void     SetupSupportedMethods(  QTSS_Object inServer,
-                                                QTSS_RTSPMethod* inMethodArray,
-                                                UInt32 inNumMethods);
-                                                
         // Using a message out of the text messages dictionary is a common
         // way to log errors to the error log. Here is a function to
         // make that process very easy.
@@ -66,26 +60,7 @@ class QTSSModuleUtils
                                     
         static void   LogErrorStr( QTSS_ErrorVerbosity inVerbosity, char* inMessage);
         static void   LogPrefErrorStr( QTSS_ErrorVerbosity inVerbosity, char*  preference, char* inMessage);
-     
-        // This function constructs a C-string of the full path to the file being requested.
-        // You may opt to append an optional suffix, or pass in NULL. You are responsible
-        // for disposing this memory
-
-        static char* GetFullPath(   QTSS_RTSPRequestObject inRequest,
-                                    QTSS_AttributeID whichFileType,
-                                    UInt32* outLen,
-                                    StrPtrLen* suffix = NULL);
-
-        // Sends and HTTP 1.1 error message with an error message in HTML if errorMessage != NULL.
-        // The session must be flagged by KillSession set to true to kill.
-        // Use the QTSS_RTSPStatusCodes for the inStatusCode, for now they are the same as HTTP.
-        //
-		// It always returns QTSS_RequestFailed
-        static QTSS_Error	SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequest,
-													QTSS_SessionStatusCode inStatusCode,
-                                                    Bool16 inKillSession,
-                                                    char *errorMessage);
-                
+                   
 		// Called by SendDescribeResponse to coalesce iovec to a buffer
 		// Allocates memory - remember to delete it!
 		static char* CoalesceVectors(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength);
@@ -150,19 +125,13 @@ class QTSSModuleUtils
         /// Get the type of request. Returns qtssActionFlagsNoFlags on failure.
         //  Result is a bitmap of flags
         //
-        static QTSS_ActionFlags GetRequestActions(QTSS_RTSPRequestObject theRTSPRequest);
- 
-        static char* GetLocalPath_Copy(QTSS_RTSPRequestObject theRTSPRequest);
-        static char* GetMoviesRootDir_Copy(QTSS_RTSPRequestObject theRTSPRequest);
-        static QTSS_UserProfileObject GetUserProfileObject(QTSS_RTSPRequestObject theRTSPRequest);
+
         static QTSS_AttrRights GetRights(QTSS_UserProfileObject theUserProfileObject);
         static char* GetExtendedRights(QTSS_UserProfileObject theUserProfileObject, UInt32 index);
        
         static char*  GetUserName_Copy(QTSS_UserProfileObject inUserProfile);
         static char** GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfile, UInt32 *outNumGroupsPtr);
         static Bool16 UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroupName, UInt32 inGroupNameLen);
-
-        static void SetEnableRTSPErrorMsg(Bool16 enable) {QTSSModuleUtils::sEnableRTSPErrorMsg = enable; }
         
         static QTSS_AttributeID CreateAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType, void* inDefaultValue, UInt32 inBufferLen);
   
@@ -171,10 +140,7 @@ class QTSSModuleUtils
         static void SetMisingPrefLogVerbosity(QTSS_ErrorVerbosity verbosityLevel) { QTSSModuleUtils::sMissingPrefVerbosity = verbosityLevel;}
         static QTSS_ErrorVerbosity GetMisingPrefLogVerbosity() { return QTSSModuleUtils::sMissingPrefVerbosity;}
   
-        static Bool16 FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);
-        
-        static QTSS_Error AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*haveUser,Bool16 *authContinue);
-        
+        static Bool16 FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);      
          
     private:
     
@@ -185,7 +151,6 @@ class QTSSModuleUtils
         static QTSS_TextMessagesObject  sMessages;
         static QTSS_ServerObject        sServer;
         static QTSS_StreamRef           sErrorLog;
-        static Bool16                   sEnableRTSPErrorMsg;
         static QTSS_ErrorVerbosity      sMissingPrefVerbosity;
 };
 

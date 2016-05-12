@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -32,7 +32,7 @@ class HTTPResponseStream : public ResizeableStringFormatter
         // on the socket.
         HTTPResponseStream(ClientSocket* inSocket, TimeoutTask* inTimeoutTask)
             :   ResizeableStringFormatter(fOutputBuf, kOutputBufferSizeInBytes),
-                fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask),fPrintHTTP(false) {}
+                fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask),fPrintMsg(false) {}
         
         virtual ~HTTPResponseStream() {}
 
@@ -66,7 +66,7 @@ class HTTPResponseStream : public ResizeableStringFormatter
         // this returns QTSS_NoErr, otherwise, it returns EWOULDBLOCK
         QTSS_Error Flush();
         
-        void ShowHTTP(Bool16 enable) {fPrintHTTP = enable; }     
+        void ShowMsg(Bool16 enable) {fPrintMsg = enable; }     
 
 		// Use a different TCPSocket to read request data 
 		// this will be used by RTSPSessionInterface::SnarfInputSocket
@@ -76,7 +76,7 @@ class HTTPResponseStream : public ResizeableStringFormatter
     
         enum
         {
-            kOutputBufferSizeInBytes = 64*1024  //64k Buffer UInt32
+            kOutputBufferSizeInBytes = 1024*1024  //64k Buffer UInt32
         };
         
         //The default buffer size is allocated inline as part of the object. Because this size
@@ -87,7 +87,7 @@ class HTTPResponseStream : public ResizeableStringFormatter
         ClientSocket*			fSocket;
         UInt32                  fBytesSentInBuffer;
         TimeoutTask*            fTimeoutTask;
-        Bool16                  fPrintHTTP;     // debugging printfs
+        Bool16                  fPrintMsg;     // debugging printfs
         
         friend class HTTPRequest;
 };

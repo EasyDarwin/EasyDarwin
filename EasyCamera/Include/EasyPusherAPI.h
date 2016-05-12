@@ -9,6 +9,9 @@
 
 #include "EasyTypes.h"
 
+#define RTSP_CLIENT_NAME	"EasyPusher v1.16.0325"
+
+
 typedef struct __EASY_AV_Frame
 {
     Easy_U32    u32AVFrameFlag;		/* 帧标志  视频 or 音频 */
@@ -38,6 +41,8 @@ typedef int (*EasyPusher_Callback)(int _id, EASY_PUSH_STATE_T _state, EASY_AV_Fr
 extern "C"
 {
 #endif
+
+	Easy_API Easy_I32 Easy_APICALL EasyPusher_Activate(char *license);
 
 	/* 创建推送句柄  返回为句柄值 */
 	Easy_API Easy_Pusher_Handle Easy_APICALL EasyPusher_Create();

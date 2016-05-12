@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -29,7 +29,7 @@ HTTPRequestStream::HTTPRequestStream(ClientSocket* sock)
     fRequest(fRequestBuffer, 0),
     fRequestPtr(NULL),
     fDecode(false),
-    fPrintHTTP(false)
+    fPrintMsg(false)
 {}
 
 void HTTPRequestStream::SnarfRetreat( HTTPRequestStream &fromRequest )
@@ -37,7 +37,7 @@ void HTTPRequestStream::SnarfRetreat( HTTPRequestStream &fromRequest )
     // Simplest thing to do is to just completely blow away everything in this current
     // stream, and replace it with the retreat bytes from the other stream.
     fRequestPtr = NULL;
-    Assert(fRetreatBytes < kRequestBufferSizeInBytes);
+    Assert(fRetreatBytes < QTSS_MAX_REQUEST_BUFFER_SIZE);
     fRetreatBytes = fromRequest.fRetreatBytes;
     fEncodedBytesRemaining = fCurOffset = fRequest.Len = 0;
     ::memcpy(&fRequestBuffer[0], fromRequest.fRequest.Ptr + fromRequest.fRequest.Len, fromRequest.fRetreatBytes);
@@ -78,7 +78,7 @@ QTSS_Error HTTPRequestStream::ReadRequest()
                 //  that this principle is maintained. 
                 ::memmove(&fRequestBuffer[fRetreatBytes], &fRequestBuffer[fCurOffset - fEncodedBytesRemaining], fEncodedBytesRemaining);
                 fCurOffset = fRetreatBytes + fEncodedBytesRemaining;
-                Assert(fCurOffset < kRequestBufferSizeInBytes);
+                Assert(fCurOffset < QTSS_MAX_REQUEST_BUFFER_SIZE);
             }
             else
                 fCurOffset = fRetreatBytes;
@@ -102,8 +102,7 @@ QTSS_Error HTTPRequestStream::ReadRequest()
             else
             {
                 // We don't have any new data, get some from the socket...
-                QTSS_Error sockErr = fSocket->Read(&fRequestBuffer[fCurOffset], 
-                                                    (kRequestBufferSizeInBytes - fCurOffset) - 1, &newOffset);
+                QTSS_Error sockErr = fSocket->Read(&fRequestBuffer[fCurOffset], (QTSS_MAX_REQUEST_BUFFER_SIZE - fCurOffset) - 1, &newOffset);
                 //assume the client is dead if we get an error back
                 if (sockErr == EAGAIN)
                     return QTSS_NoErr;
@@ -129,7 +128,7 @@ QTSS_Error HTTPRequestStream::ReadRequest()
             }
             else
                 fRequest.Len += newOffset;
-            Assert(fRequest.Len < kRequestBufferSizeInBytes);
+            Assert(fRequest.Len < QTSS_MAX_REQUEST_BUFFER_SIZE);
             fCurOffset += newOffset;
         }
         Assert(newOffset > 0);
@@ -154,7 +153,7 @@ QTSS_Error HTTPRequestStream::ReadRequest()
         }
         fIsDataPacket = false;
 
-  //      if (fPrintHTTP)
+  //      if (fPrintMsg)
   //      {
   //          DateBuffer theDate;
   //          DateTranslator::UpdateDateBuffer(&theDate, 0); // get the current GMT date and time
@@ -238,7 +237,7 @@ QTSS_Error HTTPRequestStream::ReadRequest()
         }
         
         //check for a full buffer
-        if (fCurOffset == kRequestBufferSizeInBytes - 1)
+        if (fCurOffset == QTSS_MAX_REQUEST_BUFFER_SIZE - 1)
         {
             fRequestPtr = &fRequest;
             return E2BIG;
@@ -300,7 +299,7 @@ QTSS_Error HTTPRequestStream::DecodeIncomingData(char* inSrcData, UInt32 inSrcDa
     
     if (fRequest.Ptr == &fRequestBuffer[0])
     {
-        fRequest.Ptr = NEW char[kRequestBufferSizeInBytes];
+        fRequest.Ptr = NEW char[QTSS_MAX_REQUEST_BUFFER_SIZE];
         fRequest.Len = 0;
     }
     
@@ -344,7 +343,7 @@ QTSS_Error HTTPRequestStream::DecodeIncomingData(char* inSrcData, UInt32 inSrcDa
     // Make sure to replace the sacred endChar
     inSrcData[bytesToDecode] = endChar;
 
-    Assert(fRequest.Len < kRequestBufferSizeInBytes);
+    Assert(fRequest.Len < QTSS_MAX_REQUEST_BUFFER_SIZE);
     Assert(encodedBytesConsumed == bytesToDecode);
     
     return QTSS_NoErr;

@@ -88,10 +88,6 @@ class QTSServerInterface : public QTSSDictionary
         //
         // STATISTICS MANIPULATION
         // These functions are how the server keeps its statistics current
-        
-        void                AlterCurrentRTSPSessionCount(SInt32 inDifference)
-            { OSMutexLocker locker(&fMutex); fNumRTSPSessions += inDifference; }
-        
         void            IncrementTotalLate(SInt64 milliseconds)
            {    OSMutexLocker locker(&fMutex); 
                 fTotalLate += milliseconds;
@@ -119,7 +115,6 @@ class QTSServerInterface : public QTSSDictionary
         // ACCESSORS
         
         QTSS_ServerState    GetServerState()        { return fServerState; }
-        UInt32              GetNumRTSPSessions()    { return fNumRTSPSessions; }
 
         Float32             GetCPUPercent()         { return fCPUPercent; }
         Bool16              SigIntSet()             { return fSigInt; }
@@ -216,7 +211,7 @@ class QTSServerInterface : public QTSSDictionary
         
     protected:
 
-        // Setup by the derived RTSPServer object        
+        // Setup by the derived Server object        
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;
 
@@ -265,9 +260,7 @@ class QTSServerInterface : public QTSSDictionary
         static StrPtrLen    sServerHeaderPtr;
 
         OSMutex             fMutex;
-
-        UInt32              fNumRTSPSessions;
-        
+     
         Float32             fCPUPercent;
         Float32             fCPUTimeUsedInSec;              
         

@@ -1,5 +1,5 @@
 /*
-	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
@@ -581,11 +581,11 @@ Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
 
 QTSS_Error HTTPSession::DumpRequestData()
 {
-    char theDumpBuffer[EASY_REQUEST_BUFFER_SIZE_LEN];
+    char theDumpBuffer[QTSS_MAX_REQUEST_BUFFER_SIZE];
     
     QTSS_Error theErr = QTSS_NoErr;
     while (theErr == QTSS_NoErr)
-        theErr = this->Read(theDumpBuffer, EASY_REQUEST_BUFFER_SIZE_LEN, NULL);
+        theErr = this->Read(theDumpBuffer, QTSS_MAX_REQUEST_BUFFER_SIZE, NULL);
         
     return theErr;
 }

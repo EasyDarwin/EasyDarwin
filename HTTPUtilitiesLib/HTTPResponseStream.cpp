@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -37,7 +37,7 @@ QTSS_Error HTTPResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 
         inVec[0].iov_len = amtInBuffer;
         theErr = fSocket->GetSocket()->WriteV(inVec, inNumVectors, &theLengthSent);
         
-		if (fPrintHTTP)
+		if (fPrintMsg)
 		{
             DateBuffer theDate;
             DateTranslator::UpdateDateBuffer(&theDate, 0); // get the current GMT date and time
@@ -133,43 +133,66 @@ QTSS_Error HTTPResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 
 QTSS_Error HTTPResponseStream::Flush()
 {
 	QTSS_Error theErr = QTSS_NoErr;
-    UInt32 amtInBuffer = this->GetCurrentOffset() - fBytesSentInBuffer;
-    if (amtInBuffer > 0)
-    {
-        if (fPrintHTTP)
-        {
-            DateBuffer theDate;
-            DateTranslator::UpdateDateBuffer(&theDate, 0); // get the current GMT date and time
 
- 			qtss_printf("\n#S->C:\n#time: ms=%"_U32BITARG_" date=%s\n", (UInt32) OS::StartTimeMilli_Int(), theDate.GetDateBuffer() );
-			StrPtrLen str(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer);
-			str.PrintStrEOL();
-        }
+	while(true)
+	{	
+		// 获取缓冲区中需要发送的数据长度
+		UInt32 amtInBuffer = this->GetCurrentOffset() - fBytesSentInBuffer;
 
-        //UInt32 theLengthSent = 0;
-        //(void)fSocket->GetSocket()->Send(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer, &theLengthSent);
-		theErr = fSocket->Send(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer);
-       
-        //// Refresh the timeout if we were able to send any data
-        //if (theLengthSent > 0)
-        //    fTimeoutTask->RefreshTimeout();
-        //    
-        //if (theLengthSent == amtInBuffer)
-		if(theErr == OS_NoErr)
-        {
-            // We were able to send all the data in the buffer. Great. Flush it.
-            this->Reset();
-            fBytesSentInBuffer = 0;
-        }
-        else
-        {
-			printf("socket send error: %d \n", theErr);
-        //    // Not all the data was sent, so report an EAGAIN
-        //    
-        //    fBytesSentInBuffer += theLengthSent;
-        //    Assert(fBytesSentInBuffer < this->GetCurrentOffset());
-        //    return EAGAIN;
-        }
-    }
+		// 多次发送缓冲区中的数据
+		if (amtInBuffer > QTSS_MAX_REQUEST_BUFFER_SIZE)
+			amtInBuffer = QTSS_MAX_REQUEST_BUFFER_SIZE;
+
+		printf("this->GetCurrentOffset(%d) - fBytesSentInBuffer(%d) = amtInBuffer(%d)\n", this->GetCurrentOffset(), fBytesSentInBuffer, amtInBuffer);
+
+		if (amtInBuffer > 0)
+		{
+			if (fPrintMsg)
+			{
+				DateBuffer theDate;
+				DateTranslator::UpdateDateBuffer(&theDate, 0); // get the current GMT date and time
+
+ 				qtss_printf("\n#S->C:\n#time: ms=%"_U32BITARG_" date=%s\n", (UInt32) OS::StartTimeMilli_Int(), theDate.GetDateBuffer() );
+				StrPtrLen str(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer);
+				str.PrintStrEOL();
+			}
+
+			//UInt32 theLengthSent = 0;
+			//(void)fSocket->GetSocket()->Send(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer, &theLengthSent);
+			theErr = fSocket->Send(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer);
+	       
+			//// Refresh the timeout if we were able to send any data
+			//if (theLengthSent > 0)
+			//    fTimeoutTask->RefreshTimeout();
+
+			// 单次发送成功,继续发送
+			if (theErr == OS_NoErr)
+			{
+				fBytesSentInBuffer += amtInBuffer;
+				Assert(fBytesSentInBuffer < this->GetCurrentOffset());
+			}
+			else
+				return theErr;
+	            
+			if(fBytesSentInBuffer < this->GetCurrentOffset())
+			{
+				continue;
+			}
+			else
+			{
+				// We were able to send all the data in the buffer. Great. Flush it.
+				this->Reset();
+				fBytesSentInBuffer = 0;
+				break;
+			}
+		}
+		else
+		{
+			// We were able to send all the data in the buffer. Great. Flush it.
+			this->Reset();
+			fBytesSentInBuffer = 0;
+			break;
+		}
+	}
     return theErr;
 }

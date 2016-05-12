@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -77,7 +77,10 @@ public:
 	QTSS_Error DSRegister();
 
 	// 上传快照图片到EasyCMS
-	QTSS_Error DSPostSnap(char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
+	QTSS_Error DSPostSnap();
+
+	// 更新最新快照缓存
+	QTSS_Error UpdateSnapCache(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
 
 	// 处理HTTPRequest请求报文
 	QTSS_Error ProcessMessage();
@@ -99,7 +102,7 @@ public:
     OSMutex             fReadMutex;
 
 	// Session锁
-	OSMutex             fSessionMutex;
+	OSMutex             fMutex;
 
 	// 请求报文的Content部分
 	char*				fContentBuffer;
@@ -112,6 +115,8 @@ private:
 
 	// 初步判断Session Socket是否已连接
 	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
+
+	EasyMsgDSPostSnapREQ* fSnapReq;
 
 };
 

@@ -16,9 +16,12 @@
 #define Easy_APICALL 
 #endif
 
-// Handle类型
+// Handle Type
 #define Easy_RTSP_Handle void*
 #define Easy_Pusher_Handle void*
+#define Easy_HLS_Handle void*
+
+typedef int						Easy_I32;
 
 typedef unsigned char           Easy_U8;
 typedef unsigned char           Easy_UChar;
@@ -56,28 +59,47 @@ enum
 };
 typedef int Easy_Error;
 
+
+typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
+{
+	EASY_ACTIVATE_INVALID_KEY		=		-1,			//无效Key
+	EASY_ACTIVATE_TIME_ERR			=		-2,			//时间错误
+	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			//进程名称长度不匹配
+	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			//进程名称不匹配
+	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			//有效期校验不一致
+	EASY_ACTIVATE_PLATFORM_ERR		=		-6,			//平台不匹配
+	EASY_ACTIVATE_COMPANY_ID_LEN_ERR=		-7,			//授权使用商不匹配
+	EASY_ACTIVATE_SUCCESS			=		0,			//激活成功
+
+}EASY_ACTIVATE_ERR_CODE_ENUM;
+
+
 /* 视频编码 */
-#define EASY_SDK_VIDEO_CODEC_H264	0x01000001		/* H264  */
-#define	EASY_SDK_VIDEO_CODEC_MJPEG	0x01000002		/* MJPEG */
-#define	EASY_SDK_VIDEO_CODEC_MPEG4	0x01000004		/* MPEG4 */
+#define EASY_SDK_VIDEO_CODEC_H264	0x1C		/* H264  */
+#define EASY_SDK_VIDEO_CODEC_H265	0x48323635	/* 1211250229 */
+#define	EASY_SDK_VIDEO_CODEC_MJPEG	0x08		/* MJPEG */
+#define	EASY_SDK_VIDEO_CODEC_MPEG4	0x0D		/* MPEG4 */
 
 /* 音频编码 */
-#define EASY_SDK_AUDIO_CODEC_AAC	0x01000011		/* AAC */
-#define EASY_SDK_AUDIO_CODEC_G711A	0x01000012		/* G711 alaw*/
-#define EASY_SDK_AUDIO_CODEC_G711U	0x01000014		/* G711 ulaw*/
+#define EASY_SDK_AUDIO_CODEC_AAC	0x15002		/* AAC */
+#define EASY_SDK_AUDIO_CODEC_G711U	0x10006		/* G711 ulaw*/
+#define EASY_SDK_AUDIO_CODEC_G711A	0x10007		/* G711 alaw*/
+#define EASY_SDK_AUDIO_CODEC_G726	0x1100B		/* G726 */
+
 
 /* 音视频帧标识 */
-#define EASY_SDK_VIDEO_FRAME_FLAG	0x02000001		/* 视频帧标志 */
-#define EASY_SDK_AUDIO_FRAME_FLAG	0x02000002		/* 音频帧标志 */
-#define EASY_SDK_EVENT_FRAME_FLAG	0x02000004		/* 事件帧标志 */
-#define EASY_SDK_RTP_FRAME_FLAG		0x02000008		/* RTP帧标志 */
-#define EASY_SDK_SDP_FRAME_FLAG		0x02000010		/* SDP帧标志 */
-#define EASY_SDK_MEDIA_INFO_FLAG	0x02000012		/* 媒体类型标志*/
+#define EASY_SDK_VIDEO_FRAME_FLAG	0x00000001		/* 视频帧标志 */
+#define EASY_SDK_AUDIO_FRAME_FLAG	0x00000002		/* 音频帧标志 */
+#define EASY_SDK_EVENT_FRAME_FLAG	0x00000004		/* 事件帧标志 */
+#define EASY_SDK_RTP_FRAME_FLAG		0x00000008		/* RTP帧标志 */
+#define EASY_SDK_SDP_FRAME_FLAG		0x00000010		/* SDP帧标志 */
+#define EASY_SDK_MEDIA_INFO_FLAG	0x00000020		/* 媒体类型标志*/
 
 /* 视频关键字标识 */
-#define EASY_SDK_VIDEO_FRAME_I		0x03000001		/* I帧 */
-#define EASY_SDK_VIDEO_FRAME_P		0x03000002		/* P帧 */
-#define EASY_SDK_VIDEO_FRAME_B		0x03000004		/* B帧 */
+#define EASY_SDK_VIDEO_FRAME_I		0x01		/* I帧 */
+#define EASY_SDK_VIDEO_FRAME_P		0x02		/* P帧 */
+#define EASY_SDK_VIDEO_FRAME_B		0x03		/* B帧 */
+#define EASY_SDK_VIDEO_FRAME_J		0x04		/* JPEG */
 
 /* 连接类型 */
 typedef enum __RTP_CONNECT_TYPE
@@ -89,36 +111,43 @@ typedef enum __RTP_CONNECT_TYPE
 /* 媒体信息 */
 typedef struct __EASY_MEDIA_INFO_T
 {
-	Easy_U32 u32VideoCodec;			/* 视频编码类型 */
-	Easy_U32 u32VideoFps;			/* 视频帧率 */
-	
-	Easy_U32 u32AudioCodec;			/* 音频编码类型 */
-	Easy_U32 u32AudioSamplerate;	/* 音频采样率 */
-	Easy_U32 u32AudioChannel;		/* 音频通道数 */
+	Easy_U32 u32VideoCodec;				/* 视频编码类型 */
+	Easy_U32 u32VideoFps;				/* 视频帧率 */
+
+	Easy_U32 u32AudioCodec;				/* 音频编码类型 */
+	Easy_U32 u32AudioSamplerate;		/* 音频采样率 */
+	Easy_U32 u32AudioChannel;			/* 音频通道数 */
+	Easy_U32 u32AudioBitsPerSample;		/* 音频采样精度 */
+
+	Easy_U32 u32H264SpsLength;			/* 视频sps帧长度 */
+	Easy_U32 u32H264PpsLength;			/* 视频pps帧长度 */
+	Easy_U8	 u8H264Sps[128];			/* 视频sps帧内容 */
+	Easy_U8	 u8H264Pps[36];				/* 视频sps帧内容 */
 }EASY_MEDIA_INFO_T;
 
 /* 帧信息 */
 typedef struct 
 {
-	unsigned int	codec;			/* 音视频格式 */
+	unsigned int	codec;				/* 音视频格式 */
 
-	unsigned int	type;			/* 视频帧类型 */
-	unsigned char	fps;			/* 视频帧率 */
-	unsigned short	width;			/* 视频宽 */
-	unsigned short  height;			/* 视频高 */
+	unsigned int	type;				/* 视频帧类型 */
+	unsigned char	fps;				/* 视频帧率 */
+	unsigned short	width;				/* 视频宽 */
+	unsigned short  height;				/* 视频高 */
 
-	unsigned int	reserved1;		/* 保留参数1 */
-	unsigned int	reserved2;		/* 保留参数2 */
+	unsigned int	reserved1;			/* 保留参数1 */
+	unsigned int	reserved2;			/* 保留参数2 */
 
-	unsigned int	sample_rate;	/* 音频采样率 */
-	unsigned int	channels;		/* 音频声道数 */
+	unsigned int	sample_rate;		/* 音频采样率 */
+	unsigned int	channels;			/* 音频声道数 */
+	unsigned int	bits_per_sample;	/* 音频采样精度 */
 
-	unsigned int	length;			/* 音视频帧大小 */
-	unsigned int    timestamp_usec;	/* 时间戳,微妙 */
-	unsigned int	timestamp_sec;	/* 时间戳 秒 */
+	unsigned int	length;				/* 音视频帧大小 */
+	unsigned int    timestamp_usec;		/* 时间戳,微妙 */
+	unsigned int	timestamp_sec;		/* 时间戳 秒 */
 	
-	float			bitrate;		/* 比特率 */
-	float			losspacket;		/* 丢包率 */
+	float			bitrate;			/* 比特率 */
+	float			losspacket;			/* 丢包率 */
 }RTSP_FRAME_INFO;
 
 #endif

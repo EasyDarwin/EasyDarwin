@@ -13,6 +13,7 @@
 #include "hi_net_dev_errors.h"
 #include "QTSS.h"
 #include "EasyPusherAPI.h"
+#include "TimeoutTask.h"
 
 #define EASY_SNAP_BUFFER_SIZE 1024*1024
 
@@ -29,9 +30,10 @@ public:
 	QTSS_Error NetDevStartStream();
 	void NetDevStopStream();
 
-	QTSS_Error StartStreaming();
-	
-	QTSS_Error StopStreaming();
+	static void Initialize(QTSS_ModulePrefsObject modulePrefs);
+
+	QTSS_Error StartStreaming(const char* inSerial, const char* inChannel, const char* inStreamID, const char* inProtocol, const char* inIP, UInt16 inPort);
+	QTSS_Error StopStreaming(const char* inSerial, const char* inChannel, const char* inProtocol);
 
 	QTSS_Error PushFrame(unsigned char* frame, int len);
 
@@ -42,12 +44,14 @@ public:
 	void stopGettingFrames();
 	void doStopGettingFrames();
 
-	OSMutex*	GetMutex()      { return &fMutex; }
+	OSMutex* GetMutex() { return &fMutex; }
 
 public:
 	bool fCameraLogin;
 	bool m_bStreamFlag;
 	bool m_bForceIFrame;
+
+	TimeoutTask fTimeoutTask;
 
 private:
 	//摄像机操作句柄
@@ -59,6 +63,9 @@ private:
 	void* fOnCloseClientData;
 	//客户端信息操作互斥量
 	OSMutex fMutex;
+
+	// 当前正在推送流的信息
+	QTSS_RoleParams fStartStreamParams;
 
 	SInt64 Run();
 };

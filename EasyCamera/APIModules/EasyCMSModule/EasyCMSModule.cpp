@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2013-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -103,7 +103,7 @@ QTSS_Error Post_EasyCMSModule(Easy_PostSnap_Params* inParams)
 
 	if(sCMSSession)
 	{
-		theErr = sCMSSession->DSPostSnap(inParams->snapPtr, inParams->snapLen, (EasyDarwinSnapType)inParams->snapType);
+		theErr = sCMSSession->UpdateSnapCache(inParams->snapPtr, inParams->snapLen, (EasyDarwinSnapType)inParams->snapType);
 	}
 	return theErr;
 }
