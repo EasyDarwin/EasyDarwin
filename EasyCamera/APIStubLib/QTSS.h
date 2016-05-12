@@ -104,21 +104,6 @@ enum
 typedef UInt32  QTSS_EventType;
 
 /**********************************/
-// PAYLOAD TYPES
-//
-// When a module adds an RTP stream to a client session, it must specify
-// the stream's payload type. This is so that other modules can find out
-// this information in a generalized fashion. Here are the currently
-// defined payload types
-enum
-{
-    qtssUnknownPayloadType  = 0,
-    qtssVideoPayloadType    = 1,
-    qtssAudioPayloadType    = 2
-};
-typedef UInt32 QTSS_RTPPayloadType;
-
-/**********************************/
 // QTSS API OBJECT TYPES
 enum
 {
@@ -151,7 +136,6 @@ enum
     qtssMessageVerbosity            = 2,
     qtssAssertVerbosity             = 3,
     qtssDebugVerbosity              = 4,
-    
     qtssIllegalVerbosity            = 5
 };
 typedef UInt32 QTSS_ErrorVerbosity;
@@ -280,26 +264,25 @@ enum
     
     qtssSvrState                    = 8,    //r/w   //QTSS_ServerState  //The current state of the server. If a module sets the server state, the server will respond in the appropriate fashion. Setting to qtssRefusingConnectionsState causes the server to refuse connections, setting to qtssFatalErrorState or qtssShuttingDownState causes the server to quit.
     qtssSvrIsOutOfDescriptors       = 9,    //read  //Bool16            //true if the server has run out of file descriptors, false otherwise
-    qtssRTSPCurrentSessionCount     = 10,   //read  //UInt32            //Current number of connected clients over standard RTSP
    
-    qtssSvrHandledMethods           = 11,   //r/w       //QTSS_RTSPMethod   //The methods that the server supports. Modules should append the methods they support to this attribute in their QTSS_Initialize_Role.
-    qtssSvrModuleObjects            = 12,   //read  // this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
-    qtssSvrStartupTime              = 13,   //read      //QTSS_TimeVal  //Time the server started up
-    qtssSvrGMTOffsetInHrs           = 14,   //read      //SInt32        //Server time zone (offset from GMT in hours)
-    qtssSvrDefaultIPAddrStr         = 15,   //read      //char array    //The "default" IP address of the server as a string
+    qtssSvrHandledMethods           = 10,   //r/w       //QTSS_RTSPMethod   //The methods that the server supports. Modules should append the methods they support to this attribute in their QTSS_Initialize_Role.
+    qtssSvrModuleObjects            = 11,   //read  // this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
+    qtssSvrStartupTime              = 12,   //read      //QTSS_TimeVal  //Time the server started up
+    qtssSvrGMTOffsetInHrs           = 13,   //read      //SInt32        //Server time zone (offset from GMT in hours)
+    qtssSvrDefaultIPAddrStr         = 14,   //read      //char array    //The "default" IP address of the server as a string
 
-    qtssSvrPreferences              = 16,   //read      //QTSS_PrefsObject  // An object representing each the server's preferences
-    qtssSvrMessages                 = 17,   //read      //QTSS_Object   // An object containing the server's error messages.
-    qtssSvrClientSessions           = 18,   //read      //QTSS_Object // An object containing all client sessions stored as indexed QTSS_ClientSessionObject(s).
-    qtssSvrCurrentTimeMilliseconds  = 19,   //read      //QTSS_TimeVal  //Server's current time in milliseconds. Retrieving this attribute is equivalent to calling QTSS_Milliseconds
-    qtssSvrCPULoadPercent           = 20,   //read      //Float32       //Current % CPU being used by the server
+    qtssSvrPreferences              = 15,   //read      //QTSS_PrefsObject  // An object representing each the server's preferences
+    qtssSvrMessages                 = 16,   //read      //QTSS_Object   // An object containing the server's error messages.
+    qtssSvrClientSessions           = 17,   //read      //QTSS_Object // An object containing all client sessions stored as indexed QTSS_ClientSessionObject(s).
+    qtssSvrCurrentTimeMilliseconds  = 18,   //read      //QTSS_TimeVal  //Server's current time in milliseconds. Retrieving this attribute is equivalent to calling QTSS_Milliseconds
+    qtssSvrCPULoadPercent           = 19,   //read      //Float32       //Current % CPU being used by the server
 
-    qtssSvrServerBuild              = 21,   //read      //char array //build of the server
-    qtssSvrServerPlatform           = 22,   //read      //char array //Platform (OS) of the server
-    qtssSvrRTSPServerComment        = 23,   //read      //char array //RTSP comment for the server header    
-    qtssSvrNumThinned               = 24,   //read      //SInt32    //Number of thinned sessions
-    qtssSvrNumThreads               = 25,   //read     //UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
-    qtssSvrNumParams                = 26
+    qtssSvrServerBuild              = 20,   //read      //char array //build of the server
+    qtssSvrServerPlatform           = 21,   //read      //char array //Platform (OS) of the server
+    qtssSvrRTSPServerComment        = 22,   //read      //char array //RTSP comment for the server header    
+    qtssSvrNumThinned               = 23,   //read      //SInt32    //Number of thinned sessions
+    qtssSvrNumThreads               = 24,   //read     //UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
+    qtssSvrNumParams                = 25
 };
 typedef UInt32 QTSS_ServerAttributes;
 
@@ -323,10 +306,10 @@ enum
     qtssPrefsErrorLogEnabled			= 7,   //"error_logging"               //Bool16        //Is error logging enabled?
     
 	qtssPrefsRunNumThreads				= 8,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
-    qtssPrefsPidFile					= 9,    //"pid_file" //Char Array //path to pid file
-    qtssPrefsCloseLogsOnWrite			= 10,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
+    qtssPrefsPidFile					= 9,   //"pid_file" //Char Array //path to pid file
+    qtssPrefsCloseLogsOnWrite			= 10,  // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
 
-	qtssPrefsNumBlockingThreads			= 11,   // "run_num_blocking_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
+	qtssPrefsNumBlockingThreads			= 11,  // "run_num_blocking_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 	
     qtssPrefsNumParams					= 12
 };
@@ -644,14 +627,6 @@ typedef union
 	Easy_StopStream_Params				stopStreamParams;
 	Easy_PostSnap_Params				postSnapParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
-
-typedef struct
-{
-    void*                           packetData;
-    QTSS_TimeVal                    packetTransmitTime;
-    QTSS_TimeVal                    suggestedWakeupTime;
-} QTSS_PacketStruct;
-
 
 /********************************************************************/
 // ENTRYPOINTS & FUNCTION TYPEDEFS
@@ -1217,43 +1192,6 @@ QTSS_Error  QTSS_DestroySocketStream(QTSS_SocketStream inStream);
 
 /*****************************************/
 //  ASYNC I/O CALLBACKS
-//
-//  QTSS modules must be kind in how they use the CPU. The server doesn't
-//  prevent a poorly implemented QTSS module from hogging the processing
-//  capability of the server, at the expense of other modules and other clients.
-//
-//  It is therefore imperitive that a module use non-blocking, or async, I/O.
-//  If a module were to block, say, waiting to read file data off disk, this stall
-//  would affect the entire server.
-//
-//  This problem is resolved in QTSS API in a number of ways.
-//
-//  Firstly, all QTSS_StreamRefs provided to modules are non-blocking, or async.
-//  Modules should be prepared to receive EWOULDBLOCK errors in response to
-//  QTSS_Read, QTSS_Write, & QTSS_WriteV calls, with certain noted exceptions
-//  in the case of responding to RTSP requests.
-//
-//  Modules that open their own file descriptors for network or file I/O can
-//  create separate threads for handling I/O. In this case, these descriptors
-//  can remain blocking, as long as they always block on the private module threads.
-//
-//  In most cases, however, creating a separate thread for I/O is not viable for the
-//  kind of work the module would like to do. For instance, a module may wish
-//  to respond to a RTSP DESCRIBE request, but can't immediately because constructing
-//  the response would require I/O that would block.
-//
-//  The problem is once the module returns from the QTSS_RTSPProcess_Role, the
-//  server will mistakenly consider the request handled, and move on. It won't
-//  know that the module has more work to do before it finishes processing the DESCRIBE.
-//
-//  In this case, the module needs to tell the server to delay processing of the
-//  DESCRIBE request until the file descriptor's blocking condition is lifted.
-//  The module can do this by using the provided "event" callback routines.
-
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-//              QTSS_OutOfState: if this callback is made from a role that doesn't allow async I/O events
-//              QTSS_RequestFailed: Not currently possible to request an event. 
 
 QTSS_Error  QTSS_RequestEvent(QTSS_StreamRef inStream, QTSS_EventType inEventMask);
 QTSS_Error  QTSS_SignalStream(QTSS_StreamRef inStream, QTSS_EventType inEventMask);
@@ -1267,20 +1205,6 @@ QTSS_Error  QTSS_GlobalUnLock();
 
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
-
-#ifdef QTSS_OLDROUTINENAMES
-
-//
-// Legacy routines
-
-//
-// QTSS_AddAttribute has been replaced by QTSS_AddStaticAttribute
-QTSS_Error QTSS_AddAttribute(QTSS_ObjectType inObjectType, const char* inAttributeName,
-                                void* inUnused);
-
-#endif
-
-
 
 #ifdef __cplusplus
 }
