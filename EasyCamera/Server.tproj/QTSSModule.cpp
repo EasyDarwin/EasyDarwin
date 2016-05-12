@@ -55,14 +55,7 @@ char*    QTSSModule::sRoleNames[] =
 {   
            "InitializeRole"           , 
            "ShutdownRole"             , 
-           "RTSPFilterRole"           ,
-           "RTSPRouteRole"            ,
-           "RTSPAthnRole"             ,         
-           "RTSPAuthRole"             ,
-           "RTSPPreProcessorRole"     ,
-           "RTSPRequestRole"          ,
-           "RTSPPostProcessorRole"    ,
-           "RTSPSessionClosingRole"   ,
+
            "ErrorLogRole"             ,
            "RereadPrefsRole"          ,
            "OpenFileRole"             ,
@@ -71,9 +64,14 @@ char*    QTSSModule::sRoleNames[] =
            "ReadFileRole"             ,
            "CloseFileRole"            ,
            "RequestEventFileRole"     ,
-           "RTSPIncomingDataRole"     ,
+
            "StateChangeRole"          ,
            "TimedIntervalRole"        ,
+
+		   "StartStreamRole"		  ,
+		   "StopStreamRole"			  ,
+		   "PostSnapRole"			  ,
+
            ""
 };
 
