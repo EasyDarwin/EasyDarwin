@@ -124,47 +124,6 @@ enum
 };
 typedef UInt32 QTSS_ActionFlags;
 
-/**********************************/
-// RTP SESSION STATES
-//
-// Is this session playing, paused, or what?
-enum
-{
-    qtssPausedState         = 0,
-    qtssPlayingState        = 1
-};
-typedef UInt32 QTSS_RTPSessionState;
-
-//*********************************/
-// CLIENT SESSION CLOSING REASON
-//
-// Why is this Client going away?
-enum
-{
-    qtssCliSesCloseClientTeardown       = 0, // QTSS_Teardown was called on this session
-    qtssCliSesCloseTimeout              = 1, // Server is timing this session out
-    qtssCliSesCloseClientDisconnect     = 2  // Client disconnected.
-};
-typedef UInt32 QTSS_CliSesClosingReason;
-
-// CLIENT SESSION TEARDOWN REASON
-//
-//  An attribute in the QTSS_ClientSessionObject 
-//
-//  When calling QTSS_Teardown, a module should specify the QTSS_CliSesTeardownReason in the QTSS_ClientSessionObject 
-//  if the tear down was not a client request.
-//  
-enum
-{
-    qtssCliSesTearDownClientRequest             = 0,
-    qtssCliSesTearDownUnsupportedMedia          = 1,
-    qtssCliSesTearDownServerShutdown            = 2,
-    qtssCliSesTearDownServerInternalErr         = 3,
-    qtssCliSesTearDownBroadcastEnded            = 4 // A broadcast the client was watching ended
-    
-};
-typedef UInt32  QTSS_CliSesTeardownReason;
-
 // Events
 enum
 {
@@ -181,43 +140,6 @@ enum
     qtssAuthDigest      = 2
 };
 typedef UInt32  QTSS_AuthScheme;
-
-
-/**********************************/
-// RTSP SESSION TYPES
-//
-// Is this a normal RTSP session or an RTSP / HTTP session?
-enum
-{
-    qtssRTSPSession         = 0,
-    qtssRTSPHTTPSession     = 1,
-    qtssRTSPHTTPInputSession= 2 //The input half of an RTSPHTTP session. These session types are usually very short lived.
-};
-typedef UInt32 QTSS_RTSPSessionType;
-
-/**********************************/
-//
-// What type of RTP network mode is being used for the RTP stream?
-// unicast | multicast (mutually exclusive)
-enum
-{
-    qtssRTPNetworkModeDefault       = 0, // not declared
-    qtssRTPNetworkModeMulticast     = 1,
-    qtssRTPNetworkModeUnicast       = 2
-};
-typedef UInt32 QTSS_RTPNetworkMode;
-
-
-
-/**********************************/
-//
-// The transport mode in a SETUP request
-enum
-{
-    qtssRTPTransportModePlay        = 0,
-    qtssRTPTransportModeRecord      = 1
-};
-typedef UInt32 QTSS_RTPTransportMode;
 
 /**********************************/
 // PAYLOAD TYPES
@@ -820,6 +742,7 @@ QTSS_TimeVal    QTSS_Milliseconds();
 //
 time_t  QTSS_MilliSecsTo1970Secs(QTSS_TimeVal inQTSS_MilliSeconds);
 
+
 /********************************************************************/
 //  QTSS_AddRole
 //
@@ -828,16 +751,9 @@ time_t  QTSS_MilliSecsTo1970Secs(QTSS_TimeVal inQTSS_MilliSeconds);
 //
 //  Returns:    QTSS_NoErr
 //              QTSS_OutOfState: If this function isn't being called from the Register role
-//              QTSS_RequestFailed:     If module is registering for the QTSS_RTSPRequest_Role
-//                                      and there already is such a module.
+//              QTSS_RequestFailed:     
 //              QTSS_BadArgument:   Registering for a nonexistent role.
 QTSS_Error QTSS_AddRole(QTSS_Role inRole);
-
-
-/*****************************************/
-//  ATTRIBUTE / OBJECT CALLBACKS
-//
-
 
 /********************************************************************/
 //  QTSS_LockObject
