@@ -129,15 +129,6 @@ SInt64 EasyCMSSession::Run()
 	OS_Error theErr = OS_NoErr;
 	EventFlags events = this->GetEvents();
 
-	//if(events & Task::kKillEvent)
-	//	return -1;
-
-	if(events & Task::kTimeoutEvent)
-	{
-		printf("Timeout task!\n");
-		fTimeoutTask.RefreshTimeout();
-	}
-
 	while(1)
 	{
 		switch (fState)
@@ -274,13 +265,8 @@ SInt64 EasyCMSSession::Run()
 				{
 					qtss_printf("kSendingMessage state \n");
 
-					// 响应报文发送，确保完全发送
-					// Assert(fRequest != NULL);
-
 					//发送响应报文
 					theErr = fOutputStream.Flush();
-
-					qtss_printf("kSendingMessage fOutputStream.Flush(%d) \n", theErr);
                 
 					if (theErr == EAGAIN || theErr == EINPROGRESS)
 					{
@@ -330,7 +316,6 @@ SInt64 EasyCMSSession::Run()
 					
 					if(IsConnected())
 					{
-						printf("fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask(%d))\n", fSocket->GetEventMask());
 						fSocket->GetSocket()->SetTask(this);
 						fSocket->GetSocket()->RequestEvent(EV_RE | EV_WR);
 					}
@@ -417,10 +402,6 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				qtss_printf("Serial = %s\n", startStreamReq.GetBodyValue("Serial").c_str());
 				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue("Server_IP").c_str());
 				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue("Server_Port").c_str());
-
-				char szIP[16] = {0,};
-				strcpy(szIP, (char*)startStreamReq.GetBodyValue("Server_IP").c_str());
-				qtss_printf("szIP = %s\n", szIP);
 
 				QTSS_RoleParams params;
 

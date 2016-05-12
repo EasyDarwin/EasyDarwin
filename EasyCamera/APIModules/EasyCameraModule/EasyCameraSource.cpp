@@ -124,7 +124,7 @@ EasyCameraSource::EasyCameraSource()
 	fCameraLogin(false),
 	m_bStreamFlag(false),
 	m_bForceIFrame(true),
-	fTimeoutTask(this, 15 * 1000),
+	fTimeoutTask(this, 30 * 1000),
 	fPusherHandle(NULL)
 {
 	this->SetTaskName("EasyCameraSource");
