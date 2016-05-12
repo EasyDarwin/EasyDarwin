@@ -402,18 +402,6 @@ void QTSServer::DoInitRole()
     theModuleState.curRole = QTSS_Initialize_Role;
     theModuleState.curTask = NULL;
     OSThread::SetMainThreadData(&theModuleState);
-
-    //
-    // Add the OPTIONS method as the one method the server handles by default (it handles
-    // it internally). Modules that handle other RTSP methods will add 
-    QTSS_RTSPMethod theOptionsMethod = qtssOptionsMethod;
-    (void)this->SetValue(qtssSvrHandledMethods, 0, &theOptionsMethod, sizeof(theOptionsMethod));
-
-
-// For now just disable the SetParameter to be compatible with Real.  It should really be removed only for clients that have problems with their SetParameter implementations like (Real Players).
-// At the moment it isn't necesary to add the option.
-//   QTSS_RTSPMethod	theSetParameterMethod = qtssSetParameterMethod;
-//    (void)this->SetValue(qtssSvrHandledMethods, 0, &theSetParameterMethod, sizeof(theSetParameterMethod));
 	
     for (UInt32 x = 0; x < QTSServerInterface::GetNumModulesInRole(QTSSModule::kInitializeRole); x++)
     {

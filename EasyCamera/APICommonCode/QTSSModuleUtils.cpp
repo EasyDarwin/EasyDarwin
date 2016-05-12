@@ -128,16 +128,6 @@ QTSS_Error QTSSModuleUtils::ReadEntireFile(char* inPath, StrPtrLen* outData, QTS
     return theErr;
 }
 
-void    QTSSModuleUtils::SetupSupportedMethods(QTSS_Object inServer, QTSS_RTSPMethod* inMethodArray, UInt32 inNumMethods)
-{
-    // Report to the server that this module handles DESCRIBE, SETUP, PLAY, PAUSE, and TEARDOWN
-    UInt32 theNumMethods = 0;
-    (void)QTSS_GetNumValues(inServer, qtssSvrHandledMethods, &theNumMethods);
-    
-    for (UInt32 x = 0; x < inNumMethods; x++)
-        (void)QTSS_SetValue(inServer, qtssSvrHandledMethods, theNumMethods++, (void*)&inMethodArray[x], sizeof(inMethodArray[x]));
-}
-
 void    QTSSModuleUtils::LogError(  QTSS_ErrorVerbosity inVerbosity,
                                     QTSS_AttributeID inTextMessage,
                                     UInt32 /*inErrNumber*/,

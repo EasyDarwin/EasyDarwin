@@ -48,12 +48,6 @@ class QTSSModuleUtils
         // This function allocates memory for the file data.
         static QTSS_Error   ReadEntireFile(char* inPath, StrPtrLen* outData, QTSS_TimeVal inModDate = -1, QTSS_TimeVal* outModDate = NULL);
 
-        // If your module supports RTSP methods, call this function from your QTSS_Initialize
-        // role to tell the server what those methods are.
-        static void     SetupSupportedMethods(  QTSS_Object inServer,
-                                                QTSS_RTSPMethod* inMethodArray,
-                                                UInt32 inNumMethods);
-                                                
         // Using a message out of the text messages dictionary is a common
         // way to log errors to the error log. Here is a function to
         // make that process very easy.

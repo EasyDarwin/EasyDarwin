@@ -26,7 +26,6 @@
 #ifndef QTSS_H
 #define QTSS_H
 #include "OSHeaders.h"
-#include "QTSSRTSPProtocol.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -242,7 +241,6 @@ enum
     qtssDynamicObjectType           = FOUR_CHARS_TO_INT('d', 'y', 'm', 'c'), //dymc
     qtssRTSPSessionObjectType       = FOUR_CHARS_TO_INT('s', 's', 'e', 'o'), //sseo
     qtssRTSPRequestObjectType       = FOUR_CHARS_TO_INT('s', 'r', 'q', 'o'), //srqo
-    qtssRTSPHeaderObjectType        = FOUR_CHARS_TO_INT('s', 'h', 'd', 'o'), //shdo
     qtssServerObjectType            = FOUR_CHARS_TO_INT('s', 'e', 'r', 'o'), //sero
     qtssPrefsObjectType             = FOUR_CHARS_TO_INT('p', 'r', 'f', 'o'), //prfo
     qtssTextMessagesObjectType      = FOUR_CHARS_TO_INT('t', 'x', 't', 'o'), //txto
@@ -663,8 +661,6 @@ typedef QTSS_StreamRef          QTSS_RTSPSessionStream;
 typedef QTSS_StreamRef          QTSS_RTSPRequestStream;
 typedef QTSS_StreamRef          QTSS_RTPStreamStream;
 typedef QTSS_StreamRef          QTSS_SocketStream;
-
-typedef QTSS_RTSPStatusCode QTSS_SessionStatusCode;
 
 //***********************************************/
 // ROLE PARAMETER BLOCKS
