@@ -211,7 +211,7 @@ class QTSServerInterface : public QTSSDictionary
         
     protected:
 
-        // Setup by the derived RTSPServer object        
+        // Setup by the derived Server object        
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;
 

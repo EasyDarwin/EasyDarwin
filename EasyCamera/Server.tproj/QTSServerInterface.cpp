@@ -225,7 +225,7 @@ void QTSServerInterface::LogError(QTSS_ErrorVerbosity inVerbosity, char* inBuffe
     for (UInt32 x = 0; x < QTSServerInterface::GetNumModulesInRole(QTSSModule::kErrorLogRole); x++)
         (void)QTSServerInterface::GetModule(QTSSModule::kErrorLogRole, x)->CallDispatch(QTSS_ErrorLog_Role, &theParams);
 
-    // If this is a fatal error, set the proper attribute in the RTSPServer dictionary
+    // If this is a fatal error, set the proper attribute in the Server dictionary
     if ((inVerbosity == qtssFatalVerbosity) && (sServer != NULL))
     {
         QTSS_ServerState theState = qtssFatalErrorState;

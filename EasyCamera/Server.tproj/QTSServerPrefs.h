@@ -86,7 +86,7 @@ class QTSServerPrefs : public QTSSPrefs
             { return this->GetStringPref(qtssPrefsPidFile); }
                
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
-        UInt32  GetNumBlockingThreads()           { return fNumBlockingThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
+        UInt32  GetNumBlockingThreads()           { return fNumBlockingThreads; } //return the number of threads that long tasks will be scheduled on processing for example.
         
     private:
 
