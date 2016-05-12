@@ -239,8 +239,6 @@ typedef UInt32 QTSS_RTPPayloadType;
 enum
 {
     qtssDynamicObjectType           = FOUR_CHARS_TO_INT('d', 'y', 'm', 'c'), //dymc
-    qtssRTSPSessionObjectType       = FOUR_CHARS_TO_INT('s', 's', 'e', 'o'), //sseo
-    qtssRTSPRequestObjectType       = FOUR_CHARS_TO_INT('s', 'r', 'q', 'o'), //srqo
     qtssServerObjectType            = FOUR_CHARS_TO_INT('s', 'e', 'r', 'o'), //sero
     qtssPrefsObjectType             = FOUR_CHARS_TO_INT('p', 'r', 'f', 'o'), //prfo
     qtssTextMessagesObjectType      = FOUR_CHARS_TO_INT('t', 'x', 't', 'o'), //txto
@@ -640,11 +638,6 @@ typedef SInt32					QTSS_AttributeID;
 typedef SInt32					QTSS_ServiceID;
 typedef SInt64					QTSS_TimeVal;
 
-typedef QTSS_Object             QTSS_RTPStreamObject;
-typedef QTSS_Object             QTSS_RTSPSessionObject;
-typedef QTSS_Object             QTSS_RTSPRequestObject;
-typedef QTSS_Object             QTSS_RTSPHeaderObject;
-typedef QTSS_Object             QTSS_ClientSessionObject;
 typedef QTSS_Object             QTSS_ServerObject;
 typedef QTSS_Object             QTSS_PrefsObject;
 typedef QTSS_Object             QTSS_TextMessagesObject;
@@ -657,9 +650,6 @@ typedef QTSS_Object             QTSS_ConnectedUserObject;
 
 typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;
-typedef QTSS_StreamRef          QTSS_RTSPSessionStream;
-typedef QTSS_StreamRef          QTSS_RTSPRequestStream;
-typedef QTSS_StreamRef          QTSS_RTPStreamStream;
 typedef QTSS_StreamRef          QTSS_SocketStream;
 
 //***********************************************/

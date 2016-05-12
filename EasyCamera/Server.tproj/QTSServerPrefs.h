@@ -23,10 +23,7 @@
  *
  */
  /*
-    Contains:   Object store for RTSP server preferences.
-    
-    
-    
+    Contains:   Object store for server preferences.
 */
 
 #ifndef __QTSSERVERPREFS_H__
@@ -43,7 +40,6 @@ class QTSServerPrefs : public QTSSPrefs
         // INITIALIZE
         //
         // This function sets up the dictionary map. Must be called before instantiating
-        // the first RTSPPrefs object.
     
         static void Initialize();
 

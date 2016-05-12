@@ -132,8 +132,6 @@ class QTSSModuleUtils
         static char*  GetUserName_Copy(QTSS_UserProfileObject inUserProfile);
         static char** GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfile, UInt32 *outNumGroupsPtr);
         static Bool16 UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroupName, UInt32 inGroupNameLen);
-
-        static void SetEnableRTSPErrorMsg(Bool16 enable) {QTSSModuleUtils::sEnableRTSPErrorMsg = enable; }
         
         static QTSS_AttributeID CreateAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType, void* inDefaultValue, UInt32 inBufferLen);
   
@@ -153,7 +151,6 @@ class QTSSModuleUtils
         static QTSS_TextMessagesObject  sMessages;
         static QTSS_ServerObject        sServer;
         static QTSS_StreamRef           sErrorLog;
-        static Bool16                   sEnableRTSPErrorMsg;
         static QTSS_ErrorVerbosity      sMissingPrefVerbosity;
 };
 
