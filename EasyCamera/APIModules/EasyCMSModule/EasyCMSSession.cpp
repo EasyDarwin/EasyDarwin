@@ -479,57 +479,54 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 			break;
 		case MSG_SD_STREAM_STOP_REQ:
 			{
-				//EasyMsgSDStopStreamREQ	stopStreamReq(fContentBuffer);
+				EasyMsgSDStopStreamREQ	stopStreamReq(fContentBuffer);
 
-				//QTSS_RoleParams packetParams;
-				//memset(&packetParams, 0x00, sizeof(QTSS_RoleParams));
-				//strcpy(packetParams.easyNVRParams.inNVRSerialNumber, (char*)sEasy_Serial);
-				//strcpy(packetParams.easyNVRParams.inDeviceSerial, (char*)stopStreamReq.GetBodyValue("DeviceSerial").data());
-				//strcpy(packetParams.easyNVRParams.inCameraSerial, (char*)stopStreamReq.GetBodyValue("CameraSerial").data());
-				//packetParams.easyNVRParams.inStreamID = atoi(stopStreamReq.GetBodyValue("StreamID").data());
-				//strcpy(packetParams.easyNVRParams.inProtocol, "");
-				//strcpy(packetParams.easyNVRParams.inDssIP, "");
-				//packetParams.easyNVRParams.inDssPort = 0;
+				QTSS_RoleParams params;
 
-				//// 需要先判断DeviceSerial与当前设备的sEasy_Serial是否一致
-				//// TODO::
+				string serial = stopStreamReq.GetBodyValue("Serial");
+				params.stopStreamParams.inSerial = serial.c_str();
+				string protocol = stopStreamReq.GetBodyValue("Protocol");
+				params.stopStreamParams.inProtocol = protocol.c_str();
+				string channel = stopStreamReq.GetBodyValue("Channel");
+				params.stopStreamParams.inChannel = channel.c_str();
 
-				//UInt32 fCurrentModule=0;
-				//QTSS_Error err = QTSS_NoErr;
-				//UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
-				//for (; fCurrentModule < numModules; fCurrentModule++)
-				//{
-				//	QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
-				//	err = theModule->CallDispatch(Easy_NVRStopStream_Role, &packetParams);
-				//}
-				//fCurrentModule = 0;
 
-				//EasyJsonValue body;
-				//body["DeviceSerial"] = packetParams.easyNVRParams.inDeviceSerial;
-				//body["CameraSerial"] = packetParams.easyNVRParams.inCameraSerial;
-				//body["StreamID"] = packetParams.easyNVRParams.inStreamID;
+				QTSS_Error	errCode = QTSS_NoErr;
+				UInt32 fCurrentModule=0;
+				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
+				for (; fCurrentModule < numModules; fCurrentModule++)
+				{
+					QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
+					errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
+				}
+				fCurrentModule = 0;
 
-				//EasyMsgDSStopStreamACK rsp(body, 1, err == QTSS_NoErr ? 200 : 404);
-				//string msg = rsp.GetMsg();
+				EasyJsonValue body;
+				body["Serial"] = params.stopStreamParams.inSerial;
+				body["Channel"] = params.stopStreamParams.inChannel;
+				body["Protocol"] = params.stopStreamParams.inProtocol;
 
-				////回应
-				//StrPtrLen jsonContent((char*)msg.data());
-				//HTTPRequest httpAck(&sServiceStr, httpResponseType);
+				EasyMsgDSStopStreamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				string msg = rsp.GetMsg();
 
-				//if(httpAck.CreateResponseHeader())
-				//{
-				//	if (jsonContent.Len)
-				//		httpAck.AppendContentLengthHeader(jsonContent.Len);
+				//回应
+				StrPtrLen jsonContent((char*)msg.data());
+				HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 
-				//	//Push msg to OutputBuffer
-				//	char respHeader[2048] = { 0 };
-				//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-				//	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+				if(httpAck.CreateResponseHeader())
+				{
+					if (jsonContent.Len)
+						httpAck.AppendContentLengthHeader(jsonContent.Len);
+
+					//Push msg to OutputBuffer
+					char respHeader[2048] = { 0 };
+					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+					strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
 		
-				//	fOutputStream.Put(respHeader);
-				//	if (jsonContent.Len > 0) 
-				//		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
-				//}
+					fOutputStream.Put(respHeader);
+					if (jsonContent.Len > 0) 
+						fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+				}
 			}
 			break;
 		default:
