@@ -34,6 +34,7 @@ public:
 	string password_;
 	string tag_;
 	string channel_;
+	string snapJpgPath_;//最新的快照路径
 };
 
 typedef vector<EasyDevice> EasyDevices;		//摄像头数组
@@ -317,13 +318,17 @@ typedef CliStreamMap::iterator CliStreamMapItera;
 class strDevice//设备类型对应的信息
 {
 public:
+	strDevice();
 	bool GetDevInfo(const char *msg);//由JSON文本得到设备信息
+	void HoldSnapPath(std::string strJpgPath,std::string strChannel);//保留快照的路径
 public:
 	string serial_;//设备序列号
 	string name_;//设备名称
 	string password_;//密码
 	string tag_;//标签
 	string channelCount_;//该设备包含的摄像头个数
+	string snapJpgPath_;//最新的快照路径
+
 
 	EasyDevices cameras_;//摄像头信息
 	EasyDarwinTerminalType eDeviceType;//设备类型

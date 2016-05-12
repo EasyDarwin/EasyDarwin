@@ -15,6 +15,7 @@ namespace EasyDarwin { namespace Protocol
 
 EasyDevice::EasyDevice()
 {
+	snapJpgPath_.clear();
 }
 
 EasyDevice::EasyDevice(std::string channel, std::string name)
@@ -518,6 +519,10 @@ bool EasyMsgSCListRecordACK::AddRecord(std::string record)
 }
 
 //add,紫光，start
+strDevice::strDevice()
+{
+	snapJpgPath_.clear();
+}
 bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 {
 	EasyProtocol proTemp(json);
@@ -542,7 +547,7 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 		tag_			=	proTemp.GetBodyValue("Tag");//标签
 		channelCount_	=	proTemp.GetBodyValue("ChannelCount");//当前设备包含的摄像头数量
 
-		if(eDeviceType==EASY_APP_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
+		if(eAppType==EASY_APP_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
 		{
 			cameras_.clear();
 			Json::Value *proot=proTemp.GetRoot();
@@ -563,7 +568,20 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 	//执行到这说明得到的设备信息是错误的
 	return false;
 }
-
+void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//保留快照的时间属性
+{
+	if(EASY_APP_TYPE_CAMERA==eDeviceType)//如果是摄像头类型，那么只保留一个路径
+		snapJpgPath_=strJpgPath;
+	else//否则就要保留到对应的摄像头属性里
+	{
+		EasyDevicesIterator it;
+		for(it=cameras_.begin();it!=cameras_.end();it++)
+		{
+			if(it->channel_==strChannel)
+				it->snapJpgPath_=strJpgPath;
+		}
+	}
+}
 void EasyDarwinRSP::SetHead(EasyJsonValue &header)
 {
 	for(EasyJsonValue::iterator it = header.begin(); it != header.end(); it++)

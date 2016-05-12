@@ -1,8 +1,8 @@
 <CONFIGURATION>
 	<SERVER>
-		<PREF NAME="redis_ip_addr" >192.168.8.96</PREF>
+		<PREF NAME="redis_ip_addr" >127.0.0.1</PREF>
 		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
-		<PREF NAME="cms_ip_addr" >192.168.8.96</PREF>
+		<PREF NAME="cms_ip_addr" >121.40.50.44</PREF>
 		<PREF NAME="monitor_lan_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="monitor_wan_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
