@@ -11,6 +11,40 @@
 static unsigned int sLastVPTS = 0;
 static unsigned int sLastAPTS = 0;
 
+// Camera IP
+static char*            sCamera_IP				= NULL;
+static char*            sDefaultCamera_IP_Addr	= "127.0.0.1";
+// Camera Port
+static UInt16			sCameraPort				= 80;
+static UInt16			sDefaultCameraPort		= 80;
+// Camera user
+static char*            sCameraUser				= NULL;
+static char*            sDefaultCameraUser		= "admin";
+// Camera password
+static char*            sCameraPassword			= NULL;
+static char*            sDefaultCameraPassword	= "admin";
+// Camera stream subtype
+static UInt32			sStreamType				= 1;
+static UInt32			sDefaultStreamType		= 1;
+
+
+// 初始化读取配置文件中各项配置
+void EasyCameraSource::Initialize(QTSS_ModulePrefsObject modulePrefs)
+{
+	delete [] sCamera_IP;
+    sCamera_IP = QTSSModuleUtils::GetStringAttribute(modulePrefs, "camera_ip", sDefaultCamera_IP_Addr);
+
+	QTSSModuleUtils::GetAttribute(modulePrefs, "camera_port", qtssAttrDataTypeUInt16, &sCameraPort, &sDefaultCameraPort, sizeof(sCameraPort));
+
+	delete [] sCameraUser;
+    sCameraUser = QTSSModuleUtils::GetStringAttribute(modulePrefs, "camera_user", sDefaultCameraUser);
+	
+	delete [] sCameraPassword;
+    sCameraPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "camera_password", sDefaultCameraPassword);
+
+	QTSSModuleUtils::GetAttribute(modulePrefs, "camera_stream_type", qtssAttrDataTypeUInt32, &sStreamType, &sDefaultStreamType, sizeof(sStreamType));
+}
+
 int __EasyPusher_Callback(int _id, EASY_PUSH_STATE_T _state, EASY_AV_Frame *_frame, void *_userptr)
 {
     if (_state == EASY_PUSH_STATE_CONNECTING)               printf("Connecting...\n");

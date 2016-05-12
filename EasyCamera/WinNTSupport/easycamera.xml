@@ -31,5 +31,11 @@
 		<PREF NAME="device_tag" >dev</PREF>
 		<PREF NAME="keep_alive_interval" TYPE="UInt32" >6</PREF>
 	</MODULE>
-	<MODULE NAME="EasyCameraModule" ></MODULE>
+	<MODULE NAME="EasyCameraModule" >
+		<PREF NAME="camera_ip" >127.0.0.1</PREF>
+		<PREF NAME="camera_port" TYPE="UInt16" >80</PREF>
+		<PREF NAME="camera_user" >admin</PREF>
+		<PREF NAME="camera_password" >admin</PREF>
+		<PREF NAME="camera_stream_type" TYPE="UInt32" >1</PREF>
+	</MODULE>
 </CONFIGURATION>

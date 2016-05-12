@@ -84,6 +84,8 @@ QTSS_Error Initialize_EasyCameraModule(QTSS_Initialize_Params* inParams)
 	//读取EasyCMSModule配置
 	RereadPrefs_EasyCameraModule();
 
+	EasyCameraSource::Initialize(sEasyCameraModulePrefs);
+
 	//创建并开始EasyCMSSession对象
 	sCameraSource = new EasyCameraSource();
 	sCameraSource->Signal(Task::kStartEvent);
