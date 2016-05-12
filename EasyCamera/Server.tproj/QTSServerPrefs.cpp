@@ -53,7 +53,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "Error",    NULL                    },  //error_logfile_name
 	{ kDontAllowMultipleValues,	DEFAULTPATHS_LOG_DIR,	NULL		},	//error_logfile_dir
     { kDontAllowMultipleValues, "7",        NULL                    },  //error_logfile_interval
-    { kDontAllowMultipleValues, "256000",   NULL                    },  //error_logfile_size
+    { kDontAllowMultipleValues, "10240",   NULL                    },  //error_logfile_size
     { kDontAllowMultipleValues, "2",        NULL                    },  //error_logfile_verbosity
     { kDontAllowMultipleValues, "true",     NULL                    },  //screen_logging
     { kDontAllowMultipleValues, "true",     NULL                    },  //error_logging

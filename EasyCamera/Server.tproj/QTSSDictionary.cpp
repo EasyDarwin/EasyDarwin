@@ -856,8 +856,6 @@ void QTSSDictionaryMap::Initialize()
     sDictionaryMaps[kPrefsDictIndex]        = new QTSSDictionaryMap(qtssPrefsNumParams, QTSSDictionaryMap::kInstanceAttrsAllowed | QTSSDictionaryMap::kCompleteFunctionsAllowed);
     sDictionaryMaps[kTextMessagesDictIndex] = new QTSSDictionaryMap(qtssMsgNumParams);
     sDictionaryMaps[kServiceDictIndex]      = new QTSSDictionaryMap(0);
-    sDictionaryMaps[kRTSPSessionDictIndex]  = new QTSSDictionaryMap(qtssRTSPSesNumParams);
-    sDictionaryMaps[kRTSPRequestDictIndex]  = new QTSSDictionaryMap(qtssRTSPReqNumParams);
     sDictionaryMaps[kRTSPHeaderDictIndex]   = new QTSSDictionaryMap(qtssNumHeaders);
     sDictionaryMaps[kFileDictIndex]         = new QTSSDictionaryMap(qtssFlObjNumParams);
     sDictionaryMaps[kModuleDictIndex]       = new QTSSDictionaryMap(qtssModNumParams);
@@ -1106,8 +1104,6 @@ UInt32  QTSSDictionaryMap::GetMapIndex(QTSS_ObjectType inType)
      
      switch (inType)
      {
-        case qtssRTSPSessionObjectType:     return kRTSPSessionDictIndex;
-        case qtssRTSPRequestObjectType:     return kRTSPRequestDictIndex;
         case qtssRTSPHeaderObjectType:      return kRTSPHeaderDictIndex;
         case qtssServerObjectType:          return kServerDictIndex;
         case qtssPrefsObjectType:           return kPrefsDictIndex;
