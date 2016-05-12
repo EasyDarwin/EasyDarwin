@@ -52,7 +52,6 @@
 QTSS_TextMessagesObject     QTSSModuleUtils::sMessages = NULL;
 QTSS_ServerObject           QTSSModuleUtils::sServer = NULL;
 QTSS_StreamRef              QTSSModuleUtils::sErrorLog = NULL;
-Bool16                      QTSSModuleUtils::sEnableRTSPErrorMsg = false;
 QTSS_ErrorVerbosity         QTSSModuleUtils::sMissingPrefVerbosity = qtssMessageVerbosity;
 
 void    QTSSModuleUtils::Initialize(QTSS_TextMessagesObject inMessages,
