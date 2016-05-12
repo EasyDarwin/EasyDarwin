@@ -243,7 +243,7 @@ enum EasyDarwinTerminalType
 	EASY_TERMINAL_TYPE_Android = 2,			///< ANDROID
 	EASY_TERMINAL_TYPE_IOS = 3,				///< IOS
 	EASY_TERMINAL_TYPE_WEB = 4,				///< WEB
-	EASY_TERMINAL_TYPE_PC					///< PC
+	EASY_TERMINAL_TYPE_PC  = 5					///< PC
 };
 /*!
 \}
@@ -256,7 +256,7 @@ enum EasyDarwinTerminalType
 enum EasyDarwinAppType
 {
 	EASY_APP_TYPE_CAMERA = 1,					///< EasyCamera
-	EASY_APP_TYPE_NVR							///< EasyNVR
+	EASY_APP_TYPE_NVR	 = 2					///< EasyNVR
 };
 /*!
 \}
