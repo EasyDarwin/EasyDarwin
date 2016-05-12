@@ -349,7 +349,7 @@ QTSS_Error EasyCameraSource::StartStreaming(const char* inSerial, const char* in
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyCameraSource::StopStreaming()
+QTSS_Error EasyCameraSource::StopStreaming(const char* inSerial, const char* inChannel, const char* inProtocol)
 {
 	if(fPusherHandle)
 	{

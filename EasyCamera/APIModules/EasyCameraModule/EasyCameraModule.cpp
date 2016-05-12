@@ -59,6 +59,8 @@ QTSS_Error  EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParam
             return RereadPrefs_EasyCameraModule();
 		case Easy_StartStream_Role:
 			return StartStream(&inParams->startStreaParams);
+		case Easy_StopStream_Role:
+			return StopStream(&inParams->stopStreamParams);
 	}
     return QTSS_NoErr;
 }
@@ -96,6 +98,7 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_StartStream_Role);
+	(void)QTSS_AddRole(Easy_StopStream_Role);
    
     // Tell the server our name!
     static char* sModuleName = "EasyCameraModule";
@@ -138,6 +141,17 @@ QTSS_Error StartStream(Easy_StartStream_Params* inParams)
 	if(sCameraSource)
 	{
 		theErr = sCameraSource->StartStreaming(inParams->inSerial, inParams->inChannel, inParams->inStreamID, inParams->inProtocol, inParams->inIP, inParams->inPort);
+	}
+	return theErr;
+}
+
+QTSS_Error StopStream(Easy_StopStream_Params* inParams)
+{
+	QTSS_Error theErr = QTSS_Unimplemented;
+
+	if(sCameraSource)
+	{
+		theErr = sCameraSource->StopStreaming(inParams->inSerial, inParams->inChannel, inParams->inProtocol);
 	}
 	return theErr;
 }

@@ -599,7 +599,9 @@ typedef struct
 
 typedef struct
 {
-	char*						inSerial[36];
+	const char*						inSerial;
+	const char*						inProtocol;
+	const char*						inChannel;
 }Easy_StopStream_Params;
 
 typedef struct
