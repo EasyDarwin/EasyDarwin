@@ -22,7 +22,6 @@
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-
 #ifndef QTSS_H
 #define QTSS_H
 #include "OSHeaders.h"
@@ -40,7 +39,6 @@ extern "C" {
 #define QTSS_MAX_SESSION_ID_LENGTH      32
 #define QTSS_MAX_ATTRIBUTE_NAME_SIZE    64
 #define QTSS_MAX_REQUEST_BUFFER_SIZE	2048
-
 
 //*******************************
 // ENUMERATED TYPES
@@ -74,25 +72,6 @@ enum
 };
 typedef SInt32 QTSS_Error;
 
-// QTSS_AddStreamFlags used in the QTSS_AddStream Callback function
-enum
-{
-    qtssASFlagsNoFlags              = 0x00000000,
-    qtssASFlagsAllowDestination     = 0x00000001,
-    qtssASFlagsForceInterleave      = 0x00000002,
-    qtssASFlagsDontUseSlowStart     = 0x00000004,
-    qtssASFlagsForceUDPTransport    = 0x00000008
-};
-typedef UInt32 QTSS_AddStreamFlags;
-
-// QTSS_PlayFlags used in the QTSS_Play Callback function.
-enum 
-{
-    qtssPlayFlagsSendRTCP           = 0x00000010,   // have the server generate RTCP Sender Reports 
-    qtssPlayFlagsAppendServerInfo   = 0x00000020    // have the server append the server info APP packet to your RTCP Sender Reports
-};
-typedef UInt32 QTSS_PlayFlags;
-
 // Flags for QTSS_Write when writing to a QTSS_ClientSessionObject.
 enum 
 {
@@ -103,14 +82,6 @@ enum
     qtssWriteFlagsBufferData        = 0x00000008
 };
 typedef UInt32 QTSS_WriteFlags;
-
-// Flags for QTSS_SendStandardRTSPResponse
-enum
-{
-    qtssPlayRespWriteTrackInfo      = 0x00000001,
-    qtssSetupRespDontWriteSSRC      = 0x00000002
-};
-
 
 // Flags for the qtssRTSPReqAction attribute in a QTSS_RTSPRequestObject.
 enum 
@@ -131,15 +102,6 @@ enum
     QTSS_WriteableEvent     = 2
 };
 typedef UInt32  QTSS_EventType;
-
-// Authentication schemes
-enum
-{
-    qtssAuthNone        = 0,
-    qtssAuthBasic       = 1,
-    qtssAuthDigest      = 2
-};
-typedef UInt32  QTSS_AuthScheme;
 
 /**********************************/
 // PAYLOAD TYPES
