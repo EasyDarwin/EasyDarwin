@@ -16,7 +16,13 @@
 #include "QTSServerInterface.h"
 
 #include "EasyCameraSource.h"
+#include "EasyPusherAPI.h"
 
+#ifdef __Win32__
+#define EasyPusher_KEY "6A34714D6C3469576B5A7541787A4E58714D77334576464659584E35513246745A584A684C6D56345A536C58444661672F704C67523246326157346D516D466962334E68514449774D545A4659584E355247467964326C75564756686257566863336B3D"
+#else
+#define EasyPusher_KEY "6A34714D6C354F576B597141787A4E58714D77334576566C59584E35593246745A584A684931634D5671442B6B75424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D"
+#endif
 
 // STATIC DATA
 static QTSS_PrefsObject				sServerPrefs			= NULL;	//服务器主配置
@@ -59,6 +65,33 @@ QTSS_Error  EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParam
 
 QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
 {
+	//加载前进行授权验证
+	int isEasyPusherActivated = EasyPusher_Activate(EasyPusher_KEY);
+	switch(isEasyPusherActivated)
+	{
+	case EASY_ACTIVATE_INVALID_KEY:
+		printf("EasyPusher_KEY is EASY_ACTIVATE_INVALID_KEY!\n");
+		break;
+	case EASY_ACTIVATE_TIME_ERR:
+		printf("EasyPusher_KEY is EASY_ACTIVATE_TIME_ERR!\n");
+		break;
+	case EASY_ACTIVATE_PROCESS_NAME_LEN_ERR:
+		printf("EasyPusher_KEY is EASY_ACTIVATE_PROCESS_NAME_LEN_ERR!\n");
+		break;
+	case EASY_ACTIVATE_PROCESS_NAME_ERR:
+		printf("EasyPusher_KEY is EASY_ACTIVATE_PROCESS_NAME_ERR!\n");
+		break;
+	case EASY_ACTIVATE_VALIDITY_PERIOD_ERR:
+		printf("EasyPusher_KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
+		break;
+	case EASY_ACTIVATE_SUCCESS:
+		//printf("EasyPusher_KEY is EASY_ACTIVATE_SUCCESS!\n");
+		break;
+	}
+
+	if(EASY_ACTIVATE_SUCCESS != isEasyPusherActivated)
+		return QTSS_RequestFailed;
+
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
