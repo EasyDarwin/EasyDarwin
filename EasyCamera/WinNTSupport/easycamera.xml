@@ -1,12 +1,6 @@
 <CONFIGURATION>
 	<SERVER>
 		<PREF NAME="connection_timeout" TYPE="UInt32" >0</PREF>
-		<PREF NAME="cms_addr" >www.easydss.com</PREF>
-		<PREF NAME="cms_port" TYPE="UInt16" >10000</PREF>
-		<PREF NAME="local_camera_addr" >192.168.1.189</PREF>
-		<PREF NAME="local_camera_port" TYPE="UInt16" >80</PREF>
-		<PREF NAME="serial_number" >010100000001</PREF>
-		<PREF NAME="camera_stream_type" TYPE="UInt32" >0</PREF>
 		<PREF NAME="error_logfile_name" >easycamera</PREF>
 		<PREF NAME="error_logfile_dir" >./Logs/</PREF>
 		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
@@ -14,8 +8,6 @@
 		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >2</PREF>
 		<PREF NAME="screen_logging" TYPE="Bool16" >true</PREF>
 		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
-		<PREF NAME="run_user_name" >admin</PREF>
-		<PREF NAME="run_password" >admin</PREF>
 		<PREF NAME="run_num_threads" TYPE="UInt32" >1</PREF>
 		<PREF NAME="pid_file" >easycamera.pid</PREF>
 		<PREF NAME="force_logs_close_on_write" TYPE="Bool16" >false</PREF>

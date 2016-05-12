@@ -530,36 +530,22 @@ enum
     // All of these parameters are read-write. 
     
     qtssPrefsConnectionTimeout			= 0,    //"connection_timeout"          //UInt32    //Connection timeout in seconds sent to the client.
-    qtssPrefsCMSIPAddr					= 1,    //"cms_addr"					//char array    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
-    qtssPrefsCMSPort					= 2,    //"cms_port"					//UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTP clients. 0 means no timeout
- 
-	qtssPrefsLocalCameraAddress			= 3,   // "local_camera_addr" //char array   //
-	qtssPrefsLocalCameraPort			= 4,   //"local_camera_port"          //UInt16
-	qtssPrefsSerialNumber				= 5,    //"serial_number"                //char array    //Path to the root movie folder
-	qtssPrefsCameraStreamType			= 6,    //"camera_stream_type"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
-
-    // There is a compiled-in error log module that loads before all the other modules
-    // (so it can log errors from the get-go). It uses these prefs.
     
-    qtssPrefsErrorLogName				= 7,   //"error_logfile_name"          //char array        //Name of error log file
-    qtssPrefsErrorLogDir				= 8,   //"error_logfile_dir"           //char array        //Path to error log file directory
-    qtssPrefsErrorRollInterval			= 9,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
-    qtssPrefsMaxErrorLogSize			= 10,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
-    qtssPrefsErrorLogVerbosity			= 11,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
-    qtssPrefsScreenLogging				= 12,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
-    qtssPrefsErrorLogEnabled			= 13,   //"error_logging"               //Bool16        //Is error logging enabled?
+    qtssPrefsErrorLogName				= 1,   //"error_logfile_name"          //char array        //Name of error log file
+    qtssPrefsErrorLogDir				= 2,   //"error_logfile_dir"           //char array        //Path to error log file directory
+    qtssPrefsErrorRollInterval			= 3,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
+    qtssPrefsMaxErrorLogSize			= 4,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
+    qtssPrefsErrorLogVerbosity			= 5,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
+    qtssPrefsScreenLogging				= 6,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
+    qtssPrefsErrorLogEnabled			= 7,   //"error_logging"               //Bool16        //Is error logging enabled?
     
-    qtssPrefsRunUserName				= 14,   //"run_user_name"       //char array        //Run under this user's account
-    qtssPrefsRunPassword				= 15,   //"run_password"		//char array        //Run under this group's account
-    
+	qtssPrefsRunNumThreads				= 8,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
+    qtssPrefsPidFile					= 9,    //"pid_file" //Char Array //path to pid file
+    qtssPrefsCloseLogsOnWrite			= 10,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
 
-	qtssPrefsRunNumThreads				= 16,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
-    qtssPrefsPidFile					= 17,    //"pid_file" //Char Array //path to pid file
-    qtssPrefsCloseLogsOnWrite			= 18,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
-
-	qtssPrefsNumBlockingThreads			= 19,   // "run_num_blocking_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
+	qtssPrefsNumBlockingThreads			= 11,   // "run_num_blocking_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 	
-    qtssPrefsNumParams					= 20
+    qtssPrefsNumParams					= 12
 };
 
 typedef UInt32 QTSS_PrefsAttributes;

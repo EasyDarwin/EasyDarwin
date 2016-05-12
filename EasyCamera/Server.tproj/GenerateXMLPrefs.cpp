@@ -43,24 +43,14 @@ struct PrefConversionInfo
 static const PrefConversionInfo kPrefs[] =
 {
     /* 0 */ { "connection_timeout",             NULL,           qtssAttrDataTypeUInt32 },
-    /* 1 */ { "cms_addr",						NULL,           qtssAttrDataTypeCharArray },
-    /* 2 */ { "cms_port",						NULL,           qtssAttrDataTypeUInt32 },
-	
-	/* 3 */ { "local_camera_addr",				NULL,			qtssAttrDataTypeCharArray },
-	/* 4 */ { "local_camera_port",				NULL,			qtssAttrDataTypeUInt16 },
-    /* 5 */ { "serial_number",					NULL,           qtssAttrDataTypeCharArray },
-    /* 6 */ { "camera_stream_type",				NULL,           qtssAttrDataTypeUInt32 },
+    /* 1 */ { "error_logfile_name",             NULL,			qtssAttrDataTypeCharArray },
+    /* 2 */ { "error_logfile_dir",              NULL,			qtssAttrDataTypeCharArray },
+    /* 3 */ { "error_logfile_interval",			NULL,			qtssAttrDataTypeUInt32 },
+    /* 4 */ { "error_logfile_size",				NULL,			qtssAttrDataTypeUInt32 },
+    /* 5 */ { "error_logfile_verbosity",		NULL,			qtssAttrDataTypeUInt32 },
+    /* 6 */ { "screen_logging",					NULL,			qtssAttrDataTypeBool16 },
+    /* 7 */ { "error_logging",					NULL,			qtssAttrDataTypeBool16 },
 
-    /* 7 */ { "error_logfile_name",             NULL,			qtssAttrDataTypeCharArray },
-    /* 8 */ { "error_logfile_dir",              NULL,			qtssAttrDataTypeCharArray },
-    /* 9 */ { "error_logfile_interval",        NULL,			qtssAttrDataTypeUInt32 },
-    /* 10 */ { "error_logfile_size",			NULL,			qtssAttrDataTypeUInt32 },
-    /* 11 */ { "error_logfile_verbosity",		NULL,			qtssAttrDataTypeUInt32 },
-    /* 12 */ { "screen_logging",				NULL,			qtssAttrDataTypeBool16 },
-    /* 13 */ { "error_logging",					NULL,			qtssAttrDataTypeBool16 },
-
-    /* 14 */ { "run_user_name",					NULL,			qtssAttrDataTypeCharArray },
-    /* 15 */ { "run_password",					NULL,			qtssAttrDataTypeCharArray },
     //
     // This element will be used if the pref is something we don't know about.
     // Just have unknown prefs default to be server prefs with a type of char

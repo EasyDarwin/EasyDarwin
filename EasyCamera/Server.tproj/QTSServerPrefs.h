@@ -62,10 +62,6 @@ class QTSServerPrefs : public QTSSPrefs
         
         //This is the value we advertise to clients (lower than the real one)
         UInt32  GetConnectionTimeoutSecs()  { return fConnectionTimeoutInSecs; }
-        UInt16  GetCMSPort()   { return fCMSPort; }
-
-        UInt32  GetCameraStreamType()       { return fCameraStreamType; }
-        UInt16	GetLocalCameraPort()         { return fLocalCameraPort; }
         
         // For the compiled-in error logging module
         
@@ -90,34 +86,16 @@ class QTSServerPrefs : public QTSSPrefs
         char*   GetErrorLogName()
             { return this->GetStringPref(qtssPrefsErrorLogName); }
        
-        char*   GetLocalCameraAddress()
-            { return this->GetStringPref(qtssPrefsLocalCameraAddress); }
-
-        char*   GetRunUserName()
-            { return this->GetStringPref(qtssPrefsRunUserName); }
-        char*   GetRunPassword()
-            { return this->GetStringPref(qtssPrefsRunPassword); }
-
         char*   GetPidFilePath()
             { return this->GetStringPref(qtssPrefsPidFile); }
                
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
         UInt32  GetNumBlockingThreads()           { return fNumBlockingThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
         
-		Bool16 GetCMSIP(char* outCMSIP);
-
-		char* GetDeviceSerialNumber()			  { return this->GetStringPref(qtssPrefsSerialNumber); }
-        
     private:
 
         UInt32      fConnectionTimeoutInSecs;
 
-		char		fCMSIPAddr[20];
-        UInt16      fCMSPort;
-
-        UInt32  fCameraStreamType;
-        UInt16  fLocalCameraPort;
-        
         UInt32  fErrorRollIntervalInDays;
         UInt32  fErrorLogBytes;
         UInt32  fErrorLogVerbosity;

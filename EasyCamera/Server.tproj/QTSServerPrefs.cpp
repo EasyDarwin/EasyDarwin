@@ -49,13 +49,6 @@
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
     { kDontAllowMultipleValues, "0",        NULL                    },  //connection_timeout
-    { kDontAllowMultipleValues, "www.easydarwin.org",  NULL			},  //cms_addr
-	{ kDontAllowMultipleValues,	"10000",		NULL				},	//cms_port
-
-    { kDontAllowMultipleValues, "127.0.0.1", NULL					},  //local_camera_addr
-    { kDontAllowMultipleValues, "80",		NULL                    },  //local_camera_port
-	{ kDontAllowMultipleValues,	"000000000000", NULL				},	//serial_number
-    { kDontAllowMultipleValues, "0",     NULL						},  //camera_stream_type
 
     { kDontAllowMultipleValues, "Error",    NULL                    },  //error_logfile_name
 	{ kDontAllowMultipleValues,	DEFAULTPATHS_LOG_DIR,	NULL		},	//error_logfile_dir
@@ -65,16 +58,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "true",     NULL                    },  //screen_logging
     { kDontAllowMultipleValues, "true",     NULL                    },  //error_logging
 
-
-#ifndef __Win32__
-    { kDontAllowMultipleValues, "admin",     NULL                    },  //run_user_name
-    { kDontAllowMultipleValues, "admin",     NULL                    },  //run_password
-#else
-    { kDontAllowMultipleValues, "admin",         NULL                    },  //run_user_name
-    { kDontAllowMultipleValues, "admin",         NULL                    },  //run_group_name
-#endif
-
-	{ kDontAllowMultipleValues, "0",        NULL                    },  //run_num_threads
+	{ kDontAllowMultipleValues, "3",        NULL                    },  //run_num_threads
     { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//pid_file
     { kDontAllowMultipleValues, "false",    NULL                    },   //force_logs_close_on_write
 
@@ -84,39 +68,26 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
-    /* 0 */ { "connection_timeout",                     NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 1 */ { "cms_addr",								NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 2 */ { "cms_port",								NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    
-	/* 3 */ { "local_camera_addr",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
- 	/* 4 */ { "local_camera_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-  	/* 5 */ { "serial_number",                          NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 6 */ { "camera_stream_type",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 0 */ { "connection_timeout",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 
-    /* 7 */ { "error_logfile_name",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 8 */ { "error_logfile_dir",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 9 */ { "error_logfile_interval",                NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 10 */ { "error_logfile_size",                    NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 11 */ { "error_logfile_verbosity",               NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 12 */ { "screen_logging",                        NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 13 */ { "error_logging",                         NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 1 */ { "error_logfile_name",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 2 */ { "error_logfile_dir",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 3 */ { "error_logfile_interval",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 4 */ { "error_logfile_size",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 5 */ { "error_logfile_verbosity",				NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 6 */ { "screen_logging",							NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 7 */ { "error_logging",							NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 
-    /* 14 */ { "run_user_name",                         NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 15 */ { "run_password",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-
-	/* 16 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 17 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
-    /* 18 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 19 */ { "run_num_blocking_threads",				NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
+	/* 8 */ { "run_num_threads",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 9 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
+    /* 10 */{ "force_logs_close_on_write",				NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 11 */{ "run_num_blocking_threads",				NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
 
 QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs)
 :   QTSSPrefs(inPrefsSource, NULL, QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex), false),
     fConnectionTimeoutInSecs(0),
-    fCMSPort(0),
-    fCameraStreamType(0),
-	fLocalCameraPort(80),
     fErrorRollIntervalInDays(0),
     fErrorLogBytes(0),
     fErrorLogVerbosity(0),
@@ -124,7 +95,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fErrorLogEnabled(false),
     fNumThreads(0),
     fNumBlockingThreads(0),
-
     fCloseLogsOnWrite(false)
 {
     SetupAttributes();
@@ -144,22 +114,16 @@ void QTSServerPrefs::SetupAttributes()
 {
     this->SetVal(qtssPrefsConnectionTimeout,&fConnectionTimeoutInSecs,        sizeof(fConnectionTimeoutInSecs));
 
-	this->SetVal(qtssPrefsCMSIPAddr,		&fCMSIPAddr,				sizeof(fCMSIPAddr));
-    this->SetVal(qtssPrefsCMSPort,			&fCMSPort,					sizeof(fCMSPort));
-    this->SetVal(qtssPrefsCameraStreamType,	&fCameraStreamType,			sizeof(fCameraStreamType));
-
-    this->SetVal(qtssPrefsLocalCameraPort, &fLocalCameraPort,   sizeof(fLocalCameraPort));
-
     this->SetVal(qtssPrefsErrorRollInterval, &fErrorRollIntervalInDays, sizeof(fErrorRollIntervalInDays));
     this->SetVal(qtssPrefsMaxErrorLogSize,  &fErrorLogBytes,            sizeof(fErrorLogBytes));
     this->SetVal(qtssPrefsErrorLogVerbosity, &fErrorLogVerbosity,       sizeof(fErrorLogVerbosity));
     this->SetVal(qtssPrefsScreenLogging,    &fScreenLoggingEnabled,     sizeof(fScreenLoggingEnabled));
     this->SetVal(qtssPrefsErrorLogEnabled,  &fErrorLogEnabled,          sizeof(fErrorLogEnabled));
 
-    this->SetVal(qtssPrefsRunNumThreads,                &fNumThreads,                   sizeof(fNumThreads));
+    this->SetVal(qtssPrefsRunNumThreads,	&fNumThreads,                   sizeof(fNumThreads));
 
-    this->SetVal(qtssPrefsCloseLogsOnWrite,             &fCloseLogsOnWrite,             sizeof(fCloseLogsOnWrite));
-    this->SetVal(qtssPrefsNumBlockingThreads,               &fNumBlockingThreads,               sizeof(fNumBlockingThreads));
+    this->SetVal(qtssPrefsCloseLogsOnWrite,	&fCloseLogsOnWrite,             sizeof(fCloseLogsOnWrite));
+    this->SetVal(qtssPrefsNumBlockingThreads,	&fNumBlockingThreads,               sizeof(fNumBlockingThreads));
 }
 
 void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
@@ -303,41 +267,40 @@ void QTSServerPrefs::SetCloseLogsOnWrite(Bool16 closeLogsOnWrite)
     fCloseLogsOnWrite = closeLogsOnWrite; 
 }
 
-Bool16 QTSServerPrefs::GetCMSIP(char* outCMSIP)
-{
-	if(outCMSIP == NULL)
-		return false;
-
-#ifndef _WIN32
-    typedef struct hostent HOSTENT;
-    signal(SIGPIPE, SIG_IGN);
-#endif
-	HOSTENT *host_entry = ::gethostbyname(this->GetStringPref(qtssPrefsCMSIPAddr));
-    char ip[20] = {0};
-    if (host_entry == NULL)
-    {
-        switch (h_errno)
-        {
-        case HOST_NOT_FOUND:
-            fputs("The host was not found.\n", stderr);
-            break;
-        case NO_ADDRESS:
-            fputs("The name is valid but it has no address.\n", stderr);
-            break;
-        case NO_RECOVERY:
-            fputs("A non-recoverable name server error occurred.\n", stderr);
-            break;
-        case TRY_AGAIN:
-            fputs("The name server is temporarily unavailable.", stderr);
-            break;
-        }
-        return false;
-    }
-    else
-    {
-        sprintf(outCMSIP, "%s", inet_ntoa(*((struct in_addr *) host_entry->h_addr_list[0])));
-    }
-
-	return true;
-}
-
+//Bool16 QTSServerPrefs::GetCMSIP(char* outCMSIP)
+//{
+//	if(outCMSIP == NULL)
+//		return false;
+//
+//#ifndef _WIN32
+//    typedef struct hostent HOSTENT;
+//    signal(SIGPIPE, SIG_IGN);
+//#endif
+//	HOSTENT *host_entry = ::gethostbyname(this->GetStringPref(qtssPrefsCMSIPAddr));
+//    char ip[20] = {0};
+//    if (host_entry == NULL)
+//    {
+//        switch (h_errno)
+//        {
+//        case HOST_NOT_FOUND:
+//            fputs("The host was not found.\n", stderr);
+//            break;
+//        case NO_ADDRESS:
+//            fputs("The name is valid but it has no address.\n", stderr);
+//            break;
+//        case NO_RECOVERY:
+//            fputs("A non-recoverable name server error occurred.\n", stderr);
+//            break;
+//        case TRY_AGAIN:
+//            fputs("The name server is temporarily unavailable.", stderr);
+//            break;
+//        }
+//        return false;
+//    }
+//    else
+//    {
+//        sprintf(outCMSIP, "%s", inet_ntoa(*((struct in_addr *) host_entry->h_addr_list[0])));
+//    }
+//
+//	return true;
+//}

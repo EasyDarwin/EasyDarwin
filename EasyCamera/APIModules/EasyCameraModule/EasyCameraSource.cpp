@@ -157,11 +157,7 @@ bool EasyCameraSource::CameraLogin()
 	if(fCameraLogin) return true;
 	//µÇÂ¼µ½ÉãÏñ»ú
 	HI_S32 s32Ret = HI_SUCCESS;
-	s32Ret = HI_NET_DEV_Login(	&m_u32Handle,
-		QTSServerInterface::GetServer()->GetPrefs()->GetRunUserName(),
-		QTSServerInterface::GetServer()->GetPrefs()->GetRunPassword(),
-		QTSServerInterface::GetServer()->GetPrefs()->GetLocalCameraAddress(),
-		QTSServerInterface::GetServer()->GetPrefs()->GetLocalCameraPort());
+	s32Ret = HI_NET_DEV_Login(	&m_u32Handle, sCameraUser, sCameraPassword, sCamera_IP, sCameraPort);
 
 	if (s32Ret != HI_SUCCESS)
 	{
@@ -197,7 +193,7 @@ QTSS_Error EasyCameraSource::NetDevStartStream()
 	HI_NET_DEV_SetDataCallBack(m_u32Handle, (HI_ON_DATA_CALLBACK)OnDataCallback, this);
 
 	struStreamInfo.u32Channel = HI_NET_DEV_CHANNEL_1;
-	struStreamInfo.blFlag = QTSServerInterface::GetServer()->GetPrefs()->GetCameraStreamType()?HI_TRUE:HI_FALSE;
+	struStreamInfo.blFlag = sStreamType?HI_TRUE:HI_FALSE;
 	struStreamInfo.u32Mode = HI_NET_DEV_STREAM_MODE_TCP;
 	struStreamInfo.u8Type = HI_NET_DEV_STREAM_ALL;
 	s32Ret = HI_NET_DEV_StartStream(m_u32Handle, &struStreamInfo);
