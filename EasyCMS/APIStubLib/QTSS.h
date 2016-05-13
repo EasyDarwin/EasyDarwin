@@ -1471,36 +1471,6 @@ QTSS_Error QTSS_DoService(QTSS_ServiceID inID, QTSS_ServiceFunctionArgsPtr inArg
 // Rereads the preferences, also causes the QTSS_RereadPrefs_Role to be invoked
 #define QTSS_REREAD_PREFS_SERVICE   "RereadPreferences"
 
-
-
-/*****************************************/
-//  RTSP HEADER CALLBACKS
-//
-//  As a convience to modules that want to send RTSP responses, the server
-//  has internal utilities for formatting a proper RTSP response. When a module
-//  calls QTSS_SendRTSPHeaders, the server sends a proper RTSP status line, using
-//  the request's current status code, and also sends the proper CSeq header,
-//  session ID header, and connection header.
-//
-//  Any other headers can be appended by calling QTSS_AppendRTSPHeader. They will be
-//  sent along with everything else when QTSS_SendRTSPHeaders is called.
-//
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef);
-//
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef, QTSS_RTSPHeader inHeader, const char* inValue, UInt32 inValueLen);
-
-
-/*****************************************/
-//  QTSS_SendStandardRTSPResponse
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error  QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, QTSS_Object inRTPInfo, UInt32 inFlags);
-
-
 /*****************************************/
 //  FILE SYSTEM CALLBACKS
 //

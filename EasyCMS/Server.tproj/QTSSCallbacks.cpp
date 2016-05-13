@@ -529,37 +529,6 @@ QTSS_Error  QTSSCallbacks::QTSS_DoService(QTSS_ServiceID inID, QTSS_ServiceFunct
 }
 
 
-QTSS_Error QTSSCallbacks::QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef)
-{
-    if (inRef == NULL)
-        return QTSS_BadArgument;
-        
-    //((BaseRequestInterface*)inRef)->SendHeader();
-    return QTSS_NoErr;
-}
-
-QTSS_Error QTSSCallbacks::QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef,
-                                                        QTSS_RTSPHeader inHeader,
-                                                        char* inValue,
-                                                        UInt32 inValueLen)
-{
-    if ((inRef == NULL) || (inValue == NULL))
-        return QTSS_BadArgument;
-    if (inHeader >= qtssNumHeaders)
-        return QTSS_BadArgument;
-    
-    return QTSS_NoErr;
-}
-
-QTSS_Error QTSSCallbacks::QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest,
-                                                            QTSS_Object inRTPInfo,
-                                                            UInt32 inFlags)
-{
-    if ((inRTSPRequest == NULL) || (inRTPInfo == NULL))
-        return QTSS_BadArgument;
-    return QTSS_BadArgument;
-}
-
 QTSS_Error  QTSSCallbacks::QTSS_RequestEvent(QTSS_StreamRef inStream, QTSS_EventType inEventMask)
 {
     // First thing to do is to alter the thread's module state to reflect the fact

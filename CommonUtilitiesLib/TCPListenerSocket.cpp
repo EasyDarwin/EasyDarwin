@@ -188,7 +188,7 @@ void TCPListenerSocket::ProcessEvent(int /*eventBits*/)
         theSocket->SetTask(theTask);
         theSocket->RequestEvent(EV_RE);
         
-        theTask->SetThreadPicker(Task::GetBlockingTaskThreadPicker()); //The RTSP Task processing threads
+        theTask->SetThreadPicker(Task::GetBlockingTaskThreadPicker()); //The Message Task processing threads
     }
     
 
