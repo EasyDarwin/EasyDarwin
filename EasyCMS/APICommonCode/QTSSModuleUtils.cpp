@@ -738,31 +738,6 @@ Bool16 QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_Att
     return false;
 }
 
-QTSS_Error QTSSModuleUtils::AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*foundUser, Bool16 *authContinue)
-{
-    QTSS_Error theErr = QTSS_NoErr;
-    //printf("QTSSModuleUtils::AuthorizeRequest allowed=%d foundUser=%d authContinue=%d\n", *allowed, *foundUser, *authContinue);
-    
-    if (NULL != allowed)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserAllowed, 0, allowed, sizeof(Bool16));
-    if (QTSS_NoErr != theErr)
-        return theErr;
-    
-    if (NULL != foundUser)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserFound, 0, foundUser, sizeof(Bool16));
-    if (QTSS_NoErr != theErr)
-        return theErr;  
-    
-    if (NULL != authContinue)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqAuthHandled, 0, authContinue, sizeof(Bool16));
-        
-    return theErr;
-}
-
-
-
-
-
 IPComponentStr IPComponentStr::sLocalIPCompStr("127.0.0.*");
 
 IPComponentStr::IPComponentStr(char *theAddressPtr)
