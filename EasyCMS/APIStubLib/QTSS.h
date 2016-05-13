@@ -729,7 +729,6 @@ typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;
 typedef QTSS_StreamRef          QTSS_RTSPSessionStream;
 typedef QTSS_StreamRef          QTSS_RTSPRequestStream;
-typedef QTSS_StreamRef          QTSS_RTPStreamStream;
 typedef QTSS_StreamRef          QTSS_SocketStream;
 
 //***********************************************/
