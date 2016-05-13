@@ -710,11 +710,9 @@ typedef SInt32          QTSS_AttributeID;
 typedef SInt32          QTSS_ServiceID;
 typedef SInt64          QTSS_TimeVal;
 
-typedef QTSS_Object             QTSS_RTPStreamObject;
 typedef QTSS_Object             QTSS_RTSPSessionObject;
 typedef QTSS_Object             QTSS_RTSPRequestObject;
 typedef QTSS_Object             QTSS_RTSPHeaderObject;
-typedef QTSS_Object             QTSS_ClientSessionObject;
 typedef QTSS_Object             QTSS_ServerObject;
 typedef QTSS_Object             QTSS_PrefsObject;
 typedef QTSS_Object             QTSS_TextMessagesObject;
@@ -727,8 +725,6 @@ typedef QTSS_Object             QTSS_ConnectedUserObject;
 
 typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;
-typedef QTSS_StreamRef          QTSS_RTSPSessionStream;
-typedef QTSS_StreamRef          QTSS_RTSPRequestStream;
 typedef QTSS_StreamRef          QTSS_SocketStream;
 
 //***********************************************/
@@ -811,7 +807,7 @@ typedef struct
 	QTSS_Object					inStreamName;
 	QTSS_Object					inRTSPSession;
 	QTSS_Object					inStreamingParam;
-} QTSS_Streaing_Params;
+} QTSS_Streaming_Params;
 typedef struct//add  
 {
 	char *pNonce;//用于存放随机数
@@ -840,17 +836,10 @@ typedef union
     QTSS_RequestEventFile_Params        reqEventFileParams;
 
 	// EasyCMS
-	QTSS_Streaing_Params				StreamingParams;
+	QTSS_Streaming_Params				StreamingParams;
 	QTSS_Sync_Params					SyncParams;
     QTSS_Nonce_Params                   NonceParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
-
-typedef struct
-{
-    void*                           packetData;
-    QTSS_TimeVal                    packetTransmitTime;
-    QTSS_TimeVal                    suggestedWakeupTime;
-} QTSS_PacketStruct;
 
 
 /********************************************************************/
@@ -1479,19 +1468,6 @@ QTSS_Error	QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSession, char* in
 QTSS_Error	QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen);    
 QTSS_Error	QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession);
 QTSS_Error	QTSS_UpdateDevSnap(QTSS_RTSPSessionObject inServiceSession, const char* inSnapTime, const char* inSnapJpg); 
-#ifdef QTSS_OLDROUTINENAMES
-
-//
-// Legacy routines
-
-//
-// QTSS_AddAttribute has been replaced by QTSS_AddStaticAttribute
-QTSS_Error QTSS_AddAttribute(QTSS_ObjectType inObjectType, const char* inAttributeName,
-                                void* inUnused);
-
-#endif
-
-
 
 #ifdef __cplusplus
 }

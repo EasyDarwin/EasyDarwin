@@ -566,14 +566,7 @@ void    QTSServer::LoadCompiledInModules()
     //
     // The following modules are all compiled into the server. 
 
-#endif //DSS_DYNAMIC_MODULES_ONLY
-
-#ifdef PROXYSERVER
-    QTSSModule* theProxyModule = new QTSSModule("QTSSProxyModule");
-    (void)theProxyModule->SetupModule(&sCallbacks, &QTSSProxyModule_Main);
-    (void)AddModule(theProxyModule);
 #endif
-
 }
 
 void    QTSServer::InitCallbacks()
