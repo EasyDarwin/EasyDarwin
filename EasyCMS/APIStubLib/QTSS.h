@@ -768,37 +768,9 @@ typedef struct
 {
     QTSS_RTSPSessionObject      inRTSPSession;
     QTSS_RTSPRequestObject      inRTSPRequest;
-    QTSS_RTSPHeaderObject       inRTSPHeaders;
-    QTSS_ClientSessionObject    inClientSession;
-
-} QTSS_StandardRTSP_Params;
-
-typedef struct 
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-    QTSS_RTSPRequestObject      inRTSPRequest;
     char**                      outNewRequest;
 
 } QTSS_Filter_Params;
-
-typedef struct
-{
-    QTSS_RTSPRequestObject      inRTSPRequest;
-} QTSS_RTSPAuth_Params;
-
-typedef struct 
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-    QTSS_ClientSessionObject    inClientSession;
-    char*                       inPacketData;
-    UInt32                      inPacketLen;
-
-} QTSS_IncomingData_Params;
-
-typedef struct
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-} QTSS_RTSPSession_Params;
 
 typedef struct
 {
@@ -859,14 +831,6 @@ typedef union
     QTSS_StateChange_Params             stateChangeParams;
 
     QTSS_Filter_Params                  rtspFilterParams;
-    QTSS_IncomingData_Params            rtspIncomingDataParams;
-    QTSS_StandardRTSP_Params            rtspRouteParams;
-    QTSS_RTSPAuth_Params                rtspAthnParams;
-    QTSS_StandardRTSP_Params            rtspAuthParams;
-    QTSS_StandardRTSP_Params            rtspPreProcessorParams;
-    QTSS_StandardRTSP_Params            rtspRequestParams;
-    QTSS_StandardRTSP_Params            rtspPostProcessorParams;
-    QTSS_RTSPSession_Params             rtspSessionClosingParams;
     
     QTSS_OpenFile_Params                openFilePreProcessParams;
     QTSS_OpenFile_Params                openFileParams;
@@ -875,7 +839,7 @@ typedef union
     QTSS_CloseFile_Params               closeFileParams;
     QTSS_RequestEventFile_Params        reqEventFileParams;
 
-	// EasyDarwin
+	// EasyCMS
 	QTSS_Streaing_Params				StreamingParams;
 	QTSS_Sync_Params					SyncParams;
     QTSS_Nonce_Params                   NonceParams;
