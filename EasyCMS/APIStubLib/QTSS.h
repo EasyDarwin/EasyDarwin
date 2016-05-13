@@ -108,14 +108,6 @@ enum
 };
 typedef UInt32  QTSS_EventType;
 
-// Authentication schemes
-enum
-{
-    qtssAuthNone        = 0,
-    qtssAuthBasic       = 1,
-    qtssAuthDigest      = 2
-};
-typedef UInt32  QTSS_AuthScheme;
 
 /**********************************/
 // RTSP SESSION TYPES

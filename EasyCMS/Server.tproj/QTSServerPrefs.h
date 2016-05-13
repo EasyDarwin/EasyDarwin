@@ -161,7 +161,6 @@ class QTSServerPrefs : public QTSSPrefs
 
         Bool16 ServerStatFileEnabled()      { return fEnableMonitorStatsFile; }
         UInt32 GetStatFileIntervalSec()     { return fStatsFileIntervalSeconds; }
-        QTSS_AuthScheme GetAuthScheme()     { return fAuthScheme; }
                  
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
         UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
@@ -228,7 +227,7 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  fIsAckLoggingEnabled;
         UInt32  fSendIntervalInMsec;
         UInt32  fMaxSendAheadTimeInSecs;
-        QTSS_AuthScheme fAuthScheme;
+
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
         Bool16  fEnableCMSServerInfo;
@@ -269,8 +268,7 @@ class QTSServerPrefs : public QTSSPrefs
         };
             
         void SetupAttributes();
-        void UpdateAuthScheme();
-        //
+
         // Returns the string preference with the specified ID. If there
         // was any problem, this will return an empty string.
         char* GetStringPref(QTSS_AttributeID inAttrID);

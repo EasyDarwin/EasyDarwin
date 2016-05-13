@@ -234,7 +234,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fIsAckLoggingEnabled(false),
     fSendIntervalInMsec(0),
     fMaxSendAheadTimeInSecs(0),
-    fAuthScheme(qtssAuthDigest),
     fAutoStart(false),
     fEnableMSGDebugPrintfs(false),
     fEnableCMSServerInfo(true),
@@ -445,32 +444,11 @@ void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
             
         this->SetPrefValuesFromFileWithRef(pref, x, theNumValues);
     }
-    
-    //
-    // Do any special pref post-processing
-    this->UpdateAuthScheme();
-    
+
     QTSSRollingLog::SetCloseOnWrite(fCloseLogsOnWrite);
     //
     // In case we made any changes, write out the prefs file
     (void)fPrefsSource->WritePrefsFile();
-}
-
-void    QTSServerPrefs::UpdateAuthScheme()
-{
-    static StrPtrLen sNoAuthScheme("none");
-    static StrPtrLen sBasicAuthScheme("basic");
-    static StrPtrLen sDigestAuthScheme("digest");
-    
-    // Get the auth scheme attribute
-    StrPtrLen* theAuthScheme = this->GetValue(qtssPrefsAuthenticationScheme);
-    
-    if (theAuthScheme->Equal(sNoAuthScheme))
-        fAuthScheme = qtssAuthNone;
-    else if (theAuthScheme->Equal(sBasicAuthScheme))
-        fAuthScheme = qtssAuthBasic;
-    else if (theAuthScheme->Equal(sDigestAuthScheme))
-        fAuthScheme = qtssAuthDigest;
 }
 
 //char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
