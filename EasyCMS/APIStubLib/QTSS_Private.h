@@ -32,13 +32,8 @@
     File:       QTSS_Private.h
 
     Contains:   Implementation-specific structures and typedefs used by the
-                implementation of QTSS API in the Darwin Streaming Server
-                    
-    
-    
+                implementation of QTSS API in the EasyCMS
 */
-
-
 #ifndef QTSS_PRIVATE_H
 #define QTSS_PRIVATE_H
 

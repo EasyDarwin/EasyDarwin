@@ -1,5 +1,5 @@
 /*
-Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 Github: https://github.com/EasyDarwin
 WEChat: EasyDarwin
 Website: http://www.EasyDarwin.org
@@ -934,23 +934,23 @@ QTSS_Error HTTPSession::ExecNetMsgStartDeviceStreamRsp(const char * json)
 			rsp.GetBodyValue("CameraSerial") == it->camera_serial_ &&
 			rsp.GetBodyValue("StreamID") == it->stream_id_ &&
 			it->message_type_ == MSG_CS_GET_STREAM_REQ)
-		{			
-			if (EasyUtil::NowTime() - it->timestamp_ > it->timeout_)
-			{				
-				theErr = QTSS_RequestFailed;
+			{			
+				if (EasyUtil::NowTime() - it->timestamp_ > it->timeout_)
+				{				
+					theErr = QTSS_RequestFailed;
+				}
+				else
+				{
+					HTTPSession* client = (HTTPSession*)it->object_;
+					boost::mutex::scoped_lock lock(fNVROperatorMutex);				
+					client->fCond.notify_one();				
+				}
+				it = fNVRMessageQueue.erase(it);
 			}
 			else
 			{
-				HTTPSession* client = (HTTPSession*)it->object_;
-				boost::mutex::scoped_lock lock(fNVROperatorMutex);				
-				client->fCond.notify_one();				
+				it++;
 			}
-			it = fNVRMessageQueue.erase(it);
-		}
-		else
-		{
-			it++;
-		}
 	}
 	return theErr;
 }
