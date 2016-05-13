@@ -169,9 +169,7 @@ class QTSSModule : public QTSSDictionary, public Task
         QTSSDictionary*             fAttributes;
         OSMutex                     fAttributesMutex;   
 
-        static Bool16       sHasRTSPRequestModule;
         static Bool16       sHasOpenFileModule;
-        static Bool16       sHasRTSPAuthenticateModule;
     
         static QTSSAttrInfoDict::AttrInfo   sAttributes[];
         static char* sRoleNames[];

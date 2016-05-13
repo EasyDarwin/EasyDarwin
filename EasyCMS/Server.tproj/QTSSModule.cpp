@@ -45,10 +45,7 @@
 #include "Socket.h"
 #include "QTSServerInterface.h"
 
-
-Bool16  QTSSModule::sHasRTSPRequestModule = false;
 Bool16  QTSSModule::sHasOpenFileModule = false;
-Bool16  QTSSModule::sHasRTSPAuthenticateModule = false;
 
 QTSSAttrInfoDict::AttrInfo  QTSSModule::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
@@ -64,14 +61,6 @@ char*    QTSSModule::sRoleNames[] =
 {   
            "InitializeRole"           , 
            "ShutdownRole"             , 
-           "RTSPFilterRole"           ,
-           "RTSPRouteRole"            ,
-           "RTSPAthnRole"             ,         
-           "RTSPAuthRole"             ,
-           "RTSPPreProcessorRole"     ,
-           "RTSPRequestRole"          ,
-           "RTSPPostProcessorRole"    ,
-           "RTSPSessionClosingRole"   ,
 
            "ErrorLogRole"             ,
            "RereadPrefsRole"          ,
@@ -81,7 +70,6 @@ char*    QTSSModule::sRoleNames[] =
            "ReadFileRole"             ,
            "CloseFileRole"            ,
            "RequestEventFileRole"     ,
-           "RTSPIncomingDataRole"     ,
            "StateChangeRole"          ,
            "TimedIntervalRole"        ,
            ""
