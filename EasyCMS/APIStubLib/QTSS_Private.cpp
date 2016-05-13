@@ -334,22 +334,6 @@ QTSS_Error  QTSS_UnlockObject(QTSS_Object inObject)
     return (sCallbacks->addr [kUnlockObjectCallback])  (inObject);
 }
 
-// AUTHENTICATION AND AUTHORIZATION ROUTINE
-QTSS_Error  QTSS_Authenticate(  const char* inAuthUserName, 
-                                const char* inAuthResourceLocalPath, 
-                                const char* inAuthMoviesDir, 
-                                QTSS_ActionFlags inAuthRequestAction, 
-                                QTSS_AuthScheme inAuthScheme, 
-                                QTSS_RTSPRequestObject ioAuthRequestObject)
-{
-    return (sCallbacks->addr [kAuthenticateCallback]) (inAuthUserName, inAuthResourceLocalPath, inAuthMoviesDir, inAuthRequestAction, inAuthScheme, ioAuthRequestObject);
-}
-
-QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
-{
-    return (sCallbacks->addr [kAuthorizeCallback]) (inAuthRequestObject, outAuthRealm, outAuthUserAllowed);
-}
-
 void  QTSS_LockStdLib()
 {
    (sCallbacks->addr [kLockStdLibCallback])  ();

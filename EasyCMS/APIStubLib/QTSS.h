@@ -1597,47 +1597,6 @@ QTSS_Error  QTSS_RequestGlobalLock();
 Bool16      QTSS_IsGlobalLocked();
 QTSS_Error  QTSS_GlobalUnLock();
 
-
-/*****************************************/
-//  AUTHENTICATE and AUTHORIZE CALLBACKS
-//
-//  All modules that want Authentication outside of the 
-//  QTSS_RTSPAuthenticate_Role must use the QTSS_Authenticate callback 
-//  and must pass in the request object
-//      All modules that want Authorization outside of the
-//      QTSS_RTSPAuthorize_Role should use the QTSS_Authorize callback
-//      and must pass in the request object
-/********************************************************************/
-
-//  QTSS_Authenticate
-//
-//  Arguments inputs:   inAuthUserName:         the username that is to be authenticated
-//                      inAuthResourceLocalPath:the resource that is to be authorized access
-//                      inAuthMoviesDir:        the movies directory (reqd. for finding the access file)
-//                      inAuthRequestAction:    the action that is performed for the resource
-//                      inAuthScheme:           the authentication scheme (the password retrieved will be based on it)
-//                      ioAuthRequestObject:    the request object 
-//                                              The object is filled with the attributes passed in  
-//  Returns:            QTSS_NoErr
-//                      QTSS_BadArgument        if any of the input arguments are null
-QTSS_Error  QTSS_Authenticate(  const char* inAuthUserName, 
-                                const char* inAuthResourceLocalPath, 
-                                const char* inAuthMoviesDir, 
-                                QTSS_ActionFlags inAuthRequestAction, 
-                                QTSS_AuthScheme inAuthScheme, 
-                                QTSS_RTSPRequestObject ioAuthRequestObject);
-
-//  QTSS_Authorize
-//
-//  Arguments inputs:   inAuthRequestObject:    the request object
-//
-//            outputs:  outAuthRealm:           the authentication realm 
-//                      outAuthUserAllowed:     true if user is allowed, and false otherwise
-//  
-//  Returns:            QTSS_NoErr
-//                      QTSS_BadArgument
-QTSS_Error    QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed);
-
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 

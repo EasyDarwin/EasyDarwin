@@ -661,24 +661,6 @@ QTSS_Error  QTSSCallbacks::QTSS_UnlockGlobalLock()
     return QTSS_NoErr;
 }
 
-
-QTSS_Error  QTSSCallbacks::QTSS_Authenticate(const char* inAuthUserName, const char* inAuthResourceLocalPath, const char* inAuthMoviesDir, QTSS_ActionFlags inAuthRequestAction, QTSS_AuthScheme inAuthScheme, QTSS_RTSPRequestObject ioAuthRequestObject)
-{
-    if((inAuthUserName == NULL) || (inAuthResourceLocalPath == NULL) || (inAuthMoviesDir == NULL) || (ioAuthRequestObject == NULL)) 
-        return QTSS_BadArgument;
-    if(inAuthRequestAction == qtssActionFlagsNoFlags)
-        return QTSS_BadArgument;
-    if(inAuthScheme == qtssAuthNone)
-        return QTSS_BadArgument;
-
-    return QTSS_NoErr;
-}
-
-QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
-{   
-    return QTSS_NoErr;
-}
-
 void QTSSCallbacks::QTSS_LockStdLib()
 {
     OS::GetStdLibMutex()->Lock();

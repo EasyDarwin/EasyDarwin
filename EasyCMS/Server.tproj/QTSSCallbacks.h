@@ -146,11 +146,7 @@ class QTSSCallbacks
         static QTSS_Error   QTSS_RequestLockedCallback();
         static Bool16       QTSS_IsGlobalLocked();
         static QTSS_Error   QTSS_UnlockGlobalLock();
-        
-        // AUTHENTICATION AND AUTHORIZATION ROUTINE
-        static QTSS_Error   QTSS_Authenticate(const char* inAuthUserName, const char* inAuthResourceLocalPath, const char* inAuthMoviesDir, QTSS_ActionFlags inAuthRequestAction, QTSS_AuthScheme inAuthScheme, QTSS_RTSPRequestObject ioAuthRequestObject);
-		static QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed);
-            
+          
         static void   QTSS_LockStdLib();
         static void   QTSS_UnlockStdLib();
 
