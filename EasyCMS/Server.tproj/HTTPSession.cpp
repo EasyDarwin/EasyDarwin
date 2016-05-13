@@ -67,10 +67,6 @@ HTTPSession::~HTTPSession()
 	QTSS_RoleParams theParams;
 	theParams.rtspSessionClosingParams.inRTSPSession = this;
 
-	//会话断开时，调用模块进行一些停止的工作
-	for (UInt32 x = 0; x < QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPSessionClosingRole); x++)
-		(void)QTSServerInterface::GetModule(QTSSModule::kRTSPSessionClosingRole, x)->CallDispatch(QTSS_RTSPSessionClosing_Role, &theParams);
-
 	fLiveSession = false; //used in Clean up request to remove the RTP session.
 	this->CleanupRequest();// Make sure that all our objects are deleted
 	//if (fSessionType == qtssServiceSession)
