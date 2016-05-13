@@ -1559,7 +1559,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStartReq(const char* json)//客户端开始流
 			if(fInfo.uTimeoutNum>CliStartStreamTimeout/100)//超时了
 			{
 				fInfo.cWaitingState=0;//恢复状态
-				return qtssRequestTimeout;
+				return httpRequestTimeout;
 			}
 			else//没有超时，继续等待
 			{
@@ -2069,7 +2069,7 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 			header["ErrorNum"]=605;
 			header["ErrorString"]=EasyDarwin::Protocol::EasyProtocol::GetErrorString(605);
 			break;
-		case qtssRequestTimeout:
+		case httpRequestTimeout:
 			header["ErrorNum"]=408;
 			header["ErrorString"]=EasyDarwin::Protocol::EasyProtocol::GetErrorString(408);
 			break;

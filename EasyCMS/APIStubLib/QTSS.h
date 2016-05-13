@@ -32,7 +32,6 @@
 #ifndef QTSS_H
 #define QTSS_H
 #include "OSHeaders.h"
-#include "QTSSRTSPProtocol.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,7 +45,7 @@ extern "C" {
 #define QTSS_MAX_ATTRIBUTE_NAME_SIZE    64
 #define EASY_MAX_URL_LENGTH				512
 #define EASY_MAX_SERIAL_LENGTH			32
-#define EASY_REQUEST_BUFFER_SIZE_LEN	64*1024//512*1024
+#define EASY_REQUEST_BUFFER_SIZE_LEN	64*1024
 
 //*******************************
 // ENUMERATED TYPES
@@ -89,14 +88,6 @@ enum
 };
 typedef UInt32 QTSS_WriteFlags;
 
-// Flags for QTSS_SendStandardRTSPResponse
-enum
-{
-    qtssPlayRespWriteTrackInfo      = 0x00000001,
-    qtssSetupRespDontWriteSSRC      = 0x00000002
-};
-
-
 // Flags for the qtssRTSPReqAction attribute in a QTSS_RTSPRequestObject.
 enum 
 {
@@ -108,47 +99,6 @@ enum
     qtssActionQTSSExtended      = 0x80000000,
 };
 typedef UInt32 QTSS_ActionFlags;
-
-/**********************************/
-// RTP SESSION STATES
-//
-// Is this session playing, paused, or what?
-enum
-{
-    qtssPausedState         = 0,
-    qtssPlayingState        = 1
-};
-typedef UInt32 QTSS_RTPSessionState;
-
-//*********************************/
-// CLIENT SESSION CLOSING REASON
-//
-// Why is this Client going away?
-enum
-{
-    qtssCliSesCloseClientTeardown       = 0, // QTSS_Teardown was called on this session
-    qtssCliSesCloseTimeout              = 1, // Server is timing this session out
-    qtssCliSesCloseClientDisconnect     = 2  // Client disconnected.
-};
-typedef UInt32 QTSS_CliSesClosingReason;
-
-// CLIENT SESSION TEARDOWN REASON
-//
-//  An attribute in the QTSS_ClientSessionObject 
-//
-//  When calling QTSS_Teardown, a module should specify the QTSS_CliSesTeardownReason in the QTSS_ClientSessionObject 
-//  if the tear down was not a client request.
-//  
-enum
-{
-    qtssCliSesTearDownClientRequest             = 0,
-    qtssCliSesTearDownUnsupportedMedia          = 1,
-    qtssCliSesTearDownServerShutdown            = 2,
-    qtssCliSesTearDownServerInternalErr         = 3,
-    qtssCliSesTearDownBroadcastEnded            = 4 // A broadcast the client was watching ended
-    
-};
-typedef UInt32  QTSS_CliSesTeardownReason;
 
 // Events
 enum
@@ -790,8 +740,6 @@ typedef QTSS_StreamRef          QTSS_RTSPRequestStream;
 typedef QTSS_StreamRef          QTSS_RTPStreamStream;
 typedef QTSS_StreamRef          QTSS_SocketStream;
 
-typedef QTSS_RTSPStatusCode QTSS_SessionStatusCode;
-
 //***********************************************/
 // ROLE PARAMETER BLOCKS
 //
@@ -863,19 +811,6 @@ typedef struct
 
 typedef struct
 {
-    QTSS_ClientSessionObject        inClientSession;
-    QTSS_TimeVal                    inCurrentTime;
-    QTSS_TimeVal                    outNextPacketTime;
-} QTSS_RTPSendPackets_Params;
-
-typedef struct
-{
-    QTSS_ClientSessionObject        inClientSession;
-    QTSS_CliSesClosingReason        inReason;
-} QTSS_ClientSessionClosing_Params;
-
-typedef struct
-{
     char*                       inPath;
     QTSS_OpenFileFlags          inFlags;
     QTSS_Object                 inFileObject;
@@ -941,9 +876,6 @@ typedef union
     QTSS_StandardRTSP_Params            rtspRequestParams;
     QTSS_StandardRTSP_Params            rtspPostProcessorParams;
     QTSS_RTSPSession_Params             rtspSessionClosingParams;
-
-    QTSS_RTPSendPackets_Params          rtpSendPacketsParams;
-    QTSS_ClientSessionClosing_Params    clientSessionClosingParams;
     
     QTSS_OpenFile_Params                openFilePreProcessParams;
     QTSS_OpenFile_Params                openFileParams;

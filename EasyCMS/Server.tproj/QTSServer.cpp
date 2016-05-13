@@ -74,11 +74,11 @@
 #endif
 
 // CLASS DEFINITIONS
-class ServiceListenerSocket : public TCPListenerSocket
+class HTTPListenerSocket : public TCPListenerSocket
 {
     public:
-		ServiceListenerSocket() {}
-        virtual ~ServiceListenerSocket() {}
+		HTTPListenerSocket() {}
+        virtual ~HTTPListenerSocket() {}
         
         //获取处理端口事务的具体Task
         virtual Task*   GetSessionTask(TCPSocket** outSocket);
@@ -192,7 +192,6 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     }
 	
 	//for redis
-	//获取redis和CMS的外部IP和端口
 	char * chTemp=fSrvrPrefs->GetRedisIP();
 	fRedisIP=chTemp;
 	delete[] chTemp;
@@ -263,7 +262,6 @@ void QTSServer::StartTasks()
 {
     // Start listening
     for (UInt32 x = 0; x < fNumListeners; x++)
-		//Listener 开始网络读取事件监听
         fListeners[x]->RequestEvent(EV_RE);
 }
 
@@ -380,7 +378,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
     {
         if (thePortTrackers[count3].fNeedsCreating)
         {
-            newListenerArray[curPortIndex] = NEW ServiceListenerSocket();
+            newListenerArray[curPortIndex] = NEW HTTPListenerSocket();
             QTSS_Error err = newListenerArray[curPortIndex]->Initialize(thePortTrackers[count3].fIPAddr, thePortTrackers[count3].fPort);
 
             char thePortStr[20];
@@ -551,14 +549,14 @@ Bool16  QTSServer::SwitchPersonality()
 }
 
 
-
-
 void    QTSServer::LoadCompiledInModules()
 {
 #ifndef DSS_DYNAMIC_MODULES_ONLY
+
 	QTSSModule* theAuthModule = new QTSSModule("QTSSAuthModule");
 	(void)theAuthModule->SetupModule(&sCallbacks, &QTSSAuthModule_Main);
 	(void)AddModule(theAuthModule);
+
     // MODULE DEVELOPERS SHOULD ADD THE FOLLOWING THREE LINES OF CODE TO THIS
     // FUNCTION IF THEIR MODULE IS BEING COMPILED INTO THE SERVER.
     //
@@ -567,38 +565,6 @@ void    QTSServer::LoadCompiledInModules()
     // (void)AddModule(myModule);
     //
     // The following modules are all compiled into the server. 
-
-    //QTSSModule* theAccessLog = new QTSSModule("QTSSAccessLogModule");
-    //(void)theAccessLog->SetupModule(&sCallbacks, &QTSSAccessLogModule_Main);
-    //(void)AddModule(theAccessLog);
-
-    //QTSSModule* theFlowControl = new QTSSModule("QTSSFlowControlModule");
-    //(void)theFlowControl->SetupModule(&sCallbacks, &QTSSFlowControlModule_Main);
-    //(void)AddModule(theFlowControl);
-
-    //////QTSSModule* theFileSysModule = new QTSSModule("QTSSPosixFileSysModule");
-    //////(void)theFileSysModule->SetupModule(&sCallbacks, &QTSSPosixFileSysModule_Main);
-    //////(void)AddModule(theFileSysModule);
-
-    //QTSSModule* theAdminModule = new QTSSModule("QTSSAdminModule");
-    //(void)theAdminModule->SetupModule(&sCallbacks, &QTSSAdminModule_Main);
-    //(void)AddModule(theAdminModule);
-
-#if MEMORY_DEBUGGING
-    QTSSModule* theWebDebug = new QTSSModule("QTSSWebDebugModule");
-    (void)theWebDebug->SetupModule(&sCallbacks, &QTSSWebDebugModule_Main);
-    (void)AddModule(theWebDebug);
-#endif
-
-#ifdef __MacOSX__
-    QTSSModule* theQTSSDSAuthModule = new QTSSModule("QTSSDSAuthModule");
-    (void)theQTSSDSAuthModule->SetupModule(&sCallbacks, &QTSSDSAuthModule_Main);
-    (void)AddModule(theQTSSDSAuthModule); 
-#endif
-
-    ////QTSSModule* theQTACCESSmodule = new QTSSModule("QTSSAccessModule");
-    ////(void)theQTACCESSmodule->SetupModule(&sCallbacks, &QTSSAccessModule_Main);
-    ////(void)AddModule(theQTACCESSmodule);
 
 #endif //DSS_DYNAMIC_MODULES_ONLY
 
@@ -897,7 +863,7 @@ void QTSServer::DoInitRole()
     //
     // Add the OPTIONS method as the one method the server handles by default (it handles
     // it internally). Modules that handle other RTSP methods will add 
-    QTSS_RTSPMethod theOptionsMethod = qtssOptionsMethod;
+    HTTPMethod theOptionsMethod = httpGetMethod;
     (void)this->SetValue(qtssSvrHandledMethods, 0, &theOptionsMethod, sizeof(theOptionsMethod));
 
 
@@ -927,7 +893,7 @@ void QTSServer::DoInitRole()
     OSThread::SetMainThreadData(NULL);
 }
 
-Task*   ServiceListenerSocket::GetSessionTask(TCPSocket** outSocket)
+Task*   HTTPListenerSocket::GetSessionTask(TCPSocket** outSocket)
 {
     Assert(outSocket != NULL);
     
@@ -943,7 +909,7 @@ Task*   ServiceListenerSocket::GetSessionTask(TCPSocket** outSocket)
 }
 
 
-Bool16 ServiceListenerSocket::OverMaxConnections(UInt32 buffer)
+Bool16 HTTPListenerSocket::OverMaxConnections(UInt32 buffer)
 {
     QTSServerInterface* theServer = QTSServerInterface::GetServer();
     SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();

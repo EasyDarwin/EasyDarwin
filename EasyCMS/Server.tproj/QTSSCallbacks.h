@@ -129,12 +129,6 @@ class QTSSCallbacks
         static QTSS_Error   QTSS_AddService(const char* inServiceName, QTSS_ServiceFunctionPtr inFunctionPtr);
         static QTSS_Error   QTSS_IDForService(const char* inTag, QTSS_ServiceID* outID);
         static QTSS_Error   QTSS_DoService(QTSS_ServiceID inID, QTSS_ServiceFunctionArgsPtr inArgs);
-
-        // RTSP ROUTINES
-        
-        static QTSS_Error   QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef);
-        static QTSS_Error   QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef, QTSS_RTSPHeader inHeader, char* inValue, UInt32 inValueLen);
-        static QTSS_Error   QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, QTSS_Object inRTPInfo, UInt32 inFlags);
         
         // ASYNC I/O ROUTINES
         static QTSS_Error   QTSS_RequestEvent(QTSS_StreamRef inStream, QTSS_EventType inEventMask);

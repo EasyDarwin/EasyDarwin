@@ -54,12 +54,6 @@ class QTSSModuleUtils
         // Read the complete contents of the file at inPath into the StrPtrLen.
         // This function allocates memory for the file data.
         static QTSS_Error   ReadEntireFile(char* inPath, StrPtrLen* outData, QTSS_TimeVal inModDate = -1, QTSS_TimeVal* outModDate = NULL);
-
-        // If your module supports RTSP methods, call this function from your QTSS_Initialize
-        // role to tell the server what those methods are.
-        static void     SetupSupportedMethods(  QTSS_Object inServer,
-                                                QTSS_RTSPMethod* inMethodArray,
-                                                UInt32 inNumMethods);
                                                 
         // Using a message out of the text messages dictionary is a common
         // way to log errors to the error log. Here is a function to
@@ -81,17 +75,7 @@ class QTSSModuleUtils
         static char* GetFullPath(   QTSS_RTSPRequestObject inRequest,
                                     QTSS_AttributeID whichFileType,
                                     UInt32* outLen,
-                                    StrPtrLen* suffix = NULL);
-
-        // Sends and HTTP 1.1 error message with an error message in HTML if errorMessage != NULL.
-        // The session must be flagged by KillSession set to true to kill.
-        // Use the QTSS_RTSPStatusCodes for the inStatusCode, for now they are the same as HTTP.
-        //
-		// It always returns QTSS_RequestFailed
-        static QTSS_Error	SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequest,
-													QTSS_SessionStatusCode inStatusCode,
-                                                    Bool16 inKillSession,
-                                                    char *errorMessage);                                                                                                                                               
+                                    StrPtrLen* suffix = NULL);                                                                                                                                            
         //
         // SEARCH FOR A SPECIFIC MODULE OBJECT                          
         static QTSS_ModulePrefsObject GetModuleObjectByName(const StrPtrLen& inModuleName);
@@ -164,9 +148,7 @@ class QTSSModuleUtils
         static char** GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfile, UInt32 *outNumGroupsPtr);
         static Bool16 UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroupName, UInt32 inGroupNameLen);
 
-        static void SetEnableRTSPErrorMsg(Bool16 enable) {QTSSModuleUtils::sEnableRTSPErrorMsg = enable; }
-        
-        static QTSS_AttributeID CreateAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType, void* inDefaultValue, UInt32 inBufferLen);
+		static QTSS_AttributeID CreateAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType, void* inDefaultValue, UInt32 inBufferLen);
   
         static Bool16 AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *theAddressPtr);
   
@@ -184,7 +166,6 @@ class QTSSModuleUtils
         static QTSS_TextMessagesObject  sMessages;
         static QTSS_ServerObject        sServer;
         static QTSS_StreamRef           sErrorLog;
-        static Bool16                   sEnableRTSPErrorMsg;
         static QTSS_ErrorVerbosity      sMissingPrefVerbosity;
 };
 

@@ -58,7 +58,6 @@
 QTSS_TextMessagesObject     QTSSModuleUtils::sMessages = NULL;
 QTSS_ServerObject           QTSSModuleUtils::sServer = NULL;
 QTSS_StreamRef              QTSSModuleUtils::sErrorLog = NULL;
-Bool16                      QTSSModuleUtils::sEnableRTSPErrorMsg = false;
 QTSS_ErrorVerbosity         QTSSModuleUtils::sMissingPrefVerbosity = qtssMessageVerbosity;
 
 void    QTSSModuleUtils::Initialize(QTSS_TextMessagesObject inMessages,
@@ -133,16 +132,6 @@ QTSS_Error QTSSModuleUtils::ReadEntireFile(char* inPath, StrPtrLen* outData, QTS
     }
     
     return theErr;
-}
-
-void    QTSSModuleUtils::SetupSupportedMethods(QTSS_Object inServer, QTSS_RTSPMethod* inMethodArray, UInt32 inNumMethods)
-{
-    // Report to the server that this module handles DESCRIBE, SETUP, PLAY, PAUSE, and TEARDOWN
-    UInt32 theNumMethods = 0;
-    (void)QTSS_GetNumValues(inServer, qtssSvrHandledMethods, &theNumMethods);
-    
-    for (UInt32 x = 0; x < inNumMethods; x++)
-        (void)QTSS_SetValue(inServer, qtssSvrHandledMethods, theNumMethods++, (void*)&inMethodArray[x], sizeof(inMethodArray[x]));
 }
 
 void    QTSSModuleUtils::LogError(  QTSS_ErrorVerbosity inVerbosity,
@@ -262,102 +251,6 @@ char* QTSSModuleUtils::GetFullPath( QTSS_RTSPRequestObject inRequest,
 	(void)QTSS_UnlockObject(inRequest);
 	
     return theFullPath;
-}
-
-QTSS_Error	QTSSModuleUtils::SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequest,
-													QTSS_SessionStatusCode inStatusCode,
-                                                    Bool16 inKillSession,
-                                                    char *errorMessage)
-{
-    static Bool16 sFalse = false;
-    
-    //set status code for access log
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
-
-    if (inKillSession) // tell the server to end the session
-        (void)QTSS_SetValue(inRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));
-    
-    ResizeableStringFormatter theErrorMessage(NULL, 0); //allocates and deletes memory
-    ResizeableStringFormatter bodyMessage(NULL,0); //allocates and deletes memory
-
-    char messageLineBuffer[64]; // used for each line
-    static const int maxMessageBufferChars = sizeof(messageLineBuffer) -1;
-    messageLineBuffer[maxMessageBufferChars] = 0; // guarantee termination
-
-    // ToDo: put in a more meaningful http error message for each error. Not required by spec.
-    // ToDo: maybe use the HTTP protcol class static error strings.
-    char* errorMsg = "error"; 
-
-    DateBuffer theDate;
-    DateTranslator::UpdateDateBuffer(&theDate, 0); // get the current GMT date and time
-
-    UInt32 realCode = 0;
-    UInt32 len = sizeof(realCode);
-    (void) QTSS_GetValue(inRequest, qtssRTSPReqRealStatusCode, 0,  (void*)&realCode,&len);
-
-    char serverHeaderBuffer[64]; // the qtss Server: header field
-    len = sizeof(serverHeaderBuffer) -1; // leave room for terminator
-    (void) QTSS_GetValue(sServer, qtssSvrRTSPServerHeader, 0,  (void*)serverHeaderBuffer,&len);
-    serverHeaderBuffer[len] = 0; // terminate.
- 
-    qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "HTTP/1.1 %"_U32BITARG_" %s",realCode, errorMsg);
-    theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));
-    theErrorMessage.PutEOL();
-
-    theErrorMessage.Put(serverHeaderBuffer,::strlen(serverHeaderBuffer));
-    theErrorMessage.PutEOL();
- 
-    qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "Date: %s",theDate.GetDateBuffer());
-    theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));
-    theErrorMessage.PutEOL();
- 
-    Bool16 addBody =  (errorMessage != NULL && ::strlen(errorMessage) != 0); // body error message so add body headers
-    if (addBody) // body error message so add body headers
-    {
-        // first create the html body
-        static const StrPtrLen htmlBodyStart("<html><body>\n");
-        bodyMessage.Put(htmlBodyStart.Ptr,htmlBodyStart.Len);
- 
-        //<h1>errorMessage</h1>\n
-        static const StrPtrLen hStart("<h1>");
-        bodyMessage.Put(hStart.Ptr,hStart.Len);
-
-        bodyMessage.Put(errorMessage,::strlen(errorMessage));
-
-        static const StrPtrLen hTerm("</h1>\n");
-        bodyMessage.Put(hTerm.Ptr,hTerm.Len);
- 
-        static const StrPtrLen htmlBodyTerm("</body></html>\n");
-        bodyMessage.Put(htmlBodyTerm.Ptr,htmlBodyTerm.Len);
-
-        // write body headers
-        static const StrPtrLen bodyHeaderType("Content-Type: text/html");
-        theErrorMessage.Put(bodyHeaderType.Ptr,bodyHeaderType.Len);
-        theErrorMessage.PutEOL();
-
-        qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "Content-Length: %"_U32BITARG_"", bodyMessage.GetBytesWritten());
-        theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));        
-        theErrorMessage.PutEOL();
-    }
-
-    static const StrPtrLen headerClose("Connection: close");
-    theErrorMessage.Put(headerClose.Ptr,headerClose.Len);
-    theErrorMessage.PutEOL();
-
-    theErrorMessage.PutEOL();  // terminate headers with empty line
-
-    if (addBody) // add html body
-    {
-        theErrorMessage.Put(bodyMessage.GetBufPtr(),bodyMessage.GetBytesWritten());
-    }
-
-    //
-    // Now that we've formatted the message into the temporary buffer,
-    // write it out to the request stream and the Client Session object
-    (void)QTSS_Write(inRequest, theErrorMessage.GetBufPtr(), theErrorMessage.GetBytesWritten(), NULL, 0);
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqRespMsg, 0, theErrorMessage.GetBufPtr(), theErrorMessage.GetBytesWritten());
-    
-    return QTSS_RequestFailed;
 }
 
 QTSS_ModulePrefsObject QTSSModuleUtils::GetModulePrefsObject(QTSS_ModuleObject inModObject)

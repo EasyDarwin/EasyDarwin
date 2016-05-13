@@ -209,7 +209,6 @@ int main(int argc, char * argv[])
         { NULL, NULL }
     };
 
-    //
     // In case someone runs the server improperly, print out a friendly message.
     qtss_printf("EasyCMS must either be started from the DOS Console\n");
     qtss_printf("using the -d command-line option, or using the Service Control Manager\n\n");
