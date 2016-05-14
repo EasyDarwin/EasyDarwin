@@ -193,66 +193,6 @@ void QTSSModuleUtils::LogPrefErrorStr( QTSS_ErrorVerbosity inVerbosity, char*  p
 	(void)QTSS_Write(sErrorLog, buffer, ::strlen(buffer), NULL, inVerbosity);
 }
 
-                        
-char* QTSSModuleUtils::GetFullPath( QTSS_RTSPRequestObject inRequest,
-                                    QTSS_AttributeID whichFileType,
-                                    UInt32* outLen,
-                                    StrPtrLen* suffix)
-{
-    Assert(outLen != NULL);
-    
-	(void)QTSS_LockObject(inRequest);
-    // Get the proper file path attribute. This may return an error if
-    // the file type is qtssFilePathTrunc attr, because there may be no path
-    // once its truncated. That's ok. In that case, we just won't append a path.
-    StrPtrLen theFilePath;
-    (void)QTSS_GetValuePtr(inRequest, whichFileType, 0, (void**)(void*)&theFilePath.Ptr, &theFilePath.Len);
-		
-    StrPtrLen theRootDir;
-    QTSS_Error theErr = QTSS_GetValuePtr(inRequest, qtssRTSPReqRootDir, 0, (void**)(void*)&theRootDir.Ptr, &theRootDir.Len);
-	Assert(theErr == QTSS_NoErr);
-
-
-    //trim off extra / characters before concatenating
-    // so root/ + /path instead of becoming root//path  is now root/path  as it should be.
-    
-	if (theRootDir.Len && theRootDir.Ptr[theRootDir.Len -1] == kPathDelimiterChar
-	    && theFilePath.Len  && theFilePath.Ptr[0] == kPathDelimiterChar)
-	{
-	    char *thePathEnd = &(theFilePath.Ptr[theFilePath.Len]);
-	    while (theFilePath.Ptr != thePathEnd)
-	    {
-	        if (*theFilePath.Ptr != kPathDelimiterChar)
-	            break;
-	            
-	        theFilePath.Ptr ++;
-	        theFilePath.Len --;
-	    }
-	}
-
-    //construct a full path out of the root dir path for this request,
-    //and the url path.
-    *outLen = theFilePath.Len + theRootDir.Len + 2;
-    if (suffix != NULL)
-        *outLen += suffix->Len;
-    
-    char* theFullPath = NEW char[*outLen];
-    
-    //write all the pieces of the path into this new buffer.
-    StringFormatter thePathFormatter(theFullPath, *outLen);
-    thePathFormatter.Put(theRootDir);
-    thePathFormatter.Put(theFilePath);
-    if (suffix != NULL)
-        thePathFormatter.Put(*suffix);
-    thePathFormatter.PutTerminator();
-
-    *outLen = *outLen - 2;
-	
-	(void)QTSS_UnlockObject(inRequest);
-	
-    return theFullPath;
-}
-
 QTSS_ModulePrefsObject QTSSModuleUtils::GetModulePrefsObject(QTSS_ModuleObject inModObject)
 {
     QTSS_ModulePrefsObject thePrefsObject = NULL;
@@ -471,39 +411,6 @@ QTSS_AttributeID QTSSModuleUtils::CreateAttribute(QTSS_Object inObject, char* in
         Assert(theErr == QTSS_NoErr);
     }
     return theID;
-}
-
-QTSS_ActionFlags QTSSModuleUtils::GetRequestActions(QTSS_RTSPRequestObject theRTSPRequest)
-{
-    // Don't touch write requests
-    QTSS_ActionFlags action = qtssActionFlagsNoFlags;
-    UInt32 len = sizeof(QTSS_ActionFlags);
-    QTSS_Error theErr = QTSS_GetValue(theRTSPRequest, qtssRTSPReqAction, 0, (void*)&action, &len);
-    Assert(theErr == QTSS_NoErr);
-    Assert(len == sizeof(QTSS_ActionFlags));
-    return action;
-}
-
-char* QTSSModuleUtils::GetLocalPath_Copy(QTSS_RTSPRequestObject theRTSPRequest)
-{   char*   pathBuffStr = NULL;
-    QTSS_Error theErr = QTSS_GetValueAsString(theRTSPRequest, qtssRTSPReqLocalPath, 0, &pathBuffStr);
-    Assert(theErr == QTSS_NoErr);
-    return pathBuffStr;
-}
-
-char* QTSSModuleUtils::GetMoviesRootDir_Copy(QTSS_RTSPRequestObject theRTSPRequest)
-{   char*   movieRootDirStr = NULL;
-    QTSS_Error theErr = QTSS_GetValueAsString(theRTSPRequest,qtssRTSPReqRootDir, 0, &movieRootDirStr);
-    Assert(theErr == QTSS_NoErr);
-    return movieRootDirStr;
-}
-
-QTSS_UserProfileObject QTSSModuleUtils::GetUserProfileObject(QTSS_RTSPRequestObject theRTSPRequest)
-{   QTSS_UserProfileObject theUserProfile = NULL;
-    UInt32 len = sizeof(QTSS_UserProfileObject);
-    QTSS_Error theErr = QTSS_GetValue(theRTSPRequest, qtssRTSPReqUserProfile, 0, (void*)&theUserProfile, &len);
-    Assert(theErr == QTSS_NoErr);
-    return theUserProfile;
 }
 
 char *QTSSModuleUtils::GetUserName_Copy(QTSS_UserProfileObject inUserProfile)

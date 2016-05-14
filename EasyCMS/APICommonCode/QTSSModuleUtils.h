@@ -67,16 +67,7 @@ class QTSSModuleUtils
                                     
         static void   LogErrorStr( QTSS_ErrorVerbosity inVerbosity, char* inMessage);
         static void   LogPrefErrorStr( QTSS_ErrorVerbosity inVerbosity, char*  preference, char* inMessage);
-     
-        // This function constructs a C-string of the full path to the file being requested.
-        // You may opt to append an optional suffix, or pass in NULL. You are responsible
-        // for disposing this memory
 
-        static char* GetFullPath(   QTSS_RTSPRequestObject inRequest,
-                                    QTSS_AttributeID whichFileType,
-                                    UInt32* outLen,
-                                    StrPtrLen* suffix = NULL);                                                                                                                                            
-        //
         // SEARCH FOR A SPECIFIC MODULE OBJECT                          
         static QTSS_ModulePrefsObject GetModuleObjectByName(const StrPtrLen& inModuleName);
         
@@ -129,18 +120,7 @@ class QTSSModuleUtils
         // Given an attribute in an object, returns its attribute ID
         // or qtssIllegalAttrID if it isn't found.
         static QTSS_AttributeID GetAttrID(QTSS_Object inObject, char* inAttributeName);
-        
-        //
-        //
-        //
-        /// Get the type of request. Returns qtssActionFlagsNoFlags on failure.
-        //  Result is a bitmap of flags
-        //
-        static QTSS_ActionFlags GetRequestActions(QTSS_RTSPRequestObject theRTSPRequest);
- 
-        static char* GetLocalPath_Copy(QTSS_RTSPRequestObject theRTSPRequest);
-        static char* GetMoviesRootDir_Copy(QTSS_RTSPRequestObject theRTSPRequest);
-        static QTSS_UserProfileObject GetUserProfileObject(QTSS_RTSPRequestObject theRTSPRequest);
+
         static QTSS_AttrRights GetRights(QTSS_UserProfileObject theUserProfileObject);
         static char* GetExtendedRights(QTSS_UserProfileObject theUserProfileObject, UInt32 index);
        
