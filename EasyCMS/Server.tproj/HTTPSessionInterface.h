@@ -112,12 +112,7 @@ protected:
         kFirstCMSSessionID     = 1,    //UInt32
     };
 
-    //Each RTSP session has a unique number that identifies it.
-
-    char                fUserNameBuf[kMaxUserNameLen];
-    char                fUserPasswordBuf[kMaxUserPasswordLen];
     char                fSessionID[QTSS_MAX_SESSION_ID_LENGTH];
-	char				fLastSMSSessionID[QTSS_MAX_SESSION_ID_LENGTH];
 
 	//char				fSerial[EASY_MAX_SERIAL_LENGTH];
 	//StrPtrLen			fDevSerialPtr;

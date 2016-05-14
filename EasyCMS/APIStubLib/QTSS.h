@@ -283,31 +283,26 @@ enum
     //QTSS_RTSPSessionObject parameters
     
     //Valid in any role that receives a QTSS_RTSPSessionObject
-    qtssEasySesIndex           = 0,        //read      //UInt32        //This is a unique ID for each session since the server started up.
-    qtssRTSPSesLocalAddr    = 1,        //read      //UInt32        //Local IP address for this RTSP connection
-    qtssRTSPSesLocalAddrStr = 2,        //read      //char array            //Ditto, in dotted-decimal format.
-    qtssRTSPSesLocalDNS     = 3,        //read      //char array            //DNS name of local IP address for this RTSP connection.
-    qtssRTSPSesRemoteAddr   = 4,        //read      //UInt32        //IP address of client.
-    qtssRTSPSesRemoteAddrStr= 5,        //read      //char array            //IP address addr of client, in dotted-decimal format.
-    qtssRTSPSesEventCntxt   = 6,        //read      //QTSS_EventContextRef //An event context for the RTSP connection to the client. This should primarily be used to wait for EV_WR events if flow-controlled when responding to a client. 
-    qtssRTSPSesType         = 7,        //read      //QTSS_RTSPSession //Is this a normal RTSP session, or is it a HTTP tunnelled RTSP session?
-    qtssEasySesSerial	    = 8,        //read      //QTSS_RTSPSessionStream    // A QTSS_StreamRef used for sending data to the RTSP client.
+    EasyHTTPSesIndex		= 0,        //read      //UInt32        //This is a unique ID for each session since the server started up.
+    EasyHTTPSesLocalAddr    = 1,        //read      //UInt32        //Local IP address for this RTSP connection
+    EasyHTTPSesLocalAddrStr = 2,        //read      //char array	//Ditto, in dotted-decimal format.
+    EasyHTTPSesLocalDNS     = 3,        //read      //char array	//DNS name of local IP address for this RTSP connection.
+    EasyHTTPSesRemoteAddr   = 4,        //read      //UInt32        //IP address of client.
+    EasyHTTPSesRemoteAddrStr= 5,        //read      //char array	//IP address addr of client, in dotted-decimal format.
+    EasyHTTPSesEventCntxt   = 6,        //read      //QTSS_EventContextRef		//An event context for the HTTP connection to the client. This should primarily be used to wait for EV_WR events if flow-controlled when responding to a client. 
+    EasyHTTPSesType         = 7,        //read      //QTSS_RTSPSession			//Is this a normal RTSP session, or is it a HTTP tunnelled RTSP session?
+    EasyHTTPSesSerial	    = 8,        //read      //QTSS_RTSPSessionStream	// A QTSS_StreamRef used for sending data to the RTSP client.
 
-    qtssRTSPSesLastUserName         = 9,//read      //char array        // Private
-    qtssRTSPSesLastUserPassword     = 10,//read     //char array        // Private
-    qtssEasySessionID         = 11,		//read     //char array        // Private
-    
-    qtssRTSPSesLocalPort    = 12,       //read      //UInt16        // This is the local port for the connection
-    qtssRTSPSesRemotePort   = 13,       //read      //UInt16        // This is the client port for the connection
+    EasyHTTPSessionID		= 9,		//read     //char array			// Private
+    EasyHTTPSesLocalPort    = 10,       //read      //UInt16			// This is the local port for the connection
+    EasyHTTPSesRemotePort   = 11,       //read      //UInt16			// This is the client port for the connection
 
-    qtssEasySesLastSMSSessionID = 14,	//read      //char array        // Private
+	EasyHTTPSesContentBody	= 12,		//read		//char array
+	EasyHTTPSesContentBodyOffset = 13,	//read		//int
 
-	qtssEasySesContentBody = 15,		//read		//char array
-	qtssEasySesContentBodyOffset = 16,	//read		//int
-
-    qtssRTSPSesNumParams    = 17
+    EasyHTTPSesNumParams    = 14
 };
-typedef UInt32 QTSS_RTSPSessionAttributes;
+typedef UInt32 Easy_HTTPSessionAttributes;
 
 enum 
 {

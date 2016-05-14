@@ -685,8 +685,8 @@ QTSS_Error	QTSSCallbacks::QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSes
 	if(inServiceSession == NULL)
 		return QTSS_BadArgument;
 	//Easy_SessionType sType = EasyCameraSession;
-	//QTSS_SetValue(inServiceSession, qtssRTSPSesType, 0, &sType, sizeof(sType));
-	//QTSS_SetValue(inServiceSession, qtssEasySesSerial, 0, inValue, inValueLen);
+	//QTSS_SetValue(inServiceSession, EasyHTTPSesType, 0, &sType, sizeof(sType));
+	//QTSS_SetValue(inServiceSession, EasyHTTPSesSerial, 0, inValue, inValueLen);
 	return ((HTTPSessionInterface*)inServiceSession)->RegDevSession(inValue, inValueLen);
 }
 

@@ -380,7 +380,7 @@ class QTSSDictionaryMap
             kTextMessagesDictIndex          = 2,
             kServiceDictIndex               = 3,
             
-            kRTSPSessionDictIndex           = 4,
+            kHTTPSessionDictIndex           = 4,
             kRTSPRequestDictIndex           = 5,
             kRTSPHeaderDictIndex            = 6,
             kFileDictIndex                  = 7,

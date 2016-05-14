@@ -467,7 +467,7 @@ QTSS_Error HTTPSession::SetupRequest()
 	char* theRequestBody = NULL;
 	UInt32 theLen = 0;
 	theLen = sizeof(theRequestBody);
-	theErr = QTSS_GetValue(this, qtssEasySesContentBody, 0, &theRequestBody, &theLen);
+	theErr = QTSS_GetValue(this, EasyHTTPSesContentBody, 0, &theRequestBody, &theLen);
 
 	if (theErr != QTSS_NoErr)
 	{
@@ -476,17 +476,17 @@ QTSS_Error HTTPSession::SetupRequest()
 		theRequestBody = NEW char[content_length + 1];
 		memset(theRequestBody,0,content_length + 1);
 		theLen = sizeof(theRequestBody);
-		theErr = QTSS_SetValue(this, qtssEasySesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
+		theErr = QTSS_SetValue(this, EasyHTTPSesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
 		Assert(theErr == QTSS_NoErr);
 
 		// Also store the offset in the buffer
 		theLen = sizeof(theBufferOffset);
-		theErr = QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, theLen);
+		theErr = QTSS_SetValue(this, EasyHTTPSesContentBodyOffset, 0, &theBufferOffset, theLen);
 		Assert(theErr == QTSS_NoErr);
 	}
 
 	theLen = sizeof(theBufferOffset);
-	theErr = QTSS_GetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, &theLen);
+	theErr = QTSS_GetValue(this, EasyHTTPSesContentBodyOffset, 0, &theBufferOffset, &theLen);
 
 	// We have our buffer and offset. Read the data.
 	//theErr = QTSS_Read(this, theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
@@ -507,7 +507,7 @@ QTSS_Error HTTPSession::SetupRequest()
 		//
 		// Update our offset in the buffer
 		theBufferOffset += theLen;
-		(void)QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &theBufferOffset, sizeof(theBufferOffset));
+		(void)QTSS_SetValue(this, EasyHTTPSesContentBodyOffset, 0, &theBufferOffset, sizeof(theBufferOffset));
 		// The entire content body hasn't arrived yet. Request a read event and wait for it.
 
 		Assert(theErr == QTSS_NoErr);
@@ -520,9 +520,9 @@ QTSS_Error HTTPSession::SetupRequest()
 
 
 	UInt32 offset = 0;
-	(void)QTSS_SetValue(this, qtssEasySesContentBodyOffset, 0, &offset, sizeof(offset));
+	(void)QTSS_SetValue(this, EasyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
 	char* content = NULL;
-	(void)QTSS_SetValue(this, qtssEasySesContentBody, 0, &content, 0);
+	(void)QTSS_SetValue(this, EasyHTTPSesContentBody, 0, &content, 0);
 
 	return QTSS_NoErr;
 }
