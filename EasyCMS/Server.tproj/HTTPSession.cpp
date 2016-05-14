@@ -185,18 +185,9 @@ SInt64 HTTPSession::Run()
 				fOutputStream.ResetBytesWritten();
 
 				//网络请求超过了缓冲区，返回Bad Request
-				if (err == E2BIG)
+				if ((err == E2BIG) || (err == QTSS_BadArgument))
 				{
-					//返回HTTP报文，错误码408
-					//(void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest, qtssMsgRequestTooLong);
-					fState = kSendingResponse;
-					break;
-				}
-				// Check for a corrupt base64 error, return an error
-				if (err == QTSS_BadArgument)
-				{
-					//返回HTTP报文，错误码408
-					//(void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest, qtssMsgBadBase64);
+					ExecNetMsgErrorReqHandler(httpBadRequest);
 					fState = kSendingResponse;
 					break;
 				}
@@ -211,8 +202,8 @@ SInt64 HTTPSession::Run()
 				fTimeoutTask.RefreshTimeout();
 
 				//对请求报文进行解析
-				QTSS_Error theErr = SetupRequest();
-				//当SetupRequest步骤未读取到完整的网络报文，需要进行等待
+				QTSS_Error theErr = ProcessMessage();
+				//当ProcessMessage步骤未读取到完整的网络报文，需要进行等待
 				if(theErr == QTSS_WouldBlock)
 				{
 					this->ForceSameThread();
@@ -266,9 +257,9 @@ SInt64 HTTPSession::Run()
 			{
 				if (fOutputStream.GetBytesWritten() == 0)
 				{
-					// 响应报文还没有形成
-					//QTSSModuleUtils::SendErrorResponse(fRequest, qtssServerInternal, qtssMsgNoModuleForRequest);
-					fState = kCleaningUp;
+					//返回HTTP 400报文
+					ExecNetMsgErrorReqHandler(httpInternalServerError);
+					fState = kSendingResponse;
 					break;
 				}
 
@@ -339,8 +330,8 @@ SInt64 HTTPSession::Run()
 }
 
 /*
-发送HTTP+json报文，决定是否关闭当前Session
-HTTP部分构造，json部分由函数传递
+	发送HTTP+json报文，决定是否关闭当前Session
+	HTTP部分构造，json部分由函数传递
 */
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
@@ -380,7 +371,7 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 /*
 	Content报文读取与解析同步进行报文处理，构造回复报文
 */
-QTSS_Error HTTPSession::SetupRequest()
+QTSS_Error HTTPSession::ProcessMessage()
 {
 	//解析请求报文
 	QTSS_Error theErr = fRequest->Parse();
@@ -1189,11 +1180,23 @@ QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)//设备快照请求
 		pOutputStream->Put((char*)msg.data(), msg.length());
 	return QTSS_NoErr;
 }
-QTSS_Error HTTPSession::ExecNetMsgDefaultReqHandler(const char* json)
+
+QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 {
-	return EASY_ERROR_SERVER_NOT_IMPLEMENTED;//add
-	//return QTSS_NoErr;
+	//构造响应报文(HTTP Header)
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+	httpAck.CreateResponseHeader(errCode);
+
+	char respHeader[2048] = { 0 };
+	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+	strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+
+	HTTPResponseStream *pOutputStream = GetOutputStream();
+	pOutputStream->Put(respHeader);
+
+	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgDevRegisterReqEx(const char* json)//设备注册认证请求，其他请求处理前一定要经过认证
 {
 	QTSS_Error theErr = QTSS_NoErr;		
@@ -2024,14 +2027,14 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 		break;
 	case MSG_CS_CAMERA_LIST_REQ://摄像头列表请求
 		theErr=ExecNetMsgGetCameraListReqJsonEx(fRequestBody);//add
-		nRspMsg=MSG_SC_CAMERA_LIST_ACK;
+		nRspMsg = MSG_SC_CAMERA_LIST_ACK;
 		break;
 	case MSG_DS_POST_SNAP_REQ:
-		theErr=ExecNetMsgSnapUpdateReq(fRequestBody);
-		nRspMsg=MSG_SD_POST_SNAP_ACK;
+		theErr = ExecNetMsgSnapUpdateReq(fRequestBody);
+		nRspMsg = MSG_SD_POST_SNAP_ACK;
 		break;
 	default:
-		theErr=ExecNetMsgDefaultReqHandler(fRequestBody);
+		theErr = ExecNetMsgErrorReqHandler(httpNotImplemented);
 		break;
 	}
 	//如果不想进入错误自动处理则一定要返回QTSS_NoErr

@@ -51,7 +51,7 @@ class HTTPSession : public HTTPSessionInterface
         SInt64 Run();
 
         // Does request prep & request cleanup, respectively
-        QTSS_Error SetupRequest();
+        QTSS_Error ProcessMessage();
         void CleanupRequest();
 		
 		//保留，begin
@@ -66,7 +66,7 @@ class HTTPSession : public HTTPSessionInterface
 
 		
 		QTSS_Error ProcessRequest();//处理请求，单独放到一个状态中去处理，这样方便重复执行
-		QTSS_Error ExecNetMsgDefaultReqHandler(const char* json);//消息默认处理函数
+		QTSS_Error ExecNetMsgErrorReqHandler(HTTPStatusCode errCode);//消息默认处理函数
 		QTSS_Error ExecNetMsgDevRegisterReqEx(const char* json);//设备注册请求
 		QTSS_Error ExecNetMsgStreamStartReqRestful(char *queryString);//客户端拉流请求，Restful接口
 		QTSS_Error ExecNetMsgStreamStartReq(const char* json);//客户端拉流请求
