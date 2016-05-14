@@ -101,8 +101,8 @@ class QTSServerInterface : public QTSSDictionary
         // STATISTICS MANIPULATION
         // These functions are how the server keeps its statistics current
         
-        void                AlterCurrentServiceSessionCount(SInt32 inDifference)
-            { OSMutexLocker locker(&fMutex); fNumServiceSessions += inDifference; }
+        void                AlterCurrentHTTPSessionCount(SInt32 inDifference)
+            { OSMutexLocker locker(&fMutex); fNumHTTPSessions += inDifference; }
             
 		void            IncrementTotalLate(SInt64 milliseconds)
            {    OSMutexLocker locker(&fMutex); 
@@ -129,7 +129,7 @@ class QTSServerInterface : public QTSSDictionary
         // ACCESSORS
         
         QTSS_ServerState    GetServerState()        { return fServerState; }
-        UInt32              GetNumServiceSessions()    { return fNumServiceSessions; }
+        UInt32              GetNumServiceSessions()    { return fNumHTTPSessions; }
         
         Float32             GetCPUPercent()         { return fCPUPercent; }
         Bool16              SigIntSet()             { return fSigInt; }
@@ -280,7 +280,7 @@ class QTSServerInterface : public QTSSDictionary
 
         OSMutex             fMutex;
 
-        UInt32              fNumServiceSessions;
+        UInt32              fNumHTTPSessions;
         
         Float32             fCPUPercent;
         Float32             fCPUTimeUsedInSec;              

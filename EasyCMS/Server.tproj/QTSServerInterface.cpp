@@ -179,7 +179,7 @@ QTSServerInterface::QTSServerInterface()
     fNumListeners(0),
     fStartupTime_UnixMilli(0),
     fGMTOffset(0),
-    fNumServiceSessions(0),
+    fNumHTTPSessions(0),
     fCPUPercent(0),
     fCPUTimeUsedInSec(0),
     fSigInt(false),
@@ -207,7 +207,7 @@ QTSServerInterface::QTSServerInterface()
     this->SetVal(qtssSvrServerVersion,      sServerVersionStr.Ptr,      sServerVersionStr.Len);
     this->SetVal(qtssSvrServerBuildDate,    sServerBuildDateStr.Ptr,    sServerBuildDateStr.Len);
     this->SetVal(qtssSvrRTSPServerHeader,   sServerHeaderPtr.Ptr,       sServerHeaderPtr.Len);
-    this->SetVal(qtssCurrentSessionCount,	&fNumServiceSessions,		sizeof(fNumServiceSessions));
+    this->SetVal(qtssCurrentSessionCount,	&fNumHTTPSessions,		sizeof(fNumHTTPSessions));
     this->SetVal(qtssSvrStartupTime,        &fStartupTime_UnixMilli,    sizeof(fStartupTime_UnixMilli));
     this->SetVal(qtssSvrGMTOffsetInHrs,     &fGMTOffset,                sizeof(fGMTOffset));
     this->SetVal(qtssSvrCPULoadPercent,     &fCPUPercent,               sizeof(fCPUPercent));

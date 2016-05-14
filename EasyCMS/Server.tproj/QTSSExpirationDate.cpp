@@ -44,7 +44,7 @@
 
 Bool16  QTSSExpirationDate::sIsExpirationEnabled = false;
 //must be in "5/12/1998" format, "m/d/4digityear"
-char*   QTSSExpirationDate::sExpirationDate = "12/31/2015";
+char*   QTSSExpirationDate::sExpirationDate = "12/31/2016";
 
 void QTSSExpirationDate::PrintExpirationDate()
 {

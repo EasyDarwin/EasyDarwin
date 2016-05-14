@@ -1,12 +1,12 @@
 /*
-Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-Github: https://github.com/EasyDarwin
-WEChat: EasyDarwin
-Website: http://www.EasyDarwin.org
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.EasyDarwin.org
 */
 /*
-File:       HTTPSession.cpp
-Contains:   实现对服务单元每一个Session会话的网络报文处理
+	File:       HTTPSession.cpp
+	Contains:   实现对服务单元每一个Session会话的网络报文处理
 */
 
 #include "HTTPSession.h"
@@ -42,8 +42,8 @@ HTTPSession::HTTPSession( )
 {
 	this->SetTaskName("HTTPSession");
 
-	//在全局服务对象中Session数增长一个,一个HTTPSession代表了一个连接
-	QTSServerInterface::GetServer()->AlterCurrentServiceSessionCount(1);
+	// 所有HTTPSession数量(包括EasyCameraSession/EasyNVRSession/HTTPSession)
+	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(1);
 
 	fModuleState.curModule = NULL;
 	fModuleState.curTask = this;
@@ -53,19 +53,20 @@ HTTPSession::HTTPSession( )
 	//fDeviceSnap = NEW char[EASY_MAX_URL_LENGTH];
 	//fDeviceSnap[0] = '\0';
 
-	qtss_printf("create session:%s\n", fSessionID);
+	qtss_printf("Create HTTPSession:%s\n", fSessionID);
 }
 
 HTTPSession::~HTTPSession()
 {
 	fLiveSession = false; //used in Clean up request to remove the RTP session.
 	this->CleanupRequest();// Make sure that all our objects are deleted
-	//if (fSessionType == qtssServiceSession)
-	//    QTSServerInterface::GetServer()->AlterCurrentServiceSessionCount(-1);
+	
+	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(-1);
 
 	//if (fDeviceSnap != NULL)
-		//delete [] fDeviceSnap; 
+		//delete [] fDeviceSnap;
 
+	qtss_printf("Release HTTPSession:%s\n", fSessionID);
 }
 
 /*!
@@ -92,11 +93,9 @@ SInt64 HTTPSession::Run()
 	//这部分应该也是返回false比较合理吧，因为当检测到超时时会向Session发送超时事件，如果粗暴的返回-1，则会进入delete环节直接将Session删除，那么如果当前Session被引用，在访问当前Session时就会直接崩溃。
 	if(events & Task::kTimeoutEvent)
 	{
-		//客户端Session超时，暂时不处理 
 		char msgStr[512];
-		qtss_snprintf(msgStr, sizeof(msgStr), "session timeout,release session, device_serial[%s]\n", fDevice.serial_.c_str());
+		qtss_snprintf(msgStr, sizeof(msgStr), "Timeout HTTPSession，Device_serial[%s]\n", fDevice.serial_.c_str());
 		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
-		//return -1;
 		fLiveSession = false;
 	}
 

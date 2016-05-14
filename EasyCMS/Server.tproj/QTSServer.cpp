@@ -46,7 +46,6 @@
 #endif
 
 #include "QTSServer.h"
-
 #include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include "SocketUtils.h"
@@ -62,16 +61,9 @@
 #include "HTTPSession.h"
 #include "QTSSFile.h"
 
-
 //Compile time modules
 #include "QTSSErrorLogModule.h"
-#include"QTSSAuthModule.h"
-#if __MacOSX__
-#include "QTSSDSAuthModule.h"
-#endif
-#if MEMORY_DEBUGGING
-#include "QTSSWebDebugModule.h"
-#endif
+#include "QTSSAuthModule.h"
 
 // CLASS DEFINITIONS
 class HTTPListenerSocket : public TCPListenerSocket
@@ -94,12 +86,10 @@ PrefsSource*    QTSServer::sMessagesSource = NULL;
 
 QTSServer::~QTSServer()
 {
-    //
     // Grab the server mutex. This is to make sure all gets & set values on this
     // object complete before we start deleting stuff
     OSMutexLocker* serverlocker = new OSMutexLocker(this->GetServerObjectMutex());
     
-    //
     // Grab the prefs mutex. This is to make sure we can't reread prefs
     // WHILE shutting down, which would cause some weirdness for QTSS API
     // (some modules could get QTSS_RereadPrefs_Role after QTSS_Shutdown, which would be bad)
@@ -186,7 +176,8 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     
 	//所有端口都无法监听，返回Server初始化失败
     if ( fNumListeners == 0 )
-    {   if (createListeners)
+    {
+		if (createListeners)
             QTSSModuleUtils::LogError(qtssWarningVerbosity, qtssMsgNoPortsSucceeded, 0);
         return false;
     }
