@@ -365,8 +365,6 @@ class QTSSDictionaryMap
                                     QTSS_AttrDataType inDataType,
                                     QTSS_AttrPermission inPermission );
 
-        
-        //
         // DICTIONARY MAPS
         
         // All dictionary maps are stored here, and are accessable
@@ -403,9 +401,7 @@ class QTSSDictionaryMap
 
     private:
 
-        //
         // Repository for dictionary maps
-        
         static QTSSDictionaryMap*       sDictionaryMaps[kNumDictionaries + kNumDynamicDictionaryTypes];
         static UInt32                   sNextDynamicMap;
             

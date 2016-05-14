@@ -293,16 +293,16 @@ void* QTSServerInterface::IsOutOfDescriptors(QTSSDictionary* inServer, UInt32* o
 
 QTSS_Error  QTSSErrorLogStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten, UInt32 inFlags)
 {
-    // For the error log stream, the flags are considered to be the verbosity
-    // of the error.
-    if (inFlags >= qtssIllegalVerbosity)
-        inFlags = qtssMessageVerbosity;
+	// For the error log stream, the flags are considered to be the verbosity
+	// of the error.
+	if (inFlags >= qtssIllegalVerbosity)
+		inFlags = qtssMessageVerbosity;
+
+	QTSServerInterface::LogError(inFlags, (char*)inBuffer);
+	if (outLenWritten != NULL)
+		*outLenWritten = inLen;
         
-    QTSServerInterface::LogError(inFlags, (char*)inBuffer);
-    if (outLenWritten != NULL)
-        *outLenWritten = inLen;
-        
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 void QTSSErrorLogStream::LogAssert(char* inMessage)
