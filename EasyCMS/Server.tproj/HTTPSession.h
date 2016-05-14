@@ -51,7 +51,7 @@ class HTTPSession : public HTTPSessionInterface
         SInt64 Run();
 
         // Does request prep & request cleanup, respectively
-        QTSS_Error ProcessMessage();
+        QTSS_Error SetupRequest();
         void CleanupRequest();
 		
 		//±£¡Ù£¨begin

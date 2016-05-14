@@ -110,18 +110,14 @@ typedef UInt32  QTSS_EventType;
 
 
 /**********************************/
-// RTSP SESSION TYPES
-//
-// Is this a normal RTSP session or an RTSP / HTTP session?
+//HTTP SESSION TYPES
 enum
 {
-    qtssNormalSession         = 0,	// 普通Socket Session
-	qtssDeviceSession		  = 1,	// 已登录Device Session,EasyNVR/EasyCamera
-	qtssClientSession         = 2   // 客户端Session
+    EasyHTTPSession			= 0,
+	EasyCameraSession		= 1,
+	EasyNVRSessioin			= 2
 };
-typedef UInt32 QTSS_SessionType;
-
-
+typedef UInt32 Easy_SessionType;
 
 /**********************************/
 // PAYLOAD TYPES

@@ -146,8 +146,8 @@ protected:
     
     void        SnarfInputSocket( HTTPSessionInterface* fromRTSPSession );
     
-    // What session type are we?
-    QTSS_SessionType    fSessionType;//普通socket,NVR,智能主机，摄像机
+    Easy_SessionType    fSessionType;//普通socket,NVR,智能主机，摄像机
+
     Bool16              fLiveSession;
     unsigned int        fObjectHolders;
 
@@ -198,7 +198,7 @@ protected:
 		int iMsgType;//消息类型
 	};
 	typedef map<UInt32,strMessage> MsgMap;
-	char *fRequestBody;//存储请求的数据部分
+	char* fRequestBody;//存储请求的数据部分
 
 	OSMutex fMutexCSeq;//fCSeq互斥操作实现，因为可能多个线程同时fCSeq++,和MsgMap共同使用一个互斥量
 	UInt32 fCSeq;//当前Session向对方发送请求时，fCSeq每次加1

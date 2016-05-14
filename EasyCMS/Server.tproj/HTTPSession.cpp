@@ -69,13 +69,6 @@ HTTPSession::~HTTPSession()
 	qtss_printf("Release HTTPSession:%s\n", fSessionID);
 }
 
-/*!
-\brief 事件由HTTPSession Task进行处理，大多数为网络报文处理事件 
-\param 
-\return 处理完成返回0,断开Session返回-1
-\ingroup 
-\see 
-*/
 SInt64 HTTPSession::Run()
 {
 	//获取事件类型
@@ -128,7 +121,8 @@ SInt64 HTTPSession::Run()
 				if ((err == QTSS_RequestArrived) || (err == E2BIG))
 					fState = kHaveCompleteMessage;
 			}
-			continue;            
+			continue;
+
 		case kReadingRequest://读取请求报文
 			{
 				//读取锁，已经在处理一个报文包时，不进行新网络报文的读取和处理
@@ -202,8 +196,8 @@ SInt64 HTTPSession::Run()
 				fTimeoutTask.RefreshTimeout();
 
 				//对请求报文进行解析
-				QTSS_Error theErr = ProcessMessage();
-				//当ProcessMessage步骤未读取到完整的网络报文，需要进行等待
+				QTSS_Error theErr = SetupRequest();
+				//当SetupRequest步骤未读取到完整的网络报文，需要进行等待
 				if(theErr == QTSS_WouldBlock)
 				{
 					this->ForceSameThread();
@@ -213,7 +207,8 @@ SInt64 HTTPSession::Run()
 					return 0;//返回0表示有事件才进行通知，返回>0表示规定事件后调用Run
 
 				}
-				//应该再就加上theErr的判断！=QTSS_NOERR就应该直接断开连接或者返回错误码，否则下面不一定够得到有效的数据
+				//TODO:应该再就加上theErr的判断！QTSS_NoErr就应该直接断开连接或者返回错误码，否则下面不一定够得到有效的数据
+				//
 
 				//每一步都检测响应报文是否已完成，完成则直接进行回复响应
 				if (fOutputStream.GetBytesWritten() > 0)
@@ -228,12 +223,12 @@ SInt64 HTTPSession::Run()
 
 		case kPreprocessingRequest:
 			{
-				//add
-				ProcessRequest();//处理请求
+				QTSS_Error theErr = ProcessRequest();//处理请求
+
 				if (fOutputStream.GetBytesWritten() > 0)//每一步都检测响应报文是否已完成，完成则直接进行回复响应
 				{
 					delete[] fRequestBody;//释放数据部分
-					fRequestBody=NULL;
+					fRequestBody = NULL;
 					fState = kSendingResponse;
 					break;
 				}
@@ -371,7 +366,7 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 /*
 	Content报文读取与解析同步进行报文处理，构造回复报文
 */
-QTSS_Error HTTPSession::ProcessMessage()
+QTSS_Error HTTPSession::SetupRequest()
 {
 	//解析请求报文
 	QTSS_Error theErr = fRequest->Parse();
@@ -427,8 +422,6 @@ QTSS_Error HTTPSession::ProcessMessage()
 			if (!msg.empty())
 				httpAck.AppendContentLengthHeader((UInt32)msg.length());
 
-			// 判断是否需要关闭当前Session连接
-			//if(connectionClose)
 			httpAck.AppendConnectionCloseHeader();
 
 			//Push HTTP Header to OutputBuffer
@@ -508,7 +501,6 @@ QTSS_Error HTTPSession::ProcessMessage()
 		return QTSS_RequestFailed;
 	}
 
-	qtss_printf("Add Len:%d \n", theLen);
 	qtss_printf("HTTPSession read content-length:%d (%d/%d) \n", theLen, theBufferOffset+theLen, content_length);
 	if ((theErr == QTSS_WouldBlock) || (theLen < ( content_length - theBufferOffset)))
 	{
@@ -521,8 +513,8 @@ QTSS_Error HTTPSession::ProcessMessage()
 		Assert(theErr == QTSS_NoErr);
 		return QTSS_WouldBlock;
 	}
-	//执行到这说明已经接收了完整的HTTPhead+JSON部分
-	fRequestBody=theRequestBody;//将数据部分保存起来，让ProcessRequest函数去处理请求。
+	//执行到这说明已经接收了完整的HTTPHeader+JSON部分
+	fRequestBody = theRequestBody;//将数据部分保存起来，让ProcessRequest函数去处理请求。
 	Assert(theErr == QTSS_NoErr);
 	qtss_printf("Recv message: %s\n", fRequestBody);
 
@@ -595,7 +587,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReq(const char* json)
 		//}
 
 		// 2、这里需要对TerminalType和AppType做判断，是否为EasyCamera和EasyNVR
-		fSessionType = qtssDeviceSession;
+		fSessionType = EasyCameraSession;
 
 		boost::to_lower(req.GetNVR().serial_);
 		fDevSerial = req.GetNVR().serial_;
@@ -1209,15 +1201,17 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReqEx(const char* json)//设备注册认
 		}
 		if(!fDevice.GetDevInfo(json))//获取设备信息失败
 		{
-			theErr=QTSS_BadArgument;
+			theErr = QTSS_BadArgument;
 			break;
 		}
+
 		if(false)//验证设备的合法性
 		{
-			theErr=httpUnAuthorized;
+			theErr = httpUnAuthorized;
 			break;
 		}
-		fSessionType = qtssDeviceSession;//更新Session类型
+
+		fSessionType = EasyCameraSession;//更新Session类型
 		theErr = QTSServerInterface::GetServer()->GetDeviceMap()->Register(fDevice.serial_,this);
 		if(theErr == OS_NoErr)
 		{
@@ -1989,44 +1983,43 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 {
 	//OSCharArrayDeleter charArrayPathDeleter(theRequestBody);//不要在这删除，因为可能执行多次，仅当对请求的处理完毕后再进行删除
 
-	if(fRequestBody==NULL)//表示没有正确的解析请求，SetUpRequest环节没有解析出数据部分
+	if(fRequestBody == NULL)//表示没有正确的解析请求，SetUpRequest环节没有解析出数据部分
 		return QTSS_NoErr;
 
-
 	//消息处理
-	QTSS_Error theErr=QTSS_NoErr;
+	QTSS_Error theErr = QTSS_NoErr;
 
 	EasyDarwin::Protocol::EasyProtocol protocol(fRequestBody);
-	int nNetMsg = protocol.GetMessageType(),nRspMsg=MSG_SC_EXCEPTION;
+	int nNetMsg = protocol.GetMessageType(),nRspMsg = MSG_SC_EXCEPTION;
 
 	switch (nNetMsg)
 	{
 	case MSG_DS_REGISTER_REQ://处理设备上线消息,设备类型包括NVR、摄像头和智能主机
-		theErr=ExecNetMsgDevRegisterReqEx(fRequestBody);
-		nRspMsg=MSG_SD_REGISTER_ACK;
+		theErr = ExecNetMsgDevRegisterReqEx(fRequestBody);
+		nRspMsg = MSG_SD_REGISTER_ACK;
 		break;
 	case MSG_CS_GET_STREAM_REQ://客户端的开始流请求
-		theErr=ExecNetMsgStreamStartReq(fRequestBody);
-		nRspMsg=MSG_SC_GET_STREAM_ACK;
+		theErr = ExecNetMsgStreamStartReq(fRequestBody);
+		nRspMsg = MSG_SC_GET_STREAM_ACK;
 		break;
 	case MSG_DS_PUSH_STREAM_ACK://设备的开始流回应
-		theErr=ExecNetMsgStartDeviceStreamRspEx(fRequestBody);
+		theErr = ExecNetMsgStartDeviceStreamRspEx(fRequestBody);
 		nRspMsg=MSG_DS_PUSH_STREAM_ACK;//注意，这里实际上是不应该再回应的
 		break;
 	case MSG_CS_FREE_STREAM_REQ://客户端的停止直播请求
-		theErr=ExecNetMsgStreamStopReq(fRequestBody);
-		nRspMsg=MSG_SC_FREE_STREAM_ACK;
+		theErr = ExecNetMsgStreamStopReq(fRequestBody);
+		nRspMsg = MSG_SC_FREE_STREAM_ACK;
 		break;
 	case MSG_DS_STREAM_STOP_ACK://设备对CMS的停止推流回应
-		theErr=ExecNetMsgStreamStopRsp(fRequestBody);
-		nRspMsg=MSG_DS_STREAM_STOP_ACK;//注意，这里实际上是不需要在进行回应的
+		theErr = ExecNetMsgStreamStopRsp(fRequestBody);
+		nRspMsg = MSG_DS_STREAM_STOP_ACK;//注意，这里实际上是不需要在进行回应的
 		break;
 	case MSG_CS_DEVICE_LIST_REQ://设备列表请求
-		theErr=ExecNetMsgGetDeviceListReqJsonEx(fRequestBody);//add
+		theErr = ExecNetMsgGetDeviceListReqJsonEx(fRequestBody);//add
 		nRspMsg=MSG_SC_DEVICE_LIST_ACK;
 		break;
 	case MSG_CS_CAMERA_LIST_REQ://摄像头列表请求
-		theErr=ExecNetMsgGetCameraListReqJsonEx(fRequestBody);//add
+		theErr = ExecNetMsgGetCameraListReqJsonEx(fRequestBody);//add
 		nRspMsg = MSG_SC_CAMERA_LIST_ACK;
 		break;
 	case MSG_DS_POST_SNAP_REQ:

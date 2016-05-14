@@ -69,7 +69,7 @@ HTTPSessionInterface::HTTPSessionInterface()
 	fSocket(NULL, Socket::kNonBlockingSocketType),
 	fOutputSocketP(&fSocket),
 	fInputSocketP(&fSocket),
-	fSessionType(qtssNormalSession),
+	fSessionType(EasyHTTPSession),
 	fLiveSession(true),
 	fObjectHolders(0),
 	fRequestBodyLen(-1),
@@ -133,16 +133,16 @@ HTTPSessionInterface::~HTTPSessionInterface()
 	//客户端连接断开时，进行自动停止推流处理
 	switch(fSessionType)
 	{
-	case qtssDeviceSession://设备
+	case EasyCameraSession:
 		this->UnRegDevSession();
-		this->ReleaseMsgMap();//释放
-		qtss_snprintf(msgStr, sizeof(msgStr), "Device session offline from ip[%s], device_serial[%s]",remoteAddress, fDevice.serial_.c_str());
+		this->ReleaseMsgMap();
+		qtss_snprintf(msgStr, sizeof(msgStr), "EasyCameraSession offline from ip[%s], device_serial[%s]",remoteAddress, fDevice.serial_.c_str());
 		break;
-	case qtssClientSession://客户端
-		qtss_snprintf(msgStr, sizeof(msgStr), "Client session offline from ip[%s]",remoteAddress);
+	case EasyNVRSessioin:
+		qtss_snprintf(msgStr, sizeof(msgStr), "EasyNVRSessioin offline from ip[%s]",remoteAddress);
 		break;
-	case qtssNormalSession://一般客户端
-		qtss_snprintf(msgStr, sizeof(msgStr), "Unknown session offline from ip[%s]",remoteAddress);
+	case EasyHTTPSession:
+		qtss_snprintf(msgStr, sizeof(msgStr), "EasyHTTPSession offline from ip[%s]",remoteAddress);
 		break;
 	default:
 		qtss_snprintf(msgStr, sizeof(msgStr), "Unknown session offline from ip[%s]",remoteAddress);
@@ -283,7 +283,7 @@ QTSS_Error HTTPSessionInterface::RegDevSession(const char* serial, UInt32 serail
 {
 	//if((::strlen(serial) == 0) || (serailLen == 0))
 	//	return QTSS_ValueNotFound;
-	//fSessionType = qtssDeviceSession;
+	//fSessionType = EasyCameraSession;
 	//QTSS_SetValue(this, qtssEasySesSerial, 0, serial, serailLen);
 
 	//fDevSerialPtr.Set( fSerial, serailLen);
