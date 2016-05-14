@@ -1138,7 +1138,7 @@ QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)//设备快照请求
 	if(camer_serial.empty())//为可选项填充默认值
 		camer_serial="01";
 	if(strTime.empty())//如果没有时间属性，则服务端自动为其生成一个
-		strTime=EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSS);
+		strTime=EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx);
 		
 	if(image.size()<=0||device_serial.size()<=0||strType.size()<=0||strTime.size()<=0)
 		return QTSS_BadArgument;
@@ -1154,10 +1154,15 @@ QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)//设备快照请求
 	char jpgPath[512] = { 0 };
 
 	//文件全路径，文件名由Serial_Channel_Time.Type合成
-	qtss_sprintf(jpgPath,"%s/%s_%s_%s.%s", jpgDir, device_serial.c_str(), camer_serial.c_str(), "t"/*strTime.c_str()*/,strType.c_str());
+	qtss_sprintf(jpgPath,"%s/%s_%s_%s.%s", jpgDir, device_serial.c_str(), camer_serial.c_str(),strTime.c_str(),strType.c_str());
 
 	//保存快照数据
 	FILE* fSnap = ::fopen(jpgPath, "wb");
+	if(fSnap==NULL)//错误原因有很多，比如扩展名不规范，文件名不规范,该文件已经被其他文件打开
+	{
+		//DWORD e=GetLastError();
+		return QTSS_NoErr;
+	}
 	fwrite(image.data(), 1, image.size(), fSnap);
 	::fclose(fSnap);
 
@@ -1174,9 +1179,11 @@ QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)//设备快照请求
 	header["ErrorNum"]=200;
 	header["ErrorString"]=EasyProtocol::GetErrorString(200);
 
-	body["Serial"] = fDevSerial.c_str();
-	body["Channel"] = camer_serial.c_str();
+	body["Serial"] = device_serial;
+	body["Channel"] = camer_serial;
 
+	rsp.SetHead(header);
+	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
 
 	//QTSS_SendHTTPPacket(this, (char*)msg.c_str(), msg.length(), false, false);
@@ -2038,6 +2045,7 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 	case MSG_DS_POST_SNAP_REQ:
 		theErr=ExecNetMsgSnapUpdateReq(fRequestBody);
 		nRspMsg=MSG_SD_POST_SNAP_ACK;
+		break;
 	default:
 		theErr=ExecNetMsgDefaultReqHandler(fRequestBody);
 		break;
