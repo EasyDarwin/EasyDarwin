@@ -806,10 +806,12 @@ QTSS_Error HTTPSession::ExecNetMsgStartStreamReq(const string& device_serial, ch
 				body[EASY_TAG_DEVICESERIAL] = device_serial;
 				body[EASY_TAG_CAMERASERIAL] = camera_serial;
 				body[EASY_TAG_STREAM_ID] = stream_id;
-				body[EASY_TAG_PROTOCOL] = EASY_TAG_RTSP;
 
-				body[EASY_TAG_DSS_IP] = dss_ip;
-				body[EASY_TAG_DSS_PROT] = dss_port;
+				string protocol = EasyProtocol::GetProtocolString(EASY_PROTOCOL_TYPE_RTSP);
+				body[EASY_TAG_PROTOCOL] = protocol.c_str();
+
+				body[EASY_TAG_SERVER_IP] = dss_ip;
+				body[EASY_TAG_SERVER_PORT] = dss_port;
 
 				EasyMsgSDPushStreamREQ req(body, 1);
 				string buffer = req.GetMsg();
