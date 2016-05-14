@@ -23,7 +23,7 @@
  *
  */
 /*
-	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
@@ -40,7 +40,6 @@
 #include "QTSSDictionary.h"
 #include "QTSSStream.h"
 #include "OSMemory.h"
-//#include "BaseRequestInterface.h"
 #include "HTTPSessionInterface.h"
 #include "OS.h"
 #include "EventContext.h"
@@ -529,37 +528,6 @@ QTSS_Error  QTSSCallbacks::QTSS_DoService(QTSS_ServiceID inID, QTSS_ServiceFunct
 }
 
 
-QTSS_Error QTSSCallbacks::QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef)
-{
-    if (inRef == NULL)
-        return QTSS_BadArgument;
-        
-    //((BaseRequestInterface*)inRef)->SendHeader();
-    return QTSS_NoErr;
-}
-
-QTSS_Error QTSSCallbacks::QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef,
-                                                        QTSS_RTSPHeader inHeader,
-                                                        char* inValue,
-                                                        UInt32 inValueLen)
-{
-    if ((inRef == NULL) || (inValue == NULL))
-        return QTSS_BadArgument;
-    if (inHeader >= qtssNumHeaders)
-        return QTSS_BadArgument;
-    
-    return QTSS_NoErr;
-}
-
-QTSS_Error QTSSCallbacks::QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest,
-                                                            QTSS_Object inRTPInfo,
-                                                            UInt32 inFlags)
-{
-    if ((inRTSPRequest == NULL) || (inRTPInfo == NULL))
-        return QTSS_BadArgument;
-    return QTSS_BadArgument;
-}
-
 QTSS_Error  QTSSCallbacks::QTSS_RequestEvent(QTSS_StreamRef inStream, QTSS_EventType inEventMask)
 {
     // First thing to do is to alter the thread's module state to reflect the fact
@@ -689,24 +657,6 @@ QTSS_Error  QTSSCallbacks::QTSS_UnlockGlobalLock()
     theState->isGlobalLocked = false; 
 
 
-    return QTSS_NoErr;
-}
-
-
-QTSS_Error  QTSSCallbacks::QTSS_Authenticate(const char* inAuthUserName, const char* inAuthResourceLocalPath, const char* inAuthMoviesDir, QTSS_ActionFlags inAuthRequestAction, QTSS_AuthScheme inAuthScheme, QTSS_RTSPRequestObject ioAuthRequestObject)
-{
-    if((inAuthUserName == NULL) || (inAuthResourceLocalPath == NULL) || (inAuthMoviesDir == NULL) || (ioAuthRequestObject == NULL)) 
-        return QTSS_BadArgument;
-    if(inAuthRequestAction == qtssActionFlagsNoFlags)
-        return QTSS_BadArgument;
-    if(inAuthScheme == qtssAuthNone)
-        return QTSS_BadArgument;
-
-    return QTSS_NoErr;
-}
-
-QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
-{   
     return QTSS_NoErr;
 }
 

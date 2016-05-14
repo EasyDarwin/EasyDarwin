@@ -23,7 +23,7 @@
  *
  */
 /*
-	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -260,24 +260,6 @@ QTSS_Error QTSS_DoService(QTSS_ServiceID inID, QTSS_ServiceFunctionArgsPtr inArg
     return (sCallbacks->addr [kDoServiceCallback]) (inID, inArgs);  
 }
 
-// RTSP ROUTINES
-
-QTSS_Error QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef)
-{
-    return (sCallbacks->addr [kSendRTSPHeadersCallback]) (inRef);       
-}
-
-QTSS_Error QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef, QTSS_RTSPHeader inHeader, const char* inValue, UInt32 inValueLen)
-{
-    return (sCallbacks->addr [kAppendRTSPHeadersCallback]) (inRef, inHeader, inValue, inValueLen);      
-}
-
-QTSS_Error QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, QTSS_Object inRTPInfo, UInt32 inFlags)
-{
-    return (sCallbacks->addr [kSendStandardRTSPCallback]) (inRTSPRequest, inRTPInfo, inFlags);      
-}
-
-
 // FILE SYSTEM ROUTINES
 
 QTSS_Error  QTSS_OpenFileObject(char* inPath, QTSS_OpenFileFlags inFlags, QTSS_Object* outFileObject)
@@ -350,22 +332,6 @@ QTSS_Error  QTSS_LockObject(QTSS_Object inObject)
 QTSS_Error  QTSS_UnlockObject(QTSS_Object inObject)
 {
     return (sCallbacks->addr [kUnlockObjectCallback])  (inObject);
-}
-
-// AUTHENTICATION AND AUTHORIZATION ROUTINE
-QTSS_Error  QTSS_Authenticate(  const char* inAuthUserName, 
-                                const char* inAuthResourceLocalPath, 
-                                const char* inAuthMoviesDir, 
-                                QTSS_ActionFlags inAuthRequestAction, 
-                                QTSS_AuthScheme inAuthScheme, 
-                                QTSS_RTSPRequestObject ioAuthRequestObject)
-{
-    return (sCallbacks->addr [kAuthenticateCallback]) (inAuthUserName, inAuthResourceLocalPath, inAuthMoviesDir, inAuthRequestAction, inAuthScheme, ioAuthRequestObject);
-}
-
-QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
-{
-    return (sCallbacks->addr [kAuthorizeCallback]) (inAuthRequestObject, outAuthRealm, outAuthUserAllowed);
 }
 
 void  QTSS_LockStdLib()

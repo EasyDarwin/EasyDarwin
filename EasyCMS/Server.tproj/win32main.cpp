@@ -23,7 +23,7 @@
  *
  */
 /*
-	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
@@ -209,7 +209,6 @@ int main(int argc, char * argv[])
         { NULL, NULL }
     };
 
-    //
     // In case someone runs the server improperly, print out a friendly message.
     qtss_printf("EasyCMS must either be started from the DOS Console\n");
     qtss_printf("using the -d command-line option, or using the Service Control Manager\n\n");

@@ -32,13 +32,8 @@
     File:       QTSS_Private.h
 
     Contains:   Implementation-specific structures and typedefs used by the
-                implementation of QTSS API in the Darwin Streaming Server
-                    
-    
-    
+                implementation of QTSS API in the EasyCMS
 */
-
-
 #ifndef QTSS_PRIVATE_H
 #define QTSS_PRIVATE_H
 
@@ -79,53 +74,48 @@ enum
     kAddServiceCallback             = 13,
     kIDForServiceCallback           = 14,
     kDoServiceCallback              = 15,
-    kSendRTSPHeadersCallback        = 16,
-    kAppendRTSPHeadersCallback      = 17,
-    kSendStandardRTSPCallback       = 18,
 
-    kRequestEventCallback           = 19,
-    kSetIdleTimerCallback           = 20,
-    kOpenFileObjectCallback         = 21,
-    kCloseFileObjectCallback        = 22,
-    kReadCallback                   = 23,
-    kSeekCallback                   = 24,
-    kAdviseCallback                 = 25,
-    kGetNumValuesCallback           = 26,
-    kGetNumAttributesCallback       = 27,
-    kSignalStreamCallback           = 28,
-    kCreateSocketStreamCallback     = 29,
-    kDestroySocketStreamCallback    = 30,
-    kAddStaticAttributeCallback     = 31,
-    kAddInstanceAttributeCallback   = 32,
-    kRemoveInstanceAttributeCallback= 33,
-    kGetAttrInfoByIndexCallback     = 34,
-    kGetAttrInfoByNameCallback      = 35,
-    kGetAttrInfoByIDCallback        = 36,
-    kGetValueAsStringCallback       = 37,
-    kTypeToTypeStringCallback       = 38,
-    kTypeStringToTypeCallback       = 39,
-    kStringToValueCallback          = 40,       
-    kValueToStringCallback          = 41,       
-    kRemoveValueCallback            = 42,
-    kRequestGlobalLockCallback      = 43, 
-    kIsGlobalLockedCallback         = 44, 
-    kUnlockGlobalLock               = 45, 
-    kAuthenticateCallback           = 46,
-    kAuthorizeCallback              = 47,   
+    kRequestEventCallback           = 16,
+    kSetIdleTimerCallback           = 17,
+    kOpenFileObjectCallback         = 18,
+    kCloseFileObjectCallback        = 19,
+    kReadCallback                   = 20,
+    kSeekCallback                   = 21,
+    kAdviseCallback                 = 22,
+    kGetNumValuesCallback           = 23,
+    kGetNumAttributesCallback       = 24,
+    kSignalStreamCallback           = 25,
+    kCreateSocketStreamCallback     = 26,
+    kDestroySocketStreamCallback    = 27,
+    kAddStaticAttributeCallback     = 28,
+    kAddInstanceAttributeCallback   = 29,
+    kRemoveInstanceAttributeCallback= 30,
+    kGetAttrInfoByIndexCallback     = 31,
+    kGetAttrInfoByNameCallback      = 32,
+    kGetAttrInfoByIDCallback        = 33,
+    kGetValueAsStringCallback       = 34,
+    kTypeToTypeStringCallback       = 35,
+    kTypeStringToTypeCallback       = 36,
+    kStringToValueCallback          = 37,       
+    kValueToStringCallback          = 38,       
+    kRemoveValueCallback            = 39,
+    kRequestGlobalLockCallback      = 40, 
+    kIsGlobalLockedCallback         = 41, 
+    kUnlockGlobalLock               = 42, 
 
-    kCreateObjectValueCallback      = 48,
-    kCreateObjectTypeCallback       = 49,
-    kLockObjectCallback             = 50,
-    kUnlockObjectCallback           = 51,
-    kSetAttributePtrCallback        = 52,
-    kSetIntervalRoleTimerCallback   = 53,
-    kLockStdLibCallback             = 54,
-    kUnlockStdLibCallback           = 55,
-	kSendHTTPPacketCallback			= 56,
-	kRegDevSessionCallback			= 57,
-	kUpdateDevRedisCallback			= 58,
-	kUpdateDevSnapCallback			= 59,
-    kLastCallback                   = 60
+    kCreateObjectValueCallback      = 43,
+    kCreateObjectTypeCallback       = 44,
+    kLockObjectCallback             = 45,
+    kUnlockObjectCallback           = 46,
+    kSetAttributePtrCallback        = 47,
+    kSetIntervalRoleTimerCallback   = 48,
+    kLockStdLibCallback             = 49,
+    kUnlockStdLibCallback           = 50,
+	kSendHTTPPacketCallback			= 51,
+	kRegDevSessionCallback			= 52,
+	kUpdateDevRedisCallback			= 53,
+	kUpdateDevSnapCallback			= 54,
+    kLastCallback                   = 55
 };
 
 typedef struct {

@@ -32,7 +32,6 @@
 #ifndef QTSS_H
 #define QTSS_H
 #include "OSHeaders.h"
-#include "QTSSRTSPProtocol.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,7 +45,7 @@ extern "C" {
 #define QTSS_MAX_ATTRIBUTE_NAME_SIZE    64
 #define EASY_MAX_URL_LENGTH				512
 #define EASY_MAX_SERIAL_LENGTH			32
-#define EASY_REQUEST_BUFFER_SIZE_LEN	64*1024//512*1024
+#define EASY_REQUEST_BUFFER_SIZE_LEN	64*1024
 
 //*******************************
 // ENUMERATED TYPES
@@ -89,14 +88,6 @@ enum
 };
 typedef UInt32 QTSS_WriteFlags;
 
-// Flags for QTSS_SendStandardRTSPResponse
-enum
-{
-    qtssPlayRespWriteTrackInfo      = 0x00000001,
-    qtssSetupRespDontWriteSSRC      = 0x00000002
-};
-
-
 // Flags for the qtssRTSPReqAction attribute in a QTSS_RTSPRequestObject.
 enum 
 {
@@ -109,47 +100,6 @@ enum
 };
 typedef UInt32 QTSS_ActionFlags;
 
-/**********************************/
-// RTP SESSION STATES
-//
-// Is this session playing, paused, or what?
-enum
-{
-    qtssPausedState         = 0,
-    qtssPlayingState        = 1
-};
-typedef UInt32 QTSS_RTPSessionState;
-
-//*********************************/
-// CLIENT SESSION CLOSING REASON
-//
-// Why is this Client going away?
-enum
-{
-    qtssCliSesCloseClientTeardown       = 0, // QTSS_Teardown was called on this session
-    qtssCliSesCloseTimeout              = 1, // Server is timing this session out
-    qtssCliSesCloseClientDisconnect     = 2  // Client disconnected.
-};
-typedef UInt32 QTSS_CliSesClosingReason;
-
-// CLIENT SESSION TEARDOWN REASON
-//
-//  An attribute in the QTSS_ClientSessionObject 
-//
-//  When calling QTSS_Teardown, a module should specify the QTSS_CliSesTeardownReason in the QTSS_ClientSessionObject 
-//  if the tear down was not a client request.
-//  
-enum
-{
-    qtssCliSesTearDownClientRequest             = 0,
-    qtssCliSesTearDownUnsupportedMedia          = 1,
-    qtssCliSesTearDownServerShutdown            = 2,
-    qtssCliSesTearDownServerInternalErr         = 3,
-    qtssCliSesTearDownBroadcastEnded            = 4 // A broadcast the client was watching ended
-    
-};
-typedef UInt32  QTSS_CliSesTeardownReason;
-
 // Events
 enum
 {
@@ -158,14 +108,6 @@ enum
 };
 typedef UInt32  QTSS_EventType;
 
-// Authentication schemes
-enum
-{
-    qtssAuthNone        = 0,
-    qtssAuthBasic       = 1,
-    qtssAuthDigest      = 2
-};
-typedef UInt32  QTSS_AuthScheme;
 
 /**********************************/
 // RTSP SESSION TYPES
@@ -744,19 +686,6 @@ enum
     
     QTSS_Interval_Role =             FOUR_CHARS_TO_INT('t', 'i', 'm', 'r'), //timr //This gets called whenever the module's interval timer times out calls.
     
-    //RTSP-specific
-    QTSS_RTSPFilter_Role =           FOUR_CHARS_TO_INT('f', 'i', 'l', 't'), //filt //Filter all RTSP requests before the server parses them
-    QTSS_RTSPRoute_Role =            FOUR_CHARS_TO_INT('r', 'o', 'u', 't'), //rout //Route all RTSP requests to the correct root folder.
-    QTSS_RTSPAuthenticate_Role =     FOUR_CHARS_TO_INT('a', 't', 'h', 'n'), //athn //Authenticate the RTSP request username.
-    QTSS_RTSPAuthorize_Role =        FOUR_CHARS_TO_INT('a', 'u', 't', 'h'), //auth //Authorize RTSP requests to proceed
-    QTSS_RTSPPreProcessor_Role =     FOUR_CHARS_TO_INT('p', 'r', 'e', 'p'), //prep //Pre-process all RTSP requests before the server responds.
-                                        //Modules may opt to "steal" the request and return a client response.
-    QTSS_RTSPRequest_Role =          FOUR_CHARS_TO_INT('r', 'e', 'q', 'u'), //requ //Process an RTSP request & send client response
-    QTSS_RTSPPostProcessor_Role =    FOUR_CHARS_TO_INT('p', 'o', 's', 't'), //post //Post-process all RTSP requests
-    QTSS_RTSPSessionClosing_Role =   FOUR_CHARS_TO_INT('s', 'e', 's', 'c'), //sesc //RTSP session is going away
-
-    QTSS_RTSPIncomingData_Role =     FOUR_CHARS_TO_INT('i', 'c', 'm', 'd'), //icmd //Incoming interleaved RTP data on this RTSP connection
-
     //File system roles
     QTSS_OpenFilePreProcess_Role =  FOUR_CHARS_TO_INT('o', 'p', 'p', 'r'),  //oppr
     QTSS_OpenFile_Role =            FOUR_CHARS_TO_INT('o', 'p', 'f', 'l'),  //opfl
@@ -781,11 +710,9 @@ typedef SInt32          QTSS_AttributeID;
 typedef SInt32          QTSS_ServiceID;
 typedef SInt64          QTSS_TimeVal;
 
-typedef QTSS_Object             QTSS_RTPStreamObject;
 typedef QTSS_Object             QTSS_RTSPSessionObject;
 typedef QTSS_Object             QTSS_RTSPRequestObject;
 typedef QTSS_Object             QTSS_RTSPHeaderObject;
-typedef QTSS_Object             QTSS_ClientSessionObject;
 typedef QTSS_Object             QTSS_ServerObject;
 typedef QTSS_Object             QTSS_PrefsObject;
 typedef QTSS_Object             QTSS_TextMessagesObject;
@@ -798,12 +725,7 @@ typedef QTSS_Object             QTSS_ConnectedUserObject;
 
 typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;
-typedef QTSS_StreamRef          QTSS_RTSPSessionStream;
-typedef QTSS_StreamRef          QTSS_RTSPRequestStream;
-typedef QTSS_StreamRef          QTSS_RTPStreamStream;
 typedef QTSS_StreamRef          QTSS_SocketStream;
-
-typedef QTSS_RTSPStatusCode QTSS_SessionStatusCode;
 
 //***********************************************/
 // ROLE PARAMETER BLOCKS
@@ -842,50 +764,9 @@ typedef struct
 {
     QTSS_RTSPSessionObject      inRTSPSession;
     QTSS_RTSPRequestObject      inRTSPRequest;
-    QTSS_RTSPHeaderObject       inRTSPHeaders;
-    QTSS_ClientSessionObject    inClientSession;
-
-} QTSS_StandardRTSP_Params;
-
-typedef struct 
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-    QTSS_RTSPRequestObject      inRTSPRequest;
     char**                      outNewRequest;
 
 } QTSS_Filter_Params;
-
-typedef struct
-{
-    QTSS_RTSPRequestObject      inRTSPRequest;
-} QTSS_RTSPAuth_Params;
-
-typedef struct 
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-    QTSS_ClientSessionObject    inClientSession;
-    char*                       inPacketData;
-    UInt32                      inPacketLen;
-
-} QTSS_IncomingData_Params;
-
-typedef struct
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-} QTSS_RTSPSession_Params;
-
-typedef struct
-{
-    QTSS_ClientSessionObject        inClientSession;
-    QTSS_TimeVal                    inCurrentTime;
-    QTSS_TimeVal                    outNextPacketTime;
-} QTSS_RTPSendPackets_Params;
-
-typedef struct
-{
-    QTSS_ClientSessionObject        inClientSession;
-    QTSS_CliSesClosingReason        inReason;
-} QTSS_ClientSessionClosing_Params;
 
 typedef struct
 {
@@ -926,7 +807,7 @@ typedef struct
 	QTSS_Object					inStreamName;
 	QTSS_Object					inRTSPSession;
 	QTSS_Object					inStreamingParam;
-} QTSS_Streaing_Params;
+} QTSS_Streaming_Params;
 typedef struct//add  
 {
 	char *pNonce;//用于存放随机数
@@ -946,17 +827,6 @@ typedef union
     QTSS_StateChange_Params             stateChangeParams;
 
     QTSS_Filter_Params                  rtspFilterParams;
-    QTSS_IncomingData_Params            rtspIncomingDataParams;
-    QTSS_StandardRTSP_Params            rtspRouteParams;
-    QTSS_RTSPAuth_Params                rtspAthnParams;
-    QTSS_StandardRTSP_Params            rtspAuthParams;
-    QTSS_StandardRTSP_Params            rtspPreProcessorParams;
-    QTSS_StandardRTSP_Params            rtspRequestParams;
-    QTSS_StandardRTSP_Params            rtspPostProcessorParams;
-    QTSS_RTSPSession_Params             rtspSessionClosingParams;
-
-    QTSS_RTPSendPackets_Params          rtpSendPacketsParams;
-    QTSS_ClientSessionClosing_Params    clientSessionClosingParams;
     
     QTSS_OpenFile_Params                openFilePreProcessParams;
     QTSS_OpenFile_Params                openFileParams;
@@ -965,18 +835,11 @@ typedef union
     QTSS_CloseFile_Params               closeFileParams;
     QTSS_RequestEventFile_Params        reqEventFileParams;
 
-	// EasyDarwin
-	QTSS_Streaing_Params				StreamingParams;
+	// EasyCMS
+	QTSS_Streaming_Params				StreamingParams;
 	QTSS_Sync_Params					SyncParams;
     QTSS_Nonce_Params                   NonceParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
-
-typedef struct
-{
-    void*                           packetData;
-    QTSS_TimeVal                    packetTransmitTime;
-    QTSS_TimeVal                    suggestedWakeupTime;
-} QTSS_PacketStruct;
 
 
 /********************************************************************/
@@ -1471,36 +1334,6 @@ QTSS_Error QTSS_DoService(QTSS_ServiceID inID, QTSS_ServiceFunctionArgsPtr inArg
 // Rereads the preferences, also causes the QTSS_RereadPrefs_Role to be invoked
 #define QTSS_REREAD_PREFS_SERVICE   "RereadPreferences"
 
-
-
-/*****************************************/
-//  RTSP HEADER CALLBACKS
-//
-//  As a convience to modules that want to send RTSP responses, the server
-//  has internal utilities for formatting a proper RTSP response. When a module
-//  calls QTSS_SendRTSPHeaders, the server sends a proper RTSP status line, using
-//  the request's current status code, and also sends the proper CSeq header,
-//  session ID header, and connection header.
-//
-//  Any other headers can be appended by calling QTSS_AppendRTSPHeader. They will be
-//  sent along with everything else when QTSS_SendRTSPHeaders is called.
-//
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error QTSS_SendRTSPHeaders(QTSS_RTSPRequestObject inRef);
-//
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error QTSS_AppendRTSPHeader(QTSS_RTSPRequestObject inRef, QTSS_RTSPHeader inHeader, const char* inValue, UInt32 inValueLen);
-
-
-/*****************************************/
-//  QTSS_SendStandardRTSPResponse
-//  Returns:    QTSS_NoErr
-//              QTSS_BadArgument: Bad argument
-QTSS_Error  QTSS_SendStandardRTSPResponse(QTSS_RTSPRequestObject inRTSPRequest, QTSS_Object inRTPInfo, UInt32 inFlags);
-
-
 /*****************************************/
 //  FILE SYSTEM CALLBACKS
 //
@@ -1627,47 +1460,6 @@ QTSS_Error  QTSS_RequestGlobalLock();
 Bool16      QTSS_IsGlobalLocked();
 QTSS_Error  QTSS_GlobalUnLock();
 
-
-/*****************************************/
-//  AUTHENTICATE and AUTHORIZE CALLBACKS
-//
-//  All modules that want Authentication outside of the 
-//  QTSS_RTSPAuthenticate_Role must use the QTSS_Authenticate callback 
-//  and must pass in the request object
-//      All modules that want Authorization outside of the
-//      QTSS_RTSPAuthorize_Role should use the QTSS_Authorize callback
-//      and must pass in the request object
-/********************************************************************/
-
-//  QTSS_Authenticate
-//
-//  Arguments inputs:   inAuthUserName:         the username that is to be authenticated
-//                      inAuthResourceLocalPath:the resource that is to be authorized access
-//                      inAuthMoviesDir:        the movies directory (reqd. for finding the access file)
-//                      inAuthRequestAction:    the action that is performed for the resource
-//                      inAuthScheme:           the authentication scheme (the password retrieved will be based on it)
-//                      ioAuthRequestObject:    the request object 
-//                                              The object is filled with the attributes passed in  
-//  Returns:            QTSS_NoErr
-//                      QTSS_BadArgument        if any of the input arguments are null
-QTSS_Error  QTSS_Authenticate(  const char* inAuthUserName, 
-                                const char* inAuthResourceLocalPath, 
-                                const char* inAuthMoviesDir, 
-                                QTSS_ActionFlags inAuthRequestAction, 
-                                QTSS_AuthScheme inAuthScheme, 
-                                QTSS_RTSPRequestObject ioAuthRequestObject);
-
-//  QTSS_Authorize
-//
-//  Arguments inputs:   inAuthRequestObject:    the request object
-//
-//            outputs:  outAuthRealm:           the authentication realm 
-//                      outAuthUserAllowed:     true if user is allowed, and false otherwise
-//  
-//  Returns:            QTSS_NoErr
-//                      QTSS_BadArgument
-QTSS_Error    QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed);
-
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 
@@ -1676,19 +1468,6 @@ QTSS_Error	QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSession, char* in
 QTSS_Error	QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen);    
 QTSS_Error	QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession);
 QTSS_Error	QTSS_UpdateDevSnap(QTSS_RTSPSessionObject inServiceSession, const char* inSnapTime, const char* inSnapJpg); 
-#ifdef QTSS_OLDROUTINENAMES
-
-//
-// Legacy routines
-
-//
-// QTSS_AddAttribute has been replaced by QTSS_AddStaticAttribute
-QTSS_Error QTSS_AddAttribute(QTSS_ObjectType inObjectType, const char* inAttributeName,
-                                void* inUnused);
-
-#endif
-
-
 
 #ifdef __cplusplus
 }

@@ -26,10 +26,7 @@
 /*
     File:       UserAgentParser.cpp
 
-    Contains:   Parse the User-Agent: entry of an RTSP request.
-                    
-    
-    
+    Contains:   Parse the User-Agent: entry of an request.
 
 */
 

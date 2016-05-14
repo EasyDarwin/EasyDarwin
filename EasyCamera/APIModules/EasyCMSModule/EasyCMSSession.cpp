@@ -417,7 +417,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				string channel = startStreamReq.GetBodyValue("Channel");
 				params.startStreaParams.inChannel = channel.c_str();
 
-				string streamID = startStreamReq.GetBodyValue("SessionID");
+				string streamID = startStreamReq.GetBodyValue("StreamID");
 				params.startStreaParams.inStreamID = streamID.c_str();
 
 				QTSS_Error	errCode = QTSS_NoErr;
@@ -531,6 +531,8 @@ void EasyCMSSession::ResetClientSocket()
 {
 	qtss_printf("EasyCMSSession::ResetClientSocket()\n");
 
+	CleanupRequest();
+
 	fSocket->GetSocket()->Cleanup();
 	if(fSocket) delete fSocket;
 
@@ -589,9 +591,9 @@ QTSS_Error EasyCMSSession::UpdateSnapCache(unsigned char *snapPtr, int snapLen, 
 		body["Image"] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
 		
 		fSnapReq = new EasyMsgDSPostSnapREQ(body,1);
-
-		this->Signal(Task::kUpdateEvent);
 	}
+
+	this->Signal(Task::kUpdateEvent);
 	return QTSS_NoErr;
 }
 

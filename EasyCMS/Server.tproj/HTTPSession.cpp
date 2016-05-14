@@ -1,5 +1,5 @@
 /*
-Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 Github: https://github.com/EasyDarwin
 WEChat: EasyDarwin
 Website: http://www.EasyDarwin.org
@@ -45,11 +45,6 @@ HTTPSession::HTTPSession( )
 	//在全局服务对象中Session数增长一个,一个HTTPSession代表了一个连接
 	QTSServerInterface::GetServer()->AlterCurrentServiceSessionCount(1);
 
-	// Setup the QTSS param block, as none of these fields will change through the course of this session.
-	fRoleParams.rtspRequestParams.inRTSPSession = this;
-	fRoleParams.rtspRequestParams.inRTSPRequest = NULL;
-	fRoleParams.rtspRequestParams.inClientSession = NULL;
-
 	fModuleState.curModule = NULL;
 	fModuleState.curTask = this;
 	fModuleState.curRole = 0;
@@ -63,14 +58,6 @@ HTTPSession::HTTPSession( )
 
 HTTPSession::~HTTPSession()
 {
-	// Invoke the session closing modules
-	QTSS_RoleParams theParams;
-	theParams.rtspSessionClosingParams.inRTSPSession = this;
-
-	//会话断开时，调用模块进行一些停止的工作
-	for (UInt32 x = 0; x < QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPSessionClosingRole); x++)
-		(void)QTSServerInterface::GetModule(QTSSModule::kRTSPSessionClosingRole, x)->CallDispatch(QTSS_RTSPSessionClosing_Role, &theParams);
-
 	fLiveSession = false; //used in Clean up request to remove the RTP session.
 	this->CleanupRequest();// Make sure that all our objects are deleted
 	//if (fSessionType == qtssServiceSession)
@@ -565,8 +552,6 @@ void HTTPSession::CleanupRequest()
 		// NULL out any references to the current request
 		delete fRequest;
 		fRequest = NULL;
-		fRoleParams.rtspRequestParams.inRTSPRequest = NULL;
-		fRoleParams.rtspRequestParams.inRTSPHeaders = NULL;
 	}
 
 	fSessionMutex.Unlock();
@@ -949,23 +934,23 @@ QTSS_Error HTTPSession::ExecNetMsgStartDeviceStreamRsp(const char * json)
 			rsp.GetBodyValue("CameraSerial") == it->camera_serial_ &&
 			rsp.GetBodyValue("StreamID") == it->stream_id_ &&
 			it->message_type_ == MSG_CS_GET_STREAM_REQ)
-		{			
-			if (EasyUtil::NowTime() - it->timestamp_ > it->timeout_)
-			{				
-				theErr = QTSS_RequestFailed;
+			{			
+				if (EasyUtil::NowTime() - it->timestamp_ > it->timeout_)
+				{				
+					theErr = QTSS_RequestFailed;
+				}
+				else
+				{
+					HTTPSession* client = (HTTPSession*)it->object_;
+					boost::mutex::scoped_lock lock(fNVROperatorMutex);				
+					client->fCond.notify_one();				
+				}
+				it = fNVRMessageQueue.erase(it);
 			}
 			else
 			{
-				HTTPSession* client = (HTTPSession*)it->object_;
-				boost::mutex::scoped_lock lock(fNVROperatorMutex);				
-				client->fCond.notify_one();				
+				it++;
 			}
-			it = fNVRMessageQueue.erase(it);
-		}
-		else
-		{
-			it++;
-		}
 	}
 	return theErr;
 }
@@ -1570,7 +1555,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStartReq(const char* json)//客户端开始流
 			if(fInfo.uTimeoutNum>CliStartStreamTimeout/100)//超时了
 			{
 				fInfo.cWaitingState=0;//恢复状态
-				return qtssRequestTimeout;
+				return httpRequestTimeout;
 			}
 			else//没有超时，继续等待
 			{
@@ -2081,7 +2066,7 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 			header["ErrorNum"]=605;
 			header["ErrorString"]=EasyDarwin::Protocol::EasyProtocol::GetErrorString(605);
 			break;
-		case qtssRequestTimeout:
+		case httpRequestTimeout:
 			header["ErrorNum"]=408;
 			header["ErrorString"]=EasyDarwin::Protocol::EasyProtocol::GetErrorString(408);
 			break;

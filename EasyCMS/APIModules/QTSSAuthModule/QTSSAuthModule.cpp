@@ -91,7 +91,6 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	// Do role setup
 	(void)QTSS_AddRole(QTSS_Initialize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
-	(void)QTSS_AddRole(QTSS_RTSPRequest_Role);
 	(void)QTSS_AddRole(QTSS_NONCE_ROLE);
 	(void)QTSS_AddRole(QTSS_AUTH_ROLE);
 	return QTSS_NoErr;

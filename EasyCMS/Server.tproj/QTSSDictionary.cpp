@@ -23,7 +23,7 @@
  *
  */
 /*
-	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
@@ -45,6 +45,8 @@
 #include "MyAssert.h"
 #include "OSMemory.h"
 #include "QTSSDataConverter.h"
+
+#include "HTTPProtocol.h"
 
 #include <errno.h>
 
@@ -864,7 +866,7 @@ void QTSSDictionaryMap::Initialize()
     sDictionaryMaps[kServiceDictIndex]      = new QTSSDictionaryMap(0);
 	sDictionaryMaps[kRTSPSessionDictIndex]  = new QTSSDictionaryMap(qtssRTSPSesNumParams);
     sDictionaryMaps[kRTSPRequestDictIndex]  = new QTSSDictionaryMap(qtssRTSPReqNumParams);
-    sDictionaryMaps[kRTSPHeaderDictIndex]   = new QTSSDictionaryMap(qtssNumHeaders);
+    sDictionaryMaps[kRTSPHeaderDictIndex]   = new QTSSDictionaryMap(httpNumHeaders);
     sDictionaryMaps[kFileDictIndex]         = new QTSSDictionaryMap(qtssFlObjNumParams);
     sDictionaryMaps[kModuleDictIndex]       = new QTSSDictionaryMap(qtssModNumParams);
     sDictionaryMaps[kModulePrefsDictIndex]  = new QTSSDictionaryMap(0, QTSSDictionaryMap::kInstanceAttrsAllowed | QTSSDictionaryMap::kCompleteFunctionsAllowed);

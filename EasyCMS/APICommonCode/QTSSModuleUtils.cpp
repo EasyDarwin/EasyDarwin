@@ -23,7 +23,7 @@
  *
  */
 /*
-	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
@@ -58,7 +58,6 @@
 QTSS_TextMessagesObject     QTSSModuleUtils::sMessages = NULL;
 QTSS_ServerObject           QTSSModuleUtils::sServer = NULL;
 QTSS_StreamRef              QTSSModuleUtils::sErrorLog = NULL;
-Bool16                      QTSSModuleUtils::sEnableRTSPErrorMsg = false;
 QTSS_ErrorVerbosity         QTSSModuleUtils::sMissingPrefVerbosity = qtssMessageVerbosity;
 
 void    QTSSModuleUtils::Initialize(QTSS_TextMessagesObject inMessages,
@@ -133,16 +132,6 @@ QTSS_Error QTSSModuleUtils::ReadEntireFile(char* inPath, StrPtrLen* outData, QTS
     }
     
     return theErr;
-}
-
-void    QTSSModuleUtils::SetupSupportedMethods(QTSS_Object inServer, QTSS_RTSPMethod* inMethodArray, UInt32 inNumMethods)
-{
-    // Report to the server that this module handles DESCRIBE, SETUP, PLAY, PAUSE, and TEARDOWN
-    UInt32 theNumMethods = 0;
-    (void)QTSS_GetNumValues(inServer, qtssSvrHandledMethods, &theNumMethods);
-    
-    for (UInt32 x = 0; x < inNumMethods; x++)
-        (void)QTSS_SetValue(inServer, qtssSvrHandledMethods, theNumMethods++, (void*)&inMethodArray[x], sizeof(inMethodArray[x]));
 }
 
 void    QTSSModuleUtils::LogError(  QTSS_ErrorVerbosity inVerbosity,
@@ -262,272 +251,6 @@ char* QTSSModuleUtils::GetFullPath( QTSS_RTSPRequestObject inRequest,
 	(void)QTSS_UnlockObject(inRequest);
 	
     return theFullPath;
-}
-
-
-QTSS_Error  QTSSModuleUtils::SendErrorResponse( QTSS_RTSPRequestObject inRequest,
-                                                        QTSS_RTSPStatusCode inStatusCode,
-                                                        QTSS_AttributeID inTextMessage,
-                                                        StrPtrLen* inStringArg)
-{
-    static Bool16 sFalse = false;
-    
-    //set RTSP headers necessary for this error response message
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));
-    StringFormatter theErrorMsgFormatter(NULL, 0);
-    char *messageBuffPtr = NULL;
-    
-    if (sEnableRTSPErrorMsg)
-    {
-        // Retrieve the specified message out of the text messages dictionary.
-        StrPtrLen theMessage;
-        (void)QTSS_GetValuePtr(sMessages, inTextMessage, 0, (void**)(void*)&theMessage.Ptr, &theMessage.Len);
-
-        if ((theMessage.Ptr == NULL) || (theMessage.Len == 0))
-        {
-            // If we couldn't find the specified message, get the default
-            // "No Message" message, and return that to the client instead.
-            
-            (void)QTSS_GetValuePtr(sMessages, qtssMsgNoMessage, 0, (void**)(void*)&theMessage.Ptr, &theMessage.Len);
-        }
-        Assert(theMessage.Ptr != NULL);
-        Assert(theMessage.Len > 0);
-        
-        // Allocate a temporary buffer for the error message, and format the error message
-        // into that buffer
-        UInt32 theMsgLen = 256;
-        if (inStringArg != NULL)
-            theMsgLen += inStringArg->Len;
-        
-        messageBuffPtr = NEW char[theMsgLen];
-        messageBuffPtr[0] = 0;
-        theErrorMsgFormatter.Set(messageBuffPtr, theMsgLen);
-        //
-        // Look for a %s in the string, and if one exists, replace it with the
-        // argument passed into this function.
-        
-        //we can safely assume that message is in fact NULL terminated
-        char* stringLocation = ::strstr(theMessage.Ptr, "%s");
-        if (stringLocation != NULL)
-        {
-            //write first chunk
-            theErrorMsgFormatter.Put(theMessage.Ptr, stringLocation - theMessage.Ptr);
-            
-            if (inStringArg != NULL && inStringArg->Len > 0)
-            {
-                //write string arg if it exists
-                theErrorMsgFormatter.Put(inStringArg->Ptr, inStringArg->Len);
-                stringLocation += 2;
-            }
-            //write last chunk
-            theErrorMsgFormatter.Put(stringLocation, (theMessage.Ptr + theMessage.Len) - stringLocation);
-        }
-        else
-            theErrorMsgFormatter.Put(theMessage);
-        
-        
-        char buff[32];
-        qtss_sprintf(buff,"%"_U32BITARG_"",theErrorMsgFormatter.GetBytesWritten());
-        (void)QTSS_AppendRTSPHeader(inRequest, qtssContentLengthHeader, buff, ::strlen(buff));
-    }
-    
-    //send the response header. In all situations where errors could happen, we
-    //don't really care, cause there's nothing we can do anyway!
-    (void)QTSS_SendRTSPHeaders(inRequest);
-
-    //
-    // Now that we've formatted the message into the temporary buffer,
-    // write it out to the request stream and the Client Session object
-    (void)QTSS_Write(inRequest, theErrorMsgFormatter.GetBufPtr(), theErrorMsgFormatter.GetBytesWritten(), NULL, 0);
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqRespMsg, 0, theErrorMsgFormatter.GetBufPtr(), theErrorMsgFormatter.GetBytesWritten());
-    
-    delete [] messageBuffPtr;
-    return QTSS_RequestFailed;
-}
-
-QTSS_Error	QTSSModuleUtils::SendErrorResponseWithMessage( QTSS_RTSPRequestObject inRequest,
-														QTSS_RTSPStatusCode inStatusCode,
-														StrPtrLen* inErrorMessagePtr)
-{
-    static Bool16 sFalse = false;
-    
-    //set RTSP headers necessary for this error response message
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));
-    StrPtrLen theErrorMessage(NULL, 0);
-    
-    if (sEnableRTSPErrorMsg)
-    {
-		Assert(inErrorMessagePtr != NULL);
-		//Assert(inErrorMessagePtr->Ptr != NULL);
-		//Assert(inErrorMessagePtr->Len != 0);
-		theErrorMessage.Set(inErrorMessagePtr->Ptr, inErrorMessagePtr->Len);
-		
-        char buff[32];
-        qtss_sprintf(buff,"%"_U32BITARG_"",inErrorMessagePtr->Len);
-        (void)QTSS_AppendRTSPHeader(inRequest, qtssContentLengthHeader, buff, ::strlen(buff));
-    }
-    
-    //send the response header. In all situations where errors could happen, we
-    //don't really care, cause there's nothing we can do anyway!
-    (void)QTSS_SendRTSPHeaders(inRequest);
-
-    //
-    // Now that we've formatted the message into the temporary buffer,
-    // write it out to the request stream and the Client Session object
-    (void)QTSS_Write(inRequest, theErrorMessage.Ptr, theErrorMessage.Len, NULL, 0);
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqRespMsg, 0, theErrorMessage.Ptr, theErrorMessage.Len);
-    
-    return QTSS_RequestFailed;
-}
-
-
-QTSS_Error	QTSSModuleUtils::SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequest,
-													QTSS_SessionStatusCode inStatusCode,
-                                                    Bool16 inKillSession,
-                                                    char *errorMessage)
-{
-    static Bool16 sFalse = false;
-    
-    //set status code for access log
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
-
-    if (inKillSession) // tell the server to end the session
-        (void)QTSS_SetValue(inRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));
-    
-    ResizeableStringFormatter theErrorMessage(NULL, 0); //allocates and deletes memory
-    ResizeableStringFormatter bodyMessage(NULL,0); //allocates and deletes memory
-
-    char messageLineBuffer[64]; // used for each line
-    static const int maxMessageBufferChars = sizeof(messageLineBuffer) -1;
-    messageLineBuffer[maxMessageBufferChars] = 0; // guarantee termination
-
-    // ToDo: put in a more meaningful http error message for each error. Not required by spec.
-    // ToDo: maybe use the HTTP protcol class static error strings.
-    char* errorMsg = "error"; 
-
-    DateBuffer theDate;
-    DateTranslator::UpdateDateBuffer(&theDate, 0); // get the current GMT date and time
-
-    UInt32 realCode = 0;
-    UInt32 len = sizeof(realCode);
-    (void) QTSS_GetValue(inRequest, qtssRTSPReqRealStatusCode, 0,  (void*)&realCode,&len);
-
-    char serverHeaderBuffer[64]; // the qtss Server: header field
-    len = sizeof(serverHeaderBuffer) -1; // leave room for terminator
-    (void) QTSS_GetValue(sServer, qtssSvrRTSPServerHeader, 0,  (void*)serverHeaderBuffer,&len);
-    serverHeaderBuffer[len] = 0; // terminate.
- 
-    qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "HTTP/1.1 %"_U32BITARG_" %s",realCode, errorMsg);
-    theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));
-    theErrorMessage.PutEOL();
-
-    theErrorMessage.Put(serverHeaderBuffer,::strlen(serverHeaderBuffer));
-    theErrorMessage.PutEOL();
- 
-    qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "Date: %s",theDate.GetDateBuffer());
-    theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));
-    theErrorMessage.PutEOL();
- 
-    Bool16 addBody =  (errorMessage != NULL && ::strlen(errorMessage) != 0); // body error message so add body headers
-    if (addBody) // body error message so add body headers
-    {
-        // first create the html body
-        static const StrPtrLen htmlBodyStart("<html><body>\n");
-        bodyMessage.Put(htmlBodyStart.Ptr,htmlBodyStart.Len);
- 
-        //<h1>errorMessage</h1>\n
-        static const StrPtrLen hStart("<h1>");
-        bodyMessage.Put(hStart.Ptr,hStart.Len);
-
-        bodyMessage.Put(errorMessage,::strlen(errorMessage));
-
-        static const StrPtrLen hTerm("</h1>\n");
-        bodyMessage.Put(hTerm.Ptr,hTerm.Len);
- 
-        static const StrPtrLen htmlBodyTerm("</body></html>\n");
-        bodyMessage.Put(htmlBodyTerm.Ptr,htmlBodyTerm.Len);
-
-        // write body headers
-        static const StrPtrLen bodyHeaderType("Content-Type: text/html");
-        theErrorMessage.Put(bodyHeaderType.Ptr,bodyHeaderType.Len);
-        theErrorMessage.PutEOL();
-
-        qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "Content-Length: %"_U32BITARG_"", bodyMessage.GetBytesWritten());
-        theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));        
-        theErrorMessage.PutEOL();
-    }
-
-    static const StrPtrLen headerClose("Connection: close");
-    theErrorMessage.Put(headerClose.Ptr,headerClose.Len);
-    theErrorMessage.PutEOL();
-
-    theErrorMessage.PutEOL();  // terminate headers with empty line
-
-    if (addBody) // add html body
-    {
-        theErrorMessage.Put(bodyMessage.GetBufPtr(),bodyMessage.GetBytesWritten());
-    }
-
-    //
-    // Now that we've formatted the message into the temporary buffer,
-    // write it out to the request stream and the Client Session object
-    (void)QTSS_Write(inRequest, theErrorMessage.GetBufPtr(), theErrorMessage.GetBytesWritten(), NULL, 0);
-    (void)QTSS_SetValue(inRequest, qtssRTSPReqRespMsg, 0, theErrorMessage.GetBufPtr(), theErrorMessage.GetBytesWritten());
-    
-    return QTSS_RequestFailed;
-}
-														
-void    QTSSModuleUtils::SendDescribeResponse(QTSS_RTSPRequestObject inRequest,
-                                                    QTSS_ClientSessionObject inSession,
-                                                    iovec* describeData,
-                                                    UInt32 inNumVectors,
-                                                    UInt32 inTotalLength)
-{
-    //write content size header
-    char buf[32];
-    qtss_sprintf(buf, "%"_S32BITARG_"", inTotalLength);
-    (void)QTSS_AppendRTSPHeader(inRequest, qtssContentLengthHeader, &buf[0], ::strlen(&buf[0]));
-
-    (void)QTSS_SendStandardRTSPResponse(inRequest, inSession, 0);
-
-        // On solaris, the maximum # of vectors is very low (= 16) so to ensure that we are still able to
-        // send the SDP if we have a number greater than the maximum allowed, we coalesce the vectors into
-        // a single big buffer
-#ifdef __solaris__
-    if (inNumVectors > IOV_MAX )
-    {
-            char* describeDataBuffer = QTSSModuleUtils::CoalesceVectors(describeData, inNumVectors, inTotalLength);
-            (void)QTSS_Write(inRequest, (void *)describeDataBuffer, inTotalLength, NULL, qtssWriteFlagsNoFlags);
-            // deleting memory allocated by the CoalesceVectors call
-            delete [] describeDataBuffer;
-    }
-    else
-        (void)QTSS_WriteV(inRequest, describeData, inNumVectors, inTotalLength, NULL);
-#else
-    (void)QTSS_WriteV(inRequest, describeData, inNumVectors, inTotalLength, NULL);
-#endif
-
-}
-
-char*   QTSSModuleUtils::CoalesceVectors(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength)
-{
-    if (inTotalLength == 0)
-        return NULL;
-    
-    char* buffer = NEW char[inTotalLength];
-    UInt32 bufferOffset = 0;
-    
-    for (UInt32 index = 0; index < inNumVectors; index++)
-    {
-        ::memcpy (buffer + bufferOffset, inVec[index].iov_base, inVec[index].iov_len);
-        bufferOffset += inVec[index].iov_len;
-    }
-    
-    Assert (bufferOffset == inTotalLength);
-    
-    return buffer;
 }
 
 QTSS_ModulePrefsObject QTSSModuleUtils::GetModulePrefsObject(QTSS_ModuleObject inModObject)
@@ -907,31 +630,6 @@ Bool16 QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_Att
 
     return false;
 }
-
-QTSS_Error QTSSModuleUtils::AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*foundUser, Bool16 *authContinue)
-{
-    QTSS_Error theErr = QTSS_NoErr;
-    //printf("QTSSModuleUtils::AuthorizeRequest allowed=%d foundUser=%d authContinue=%d\n", *allowed, *foundUser, *authContinue);
-    
-    if (NULL != allowed)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserAllowed, 0, allowed, sizeof(Bool16));
-    if (QTSS_NoErr != theErr)
-        return theErr;
-    
-    if (NULL != foundUser)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserFound, 0, foundUser, sizeof(Bool16));
-    if (QTSS_NoErr != theErr)
-        return theErr;  
-    
-    if (NULL != authContinue)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqAuthHandled, 0, authContinue, sizeof(Bool16));
-        
-    return theErr;
-}
-
-
-
-
 
 IPComponentStr IPComponentStr::sLocalIPCompStr("127.0.0.*");
 

@@ -129,29 +129,20 @@ class QTSSModule : public QTSSDictionary, public Task
         {
             kInitializeRole =           0,
             kShutdownRole =             1,
-            kRTSPFilterRole =           2,
-            kRTSPRouteRole =            3,
-            kRTSPAthnRole =             4,          
-            kRTSPAuthRole =             5,
-            kRTSPPreProcessorRole =     6,
-            kRTSPRequestRole =          7,
-            kRTSPPostProcessorRole =    8,
-            kRTSPSessionClosingRole =   9,
-            kErrorLogRole =             10,
-            kRereadPrefsRole =          11,
-            kOpenFileRole =             12,
-            kOpenFilePreProcessRole =   13,
-            kAdviseFileRole =           14,
-            kReadFileRole =             15,
-            kCloseFileRole =            16,
-            kRequestEventFileRole =     17,
-            kRTSPIncomingDataRole =     18,
-            kStateChangeRole =          19,
-            kTimedIntervalRole =        20,
-            kNonceRole        =         21,//add
-			kAuthRole         =         22,//add
+            kErrorLogRole =             2,
+            kRereadPrefsRole =          3,
+            kOpenFileRole =             4,
+            kOpenFilePreProcessRole =   5,
+            kAdviseFileRole =           6,
+            kReadFileRole =             7,
+            kCloseFileRole =            8,
+            kRequestEventFileRole =     9,
+            kStateChangeRole =          10,
+            kTimedIntervalRole =        11,
+            kNonceRole        =         12,//add
+			kAuthRole         =         13,//add
 
-            kNumRoles =                 23
+            kNumRoles =                 14
         };
         typedef UInt32 RoleIndex;
         
@@ -178,9 +169,7 @@ class QTSSModule : public QTSSDictionary, public Task
         QTSSDictionary*             fAttributes;
         OSMutex                     fAttributesMutex;   
 
-        static Bool16       sHasRTSPRequestModule;
         static Bool16       sHasOpenFileModule;
-        static Bool16       sHasRTSPAuthenticateModule;
     
         static QTSSAttrInfoDict::AttrInfo   sAttributes[];
         static char* sRoleNames[];
