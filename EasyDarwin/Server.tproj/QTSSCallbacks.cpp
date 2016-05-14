@@ -1008,7 +1008,7 @@ void* QTSSCallbacks::Easy_GetHLSessions()
 	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");	
 	char count[16] = { 0 };
 	sprintf(count,"%d", hlsMap->GetNumRefsInTable());
-	ack.SetBodyValue("SessionCount", count );
+	ack.SetBodyValue(EASY_TAG_SESSION_COUNT, count );
 
 	OSRef* theSesRef = NULL;
 
@@ -1072,7 +1072,7 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 
 	char count[16] = { 0 };
 	sprintf(count,"%d", uIndex);
-	ack.SetBodyValue("SessionCount", count);
+	ack.SetBodyValue(EASY_TAG_SESSION_COUNT, count);
 
 	string msg = ack.GetMsg();
 

@@ -30,10 +30,6 @@
 \ingroup EasyDarwin_Tag_Define
 \{
 */
-
-#define EASY_TAG_RTSP									"RTSP"
-#define EASY_TAG_DSS_IP									"DssIP"
-#define EASY_TAG_DSS_PROT								"DssPort"
 #define EASY_TAG_DEVICESERIAL						    "DeviceSerial"
 #define EASY_TAG_CAMERASERIAL						    "CameraSerial"
 #define EASY_TAG_L_CAMERA							    "camera"
@@ -119,6 +115,7 @@
 #define EASY_TAG_STREAM_ID								"StreamID"
 #define EASY_TAG_L_STREAM_ID							"streamid"
 #define EASY_TAG_PLAY_COUNT								"PlayCount"
+#define EASY_TAG_SESSION_COUNT							"SessionCount"
 /*!
 \}
 */
@@ -144,12 +141,7 @@
 #define MSG_SC_FREE_STREAM_ACK								0xe007
 #define MSG_DS_POST_SNAP_REQ								0x0008//设备向CMS上传快照
 #define MSG_SD_POST_SNAP_ACK								0xe008
-
 #define MSG_SC_LIST_RECORD_ACK								0xe009
-
-
-
-//保留
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
 #define MSG_SC_RTSP_PUSH_SESSION_LIST_ACK					0xeee2
@@ -270,7 +262,7 @@ enum EasyDarwinTerminalType
 	EASY_TERMINAL_TYPE_Android = 2,			///< ANDROID
 	EASY_TERMINAL_TYPE_IOS = 3,				///< IOS
 	EASY_TERMINAL_TYPE_WEB = 4,				///< WEB
-	EASY_TERMINAL_TYPE_PC  = 5					///< PC
+	EASY_TERMINAL_TYPE_PC  = 5				///< PC
 };
 /*!
 \}
