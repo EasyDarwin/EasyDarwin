@@ -30,6 +30,28 @@
 \ingroup EasyDarwin_Tag_Define
 \{
 */
+
+#define EASY_TAG_RTSP									"RTSP"
+#define EASY_TAG_DSS_IP									"DssIP"
+#define EASY_TAG_DSS_PROT								"DssPort"
+#define EASY_TAG_DEVICESERIAL						    "DeviceSerial"
+#define EASY_TAG_CAMERASERIAL						    "CameraSerial"
+#define EASY_TAG_L_CAMERA							    "camera"
+#define EASY_TAG_CAMERAS								"Cameras"
+#define EASY_TAG_TAG									"Tag"
+#define EASY_TAG_DEVICE_COUNT							"DeviceCount"
+#define EASY_TAG_CHANNEL_COUNT							"ChannelCount"
+#define EASY_TAG_URL									"URL"
+#define EASY_TAG_SNAP_URL								"SnapURL"
+#define EASY_TAG_SERVER_IP                              "Server_IP"
+#define EASY_TAG_SERVER_PORT                            "Server_PORT"
+#define EASY_TAG_TYPE									"Type"
+#define EASY_TAG_SERIAL									"Serial"
+#define EASY_TAG_CHANNEL								"Channel"
+#define EASY_TAG_L_CHANNEL								"channel"
+#define EASY_TAG_IMAGE								    "Image"
+#define EASY_TAG_RESERVE								"Reserve"
+#define EASY_TAG_L_RESERVE								"reserve"
 #define EASY_TAG_ROOT									"EasyDarwin"
 #define EASY_TAG_HEADER									"Header"
 #define EASY_TAG_BODY									"Body"
@@ -43,7 +65,6 @@
 #define EASY_TAG_ERROR_STRING							"ErrorString"
 #define EASY_TAG_REDIRECT								"Redirect"
 #define EASY_TAG_SERVER_ADDRESS							"ServerAddress"
-#define EASY_TAG_SERVER_PORT							"ServerPort"
 #define EASY_TAG_KEY									"Key"
 #define EASY_TAG_NAME									"Name"
 #define EASY_TAG_PASSWORD								"Password"
@@ -52,6 +73,8 @@
 #define EASY_TAG_PERMISSION								"Permission"
 #define EASY_TAG_PAGE_NUM								"PageNum"
 #define EASY_TAG_DEVICE									"Device"
+#define EASY_TAG_DEVICES								"Devices"
+#define EASY_TAG_L_DEVICE								"device"
 #define EASY_TAG_DEVICE_TYPE							"DeviceType"
 #define EASY_TAG_DEVICE_SUM_PER_PAGE					"DeviceSumPerPage"
 #define EASY_TAG_DEVICE_SUM								"DeviceSum"
@@ -77,6 +100,7 @@
 #define EASY_TAG_USER									"User"
 #define EASY_TAG_USER_NAME								"UserName"
 #define EASY_TAG_PROTOCOL								"Protocol"
+#define EASY_TAG_L_PROTOCOL								"protocol"
 #define EASY_TAG_AUDIO									"Audio"
 #define EASY_TAG_VIDEO									"Video"
 #define EASY_TAG_CMD									"Command"
@@ -93,6 +117,8 @@
 #define EASY_TAG_TIME									"Time"
 #define EASY_TAG_SCHEDULE								"Schedule" 
 #define EASY_TAG_STREAM_ID								"StreamID"
+#define EASY_TAG_L_STREAM_ID							"streamid"
+#define EASY_TAG_PLAY_COUNT								"PlayCount"
 /*!
 \}
 */
