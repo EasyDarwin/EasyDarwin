@@ -121,13 +121,6 @@ class QTSSModuleUtils
         // or qtssIllegalAttrID if it isn't found.
         static QTSS_AttributeID GetAttrID(QTSS_Object inObject, char* inAttributeName);
 
-        static QTSS_AttrRights GetRights(QTSS_UserProfileObject theUserProfileObject);
-        static char* GetExtendedRights(QTSS_UserProfileObject theUserProfileObject, UInt32 index);
-       
-        static char*  GetUserName_Copy(QTSS_UserProfileObject inUserProfile);
-        static char** GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfile, UInt32 *outNumGroupsPtr);
-        static Bool16 UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroupName, UInt32 inGroupNameLen);
-
 		static QTSS_AttributeID CreateAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType, void* inDefaultValue, UInt32 inBufferLen);
   
         static Bool16 AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *theAddressPtr);

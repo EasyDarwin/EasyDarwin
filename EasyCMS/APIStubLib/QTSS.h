@@ -139,7 +139,7 @@ typedef UInt32 QTSS_RTPPayloadType;
 enum
 {
     qtssDynamicObjectType           = FOUR_CHARS_TO_INT('d', 'y', 'm', 'c'), //dymc
-    qtssRTSPSessionObjectType       = FOUR_CHARS_TO_INT('s', 's', 'e', 'o'), //sseo
+    qtssHTTPSessionObjectType       = FOUR_CHARS_TO_INT('s', 's', 'e', 'o'), //sseo
     qtssServerObjectType            = FOUR_CHARS_TO_INT('s', 'e', 'r', 'o'), //sero
     qtssPrefsObjectType             = FOUR_CHARS_TO_INT('p', 'r', 'f', 'o'), //prfo
     qtssTextMessagesObjectType      = FOUR_CHARS_TO_INT('t', 'x', 't', 'o'), //txto
@@ -147,7 +147,6 @@ enum
     qtssModuleObjectType            = FOUR_CHARS_TO_INT('m', 'o', 'd', 'o'), //modo
     qtssModulePrefsObjectType       = FOUR_CHARS_TO_INT('m', 'o', 'd', 'p'), //modp
     qtssAttrInfoObjectType          = FOUR_CHARS_TO_INT('a', 't', 't', 'r'), //attr
-    qtssUserProfileObjectType       = FOUR_CHARS_TO_INT('u', 's', 'p', 'o'), //uspo
     qtssConnectedUserObjectType     = FOUR_CHARS_TO_INT('c', 'u', 's', 'r'), //cusr    
 };
 typedef UInt32 QTSS_ObjectType;
@@ -543,23 +542,6 @@ enum
     qtssAttrInfoNumParams           = 4
 };
 typedef UInt32 QTSS_AttrInfoObjectAttributes;
-
-enum
-{
-    //QTSS_UserProfileObject parameters
-    
-    // All of these parameters are preemptive-safe.
-    
-    qtssUserName                = 0, //read  //char array
-    qtssUserPassword            = 1, //r/w   //char array
-    qtssUserGroups              = 2, //r/w   //char array -  multi-valued attribute, all values should be C strings padded with \0s to                                         //              make them all of the same length 
-    qtssUserRealm               = 3, //r/w   //char array -  the authentication realm for username
-    qtssUserRights              = 4, //r/w   //QTSS_AttrRights - rights granted this user
-    qtssUserExtendedRights      = 5, //r/w   //qtssAttrDataTypeCharArray - a list of strings with extended rights granted to the user.
-    qtssUserQTSSExtendedRights  = 6, //r/w   //qtssAttrDataTypeCharArray - a private list of strings with extended rights granted to the user and reserved by QTSS/Apple.
-    qtssUserNumParams           = 7,
-};
-typedef UInt32 QTSS_UserProfileObjectAttributes;
 
 enum
 {

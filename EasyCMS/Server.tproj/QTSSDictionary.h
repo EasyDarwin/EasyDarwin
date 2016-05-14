@@ -385,10 +385,9 @@ class QTSSDictionaryMap
             kModuleDictIndex                = 6,
             kModulePrefsDictIndex           = 7,
             kAttrInfoDictIndex              = 8,
-            kQTSSUserProfileDictIndex       = 9,
-            kQTSSConnectedUserDictIndex     = 10,
+            kQTSSConnectedUserDictIndex     = 9,
 
-            kNumDictionaries                = 11,
+            kNumDictionaries                = 10,
             
             kNumDynamicDictionaryTypes      = 500,
             kIllegalDictionary              = kNumDynamicDictionaryTypes + kNumDictionaries
