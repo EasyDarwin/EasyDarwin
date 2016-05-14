@@ -868,9 +868,6 @@ void QTSSDictionaryMap::Initialize()
     sDictionaryMaps[kFileDictIndex]         = new QTSSDictionaryMap(qtssFlObjNumParams);
     sDictionaryMaps[kModuleDictIndex]       = new QTSSDictionaryMap(qtssModNumParams);
     sDictionaryMaps[kModulePrefsDictIndex]  = new QTSSDictionaryMap(0, QTSSDictionaryMap::kInstanceAttrsAllowed | QTSSDictionaryMap::kCompleteFunctionsAllowed);
-
-    sDictionaryMaps[kQTSSConnectedUserDictIndex] = new QTSSDictionaryMap(qtssConnectionNumParams);
-
 }
 
 QTSSDictionaryMap::QTSSDictionaryMap(UInt32 inNumReservedAttrs, UInt32 inFlags)
@@ -1120,7 +1117,6 @@ UInt32  QTSSDictionaryMap::GetMapIndex(QTSS_ObjectType inType)
         case qtssModuleObjectType:          return kModuleDictIndex;//8
         case qtssModulePrefsObjectType:     return kModulePrefsDictIndex;//9
         case qtssAttrInfoObjectType:        return kAttrInfoDictIndex;//10
-        case qtssConnectedUserObjectType:   return kQTSSConnectedUserDictIndex;//11
         default:                            return kIllegalDictionary;
      }
      return kIllegalDictionary;

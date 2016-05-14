@@ -72,26 +72,6 @@ UInt32                  QTSServerInterface::sNumModulesInRole[QTSSModule::kNumRo
 OSQueue                 QTSServerInterface::sModuleQueue;
 QTSSErrorLogStream      QTSServerInterface::sErrorLogStream;
 
-
-QTSSAttrInfoDict::AttrInfo  QTSServerInterface::sConnectedUserAttributes[] = 
-{   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
-    /* 0  */ { "qtssConnectionType",                    NULL,   qtssAttrDataTypeCharArray,      qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    /* 1  */ { "qtssConnectionCreateTimeInMsec",        NULL,   qtssAttrDataTypeTimeVal,        qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    /* 2  */ { "qtssConnectionTimeConnectedInMsec",     TimeConnected,  qtssAttrDataTypeTimeVal,        qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 3  */ { "qtssConnectionBytesSent",               NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    /* 4  */ { "qtssConnectionMountPoint",              NULL,   qtssAttrDataTypeCharArray,      qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    /* 5  */ { "qtssConnectionHostName",                NULL,   qtssAttrDataTypeCharArray,      qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe } ,
-
-    /* 6  */ { "qtssConnectionSessRemoteAddrStr",       NULL,   qtssAttrDataTypeCharArray,      qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    /* 7  */ { "qtssConnectionSessLocalAddrStr",        NULL,   qtssAttrDataTypeCharArray,      qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    
-    /* 8  */ { "qtssConnectionCurrentBitRate",          NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    /* 9  */ { "qtssConnectionPacketLossPercent",       NULL,   qtssAttrDataTypeFloat32,        qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-    // this last parameter is a workaround for the current dictionary implementation.  For qtssConnectionTimeConnectedInMsec above we have a param
-    // retrieval function.  This needs storage to keep the value returned, but if it sets its own param then the function no longer gets called.
-    /* 10 */ { "qtssConnectionTimeStorage",             NULL,   qtssAttrDataTypeTimeVal,        qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-};
-
 QTSSAttrInfoDict::AttrInfo  QTSServerInterface::sAttributes[] = 
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
     /* 0  */ { "qtssServerAPIVersion",          NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
@@ -133,11 +113,6 @@ void    QTSServerInterface::Initialize()
         QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kServerDictIndex)->
             SetAttribute(x, sAttributes[x].fAttrName, sAttributes[x].fFuncPtr,
                 sAttributes[x].fAttrDataType, sAttributes[x].fAttrPermission);
-
-    for (UInt32 y = 0; y < qtssConnectionNumParams; y++)
-        QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kQTSSConnectedUserDictIndex)->
-            SetAttribute(y, sConnectedUserAttributes[y].fAttrName, sConnectedUserAttributes[y].fFuncPtr,
-                sConnectedUserAttributes[y].fAttrDataType, sConnectedUserAttributes[y].fAttrPermission);
 
     //Write out a premade server header
     StringFormatter serverFormatter(sServerHeaderPtr.Ptr, kMaxServerHeaderLen);
@@ -315,22 +290,6 @@ void* QTSServerInterface::IsOutOfDescriptors(QTSSDictionary* inServer, UInt32* o
     *outLen = sizeof(theServer->fIsOutOfDescriptors);
     return &theServer->fIsOutOfDescriptors;
 }
-
-void* QTSServerInterface::TimeConnected(QTSSDictionary* inConnection, UInt32* outLen)
-{
-    SInt64 connectTime;
-    void* result;
-    UInt32 len = sizeof(connectTime);
-    inConnection->GetValue(qtssConnectionCreateTimeInMsec, 0, &connectTime, &len);
-    SInt64 timeConnected = OS::Milliseconds() - connectTime;
-    *outLen = sizeof(timeConnected);
-    inConnection->SetValue(qtssConnectionTimeStorage, 0, &timeConnected, sizeof(connectTime));
-    inConnection->GetValuePtr(qtssConnectionTimeStorage, 0, &result, outLen);
-
-    // Return the result
-    return result;
-}
-
 
 QTSS_Error  QTSSErrorLogStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten, UInt32 inFlags)
 {

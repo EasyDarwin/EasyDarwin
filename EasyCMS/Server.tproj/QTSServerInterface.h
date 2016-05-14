@@ -266,8 +266,6 @@ class QTSServerInterface : public QTSSDictionary
             kMaxServerHeaderLen = 1000
         };
 
-        static void* TimeConnected(QTSSDictionary* inConnection, UInt32* outLen);
-
         static UInt32       sServerAPIVersion;
         static StrPtrLen    sServerNameStr;
         static StrPtrLen    sServerVersionStr;
