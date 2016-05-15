@@ -32,7 +32,6 @@ using namespace std;
 
 static const int sWaitDeviceRspTimeout = 10;
 
-
 HTTPSession::HTTPSession( )
 	: HTTPSessionInterface(),
 	fRequest(NULL),
@@ -526,6 +525,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 	return QTSS_NoErr;
 }
+
 void HTTPSession::CleanupRequest()
 {
 	if (fRequest != NULL)
@@ -541,6 +541,7 @@ void HTTPSession::CleanupRequest()
 	// Clear out our last value for request body length before moving onto the next request
 	this->SetRequestBodyLength(-1);
 }
+
 Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
@@ -557,6 +558,7 @@ Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
 	}
 	return overLimit;
 }
+
 QTSS_Error HTTPSession::DumpRequestData()
 {
 	char theDumpBuffer[EASY_REQUEST_BUFFER_SIZE_LEN];
@@ -586,7 +588,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//Éè±¸¿ìÕÕÇëÇó
 	if(strTime.empty())//Èç¹ûÃ»ÓĞÊ±¼äÊôĞÔ£¬Ôò·şÎñ¶Ë×Ô¶¯ÎªÆäÉú³ÉÒ»¸ö
 		strTime = EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx);
 		
-	if(image.size()<=0||device_serial.size()<=0||strType.size()<=0||strTime.size()<=0)
+	if( (image.size() <= 0) || (device_serial.size() <= 0) || (strType.size() <= 0) || (strTime.size() <= 0) )
 		return QTSS_BadArgument;
 
 	//ÏÈ¶ÔÊı¾İ½øĞĞBase64½âÂë
@@ -651,6 +653,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//Éè±¸¿ìÕÕÇëÇó
 		pOutputStream->Put((char*)msg.data(), msg.length());
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 {
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTP Header)
@@ -666,6 +669,7 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)//Éè±¸×¢²áÈÏÖ¤ÇëÇó£¬ÆäËûÇëÇó´¦ÀíÇ°Ò»¶¨Òª¾­¹ıÈÏÖ¤
 {
 	QTSS_Error theErr = QTSS_NoErr;		
@@ -742,6 +746,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)//Éè±¸×¢²áÈÏÖ¤Ç
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgStreamStopReqRestful(char *queryString)//¿Í»§¶ËµÄÍ£Ö¹Ö±²¥ÇëÇó£¬Restful½Ó¿Ú£¬
 //ËäÈ»¿ÉÒÔÔÚÀïÃæ½øĞĞ´¦Àí£¬µ«»¹ÊÇ·Åµ½ExecNetMsgCSFreeStreamReqÖĞ,Ö»±£ÁôÒ»·İ´¦Àí
 {
@@ -787,6 +792,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStopReqRestful(char *queryString)//¿Í»§¶
 	strcpy(fRequestBody,buffer.c_str());
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö¹Ö±²¥ÇëÇó
 {
 	//Ëã·¨ÃèÊö£º²éÕÒÖ¸¶¨Éè±¸£¬ÈôÉè±¸´æÔÚ£¬É¾³ısetÖĞµÄµ±Ç°¿Í»§¶ËÔªËØ²¢ÅĞ¶ÏsetÊÇ·ñÎª¿Õ£¬Îª¿ÕÔòÏòÉè±¸·¢³öÍ£Ö¹Á÷ÇëÇó
@@ -849,6 +855,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	//¿Í»§¶Ë²¢²»¹ØĞÄ¶ÔÓÚÍ£Ö¹Ö±²¥µÄ»ØÓ¦£¬Òò´Ë¶Ô¿Í»§¶ËµÄÍ£Ö¹Ö±²¥²»½øĞĞ»ØÓ¦
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgDSStreamStopAck(const char* json)//Éè±¸µÄÍ£Ö¹ÍÆÁ÷»ØÓ¦
 {
 	if(!fAuthenticated)//Ã»ÓĞ½øĞĞÈÏÖ¤ÇëÇó
@@ -856,6 +863,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSStreamStopAck(const char* json)//Éè±¸µÄÍ£Ö¹Í
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgStreamStartReqRestful(char *queryString)//·Åµ½ProcessRequestËùÔÚµÄ×´Ì¬È¥´¦Àí£¬·½±ã¶à´ÎÑ­»·µ÷ÓÃ
 {
 	/*//ÔİÊ±×¢ÊÍµô£¬Êµ¼ÊÉÏÊÇĞèÒªÈÏÖ¤µÄ
@@ -900,6 +908,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStartReqRestful(char *queryString)//·Åµ½
 	return QTSS_NoErr;
 
 }
+
 QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷ÇëÇó
 {
 	/*//ÔİÊ±×¢ÊÍµô£¬Êµ¼ÊÉÏÊÇĞèÒªÈÏÖ¤µÄ
@@ -1122,6 +1131,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 		pOutputStream->Put((char*)msg.data(), msg.length());
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á÷»ØÓ¦
 {
 	if(!fAuthenticated)//Ã»ÓĞ½øĞĞÈÏÖ¤ÇëÇó
@@ -1172,6 +1182,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 	}
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReqEx(char *queryString)//¿Í»§¶Ë»ñµÃÉè±¸ÁĞ±í
 {
 	//queryStringÔÚÕâ¸öº¯ÊıÖĞÊÇÃ»ÓĞÓÃµÄ£¬½öÎªÁË±£³Ö½Ó¿ÚµÄÒ»ÖÂĞÔ¡£
@@ -1234,6 +1245,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReqEx(char *queryString)//¿Í»§¶Ë»
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉè±¸ÁĞ±í
 {
 	/*
@@ -1294,6 +1306,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉ
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgGetCameraListReqEx(char* queryString)
 {
 	/*	
@@ -1375,6 +1388,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetCameraListReqEx(char* queryString)
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 {
 	/*	
@@ -1455,6 +1469,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 
 	return QTSS_NoErr;
 }
+
 QTSS_Error HTTPSession::ProcessRequest()//´¦ÀíÇëÇó
 {
 	//OSCharArrayDeleter charArrayPathDeleter(theRequestBody);//²»ÒªÔÚÕâÉ¾³ı£¬ÒòÎª¿ÉÄÜÖ´ĞĞ¶à´Î£¬½öµ±¶ÔÇëÇóµÄ´¦ÀíÍê±ÏºóÔÙ½øĞĞÉ¾³ı
