@@ -51,24 +51,24 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 : EasyProtocol(MSG_DS_REGISTER_REQ)
 , nvr_(nvr)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("AppType", EasyProtocol::GetAppTypeString(appType));
-	SetHeaderValue("TerminalType", EasyProtocol::GetTerminalTypeString(terminalType));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_APP_TYPE, EasyProtocol::GetAppTypeString(appType));
+	SetHeaderValue(EASY_TAG_TERMINAL_TYPE, EasyProtocol::GetTerminalTypeString(terminalType));
 
-	SetBodyValue("Serial", nvr.serial_);
-	SetBodyValue("Name", nvr.name_);
-	SetBodyValue("Tag", nvr.tag_);
-	SetBodyValue("Token", nvr.password_);
+	SetBodyValue(EASY_TAG_SERIAL, nvr.serial_);
+	SetBodyValue(EASY_TAG_NAME, nvr.name_);
+	SetBodyValue(EASY_TAG_TAG, nvr.tag_);
+	SetBodyValue(EASY_TAG_TOKEN, nvr.password_);
 	if(appType == EASY_APP_TYPE_NVR)
 	{
-		SetBodyValue("ChannelCount", nvr.channels_.size());
+		SetBodyValue(EASY_TAG_CHANNEL_COUNT, nvr.channels_.size());
 		for(EasyDevices::iterator it = nvr.channels_.begin(); it != nvr.channels_.end(); it++)
 		{
 			Json::Value value;
-			value["Channel"] = it->serial_;
-			value["Name"] = it->name_;		
-			value["Status"] = it->status_;
-			root[EASY_TAG_ROOT][EASY_TAG_BODY]["Channels"].append(value);		
+			value[EASY_TAG_CHANNEL] = it->serial_;
+			value[EASY_TAG_NAME] = it->name_;		
+			value[EASY_TAG_STATUS] = it->status_;
+			root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);		
 		}
 	}
 }
@@ -77,22 +77,22 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 : EasyProtocol(msg, MSG_DS_REGISTER_REQ)
 {
-	nvr_.serial_ = GetBodyValue("Serial");
-	nvr_.name_ = GetBodyValue("Name");
-	nvr_.tag_ = GetBodyValue("Tag");
-	nvr_.password_ = GetBodyValue("Token");
+	nvr_.serial_ = GetBodyValue(EASY_TAG_SERIAL);
+	nvr_.name_ = GetBodyValue(EASY_TAG_NAME);
+	nvr_.tag_ = GetBodyValue(EASY_TAG_TAG);
+	nvr_.password_ = GetBodyValue(EASY_TAG_TOKEN);
 	
 	nvr_.channels_.clear();
 
-	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].size();  
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].size();  
 
 	for(int i = 0; i < size; i++)  
 	{  
-		Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"][i];  
+		Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS][i];  
 		EasyDevice camera;
-		camera.name_ = json_camera["CameraName"].asString();
-		camera.serial_ = json_camera["CameraSerial"].asString();		
-		camera.status_ = json_camera["Status"].asString();	
+		camera.name_ = json_camera[EASY_TAG_CAMERA_NAME].asString();
+		camera.serial_ = json_camera[EASY_TAG_CAMERASERIAL].asString();		
+		camera.status_ = json_camera[EASY_TAG_STATUS].asString();	
 		nvr_.channels_.push_back(camera);
 	}  
 }
@@ -101,9 +101,9 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(EasyJsonValue &body, size_t cseq, size_t error)
 : EasyProtocol(MSG_SD_REGISTER_ACK)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -121,7 +121,7 @@ EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(const char* msg)
 EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(EasyJsonValue &body, size_t cseq)
 : EasyProtocol(MSG_SD_PUSH_STREAM_REQ)
 {
-	SetHeaderValue("CSeq", cseq);
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
 	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -139,9 +139,9 @@ EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(const char *msg)
 EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(EasyJsonValue &body, size_t cseq, size_t error)
 : EasyProtocol(MSG_DS_PUSH_STREAM_ACK)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -159,7 +159,7 @@ EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(const char *msg)
 EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(EasyJsonValue &body, size_t cseq)
 :EasyProtocol(MSG_SD_STREAM_STOP_REQ)
 {
-	SetHeaderValue("CSeq", cseq);
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
 	
 	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -177,9 +177,9 @@ EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(const char *msg)
 EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq, size_t error)
 : EasyProtocol(MSG_SD_STREAM_STOP_REQ)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -295,12 +295,12 @@ EasyMsgSCStartHLSACK::EasyMsgSCStartHLSACK(const char *msg)
 
 void EasyMsgSCStartHLSACK::SetStreamName(const char* sName)
 {
-	SetBodyValue("name", sName);
+	SetBodyValue(EASY_TAG_L_NAME, sName);
 }
 
 void EasyMsgSCStartHLSACK::SetStreamURL(const char* sURL)
 {
-	SetBodyValue("url", sURL);
+	SetBodyValue(EASY_TAG_L_URL, sURL);
 }
 
 EasyMsgSCHLSessionListACK::EasyMsgSCHLSessionListACK()
@@ -316,12 +316,12 @@ EasyMsgSCHLSessionListACK::EasyMsgSCHLSessionListACK(const char* msg)
 bool EasyMsgSCHLSessionListACK::AddSession(EasyDarwinHLSession &session)
 {	
 	Json::Value value;
-	value["index"] = session.index;
-	value["name"] = session.SessionName;
-	value["url"] = session.HlsUrl;
-	value["source"] = session.sourceUrl;
-	value["Bitrate"] = session.bitrate;
-	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Sessions"].append(value);
+	value[EASY_TAG_L_INDEX] = session.index;
+	value[EASY_TAG_L_NAME] = session.SessionName;
+	value[EASY_TAG_L_URL] = session.HlsUrl;
+	value[EASY_TAG_L_SOURCE] = session.sourceUrl;
+	value[EASY_TAG_BITRATE] = session.bitrate;
+	root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_SESSIONS].append(value);
 	return true;
 }
 
@@ -330,19 +330,19 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(EasyDevices & devices, size_t cse
 : EasyProtocol(MSG_SC_DEVICE_LIST_ACK)
 , devices_(devices)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-	SetBodyValue("DeviceCount", devices.size());
+	SetBodyValue(EASY_TAG_DEVICE_COUNT, devices.size());
 	for (EasyDevices::iterator it = devices.begin(); it != devices.end(); it++)
 	{
 		Json::Value value;
-		value["DeviceSerial"] = it->serial_;
-		value["DeviceName"] = it->name_;
-		value["DeviceTag"] = it->tag_;
+		value[EASY_TAG_DEVICESERIAL] = it->serial_;
+		value[EASY_TAG_DEVICE_NAME] = it->name_;
+		value[EASY_TAG_DEVICE_TAG] = it->tag_;
 		//value["Status"] = it->status_;
-		root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].append(value);
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES].append(value);
 	}
 }
 
@@ -350,15 +350,15 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const char * msg)
 : EasyProtocol(msg, MSG_SC_DEVICE_LIST_ACK)
 {
 	devices_.clear();
-	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].size();
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES].size();
 
 	for (int i = 0; i < size; i++)
 	{
-		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"][i];
+		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES][i];
 		EasyDevice device;
-		device.name_ = json_["DeviceSerial"].asString();
-		device.serial_ = json_["DeviceName"].asString();
-		device.tag_ = json_["DeviceTag"].asString();
+		device.name_ = json_[EASY_TAG_DEVICE_NAME].asString();
+		device.serial_ = json_[EASY_TAG_DEVICESERIAL].asString();
+		device.tag_ = json_[EASY_TAG_DEVICE_TAG].asString();
 		//device.status_ = json_["Status"].asString();
 		devices_.push_back(device);
 	}
@@ -368,19 +368,19 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const char * msg)
 EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices & cameras, string devcei_serial, size_t cseq, size_t error)
 : EasyProtocol(MSG_SC_CAMERA_LIST_ACK)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-	SetBodyValue("DeviceSerial", devcei_serial);
-	SetBodyValue("CameraCount", cameras.size());
+	SetBodyValue(EASY_TAG_DEVICESERIAL, devcei_serial);
+	SetBodyValue(EASY_TAG_CAMERA_COUNT, cameras.size());
 	for (EasyDevices::iterator it = cameras.begin(); it != cameras.end(); it++)
 	{
 		Json::Value value;
-		value["CameraSerial"] = it->serial_;
-		value["CameraName"] = it->name_;
-        value["Status"] = it->status_;
-		root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].append(value);
+		value[EASY_TAG_CAMERASERIAL] = it->serial_;
+		value[EASY_TAG_CAMERA_NAME] = it->name_;
+        value[EASY_TAG_STATUS] = it->status_;
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].append(value);
 	}
 }
 
@@ -388,15 +388,15 @@ EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(const char * msg)
 : EasyProtocol(msg, MSG_SC_CAMERA_LIST_ACK)
 {
 	cameras_.clear();
-	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].size();
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].size();
 
 	for (int i = 0; i < size; i++)
 	{
-		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"][i];
+		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS][i];
 		EasyDevice camera;
-		camera.name_ = json_["CameraSerial"].asString();
-		camera.serial_ = json_["CameraName"].asString();
-        camera.status_ = json_["Status"].asString();
+		camera.name_ = json_[EASY_TAG_CAMERASERIAL].asString();
+		camera.serial_ = json_[EASY_TAG_CAMERA_NAME].asString();
+        camera.status_ = json_[EASY_TAG_STATUS].asString();
 		cameras_.push_back(camera);
 	}
 }
@@ -404,9 +404,9 @@ EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(const char * msg)
 EasyMsgSCGetStreamACK::EasyMsgSCGetStreamACK(EasyJsonValue &body, size_t cseq, size_t error)
 : EasyProtocol(MSG_SC_GET_STREAM_ACK)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -422,9 +422,9 @@ EasyMsgSCGetStreamACK::EasyMsgSCGetStreamACK(const char *msg)
 EasyMsgSCFreeStreamACK::EasyMsgSCFreeStreamACK(EasyJsonValue & body, size_t cseq, size_t error)
 : EasyProtocol(MSG_SC_FREE_STREAM_ACK)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -440,7 +440,7 @@ EasyMsgSCFreeStreamACK::EasyMsgSCFreeStreamACK(const char * msg)
 EasyMsgDSPostSnapREQ::EasyMsgDSPostSnapREQ(EasyJsonValue & body, size_t cseq)
 : EasyProtocol(MSG_DS_POST_SNAP_REQ)
 {
-	SetHeaderValue("CSeq", cseq);
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
 	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -456,9 +456,9 @@ EasyMsgDSPostSnapREQ::EasyMsgDSPostSnapREQ(const char * msg)
 EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(EasyJsonValue & body, size_t cseq, size_t error)
 : EasyProtocol(MSG_SD_POST_SNAP_ACK)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{
@@ -474,9 +474,9 @@ EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(const char * msg)
 EasyMsgExceptionACK::EasyMsgExceptionACK(size_t cseq, size_t error)
 :EasyProtocol(MSG_SC_EXCEPTION)
 {
-	SetHeaderValue("CSeq", cseq);
-	SetHeaderValue("ErrorNum", error);
-	SetHeaderValue("ErrorString", GetErrorString(error));
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 }
 
 EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK()
@@ -491,10 +491,10 @@ EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK(const char* msg
 bool EasyMsgSCRTSPPushSessionListACK::AddSession(EasyDarwinRTSPSession &session)
 {	
 	Json::Value value;
-	value["index"] = session.index;
-	value["url"] = session.Url;
-	value["name"] = session.Name;
-	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Sessions"].append(value);
+	value[EASY_TAG_L_INDEX] = session.index;
+	value[EASY_TAG_L_URL] = session.Url;
+	value[EASY_TAG_L_NAME] = session.Name;
+	root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_SESSIONS].append(value);
 	return true;
 }
 
@@ -511,10 +511,10 @@ EasyMsgSCListRecordACK::EasyMsgSCListRecordACK(const char *msg)
 bool EasyMsgSCListRecordACK::AddRecord(std::string record)
 {
 	Json::Value value;	
-	value["url"] = record;	
+	value[EASY_TAG_L_URL] = record;	
 	int pos = record.find_last_of('/');	
-	value["time"] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
-	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Records"].append(value);
+	value[EASY_TAG_L_TIME] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
+	root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
 	return true;
 }
 
@@ -528,9 +528,9 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 	EasyProtocol proTemp(json);
 	do 
 	{
-		string strTerminalType	=	proTemp.GetHeaderValue("TerminalType");//获取设备类型
-		string strAppType		=	proTemp.GetHeaderValue("AppType");//获取App类型
-		serial_					=	proTemp.GetBodyValue("Serial");//获取设备序列号
+		string strTerminalType	=	proTemp.GetHeaderValue(EASY_TAG_TERMINAL_TYPE);//获取设备类型
+		string strAppType		=	proTemp.GetHeaderValue(EASY_TAG_APP_TYPE);//获取App类型
+		serial_					=	proTemp.GetBodyValue(EASY_TAG_SERIAL);//获取设备序列号
 
 		if(strTerminalType.size()<=0||serial_.size()<=0||strAppType.size()<=0)
 			break;
@@ -542,24 +542,24 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 		if(eAppType==-1)
 			break;
 
-		name_			=	proTemp.GetBodyValue("Name");//获取设备名称
-		password_		=	proTemp.GetBodyValue("Token");//设备认证码
-		tag_			=	proTemp.GetBodyValue("Tag");//标签
-		channelCount_	=	proTemp.GetBodyValue("ChannelCount");//当前设备包含的摄像头数量
+		name_			=	proTemp.GetBodyValue(EASY_TAG_NAME);//获取设备名称
+		password_		=	proTemp.GetBodyValue(EASY_TAG_TOKEN);//设备认证码
+		tag_			=	proTemp.GetBodyValue(EASY_TAG_TAG);//标签
+		channelCount_	=	proTemp.GetBodyValue(EASY_TAG_CHANNEL_COUNT);//当前设备包含的摄像头数量
 
 		if(eAppType==EASY_APP_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
 		{
 			cameras_.clear();
 			Json::Value *proot=proTemp.GetRoot();
-			int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY]["Channels"].size(); //数组大小 
+			int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size(); //数组大小 
 
 			for(int i = 0; i < size; i++)  
 			{  
-				Json::Value &json_camera = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY]["Channels"][i];  
+				Json::Value &json_camera = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];  
 				EasyDevice camera;
-				camera.name_ = json_camera["Name"].asString();
-				camera.channel_ = json_camera["Channel"].asString();		
-				camera.status_ = json_camera["Status"].asString();	
+				camera.name_ = json_camera[EASY_TAG_NAME].asString();
+				camera.channel_ = json_camera[EASY_TAG_CHANNEL].asString();		
+				camera.status_ = json_camera[EASY_TAG_STATUS].asString();	
 				cameras_.push_back(camera);
 			}  
 		}
@@ -599,10 +599,10 @@ void EasyDarwinRSP::SetBody(EasyJsonValue &body)
 void EasyDarwinRecordListRSP::AddRecord(std::string record)
 {
 	Json::Value value;	
-	value["url"] = record;	
+	value[EASY_TAG_L_URL] = record;	
 	int pos = record.find_last_of('/');	
-	value["time"] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
-	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Records"].append(value);
+	value[EASY_TAG_L_TIME] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
+	root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
 }
 //add,紫光，end
 }

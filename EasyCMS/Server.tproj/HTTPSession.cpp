@@ -614,7 +614,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	fwrite(image.data(), 1, image.size(), fSnap);
 	::fclose(fSnap);
 
-	//设备快照需要保留多个时间属性，一个摄像头一个
+	//设备快照需要保留多个路径属性，一个摄像头一个
 	fDevice.HoldSnapPath(jpgPath,camer_serial);
 
 	//qtss_sprintf(fDeviceSnap, "%s/%s/%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),camer_serial.c_str(),strType.c_str());
@@ -1320,7 +1320,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetCameraListReqEx(char* queryString)
 	if(device_serial==NULL)
 		return QTSS_BadArgument;
 
-	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_CAMERA_LIST_ACK);
+	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_DEVICE_INFO_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		= EASY_PROTOCOL_VERSION;
@@ -1402,7 +1402,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 	if(strDeviceSerial.size()<=0)
 		return QTSS_BadArgument;
 
-	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_CAMERA_LIST_ACK);
+	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_DEVICE_INFO_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
@@ -1509,9 +1509,9 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 		theErr = ExecNetMsgCSDeviceListReq(fRequestBody);//add
 		nRspMsg=MSG_SC_DEVICE_LIST_ACK;
 		break;
-	case MSG_CS_CAMERA_LIST_REQ://摄像头列表请求
+	case MSG_CS_DEVICE_INFO_REQ://摄像头列表请求,设备的具体信息
 		theErr = ExecNetMsgCSCameraListReq(fRequestBody);//add
-		nRspMsg = MSG_SC_CAMERA_LIST_ACK;
+		nRspMsg = MSG_SC_DEVICE_INFO_ACK;
 		break;
 	case MSG_DS_POST_SNAP_REQ://设备快照上传
 		theErr = ExecNetMsgDSPostSnapReq(fRequestBody);
