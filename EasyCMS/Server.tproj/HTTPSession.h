@@ -67,16 +67,16 @@ class HTTPSession : public HTTPSessionInterface
 		
 		QTSS_Error ProcessRequest();//处理请求，单独放到一个状态中去处理，这样方便重复执行
 		QTSS_Error ExecNetMsgErrorReqHandler(HTTPStatusCode errCode);//消息默认处理函数
-		QTSS_Error ExecNetMsgDevRegisterReqEx(const char* json);//设备注册请求
+		QTSS_Error ExecNetMsgDSRegisterReq(const char* json);//设备注册请求
 		QTSS_Error ExecNetMsgStreamStartReqRestful(char *queryString);//客户端拉流请求，Restful接口
-		QTSS_Error ExecNetMsgStreamStartReq(const char* json);//客户端拉流请求
-		QTSS_Error ExecNetMsgStartDeviceStreamRspEx(const char* json);//设备的开始流回应
+		QTSS_Error ExecNetMsgCSGetStreamReq(const char* json);//客户端拉流请求
+		QTSS_Error ExecNetMsgDSPushStreamAck(const char* json);//设备的开始流回应
 		QTSS_Error ExecNetMsgStreamStopReqRestful(char *queryString);//客户端的停止直播请求，Restful接口
-		QTSS_Error ExecNetMsgStreamStopReq(const char *json);//客户端的停止直播请求
-		QTSS_Error ExecNetMsgStreamStopRsp(const char* json);//设备的停止推流回应
-		QTSS_Error ExecNetMsgSnapUpdateReq(const char* json);//设备的快照更新请求
+		QTSS_Error ExecNetMsgCSFreeStreamReq(const char *json);//客户端的停止直播请求
+		QTSS_Error ExecNetMsgDSStreamStopAck(const char* json);//设备的停止推流回应
+		QTSS_Error ExecNetMsgDSPostSnapReq(const char* json);//设备的快照更新请求
 		QTSS_Error ExecNetMsgGetDeviceListReqEx(char *queryString);//客户端获得设备列表,restful接口
-		QTSS_Error ExecNetMsgGetDeviceListReqJsonEx(const char *json);//客户端获得设备列表，json接口
+		QTSS_Error ExecNetMsgCSDeviceListReq(const char *json);//客户端获得设备列表，json接口
 		QTSS_Error ExecNetMsgGetCameraListReqEx(char *queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
 		QTSS_Error ExecNetMsgGetCameraListReqJsonEx(const char *json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
 

@@ -42,7 +42,7 @@ HTTPSession::HTTPSession( )
 {
 	this->SetTaskName("HTTPSession");
 
-	// À˘”–HTTPSession ˝¡ø(∞¸¿®EasyCameraSession/EasyNVRSession/HTTPSession)
+	//À˘”–HTTPSession ˝¡ø(∞¸¿®EasyCameraSession/EasyNVRSession/EasyHTTPSession¿‡–Õ)
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(1);
 
 	fModuleState.curModule = NULL;
@@ -239,11 +239,11 @@ SInt64 HTTPSession::Run()
 					// We are holding mutexes, so we need to force
 					// the same thread to be used for next Run()
 					UInt32 iTemp=fInfo.uWaitingTime;
-					fInfo.uWaitingTime=0;//œ¬¥Œµ»¥˝ ±º‰–Ë“™÷ÿ–¬±ª∏≥÷µ
+					fInfo.uWaitingTime = 0;//œ¬¥Œµ»¥˝ ±º‰–Ë“™÷ÿ–¬±ª∏≥÷µ
 					return iTemp;//µ»¥˝œ¬“ª∏ˆ÷‹∆⁄±ªµ˜”√
 				}
 				delete[] fRequestBody;// Õ∑≈ ˝æ›≤ø∑÷,◊¢“‚‘⁄¥Àø…ƒ‹÷∏’ÎŒ™ø’
-				fRequestBody=NULL;
+				fRequestBody = NULL;
 				fState = kCleaningUp;
 				break;
 			}
@@ -1087,7 +1087,7 @@ QTSS_Error HTTPSession::ExecNetMsgStopDeviceStreamRsp(const char * json)
 
 
 //π´π≤£¨begin
-QTSS_Error HTTPSession::ExecNetMsgSnapUpdateReq(const char* json)//…Ë±∏øÏ’’«Î«Û
+QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//…Ë±∏øÏ’’«Î«Û
 {
 	if(!fAuthenticated) return httpUnAuthorized;
 
@@ -1184,7 +1184,7 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 
 	return QTSS_NoErr;
 }
-QTSS_Error HTTPSession::ExecNetMsgDevRegisterReqEx(const char* json)//…Ë±∏◊¢≤·»œ÷§«Î«Û£¨∆‰À˚«Î«Û¥¶¿Ì«∞“ª∂®“™æ≠π˝»œ÷§
+QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)//…Ë±∏◊¢≤·»œ÷§«Î«Û£¨∆‰À˚«Î«Û¥¶¿Ì«∞“ª∂®“™æ≠π˝»œ÷§
 {
 	QTSS_Error theErr = QTSS_NoErr;		
 	do
@@ -1261,7 +1261,7 @@ QTSS_Error HTTPSession::ExecNetMsgDevRegisterReqEx(const char* json)//…Ë±∏◊¢≤·»œ
 	return QTSS_NoErr;
 }
 QTSS_Error HTTPSession::ExecNetMsgStreamStopReqRestful(char *queryString)//øÕªß∂ÀµƒÕ£÷π÷±≤•«Î«Û£¨RestfulΩ”ø⁄£¨
-//À‰»ªø…“‘‘⁄¿Ô√ÊΩ¯––¥¶¿Ì£¨µ´ªπ «∑≈µΩExecNetMsgStreamStopReq÷–,÷ª±£¡Ù“ª∑›¥¶¿Ì
+//À‰»ªø…“‘‘⁄¿Ô√ÊΩ¯––¥¶¿Ì£¨µ´ªπ «∑≈µΩExecNetMsgCSFreeStreamReq÷–,÷ª±£¡Ù“ª∑›¥¶¿Ì
 {
 		/*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1305,7 +1305,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStopReqRestful(char *queryString)//øÕªß∂
 	strcpy(fRequestBody,buffer.c_str());
 	return QTSS_NoErr;
 }
-QTSS_Error HTTPSession::ExecNetMsgStreamStopReq(const char* json)//øÕªß∂ÀµƒÕ£÷π÷±≤•«Î«Û
+QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷π÷±≤•«Î«Û
 {
 	//À„∑®√Ë ˆ£∫≤È’“÷∏∂®…Ë±∏£¨»Ù…Ë±∏¥Ê‘⁄£¨…æ≥˝set÷–µƒµ±«∞øÕªß∂À‘™Àÿ≤¢≈–∂œset «∑ÒŒ™ø’£¨Œ™ø’‘ÚœÚ…Ë±∏∑¢≥ˆÕ£÷π¡˜«Î«Û
 	/*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
@@ -1367,7 +1367,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStopReq(const char* json)//øÕªß∂ÀµƒÕ£÷π÷
 	//øÕªß∂À≤¢≤ªπÿ–ƒ∂‘”⁄Õ£÷π÷±≤•µƒªÿ”¶£¨“Ú¥À∂‘øÕªß∂ÀµƒÕ£÷π÷±≤•≤ªΩ¯––ªÿ”¶
 	return QTSS_NoErr;
 }
-QTSS_Error HTTPSession::ExecNetMsgStreamStopRsp(const char* json)//…Ë±∏µƒÕ£÷πÕ∆¡˜ªÿ”¶
+QTSS_Error HTTPSession::ExecNetMsgDSStreamStopAck(const char* json)//…Ë±∏µƒÕ£÷πÕ∆¡˜ªÿ”¶
 {
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
 		return httpUnAuthorized;
@@ -1418,7 +1418,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStartReqRestful(char *queryString)//∑≈µΩ
 	return QTSS_NoErr;
 
 }
-QTSS_Error HTTPSession::ExecNetMsgStreamStartReq(const char* json)//øÕªß∂Àø™ º¡˜«Î«Û
+QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//øÕªß∂Àø™ º¡˜«Î«Û
 {
 	/*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1640,7 +1640,7 @@ QTSS_Error HTTPSession::ExecNetMsgStreamStartReq(const char* json)//øÕªß∂Àø™ º¡˜
 		pOutputStream->Put((char*)msg.data(), msg.length());
 	return QTSS_NoErr;
 }
-QTSS_Error HTTPSession::ExecNetMsgStartDeviceStreamRspEx(const char* json)//…Ë±∏µƒø™ º¡˜ªÿ”¶
+QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡˜ªÿ”¶
 {
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
 		return httpUnAuthorized;
@@ -1752,7 +1752,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReqEx(char *queryString)//øÕªß∂Àª
 
 	return QTSS_NoErr;
 }
-QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReqJsonEx(const char *json)//øÕªß∂ÀªÒµ√…Ë±∏¡–±Ì
+QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//øÕªß∂ÀªÒµ√…Ë±∏¡–±Ì
 {
 	/*
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1989,27 +1989,27 @@ QTSS_Error HTTPSession::ProcessRequest()//¥¶¿Ì«Î«Û
 	switch (nNetMsg)
 	{
 	case MSG_DS_REGISTER_REQ://¥¶¿Ì…Ë±∏…œœﬂœ˚œ¢,…Ë±∏¿‡–Õ∞¸¿®NVR°¢…„œÒÕ∑∫Õ÷«ƒ‹÷˜ª˙
-		theErr = ExecNetMsgDevRegisterReqEx(fRequestBody);
+		theErr = ExecNetMsgDSRegisterReq(fRequestBody);
 		nRspMsg = MSG_SD_REGISTER_ACK;
 		break;
 	case MSG_CS_GET_STREAM_REQ://øÕªß∂Àµƒø™ º¡˜«Î«Û
-		theErr = ExecNetMsgStreamStartReq(fRequestBody);
+		theErr = ExecNetMsgCSGetStreamReq(fRequestBody);
 		nRspMsg = MSG_SC_GET_STREAM_ACK;
 		break;
 	case MSG_DS_PUSH_STREAM_ACK://…Ë±∏µƒø™ º¡˜ªÿ”¶
-		theErr = ExecNetMsgStartDeviceStreamRspEx(fRequestBody);
+		theErr = ExecNetMsgDSPushStreamAck(fRequestBody);
 		nRspMsg=MSG_DS_PUSH_STREAM_ACK;//◊¢“‚£¨’‚¿Ô µº …œ «≤ª”¶∏√‘Ÿªÿ”¶µƒ
 		break;
 	case MSG_CS_FREE_STREAM_REQ://øÕªß∂ÀµƒÕ£÷π÷±≤•«Î«Û
-		theErr = ExecNetMsgStreamStopReq(fRequestBody);
+		theErr = ExecNetMsgCSFreeStreamReq(fRequestBody);
 		nRspMsg = MSG_SC_FREE_STREAM_ACK;
 		break;
 	case MSG_DS_STREAM_STOP_ACK://…Ë±∏∂‘CMSµƒÕ£÷πÕ∆¡˜ªÿ”¶
-		theErr = ExecNetMsgStreamStopRsp(fRequestBody);
+		theErr = ExecNetMsgDSStreamStopAck(fRequestBody);
 		nRspMsg = MSG_DS_STREAM_STOP_ACK;//◊¢“‚£¨’‚¿Ô µº …œ «≤ª–Ë“™‘⁄Ω¯––ªÿ”¶µƒ
 		break;
 	case MSG_CS_DEVICE_LIST_REQ://…Ë±∏¡–±Ì«Î«Û
-		theErr = ExecNetMsgGetDeviceListReqJsonEx(fRequestBody);//add
+		theErr = ExecNetMsgCSDeviceListReq(fRequestBody);//add
 		nRspMsg=MSG_SC_DEVICE_LIST_ACK;
 		break;
 	case MSG_CS_CAMERA_LIST_REQ://…„œÒÕ∑¡–±Ì«Î«Û
@@ -2017,7 +2017,7 @@ QTSS_Error HTTPSession::ProcessRequest()//¥¶¿Ì«Î«Û
 		nRspMsg = MSG_SC_CAMERA_LIST_ACK;
 		break;
 	case MSG_DS_POST_SNAP_REQ:
-		theErr = ExecNetMsgSnapUpdateReq(fRequestBody);
+		theErr = ExecNetMsgDSPostSnapReq(fRequestBody);
 		nRspMsg = MSG_SD_POST_SNAP_ACK;
 		break;
 	default:
