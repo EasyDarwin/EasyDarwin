@@ -77,23 +77,22 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 : EasyProtocol(msg, MSG_DS_REGISTER_REQ)
 {
-	nvr_.serial_ = GetBodyValue("Serial");
-	nvr_.name_ = GetBodyValue("Name");
-	nvr_.tag_ = GetBodyValue("Tag");
-	nvr_.password_ = GetBodyValue("Token");
+	nvr_.serial_ = GetBodyValue(EASY_TAG_SERIAL);
+	nvr_.name_ = GetBodyValue(EASY_TAG_NAME);
+	nvr_.tag_ = GetBodyValue(EASY_TAG_TAG);
+	nvr_.password_ = GetBodyValue(EASY_TAG_TOKEN);
 	
 	nvr_.channels_.clear();
 
-	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"].size();  
-
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size();  
 	for(int i = 0; i < size; i++)  
 	{  
-		Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Cameras"][i];  
-		EasyDevice camera;
-		camera.name_ = json_camera["CameraName"].asString();
-		camera.serial_ = json_camera["CameraSerial"].asString();		
-		camera.status_ = json_camera["Status"].asString();	
-		nvr_.channels_.push_back(camera);
+		Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];  
+		EasyDevice channel;
+		channel.channel_ = json_camera[EASY_TAG_CHANNEL].asString();
+		channel.name_ = json_camera[EASY_TAG_NAME].asString();
+		channel.status_ = json_camera[EASY_TAG_STATUS].asString();
+		nvr_.channels_.push_back(channel);
 	}  
 }
 

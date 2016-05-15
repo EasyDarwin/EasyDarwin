@@ -670,47 +670,95 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)//设备注册认证请求，其他请求处理前一定要经过认证
+/*
+	1.获取TerminalType和AppType,进行逻辑验证，不符合则返回400 httpBadRequest;
+	2.验证Serial和Token进行权限验证，不符合则返回401 httpUnAuthorized;
+	3.获取Name和Tag信息进行本地保存或者写入Redis;
+	4.如果是APPType为EasyNVR,获取Channels通道信息本地保存或者写入Redis
+*/
+QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 {
-	QTSS_Error theErr = QTSS_NoErr;		
+	QTSS_Error theErr = QTSS_NoErr;
+	HTTPStatusCode statusCode = httpOK;	
+	EasyMsgDSRegisterREQ regREQ(json);
+
 	do
 	{
-		if(fAuthenticated)//如果已经认证，则不对信息进行处理
+		//1.获取TerminalType和AppType,进行逻辑验证，不符合则返回400 httpBadRequest;
+		int appType = regREQ.GetAppType();
+		int terminalType = regREQ.GetTerminalType();
+		switch(appType)
 		{
-			//如果有什么信息是认证之后还要处理的，则需要在这和外面分别进行处理
+		case EASY_APP_TYPE_CAMERA:
+			{
+				fSessionType = EasyCameraSession;
+				fTerminalType = terminalType;
+				break;
+			}
+		case EASY_APP_TYPE_NVR:
+			{
+				fSessionType = EasyNVRSession;
+				fTerminalType = terminalType;
+				break;
+			}
+		default:
+			{
+				break;
+			}
+		}
+
+		if( (fSessionType != EasyCameraSession) && (fSessionType != EasyNVRSession))
+		{
+			//设备注册既不是EasyCamera，也不是EasyNVR，返回错误
+			statusCode = httpBadRequest;
 			break;
 		}
+
+		//2.验证Serial和Token进行权限验证，不符合则返回401 httpUnAuthorized;
+		if(!fAuthenticated)
+		{
+			string serial = regREQ.GetBodyValue(EASY_TAG_SERIAL);
+			string token = regREQ.GetBodyValue(EASY_TAG_TOKEN);
+
+			if(serial.empty())
+			{
+				statusCode = httpBadRequest;
+				break;
+			}
+
+			//验证Serial和Token是否合法
+			if(false)
+			{
+				statusCode = httpUnAuthorized;
+				break;
+			}
+
+			fAuthenticated = true;
+		}
+
+		//3.获取Name和Tag信息进行本地保存或者写入Redis;
 		if(!fDevice.GetDevInfo(json))//获取设备信息失败
 		{
-			theErr = QTSS_BadArgument;
+			statusCode = httpBadRequest;
 			break;
 		}
 
-		if(false)//验证设备的合法性
-		{
-			theErr = httpUnAuthorized;
-			break;
-		}
-
-		fSessionType = EasyCameraSession;//更新Session类型
 		theErr = QTSServerInterface::GetServer()->GetDeviceMap()->Register(fDevice.serial_,this);
 		if(theErr == OS_NoErr)
 		{
-			//认证授权标识,当前Session就不需要再进行认证过程了
-			fAuthenticated = true;
-
 			//在redis上增加设备
 			QTSServerInterface::GetServer()->RedisAddDevName(fDevice.serial_.c_str());
 		}
 		else
 		{
 			//上线冲突
-			theErr =  QTSS_AttrNameExists;
+			statusCode =  QTSS_AttrNameExists;
 			break;
 		}
 	}while(0);
 
-	if(theErr != QTSS_NoErr) return theErr;
+	if(statusCode != httpOK) return statusCode;
+
 	//走到这说明该设备成功注册或者心跳
 	EasyProtocol req(json);
 	EasyDarwinRSP rsp(MSG_SD_REGISTER_ACK);

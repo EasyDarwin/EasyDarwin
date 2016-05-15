@@ -141,7 +141,8 @@ protected:
     
     void        SnarfInputSocket( HTTPSessionInterface* fromRTSPSession );
     
-    Easy_SessionType    fSessionType;//普通socket,NVR,智能主机，摄像机
+    Easy_SessionType    fSessionType;	//普通socket,NVR,智能主机，摄像机
+	UInt32				fTerminalType;	//终端类型ARM、PC、Android、IOS
 
     Bool16              fLiveSession;
     unsigned int        fObjectHolders;

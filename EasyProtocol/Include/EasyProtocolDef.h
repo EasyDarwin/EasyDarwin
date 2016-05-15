@@ -44,6 +44,7 @@
 #define EASY_TAG_TYPE									"Type"
 #define EASY_TAG_SERIAL									"Serial"
 #define EASY_TAG_CHANNEL								"Channel"
+#define	EASY_TAG_CHANNELS								"Channels"
 #define EASY_TAG_L_CHANNEL								"channel"
 #define EASY_TAG_IMAGE								    "Image"
 #define EASY_TAG_RESERVE								"Reserve"

@@ -115,7 +115,7 @@ enum
 {
     EasyHTTPSession			= 0,
 	EasyCameraSession		= 1,
-	EasyNVRSessioin			= 2
+	EasyNVRSession			= 2
 };
 typedef UInt32 Easy_SessionType;
 
