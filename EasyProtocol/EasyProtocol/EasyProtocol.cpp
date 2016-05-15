@@ -59,6 +59,7 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 	SetBodyValue(EASY_TAG_NAME, nvr.name_);
 	SetBodyValue(EASY_TAG_TAG, nvr.tag_);
 	SetBodyValue(EASY_TAG_TOKEN, nvr.password_);
+
 	if(appType == EASY_APP_TYPE_NVR)
 	{
 		SetBodyValue(EASY_TAG_CHANNEL_COUNT, nvr.channels_.size());
@@ -192,96 +193,6 @@ EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(const char *msg)
 {
 }
 
-/*
-EasyDarwinDeviceListAck::EasyDarwinDeviceListAck()
-: EasyProtocol(MSG_CLI_CMS_DEVICE_LIST_ACK)
-{
-}
-
-EasyDarwinDeviceListAck::EasyDarwinDeviceListAck(const char* msg)
-: EasyProtocol(msg, MSG_CLI_CMS_DEVICE_LIST_ACK)
-{
-}
-
-bool EasyDarwinDeviceListAck::AddDevice(EasyDarwinDevice &device)
-{	
-	Json::Value value;
-	value["DeviceSerial"] = device.DeviceSerial;
-	value["DeviceName"] = device.DeviceName;
-	value["DeviceSnap"] = device.DeviceSnap;
-	root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].append(value);
-	return true;
-}
-
-int EasyDarwinDeviceListAck::StartGetDevice()
-{
-	devices.clear();	
-	
-	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"].size();  
-
-	for(int i = 0; i < size; i++)  
-	{  
-		Json::Value &json_device = root[EASY_TAG_ROOT][EASY_TAG_BODY]["Devices"][i];  
-		EasyDarwinDevice device;
-		device.DeviceName = json_device["DeviceName"].asString();
-		device.DeviceSerial = json_device["DeviceSerial"].asString();    
-		device.DeviceSnap = json_device["DeviceSnap"].asString();
-
-		devices.push_back(device);
-	}  
-	
-	return devices.size();	
-}
-
-bool EasyDarwinDeviceListAck::GetNextDevice(EasyDarwinDevice &device)
-{
-	if(devices.empty())
-    {
-        return false;
-    }
-    
-    device = devices.front();
-    devices.pop_front();   
-
-    return true;
-}
-
-EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq()
-: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_REQ)
-{
-}
-
-EasyDarwinDeviceSnapUpdateReq::EasyDarwinDeviceSnapUpdateReq(const char *msg)
-: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_REQ)
-{
-}
-
-
-void EasyDarwinDeviceSnapUpdateReq::SetImageData(const char* sImageBase64Data, size_t iBase64DataSize)
-{
-	//std::string data;
-	//data.assign(sImageBase64Data, iBase64DataSize);
-	SetBodyValue("Img", sImageBase64Data);
-}
-
-bool EasyDarwinDeviceSnapUpdateReq::GetImageData(std::string &sImageBase64Data)
-{
-	sImageBase64Data.clear();
-	sImageBase64Data = GetBodyValue("Img");
-	return !sImageBase64Data.empty();
-}
-
-EasyDarwinDeviceSnapUpdateAck::EasyDarwinDeviceSnapUpdateAck()
-: EasyProtocol(MSG_DEV_CMS_SNAP_UPDATE_ACK)
-{
-}
-
-EasyDarwinDeviceSnapUpdateAck::EasyDarwinDeviceSnapUpdateAck(const char *msg)
-: EasyProtocol(msg, MSG_DEV_CMS_SNAP_UPDATE_ACK)
-{
-}
-*/
-
 EasyMsgSCStartHLSACK::EasyMsgSCStartHLSACK()
 : EasyProtocol(MSG_SC_START_HLS_ACK)
 {
@@ -362,7 +273,6 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const char * msg)
 		devices_.push_back(device);
 	}
 }
-
 
 EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices & cameras, string devcei_serial, size_t cseq, size_t error)
 : EasyProtocol(MSG_SC_CAMERA_LIST_ACK)
@@ -522,6 +432,7 @@ strDevice::strDevice()
 {
 	snapJpgPath_.clear();
 }
+
 bool strDevice::GetDevInfo(const char* json)//ÓÉJSONÎÄ±¾µÃµ½Éè±¸ÐÅÏ¢
 {
 	EasyProtocol proTemp(json);
@@ -567,6 +478,7 @@ bool strDevice::GetDevInfo(const char* json)//ÓÉJSONÎÄ±¾µÃµ½Éè±¸ÐÅÏ¢
 	//Ö´ÐÐµ½ÕâËµÃ÷µÃµ½µÄÉè±¸ÐÅÏ¢ÊÇ´íÎóµÄ
 	return false;
 }
+
 void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//±£Áô¿ìÕÕµÄÊ±¼äÊôÐÔ
 {
 	if(EASY_APP_TYPE_CAMERA==eDeviceType)//Èç¹ûÊÇÉãÏñÍ·ÀàÐÍ£¬ÄÇÃ´Ö»±£ÁôÒ»¸öÂ·¾¶
@@ -581,6 +493,7 @@ void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//±£Á
 		}
 	}
 }
+
 void EasyDarwinRSP::SetHead(EasyJsonValue &header)
 {
 	for(EasyJsonValue::iterator it = header.begin(); it != header.end(); it++)
@@ -588,6 +501,7 @@ void EasyDarwinRSP::SetHead(EasyJsonValue &header)
 		SetHeaderValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 	}
 }
+
 void EasyDarwinRSP::SetBody(EasyJsonValue &body)
 {
 	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
@@ -595,6 +509,7 @@ void EasyDarwinRSP::SetBody(EasyJsonValue &body)
 		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 	}
 }
+
 void EasyDarwinRecordListRSP::AddRecord(std::string record)
 {
 	Json::Value value;	

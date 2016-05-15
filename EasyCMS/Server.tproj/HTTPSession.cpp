@@ -392,22 +392,22 @@ QTSS_Error HTTPSession::SetupRequest()
 			{
 				if(path[0]=="api"&&path[1]=="getdevicelist")
 				{
-					ExecNetMsgGetDeviceListReqEx(fRequest->GetQueryString());//»ñµÃÉè±¸ÁĞ±í
+					ExecNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());//»ñµÃÉè±¸ÁĞ±í
 					return 0;
 				}
 				else if(path[0]=="api"&&path[1]=="getdeviceinfo")
 				{
-					ExecNetMsgGetCameraListReqEx(fRequest->GetQueryString());//»ñµÃÄ³¸öÉè±¸ÏêÏ¸ĞÅÏ¢
+					ExecNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());//»ñµÃÄ³¸öÉè±¸ÏêÏ¸ĞÅÏ¢
 					return 0;
 				}
 				else if(path[0]=="api"&&path[1]=="getdevicestream")
 				{
-					ExecNetMsgStreamStartReqRestful(fRequest->GetQueryString());//¿Í»§¶ËµÄÖ±²¥ÇëÇó
+					ExecNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());//¿Í»§¶ËµÄÖ±²¥ÇëÇó
 					return 0;
 				}
 				else if(path[0]=="api"&&path[1]=="freedevicestream")
 				{
-					ExecNetMsgStreamStopReqRestful(fRequest->GetQueryString());//¿Í»§¶ËµÄÍ£Ö¹Ö±²¥ÇëÇó
+					ExecNetMsgCSFreeStreamReqRESTful(fRequest->GetQueryString());//¿Í»§¶ËµÄÍ£Ö¹Ö±²¥ÇëÇó
 					return 0;
 				}
 			}
@@ -795,7 +795,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgStreamStopReqRestful(char *queryString)//¿Í»§¶ËµÄÍ£Ö¹Ö±²¥ÇëÇó£¬Restful½Ó¿Ú£¬
+QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReqRESTful(char *queryString)//¿Í»§¶ËµÄÍ£Ö¹Ö±²¥ÇëÇó£¬Restful½Ó¿Ú£¬
 //ËäÈ»¿ÉÒÔÔÚÀïÃæ½øĞĞ´¦Àí£¬µ«»¹ÊÇ·Åµ½ExecNetMsgCSFreeStreamReqÖĞ,Ö»±£ÁôÒ»·İ´¦Àí
 {
 		/*//ÔİÊ±×¢ÊÍµô£¬Êµ¼ÊÉÏÊÇĞèÒªÈÏÖ¤µÄ
@@ -912,7 +912,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSStreamStopAck(const char* json)//Éè±¸µÄÍ£Ö¹Í
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgStreamStartReqRestful(char *queryString)//·Åµ½ProcessRequestËùÔÚµÄ×´Ì¬È¥´¦Àí£¬·½±ã¶à´ÎÑ­»·µ÷ÓÃ
+QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(char *queryString)//·Åµ½ProcessRequestËùÔÚµÄ×´Ì¬È¥´¦Àí£¬·½±ã¶à´ÎÑ­»·µ÷ÓÃ
 {
 	/*//ÔİÊ±×¢ÊÍµô£¬Êµ¼ÊÉÏÊÇĞèÒªÈÏÖ¤µÄ
 	if(!fAuthenticated)//Ã»ÓĞ½øĞĞÈÏÖ¤ÇëÇó
@@ -1231,7 +1231,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgGetDeviceListReqEx(char *queryString)//¿Í»§¶Ë»ñµÃÉè±¸ÁĞ±í
+QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(char *queryString)//¿Í»§¶Ë»ñµÃÉè±¸ÁĞ±í
 {
 	//queryStringÔÚÕâ¸öº¯ÊıÖĞÊÇÃ»ÓĞÓÃµÄ£¬½öÎªÁË±£³Ö½Ó¿ÚµÄÒ»ÖÂĞÔ¡£
 	/*
@@ -1355,7 +1355,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉ
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgGetCameraListReqEx(char* queryString)
+QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 {
 	/*	
 	if(!fAuthenticated)//Ã»ÓĞ½øĞĞÈÏÖ¤ÇëÇó

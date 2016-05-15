@@ -5,7 +5,7 @@
 	Website: http://www.EasyDarwin.org
 */
 /*! 
-  \file    ServiceSession.h  
+  \file    HTTPSession.h  
   \author  Babosa@EasyDarwin.org
   \date    2014-12-03
   \version 1.0
@@ -29,7 +29,6 @@
 
 using namespace std;
 
-
 class HTTPSession : public HTTPSessionInterface
 {
     public:
@@ -45,8 +44,6 @@ class HTTPSession : public HTTPSessionInterface
 		void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
 		EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }
 
-		
-
     private: 
         SInt64 Run();
 
@@ -57,18 +54,19 @@ class HTTPSession : public HTTPSessionInterface
 		QTSS_Error ProcessRequest();//处理请求，单独放到一个状态中去处理，这样方便重复执行
 		QTSS_Error ExecNetMsgErrorReqHandler(HTTPStatusCode errCode);//消息默认处理函数
 		QTSS_Error ExecNetMsgDSRegisterReq(const char* json);//设备注册请求
-		QTSS_Error ExecNetMsgStreamStartReqRestful(char *queryString);//客户端拉流请求，Restful接口
 		QTSS_Error ExecNetMsgCSGetStreamReq(const char* json);//客户端拉流请求
 		QTSS_Error ExecNetMsgDSPushStreamAck(const char* json);//设备的开始流回应
-		QTSS_Error ExecNetMsgStreamStopReqRestful(char *queryString);//客户端的停止直播请求，Restful接口
 		QTSS_Error ExecNetMsgCSFreeStreamReq(const char *json);//客户端的停止直播请求
 		QTSS_Error ExecNetMsgDSStreamStopAck(const char* json);//设备的停止推流回应
 		QTSS_Error ExecNetMsgDSPostSnapReq(const char* json);//设备的快照更新请求
-		QTSS_Error ExecNetMsgGetDeviceListReqEx(char *queryString);//客户端获得设备列表,restful接口
+
 		QTSS_Error ExecNetMsgCSDeviceListReq(const char *json);//客户端获得设备列表，json接口
-		QTSS_Error ExecNetMsgGetCameraListReqEx(char *queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
 		QTSS_Error ExecNetMsgCSCameraListReq(const char *json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
 
+		QTSS_Error ExecNetMsgCSGetStreamReqRESTful(char *queryString);//客户端拉流请求，Restful接口		
+		QTSS_Error ExecNetMsgCSFreeStreamReqRESTful(char *queryString);//客户端的停止直播请求，Restful接口
+		QTSS_Error ExecNetMsgCSGetDeviceListReqRESTful(char *queryString);//客户端获得设备列表,restful接口
+		QTSS_Error ExecNetMsgCSGetCameraListReqRESTful(char *queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
 
         // test current connections handled by this object against server pref connection limit
         Bool16 OverMaxConnections(UInt32 buffer);
