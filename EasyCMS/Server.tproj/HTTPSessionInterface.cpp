@@ -69,6 +69,7 @@ HTTPSessionInterface::HTTPSessionInterface()
 	fOutputSocketP(&fSocket),
 	fInputSocketP(&fSocket),
 	fSessionType(EasyHTTPSession),
+	fTerminalType(0),
 	fLiveSession(true),
 	fObjectHolders(0),
 	fRequestBodyLen(-1),
@@ -133,8 +134,8 @@ HTTPSessionInterface::~HTTPSessionInterface()
 		this->ReleaseMsgMap();
 		qtss_snprintf(msgStr, sizeof(msgStr), "EasyCameraSession offline from ip[%s], device_serial[%s]",remoteAddress, fDevice.serial_.c_str());
 		break;
-	case EasyNVRSessioin:
-		qtss_snprintf(msgStr, sizeof(msgStr), "EasyNVRSessioin offline from ip[%s]",remoteAddress);
+	case EasyNVRSession:
+		qtss_snprintf(msgStr, sizeof(msgStr), "EasyNVRSession offline from ip[%s]",remoteAddress);
 		break;
 	case EasyHTTPSession:
 		qtss_snprintf(msgStr, sizeof(msgStr), "EasyHTTPSession offline from ip[%s]",remoteAddress);

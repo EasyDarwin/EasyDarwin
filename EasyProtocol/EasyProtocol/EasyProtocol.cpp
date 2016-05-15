@@ -84,16 +84,15 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 	
 	nvr_.channels_.clear();
 
-	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].size();  
-
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size();  
 	for(int i = 0; i < size; i++)  
 	{  
-		Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS][i];  
-		EasyDevice camera;
-		camera.name_ = json_camera[EASY_TAG_CAMERA_NAME].asString();
-		camera.serial_ = json_camera[EASY_TAG_CAMERASERIAL].asString();		
-		camera.status_ = json_camera[EASY_TAG_STATUS].asString();	
-		nvr_.channels_.push_back(camera);
+		Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];  
+		EasyDevice channel;
+		channel.channel_ = json_camera[EASY_TAG_CHANNEL].asString();
+		channel.name_ = json_camera[EASY_TAG_NAME].asString();
+		channel.status_ = json_camera[EASY_TAG_STATUS].asString();
+		nvr_.channels_.push_back(channel);
 	}  
 }
 
