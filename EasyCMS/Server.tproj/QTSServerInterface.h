@@ -153,9 +153,6 @@ class QTSServerInterface : public QTSSDictionary
         // This object is in fact global, so there is an accessor for it as well.
         
         static QTSServerInterface*  GetServer()         { return sServer; }
-        
-        //Allows you to map RTP session IDs (strings) to actual RTP session objects
-        OSRefTable*         GetDeviceSessionMap()		{ return fDeviceSessionMap; }
 
 		OSRefTableEx*        GetDeviceMap()				{ return &fDeviceMap; }//add
 
@@ -172,10 +169,6 @@ class QTSServerInterface : public QTSSDictionary
         static StrPtrLen&   GetServerBuild()            { return sServerBuildStr; }
         static StrPtrLen&   GetServerComment()          { return sServerCommentStr; }
         
-        //断开所有session连接
-        void                RemoveAllDeviceSession();
-        
-        //
         // SIGINT - to interrupt the server, set this flag and the server will shut down
         void                SetSigInt()                 { fSigInt = true; }
 
@@ -222,11 +215,6 @@ class QTSServerInterface : public QTSSDictionary
         OSMutex*        GetServerObjectMutex() { return &fMutex; }
 
     protected:
-
-        // Setup by the derived RTSPServer object
-        
-        //所有服务单元Hash表，以ServiceType区分不同功能单元
-        OSRefTable*                 fDeviceSessionMap;
 
 		OSRefTableEx				fDeviceMap;//add,维护所有的注册设备
 

@@ -105,7 +105,6 @@ QTSServer::~QTSServer()
 
     OSThread::SetMainThreadData(NULL);
 
-    delete fDeviceSessionMap;
     delete fSrvrMessages;
     delete locker;
     delete serverlocker;
@@ -146,10 +145,6 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     // assert, or log the assert to the error log
     if (!fSrvrPrefs->ShouldServerBreakOnAssert())
         SetAssertLogger(this->GetErrorLogStream());// the error log stream is our assert logger
-        
-    //
-    // CREATE GLOBAL OBJECTS
-    fDeviceSessionMap = new OSRefTable(kDeviceSessionMapSize);
 
     //提前加载日志模块，记录Server启动过程
     QTSSModule* theLoggingModule = new QTSSModule("QTSSErrorLogModule");

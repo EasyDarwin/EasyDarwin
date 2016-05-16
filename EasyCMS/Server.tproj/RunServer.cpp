@@ -683,16 +683,7 @@ void RunServer()
             if (sServer->SigIntSet())
                 restartServer = true;
         }
-        
-        theServerState = sServer->GetServerState();
-        if (theServerState == qtssIdleState)
-			sServer->RemoveAllDeviceSession();
     }
-    
-    //
-    // Kill all the sessions and wait for them to die,
-    // but don't wait more than 5 seconds
-	sServer->RemoveAllDeviceSession();
         
     //Now, make sure that the server can't do any work
     TaskThreadPool::RemoveThreads();
