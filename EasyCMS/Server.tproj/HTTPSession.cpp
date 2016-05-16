@@ -654,7 +654,6 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
-	HTTPStatusCode statusCode = httpOK;	
 	EasyMsgDSRegisterREQ regREQ(json);
 
 	while(!fAuthenticated)
@@ -685,7 +684,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 		if(fSessionType >= EasyHTTPSession)
 		{
 			//设备注册既不是EasyCamera，也不是EasyNVR，返回错误
-			statusCode = httpForbidden;
+			theErr = QTSS_BadArgument;
 			break;
 		}
 
@@ -695,21 +694,21 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 
 		if(serial.empty())
 		{
-			statusCode = httpBadRequest;
+			theErr = QTSS_AttrDoesntExist;
 			break;
 		}
 
 		//验证Serial和Token是否合法
 		if(false)
 		{
-			statusCode = httpUnAuthorized;
+			theErr = QTSS_NotPreemptiveSafe;
 			break;
 		}
 
 		//3.获取Name和Tag信息进行本地保存或者写入Redis;
-		if(!fDevice.GetDevInfo(json))//获取设备信息失败
+		if(!fDevice.GetDevInfo(json))
 		{
-			statusCode = httpBadRequest;
+			theErr = QTSS_BadArgument;
 			break;
 		}
 
@@ -723,14 +722,14 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 		else
 		{
 			//上线冲突
-			statusCode =  httpConflict;
+			theErr =  QTSS_AttrNameExists;
 			break;
 		}
 
 		break;
 	}
 
-	if(statusCode != httpOK)	return QTSS_RequestFailed;
+	if(theErr != QTSS_NoErr)	return QTSS_RequestFailed;
 
 	//走到这说明该设备成功注册或者心跳
 	EasyProtocol req(json);
