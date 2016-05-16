@@ -66,6 +66,7 @@ EasyCMSSession::~EasyCMSSession()
 {
 	delete[] fSerial;
 	delete[] fChannel;
+
 	if(fSocket)
 	{
 		delete fSocket;

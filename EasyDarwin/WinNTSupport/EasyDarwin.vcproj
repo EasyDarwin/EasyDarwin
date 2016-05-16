@@ -1016,6 +1016,14 @@
 						RelativePath="..\APIModules\EasyCMSModule\EasyCMSModule.h"
 						>
 					</File>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyCMSSession.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyCMSModule\EasyCMSSession.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
