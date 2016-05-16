@@ -718,8 +718,8 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 			break;
 		}
 
-		theErr = QTSServerInterface::GetServer()->GetDeviceMap()->Register(fDevice.serial_,this);
-		if(theErr == OS_NoErr)
+		OS_Error regErr = QTSServerInterface::GetServer()->GetDeviceMap()->Register(fDevice.serial_,this);
+		if(regErr == OS_NoErr)
 		{
 			//在redis上增加设备
 			QTSServerInterface::GetServer()->RedisAddDevName(fDevice.serial_.c_str());
@@ -732,7 +732,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 		}
 	}while(0);
 
-	if(statusCode != httpOK) return statusCode;
+	if(statusCode != httpOK)	return QTSS_RequestFailed;
 
 	//走到这说明该设备成功注册或者心跳
 	EasyProtocol req(json);

@@ -155,10 +155,9 @@ class QTSServerInterface : public QTSSDictionary
         static QTSServerInterface*  GetServer()         { return sServer; }
         
         //Allows you to map RTP session IDs (strings) to actual RTP session objects
-        OSRefTable*         GetDeviceSessionMap()          { return fDeviceSessionMap; }
+        OSRefTable*         GetDeviceSessionMap()		{ return fDeviceSessionMap; }
 
-		EasyNVRs &GetRegisterNVRs() { return fRegisterNVRs; }
-		OSRefTableEx*        GetDeviceMap()          { return &fDeviceMap; }//add
+		OSRefTableEx*        GetDeviceMap()				{ return &fDeviceMap; }//add
 
         QTSServerPrefs*     GetPrefs()                  { return fSrvrPrefs; }
         QTSSMessages*       GetMessages()               { return fSrvrMessages; }
@@ -228,9 +227,8 @@ class QTSServerInterface : public QTSSDictionary
         
         //所有服务单元Hash表，以ServiceType区分不同功能单元
         OSRefTable*                 fDeviceSessionMap;
-        
-		EasyNVRs fRegisterNVRs;
-		OSRefTableEx fDeviceMap;//add,维护所有的注册设备
+
+		OSRefTableEx				fDeviceMap;//add,维护所有的注册设备
 
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;

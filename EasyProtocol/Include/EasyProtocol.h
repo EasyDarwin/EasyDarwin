@@ -79,8 +79,6 @@ public:
 	EasyObject object_;
 };
 
-typedef map<string, EasyNVR> EasyNVRs;//维护所有的NVR
-
 // MSG_DS_REGISTER_REQ
 class Easy_API EasyMsgDSRegisterREQ : public EasyProtocol	//封装NVR的注册请求
 {

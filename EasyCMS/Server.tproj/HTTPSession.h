@@ -73,7 +73,6 @@ class HTTPSession : public HTTPSessionInterface
         HTTPRequest*        fRequest;
         OSMutex             fReadMutex;
 
-		//网络报文处理状态机
         enum
         {
             kReadingRequest             = 0,	//读取报文
@@ -84,7 +83,7 @@ class HTTPSession : public HTTPSessionInterface
             kCleaningUp                 = 5,	//清空本次处理的报文内容
         
             kReadingFirstRequest		= 6,	//第一次读取Session报文，主要用来做Session协议区分（HTTP/TCP/RTSP等等）
-            kHaveCompleteMessage		= 7    // 读取到完整的报文
+            kHaveCompleteMessage		= 7		// 读取到完整的报文
         };
         
         UInt32 fCurrentModule;

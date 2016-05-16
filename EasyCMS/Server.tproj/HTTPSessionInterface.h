@@ -100,10 +100,6 @@ public:
         kMaxUserPasswordLen     = 32
     };
 
-	UInt32 GetStreamReqCount(string camera);
-	void IncrementStreamReqCount(string camera);
-	void DecrementStreamReqCount(string camera);
-
 	void PushNVRMessage(EasyNVRMessage &msg) { fNVRMessageQueue.push_back(msg); }
 
 protected:
@@ -117,7 +113,6 @@ protected:
 	//char				fSerial[EASY_MAX_SERIAL_LENGTH];
 	//StrPtrLen			fDevSerialPtr;
 	string				fDevSerial;
-	map<string, int>	fStreamReqCount;	//记录客户端请求打开视频次数
 	boost::mutex		fNVROperatorMutex;
 	boost::mutex		fStreamReqCountMutex;
 	boost::condition_variable fCond;

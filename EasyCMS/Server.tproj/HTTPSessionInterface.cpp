@@ -77,7 +77,6 @@ HTTPSessionInterface::HTTPSessionInterface()
 	fRequestBody(NULL),//add
 	fCSeq(1)//add
 {
-	fStreamReqCount.clear();
     fTimeoutTask.SetTask(this);
     fSocket.SetTask(this);
 
@@ -302,14 +301,6 @@ void HTTPSessionInterface::UnRegDevSession()
 {
 	if (fAuthenticated)
 	{
-		/*
-		EasyNVRs &nvrs = QTSServerInterface::GetServer()->GetRegisterNVRs();		
-		EasyNVRs::iterator nvr = nvrs.find(fDevSerial);
-		if (nvr != nvrs.end())
-		{
-			nvrs.erase(nvr);
-		}
-		*/
 		QTSServerInterface::GetServer()->GetDeviceMap()->UnRegister(fDevice.serial_);//add
 		//在redis上删除设备
 		QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
@@ -321,24 +312,6 @@ QTSS_Error HTTPSessionInterface::UpdateDevRedis()
 	return QTSS_NoErr;
 }
 
-UInt32 HTTPSessionInterface::GetStreamReqCount(string camera)
-{
-	boost::mutex::scoped_lock lock(fStreamReqCountMutex);
-	return fStreamReqCount[camera];
-}
-
-void HTTPSessionInterface::IncrementStreamReqCount(string camera)
-{
-	boost::mutex::scoped_lock lock(fStreamReqCountMutex);
-	fStreamReqCount[camera]++;
-}
-
-void HTTPSessionInterface::DecrementStreamReqCount(string camera)
-{
-	boost::mutex::scoped_lock lock(fStreamReqCountMutex);
-	fStreamReqCount[camera]--;
-	if (fStreamReqCount[camera] < 0) fStreamReqCount[camera] = 0;
-}
 //add
 void HTTPSessionInterface::InsertToSet(const string &strCameraSerial,void * pObject)//加入到set中
 {
