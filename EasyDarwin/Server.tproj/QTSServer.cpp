@@ -64,7 +64,7 @@
 #include "QTSSReflectorModule.h"
 #include "EasyRelayModule.h"
 #include "EasyHLSModule.h"
-#include "EasyCMSModule.h"//add
+#include "EasyCMSModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
