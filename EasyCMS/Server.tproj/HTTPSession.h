@@ -64,7 +64,6 @@ class HTTPSession : public HTTPSessionInterface
 		QTSS_Error ExecNetMsgCSCameraListReq(const char *json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
 
 		QTSS_Error ExecNetMsgCSGetStreamReqRESTful(char *queryString);//客户端拉流请求，Restful接口		
-		QTSS_Error ExecNetMsgCSFreeStreamReqRESTful(char *queryString);//客户端的停止直播请求，Restful接口
 		QTSS_Error ExecNetMsgCSGetDeviceListReqRESTful(char *queryString);//客户端获得设备列表,restful接口
 		QTSS_Error ExecNetMsgCSGetCameraListReqRESTful(char *queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
 

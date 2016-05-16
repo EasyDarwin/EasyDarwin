@@ -405,11 +405,6 @@ QTSS_Error HTTPSession::SetupRequest()
 					ExecNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());//客户端的直播请求
 					return 0;
 				}
-				else if(path[0]=="api"&&path[1]=="freedevicestream")
-				{
-					ExecNetMsgCSFreeStreamReqRESTful(fRequest->GetQueryString());//客户端的停止直播请求
-					return 0;
-				}
 			}
 
 			// 执行到这的都说明需要进行异常处理
@@ -792,52 +787,6 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	if (!msg.empty()) 
 		pOutputStream->Put((char*)msg.data(), msg.length());
 
-	return QTSS_NoErr;
-}
-
-QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReqRESTful(char *queryString)//客户端的停止直播请求，Restful接口，
-//虽然可以在里面进行处理，但还是放到ExecNetMsgCSFreeStreamReq中,只保留一份处理
-{
-		/*//暂时注释掉，实际上是需要认证的
-	if(!fAuthenticated)//没有进行认证请求
-	return httpUnAuthorized;
-	*/
-	QueryParamList parList(queryString);
-	const char* chSerial	=	parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
-	const char* chChannel	=	parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
-	const char* chProtocol  =   parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//获取协议
-	const char* chReserve	=	parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);//获取码流类型
-
-	
-	//为可选参数填充默认值
-	if(chChannel==NULL)
-		chChannel	=	"01";
-	if(chReserve==NULL)
-		chReserve =	"1";
-
-	if(chSerial==NULL||chProtocol==NULL)
-		return QTSS_BadArgument;
-
-	EasyDarwin::Protocol::EasyDarwinRSP req(MSG_CS_FREE_STREAM_REQ);//由restful接口合成json格式请求
-	EasyJsonValue header,body;
-
-	char chTemp[16]={0};//如果客户端不提供CSeq,那么我们每次给他生成一个唯一的CSeq
-	UInt32 uCseq = GetCSeq();
-	sprintf(chTemp,"%d",uCseq);
-
-	header[EASY_TAG_CSEQ]		=		chTemp;
-	header[EASY_TAG_VERSION]	=		"1.0";
-	body[EASY_TAG_SERIAL]		=		chSerial;
-	body[EASY_TAG_CHANNEL]		=		chChannel;
-	body[EASY_TAG_PROTOCOL]		=		chProtocol;
-	body[EASY_TAG_RESERVE]		=		chReserve;
-
-	req.SetHead(header);
-	req.SetBody(body);
-
-	string buffer = req.GetMsg();
-	fRequestBody  = new char[buffer.size()+1];
-	strcpy(fRequestBody,buffer.c_str());
 	return QTSS_NoErr;
 }
 
