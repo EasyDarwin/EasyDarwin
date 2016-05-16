@@ -73,54 +73,53 @@ enum
 {
     // VIP headers
     httpConnectionHeader        = 0, // general header
-    httpDateHeader          = 1, // general header
-    httpAuthorizationHeader         = 2, // request header
+    httpDateHeader				= 1, // general header
+    httpAuthorizationHeader		= 2, // request header
     httpIfModifiedSinceHeader   = 3, // request header
-    httpServerHeader        = 4, // response header
+    httpServerHeader			= 4, // response header
     httpWWWAuthenticateHeader   = 5, // response header
-    httpExpiresHeader       = 6, // entity header
+    httpExpiresHeader			= 6, // entity header
     httpLastModifiedHeader      = 7, // entity header
-    httpNumVIPHeaders       = 8,
+    httpNumVIPHeaders			= 8,
 
     //Other general http headers
     httpCacheControlHeader      = 8,
-    httpPragmaHeader        = 9,
-    httpTrailerHeader       = 10,
+    httpPragmaHeader			= 9,
+    httpTrailerHeader			= 10,
     httpTransferEncodingHeader  = 11,
-    httpUpgradeHeader       = 12,
-    httpViaHeader           = 13,
-    httpWarningHeader       = 14,
+    httpUpgradeHeader			= 12,
+    httpViaHeader				= 13,
+    httpWarningHeader			= 14,
 
-    // Other request headers
-    httpAcceptHeader        = 15,
+    httpAcceptHeader			= 15,
     httpAcceptCharsetHeader     = 16,
     httpAcceptEncodingHeader    = 17,
     httpAcceptLanguageHeader    = 18,
-    httpExpectHeader        = 19,
-    httpFromHeader          = 20,
-    httpHostHeader          = 21,
-    httpIfMatchHeader       = 22,
+    httpExpectHeader			= 19,
+    httpFromHeader				= 20,
+    httpHostHeader				= 21,
+    httpIfMatchHeader			= 22,
     httpIfNoneMatchHeader       = 23,
-    httpIfRangeHeader       = 24,
+    httpIfRangeHeader			= 24,
     httpIfUnmodifiedSinceHeader = 25,
     httpMaxForwardsHeader       = 26,
     httpProxyAuthorizationHeader    = 27,
-    httpRangeHeader         = 28,
-    httpRefererHeader       = 29,
-    httpTEHeader            = 30,
-    httpUserAgentHeader     = 31,
+    httpRangeHeader				= 28,
+    httpRefererHeader			= 29,
+    httpTEHeader				= 30,
+    httpUserAgentHeader			= 31,
 
     // Other response headers
     httpAcceptRangesHeader      = 32,
-    httpAgeHeader           = 33,
-    httpETagHeader          = 34,
-    httpLocationHeader      = 35,
+    httpAgeHeader				= 33,
+    httpETagHeader				= 34,
+    httpLocationHeader			= 35,
     httpProxyAuthenticateHeader = 36,
     httpRetryAfterHeader        = 37,
-    httpVaryHeader          = 38,
+    httpVaryHeader				= 38,
 
     // Other entity headers
-    httpAllowHeader         = 39,
+    httpAllowHeader				= 39,
     httpContentEncodingHeader   = 40,
     httpContentLanguageHeader   = 41,
     httpContentLengthHeader     = 42,
@@ -129,10 +128,7 @@ enum
     httpContentRangeHeader      = 45,
     httpContentTypeHeader       = 46,
 
-    // QTSS Specific headers
-    // Add headers that are not part of the HTTP spec here 
-    // Make sure and up the number of headers and httpIllegalHeader number
-    httpSessionCookieHeader     = 47,           // Used for HTTP tunnelling
+    httpSessionCookieHeader     = 47,
     httpServerIPAddressHeader   = 48,
         
     httpNumHeaders              = 49,
@@ -184,7 +180,7 @@ enum
     httpGatewayTimeout				= 38,           //504
     httpHTTPVersionNotSupported		= 39,           //505
 
-    httpNumStatusCodes      = 40
+    httpNumStatusCodes				= 40
 };
 typedef UInt32 HTTPStatusCode;
 
