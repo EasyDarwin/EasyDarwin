@@ -145,7 +145,6 @@ void    QTSServerInterface::Initialize()
 
 QTSServerInterface::QTSServerInterface()
  :  QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kServerDictIndex), &fMutex),
-    fDeviceSessionMap(NULL),
     fSrvrPrefs(NULL),
     fSrvrMessages(NULL),
     fServerState(qtssStartingUpState),
@@ -215,16 +214,6 @@ void QTSServerInterface::LogError(QTSS_ErrorVerbosity inVerbosity, char* inBuffe
         QTSS_ServerState theState = qtssFatalErrorState;
         (void)sServer->SetValue(qtssSvrState, 0, &theState, sizeof(theState));
     }
-}
-
-//只是将DeviceSession移出DeviceSessionMap,不会删除对象
-void QTSServerInterface::RemoveAllDeviceSession()
-{
-    OSMutexLocker locker(fDeviceSessionMap->GetMutex());
-    for (OSRefHashTableIter theIter(fDeviceSessionMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
-    {
-		fDeviceSessionMap->TryUnRegister(theIter.GetCurrent());
-    }   
 }
 
 void QTSServerInterface::SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap* inMap,
