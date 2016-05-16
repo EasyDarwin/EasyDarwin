@@ -23,7 +23,7 @@ void EasyCMSSession::Initialize(QTSS_ModulePrefsObject cmsModulePrefs)
 	QTSSModuleUtils::GetAttribute(cmsModulePrefs, "keep_alive_interval", qtssAttrDataTypeUInt32, &sKeepAliveInterval, &sDefKeepAliveInterval, sizeof(sKeepAliveInterval));
 }
 
-EasyCMSSession::EasyCMSSession(char * chSerial,char * chChannel)
+EasyCMSSession::EasyCMSSession()
 :	Task(),
 	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),    
 	fTimeoutTask(this, sKeepAliveInterval * 1000),
@@ -34,7 +34,10 @@ EasyCMSSession::EasyCMSSession(char * chSerial,char * chChannel)
 	fReadMutex(),
 	fMutex(),
 	fContentBufferOffset(0),
-	fContentBuffer(NULL)
+	fContentBuffer(NULL),
+	fSerial(NULL),
+	fChannel(NULL),
+	fLiveSession(true)
 {
 	this->SetTaskName("EasyCMSSession");
 
@@ -52,11 +55,6 @@ EasyCMSSession::EasyCMSSession(char * chSerial,char * chChannel)
 		//TODO:连接备用默认EasyCMS服务器
 		;
 	}
-	fChannel = new char[strlen(chChannel) + 1];
-	strcpy(fChannel,chChannel);
-
-	fSerial = new char[strlen(chSerial) + 1];
-	strcpy(fSerial,chSerial);
 
 	fTimeoutTask.RefreshTimeout();
 
@@ -64,6 +62,7 @@ EasyCMSSession::EasyCMSSession(char * chSerial,char * chChannel)
 
 EasyCMSSession::~EasyCMSSession()
 {
+	qtss_printf("~EasyCMSSession\n");
 	delete[] fSerial;
 	delete[] fChannel;
 
@@ -104,7 +103,7 @@ SInt64 EasyCMSSession::Run()
 	OS_Error theErr = OS_NoErr;
 	EventFlags events = this->GetEvents();
 
-	while(1)
+	while(fLiveSession)
 	{
 		switch (fState)
 		{
@@ -114,7 +113,15 @@ SInt64 EasyCMSSession::Run()
 					//根据事件类型执行不同的动作
 					if(events & Task::kStartEvent)
 					{
-						CSStreamStop();
+						switch(fMsg)
+						{
+						case kStreamStopMsg:
+							CSStreamStop();
+							break;
+						default:
+							break;
+						}
+						
 					}
 
 					if(events & Task::kReadEvent)
@@ -266,7 +273,7 @@ SInt64 EasyCMSSession::Run()
 				}
 		}
 	}
-    return 0;
+    return -1;
 }
 
 QTSS_Error EasyCMSSession::ProcessMessage()
@@ -338,6 +345,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				string strChannle		=	protocol.GetHeaderValue(EASY_TAG_CHANNEL);
 				
 				qtss_printf("EasyCMS停止推流响应:%s,Serial=%s,Channel=%s",strErrorNum.c_str(),strSerial.c_str(),strChannle.c_str());
+				fLiveSession=false;//进入析构
 			}
 			break;
 		default:
@@ -398,4 +406,18 @@ QTSS_Error EasyCMSSession::CSStreamStop()
 		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
 
 	return QTSS_NoErr;
+}
+void EasyCMSSession::SetStreamStopInfo(const char * chSerial,const char * chChannel)
+{
+	fSerial = new char[strlen(chSerial) + 1];
+	strcpy(fSerial,chSerial);
+
+	fChannel = new char[strlen(chChannel) + 1];
+	strcpy(fChannel,chChannel);
+
+}
+
+void EasyCMSSession::SetMsgType(fEnumMsg msg)
+{
+	fMsg=msg;
 }

@@ -42,7 +42,7 @@ using namespace std;
 class EasyCMSSession : public Task
 {
 public:
-    EasyCMSSession(char * chSerial,char * chChannel);
+    EasyCMSSession();
     virtual ~EasyCMSSession();
 
 	static void Initialize(QTSS_ModulePrefsObject inPrefs);
@@ -59,6 +59,13 @@ public:
 		kSendingMessage             = 3,
 		kCleaningUp                 = 4
     };
+
+	typedef enum 
+	{
+		kStreamStopMsg=0
+		//需要和CMS进行其他通讯的在这里填充类型，并调用相应的接口函数
+	}fEnumMsg;
+
 	UInt32 fState;
 
 	void CleanupRequest();
@@ -91,11 +98,16 @@ public:
 
 	// 请求报文的Content读取偏移量,在多次读取到完整Content部分时用到
 	UInt32				fContentBufferOffset;
-
+	//接口函数
+	void SetStreamStopInfo(const char * chSerial,const char * chChannel);
+	void SetMsgType(fEnumMsg msg);
 private:
     virtual SInt64 Run();
 	char*	fSerial;//需要停止推流的设备序列号
 	char*   fChannel;//需要停止推流的通道号
+	fEnumMsg fMsg;
+	Bool16              fLiveSession;
+
 	// 初步判断Session Socket是否已连接
 	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
 
