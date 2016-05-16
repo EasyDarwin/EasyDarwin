@@ -266,9 +266,9 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(EasyDevices & devices, size_t cse
 	for (EasyDevices::iterator it = devices.begin(); it != devices.end(); it++)
 	{
 		Json::Value value;
-		value[EASY_TAG_DEVICESERIAL] = it->serial_;
-		value[EASY_TAG_DEVICE_NAME] = it->name_;
-		value[EASY_TAG_DEVICE_TAG] = it->tag_;
+		value[EASY_TAG_SERIAL] = it->serial_;
+		value[EASY_TAG_NAME] = it->name_;
+		value[EASY_TAG_TAG] = it->tag_;
 		//value["Status"] = it->status_;
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES].append(value);
 	}
@@ -284,28 +284,28 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const char * msg)
 	{
 		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES][i];
 		EasyDevice device;
-		device.name_ = json_[EASY_TAG_DEVICE_NAME].asString();
-		device.serial_ = json_[EASY_TAG_DEVICESERIAL].asString();
-		device.tag_ = json_[EASY_TAG_DEVICE_TAG].asString();
+		device.name_ = json_[EASY_TAG_NAME].asString();
+		device.serial_ = json_[EASY_TAG_SERIAL].asString();
+		device.tag_ = json_[EASY_TAG_TAG].asString();
 		//device.status_ = json_["Status"].asString();
 		devices_.push_back(device);
 	}
 }
 
-EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices & cameras, string devcei_serial, size_t cseq, size_t error)
+EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices & cameras, string device_serial, size_t cseq, size_t error)
 : EasyProtocol(MSG_SC_CAMERA_LIST_ACK)
 {
 	SetHeaderValue(EASY_TAG_CSEQ, cseq);
 	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-	SetBodyValue(EASY_TAG_DEVICESERIAL, devcei_serial);
+	SetBodyValue(EASY_TAG_SERIAL, device_serial);
 	SetBodyValue(EASY_TAG_CAMERA_COUNT, cameras.size());
 	for (EasyDevices::iterator it = cameras.begin(); it != cameras.end(); it++)
 	{
 		Json::Value value;
-		value[EASY_TAG_CAMERASERIAL] = it->serial_;
-		value[EASY_TAG_CAMERA_NAME] = it->name_;
+		value[EASY_TAG_SERIAL] = it->serial_;
+		value[EASY_TAG_NAME] = it->name_;
         value[EASY_TAG_STATUS] = it->status_;
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].append(value);
 	}
@@ -321,8 +321,8 @@ EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(const char * msg)
 	{
 		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS][i];
 		EasyDevice camera;
-		camera.name_ = json_[EASY_TAG_CAMERASERIAL].asString();
-		camera.serial_ = json_[EASY_TAG_CAMERA_NAME].asString();
+		camera.name_ = json_[EASY_TAG_SERIAL].asString();
+		camera.serial_ = json_[EASY_TAG_NAME].asString();
         camera.status_ = json_[EASY_TAG_STATUS].asString();
 		cameras_.push_back(camera);
 	}
