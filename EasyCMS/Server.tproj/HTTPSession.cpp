@@ -594,7 +594,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//Éè±¸¿ìÕÕÇëÇó
 
 	//qtss_sprintf(fDeviceSnap, "%s/%s/%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),camer_serial.c_str(),strType.c_str());
 
-	EasyDarwinRSP rsp(MSG_SD_POST_SNAP_ACK);
+	EasyProtocolACK rsp(MSG_SD_POST_SNAP_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
@@ -736,7 +736,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 
 	//×ßµ½ÕâËµÃ÷¸ÃÉè±¸³É¹¦×¢²á»òÕßÐÄÌø
 	EasyProtocol req(json);
-	EasyDarwinRSP rsp(MSG_SD_REGISTER_ACK);
+	EasyProtocolACK rsp(MSG_SD_REGISTER_ACK);
 	EasyJsonValue header,body;
 	header[EASY_TAG_VERSION]=EASY_PROTOCOL_VERSION;
 	header[EASY_TAG_CSEQ]=req.GetHeaderValue(EASY_TAG_CSEQ);
@@ -804,7 +804,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	} 
 	if(pDevSession->EraseInSet(strCameraSerial,this))//Èç¹ûÉè±¸µÄ¿Í»§¶ËÁÐ±íÎª¿Õ£¬ÔòÏòÉè±¸·¢³öÍ£Ö¹ÍÆÁ÷ÇëÇó
 	{
-		EasyDarwin::Protocol::EasyDarwinRSP		reqreq(MSG_SD_STREAM_STOP_REQ);
+		EasyDarwin::Protocol::EasyProtocolACK		reqreq(MSG_SD_STREAM_STOP_REQ);
 		EasyJsonValue headerheader,bodybody;
 
 		char chTemp[16] = {0};
@@ -862,7 +862,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(char *queryString)//·Åµ½
 	if(chSerial==NULL||chProtocol==NULL)
 		return QTSS_BadArgument;
 
-	EasyDarwin::Protocol::EasyDarwinRSP req(MSG_CS_GET_STREAM_REQ);//ÓÉrestful½Ó¿ÚºÏ³Éjson¸ñÊ½ÇëÇó
+	EasyDarwin::Protocol::EasyProtocolACK req(MSG_CS_GET_STREAM_REQ);//ÓÉrestful½Ó¿ÚºÏ³Éjson¸ñÊ½ÇëÇó
 	EasyJsonValue header,body;
 
 	char chTemp[16] = {0};//Èç¹û¿Í»§¶Ë²»Ìá¹©CSeq,ÄÇÃ´ÎÒÃÇÃ¿´Î¸øËûÉú³ÉÒ»¸öÎ¨Ò»µÄCSeq
@@ -957,7 +957,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 			}
 			//ÏòÖ¸¶¨Éè±¸·¢ËÍ¿ªÊ¼Á÷ÇëÇó
 
-			EasyDarwin::Protocol::EasyDarwinRSP		reqreq(MSG_SD_PUSH_STREAM_REQ);
+			EasyDarwin::Protocol::EasyProtocolACK		reqreq(MSG_SD_PUSH_STREAM_REQ);
 			EasyJsonValue headerheader,bodybody;
 
 			char chTemp[16]={0};
@@ -1072,7 +1072,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 	}
 
 	//×ßµ½ÕâËµÃ÷¶Ô¿Í»§¶ËµÄÕýÈ·»ØÓ¦,ÒòÎª´íÎó»ØÓ¦Ö±½Ó·µ»Ø¡£
-	EasyDarwin::Protocol::EasyDarwinRSP rsp(MSG_SC_GET_STREAM_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
 	EasyJsonValue header,body;
 	body[EASY_TAG_URL]			=	strURL;
 	body[EASY_TAG_SERIAL]		=	strDeviceSerial;
@@ -1168,7 +1168,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(char *queryString)//
 	return httpUnAuthorized;
 	*/
 
-	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_DEVICE_LIST_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_LIST_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
@@ -1232,7 +1232,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉ
 	EasyDarwin::Protocol::EasyProtocol		req(json);
 
 
-	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_DEVICE_LIST_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_LIST_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
@@ -1297,7 +1297,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 	if(device_serial==NULL)
 		return QTSS_BadArgument;
 
-	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_DEVICE_INFO_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_INFO_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		= EASY_PROTOCOL_VERSION;
@@ -1379,7 +1379,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 	if(strDeviceSerial.size()<=0)
 		return QTSS_BadArgument;
 
-	EasyDarwin::Protocol::EasyDarwinRSP		rsp(MSG_SC_DEVICE_INFO_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_INFO_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
@@ -1503,7 +1503,7 @@ QTSS_Error HTTPSession::ProcessRequest()//´¦ÀíÇëÇó
 	if(theErr != QTSS_NoErr)//ÎÞÂÛÊÇÕýÈ·»ØÓ¦»¹ÊÇµÈ´ý·µ»Ø¶¼ÊÇQTSS_NoErr£¬³öÏÖ´íÎó£¬¶Ô´íÎó½øÐÐÍ³Ò»»ØÓ¦
 	{
 		EasyDarwin::Protocol::EasyProtocol req(fRequestBody);
-		EasyDarwin::Protocol::EasyDarwinRSP rsp(nRspMsg);
+		EasyDarwin::Protocol::EasyProtocolACK rsp(nRspMsg);
 		EasyJsonValue header;
 		header[EASY_TAG_VERSION]	=	EASY_PROTOCOL_VERSION;
 		header[EASY_TAG_CSEQ]		=	req.GetHeaderValue(EASY_TAG_CSEQ);

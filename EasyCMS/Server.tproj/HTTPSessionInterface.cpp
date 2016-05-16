@@ -388,7 +388,7 @@ void HTTPSessionInterface::AutoStopStreamJudge()
 		HTTPSessionInterface *pDevSession=(HTTPSessionInterface *)theDevRef->GetObjectPtr();//获得当前设备会话
 		if(pDevSession->EraseInSet(stTemp.strCameraSerial,this))//当前摄像头的拉流客户端为空，则向设备发出停止推流请求
 		{
-			EasyDarwin::Protocol::EasyDarwinRSP		reqreq(MSG_SD_STREAM_STOP_REQ);
+			EasyDarwin::Protocol::EasyProtocolACK		reqreq(MSG_SD_STREAM_STOP_REQ);
 			EasyJsonValue headerheader,bodybody;
 
 			char chTemp[16]={0};

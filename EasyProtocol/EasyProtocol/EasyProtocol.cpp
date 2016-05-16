@@ -512,7 +512,7 @@ void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//±£Á
 	}
 }
 
-void EasyDarwinRSP::SetHead(EasyJsonValue &header)
+void EasyProtocolACK::SetHead(EasyJsonValue &header)
 {
 	for(EasyJsonValue::iterator it = header.begin(); it != header.end(); it++)
 	{
@@ -520,7 +520,7 @@ void EasyDarwinRSP::SetHead(EasyJsonValue &header)
 	}
 }
 
-void EasyDarwinRSP::SetBody(EasyJsonValue &body)
+void EasyProtocolACK::SetBody(EasyJsonValue &body)
 {
 	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
 	{

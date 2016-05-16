@@ -344,17 +344,17 @@ public:
 	EasyDarwinAppType eAppType;//App类型
 };
 
-class Easy_API EasyDarwinRSP : public EasyProtocol//封装CMS的一般回应的JSON部分
+class Easy_API EasyProtocolACK : public EasyProtocol//封装CMS的一般回应的JSON部分
 {
 public:
-	EasyDarwinRSP(int iMsgType):EasyProtocol(iMsgType){}
+	EasyProtocolACK(int iMsgType):EasyProtocol(iMsgType){}
 	void SetHead(EasyJsonValue& header);//设置头部
 	void SetBody(EasyJsonValue& body);//设置JSON
 };
-class Easy_API EasyDarwinRecordListRSP : public EasyDarwinRSP//封装录像列表回应
+class Easy_API EasyDarwinRecordListRSP : public EasyProtocolACK//封装录像列表回应
 {
 public:
-	EasyDarwinRecordListRSP(int iMsgType):EasyDarwinRSP(iMsgType){}
+	EasyDarwinRecordListRSP(int iMsgType):EasyProtocolACK(iMsgType){}
 	void AddRecord(std::string record);
 };
 //add,Unisiot，end
