@@ -1064,6 +1064,8 @@ enum
 	Easy_HLSOpen_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'o'),  //hlso
 	Easy_HLSClose_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
+	//stream stop role//test
+	Easy_StreamStop_Role	=			FOUR_CHARS_TO_INT('s', 's', 't', 'p'),  //sstp
 };
 typedef UInt32 QTSS_Role;
 
@@ -1134,6 +1136,11 @@ typedef struct
     char*                       inBuffer;
     
 } QTSS_ErrorLog_Params;
+
+typedef struct
+{
+	QTSS_Object inReflectorSession;
+}Easy_StreamStop_Params;//test
 
 typedef struct
 {
@@ -1274,6 +1281,8 @@ typedef union
 
 	Easy_HLSOpen_Params					easyHLSOpenParams;
 	Easy_HLSClose_Params				easyHLSCloseParams;
+
+	Easy_StreamStop_Params				easyStreamStopParams;//test			
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 typedef struct
