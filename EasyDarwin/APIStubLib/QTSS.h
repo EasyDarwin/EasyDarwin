@@ -1139,7 +1139,8 @@ typedef struct
 
 typedef struct
 {
-	QTSS_Object inReflectorSession;
+	char *	inSerial;
+	char *  inChannel;
 }Easy_StreamStop_Params;//test
 
 typedef struct

@@ -8,21 +8,20 @@
     File:       EasyCMSModule.cpp
     Contains:   Implementation of EasyCMSModule class. 
 */
+
 #include "EasyCMSModule.h"
 #include "QTSSModuleUtils.h"
 #include "QueryParamList.h"
 #include "OSRef.h"
 #include "StringParser.h"
 #include "QTSServerInterface.h"
-
-//#include "EasyCMSSession.h"
+#include "EasyCMSSession.h"
 
 // STATIC DATA
 static QTSS_PrefsObject				sServerPrefs		= NULL;	//服务器主配置
 static QTSS_ServerObject			sServer				= NULL;	//服务器对象
 static QTSS_ModulePrefsObject		sEasyCMSModulePrefs	= NULL;	//当前模块配置
 
-//static EasyCMSSession*			sCMSSession			= NULL; //唯一EasyCMSSession对象
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -82,13 +81,6 @@ QTSS_Error Initialize_EasyCMSModule(QTSS_Initialize_Params* inParams)
 	//读取EasyCMSModule配置
 	RereadPrefs_EasyCMSModule();
 
-	/*
-	EasyCMSSession::Initialize(sEasyCMSModulePrefs);
-
-	//创建并开始EasyCMSSession对象
-	sCMSSession = new EasyCMSSession();
-	sCMSSession->Signal(Task::kStartEvent);
-	*/
     return QTSS_NoErr;
 }
 
@@ -97,14 +89,19 @@ QTSS_Error RereadPrefs_EasyCMSModule()
 	return QTSS_NoErr;
 }
 
+//算法描述：动态创建EasyCMSSession对象，同时触发该对象向EasyCMS发送停止推流请求；然后等待EasyCMS的回应，如果EasyCMS正确回应，则析构EasyCMSSession对象
+//如果在一定时间内没有收到EasyCMS的回应，则进行重发（或者析构）
 QTSS_Error StreamStop_EasyCMSModule(Easy_StreamStop_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_Unimplemented;
 
-	//在此调用ReflectorSession提供的停止推流接口
-	if(inParams->inReflectorSession)
-	{
 
+	if(inParams->inSerial != NULL)
+	{
+		//创建并开始EasyCMSSession对象
+		EasyCMSSession * pCMSSession = new EasyCMSSession(inParams->inSerial,inParams->inChannel);
+		pCMSSession->Signal(Task::kStartEvent);
 	}
+
 	return theErr;
 }
