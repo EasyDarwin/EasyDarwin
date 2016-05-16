@@ -108,13 +108,15 @@ EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
 	EASY_TERMINAL_TYPE_Android,						"Android",
 	EASY_TERMINAL_TYPE_IOS,							"IOS",
 	EASY_TERMINAL_TYPE_WEB,							"WEB",
-	EASY_TERMINAL_TYPE_PC,							"PC"
+	EASY_TERMINAL_TYPE_WINDOWS,						"Windows",
+	EASY_TERMINAL_TYPE_LINUX,						"Linux"
 
 };
 
 EasyProtocol::MsgType EasyProtocol::AppTypeMap[] = {
 	EASY_APP_TYPE_CAMERA,							"EasyCamera",
-	EASY_APP_TYPE_NVR,								"EasyNVR"
+	EASY_APP_TYPE_NVR,								"EasyNVR",
+	EASY_APP_TYPE_EASYDARWIN,						"EasyDarwin"
 };
 
 EasyProtocol::MsgType EasyProtocol::SnapTypeMap[] = {

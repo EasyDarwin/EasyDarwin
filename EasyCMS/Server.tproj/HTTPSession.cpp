@@ -729,7 +729,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 		break;
 	}
 
-	if(theErr != QTSS_NoErr)	return QTSS_RequestFailed;
+	if(theErr != QTSS_NoErr)	return theErr;
 
 	//走到这说明该设备成功注册或者心跳
 	EasyProtocol req(json);

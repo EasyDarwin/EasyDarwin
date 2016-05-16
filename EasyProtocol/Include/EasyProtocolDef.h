@@ -265,11 +265,12 @@ enum EasyDarwinMediaEncodeType
 */
 enum EasyDarwinTerminalType
 {
-	EASY_TERMINAL_TYPE_ARM = 1,				///< ARM	
-	EASY_TERMINAL_TYPE_Android = 2,			///< ANDROID
-	EASY_TERMINAL_TYPE_IOS = 3,				///< IOS
-	EASY_TERMINAL_TYPE_WEB = 4,				///< WEB
-	EASY_TERMINAL_TYPE_PC  = 5				///< PC
+	EASY_TERMINAL_TYPE_ARM		= 1,				///< ARM	
+	EASY_TERMINAL_TYPE_Android	= 2,				///< ANDROID
+	EASY_TERMINAL_TYPE_IOS		= 3,				///< IOS
+	EASY_TERMINAL_TYPE_WEB		= 4,				///< WEB
+	EASY_TERMINAL_TYPE_WINDOWS  = 5,				///< WINDOWS
+	EASY_TERMINAL_TYPE_LINUX	= 6					///< LINUX
 };
 /*!
 \}
@@ -281,8 +282,9 @@ enum EasyDarwinTerminalType
 */
 enum EasyDarwinAppType
 {
-	EASY_APP_TYPE_CAMERA = 1,					///< EasyCamera
-	EASY_APP_TYPE_NVR	 = 2					///< EasyNVR
+	EASY_APP_TYPE_CAMERA		= 1,					///< EasyCamera
+	EASY_APP_TYPE_NVR			= 2,					///< EasyNVR
+	EASY_APP_TYPE_EASYDARWIN	= 3						///< EasyDarwin
 };
 /*!
 \}
