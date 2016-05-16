@@ -72,7 +72,7 @@ EasyProtocol::MsgType EasyProtocol::ErrorMap[] = {
 	EASY_ERROR_SERVER_NOT_IMPLEMENTED,				"Server Not Implemented",
 	EASY_ERROR_SERVER_BAD_GATEWAY,					"Server Bad Gateway",
 	EASY_ERROR_SERVER_UNAVAILABLE,					"Server Unavailable",
-	EASY_ERROR_RTSP_VERSION_NOT_SUPPORTED,			"RTSP Version Not Supported",
+	EASY_ERROR_VERSION_NOT_SUPPORTED,				"Version Not Supported",
 	EASY_ERROR_DEVICE_VERSION_TOO_OLD,				"Device Version Too Old",
 	EASY_ERROR_DEVICE_FAILURE,						"Device Failure",
 	EASY_ERROR_MEMCACHE_NOT_FOUND,					"Memcache Not Found",

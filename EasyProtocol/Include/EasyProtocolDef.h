@@ -36,8 +36,8 @@
 #define EASY_TAG_L_INDEX								"index"
 #define EASY_TAG_L_CAMERA							    "camera"
 #define EASY_TAG_TAG									"Tag"
-#define EASY_TAG_CHANNEL_COUNT							"ChannelCount"
 #define EASY_TAG_DEVICE_COUNT							"DeviceCount"
+#define EASY_TAG_CHANNEL_COUNT							"ChannelCount"
 #define EASY_TAG_URL									"URL"
 #define EASY_TAG_L_URL									"url"
 #define EASY_TAG_SNAP_URL								"SnapURL"
@@ -103,9 +103,6 @@
 #define EASY_TAG_VIDEO									"Video"
 #define EASY_TAG_CMD									"Command"
 #define EASY_TAG_VALUE									"Value"
-#define EASY_TAG_CLIENT_SERIAL							"ClientSerial"
-#define EASY_TAG_LIVE_STREAM_ID							"LiveStreamID"
-#define EASY_TAG_CLIENT_SESSION							"ClientSession"
 #define EASY_TAG_IP										"IP"
 #define EASY_TAG_LIVE_TYPE								"LiveType"
 #define EASY_TAG_USER_PLAY_COUNT						"UserPlayCount"
@@ -187,9 +184,8 @@
 #define EASY_ERROR_SERVER_NOT_IMPLEMENTED            	501             ///< Server Not Implemented
 #define EASY_ERROR_SERVER_BAD_GATEWAY                	502             ///< Server Bad Gateway
 #define EASY_ERROR_SERVER_UNAVAILABLE                	503             ///< Server Unavailable
-#define EASY_ERROR_RTSP_VERSION_NOT_SUPPORTED        	505             ///< RTSP Version Not Supported
-#define EASY_ERROR_DEVICE_VERSION_TOO_OLD				15              ///< Device Version Too Old
-#define EASY_ERROR_DEVICE_FAILURE						16              ///< Device Failure
+#define EASY_ERROR_VERSION_NOT_SUPPORTED        		505             ///< RTSP Version Not Supported
+
 #define EASY_ERROR_MEMCACHE_NOT_FOUND					600				///< Memcache Not Found
 #define EASY_ERROR_DATABASE_NOT_FOUND					601				///< Database Not Found
 #define EASY_ERROR_USER_NOT_FOUND						602				///< User Not Found
@@ -202,6 +198,9 @@
 #define EASY_ERROR_LOCAL_SYSTEM_ERROR					623             ///< Local System Error
 #define EASY_ERROR_PARAM_ERROR							624             ///< Param Error
 
+#define EASY_ERROR_DEVICE_VERSION_TOO_OLD				700             ///< Device Version Too Old
+#define EASY_ERROR_DEVICE_FAILURE						701             ///< Device Failure
+
 /*!
 \}
 */
@@ -212,10 +211,10 @@
 */
 enum EasyDarwinTimeFormat
 {
-    EASY_TIME_FORMAT_YYYYMMDDHHMMSS = 1,     ///< Format like 2014-08-31 08:15:30
+    EASY_TIME_FORMAT_YYYYMMDDHHMMSS = 1,    ///< Format like 2014-08-31 08:15:30
 	EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx,		///<Format like 20140831081530
-    EASY_TIME_FORMAT_YYYYMMDD,               ///< Format like 2014-08-31
-    EASY_TIME_FORMAT_HHMMSS                  ///< Format like 08:15:30    
+    EASY_TIME_FORMAT_YYYYMMDD,              ///< Format like 2014-08-31
+    EASY_TIME_FORMAT_HHMMSS                 ///< Format like 08:15:30    
 };
 /*!
 \}
