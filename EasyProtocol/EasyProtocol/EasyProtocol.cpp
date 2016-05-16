@@ -149,6 +149,24 @@ EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(EasyJsonValue &body, size_t cseq, s
 	}
 }
 
+// MSG_CS_FREE_STREAM_REQ消息构造
+EasyMsgCSFreeStreamREQ::EasyMsgCSFreeStreamREQ(EasyJsonValue &body, size_t cseq)
+: EasyProtocol(MSG_CS_FREE_STREAM_REQ)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+// MSG_CS_FREE_STREAM_REQ消息解析
+EasyMsgCSFreeStreamREQ::EasyMsgCSFreeStreamREQ(const char *msg)
+: EasyProtocol(msg, MSG_CS_FREE_STREAM_REQ)
+{
+}
+
 // MSG_DS_PUSH_STREAM_ACK消息解析
 EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(const char *msg)
 : EasyProtocol(msg, MSG_DS_PUSH_STREAM_ACK)

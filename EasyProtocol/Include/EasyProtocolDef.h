@@ -35,7 +35,6 @@
 #define EASY_TAG_L_SOURCE								"source"
 #define EASY_TAG_L_INDEX								"index"
 #define EASY_TAG_CAMERA_NAME							"CameraName"
-#define EASY_TAG_TOKEN									"Token"
 #define EASY_TAG_DEVICESERIAL						    "DeviceSerial"
 #define EASY_TAG_CAMERASERIAL						    "CameraSerial"
 #define EASY_TAG_L_CAMERA							    "camera"

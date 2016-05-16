@@ -178,6 +178,15 @@ public:
 	~EasyMsgSCGetStreamACK(){}
 };
 
+// MSG_CS_FREE_STREAM_REQ
+class EasyMsgCSFreeStreamREQ : public EasyProtocol
+{
+public:
+	EasyMsgCSFreeStreamREQ(EasyJsonValue &body, size_t cseq);
+	EasyMsgCSFreeStreamREQ(const char* msg);
+	~EasyMsgCSFreeStreamREQ(){}
+};
+
 // MSG_SC_FREE_STREAM_ACK
 class EasyMsgSCFreeStreamACK : public EasyProtocol
 {
