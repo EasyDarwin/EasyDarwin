@@ -739,9 +739,6 @@ Bool16  QTSServer::SwitchPersonality()
    return true;
 }
 
-
-
-
 void    QTSServer::LoadCompiledInModules()
 {
 #ifndef DSS_DYNAMIC_MODULES_ONLY

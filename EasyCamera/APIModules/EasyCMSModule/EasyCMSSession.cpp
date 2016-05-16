@@ -392,32 +392,32 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 			{	
 				EasyMsgSDRegisterACK ack(fContentBuffer);
 
-				qtss_printf("session id = %s\n", ack.GetBodyValue("SessionID").c_str());
-				qtss_printf("device serial = %s\n", ack.GetBodyValue("Serial").c_str());
+				qtss_printf("session id = %s\n", ack.GetBodyValue(EASY_TAG_SESSION_ID).c_str());
+				qtss_printf("device serial = %s\n", ack.GetBodyValue(EASY_TAG_SERIAL).c_str());
 			}
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
 			{
 				EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
-				qtss_printf("Serial = %s\n", startStreamReq.GetBodyValue("Serial").c_str());
-				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue("Server_IP").c_str());
-				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue("Server_Port").c_str());
+				qtss_printf("Serial = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERIAL).c_str());
+				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP).c_str());
+				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT).c_str());
 
 				QTSS_RoleParams params;
 
-				string ip = startStreamReq.GetBodyValue("Server_IP");
+				string ip = startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP);
 				params.startStreaParams.inIP = ip.c_str();
-				string port = startStreamReq.GetBodyValue("Server_PORT");
+				string port = startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT);
 				params.startStreaParams.inPort = atoi(port.c_str());
-				string serial = startStreamReq.GetBodyValue("Serial");
+				string serial = startStreamReq.GetBodyValue(EASY_TAG_SERIAL);
 				params.startStreaParams.inSerial = serial.c_str();
-				string protocol = startStreamReq.GetBodyValue("Protocol");
+				string protocol = startStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
 				params.startStreaParams.inProtocol = protocol.c_str();
 
-				string channel = startStreamReq.GetBodyValue("Channel");
+				string channel = startStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				params.startStreaParams.inChannel = channel.c_str();
 
-				string streamID = startStreamReq.GetBodyValue("StreamID");
+				string streamID = startStreamReq.GetBodyValue(EASY_TAG_STREAM_ID);
 				params.startStreaParams.inStreamID = streamID.c_str();
 
 				QTSS_Error	errCode = QTSS_NoErr;
@@ -431,10 +431,10 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				fCurrentModule = 0;
 
 				EasyJsonValue body;
-				body["Serial"] = params.startStreaParams.inSerial;
-				body["Protocol"] = params.startStreaParams.inProtocol;
-				body["Server_IP"] = params.startStreaParams.inIP;
-				body["Server_Port"] = params.startStreaParams.inPort;
+				body[EASY_TAG_SERIAL] = params.startStreaParams.inSerial;
+				body[EASY_TAG_PROTOCOL] = params.startStreaParams.inProtocol;
+				body[EASY_TAG_SERVER_IP] = params.startStreaParams.inIP;
+				body[EASY_TAG_SERVER_PORT] = params.startStreaParams.inPort;
 
 				EasyMsgDSPushSteamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
 
@@ -464,11 +464,11 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 
 				QTSS_RoleParams params;
 
-				string serial = stopStreamReq.GetBodyValue("Serial");
+				string serial = stopStreamReq.GetBodyValue(EASY_TAG_SERIAL);
 				params.stopStreamParams.inSerial = serial.c_str();
-				string protocol = stopStreamReq.GetBodyValue("Protocol");
+				string protocol = stopStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
 				params.stopStreamParams.inProtocol = protocol.c_str();
-				string channel = stopStreamReq.GetBodyValue("Channel");
+				string channel = stopStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				params.stopStreamParams.inChannel = channel.c_str();
 
 
@@ -483,9 +483,9 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				fCurrentModule = 0;
 
 				EasyJsonValue body;
-				body["Serial"] = params.stopStreamParams.inSerial;
-				body["Channel"] = params.stopStreamParams.inChannel;
-				body["Protocol"] = params.stopStreamParams.inProtocol;
+				body[EASY_TAG_SERIAL] = params.stopStreamParams.inSerial;
+				body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
+				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
 
 				EasyMsgDSStopStreamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
 				string msg = rsp.GetMsg();
@@ -582,13 +582,13 @@ QTSS_Error EasyCMSSession::UpdateSnapCache(unsigned char *snapPtr, int snapLen, 
 	{
 		char szTime[32] = {0,};
 		EasyJsonValue body;
-		body["Serial"] = sEasy_Serial;
+		body[EASY_TAG_SERIAL] = sEasy_Serial;
 
 		string type = EasyProtocol::GetSnapTypeString(snapType);
 
-		body["Type"] = type.c_str();
-		body["Time"] = szTime;	
-		body["Image"] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
+		body[EASY_TAG_TYPE] = type.c_str();
+		body[EASY_TAG_TIME] = szTime;	
+		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
 		
 		fSnapReq = new EasyMsgDSPostSnapREQ(body,1);
 	}

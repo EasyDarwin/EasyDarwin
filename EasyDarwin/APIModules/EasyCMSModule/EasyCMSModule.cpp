@@ -8,7 +8,6 @@
     File:       EasyCMSModule.cpp
     Contains:   Implementation of EasyCMSModule class. 
 */
-
 #include "EasyCMSModule.h"
 #include "QTSSModuleUtils.h"
 #include "QueryParamList.h"
@@ -23,7 +22,7 @@ static QTSS_PrefsObject				sServerPrefs		= NULL;	//服务器主配置
 static QTSS_ServerObject			sServer				= NULL;	//服务器对象
 static QTSS_ModulePrefsObject		sEasyCMSModulePrefs	= NULL;	//当前模块配置
 
-//static EasyCMSSession*				sCMSSession			= NULL; //唯一EasyCMSSession对象
+//static EasyCMSSession*			sCMSSession			= NULL; //唯一EasyCMSSession对象
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
