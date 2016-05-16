@@ -1396,7 +1396,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 		}
 		else
 		{
-			EasyDevices *camerasInfo = &(deviceInfo->cameras_);
+			EasyDevices *camerasInfo = &(deviceInfo->channels_);
 			EasyDevicesIterator itCam;
 			body[EASY_TAG_CHANNEL_COUNT] = ((HTTPSession*)theDevRef->GetObjectPtr())->GetDeviceInfo()->channelCount_;
 			for(itCam=camerasInfo->begin();itCam!=camerasInfo->end();itCam++)
@@ -1406,7 +1406,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 				value[EASY_TAG_NAME]	 = itCam->name_;
 				value[EASY_TAG_STATUS]	 = itCam->status_;
 				value[EASY_TAG_SNAP_URL] = itCam->snapJpgPath_;
-				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].append(value);
+				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 			}
 		}
 		DeviceMap->Release(device_serial);////////////////////////////////--
@@ -1476,7 +1476,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 		}
 		else
 		{
-			EasyDevices *camerasInfo = &(deviceInfo->cameras_);
+			EasyDevices *camerasInfo = &(deviceInfo->channels_);
 			EasyDevicesIterator itCam;
 
 			body[EASY_TAG_CHANNEL_COUNT] = ((HTTPSession*)theDevRef->GetObjectPtr())->GetDeviceInfo()->channelCount_;
@@ -1487,7 +1487,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 				value[EASY_TAG_NAME]		=	itCam->name_;
 				value[EASY_TAG_STATUS]		=	itCam->status_;
 				body[EASY_TAG_SNAP_URL]		=	itCam->snapJpgPath_;
-				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].append(value);
+				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 			}
 		}
 		DeviceMap->Release(strDeviceSerial);////////////////////////////////--
