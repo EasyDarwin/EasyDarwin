@@ -64,6 +64,7 @@
 #include "QTSSReflectorModule.h"
 #include "EasyRelayModule.h"
 #include "EasyHLSModule.h"
+#include "EasyCMSModule.h"//add
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
@@ -752,7 +753,10 @@ void    QTSServer::LoadCompiledInModules()
     // (void)AddModule(myModule);
     //
     // The following modules are all compiled into the server. 
-    
+	QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");//test
+	(void)theCMSModule->SetupModule(&sCallbacks, &EasyCMSModule_Main);
+	(void)AddModule(theCMSModule);
+
     QTSSModule* theFileModule = new QTSSModule("QTSSFileModule");
     (void)theFileModule->SetupModule(&sCallbacks, &QTSSFileModule_Main);
     (void)AddModule(theFileModule);

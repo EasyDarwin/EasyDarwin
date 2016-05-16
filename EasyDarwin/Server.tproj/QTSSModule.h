@@ -149,7 +149,8 @@ class QTSSModule : public QTSSDictionary, public Task
 			kHLSOpenRole	=			24,
 			kHLSCloseRole	=			25,
             
-            kNumRoles =                 26
+			kStreamStopRole =			26,//test
+            kNumRoles =                 27
         };
         typedef UInt32 RoleIndex;
         

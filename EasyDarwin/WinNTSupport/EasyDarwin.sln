@@ -1,30 +1,21 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyDarwin", "EasyDarwin.vcproj", "{A0EFC09D-B539-40ED-B7A2-06177CBA669D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3C010B07-9D9B-4065-A426-F0AC0CE4E56F} = {3C010B07-9D9B-4065-A426-F0AC0CE4E56F}
-		{230D5525-AEA7-4037-95FE-3B45BEF98E55} = {230D5525-AEA7-4037-95FE-3B45BEF98E55}
-		{B84F7231-16CE-41D8-8C08-7B523FF4225B} = {B84F7231-16CE-41D8-8C08-7B523FF4225B}
-		{21898038-6830-4B4D-BE2C-E32641F253BC} = {21898038-6830-4B4D-BE2C-E32641F253BC}
-		{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D} = {EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}
-		{4E4F758C-7CB5-471C-BD61-FB70BF69D48B} = {4E4F758C-7CB5-471C-BD61-FB70BF69D48B}
-		{14F332E3-1771-4908-8850-9A2581A4AED2} = {14F332E3-1771-4908-8850-9A2581A4AED2}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyDarwin", "EasyDarwin.vcxproj", "{A0EFC09D-B539-40ED-B7A2-06177CBA669D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QTFileLib", "..\QTFileLib\QTFileLib.vcproj", "{3C010B07-9D9B-4065-A426-F0AC0CE4E56F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QTFileLib", "..\QTFileLib\QTFileLib.vcxproj", "{3C010B07-9D9B-4065-A426-F0AC0CE4E56F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommonUtilitiesLib", "..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcproj", "{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommonUtilitiesLib", "..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcxproj", "{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SafeInternalStdLib", "..\..\SafeStdLib\SafeInternalStdLib.vcproj", "{230D5525-AEA7-4037-95FE-3B45BEF98E55}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SafeInternalStdLib", "..\..\SafeStdLib\SafeInternalStdLib.vcxproj", "{230D5525-AEA7-4037-95FE-3B45BEF98E55}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APIStubLib", "..\APIStubLib\APIStubLib.vcproj", "{21898038-6830-4B4D-BE2C-E32641F253BC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APIStubLib", "..\APIStubLib\APIStubLib.vcxproj", "{21898038-6830-4B4D-BE2C-E32641F253BC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APICommonCode", "..\APICommonCode\APICommonCode.vcproj", "{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APICommonCode", "..\APICommonCode\APICommonCode.vcxproj", "{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_json", "..\..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcproj", "{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_json", "..\..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcxproj", "{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyProtocol", "..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj", "{14F332E3-1771-4908-8850-9A2581A4AED2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EasyProtocol", "..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcxproj", "{14F332E3-1771-4908-8850-9A2581A4AED2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
