@@ -154,7 +154,7 @@ class QTSServerInterface : public QTSSDictionary
         
         static QTSServerInterface*  GetServer()         { return sServer; }
 
-		OSRefTableEx*        GetDeviceMap()				{ return &fDeviceMap; }//add
+		OSRefTableEx*		GetDeviceSessionMap()				{ return &fDeviceMap; }
 
         QTSServerPrefs*     GetPrefs()                  { return fSrvrPrefs; }
         QTSSMessages*       GetMessages()               { return fSrvrMessages; }

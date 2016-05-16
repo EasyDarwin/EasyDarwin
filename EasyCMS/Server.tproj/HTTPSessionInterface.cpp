@@ -263,7 +263,7 @@ void HTTPSessionInterface::UnRegDevSession()
 {
 	if (fAuthenticated)
 	{
-		QTSServerInterface::GetServer()->GetDeviceMap()->UnRegister(fDevice.serial_);//add
+		QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(fDevice.serial_);//add
 		//在redis上删除设备
 		QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
 	}
@@ -311,7 +311,7 @@ void HTTPSessionInterface::AutoStopStreamJudge()
 	OSMutexLocker MutexLocker(&fMutexSet);
 	CliStreamMapItera it;
 	stStreamInfo stTemp;
-	OSRefTableEx* DeviceMap=QTSServerInterface::GetServer()->GetDeviceMap();
+	OSRefTableEx* DeviceMap=QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef;
 	for(it=fClientStreamMap.begin();it!=fClientStreamMap.end();it++)
 	{

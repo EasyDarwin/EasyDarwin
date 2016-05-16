@@ -712,7 +712,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 			break;
 		}
 
-		OS_Error regErr = QTSServerInterface::GetServer()->GetDeviceMap()->Register(fDevice.serial_,this);
+		OS_Error regErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(fDevice.serial_,this);
 		if(regErr == OS_NoErr)
 		{
 			//ÔÚredisÉÏÔö¼ÓÉè±¸
@@ -787,7 +787,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	if(strDeviceSerial.size()<=0||strCameraSerial.size()<=0||strStreamID.size()<=0||strProtocol.size()<=0)//²ÎÊıÅĞ¶Ï
 		return QTSS_BadArgument;
 
-	OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceMap();
+	OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(strDeviceSerial);////////////////////////////////++
 	if(theDevRef==NULL)//ÕÒ²»µ½Ö¸¶¨Éè±¸
 		return EASY_ERROR_DEVICE_NOT_FOUND;
@@ -911,7 +911,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 
 	if(fInfo.cWaitingState==0)//µÚÒ»´Î´¦ÀíÇëÇó
 	{
-		OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceMap();
+		OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 		OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(strDeviceSerial);////////////////////////////////++
 		if(theDevRef==NULL)//ÕÒ²»µ½Ö¸¶¨Éè±¸
 			return EASY_ERROR_DEVICE_NOT_FOUND;
@@ -1045,7 +1045,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 				+strCameraSerial+".sdp";
 
 			//×Ô¶¯Í£Ö¹ÍÆÁ÷add
-			OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceMap();
+			OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 			OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(strDeviceSerial);////////////////////////////////++
 			if(theDevRef==NULL)//ÕÒ²»µ½Ö¸¶¨Éè±¸
 				return EASY_ERROR_DEVICE_NOT_FOUND;
@@ -1174,13 +1174,13 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(char *queryString)//
 	header[EASY_TAG_ERROR_STRING]	=	EasyDarwin::Protocol::EasyProtocol::GetErrorString(200);
 
 
-	OSMutex *mutexMap = QTSServerInterface::GetServer()->GetDeviceMap()->GetMutex();
-	OSHashMap  *deviceMap = QTSServerInterface::GetServer()->GetDeviceMap()->GetMap();
+	OSMutex *mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
+	OSHashMap  *deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
 	OSRefIt itRef;
 	Json::Value *proot = rsp.GetRoot();
 
 	mutexMap->Lock();
-	body[EASY_TAG_DEVICE_COUNT] = QTSServerInterface::GetServer()->GetDeviceMap()->GetEleNumInMap();
+	body[EASY_TAG_DEVICE_COUNT] = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetEleNumInMap();
 	for(itRef=deviceMap->begin();itRef!=deviceMap->end();itRef++)
 	{
 		Json::Value value;
@@ -1238,13 +1238,13 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉ
 	header[EASY_TAG_ERROR_STRING]	=	EasyDarwin::Protocol::EasyProtocol::GetErrorString(200);
 
 
-	OSMutex *mutexMap = QTSServerInterface::GetServer()->GetDeviceMap()->GetMutex();
-	OSHashMap  *deviceMap = QTSServerInterface::GetServer()->GetDeviceMap()->GetMap();
+	OSMutex *mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
+	OSHashMap  *deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
 	OSRefIt itRef;
 	Json::Value *proot = rsp.GetRoot();
 
 	mutexMap->Lock();
-	body[EASY_TAG_DEVICE_COUNT] = QTSServerInterface::GetServer()->GetDeviceMap()->GetEleNumInMap();
+	body[EASY_TAG_DEVICE_COUNT] = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetEleNumInMap();
 	for(itRef=deviceMap->begin();itRef!=deviceMap->end();itRef++)
 	{
 		Json::Value value;
@@ -1302,7 +1302,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 
 	body[EASY_TAG_SERIAL]			= device_serial;
 
-	OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceMap();
+	OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(device_serial);////////////////////////////////++
 	if(theDevRef==NULL)//²»´æÔÚÖ¸¶¨Éè±¸
 	{
@@ -1385,7 +1385,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 	header[EASY_TAG_ERROR_STRING]	=	EasyDarwin::Protocol::EasyProtocol::GetErrorString(200);
 	body[EASY_TAG_SERIAL]			=	strDeviceSerial;
 
-	OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceMap();
+	OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(strDeviceSerial);////////////////////////////////++
 	if(theDevRef==NULL)//²»´æÔÚÖ¸¶¨Éè±¸
 	{
