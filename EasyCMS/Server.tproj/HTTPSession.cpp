@@ -553,13 +553,13 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	EasyDarwin::Protocol::EasyMsgDSPostSnapREQ parse(json);
 
 	string image			=	parse.GetBodyValue(EASY_TAG_IMAGE);	
-	string camer_serial		=	parse.GetBodyValue(EASY_TAG_CHANNEL);
+	string channel			=	parse.GetBodyValue(EASY_TAG_CHANNEL);
 	string device_serial	=	parse.GetBodyValue(EASY_TAG_SERIAL);
 	string strType			=	parse.GetBodyValue(EASY_TAG_TYPE);//类型就是图片的扩展名
 	string strTime			=	parse.GetBodyValue(EASY_TAG_TIME);//时间属性
 
-	if(camer_serial.empty())//为可选项填充默认值
-		camer_serial = "01";
+	if(channel.empty())//为可选项填充默认值
+		channel = "01";
 	if(strTime.empty())//如果没有时间属性，则服务端自动为其生成一个
 		strTime = EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx);
 		
@@ -577,7 +577,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	char jpgPath[512] = { 0 };
 
 	//文件全路径，文件名由Serial_Channel_Time.Type合成
-	qtss_sprintf(jpgPath,"%s/%s_%s_%s.%s", jpgDir, device_serial.c_str(), camer_serial.c_str(),strTime.c_str(),strType.c_str());
+	qtss_sprintf(jpgPath,"%s/%s_%s_%s.%s", jpgDir, device_serial.c_str(), channel.c_str(),strTime.c_str(),strType.c_str());
 
 	//保存快照数据
 	FILE* fSnap = ::fopen(jpgPath, "wb");
@@ -588,28 +588,27 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	}
 	fwrite(image.data(), 1, image.size(), fSnap);
 	::fclose(fSnap);
+	
+	char snapURL[512] = { 0 };
+	qtss_sprintf(snapURL, "%s/%s/%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),channel.c_str(),strType.c_str());
+	fDevice.HoldSnapPath(jpgPath,channel);
 
-	//设备快照需要保留多个路径属性，一个摄像头一个
-	fDevice.HoldSnapPath(jpgPath,camer_serial);
-
-	//qtss_sprintf(fDeviceSnap, "%s/%s/%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),camer_serial.c_str(),strType.c_str());
 
 	EasyProtocolACK rsp(MSG_SD_POST_SNAP_ACK);
 	EasyJsonValue header,body;
 
 	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
 	header[EASY_TAG_CSEQ]			=	parse.GetHeaderValue(EASY_TAG_CSEQ);
-	header[EASY_TAG_ERROR_NUM]		=	200;
-	header[EASY_TAG_ERROR_STRING]	=	EasyProtocol::GetErrorString(200);
+	header[EASY_TAG_ERROR_NUM]		=	EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING]	=	EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
 	body[EASY_TAG_SERIAL]			=	device_serial;
-	body[EASY_TAG_CHANNEL]			=	camer_serial;
+	body[EASY_TAG_CHANNEL]			=	channel;
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
 
-	//QTSS_SendHTTPPacket(this, (char*)msg.c_str(), msg.length(), false, false);
 	//构造响应报文(HTTP Header)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
