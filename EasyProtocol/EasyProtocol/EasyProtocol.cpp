@@ -445,6 +445,31 @@ bool EasyMsgSCListRecordACK::AddRecord(std::string record)
 	return true;
 }
 
+void EasyProtocolACK::SetHead(EasyJsonValue &header)
+{
+	for(EasyJsonValue::iterator it = header.begin(); it != header.end(); it++)
+	{
+		SetHeaderValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+void EasyProtocolACK::SetBody(EasyJsonValue &body)
+{
+	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+void EasyMsgSCRecordListACK::AddRecord(std::string record)
+{
+	Json::Value value;	
+	value[EASY_TAG_L_URL] = record;	
+	int pos = record.find_last_of('/');	
+	value[EASY_TAG_L_TIME] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
+	root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
+}
+
 //add,×Ï¹â£¬start
 strDevice::strDevice()
 {
@@ -512,30 +537,6 @@ void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//±£Á
 	}
 }
 
-void EasyProtocolACK::SetHead(EasyJsonValue &header)
-{
-	for(EasyJsonValue::iterator it = header.begin(); it != header.end(); it++)
-	{
-		SetHeaderValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
-	}
-}
-
-void EasyProtocolACK::SetBody(EasyJsonValue &body)
-{
-	for(EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
-	{
-		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
-	}
-}
-
-void EasyDarwinRecordListRSP::AddRecord(std::string record)
-{
-	Json::Value value;	
-	value[EASY_TAG_L_URL] = record;	
-	int pos = record.find_last_of('/');	
-	value[EASY_TAG_L_TIME] = record.substr(pos - 14, 14); // /20151123114500/*.m3u8
-	root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
-}
 //add,×Ï¹â£¬end
 }
 }//namespace
