@@ -309,6 +309,20 @@ private:
 	std::list<std::string> records;
 };
 
+class Easy_API EasyProtocolACK : public EasyProtocol
+{
+public:
+	EasyProtocolACK(int iMsgType):EasyProtocol(iMsgType){}
+	void SetHead(EasyJsonValue& header);//设置头部
+	void SetBody(EasyJsonValue& body);//设置JSON
+};
+
+class Easy_API EasyMsgSCRecordListACK : public EasyProtocolACK//封装录像列表回应
+{
+public:
+	EasyMsgSCRecordListACK(int iMsgType):EasyProtocolACK(iMsgType){}
+	void AddRecord(std::string record);
+};
 
 //add,Unisiot，start
 typedef struct 
@@ -342,20 +356,6 @@ public:
 	EasyDevices channels_;//摄像头信息
 	EasyDarwinTerminalType eDeviceType;//设备类型
 	EasyDarwinAppType eAppType;//App类型
-};
-
-class Easy_API EasyProtocolACK : public EasyProtocol//封装CMS的一般回应的JSON部分
-{
-public:
-	EasyProtocolACK(int iMsgType):EasyProtocol(iMsgType){}
-	void SetHead(EasyJsonValue& header);//设置头部
-	void SetBody(EasyJsonValue& body);//设置JSON
-};
-class Easy_API EasyDarwinRecordListRSP : public EasyProtocolACK//封装录像列表回应
-{
-public:
-	EasyDarwinRecordListRSP(int iMsgType):EasyProtocolACK(iMsgType){}
-	void AddRecord(std::string record);
 };
 //add,Unisiot，end
 }}//namespace
