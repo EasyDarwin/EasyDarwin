@@ -109,9 +109,6 @@ HTTPSessionInterface::~HTTPSessionInterface()
 	QTSS_GetValue(this, EasyHTTPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
 	char msgStr[2048] = { 0 };
 	
-	//客户端连接断开时，进行自动停止推流处理，放到对fSessionType类型判断里面更好
-	AutoStopStreamJudge();
-	//客户端连接断开时，进行自动停止推流处理
 	switch(fSessionType)
 	{
 	case EasyCameraSession:
@@ -272,77 +269,4 @@ void HTTPSessionInterface::UnRegDevSession()
 QTSS_Error HTTPSessionInterface::UpdateDevRedis()
 {
 	return QTSS_NoErr;
-}
-
-//add
-void HTTPSessionInterface::InsertToSet(const string &strCameraSerial,void * pObject)//加入到set中
-{
-	OSMutexLocker MutexLocker(&fMutexSet);
-	DevMapItera it=fDevmap.find(strCameraSerial);
-	if(it==fDevmap.end())//表示这是对当前设备这个摄像头的第一次直播
-	{
-		DevSet setTemp;
-		setTemp.insert(pObject);
-		fDevmap[strCameraSerial]=setTemp;
-	}
-	else//之间已经创建了
-	{
-		DevSet *setTemp=&(it->second);//获取当前摄像头直播列表
-		setTemp->insert(pObject);
-	}
-}
-bool HTTPSessionInterface::EraseInSet(const string &strCameraSerial,void *pObject)//删除元素，并判断是否为空，为空返回true,失败返回false
-{
-	OSMutexLocker MutexLocker(&fMutexSet);
-	DevMapItera it=fDevmap.find(strCameraSerial);
-	if(it==fDevmap.end())
-	{
-		return false;
-	}
-	else
-	{
-		DevSet *setTemp=&(it->second);//获取当前摄像头直播列表
-		setTemp->erase(pObject);
-		return setTemp->empty();
-	}
-}
-void HTTPSessionInterface::AutoStopStreamJudge()
-{
-	OSMutexLocker MutexLocker(&fMutexSet);
-	CliStreamMapItera it;
-	stStreamInfo stTemp;
-	OSRefTableEx* DeviceMap=QTSServerInterface::GetServer()->GetDeviceSessionMap();
-	OSRefTableEx::OSRefEx* theDevRef;
-	for(it=fClientStreamMap.begin();it!=fClientStreamMap.end();it++)
-	{
-		stTemp=it->second;
-		theDevRef=DeviceMap->Resolve(stTemp.strDeviceSerial);////////////////////////////////++
-		if(theDevRef==NULL)
-			continue;
-		//走到这说明存在指定设备
-		HTTPSessionInterface *pDevSession=(HTTPSessionInterface *)theDevRef->GetObjectPtr();//获得当前设备会话
-		if(pDevSession->EraseInSet(stTemp.strCameraSerial,this))//当前摄像头的拉流客户端为空，则向设备发出停止推流请求
-		{
-			EasyDarwin::Protocol::EasyProtocolACK		reqreq(MSG_SD_STREAM_STOP_REQ);
-			EasyJsonValue headerheader,bodybody;
-
-			char chTemp[16]={0};
-			UInt32 uDevCseq=pDevSession->GetCSeq();
-			sprintf(chTemp,"%d",uDevCseq);
-			headerheader["CSeq"]	=string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
-			headerheader[EASY_TAG_VERSION]=		EASY_PROTOCOL_VERSION;
-
-			bodybody["DeviceSerial"]	=	stTemp.strDeviceSerial;
-			bodybody["CameraSerial"]	=	stTemp.strCameraSerial;
-			bodybody["StreamID"]		=   stTemp.strStreamID;
-			bodybody["Protocol"]		=	stTemp.strProtocol;
-
-			reqreq.SetHead(headerheader);
-			reqreq.SetBody(bodybody);
-
-			string buffer = reqreq.GetMsg();
-			//QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
-		}
-		DeviceMap->Release(stTemp.strDeviceSerial);
-	}
 }

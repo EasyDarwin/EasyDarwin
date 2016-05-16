@@ -330,12 +330,7 @@ typedef struct
 	string strProtocol;//直播协议
 	string strStreamID;//直播流类型
 }stStreamInfo;
-typedef set<void*> DevSet;//void*对应的是客户端对象指针，客户端开始直播时加入，停止直播时删除，客户端连接终止时删除
-typedef map<string,DevSet> DevMap;//key为string表示当前设备下的某个摄像头，value为对这个摄像头进行拉流的客户端
-typedef DevMap::iterator DevMapItera;
 
-typedef map<string,stStreamInfo> CliStreamMap;//客户端存储所有的直播信息，key为设备序列号和摄像头序列号的组合，value为流类型和协议.用来判断客户端对哪些设备进行了直播，一个客户端可能同时对多个设备的多个摄像头同时进行直播
-typedef CliStreamMap::iterator CliStreamMapItera;
 class strDevice//设备类型对应的信息
 {
 public:

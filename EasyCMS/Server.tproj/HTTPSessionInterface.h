@@ -191,12 +191,7 @@ protected:
 	UInt32 fCSeq;//当前Session向对方发送请求时，fCSeq每次加1
 	MsgMap fMsgMap;//存储客户端发来的消息
 	strInfo fInfo;//存储设备发来的消息
-	
-	//自动停止推流实现
-	DevMap fDevmap;//当前设备存储的拉流客户端列表,每一个摄像头都有一个拉流客户端列表
-	OSMutex fMutexSet;//set、map互斥操作
-	CliStreamMap fClientStreamMap;//当前客户端正在拉流的所有流信息
-	//自动停止推流实现
+
 public:
 	strDevice *GetDeviceInfo(){return &fDevice;}
 	UInt32 GetCSeq(){OSMutexLocker MutexLocker(&fMutexCSeq);return fCSeq++;}
@@ -224,25 +219,6 @@ public:
 			((HTTPSessionInterface*)(it_l->second.pObject))->DecrementObjectHolderCount();//减少引用
 		}
 	}
-	//自动停止推流操作
-	void InsertToSet(const string &strCameraSerial,void * pObject);//加入到set中
-	bool EraseInSet(const string &strCameraSerial,void *pObject);//删除元素，并判断是否为空，为空返回true,失败返回false
-	void AutoStopStreamJudge();//自动停止推流判断，客户端连接断开时去判断,保证客户端直播后没有进行主动停止直播而直接断开连接这种情况不会让推流一直进行。
-	void InsertToStreamMap(const string & strDeviceSerial,stStreamInfo & stTemp){OSMutexLocker MutexLocker(&fMutexSet);fClientStreamMap[strDeviceSerial]=stTemp;}
-	bool FindInStreamMap(const string & strDeviceSerial,stStreamInfo & stTemp)
-	{
-		OSMutexLocker MutexLocker(&fMutexSet);
-		CliStreamMap::iterator it_l=fClientStreamMap.find(strDeviceSerial);
-		if(it_l==fClientStreamMap.end())//没有找到
-			return false;
-		else
-		{
-			stTemp=it_l->second;
-			fClientStreamMap.erase(it_l);
-			return true;
-		}
-	}
-	//自动停止推流操作
 	//add,紫光，end
 };
 #endif // __HTTPSESSIONINTERFACE_H__
