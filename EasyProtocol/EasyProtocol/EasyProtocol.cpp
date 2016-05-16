@@ -300,31 +300,31 @@ EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices & cameras, string dev
 	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 	SetBodyValue(EASY_TAG_SERIAL, device_serial);
-	SetBodyValue(EASY_TAG_CAMERA_COUNT, cameras.size());
+	SetBodyValue(EASY_TAG_CHANNEL_COUNT, cameras.size());
 	for (EasyDevices::iterator it = cameras.begin(); it != cameras.end(); it++)
 	{
 		Json::Value value;
 		value[EASY_TAG_SERIAL] = it->serial_;
 		value[EASY_TAG_NAME] = it->name_;
         value[EASY_TAG_STATUS] = it->status_;
-		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].append(value);
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 	}
 }
 
 EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(const char * msg)
 : EasyProtocol(msg, MSG_SC_CAMERA_LIST_ACK)
 {
-	cameras_.clear();
-	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS].size();
+	channels_.clear();
+	int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size();
 
 	for (int i = 0; i < size; i++)
 	{
-		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CAMERAS][i];
-		EasyDevice camera;
-		camera.name_ = json_[EASY_TAG_SERIAL].asString();
-		camera.serial_ = json_[EASY_TAG_NAME].asString();
-        camera.status_ = json_[EASY_TAG_STATUS].asString();
-		cameras_.push_back(camera);
+		Json::Value &json_ = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];
+		EasyDevice channel;
+		channel.name_ = json_[EASY_TAG_SERIAL].asString();
+		channel.serial_ = json_[EASY_TAG_NAME].asString();
+        channel.status_ = json_[EASY_TAG_STATUS].asString();
+		channels_.push_back(channel);
 	}
 }
 
@@ -477,7 +477,7 @@ bool strDevice::GetDevInfo(const char* json)//ÓÉJSONÎÄ±¾µÃµ½Éè±¸ÐÅÏ¢
 
 		if(eAppType==EASY_APP_TYPE_NVR)//Èç¹ûÉè±¸ÀàÐÍÊÇNVR£¬ÔòÐèÒª»ñÈ¡ÉãÏñÍ·ÐÅÏ¢
 		{
-			cameras_.clear();
+			channels_.clear();
 			Json::Value *proot=proTemp.GetRoot();
 			int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size(); //Êý×é´óÐ¡ 
 
@@ -488,7 +488,7 @@ bool strDevice::GetDevInfo(const char* json)//ÓÉJSONÎÄ±¾µÃµ½Éè±¸ÐÅÏ¢
 				camera.name_ = json_camera[EASY_TAG_NAME].asString();
 				camera.channel_ = json_camera[EASY_TAG_CHANNEL].asString();		
 				camera.status_ = json_camera[EASY_TAG_STATUS].asString();	
-				cameras_.push_back(camera);
+				channels_.push_back(camera);
 			}  
 		}
 		return true;
@@ -504,7 +504,7 @@ void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//±£Á
 	else//·ñÔò¾ÍÒª±£Áôµ½¶ÔÓ¦µÄÉãÏñÍ·ÊôÐÔÀï
 	{
 		EasyDevicesIterator it;
-		for(it=cameras_.begin();it!=cameras_.end();it++)
+		for(it=channels_.begin();it!=channels_.end();it++)
 		{
 			if(it->channel_==strChannel)
 				it->snapJpgPath_=strJpgPath;

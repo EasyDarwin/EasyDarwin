@@ -163,10 +163,10 @@ public:
 	EasyMsgSCDeviceInfoACK(const char* msg);
 	~EasyMsgSCDeviceInfoACK() {}
 
-	EasyDevices& GetCameras() { return cameras_; }
+	EasyDevices& GetCameras() { return channels_; }
 
 private:
-	EasyDevices cameras_;
+	EasyDevices channels_;
 };
 
 // MSG_SC_GET_STREAM_ACK
@@ -339,7 +339,7 @@ public:
 	string snapJpgPath_;//最新的快照路径
 
 
-	EasyDevices cameras_;//摄像头信息
+	EasyDevices channels_;//摄像头信息
 	EasyDarwinTerminalType eDeviceType;//设备类型
 	EasyDarwinAppType eAppType;//App类型
 };
