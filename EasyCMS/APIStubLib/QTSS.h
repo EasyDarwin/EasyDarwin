@@ -113,9 +113,9 @@ typedef UInt32  QTSS_EventType;
 //HTTP SESSION TYPES
 enum
 {
-    EasyHTTPSession			= 0,
-	EasyCameraSession		= 1,
-	EasyNVRSession			= 2
+	EasyCameraSession		= 0,
+	EasyNVRSession			= 1,
+	EasyHTTPSession			= 2
 };
 typedef UInt32 Easy_SessionType;
 

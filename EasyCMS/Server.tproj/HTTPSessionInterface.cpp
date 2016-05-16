@@ -253,13 +253,6 @@ void* HTTPSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*out
     return NULL;
 }
 
-
-
-QTSS_Error HTTPSessionInterface::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
-{
-	return QTSS_NoErr;
-}
-
 QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg)
 {
 	if(!fAuthenticated) return QTSS_NoErr;

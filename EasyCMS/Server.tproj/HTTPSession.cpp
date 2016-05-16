@@ -657,7 +657,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	HTTPStatusCode statusCode = httpOK;	
 	EasyMsgDSRegisterREQ regREQ(json);
 
-	do
+	while(!fAuthenticated)
 	{
 		//1.获取TerminalType和AppType,进行逻辑验证，不符合则返回400 httpBadRequest;
 		int appType = regREQ.GetAppType();
@@ -682,33 +682,28 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 			}
 		}
 
-		if( (fSessionType != EasyCameraSession) && (fSessionType != EasyNVRSession))
+		if(fSessionType >= EasyHTTPSession)
 		{
 			//设备注册既不是EasyCamera，也不是EasyNVR，返回错误
-			statusCode = httpBadRequest;
+			statusCode = httpForbidden;
 			break;
 		}
 
 		//2.验证Serial和Token进行权限验证，不符合则返回401 httpUnAuthorized;
-		if(!fAuthenticated)
+		string serial = regREQ.GetBodyValue(EASY_TAG_SERIAL);
+		string token = regREQ.GetBodyValue(EASY_TAG_TOKEN);
+
+		if(serial.empty())
 		{
-			string serial = regREQ.GetBodyValue(EASY_TAG_SERIAL);
-			string token = regREQ.GetBodyValue(EASY_TAG_TOKEN);
+			statusCode = httpBadRequest;
+			break;
+		}
 
-			if(serial.empty())
-			{
-				statusCode = httpBadRequest;
-				break;
-			}
-
-			//验证Serial和Token是否合法
-			if(false)
-			{
-				statusCode = httpUnAuthorized;
-				break;
-			}
-
-			fAuthenticated = true;
+		//验证Serial和Token是否合法
+		if(false)
+		{
+			statusCode = httpUnAuthorized;
+			break;
 		}
 
 		//3.获取Name和Tag信息进行本地保存或者写入Redis;
@@ -723,14 +718,17 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 		{
 			//在redis上增加设备
 			QTSServerInterface::GetServer()->RedisAddDevName(fDevice.serial_.c_str());
+			fAuthenticated = true;
 		}
 		else
 		{
 			//上线冲突
-			statusCode =  QTSS_AttrNameExists;
+			statusCode =  httpConflict;
 			break;
 		}
-	}while(0);
+
+		break;
+	}
 
 	if(statusCode != httpOK)	return QTSS_RequestFailed;
 

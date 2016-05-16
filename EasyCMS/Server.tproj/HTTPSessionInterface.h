@@ -90,8 +90,6 @@ public:
     virtual QTSS_Error Read(void* ioBuffer, UInt32 inLength, UInt32* outLenRead);
     virtual QTSS_Error RequestEvent(QTSS_EventType inEventMask);
 
-	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
-
     enum
     {
         kMaxUserNameLen         = 32,
