@@ -70,7 +70,6 @@ HTTPSession::~HTTPSession()
 
 SInt64 HTTPSession::Run()
 {
-	//获取事件类型
 	EventFlags events = this->GetEvents();
 	QTSS_Error err = QTSS_NoErr;
 	QTSSModule* theModule = NULL;
@@ -78,11 +77,9 @@ SInt64 HTTPSession::Run()
 	// Some callbacks look for this struct in the thread object
 	OSThreadDataSetter theSetter(&fModuleState, NULL);
 
-	//超时事件或者Kill事件，进入释放流程：清理 & 返回-1
 	if (events & Task::kKillEvent)
 		fLiveSession = false;
 
-	//这部分应该也是返回false比较合理吧，因为当检测到超时时会向Session发送超时事件，如果粗暴的返回-1，则会进入delete环节直接将Session删除，那么如果当前Session被引用，在访问当前Session时就会直接崩溃。
 	if(events & Task::kTimeoutEvent)
 	{
 		char msgStr[512];
@@ -91,18 +88,14 @@ SInt64 HTTPSession::Run()
 		fLiveSession = false;
 	}
 
-	//正常事件处理流程
 	while (this->IsLiveSession())
 	{
-		//报文处理以状态机的形式，可以方便多次处理同一个消息
 		switch (fState)
 		{
-		case kReadingFirstRequest://首次对Socket进行读取
+		case kReadingFirstRequest:
 			{
 				if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
 				{
-					//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
-					//但，还不能构成一个整体报文，还要继续等待读取...
 					fInputSocketP->RequestEvent(EV_RE);
 					return 0;
 				}
@@ -122,12 +115,10 @@ SInt64 HTTPSession::Run()
 			}
 			continue;
 
-		case kReadingRequest://读取请求报文
+		case kReadingRequest:
 			{
-				//读取锁，已经在处理一个报文包时，不进行新网络报文的读取和处理
 				OSMutexLocker readMutexLocker(&fReadMutex);
 
-				//网络请求报文存储在fInputStream中
 				if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
 				{
 					//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
@@ -161,7 +152,7 @@ SInt64 HTTPSession::Run()
 				}
 				fState = kHaveCompleteMessage;
 			}
-		case kHaveCompleteMessage://读取到完整的请求报文
+		case kHaveCompleteMessage:
 			{
 				Assert( fInputStream.GetRequestBuffer() );
 
@@ -251,7 +242,7 @@ SInt64 HTTPSession::Run()
 			{
 				if (fOutputStream.GetBytesWritten() == 0)
 				{
-					//返回HTTP 400报文
+					//返回HTTP报文
 					ExecNetMsgErrorReqHandler(httpInternalServerError);
 					fState = kSendingResponse;
 					break;
@@ -261,7 +252,6 @@ SInt64 HTTPSession::Run()
 			}
 		case kSendingResponse:
 			{
-				//响应报文发送，确保完全发送
 				Assert(fRequest != NULL);
 
 				//发送响应报文
@@ -319,19 +309,13 @@ SInt64 HTTPSession::Run()
 	if (fObjectHolders == 0)
 		return -1;
 
-	//如果流程走到这里，Session实际已经无效了，应该被删除，但没有，因为还有其他地方引用了Session对象
 	return 0;
 }
 
-/*
-	发送HTTP+json报文，决定是否关闭当前Session
-	HTTP部分构造，json部分由函数传递
-*/
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
-	//构造响应报文(HTTP头)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(contentXML->Len?httpOK:httpNotImplemented);
+	httpAck.CreateResponseHeader(httpOK);
 	if (contentXML->Len)
 		httpAck.AppendContentLengthHeader(contentXML->Len);
 
@@ -362,9 +346,6 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 	return QTSS_NoErr;
 }
 
-/*
-	Content报文读取与解析同步进行报文处理，构造回复报文
-*/
 QTSS_Error HTTPSession::SetupRequest()
 {
 	//解析请求报文
@@ -565,7 +546,6 @@ QTSS_Error HTTPSession::DumpRequestData()
 	return theErr;
 }
 
-//公共，begin
 QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 {
 	if(!fAuthenticated) return httpUnAuthorized;
@@ -983,7 +963,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			char chTemp[16]={0};
 			UInt32 uDevCseq=pDevSession->GetCSeq();
 			sprintf(chTemp,"%d",uDevCseq);
-			headerheader["CSeq"]	=string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+			headerheader[EASY_TAG_CSEQ] = string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
 			headerheader[EASY_TAG_VERSION]=		EASY_PROTOCOL_VERSION;
 
 			string strSessionID;
@@ -997,8 +977,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			bodybody[EASY_TAG_STREAM_ID]		=		strSessionID;
 			bodybody[EASY_TAG_SERVER_IP]		=		strDssIP;
 			bodybody[EASY_TAG_SERVER_PORT]		=		strDssPort;
-			bodybody[EASY_TAG_SERIAL]			=	strDeviceSerial;
-			bodybody[EASY_TAG_CHANNEL]			=	strCameraSerial;
+			bodybody[EASY_TAG_SERIAL]			=		strDeviceSerial;
+			bodybody[EASY_TAG_CHANNEL]			=		strCameraSerial;
 			bodybody[EASY_TAG_PROTOCOL]			=		strProtocol;
 			bodybody[EASY_TAG_RESERVE]			=		strStreamID;
 
@@ -1520,7 +1500,7 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 	}
 
 	//如果不想进入错误自动处理则一定要返回QTSS_NoErr
-	if(theErr!=QTSS_NoErr)//无论是正确回应还是等待返回都是QTSS_NoErr，出现错误，对错误进行统一回应
+	if(theErr != QTSS_NoErr)//无论是正确回应还是等待返回都是QTSS_NoErr，出现错误，对错误进行统一回应
 	{
 		EasyDarwin::Protocol::EasyProtocol req(fRequestBody);
 		EasyDarwin::Protocol::EasyDarwinRSP rsp(nRspMsg);
@@ -1589,4 +1569,3 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 	}
 	return QTSS_NoErr;
 }
-//公共，end
