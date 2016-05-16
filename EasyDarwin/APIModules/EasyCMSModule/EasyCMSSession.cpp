@@ -11,22 +11,10 @@
 #include "EasyCMSSession.h"
 #include "EasyUtil.h"
 
-
-// EasyCMS Keep-Alive Interval
-static UInt32			sKeepAliveInterval		= 30;
-static UInt32			sDefKeepAliveInterval	= 30;
-
-
-// 初始化读取配置文件中各项配置
-void EasyCMSSession::Initialize(QTSS_ModulePrefsObject cmsModulePrefs)
-{
-	QTSSModuleUtils::GetAttribute(cmsModulePrefs, "keep_alive_interval", qtssAttrDataTypeUInt32, &sKeepAliveInterval, &sDefKeepAliveInterval, sizeof(sKeepAliveInterval));
-}
-
 EasyCMSSession::EasyCMSSession()
 :	Task(),
 	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),    
-	fTimeoutTask(this, sKeepAliveInterval * 1000),
+	fTimeoutTask(this, 30 * 1000),
 	fInputStream(fSocket),
 	fOutputStream(fSocket, &fTimeoutTask),
 	fState(kIdle),//状态机的初始状态
@@ -71,11 +59,13 @@ EasyCMSSession::~EasyCMSSession()
 		delete fSocket;
 		fSocket = NULL;
 	}
+
 	if(fRequest)
 	{
 		delete fRequest;
 		fRequest = NULL;
 	}
+
 	if(fContentBuffer)
 	{
 		delete [] fContentBuffer;
@@ -116,12 +106,11 @@ SInt64 EasyCMSSession::Run()
 						switch(fMsg)
 						{
 						case kStreamStopMsg:
-							CSStreamStop();
+							CSFreeStream();
 							break;
 						default:
 							break;
 						}
-						
 					}
 
 					if(events & Task::kReadEvent)
@@ -359,7 +348,8 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 
 	return QTSS_NoErr;
 }
-QTSS_Error EasyCMSSession::CSStreamStop()
+
+QTSS_Error EasyCMSSession::CSFreeStream()
 {
 	EasyDarwin::Protocol::EasyProtocolACK req(MSG_CS_FREE_STREAM_REQ);
 	EasyJsonValue header,body;
@@ -379,7 +369,7 @@ QTSS_Error EasyCMSSession::CSStreamStop()
 
 	body[EASY_TAG_SERIAL]		=	fSerial;
 	body[EASY_TAG_CHANNEL]		=	fChannel;
-	body[EASY_TAG_PROTOCOL]		=	"RTSP";
+	body[EASY_TAG_PROTOCOL]		=	EasyProtocol::GetProtocolString(EASY_PROTOCOL_TYPE_RTSP);
 	body[EASY_TAG_RESERVE]		=	"1";
 
 	req.SetHead(header);
@@ -407,6 +397,7 @@ QTSS_Error EasyCMSSession::CSStreamStop()
 
 	return QTSS_NoErr;
 }
+
 void EasyCMSSession::SetStreamStopInfo(const char * chSerial,const char * chChannel)
 {
 	fSerial = new char[strlen(chSerial) + 1];

@@ -45,8 +45,6 @@ public:
     EasyCMSSession();
     virtual ~EasyCMSSession();
 
-	static void Initialize(QTSS_ModulePrefsObject inPrefs);
-
 	ClientSocket* fSocket;
 
 	TimeoutTask fTimeoutTask;
@@ -59,11 +57,12 @@ public:
 		kSendingMessage             = 3,
 		kCleaningUp                 = 4
     };
-
+		
+	//需要和CMS进行其他通讯的在这里填充类型，并调用相应的接口函数
 	typedef enum 
 	{
-		kStreamStopMsg=0
-		//需要和CMS进行其他通讯的在这里填充类型，并调用相应的接口函数
+		kStreamStopMsg = 0
+
 	}fEnumMsg;
 
 	UInt32 fState;
@@ -71,7 +70,7 @@ public:
 	void CleanupRequest();
 
 	//向EasyCMS发送停止推流请求
-	QTSS_Error CSStreamStop();
+	QTSS_Error CSFreeStream();
 
 	// 处理HTTPRequest请求报文
 	QTSS_Error ProcessMessage();
@@ -98,8 +97,10 @@ public:
 
 	// 请求报文的Content读取偏移量,在多次读取到完整Content部分时用到
 	UInt32				fContentBufferOffset;
+
 	//接口函数
 	void SetStreamStopInfo(const char * chSerial,const char * chChannel);
+
 	void SetMsgType(fEnumMsg msg);
 private:
     virtual SInt64 Run();
