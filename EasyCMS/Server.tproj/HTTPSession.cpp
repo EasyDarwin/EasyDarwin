@@ -822,7 +822,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷
 		reqreq.SetBody(bodybody);
 
 		string buffer = reqreq.GetMsg();
-		QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
+		//QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
 	}
 	else//Àµ√˜»‘»ª”–∆‰À˚øÕªß∂À’˝‘⁄∂‘µ±«∞…„œÒÕ∑Ω¯––÷±≤•
 	{
@@ -995,7 +995,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//øÕªß∂Àø™ º¡˜
 
 			pDevSession->InsertToMsgMap(uDevCseq,msgTemp);//º”»ÎµΩMap÷–µ»¥˝øÕªß∂Àµƒªÿ”¶
 			IncrementObjectHolderCount();//‘ˆº”“˝”√£¨∑¿÷π…Ë±∏ªÿ”¶ ±µ±«∞Session“—æ≠÷’÷π
-			QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
+			//QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
 			DeviceMap->Release(strDeviceSerial);//////////////////////////////////////////////////////////--
 
 			fInfo.cWaitingState = 1;//µ»¥˝…Ë±∏ªÿ”¶

@@ -38,11 +38,11 @@ class HTTPSession : public HTTPSessionInterface
 		////发送HTTP响应报文
 		virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
 
-		char* GetDeviceSnap(){ return fDeviceSnap; };
-		char* GetDeviceSerial(){ return (char*)fDevSerial.c_str(); };
+		char* GetDeviceSnap()	{ return fDeviceSnap; };
+		char* GetDeviceSerial()	{ return (char*)fDevSerial.c_str(); };
 		
-		void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
-		EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }
+		void SetStreamPushInfo(EasyJsonValue &info)	{ fStreamPushInfo = info; }
+		EasyJsonValue &GetStreamPushInfo()	{ return fStreamPushInfo; }
 
     private: 
         SInt64 Run();

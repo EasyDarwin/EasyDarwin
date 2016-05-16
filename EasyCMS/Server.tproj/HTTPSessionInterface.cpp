@@ -80,11 +80,6 @@ HTTPSessionInterface::HTTPSessionInterface()
     fTimeoutTask.SetTask(this);
     fSocket.SetTask(this);
 
-	//fSerial[0] = 0;
-	//::memset(fSerial, 0, EASY_MAX_SERIAL_LENGTH);
-	//fDevSerialPtr.Set( fSerial, ::strlen(fSerial));
-	//fDevRef.Set( fDevSerialPtr, this);
-
     fSessionIndex = (UInt32)atomic_add(&sSessionIndexCounter, 1);
     this->SetVal(EasyHTTPSesIndex, &fSessionIndex, sizeof(fSessionIndex));
 
@@ -101,15 +96,6 @@ HTTPSessionInterface::HTTPSessionInterface()
 	//add
 	fInfo.cWaitingState=0;	//初始为处理第一次请求状态
 	fInfo.uWaitingTime=0;	//初始为不用等待回应
-	/*
-		HTTPSessionInterface * p=this;
-		int iSize=sizeof(QTSSDictionary)+sizeof(Task)+sizeof(fUserNameBuf)+sizeof(fUserPasswordBuf)+sizeof(fSessionID)+sizeof(fLastSMSSessionID)
-			+sizeof(fDevSerial)+sizeof(fStreamReqCount)+sizeof(fNVROperatorMutex)+sizeof(fStreamReqCountMutex)+sizeof(fCond)+sizeof(fNVRMessageQueue)
-			+sizeof(fTimeoutTask)+sizeof(fInputStream)+sizeof(fOutputStream)+sizeof(fSessionMutex)+sizeof(fSocket)+sizeof(fOutputSocketP)+sizeof(fInputSocketP)
-			+sizeof(fSessionType)+sizeof(fLiveSession)+sizeof(fObjectHolders)+sizeof(fSessionIndex)+sizeof(fLocalAddr)+sizeof(fRemoteAddr)+sizeof(fAuthenticated)
-			+sizeof(sSessionIndexCounter)+sizeof(sAttributes)+sizeof(fDevice)+sizeof(fRequestBody)+sizeof(fMutexCSeq)+sizeof(fCSeq)+sizeof(fMsgMap)+sizeof(fin);
-		iSize=sizeof(HTTPSessionInterface);
-	*/
 }
 
 HTTPSessionInterface::~HTTPSessionInterface()
@@ -274,23 +260,6 @@ QTSS_Error HTTPSessionInterface::SendHTTPPacket(StrPtrLen* contentXML, Bool16 co
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSessionInterface::RegDevSession(const char* serial, UInt32 serailLen)
-{
-	//if((::strlen(serial) == 0) || (serailLen == 0))
-	//	return QTSS_ValueNotFound;
-	//fSessionType = EasyCameraSession;
-	//QTSS_SetValue(this, EasyHTTPSesSerial, 0, serial, serailLen);
-
-	//fDevSerialPtr.Set( fSerial, serailLen);
-	//fDevRef.Set( fDevSerialPtr, this);
-	//OS_Error theErr = QTSServerInterface::GetServer()->GetDeviceSessionMap()->Register(GetRef());
-	////printf("[line:%d]HTTPSessionInterface::RegDevSession theErr = %d\n",__LINE__, theErr);
-	//if(theErr == OS_NoErr)
-	//	fAuthenticated = true;
-	//return theErr;
-	return QTSS_Unimplemented;
-}
-
 QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg)
 {
 	if(!fAuthenticated) return QTSS_NoErr;
@@ -379,7 +348,7 @@ void HTTPSessionInterface::AutoStopStreamJudge()
 			reqreq.SetBody(bodybody);
 
 			string buffer = reqreq.GetMsg();
-			QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
+			//QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
 		}
 		DeviceMap->Release(stTemp.strDeviceSerial);
 	}

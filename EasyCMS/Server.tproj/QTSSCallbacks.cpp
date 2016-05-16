@@ -669,37 +669,3 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
 {
     OS::GetStdLibMutex()->Unlock();
 }
-
-QTSS_Error	QTSSCallbacks::QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen, Bool16 connectionClose, Bool16 decrement)
-{
-	if(inServiceSession == NULL)
-		return QTSS_BadArgument;
-
-	HTTPSessionInterface* session = (HTTPSessionInterface*)inServiceSession;
-	StrPtrLen theValue(inValue, inValueLen);
-	return session->SendHTTPPacket(&theValue, connectionClose, decrement);
-}
-
-QTSS_Error	QTSSCallbacks::QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen)
-{
-	if(inServiceSession == NULL)
-		return QTSS_BadArgument;
-	//Easy_SessionType sType = EasyCameraSession;
-	//QTSS_SetValue(inServiceSession, EasyHTTPSesType, 0, &sType, sizeof(sType));
-	//QTSS_SetValue(inServiceSession, EasyHTTPSesSerial, 0, inValue, inValueLen);
-	return ((HTTPSessionInterface*)inServiceSession)->RegDevSession(inValue, inValueLen);
-}
-
-QTSS_Error	QTSSCallbacks::QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession)
-{
-	if(inServiceSession == NULL)
-		return QTSS_BadArgument;
-	return ((HTTPSessionInterface*)inServiceSession)->UpdateDevRedis();
-}
-
-QTSS_Error	QTSSCallbacks::QTSS_UpdateDevSnap(QTSS_RTSPSessionObject inServiceSession, const char* inSnapTime, const char* inSnapJpg)
-{
-	if(inServiceSession == NULL)
-		return QTSS_BadArgument;
-	return ((HTTPSessionInterface*)inServiceSession)->UpdateDevSnap(inSnapTime, inSnapJpg);
-}

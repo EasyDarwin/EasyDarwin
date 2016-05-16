@@ -343,25 +343,3 @@ void  QTSS_UnlockStdLib()
 {
     (sCallbacks->addr [kUnlockStdLibCallback])  ();
 }
-
-//DispatchCenter消息中心调用
-QTSS_Error	QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen, Bool16 connectionClose, Bool16 decrement)
-{
-	return (sCallbacks->addr[kSendHTTPPacketCallback]) (inServiceSession, inValue, inValueLen, connectionClose, decrement);
-}
-
-QTSS_Error	QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen)
-{
-	return (sCallbacks->addr[kRegDevSessionCallback]) (inServiceSession, inValue, inValueLen);
-}
-
-QTSS_Error	QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession)
-{
-	return (sCallbacks->addr[kUpdateDevRedisCallback]) (inServiceSession);
-}
-
-QTSS_Error	QTSS_UpdateDevSnap(QTSS_RTSPSessionObject inServiceSession, const char* inSnapTime, const char* inSnapJpg)
-{
-	return (sCallbacks->addr[kUpdateDevSnapCallback]) (inServiceSession, inSnapTime, inSnapJpg);
-}
-    

@@ -143,12 +143,6 @@ class QTSSCallbacks
           
         static void   QTSS_LockStdLib();
         static void   QTSS_UnlockStdLib();
-
-		//DispatchCenterÏûÏ¢ÖÐÐÄµ÷ÓÃ
-		static QTSS_Error	QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen, Bool16 connectionClose = false, Bool16 decrement = true);
-		static QTSS_Error	QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen);
-		static QTSS_Error	QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession);
-		static QTSS_Error	QTSS_UpdateDevSnap(QTSS_RTSPSessionObject inServiceSession, const char* inSnapTime, const char* inSnapJpg);
 };
 
 #endif //__QTSSCALLBACKS_H__

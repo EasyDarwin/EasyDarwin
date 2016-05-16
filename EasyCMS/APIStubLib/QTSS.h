@@ -1338,12 +1338,6 @@ QTSS_Error  QTSS_GlobalUnLock();
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 
-//DispatchCenter消息中心调用
-QTSS_Error	QTSS_SendHTTPPacket(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen, Bool16 connectionClose = false, Bool16 decrement = true);
-QTSS_Error	QTSS_RegDevSession(QTSS_RTSPSessionObject inServiceSession, char* inValue, UInt32 inValueLen);    
-QTSS_Error	QTSS_UpdateDevRedis(QTSS_RTSPSessionObject inServiceSession);
-QTSS_Error	QTSS_UpdateDevSnap(QTSS_RTSPSessionObject inServiceSession, const char* inSnapTime, const char* inSnapJpg); 
-
 #ifdef __cplusplus
 }
 #endif

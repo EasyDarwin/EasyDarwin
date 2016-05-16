@@ -628,10 +628,6 @@ void    QTSServer::InitCallbacks()
     
     sCallbacks.addr[kLockStdLibCallback] =                  (QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_LockStdLib;
     sCallbacks.addr[kUnlockStdLibCallback] =                (QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_UnlockStdLib;
-	sCallbacks.addr[kSendHTTPPacketCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_SendHTTPPacket;
-	sCallbacks.addr[kRegDevSessionCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_RegDevSession;
-	sCallbacks.addr[kUpdateDevRedisCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_UpdateDevRedis;
-	sCallbacks.addr[kUpdateDevSnapCallback] =				(QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_UpdateDevSnap;
 }
 
 void QTSServer::LoadModules(QTSServerPrefs* inPrefs)

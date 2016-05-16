@@ -76,8 +76,6 @@ public:
     void                SetRequestBodyLength(SInt32 inLength)   { fRequestBodyLen = inLength; }
     SInt32              GetRemainingReqBodyLen()                { return fRequestBodyLen; }
 
-	//OSRef*	GetRef()	{return &fDevRef; }
-	QTSS_Error RegDevSession(const char* serial, UInt32 serailLen);
 	QTSS_Error UpdateDevRedis();
 	QTSS_Error UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg);
 	void UnRegDevSession();
