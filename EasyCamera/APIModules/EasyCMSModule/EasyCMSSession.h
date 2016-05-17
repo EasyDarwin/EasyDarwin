@@ -9,8 +9,6 @@
     Contains:   CMS Session
 */
 
-#undef COMMON_UTILITIES_LIB
-
 #include "Task.h"
 #include "TimeoutTask.h"
 
@@ -43,13 +41,10 @@ class EasyCMSSession : public Task
 {
 public:
     EasyCMSSession();
+
     virtual ~EasyCMSSession();
 
 	static void Initialize(QTSS_ModulePrefsObject inPrefs);
-
-	ClientSocket* fSocket;
-
-	TimeoutTask fTimeoutTask;
     
 	enum
 	{
@@ -93,27 +88,22 @@ public:
 	// 为CMSSession专门进行网络数据包发送的对象
 	HTTPResponseStream  fOutputStream;
 
-	// 初始化时为NULL
-	// 在每一次请求发出或者接收命令时,都有可能生成HTTPRequest对象并进行处理
-	// 每一次状态机流程在处理完成kIdle~kCleanUp的流程都需要清理HTTPRequest对象
     HTTPRequest*        fRequest;
 	
-	// 读取网络报文前先锁住Session防止重入读取
     OSMutex             fReadMutex;
-
-	// Session锁
 	OSMutex             fMutex;
 
-	// 请求报文的Content部分
 	char*				fContentBuffer;
-
-	// 请求报文的Content读取偏移量,在多次读取到完整Content部分时用到
 	UInt32				fContentBufferOffset;
 
 private:
+	
+	ClientSocket* fSocket;
+
+	TimeoutTask fKeepAliveTimeoutTask;
+
     virtual SInt64 Run();
 
-	// 初步判断Session Socket是否已连接
 	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
 
 	EasyMsgDSPostSnapREQ* fSnapReq;
