@@ -61,9 +61,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kAllowMultipleValues,     "0",        NULL                    },  //6 bind_ip_addr
     { kDontAllowMultipleValues, "false",    NULL                    },  //7 break_on_assert
     { kDontAllowMultipleValues, "true",     NULL                    },  //8 auto_restart
-    { kDontAllowMultipleValues, "1",        NULL                    },  //9 total_bytes_update
-    { kDontAllowMultipleValues, "60",       NULL                    },  //10 average_bandwidth_update
-    { kDontAllowMultipleValues, "600",      NULL                    },  //11 safe_play_duration
+
 	{ kDontAllowMultipleValues,	DEFAULTPATHS_SSM_DIR,	NULL		},	//12 module_folder
     { kDontAllowMultipleValues, "Error",    NULL                    },  //13 error_logfile_name
 	{ kDontAllowMultipleValues,	DEFAULTPATHS_LOG_DIR,	NULL		},	//14 error_logfile_dir
@@ -74,8 +72,8 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "true",     NULL                    },  //19 error_logging
     { kDontAllowMultipleValues, "CMS000",   NULL                    },  //20 service_id
     { kDontAllowMultipleValues, "0",        NULL                    },  //21 start_thinning_delay
-    { kDontAllowMultipleValues, "64",       NULL                    },  //22 large_window_size
-    { kDontAllowMultipleValues, "200",      NULL                    },  //23 window_size_threshold
+
+
     { kDontAllowMultipleValues, "8192",     NULL                    },  //24 min_tcp_buffer_size
 	{ kDontAllowMultipleValues,	"200000",	NULL					},	//25 max_tcp_buffer_size
     { kDontAllowMultipleValues, ".5",       NULL                    },  //26 tcp_seconds_to_buffer
@@ -91,7 +89,8 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "false",    NULL                    },  //31 append_source_addr_in_transport
     { kDontAllowMultipleValues, "6379",     NULL					},	//32 redis_port
     { kDontAllowMultipleValues, "500",      NULL                    },  //33 max_retransmit_delay
-    { kDontAllowMultipleValues, "24",       NULL                    },  //34 small_window_size
+
+
     { kDontAllowMultipleValues, "false",    NULL                    },  //35 ack_logging_enabled
     { kDontAllowMultipleValues, "./snap/",      NULL                    },  //36 snap_local_path
     { kDontAllowMultipleValues, "http://cms.easydarwin.org/",      NULL                    },  //37 snap_web_path
@@ -113,8 +112,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 
 
 	{ kDontAllowMultipleValues, "2.0",		NULL					},	//48 overbuffer_rate
-	{ kDontAllowMultipleValues,	"48",		NULL					},	//49 medium_window_size
-	{ kDontAllowMultipleValues,	"1000",		NULL					},	//50 window_size_max_threshold
+
     { kDontAllowMultipleValues, "true",     NULL                    },  //51 CMS_server_info
 	{ kDontAllowMultipleValues, "0",        NULL                    },  //52 run_num_threads
     { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//53 pid_file
@@ -138,10 +136,8 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 6 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 7 */ { "break_on_assert",                        NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 8 */ { "auto_restart",                           NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 9 */ { "total_bytes_update",                     NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 10 */ { "average_bandwidth_update",              NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 11 */ { "safe_play_duration",                    NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 12 */ { "module_folder",                         NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+
+	/* 12 */ { "module_folder",                         NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 13 */ { "error_logfile_name",                    NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 14 */ { "error_logfile_dir",                     NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 15 */ { "error_logfile_interval",                NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -151,9 +147,8 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 19 */ { "error_logging",                         NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 20 */ { "service_id",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 21 */ { "start_thinning_delay",                  NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 22 */ { "large_window_size",                     NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 23 */ { "window_size_threshold",                 NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 24 */ { "min_tcp_buffer_size",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+
+	/* 24 */ { "min_tcp_buffer_size",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 25 */ { "max_tcp_buffer_size",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 26 */ { "tcp_seconds_to_buffer",                 NULL,                   qtssAttrDataTypeFloat32,    qtssAttrModeRead | qtssAttrModeWrite },
     /* 27 */ { "cms_port",								NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -163,8 +158,8 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 31 */ { "append_source_addr_in_transport",       NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 32 */ { "redis_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 33 */ { "max_retransmit_delay",                  NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 34 */ { "small_window_size",                     NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 35 */ { "ack_logging_enabled",                   NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+
+	/* 35 */ { "ack_logging_enabled",                   NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 36 */ { "snap_local_path",						NULL,                   qtssAttrDataTypeCharArray,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 37 */ { "snap_web_path",							NULL,                   qtssAttrDataTypeCharArray,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 38 */ { "send_interval",                         NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -180,9 +175,9 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 47 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
 	/* 48 */ { "overbuffer_rate",						NULL,					qtssAttrDataTypeFloat32,	qtssAttrModeRead | qtssAttrModeWrite },
-	/* 49 */ { "medium_window_size",					NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
-	/* 50 */ { "window_size_max_threshold",				NULL,					qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModeWrite },
-    /* 51 */ { "CMS_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+
+
+	/* 51 */ { "CMS_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 52 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 53 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
     /* 54 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -203,9 +198,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fMaxBandwidthInKBits(0),
     fBreakOnAssert(false),
     fAutoRestart(false),
-    fTBUpdateTimeInSecs(0),
-    fABUpdateTimeInSecs(0),
-    fSafePlayDurationInSecs(0),
     fErrorRollIntervalInDays(0),
     fErrorLogBytes(0),
     fErrorLogVerbosity(0),
@@ -216,11 +208,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fTCPSecondsToBuffer(0),
     fCMSPort(0),
     fAppendSrcAddrInTransport(false),
-    fSmallWindowSizeInK(0),
-	fMediumWindowSizeInK(0),
-    fLargeWindowSizeInK(0),
-    fWindowSizeThreshold(0),
-	fWindowSizeMaxThreshold(0),
     fMaxRetransDelayInMsec(0),
     fIsAckLoggingEnabled(false),
     fSendIntervalInMsec(0),
@@ -264,9 +251,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsMaximumBandwidth, &fMaxBandwidthInKBits,      sizeof(fMaxBandwidthInKBits));
     this->SetVal(qtssPrefsBreakOnAssert,    &fBreakOnAssert,            sizeof(fBreakOnAssert));
     this->SetVal(qtssPrefsAutoRestart,      &fAutoRestart,              sizeof(fAutoRestart));
-    this->SetVal(qtssPrefsTotalBytesUpdate, &fTBUpdateTimeInSecs,       sizeof(fTBUpdateTimeInSecs));
-    this->SetVal(qtssPrefsAvgBandwidthUpdate,&fABUpdateTimeInSecs,      sizeof(fABUpdateTimeInSecs));
-    this->SetVal(qtssPrefsSafePlayDuration, &fSafePlayDurationInSecs,   sizeof(fSafePlayDurationInSecs));
 
     this->SetVal(qtssPrefsErrorRollInterval, &fErrorRollIntervalInDays, sizeof(fErrorRollIntervalInDays));
     this->SetVal(qtssPrefsMaxErrorLogSize,  &fErrorLogBytes,            sizeof(fErrorLogBytes));
@@ -280,12 +264,6 @@ void QTSServerPrefs::SetupAttributes()
 
     this->SetVal(qtssPrefsCMSPort,				&fCMSPort,						sizeof(fCMSPort));
     this->SetVal(qtssPrefsSrcAddrInTransport,   &fAppendSrcAddrInTransport, sizeof(fAppendSrcAddrInTransport));
-
-    this->SetVal(qtssPrefsSmallWindowSizeInK,   &fSmallWindowSizeInK,       sizeof(fSmallWindowSizeInK));
-	this->SetVal(qtssPrefsMediumWindowSizeInK, 	&fMediumWindowSizeInK,   sizeof(fMediumWindowSizeInK));
-    this->SetVal(qtssPrefsLargeWindowSizeInK,   &fLargeWindowSizeInK,       sizeof(fLargeWindowSizeInK));
-    this->SetVal(qtssPrefsWindowSizeThreshold,  &fWindowSizeThreshold,      sizeof(fWindowSizeThreshold));
-	this->SetVal(qtssPrefsWindowSizeMaxThreshold,	&fWindowSizeMaxThreshold,   sizeof(fWindowSizeMaxThreshold));
 
     this->SetVal(qtssPrefsMaxRetransDelayInMsec,    &fMaxRetransDelayInMsec,    sizeof(fMaxRetransDelayInMsec));
     this->SetVal(qtssPrefsAckLoggingEnabled,        &fIsAckLoggingEnabled,      sizeof(fIsAckLoggingEnabled));

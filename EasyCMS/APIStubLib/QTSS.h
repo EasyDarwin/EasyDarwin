@@ -325,9 +325,7 @@ enum
     qtssPrefsBindIPAddr             = 6,    //"bind_ip_addr"                //char array    //IP address the server should accept RTSP connections on. 0.0.0.0 means all addresses on the machine.
     qtssPrefsBreakOnAssert          = 7,    //"break_on_assert"             //Bool16        //If true, the server will break in the debugger when an assert fails.
     qtssPrefsAutoRestart            = 8,    //"auto_restart"                //Bool16        //If true, the server will automatically restart itself if it crashes.
-    qtssPrefsTotalBytesUpdate       = 9,    //"total_bytes_update"          //UInt32    //Interval in seconds between updates of the server's total bytes and current bandwidth statistics
-    qtssPrefsAvgBandwidthUpdate     = 10,   //"average_bandwidth_update"    //UInt32    //Interval in seconds between computations of the server's average bandwidth
-    qtssPrefsSafePlayDuration       = 11,   //"safe_play_duration"          //UInt32    //Hard to explain... see streamingserver.conf
+
     qtssPrefsModuleFolder           = 12,   //"module_folder"               //char array    //Path to the module folder
 
     // There is a compiled-in error log module that loads before all the other modules
@@ -343,10 +341,8 @@ enum
 
     qtssPrefsServiceID				= 20,   //"service_id"    //SInt32 // Don't send video packets later than this
     qtssPrefsStartThinningDelayInMsec       = 21,   //"start_thinning_delay"    //SInt32 // lateness at which we might start thinning
-    qtssPrefsLargeWindowSizeInK             = 22,   //"large_window_size"  // UInt32    //default size that will be used for high bitrate movies
-    qtssPrefsWindowSizeThreshold            = 23,   //"window_size_threshold"  // UInt32    //bitrate at which we switch to larger window size
-    
-    qtssPrefsMinTCPBufferSizeInBytes        = 24,   //"min_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the minimum size the TCP socket send buffer can be set to
+ 
+	qtssPrefsMinTCPBufferSizeInBytes        = 24,   //"min_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the minimum size the TCP socket send buffer can be set to
     qtssPrefsMaxTCPBufferSizeInBytes        = 25,   //"max_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the maximum size the TCP socket send buffer can be set to
     qtssPrefsTCPSecondsToBuffer             = 26,   //"tcp_seconds_to_buffer" //Float32 // When streaming over TCP, the size of the TCP send buffer is scaled based on the bitrate of the movie. It will fit all the data that gets sent in this amount of time.
     
@@ -361,8 +357,8 @@ enum
     qtssPrefsRedisPorts						= 32,   //"redis_port"          // UInt16   
 
     qtssPrefsMaxRetransDelayInMsec          = 33,   //"max_retransmit_delay" // UInt32  //maximum interval between when a retransmit is supposed to be sent and when it actually gets sent. Lower values means smoother flow but slower server performance
-    qtssPrefsSmallWindowSizeInK             = 34,   //"small_window_size"  // UInt32    //default size that will be used for low bitrate movies
-    qtssPrefsAckLoggingEnabled              = 35,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of 
+
+	qtssPrefsAckLoggingEnabled              = 35,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of 
     qtssPrefsSnapLocalPath					= 36,   //"snap_local_path"		// char array   //¿ìÕÕ±¾µØ´æ´¢Â·¾¶
     qtssPrefsSnapWebPath			        = 37,   //"snap_web_path"		// char array   //¿ìÕÕÍøÂç´æ´¢Â·¾¶
     qtssPrefsSendInterval                   = 38,   //"send_interval"  // UInt32    //
@@ -382,8 +378,7 @@ enum
     qtssPrefsMonitorStatsFileName           = 47,   //"monitor_stats_file_name" // private
 
 	qtssPrefsOverbufferRate                 = 48,    //"overbuffer_rate"    //Float32
-    qtssPrefsMediumWindowSizeInK            = 49,    //"medium_window_size" // UInt32    //default size that will be used for medium bitrate movies
-    qtssPrefsWindowSizeMaxThreshold         = 50,    //"window_size_threshold"  // UInt32    //bitrate at which we switch from medium to large window size
+
     qtssPrefsEnableCMSServerInfo			= 51,   //"CMS_server_info" //Boo1l6 // Adds server info to the RTSP responses.
     qtssPrefsRunNumThreads                  = 52,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
     qtssPrefsPidFile                        = 53,    //"pid_file" //Char Array //path to pid file

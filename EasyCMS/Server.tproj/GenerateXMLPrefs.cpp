@@ -55,9 +55,7 @@ static const PrefConversionInfo kPrefs[] =
     { "bind_ip_addr",                   NULL,           qtssAttrDataTypeCharArray },
     { "break_on_assert",                NULL,           qtssAttrDataTypeBool16 },
     { "auto_restart",                   NULL,           qtssAttrDataTypeBool16 },
-    { "total_bytes_update",             NULL,           qtssAttrDataTypeUInt32 },
-    { "average_bandwidth_update",       NULL,           qtssAttrDataTypeUInt32 },
-    { "safe_play_duration",                     NULL,   qtssAttrDataTypeUInt32 },
+
     { "module_folder",                          NULL,   qtssAttrDataTypeCharArray },
     { "error_logfile_name",                     NULL,   qtssAttrDataTypeCharArray },
     { "error_logfile_dir",                      NULL,   qtssAttrDataTypeCharArray },

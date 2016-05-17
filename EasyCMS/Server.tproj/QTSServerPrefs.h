@@ -79,10 +79,6 @@ class QTSServerPrefs : public QTSSPrefs
         //for debugging, mainly
         Bool16      ShouldServerBreakOnAssert()         { return fBreakOnAssert; }
         Bool16      IsAutoRestartEnabled()              { return fAutoRestart; }
-
-        UInt32      GetTotalBytesUpdateTimeInSecs()     { return fTBUpdateTimeInSecs; }
-        UInt32      GetAvgBandwidthUpdateTimeInSecs()   { return fABUpdateTimeInSecs; }
-        UInt32      GetSafePlayDurationInSecs()         { return fSafePlayDurationInSecs; }
         
         // For the compiled-in error logging module
         
@@ -104,16 +100,8 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  GetCMSServerInfoEnabled()      { return fEnableCMSServerInfo; }
         
         Float32    GetOverbufferRate()                { return fOverbufferRate; }
-        
-        //window size
-        UInt32  GetSmallWindowSizeInK()         { return fSmallWindowSizeInK; }
-        UInt32    GetMediumWindowSizeInK()        { return fMediumWindowSizeInK; }
-        UInt32  GetLargeWindowSizeInK()         { return fLargeWindowSizeInK; }
-        UInt32  GetWindowSizeThreshold()        { return fWindowSizeThreshold; }
-         UInt32    GetWindowSizeMaxThreshold()        { return fWindowSizeMaxThreshold; }
-       
-        //
-        // force logs to close after each write (true or false)
+
+		// force logs to close after each write (true or false)
         Bool16  GetCloseLogsOnWrite()           { return fCloseLogsOnWrite; }
         void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
 
@@ -184,9 +172,6 @@ class QTSServerPrefs : public QTSSPrefs
         
         Bool16  fBreakOnAssert;
         Bool16  fAutoRestart;
-        UInt32  fTBUpdateTimeInSecs;
-        UInt32  fABUpdateTimeInSecs;
-        UInt32  fSafePlayDurationInSecs;
         
         UInt32  fErrorRollIntervalInDays;
         UInt32  fErrorLogBytes;
@@ -200,12 +185,6 @@ class QTSServerPrefs : public QTSSPrefs
 
         UInt16  fCMSPort;
         Bool16  fAppendSrcAddrInTransport;
-
-        UInt32  fSmallWindowSizeInK;
-        UInt32  fMediumWindowSizeInK;
-        UInt32  fLargeWindowSizeInK;
-        UInt32  fWindowSizeThreshold;
-        UInt32  fWindowSizeMaxThreshold;
 
         UInt32  fMaxRetransDelayInMsec;
         Bool16  fIsAckLoggingEnabled;
