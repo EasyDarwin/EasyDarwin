@@ -89,7 +89,6 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "10",        NULL                   },  //46 monitor_stats_file_interval_seconds
     { kDontAllowMultipleValues, "server_status",        NULL        },  //47 monitor_stats_file_name
 
-    { kDontAllowMultipleValues, "true",     NULL                    },  //51 CMS_server_info
 	{ kDontAllowMultipleValues, "0",        NULL                    },  //52 run_num_threads
     { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//53 pid_file
     { kDontAllowMultipleValues, "false",    NULL                    },   //54 force_logs_close_on_write
@@ -134,7 +133,6 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 46 */ { "monitor_stats_file_interval_seconds",   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 47 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 51 */ { "CMS_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 52 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 53 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
     /* 54 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -161,7 +159,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fErrorLogEnabled(false),
     fAutoStart(false),
     fEnableMSGDebugPrintfs(false),
-    fEnableCMSServerInfo(true),
     fNumThreads(0),
     fNumMsgThreads(0),
 #if __MacOSX__
@@ -205,7 +202,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsAutoStart,                &fAutoStart,                sizeof(fAutoStart));
 
     this->SetVal(qtssPrefsEnableMSGDebugPrintfs,		&fEnableMSGDebugPrintfs,		sizeof(fEnableMSGDebugPrintfs));
-    this->SetVal(qtssPrefsEnableCMSServerInfo,         &fEnableCMSServerInfo,         sizeof(fEnableCMSServerInfo));
     this->SetVal(qtssPrefsRunNumThreads,                &fNumThreads,                   sizeof(fNumThreads));
     this->SetVal(qtssPrefsEnableMonitorStatsFile,       &fEnableMonitorStatsFile,       sizeof(fEnableMonitorStatsFile));
     this->SetVal(qtssPrefsMonitorStatsFileIntervalSec,  &fStatsFileIntervalSeconds,     sizeof(fStatsFileIntervalSeconds));

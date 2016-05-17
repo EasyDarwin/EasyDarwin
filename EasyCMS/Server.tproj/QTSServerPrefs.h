@@ -79,9 +79,7 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetErrorLogVerbosity()          { return fErrorLogVerbosity; }
         void    SetErrorLogVerbosity(UInt32 verbosity)        { fErrorLogVerbosity = verbosity; }
 
-        Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }
-        Bool16  GetCMSServerInfoEnabled()      { return fEnableCMSServerInfo; }
-        
+        Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }        
 
 		// force logs to close after each write (true or false)
         Bool16  GetCloseLogsOnWrite()           { return fCloseLogsOnWrite; }
@@ -142,7 +140,7 @@ class QTSServerPrefs : public QTSSPrefs
 
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
-        Bool16  fEnableCMSServerInfo;
+
         UInt32  fNumThreads;
         UInt32  fNumMsgThreads;
         
