@@ -72,10 +72,6 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "true",     NULL                    },  //19 error_logging
     { kDontAllowMultipleValues, "CMS000",   NULL                    },  //20 service_id
 
-
-    { kDontAllowMultipleValues, "8192",     NULL                    },  //24 min_tcp_buffer_size
-	{ kDontAllowMultipleValues,	"200000",	NULL					},	//25 max_tcp_buffer_size
-    { kDontAllowMultipleValues, ".5",       NULL                    },  //26 tcp_seconds_to_buffer
     { kDontAllowMultipleValues, "60000",	NULL                    },  //27 cms_port
     { kDontAllowMultipleValues, "127.0.0.1",NULL					},  //28 redis_ip_addr
 
@@ -133,9 +129,6 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 19 */ { "error_logging",                         NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 20 */ { "service_id",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 24 */ { "min_tcp_buffer_size",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 25 */ { "max_tcp_buffer_size",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 26 */ { "tcp_seconds_to_buffer",                 NULL,                   qtssAttrDataTypeFloat32,    qtssAttrModeRead | qtssAttrModeWrite },
     /* 27 */ { "cms_port",								NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 28 */ { "redis_ip_addr",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 32 */ { "redis_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -179,9 +172,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fErrorLogVerbosity(0),
     fScreenLoggingEnabled(true),
     fErrorLogEnabled(false),
-    fMinTCPBufferSizeInBytes(0),
-    fMaxTCPBufferSizeInBytes(0),
-    fTCPSecondsToBuffer(0),
     fCMSPort(0),
 
     fIsAckLoggingEnabled(false),
@@ -231,10 +221,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsErrorLogVerbosity, &fErrorLogVerbosity,       sizeof(fErrorLogVerbosity));
     this->SetVal(qtssPrefsScreenLogging,    &fScreenLoggingEnabled,     sizeof(fScreenLoggingEnabled));
     this->SetVal(qtssPrefsErrorLogEnabled,  &fErrorLogEnabled,          sizeof(fErrorLogEnabled));
-
-    this->SetVal(qtssPrefsMinTCPBufferSizeInBytes,  &fMinTCPBufferSizeInBytes,  sizeof(fMinTCPBufferSizeInBytes));
-    this->SetVal(qtssPrefsMaxTCPBufferSizeInBytes,  &fMaxTCPBufferSizeInBytes,  sizeof(fMaxTCPBufferSizeInBytes));
-    this->SetVal(qtssPrefsTCPSecondsToBuffer,   &fTCPSecondsToBuffer,           sizeof(fTCPSecondsToBuffer));
 
     this->SetVal(qtssPrefsCMSPort,				&fCMSPort,						sizeof(fCMSPort));
  

@@ -340,11 +340,7 @@ enum
     qtssPrefsErrorLogEnabled        = 14,   //"error_logging"               //Bool16        //Is error logging enabled?
 
     qtssPrefsServiceID				= 15,   //"service_id"    //SInt32 // Don't send video packets later than this
- 
-	qtssPrefsMinTCPBufferSizeInBytes        = 16,   //"min_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the minimum size the TCP socket send buffer can be set to
-    qtssPrefsMaxTCPBufferSizeInBytes        = 17,   //"max_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the maximum size the TCP socket send buffer can be set to
-    qtssPrefsTCPSecondsToBuffer             = 18,   //"tcp_seconds_to_buffer" //Float32 // When streaming over TCP, the size of the TCP send buffer is scaled based on the bitrate of the movie. It will fit all the data that gets sent in this amount of time.
-    
+  
     qtssPrefsCMSPort						= 19,   //"cms_port"    //UInt16    // when behind a round robin DNS, the client needs to be told the specific ip address of the maching handling its request. this pref tells the server to repot its IP address in the reply to the HTTP GET request when tunneling RTSP through HTTP
 
     qtssPrefsRedisIPAddr					= 20,   // "redis_ip_addr" //char array   //    

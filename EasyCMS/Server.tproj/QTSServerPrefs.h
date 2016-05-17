@@ -69,10 +69,6 @@ class QTSServerPrefs : public QTSSPrefs
         //-1 means unlimited
         SInt32  GetMaxConnections()         { return fMaximumConnections; }
         SInt32  GetMaxKBitsBandwidth()      { return fMaxBandwidthInKBits; }       
-        // for tcp buffer size scaling
-        UInt32  GetMinTCPBufferSizeInBytes()            { return fMinTCPBufferSizeInBytes; }
-        UInt32  GetMaxTCPBufferSizeInBytes()            { return fMaxTCPBufferSizeInBytes; }
-        Float32 GetTCPSecondsToBuffer()                 { return fTCPSecondsToBuffer; }
         
 		UInt16	GetCMSPort()							{ return fCMSPort; }
         
@@ -165,10 +161,6 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  fErrorLogVerbosity;
         Bool16  fScreenLoggingEnabled;
         Bool16  fErrorLogEnabled;
-
-        UInt32  fMinTCPBufferSizeInBytes;
-        UInt32  fMaxTCPBufferSizeInBytes;
-        Float32 fTCPSecondsToBuffer;
 
         UInt16  fCMSPort;
 
