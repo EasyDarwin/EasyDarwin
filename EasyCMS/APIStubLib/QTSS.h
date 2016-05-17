@@ -352,20 +352,11 @@ enum
     qtssPrefsRunUserName                    = 29,   //"run_user_name"       //char array        //Run under this user's account
     qtssPrefsRunGroupName                   = 30,   //"run_group_name"      //char array        //Run under this group's account
     
-   qtssPrefsRedisPorts						= 32,   //"redis_port"          // UInt16   
-
-    qtssPrefsMaxRetransDelayInMsec          = 33,   //"max_retransmit_delay" // UInt32  //maximum interval between when a retransmit is supposed to be sent and when it actually gets sent. Lower values means smoother flow but slower server performance
+	qtssPrefsRedisPorts						= 32,   //"redis_port"          // UInt16   
 
 	qtssPrefsAckLoggingEnabled              = 35,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of 
     qtssPrefsSnapLocalPath					= 36,   //"snap_local_path"		// char array   //¿ìÕÕ±¾µØ´æ´¢Â·¾¶
     qtssPrefsSnapWebPath			        = 37,   //"snap_web_path"		// char array   //¿ìÕÕÍøÂç´æ´¢Â·¾¶
-    qtssPrefsSendInterval                   = 38,   //"send_interval"  // UInt32    //
-    qtssPrefsThickAllTheWayDelayInMsec      = 39,   //"thick_all_the_way_delay"     // UInt32   //
-    qtssPrefsAltTransportIPAddr             = 40,   //"alt_transport_src_ipaddr"// char     //If empty, the server uses its own IP addr in the source= param of the transport header. Otherwise, it uses this addr.
-    qtssPrefsMaxAdvanceSendTimeInSec        = 41,   //"max_send_ahead_time"     // UInt32   //This is the farthest in advance the server will send a packet to a client that supports overbuffering.
-
-	
-	qtssPrefsAuthenticationScheme           = 42,   //"authentication_scheme" // char   //Set this to be the authentication scheme you want the server to use. "basic", "digest", and "none" are the currently supported values
 
 	qtssPrefsAutoStart                      = 43,   //"auto_start" //Bool16 //If true, streaming server likes to be started at system startup
        

@@ -87,17 +87,11 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 #endif
 
     { kDontAllowMultipleValues, "6379",     NULL					},	//32 redis_port
-    { kDontAllowMultipleValues, "500",      NULL                    },  //33 max_retransmit_delay
-
 
     { kDontAllowMultipleValues, "false",    NULL                    },  //35 ack_logging_enabled
     { kDontAllowMultipleValues, "./snap/",      NULL                    },  //36 snap_local_path
     { kDontAllowMultipleValues, "http://cms.easydarwin.org/",      NULL                    },  //37 snap_web_path
-    { kDontAllowMultipleValues, "50",       NULL                    },  //38 send_interval
-    { kDontAllowMultipleValues, "-2000",    NULL                    },  //39 thick_all_the_way_delay
-    { kDontAllowMultipleValues, "",         NULL                    },  //40 alt_transport_src_ipaddr
-    { kDontAllowMultipleValues, "25",       NULL                    },  //41 max_send_ahead_time
-    { kDontAllowMultipleValues, "digest",   NULL                    },  //42 authentication_scheme
+
     { kDontAllowMultipleValues, "false",    NULL                    },  //43 auto_start
 
     { kDontAllowMultipleValues, "false",    NULL                    },  //44 MSG_debug_printfs
@@ -155,17 +149,11 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 30 */ { "run_group_name",                        NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
 	/* 32 */ { "redis_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 33 */ { "max_retransmit_delay",                  NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 
 	/* 35 */ { "ack_logging_enabled",                   NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 36 */ { "snap_local_path",						NULL,                   qtssAttrDataTypeCharArray,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 37 */ { "snap_web_path",							NULL,                   qtssAttrDataTypeCharArray,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 38 */ { "send_interval",                         NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 39 */ { "thick_all_the_way_delay",               NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 40 */ { "alt_transport_src_ipaddr",              NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 41 */ { "max_send_ahead_time",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 42 */ { "authentication_scheme",                 NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 43 */ { "auto_start",                            NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 44 */ { "MSG_debug_printfs",						NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 45 */ { "enable_monitor_stats_file",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -206,10 +194,8 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fTCPSecondsToBuffer(0),
     fCMSPort(0),
 
-    fMaxRetransDelayInMsec(0),
     fIsAckLoggingEnabled(false),
-    fSendIntervalInMsec(0),
-    fMaxSendAheadTimeInSecs(0),
+
     fAutoStart(false),
     fEnableMSGDebugPrintfs(false),
     fEnableCMSServerInfo(true),
@@ -262,10 +248,8 @@ void QTSServerPrefs::SetupAttributes()
 
     this->SetVal(qtssPrefsCMSPort,				&fCMSPort,						sizeof(fCMSPort));
  
-    this->SetVal(qtssPrefsMaxRetransDelayInMsec,    &fMaxRetransDelayInMsec,    sizeof(fMaxRetransDelayInMsec));
     this->SetVal(qtssPrefsAckLoggingEnabled,        &fIsAckLoggingEnabled,      sizeof(fIsAckLoggingEnabled));
-    this->SetVal(qtssPrefsSendInterval,             &fSendIntervalInMsec,       sizeof(fSendIntervalInMsec));
-    this->SetVal(qtssPrefsMaxAdvanceSendTimeInSec,  &fMaxSendAheadTimeInSecs,   sizeof(fMaxSendAheadTimeInSecs));
+
     this->SetVal(qtssPrefsAutoStart,                &fAutoStart,                sizeof(fAutoStart));
 
     this->SetVal(qtssPrefsEnableMSGDebugPrintfs,		&fEnableMSGDebugPrintfs,		sizeof(fEnableMSGDebugPrintfs));
@@ -433,23 +417,6 @@ void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
 //    *ioLen = theMovieFolder->Len;
 //    return inBuffer;
 //}
-
-void QTSServerPrefs::GetTransportSrcAddr(StrPtrLen* ioBuf)
-{
-    OSMutexLocker locker(&fPrefsMutex);
-
-    // Get the movie folder attribute
-    StrPtrLen* theTransportAddr = this->GetValue(qtssPrefsAltTransportIPAddr);
-
-    // If the movie folder path fits inside the provided buffer, copy it there
-    if ((theTransportAddr->Len > 0) && (theTransportAddr->Len < ioBuf->Len))
-    {
-        ::memcpy(ioBuf->Ptr, theTransportAddr->Ptr, theTransportAddr->Len);
-        ioBuf->Len = theTransportAddr->Len;
-    }
-    else
-        ioBuf->Len = 0;
-}
 
 char* QTSServerPrefs::GetStringPref(QTSS_AttributeID inAttrID)
 {

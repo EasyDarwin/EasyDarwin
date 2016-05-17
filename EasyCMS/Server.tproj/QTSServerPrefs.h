@@ -90,11 +90,8 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetErrorLogVerbosity()          { return fErrorLogVerbosity; }
         void    SetErrorLogVerbosity(UInt32 verbosity)        { fErrorLogVerbosity = verbosity; }
         
-        //
-        UInt32  GetMaxRetransmitDelayInMsec()   { return fMaxRetransDelayInMsec; }
         Bool16  IsAckLoggingEnabled()           { return fIsAckLoggingEnabled; }
-        UInt32  GetSendIntervalInMsec()         { return fSendIntervalInMsec; }
-        UInt32  GetMaxSendAheadTimeInSecs()     { return fMaxSendAheadTimeInSecs; }
+
         Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }
         Bool16  GetCMSServerInfoEnabled()      { return fEnableCMSServerInfo; }
         
@@ -108,10 +105,6 @@ class QTSServerPrefs : public QTSSPrefs
         // the path is copied into that buffer. Otherwise, a new buffer is allocated
         // and returned.
         //char*   GetMovieFolder(char* inBuffer, UInt32* ioLen);
-        
-        //
-        // Transport addr pref. Caller must provide a buffer big enough for an IP addr
-        void    GetTransportSrcAddr(StrPtrLen* ioBuf);
                 
         // String preferences. Note that the pointers returned here is allocated
         // memory that you must delete!
@@ -184,10 +177,7 @@ class QTSServerPrefs : public QTSSPrefs
 
         UInt16  fCMSPort;
 
-        UInt32  fMaxRetransDelayInMsec;
         Bool16  fIsAckLoggingEnabled;
-        UInt32  fSendIntervalInMsec;
-        UInt32  fMaxSendAheadTimeInSecs;
 
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
