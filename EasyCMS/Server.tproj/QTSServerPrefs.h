@@ -119,11 +119,6 @@ class QTSServerPrefs : public QTSSPrefs
 
         char*   GetModuleDirectory()
             { return this->GetStringPref(qtssPrefsModuleFolder); }
-        
-        char*   GetRunUserName()
-            { return this->GetStringPref(qtssPrefsRunUserName); }
-        char*   GetRunGroupName()
-            { return this->GetStringPref(qtssPrefsRunGroupName); }
 
         char*   GetPidFilePath()
             { return this->GetStringPref(qtssPrefsPidFile); }

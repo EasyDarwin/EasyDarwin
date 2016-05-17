@@ -73,10 +73,6 @@ static const PrefConversionInfo kPrefs[] =
     { "tcp_seconds_to_buffer",                  NULL,   qtssAttrDataTypeFloat32 },
     { "cms_port",								NULL,   qtssAttrDataTypeUInt16 },
     { "redis_ip_addr",							NULL,   qtssAttrDataTypeCharArray },
-    { "run_user_name",                          NULL,   qtssAttrDataTypeCharArray },
-    { "run_group_name",                         NULL,   qtssAttrDataTypeCharArray },
-
-
     { "redis_port",                           NULL,   qtssAttrDataTypeUInt16 },
 
     // This element will be used if the pref is something we don't know about.

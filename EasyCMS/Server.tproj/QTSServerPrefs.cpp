@@ -53,7 +53,7 @@
 
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
-    { kDontAllowMultipleValues, "90",      NULL                    },  //1 session_timeout
+    { kDontAllowMultipleValues, "90",      NULL                     },   //1 session_timeout
 
     { kDontAllowMultipleValues, "1000",     NULL                    },  //3 maximum_connections
     { kDontAllowMultipleValues, "102400",   NULL                    },  //4 maximum_bandwidth
@@ -78,13 +78,6 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, ".5",       NULL                    },  //26 tcp_seconds_to_buffer
     { kDontAllowMultipleValues, "60000",	NULL                    },  //27 cms_port
     { kDontAllowMultipleValues, "127.0.0.1",NULL					},  //28 redis_ip_addr
-#ifndef __Win32__
-    { kDontAllowMultipleValues, "qtss",     NULL                    },  //29 run_user_name
-    { kDontAllowMultipleValues, "qtss",     NULL                    },  //30 run_group_name
-#else
-    { kDontAllowMultipleValues, "",         NULL                    },  //29 run_user_name
-    { kDontAllowMultipleValues, "",         NULL                    },  //30 run_group_name
-#endif
 
     { kDontAllowMultipleValues, "6379",     NULL					},	//32 redis_port
 
@@ -145,9 +138,6 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 26 */ { "tcp_seconds_to_buffer",                 NULL,                   qtssAttrDataTypeFloat32,    qtssAttrModeRead | qtssAttrModeWrite },
     /* 27 */ { "cms_port",								NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 28 */ { "redis_ip_addr",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 29 */ { "run_user_name",                         NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 30 */ { "run_group_name",                        NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-
 	/* 32 */ { "redis_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
 	/* 35 */ { "ack_logging_enabled",                   NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },

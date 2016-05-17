@@ -347,11 +347,7 @@ enum
     
     qtssPrefsCMSPort						= 19,   //"cms_port"    //UInt16    // when behind a round robin DNS, the client needs to be told the specific ip address of the maching handling its request. this pref tells the server to repot its IP address in the reply to the HTTP GET request when tunneling RTSP through HTTP
 
-    qtssPrefsRedisIPAddr					= 20,   // "redis_ip_addr" //char array   //
-    
-    qtssPrefsRunUserName                    = 21,   //"run_user_name"       //char array        //Run under this user's account
-    qtssPrefsRunGroupName                   = 22,   //"run_group_name"      //char array        //Run under this group's account
-    
+    qtssPrefsRedisIPAddr					= 20,   // "redis_ip_addr" //char array   //    
 	qtssPrefsRedisPorts						= 23,   //"redis_port"          // UInt16   
 
 	qtssPrefsAckLoggingEnabled              = 24,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of 
