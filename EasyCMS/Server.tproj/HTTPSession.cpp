@@ -591,7 +591,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	
 	char snapURL[512] = { 0 };
 	qtss_sprintf(snapURL, "%s/%s/%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),channel.c_str(),strType.c_str());
-	fDevice.HoldSnapPath(jpgPath,channel);
+	fDevice.HoldSnapPath(snapURL,channel);
 
 
 	EasyProtocolACK rsp(MSG_SD_POST_SNAP_ACK);
