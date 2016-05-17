@@ -65,21 +65,6 @@ class QTAccessFile
         virtual void   GetRealm(StrPtrLen* accessRealm, StrPtrLen* ioRealmNameStr, char *userName,void *extraDataPtr );
         virtual Bool16 ValidUser(char* userName, void* extraDataPtr) { return false; };
 
-        //AccessAllowed
-        //
-        // This routine is used to get the Realm to send back to a user and to check if a user has access
-        // userName: may be null.
-        // accessFileBufPtr:If accessFileBufPtr is NULL or contains a NULL PTR or 0 LEN then false is returned
-        // ioRealmNameStr:  ioRealmNameStr and ioRealmNameStr->Ptr may be null. 
-        //                  To get a returned ioRealmNameStr value the ioRealmNameStr and ioRealmNameStr->Ptr must be non-NULL
-        //                  valid pointers. The ioRealmNameStr.Len should be set to the ioRealmNameStr->Ptr's allocated len.
-        // numGroups:       The number of groups in the groupArray. Use GetGroupsArrayCopy to create the groupArray.
-        Bool16 AccessAllowed (   char *userName, char**groupArray, UInt32 numGroups, 
-                                        StrPtrLen *accessFileBufPtr,QTSS_ActionFlags inFlags,StrPtrLen* ioRealmNameStr,
-                                        Bool16* outAllowAnyUserPtr,
-                                        void *extraDataPtr = NULL
-                                    );
-
         static void SetAccessFileName(const char *inQTAccessFileName); //makes a copy and stores it
         static char* GetAccessFileName() { return sQTAccessFileName; }; // a reference. Don't delete!
                

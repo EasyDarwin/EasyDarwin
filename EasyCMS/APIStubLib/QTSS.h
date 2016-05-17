@@ -88,18 +88,6 @@ enum
 };
 typedef UInt32 QTSS_WriteFlags;
 
-// Flags for the qtssRTSPReqAction attribute in a QTSS_RTSPRequestObject.
-enum 
-{
-    qtssActionFlagsNoFlags      = 0x00000000,
-    qtssActionFlagsRead         = 0x00000001,
-    qtssActionFlagsWrite        = 0x00000002,
-    qtssActionFlagsAdmin        = 0x00000004,
-    qtssActionFlagsExtended     = 0x40000000,
-    qtssActionQTSSExtended      = 0x80000000,
-};
-typedef UInt32 QTSS_ActionFlags;
-
 // Events
 enum
 {
@@ -732,7 +720,7 @@ time_t  QTSS_MilliSecsTo1970Secs(QTSS_TimeVal inQTSS_MilliSeconds);
 //
 //  Returns:    QTSS_NoErr
 //              QTSS_OutOfState: If this function isn't being called from the Register role
-//              QTSS_RequestFailed:     If module is registering for the QTSS_RTSPRequest_Role
+//              QTSS_RequestFailed:     If module is registering for the QTSS_xxx_Role
 //                                      and there already is such a module.
 //              QTSS_BadArgument:   Registering for a nonexistent role.
 QTSS_Error QTSS_AddRole(QTSS_Role inRole);
@@ -1013,18 +1001,6 @@ QTSS_Error QTSS_GetNumValues (QTSS_Object inObject, QTSS_AttributeID inID, UInt3
 //
 QTSS_Error QTSS_RemoveValue (QTSS_Object inObject, QTSS_AttributeID inID, UInt32 inIndex);
 
-/*****************************************/
-//  STREAM CALLBACKS
-//
-//  The QTSS API provides QTSS_StreamRefs as a generalized stream abstraction. Mostly,
-//  QTSS_StreamRefs are used for communicating with the client. For instance,
-//  in the QTSS_RTSPRequest_Role, modules receive a QTSS_StreamRef which can be
-//  used for reading RTSP data from the client, and sending RTSP response data to the client.
-//
-//  Additionally, QTSS_StreamRefs are generalized enough to be used in many other situations.
-//  For instance, modules receive a QTSS_StreamRef for the error log. When modules want
-//  to report errors, they can use these same routines, passing in the error log StreamRef.
-
 /********************************************************************/
 //  QTSS_Write
 //
@@ -1243,38 +1219,6 @@ QTSS_Error  QTSS_DestroySocketStream(QTSS_SocketStream inStream);
 
 /*****************************************/
 //  ASYNC I/O CALLBACKS
-//
-//  QTSS modules must be kind in how they use the CPU. The server doesn't
-//  prevent a poorly implemented QTSS module from hogging the processing
-//  capability of the server, at the expense of other modules and other clients.
-//
-//  It is therefore imperitive that a module use non-blocking, or async, I/O.
-//  If a module were to block, say, waiting to read file data off disk, this stall
-//  would affect the entire server.
-//
-//  This problem is resolved in QTSS API in a number of ways.
-//
-//  Firstly, all QTSS_StreamRefs provided to modules are non-blocking, or async.
-//  Modules should be prepared to receive EWOULDBLOCK errors in response to
-//  QTSS_Read, QTSS_Write, & QTSS_WriteV calls, with certain noted exceptions
-//  in the case of responding to RTSP requests.
-//
-//  Modules that open their own file descriptors for network or file I/O can
-//  create separate threads for handling I/O. In this case, these descriptors
-//  can remain blocking, as long as they always block on the private module threads.
-//
-//  In most cases, however, creating a separate thread for I/O is not viable for the
-//  kind of work the module would like to do. For instance, a module may wish
-//  to respond to a RTSP DESCRIBE request, but can't immediately because constructing
-//  the response would require I/O that would block.
-//
-//  The problem is once the module returns from the QTSS_RTSPProcess_Role, the
-//  server will mistakenly consider the request handled, and move on. It won't
-//  know that the module has more work to do before it finishes processing the DESCRIBE.
-//
-//  In this case, the module needs to tell the server to delay processing of the
-//  DESCRIBE request until the file descriptor's blocking condition is lifted.
-//  The module can do this by using the provided "event" callback routines.
 
 //  Returns:    QTSS_NoErr
 //              QTSS_BadArgument: Bad argument
