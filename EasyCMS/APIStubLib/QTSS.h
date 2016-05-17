@@ -318,7 +318,6 @@ enum
     
     // All of these parameters are read-write. 
     qtssPrefsSessionTimeout					= 0,	//"session_timeout"				//UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
-
 	qtssPrefsMaximumConnections				= 1,    //"maximum_connections"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
     qtssPrefsMaximumBandwidth				= 2,    //"maximum_bandwidth"           //SInt32    //Maximum amt of bandwidth the server is allowed to serve in K bits. -1 means unlimited.
     qtssPrefsCMSIPAddr						= 3,    //"cms_ip_addr"                //char array    //Path to the root movie folder
@@ -326,7 +325,6 @@ enum
     qtssPrefsBreakOnAssert					= 5,    //"break_on_assert"             //Bool16        //If true, the server will break in the debugger when an assert fails.
     qtssPrefsAutoRestart					= 6,    //"auto_restart"                //Bool16        //If true, the server will automatically restart itself if it crashes.
     qtssPrefsModuleFolder					= 7,   //"module_folder"               //char array    //Path to the module folder
-  
     qtssPrefsErrorLogName					= 8,   //"error_logfile_name"          //char array        //Name of error log file
     qtssPrefsErrorLogDir					= 9,   //"error_logfile_dir"           //char array        //Path to error log file directory
     qtssPrefsErrorRollInterval				= 10,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
@@ -335,32 +333,25 @@ enum
     qtssPrefsScreenLogging					= 13,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
     qtssPrefsErrorLogEnabled				= 14,   //"error_logging"               //Bool16        //Is error logging enabled?
     qtssPrefsServiceID						= 15,   //"service_id"    //SInt32 // Don't send video packets later than this
-  
     qtssPrefsRedisIPAddr					= 16,   // "redis_ip_addr" //char array   //    
 	qtssPrefsRedisPorts						= 17,   //"redis_port"          // UInt16   
-
     qtssPrefsSnapLocalPath					= 18,   //"snap_local_path"		// char array   //¿ìÕÕ±¾µØ´æ´¢Â·¾¶
     qtssPrefsSnapWebPath			        = 19,   //"snap_web_path"		// char array   //¿ìÕÕÍøÂç´æ´¢Â·¾¶
-
 	qtssPrefsAutoStart                      = 20,   //"auto_start" //Bool16 //If true, streaming server likes to be started at system startup
-       
 	qtssPrefsEnableMSGDebugPrintfs			= 21,	//"MSG_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
-
     qtssPrefsEnableMonitorStatsFile         = 22,   //"enable_monitor_stats_file" //Bool16 //write server stats to the monitor file
     qtssPrefsMonitorStatsFileIntervalSec    = 23,   //"monitor_stats_file_interval_seconds" // private
     qtssPrefsMonitorStatsFileName           = 24,   //"monitor_stats_file_name" // private
+    qtssPrefsRunNumThreads                  = 25,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
+    qtssPrefsPidFile                        = 26,    //"pid_file" //Char Array //path to pid file
+    qtssPrefsCloseLogsOnWrite               = 27,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
+	qtssPrefsMonitorLANPort					= 28,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
+    qtssPrefsMonitorWANPort					= 29,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
+    qtssPrefsMonitorLANIPAddr				= 30,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
+    qtssPrefsMonitorWANIPAddr				= 31,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
+    qtssPrefsNumMsgThreads					= 32,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 
-    qtssPrefsRunNumThreads                  = 26,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
-    qtssPrefsPidFile                        = 27,    //"pid_file" //Char Array //path to pid file
-    qtssPrefsCloseLogsOnWrite               = 28,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
-
-	qtssPrefsMonitorLANPort					= 29,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorWANPort					= 30,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorLANIPAddr				= 31,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
-    qtssPrefsMonitorWANIPAddr				= 32,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
-    qtssPrefsNumMsgThreads					= 33,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
-
-    qtssPrefsNumParams                      = 34
+    qtssPrefsNumParams                      = 33
 };
 
 typedef UInt32 QTSS_PrefsAttributes;
