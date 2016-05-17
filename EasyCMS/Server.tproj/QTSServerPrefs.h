@@ -69,10 +69,6 @@ class QTSServerPrefs : public QTSSPrefs
         //-1 means unlimited
         SInt32  GetMaxConnections()         { return fMaximumConnections; }
         SInt32  GetMaxKBitsBandwidth()      { return fMaxBandwidthInKBits; }       
-        // for tcp buffer size scaling
-        UInt32  GetMinTCPBufferSizeInBytes()            { return fMinTCPBufferSizeInBytes; }
-        UInt32  GetMaxTCPBufferSizeInBytes()            { return fMaxTCPBufferSizeInBytes; }
-        Float32 GetTCPSecondsToBuffer()                 { return fTCPSecondsToBuffer; }
         
 		UInt16	GetCMSPort()							{ return fCMSPort; }
         
@@ -89,13 +85,10 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetErrorRollIntervalInDays()    { return fErrorRollIntervalInDays; }
         UInt32  GetErrorLogVerbosity()          { return fErrorLogVerbosity; }
         void    SetErrorLogVerbosity(UInt32 verbosity)        { fErrorLogVerbosity = verbosity; }
-        
-        Bool16  IsAckLoggingEnabled()           { return fIsAckLoggingEnabled; }
 
         Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }
         Bool16  GetCMSServerInfoEnabled()      { return fEnableCMSServerInfo; }
         
-        Float32    GetOverbufferRate()                { return fOverbufferRate; }
 
 		// force logs to close after each write (true or false)
         Bool16  GetCloseLogsOnWrite()           { return fCloseLogsOnWrite; }
@@ -119,11 +112,6 @@ class QTSServerPrefs : public QTSSPrefs
 
         char*   GetModuleDirectory()
             { return this->GetStringPref(qtssPrefsModuleFolder); }
-        
-        char*   GetRunUserName()
-            { return this->GetStringPref(qtssPrefsRunUserName); }
-        char*   GetRunGroupName()
-            { return this->GetStringPref(qtssPrefsRunGroupName); }
 
         char*   GetPidFilePath()
             { return this->GetStringPref(qtssPrefsPidFile); }
@@ -136,8 +124,6 @@ class QTSServerPrefs : public QTSSPrefs
                  
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
         UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
-        
-        Bool16  GetDisableThinning()              { return fDisableThinning; }
 
         UInt16  GetMonitorLANPort()			{ return fMonitorLANPort; }       
         UInt16  GetMonitorWANPort()         { return fMonitorWANPort; }  
@@ -171,13 +157,7 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  fScreenLoggingEnabled;
         Bool16  fErrorLogEnabled;
 
-        UInt32  fMinTCPBufferSizeInBytes;
-        UInt32  fMaxTCPBufferSizeInBytes;
-        Float32 fTCPSecondsToBuffer;
-
         UInt16  fCMSPort;
-
-        Bool16  fIsAckLoggingEnabled;
 
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
@@ -187,12 +167,9 @@ class QTSServerPrefs : public QTSSPrefs
         
         Bool16  fEnableMonitorStatsFile;
         UInt32  fStatsFileIntervalSeconds;
-    
-        Float32    fOverbufferRate;
         
         Bool16  fCloseLogsOnWrite;
-        
-        Bool16 fDisableThinning;
+
         UInt16 fMonitorLANPort;    
         UInt16 fMonitorWANPort;
 		UInt16 fRedisPort;

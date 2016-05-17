@@ -66,17 +66,8 @@ static const PrefConversionInfo kPrefs[] =
     { "error_logging",                          NULL,   qtssAttrDataTypeBool16 },
     { "service_id",								NULL,   qtssAttrDataTypeCharArray },
 
-    { "large_window_size",                      NULL,   qtssAttrDataTypeSInt32 },
-    { "window_size_threshold",                  NULL,   qtssAttrDataTypeSInt32 },
-    { "min_tcp_buffer_size",                    NULL,   qtssAttrDataTypeUInt32 },
-    { "max_tcp_buffer_size",                    NULL,   qtssAttrDataTypeUInt32 },
-    { "tcp_seconds_to_buffer",                  NULL,   qtssAttrDataTypeFloat32 },
     { "cms_port",								NULL,   qtssAttrDataTypeUInt16 },
     { "redis_ip_addr",							NULL,   qtssAttrDataTypeCharArray },
-    { "run_user_name",                          NULL,   qtssAttrDataTypeCharArray },
-    { "run_group_name",                         NULL,   qtssAttrDataTypeCharArray },
-
-
     { "redis_port",                           NULL,   qtssAttrDataTypeUInt16 },
 
     // This element will be used if the pref is something we don't know about.

@@ -53,7 +53,7 @@
 
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
-    { kDontAllowMultipleValues, "90",      NULL                    },  //1 session_timeout
+    { kDontAllowMultipleValues, "90",      NULL                     },   //1 session_timeout
 
     { kDontAllowMultipleValues, "1000",     NULL                    },  //3 maximum_connections
     { kDontAllowMultipleValues, "102400",   NULL                    },  //4 maximum_bandwidth
@@ -72,25 +72,13 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "true",     NULL                    },  //19 error_logging
     { kDontAllowMultipleValues, "CMS000",   NULL                    },  //20 service_id
 
-
-    { kDontAllowMultipleValues, "8192",     NULL                    },  //24 min_tcp_buffer_size
-	{ kDontAllowMultipleValues,	"200000",	NULL					},	//25 max_tcp_buffer_size
-    { kDontAllowMultipleValues, ".5",       NULL                    },  //26 tcp_seconds_to_buffer
     { kDontAllowMultipleValues, "60000",	NULL                    },  //27 cms_port
     { kDontAllowMultipleValues, "127.0.0.1",NULL					},  //28 redis_ip_addr
-#ifndef __Win32__
-    { kDontAllowMultipleValues, "qtss",     NULL                    },  //29 run_user_name
-    { kDontAllowMultipleValues, "qtss",     NULL                    },  //30 run_group_name
-#else
-    { kDontAllowMultipleValues, "",         NULL                    },  //29 run_user_name
-    { kDontAllowMultipleValues, "",         NULL                    },  //30 run_group_name
-#endif
 
     { kDontAllowMultipleValues, "6379",     NULL					},	//32 redis_port
 
-    { kDontAllowMultipleValues, "false",    NULL                    },  //35 ack_logging_enabled
     { kDontAllowMultipleValues, "./snap/",      NULL                    },  //36 snap_local_path
-    { kDontAllowMultipleValues, "http://cms.easydarwin.org/",      NULL                    },  //37 snap_web_path
+    { kDontAllowMultipleValues, "http://snap.easydarwin.org/",      NULL                    },  //37 snap_web_path
 
     { kDontAllowMultipleValues, "false",    NULL                    },  //43 auto_start
 
@@ -103,14 +91,11 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "10",        NULL                   },  //46 monitor_stats_file_interval_seconds
     { kDontAllowMultipleValues, "server_status",        NULL        },  //47 monitor_stats_file_name
 
-
-	{ kDontAllowMultipleValues, "2.0",		NULL					},	//48 overbuffer_rate
-
     { kDontAllowMultipleValues, "true",     NULL                    },  //51 CMS_server_info
 	{ kDontAllowMultipleValues, "0",        NULL                    },  //52 run_num_threads
     { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//53 pid_file
     { kDontAllowMultipleValues, "false",    NULL                    },   //54 force_logs_close_on_write
-    { kDontAllowMultipleValues, "false",    NULL                    },   //55 disable_thinning
+
     { kDontAllowMultipleValues, "10000",    NULL                     }, //56 monitor_lan_port
     { kDontAllowMultipleValues, "10000",    NULL                     }, //57 monitor_wan_port
     { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //58 monitor_lan_ip
@@ -140,17 +125,10 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 19 */ { "error_logging",                         NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 20 */ { "service_id",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 24 */ { "min_tcp_buffer_size",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 25 */ { "max_tcp_buffer_size",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 26 */ { "tcp_seconds_to_buffer",                 NULL,                   qtssAttrDataTypeFloat32,    qtssAttrModeRead | qtssAttrModeWrite },
     /* 27 */ { "cms_port",								NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 28 */ { "redis_ip_addr",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 29 */ { "run_user_name",                         NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 30 */ { "run_group_name",                        NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-
 	/* 32 */ { "redis_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 35 */ { "ack_logging_enabled",                   NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 36 */ { "snap_local_path",						NULL,                   qtssAttrDataTypeCharArray,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 37 */ { "snap_web_path",							NULL,                   qtssAttrDataTypeCharArray,     qtssAttrModeRead | qtssAttrModeWrite },
 
@@ -160,15 +138,12 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 46 */ { "monitor_stats_file_interval_seconds",   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 47 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 48 */ { "overbuffer_rate",						NULL,					qtssAttrDataTypeFloat32,	qtssAttrModeRead | qtssAttrModeWrite },
-
-
 	/* 51 */ { "CMS_server_info",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 52 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 53 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
     /* 54 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 55 */ { "disable_thinning",                      NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 56 */ { "monitor_lan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+
+	/* 56 */ { "monitor_lan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 57 */ { "monitor_wan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 58 */ { "monitor_lan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 59 */ { "monitor_wan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
@@ -189,12 +164,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fErrorLogVerbosity(0),
     fScreenLoggingEnabled(true),
     fErrorLogEnabled(false),
-    fMinTCPBufferSizeInBytes(0),
-    fMaxTCPBufferSizeInBytes(0),
-    fTCPSecondsToBuffer(0),
     fCMSPort(0),
-
-    fIsAckLoggingEnabled(false),
 
     fAutoStart(false),
     fEnableMSGDebugPrintfs(false),
@@ -207,9 +177,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fEnableMonitorStatsFile(false),
 #endif 
     fStatsFileIntervalSeconds(10),
-	fOverbufferRate(0.0),
     fCloseLogsOnWrite(false),
-    fDisableThinning(false),
 	fMonitorLANPort(0),
 	fMonitorWANPort(0),
 	fAllowGuestAuthorizeDefault(true)
@@ -242,13 +210,7 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsScreenLogging,    &fScreenLoggingEnabled,     sizeof(fScreenLoggingEnabled));
     this->SetVal(qtssPrefsErrorLogEnabled,  &fErrorLogEnabled,          sizeof(fErrorLogEnabled));
 
-    this->SetVal(qtssPrefsMinTCPBufferSizeInBytes,  &fMinTCPBufferSizeInBytes,  sizeof(fMinTCPBufferSizeInBytes));
-    this->SetVal(qtssPrefsMaxTCPBufferSizeInBytes,  &fMaxTCPBufferSizeInBytes,  sizeof(fMaxTCPBufferSizeInBytes));
-    this->SetVal(qtssPrefsTCPSecondsToBuffer,   &fTCPSecondsToBuffer,           sizeof(fTCPSecondsToBuffer));
-
     this->SetVal(qtssPrefsCMSPort,				&fCMSPort,						sizeof(fCMSPort));
- 
-    this->SetVal(qtssPrefsAckLoggingEnabled,        &fIsAckLoggingEnabled,      sizeof(fIsAckLoggingEnabled));
 
     this->SetVal(qtssPrefsAutoStart,                &fAutoStart,                sizeof(fAutoStart));
 
@@ -259,8 +221,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsMonitorStatsFileIntervalSec,  &fStatsFileIntervalSeconds,     sizeof(fStatsFileIntervalSeconds));
 
     this->SetVal(qtssPrefsCloseLogsOnWrite,             &fCloseLogsOnWrite,             sizeof(fCloseLogsOnWrite));
-	this->SetVal(qtssPrefsOverbufferRate,				&fOverbufferRate,				sizeof(fOverbufferRate));
-    this->SetVal(qtssPrefsDisableThinning,              &fDisableThinning,              sizeof(fDisableThinning));
 	
     this->SetVal(qtssPrefsMonitorLANPort,				&fMonitorLANPort,          sizeof(fMonitorLANPort));
     this->SetVal(qtssPrefsMonitorWANPort,				&fMonitorWANPort,          sizeof(fMonitorWANPort));

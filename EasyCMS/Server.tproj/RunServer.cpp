@@ -128,10 +128,6 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
         return inInitialState;
     }
 
-    OSCharArrayDeleter runGroupName(sServer->GetPrefs()->GetRunGroupName());
-    OSCharArrayDeleter runUserName(sServer->GetPrefs()->GetRunUserName());
-    OSThread::SetPersonality(runUserName.GetObject(), runGroupName.GetObject());
-
     if (sServer->GetServerState() != qtssFatalErrorState)
     {
         UInt32 numShortTaskThreads = 0;
