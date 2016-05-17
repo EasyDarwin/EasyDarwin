@@ -225,3 +225,14 @@ string EasyUtil::Base64Decode(const char* src, size_t len)
 	return std::string();
 }
 
+void EasyUtil::DelChar(std::string & sInput, char ch)
+{
+	int begin = 0;
+	begin = sInput.find(ch,begin);//查找ch在sInput的第一个位置
+
+	while(begin != std::string::npos)  //表示字符串中存在ch
+	{
+		sInput.replace(begin, 1, "");  // 用空串替换sInput中从begin开始的1个字符
+		begin = sInput.find(ch,begin);  //查找ch在替换后的sInput中第一次出现的位置
+	}
+}

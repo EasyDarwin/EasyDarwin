@@ -45,7 +45,7 @@
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "OSArrayObjectDeleter.h"
-
+#include "Task.h"//add
 
 #ifndef _FILE_DELETER_
 #define _FILE_DELETER_
@@ -64,7 +64,7 @@ class FileDeleter
 
 #ifndef __REFLECTOR_SESSION__
 #define __REFLECTOR_SESSION__
-class ReflectorSession
+class ReflectorSession : public Task//每一个ReflectorSession自己循环判断是否转发客户端列表是否为空。
 {
     public:
     
@@ -217,7 +217,15 @@ class ReflectorSession
 	public:
 		QTSS_Object GetRTSPRelaySession()	{ return fRTSPRelaySession;}
 		void SetRTSPRelaySession(QTSS_Object relaySession)	{ fRTSPRelaySession = relaySession; }
-         
+	//自动停止推流，add
+	public:
+		char * GetSerial(){return fSerial;}
+		char * GetChannel(){return fChannel;}
+	private:
+		virtual SInt64 Run();
+		bool fIfFirstRun;
+		char fSerial[32];
+		char fChannel[16];
 };
 
 #endif

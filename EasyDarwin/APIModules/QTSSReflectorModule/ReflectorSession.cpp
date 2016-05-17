@@ -84,8 +84,8 @@ void ReflectorSession::Initialize()
 	;
 }
 
-ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo)
-:   fIsSetup(false),
+ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo):  Task(),
+	fIsSetup(false),
     fQueueElem(),
     fNumOutputs(0),
     fStreamArray(NULL),
@@ -98,7 +98,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo)
 	fRTSPRelaySession(NULL),
 	fSessionName(NULL),
 	fHLSLive(false),
-	fHasVideoKeyFrameUpdate(false)
+	fHasVideoKeyFrameUpdate(false),
+	fIfFirstRun(true)//add
 {
 
     fQueueElem.SetEnclosingObject(this);
@@ -112,6 +113,32 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo)
 
 		this->SetSessionName();
     }
+
+	//自动停止推流，add
+	memset(fSerial,0,sizeof(fSerial));
+	memset(fChannel,0,sizeof(fChannel));
+	if(inSourceID != NULL)//解析出fSerial和fChannel,fSourceID = "./Movies/\123456\010.sdp"
+	{
+#ifdef __Win32__
+		char * pPos1 = strstr(fSourceID.Ptr,"\\");
+		if(pPos1 != NULL)
+		{
+			char * pPos2 = strstr(pPos1+1,"\\");
+			if(pPos2 != NULL)
+			{
+				char * pPos3 = strstr(pPos2+1,".");
+				if(pPos3 != NULL)
+				{
+					memcpy(fSerial,pPos1+1,pPos2-pPos1-1);
+					memcpy(fChannel,pPos2+1,pPos3-pPos2-1);
+				}
+			}
+		}
+#else
+//for linux
+#endif
+	}
+	this->Signal(Task::kStartEvent);//开始干活,不想使用自动停止推流，注释掉这一句
 }
 
 
@@ -409,3 +436,23 @@ void*   ReflectorSession::GetStreamCookie(UInt32 inStreamID)
     return NULL;
 }
 
+//自动停止推流，add
+SInt64 ReflectorSession::Run()//不使用TimeoutTask实现循环判断而使用retuen ***的方式，因为前者不能精确控制时间（我认为）。
+{
+	if(fIfFirstRun)
+		fIfFirstRun = false;//第一次的时候还没有拉流，就不要进行处理了;客户端拉流不要过慢。
+	else
+	{
+		if(fNumOutputs == 0)
+		{
+			//调用角色，停止推流
+			qtss_printf("没有客户端观看当前转发媒体\n");
+			QTSS_RoleParams theParams;
+			theParams.easyStreamStopParams.inSerial = fSerial;
+			theParams.easyStreamStopParams.inChannel= fChannel;
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
+			 (void)theModule->CallDispatch(Easy_StreamStop_Role, &theParams);
+		}
+	}
+	return 15*1000;
+}

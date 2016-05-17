@@ -562,6 +562,12 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 		channel = "01";
 	if(strTime.empty())//如果没有时间属性，则服务端自动为其生成一个
 		strTime = EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx);
+	else//过滤Time里面的非法字符，2015-07-20 12:55:30->20150720125530
+	{
+		EasyUtil::DelChar(strTime,'-');
+		EasyUtil::DelChar(strTime,':');
+		EasyUtil::DelChar(strTime,' ');
+	}
 		
 	if( (image.size() <= 0) || (device_serial.size() <= 0) || (strType.size() <= 0) || (strTime.size() <= 0) )
 		return QTSS_BadArgument;

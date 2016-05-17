@@ -44,7 +44,7 @@ public:
 
 	static bool Base64Encode(string &sInput, string &sOutput);
 	static bool Base64Decode(string &sInput, string &sOutput);
-    
+	static void DelChar(std::string & sInput, char ch);//删除字符串中的某个特定字符 
 };
 
 #endif	/* EASY_UTIL_H */
