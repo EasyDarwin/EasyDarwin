@@ -669,12 +669,6 @@ typedef struct
     QTSS_EventType              inEventMask;
 } QTSS_RequestEventFile_Params;
 
-typedef struct
-{
-	QTSS_Object					inStreamName;
-	QTSS_Object					inRTSPSession;
-	QTSS_Object					inStreamingParam;
-} QTSS_Streaming_Params;
 typedef struct//add  
 {
 	char *pNonce;//用于存放随机数
@@ -701,7 +695,6 @@ typedef union
     QTSS_RequestEventFile_Params        reqEventFileParams;
 
 	// EasyCMS
-	QTSS_Streaming_Params				StreamingParams;
 	QTSS_Sync_Params					SyncParams;
     QTSS_Nonce_Params                   NonceParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
