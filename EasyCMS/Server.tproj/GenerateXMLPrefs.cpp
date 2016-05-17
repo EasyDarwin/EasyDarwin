@@ -65,7 +65,7 @@ static const PrefConversionInfo kPrefs[] =
     { "screen_logging",                         NULL,   qtssAttrDataTypeBool16 },
     { "error_logging",                          NULL,   qtssAttrDataTypeBool16 },
     { "service_id",								NULL,   qtssAttrDataTypeCharArray },
-    { "start_thinning_delay",                   NULL,   qtssAttrDataTypeSInt32 },
+
     { "large_window_size",                      NULL,   qtssAttrDataTypeSInt32 },
     { "window_size_threshold",                  NULL,   qtssAttrDataTypeSInt32 },
     { "min_tcp_buffer_size",                    NULL,   qtssAttrDataTypeUInt32 },
@@ -75,7 +75,8 @@ static const PrefConversionInfo kPrefs[] =
     { "redis_ip_addr",							NULL,   qtssAttrDataTypeCharArray },
     { "run_user_name",                          NULL,   qtssAttrDataTypeCharArray },
     { "run_group_name",                         NULL,   qtssAttrDataTypeCharArray },
-    { "append_source_addr_in_transport",        NULL,   qtssAttrDataTypeBool16 },
+
+
     { "redis_port",                           NULL,   qtssAttrDataTypeUInt16 },
 
     // This element will be used if the pref is something we don't know about.

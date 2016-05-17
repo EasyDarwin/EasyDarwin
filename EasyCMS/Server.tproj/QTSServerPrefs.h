@@ -89,7 +89,6 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetErrorRollIntervalInDays()    { return fErrorRollIntervalInDays; }
         UInt32  GetErrorLogVerbosity()          { return fErrorLogVerbosity; }
         void    SetErrorLogVerbosity(UInt32 verbosity)        { fErrorLogVerbosity = verbosity; }
-        Bool16  GetAppendSrcAddrInTransport()   { return fAppendSrcAddrInTransport; }
         
         //
         UInt32  GetMaxRetransmitDelayInMsec()   { return fMaxRetransDelayInMsec; }
@@ -184,7 +183,6 @@ class QTSServerPrefs : public QTSSPrefs
         Float32 fTCPSecondsToBuffer;
 
         UInt16  fCMSPort;
-        Bool16  fAppendSrcAddrInTransport;
 
         UInt32  fMaxRetransDelayInMsec;
         Bool16  fIsAckLoggingEnabled;

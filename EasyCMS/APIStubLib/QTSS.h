@@ -340,7 +340,6 @@ enum
     qtssPrefsErrorLogEnabled        = 19,   //"error_logging"               //Bool16        //Is error logging enabled?
 
     qtssPrefsServiceID				= 20,   //"service_id"    //SInt32 // Don't send video packets later than this
-    qtssPrefsStartThinningDelayInMsec       = 21,   //"start_thinning_delay"    //SInt32 // lateness at which we might start thinning
  
 	qtssPrefsMinTCPBufferSizeInBytes        = 24,   //"min_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the minimum size the TCP socket send buffer can be set to
     qtssPrefsMaxTCPBufferSizeInBytes        = 25,   //"max_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the maximum size the TCP socket send buffer can be set to
@@ -353,8 +352,7 @@ enum
     qtssPrefsRunUserName                    = 29,   //"run_user_name"       //char array        //Run under this user's account
     qtssPrefsRunGroupName                   = 30,   //"run_group_name"      //char array        //Run under this group's account
     
-    qtssPrefsSrcAddrInTransport             = 31,   //"append_source_addr_in_transport" // Bool16   //If true, the server will append the src address to the Transport header responses
-    qtssPrefsRedisPorts						= 32,   //"redis_port"          // UInt16   
+   qtssPrefsRedisPorts						= 32,   //"redis_port"          // UInt16   
 
     qtssPrefsMaxRetransDelayInMsec          = 33,   //"max_retransmit_delay" // UInt32  //maximum interval between when a retransmit is supposed to be sent and when it actually gets sent. Lower values means smoother flow but slower server performance
 
