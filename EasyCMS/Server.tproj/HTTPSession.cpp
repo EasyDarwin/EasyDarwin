@@ -590,7 +590,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//…Ë±∏øÏ’’«Î«Û
 	::fclose(fSnap);
 	
 	char snapURL[512] = { 0 };
-	qtss_sprintf(snapURL, "%s/%s/%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),channel.c_str(),strType.c_str());
+	qtss_sprintf(snapURL, "%s%s/%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),channel.c_str(),strType.c_str());
 	fDevice.HoldSnapPath(snapURL,channel);
 
 
@@ -817,7 +817,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷
 
 	string buffer = reqreq.GetMsg();
 
-	//QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
+	Easy_SendMsg(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
 	DeviceMap->Release(strDeviceSerial);//////////////////////////////////////////////////////////--
 	
 	//÷±Ω”∂‘øÕªß∂À£®EasyDarWin)Ω¯––’˝»∑ªÿ”¶
@@ -1012,7 +1012,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//øÕªß∂Àø™ º¡˜
 
 			pDevSession->InsertToMsgMap(uDevCseq,msgTemp);//º”»ÎµΩMap÷–µ»¥˝øÕªß∂Àµƒªÿ”¶
 			IncrementObjectHolderCount();//‘ˆº”“˝”√£¨∑¿÷π…Ë±∏ªÿ”¶ ±µ±«∞Session“—æ≠÷’÷π
-			//QTSS_SendHTTPPacket(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
+			Easy_SendMsg(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
 			DeviceMap->Release(strDeviceSerial);//////////////////////////////////////////////////////////--
 
 			fInfo.cWaitingState = 1;//µ»¥˝…Ë±∏ªÿ”¶

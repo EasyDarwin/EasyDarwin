@@ -40,7 +40,7 @@
 #include "QTSSDictionary.h"
 #include "QTSSStream.h"
 #include "OSMemory.h"
-#include "HTTPSessionInterface.h"
+#include "HTTPSession.h"
 #include "OS.h"
 #include "EventContext.h"
 #include "Socket.h"
@@ -668,4 +668,14 @@ void QTSSCallbacks::QTSS_LockStdLib()
 void QTSSCallbacks::QTSS_UnlockStdLib()
 {
     OS::GetStdLibMutex()->Unlock();
+}
+
+QTSS_Error QTSSCallbacks::Easy_SendMsg(QTSS_RTSPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose, Bool16 decrement)
+{
+	if(inHTTPSession == NULL)
+		return QTSS_BadArgument;
+
+	HTTPSession* session = (HTTPSession*)inHTTPSession;
+	StrPtrLen theValue(inMsg, inMsgLen);
+	return session->SendHTTPPacket(&theValue, connectionClose, decrement);
 }

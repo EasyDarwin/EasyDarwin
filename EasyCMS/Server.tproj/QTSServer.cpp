@@ -623,6 +623,7 @@ void    QTSServer::InitCallbacks()
     
     sCallbacks.addr[kLockStdLibCallback] =                  (QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_LockStdLib;
     sCallbacks.addr[kUnlockStdLibCallback] =                (QTSS_CallbackProcPtr)QTSSCallbacks::QTSS_UnlockStdLib;
+	sCallbacks.addr[kEasySendMsgCallback] =					(QTSS_CallbackProcPtr)QTSSCallbacks::Easy_SendMsg;
 }
 
 void QTSServer::LoadModules(QTSServerPrefs* inPrefs)

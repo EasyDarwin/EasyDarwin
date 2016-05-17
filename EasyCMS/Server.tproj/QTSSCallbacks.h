@@ -141,8 +141,9 @@ class QTSSCallbacks
         static Bool16       QTSS_IsGlobalLocked();
         static QTSS_Error   QTSS_UnlockGlobalLock();
           
-        static void   QTSS_LockStdLib();
-        static void   QTSS_UnlockStdLib();
+        static void			QTSS_LockStdLib();
+        static void			QTSS_UnlockStdLib();
+		static QTSS_Error	Easy_SendMsg(QTSS_RTSPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
 };
 
 #endif //__QTSSCALLBACKS_H__

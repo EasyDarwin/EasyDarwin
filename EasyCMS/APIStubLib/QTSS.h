@@ -1338,6 +1338,9 @@ QTSS_Error  QTSS_GlobalUnLock();
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 
+//EasyCMS
+QTSS_Error	Easy_SendMsg(QTSS_RTSPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
+
 #ifdef __cplusplus
 }
 #endif

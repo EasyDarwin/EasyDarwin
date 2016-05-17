@@ -343,3 +343,8 @@ void  QTSS_UnlockStdLib()
 {
     (sCallbacks->addr [kUnlockStdLibCallback])  ();
 }
+
+QTSS_Error Easy_SendMsg(QTSS_RTSPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose, Bool16 decrement)
+{
+	return (sCallbacks->addr[kEasySendMsgCallback]) (inHTTPSession, inMsg, inMsgLen, connectionClose, decrement);
+}
