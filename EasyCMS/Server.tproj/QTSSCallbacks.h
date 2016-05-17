@@ -143,7 +143,7 @@ class QTSSCallbacks
           
         static void			QTSS_LockStdLib();
         static void			QTSS_UnlockStdLib();
-		static QTSS_Error	Easy_SendMsg(QTSS_RTSPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
+		static QTSS_Error	Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
 };
 
 #endif //__QTSSCALLBACKS_H__

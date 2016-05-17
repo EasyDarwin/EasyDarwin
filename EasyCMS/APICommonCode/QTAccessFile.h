@@ -51,11 +51,7 @@ class QTAccessFile
     public:
         static UInt8 sWhitespaceAndGreaterThanMask[];
         static void Initialize();
-        
-        static char * GetUserNameCopy(QTSS_UserProfileObject inUserProfile);
 
-        //GetGroupsArrayCopy 
-        //
         // GetGroupsArrayCopy allocates outGroupCharPtrArray. Caller must "delete [] outGroupCharPtrArray" when done.
         static char*  GetAccessFile_Copy( const char* movieRootDir, const char* dirPath);
 

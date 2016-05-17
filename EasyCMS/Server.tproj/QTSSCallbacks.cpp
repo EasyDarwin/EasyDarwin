@@ -670,7 +670,7 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
     OS::GetStdLibMutex()->Unlock();
 }
 
-QTSS_Error QTSSCallbacks::Easy_SendMsg(QTSS_RTSPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose, Bool16 decrement)
+QTSS_Error QTSSCallbacks::Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose, Bool16 decrement)
 {
 	if(inHTTPSession == NULL)
 		return QTSS_BadArgument;

@@ -252,9 +252,9 @@ typedef UInt32 QTSS_AttrRights; // see QTSS_UserProfileObject
 
 enum
 {
-    //QTSS_RTSPSessionObject parameters
+    //Easy_HTTPSessionObject parameters
     
-    //Valid in any role that receives a QTSS_RTSPSessionObject
+    //Valid in any role that receives a Easy_HTTPSessionObject
     EasyHTTPSesIndex		= 0,        //read      //UInt32        //This is a unique ID for each session since the server started up.
     EasyHTTPSesLocalAddr    = 1,        //read      //UInt32        //Local IP address for this RTSP connection
     EasyHTTPSesLocalAddrStr = 2,        //read      //char array	//Ditto, in dotted-decimal format.
@@ -562,7 +562,7 @@ typedef SInt32          QTSS_AttributeID;
 typedef SInt32          QTSS_ServiceID;
 typedef SInt64          QTSS_TimeVal;
 
-typedef QTSS_Object             QTSS_RTSPSessionObject;
+typedef QTSS_Object             Easy_HTTPSessionObject;
 typedef QTSS_Object             QTSS_ServerObject;
 typedef QTSS_Object             QTSS_PrefsObject;
 typedef QTSS_Object             QTSS_TextMessagesObject;
@@ -570,9 +570,7 @@ typedef QTSS_Object             QTSS_FileObject;
 typedef QTSS_Object             QTSS_ModuleObject;
 typedef QTSS_Object             QTSS_ModulePrefsObject;
 typedef QTSS_Object             QTSS_AttrInfoObject;
-typedef QTSS_Object             QTSS_UserProfileObject;
 typedef QTSS_Object             QTSS_ConnectedUserObject;
-
 typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;
 typedef QTSS_StreamRef          QTSS_SocketStream;
@@ -1297,7 +1295,7 @@ void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 
 //EasyCMS
-QTSS_Error	Easy_SendMsg(QTSS_RTSPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
+QTSS_Error	Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
 
 #ifdef __cplusplus
 }
