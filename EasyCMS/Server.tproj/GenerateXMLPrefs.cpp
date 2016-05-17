@@ -66,7 +66,6 @@ static const PrefConversionInfo kPrefs[] =
     { "error_logging",                          NULL,   qtssAttrDataTypeBool16 },
     { "service_id",								NULL,   qtssAttrDataTypeCharArray },
 
-    { "cms_port",								NULL,   qtssAttrDataTypeUInt16 },
     { "redis_ip_addr",							NULL,   qtssAttrDataTypeCharArray },
     { "redis_port",                           NULL,   qtssAttrDataTypeUInt16 },
 

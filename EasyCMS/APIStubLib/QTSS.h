@@ -341,8 +341,6 @@ enum
 
     qtssPrefsServiceID				= 15,   //"service_id"    //SInt32 // Don't send video packets later than this
   
-    qtssPrefsCMSPort						= 19,   //"cms_port"    //UInt16    // when behind a round robin DNS, the client needs to be told the specific ip address of the maching handling its request. this pref tells the server to repot its IP address in the reply to the HTTP GET request when tunneling RTSP through HTTP
-
     qtssPrefsRedisIPAddr					= 20,   // "redis_ip_addr" //char array   //    
 	qtssPrefsRedisPorts						= 23,   //"redis_port"          // UInt16   
 
@@ -366,7 +364,6 @@ enum
     qtssPrefsMonitorWANPort					= 39,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
     qtssPrefsMonitorLANIPAddr				= 40,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
     qtssPrefsMonitorWANIPAddr				= 41,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
-    qtssPrefsEnableAllowGuestDefault        = 42,   // "enable_allow_guest_authorize_default" //Boo1l6 // server hint to access modules to allow guest access as the default (can be overriden in a qtaccess file or other means)
     qtssPrefsNumMsgThreads					= 43,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 
     qtssPrefsNumParams                      = 44

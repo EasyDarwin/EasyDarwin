@@ -34,7 +34,6 @@
     Contains:   Implements class defined in QTSSPrefs.h.
 
     Change History (most recent first):
-    
 */
 
 #include "QTSServerPrefs.h"
@@ -72,7 +71,6 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "true",     NULL                    },  //19 error_logging
     { kDontAllowMultipleValues, "CMS000",   NULL                    },  //20 service_id
 
-    { kDontAllowMultipleValues, "60000",	NULL                    },  //27 cms_port
     { kDontAllowMultipleValues, "127.0.0.1",NULL					},  //28 redis_ip_addr
 
     { kDontAllowMultipleValues, "6379",     NULL					},	//32 redis_port
@@ -100,7 +98,6 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "10000",    NULL                     }, //57 monitor_wan_port
     { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //58 monitor_lan_ip
     { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //59 monitor_wan_ip
-    { kDontAllowMultipleValues, "true",     NULL                     }, //60 enable_allow_guest_default
     { kDontAllowMultipleValues, "2",        NULL                     }  //61 run_num_msg_threads
 };
  
@@ -125,7 +122,6 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 19 */ { "error_logging",                         NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 20 */ { "service_id",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
-    /* 27 */ { "cms_port",								NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 28 */ { "redis_ip_addr",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 32 */ { "redis_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
@@ -147,7 +143,6 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 57 */ { "monitor_wan_port",		NULL,									qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 58 */ { "monitor_lan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 59 */ { "monitor_wan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 60 */ { "enable_allow_guest_default",  NULL,                             qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 61 */ { "run_num_msg_threads",  NULL,									qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
@@ -164,8 +159,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fErrorLogVerbosity(0),
     fScreenLoggingEnabled(true),
     fErrorLogEnabled(false),
-    fCMSPort(0),
-
     fAutoStart(false),
     fEnableMSGDebugPrintfs(false),
     fEnableCMSServerInfo(true),
@@ -179,8 +172,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fStatsFileIntervalSeconds(10),
     fCloseLogsOnWrite(false),
 	fMonitorLANPort(0),
-	fMonitorWANPort(0),
-	fAllowGuestAuthorizeDefault(true)
+	fMonitorWANPort(0)
 {
     SetupAttributes();
     RereadServerPreferences(inWriteMissingPrefs);
@@ -210,8 +202,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsScreenLogging,    &fScreenLoggingEnabled,     sizeof(fScreenLoggingEnabled));
     this->SetVal(qtssPrefsErrorLogEnabled,  &fErrorLogEnabled,          sizeof(fErrorLogEnabled));
 
-    this->SetVal(qtssPrefsCMSPort,				&fCMSPort,						sizeof(fCMSPort));
-
     this->SetVal(qtssPrefsAutoStart,                &fAutoStart,                sizeof(fAutoStart));
 
     this->SetVal(qtssPrefsEnableMSGDebugPrintfs,		&fEnableMSGDebugPrintfs,		sizeof(fEnableMSGDebugPrintfs));
@@ -231,8 +221,6 @@ void QTSServerPrefs::SetupAttributes()
 
 	this->SetVal(qtssPrefsRedisIPAddr,					&fRedisAddr,            sizeof(fRedisAddr));
 	this->SetVal(qtssPrefsRedisPorts,					&fRedisPort,          sizeof(fRedisPort));
-	
-    this->SetVal(qtssPrefsEnableAllowGuestDefault,      &fAllowGuestAuthorizeDefault,   sizeof(fAllowGuestAuthorizeDefault)); //enable_allow_guest_authorize_default
     this->SetVal(qtssPrefsNumMsgThreads,				&fNumMsgThreads,               sizeof(fNumMsgThreads));
 }
 

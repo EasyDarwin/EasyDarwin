@@ -30,9 +30,6 @@
 */
  /*
     Contains:   Object store for RTSP server preferences.
-    
-    
-    
 */
 
 #ifndef __QTSSERVERPREFS_H__
@@ -48,9 +45,7 @@ class QTSServerPrefs : public QTSSPrefs
 
         // INITIALIZE
         //
-        // This function sets up the dictionary map. Must be called before instantiating
-        // the first RTSPPrefs object.
-    
+        // This function sets up the dictionary map. Must be called before instantiating   
         static void Initialize();
 
         QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs);
@@ -69,9 +64,7 @@ class QTSServerPrefs : public QTSSPrefs
         //-1 means unlimited
         SInt32  GetMaxConnections()         { return fMaximumConnections; }
         SInt32  GetMaxKBitsBandwidth()      { return fMaxBandwidthInKBits; }       
-        
-		UInt16	GetCMSPort()							{ return fCMSPort; }
-        
+                
         //for debugging, mainly
         Bool16      ShouldServerBreakOnAssert()         { return fBreakOnAssert; }
         Bool16      IsAutoRestartEnabled()              { return fAutoRestart; }
@@ -93,11 +86,6 @@ class QTSServerPrefs : public QTSSPrefs
 		// force logs to close after each write (true or false)
         Bool16  GetCloseLogsOnWrite()           { return fCloseLogsOnWrite; }
         void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
-
-        // Movie folder pref. If the path fits inside the buffer provided,
-        // the path is copied into that buffer. Otherwise, a new buffer is allocated
-        // and returned.
-        //char*   GetMovieFolder(char* inBuffer, UInt32* ioLen);
                 
         // String preferences. Note that the pointers returned here is allocated
         // memory that you must delete!
@@ -129,19 +117,14 @@ class QTSServerPrefs : public QTSSPrefs
         UInt16  GetMonitorWANPort()         { return fMonitorWANPort; }  
             
         char* GetMonitorLANIP()    { return this->GetStringPref(qtssPrefsMonitorLANIPAddr); }
-        
         char* GetMonitorWANIP()     { return this->GetStringPref(qtssPrefsMonitorWANIPAddr); }
 
 		char* GetCMSIP()			{ return this->GetStringPref(qtssPrefsCMSIPAddr); }
 		char* GetSnapLocalPath()	{ return this->GetStringPref(qtssPrefsSnapLocalPath); }
 		char* GetSnapWebPath()		{ return this->GetStringPref(qtssPrefsSnapWebPath); }
-       
-        Bool16 GetAllowGuestDefault()               { return fAllowGuestAuthorizeDefault; }
 
 		char* GetRedisIP()			{return this->GetStringPref(qtssPrefsRedisIPAddr); }
         UInt16 GetRedisPort(){return fRedisPort;}
-
-
     private:
         UInt32      fSessionTimeoutInSecs;
         
@@ -156,8 +139,6 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  fErrorLogVerbosity;
         Bool16  fScreenLoggingEnabled;
         Bool16  fErrorLogEnabled;
-
-        UInt16  fCMSPort;
 
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
@@ -178,7 +159,6 @@ class QTSServerPrefs : public QTSSPrefs
         char   fMonitorLANAddr[20];
 		char   fRedisAddr[20];
 		char   fServiceID[64];
-        Bool16 fAllowGuestAuthorizeDefault;
         
         enum
         {
