@@ -82,8 +82,8 @@ EasyCMSSession::EasyCMSSession()
 	}
 	else
 	{
-		//TODO:连接备用默认EasyCMS服务器
-		;
+		//connect default EasyCMS server
+		fSocket->Set(SocketUtils::ConvertStringToAddr("121.40.50.44"), sEasyCMSPort);
 	}
 
 	fTimeoutTask.RefreshTimeout();
