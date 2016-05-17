@@ -62,15 +62,7 @@ class QTSServerPrefs : public QTSSPrefs
         void RereadServerPreferences(Bool16 inWriteMissingPrefs);
         
         //Individual accessor methods for preferences.
-        
-        //Amount of idle time after which respective protocol sessions are timed out
-        //(stored in seconds)
-        
-        //This is the value we advertise to clients (lower than the real one)
-        UInt32  GetRTSPTimeoutInSecs()  { return fRTSPTimeoutInSecs; }
-        UInt32  GetRTPTimeoutInSecs()   { return fRTPTimeoutInSecs; }
-        StrPtrLen*  GetRTSPTimeoutAsString() { return &fRTSPTimeoutString; }
-        
+
         //This is the real timeout
         UInt32  GetSessionTimeoutInSecs(){ return fSessionTimeoutInSecs; }
         
@@ -185,12 +177,7 @@ class QTSServerPrefs : public QTSSPrefs
 
 
     private:
-
-        UInt32      fRTSPTimeoutInSecs;
-        char        fRTSPTimeoutBuf[20];
-        StrPtrLen   fRTSPTimeoutString;
         UInt32      fSessionTimeoutInSecs;
-        UInt32      fRTPTimeoutInSecs;
         
         SInt32  fMaximumConnections;
         SInt32  fMaxBandwidthInKBits;

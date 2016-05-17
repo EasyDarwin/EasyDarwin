@@ -53,9 +53,8 @@
 
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
-    { kDontAllowMultipleValues, "0",        NULL                    },  //0 rtsp_timeout
     { kDontAllowMultipleValues, "90",      NULL                    },  //1 session_timeout
-	{ kDontAllowMultipleValues,	"120",		NULL					},	//2 rtp_timeout
+
     { kDontAllowMultipleValues, "1000",     NULL                    },  //3 maximum_connections
     { kDontAllowMultipleValues, "102400",   NULL                    },  //4 maximum_bandwidth
 	{ kDontAllowMultipleValues,	"127.0.0.1",NULL					},	//5 cms_ip_addr
@@ -131,10 +130,9 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
  
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
-    /* 0 */ { "rtsp_timeout",                           NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 1 */ { "session_timeout",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 2 */ { "rtp_timeout",                            NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 3 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+
+	/* 3 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 4 */ { "maximum_bandwidth",                      NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 5 */ { "cms_ip_addr",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 6 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
@@ -194,18 +192,13 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 58 */ { "monitor_lan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 59 */ { "monitor_wan_ip",		NULL,                                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 60 */ { "enable_allow_guest_default",  NULL,                             qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 61 */ { "run_num_msg_threads",  NULL,									qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 62 */ {"dss_ip",					NULL,									qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
-	/* 63 */ {"dss_port",				NULL,									qtssAttrDataTypeUInt16,		qtssAttrModeRead | qtssAttrModeWrite }
+    /* 61 */ { "run_num_msg_threads",  NULL,									qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
 
 QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs)
 :   QTSSPrefs(inPrefsSource, NULL, QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex), false),
-    fRTSPTimeoutInSecs(0),
-    fRTSPTimeoutString(fRTSPTimeoutBuf, 0),
     fSessionTimeoutInSecs(0),
-    fRTPTimeoutInSecs(0),
     fMaximumConnections(0),
     fMaxBandwidthInKBits(0),
     fBreakOnAssert(false),
@@ -265,9 +258,8 @@ void QTSServerPrefs::Initialize()
 
 void QTSServerPrefs::SetupAttributes()
 {
-    this->SetVal(qtssPrefsRTSPTimeout,      &fRTSPTimeoutInSecs,        sizeof(fRTSPTimeoutInSecs));
     this->SetVal(qtssPrefsSessionTimeout,	&fSessionTimeoutInSecs,    sizeof(fSessionTimeoutInSecs));
-    this->SetVal(qtssPrefsRTPTimeout,       &fRTPTimeoutInSecs,         sizeof(fRTPTimeoutInSecs));
+
     this->SetVal(qtssPrefsMaximumConnections,&fMaximumConnections,      sizeof(fMaximumConnections));
     this->SetVal(qtssPrefsMaximumBandwidth, &fMaxBandwidthInKBits,      sizeof(fMaxBandwidthInKBits));
     this->SetVal(qtssPrefsBreakOnAssert,    &fBreakOnAssert,            sizeof(fBreakOnAssert));
