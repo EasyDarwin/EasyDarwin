@@ -586,7 +586,7 @@ typedef SInt32          QTSS_ServiceID;
 typedef SInt64          QTSS_TimeVal;
 
 typedef QTSS_Object             QTSS_RTSPSessionObject;
-typedef QTSS_Object             QTSS_RTSPRequestObject;
+
 typedef QTSS_Object             QTSS_RTSPHeaderObject;
 typedef QTSS_Object             QTSS_ServerObject;
 typedef QTSS_Object             QTSS_PrefsObject;
@@ -634,14 +634,6 @@ typedef struct
 {
     QTSS_ServerState            inNewState;
 } QTSS_StateChange_Params;
-
-typedef struct 
-{
-    QTSS_RTSPSessionObject      inRTSPSession;
-    QTSS_RTSPRequestObject      inRTSPRequest;
-    char**                      outNewRequest;
-
-} QTSS_Filter_Params;
 
 typedef struct
 {
@@ -700,8 +692,6 @@ typedef union
     QTSS_Initialize_Params              initParams;
     QTSS_ErrorLog_Params                errorParams;
     QTSS_StateChange_Params             stateChangeParams;
-
-    QTSS_Filter_Params                  rtspFilterParams;
     
     QTSS_OpenFile_Params                openFilePreProcessParams;
     QTSS_OpenFile_Params                openFileParams;
