@@ -60,9 +60,9 @@ void EasyCMSSession::Initialize(QTSS_ModulePrefsObject cmsModulePrefs)
 EasyCMSSession::EasyCMSSession()
 :	Task(),
 	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),    
-	fKeepAliveTimeoutTask(this, sKeepAliveInterval * 1000),
+	fTimeoutTask(this, sKeepAliveInterval * 1000),
 	fInputStream(fSocket),
-	fOutputStream(fSocket, &fKeepAliveTimeoutTask),
+	fOutputStream(fSocket, &fTimeoutTask),
 	fSessionStatus(kSessionOffline),
 	fState(kIdle),
 	fRequest(NULL),
@@ -86,7 +86,7 @@ EasyCMSSession::EasyCMSSession()
 		;
 	}
 
-	fKeepAliveTimeoutTask.RefreshTimeout();
+	fTimeoutTask.RefreshTimeout();
 
 }
 
@@ -163,7 +163,7 @@ SInt64 EasyCMSSession::Run()
 						{
 							// 已连接，保活时间到需要发送保活报文
 							DSRegister();
-							fKeepAliveTimeoutTask.RefreshTimeout();
+							fTimeoutTask.RefreshTimeout();
 						}
 
 						if(events & Task::kUpdateEvent)
