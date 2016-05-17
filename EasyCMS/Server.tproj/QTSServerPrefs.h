@@ -85,13 +85,10 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32  GetErrorRollIntervalInDays()    { return fErrorRollIntervalInDays; }
         UInt32  GetErrorLogVerbosity()          { return fErrorLogVerbosity; }
         void    SetErrorLogVerbosity(UInt32 verbosity)        { fErrorLogVerbosity = verbosity; }
-        
-        Bool16  IsAckLoggingEnabled()           { return fIsAckLoggingEnabled; }
 
         Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }
         Bool16  GetCMSServerInfoEnabled()      { return fEnableCMSServerInfo; }
         
-        Float32    GetOverbufferRate()                { return fOverbufferRate; }
 
 		// force logs to close after each write (true or false)
         Bool16  GetCloseLogsOnWrite()           { return fCloseLogsOnWrite; }
@@ -127,8 +124,6 @@ class QTSServerPrefs : public QTSSPrefs
                  
         UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
         UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
-        
-        Bool16  GetDisableThinning()              { return fDisableThinning; }
 
         UInt16  GetMonitorLANPort()			{ return fMonitorLANPort; }       
         UInt16  GetMonitorWANPort()         { return fMonitorWANPort; }  
@@ -164,8 +159,6 @@ class QTSServerPrefs : public QTSSPrefs
 
         UInt16  fCMSPort;
 
-        Bool16  fIsAckLoggingEnabled;
-
         Bool16  fAutoStart;
         Bool16  fEnableMSGDebugPrintfs;
         Bool16  fEnableCMSServerInfo;
@@ -174,12 +167,9 @@ class QTSServerPrefs : public QTSSPrefs
         
         Bool16  fEnableMonitorStatsFile;
         UInt32  fStatsFileIntervalSeconds;
-    
-        Float32    fOverbufferRate;
         
         Bool16  fCloseLogsOnWrite;
-        
-        Bool16 fDisableThinning;
+
         UInt16 fMonitorLANPort;    
         UInt16 fMonitorWANPort;
 		UInt16 fRedisPort;

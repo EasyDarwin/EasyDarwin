@@ -346,7 +346,6 @@ enum
     qtssPrefsRedisIPAddr					= 20,   // "redis_ip_addr" //char array   //    
 	qtssPrefsRedisPorts						= 23,   //"redis_port"          // UInt16   
 
-	qtssPrefsAckLoggingEnabled              = 24,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of 
     qtssPrefsSnapLocalPath					= 25,   //"snap_local_path"		// char array   //¿ìÕÕ±¾µØ´æ´¢Â·¾¶
     qtssPrefsSnapWebPath			        = 26,   //"snap_web_path"		// char array   //¿ìÕÕÍøÂç´æ´¢Â·¾¶
 
@@ -358,14 +357,12 @@ enum
     qtssPrefsMonitorStatsFileIntervalSec    = 30,   //"monitor_stats_file_interval_seconds" // private
     qtssPrefsMonitorStatsFileName           = 31,   //"monitor_stats_file_name" // private
 
-	qtssPrefsOverbufferRate                 = 32,    //"overbuffer_rate"    //Float32
-
     qtssPrefsEnableCMSServerInfo			= 33,   //"CMS_server_info" //Boo1l6 // Adds server info to the RTSP responses.
     qtssPrefsRunNumThreads                  = 34,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
     qtssPrefsPidFile                        = 35,    //"pid_file" //Char Array //path to pid file
     qtssPrefsCloseLogsOnWrite               = 36,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
-    qtssPrefsDisableThinning                = 37,   // "disable_thinning" //Bool16 // Usually used for performance testing. Turn off stream thinning from packet loss or stream lateness.
-    qtssPrefsMonitorLANPort					= 38,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
+
+	qtssPrefsMonitorLANPort					= 38,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
     qtssPrefsMonitorWANPort					= 39,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
     qtssPrefsMonitorLANIPAddr				= 40,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
     qtssPrefsMonitorWANIPAddr				= 41,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
