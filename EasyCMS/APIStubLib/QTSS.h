@@ -397,8 +397,6 @@ enum
     qtssPrefsMonitorWANIPAddr				= 59,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
     qtssPrefsEnableAllowGuestDefault        = 60,   // "enable_allow_guest_authorize_default" //Boo1l6 // server hint to access modules to allow guest access as the default (can be overriden in a qtaccess file or other means)
     qtssPrefsNumMsgThreads					= 61,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
-	qtssPrefsDssIP							= 62,	// "dss_ip"		 //char array 
-	qtssPrefsDssPort						= 63,	// "dss_port"	//UInt16 
 
     qtssPrefsNumParams                      = 64
 };

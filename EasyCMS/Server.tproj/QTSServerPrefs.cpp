@@ -126,9 +126,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //58 monitor_lan_ip
     { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //59 monitor_wan_ip
     { kDontAllowMultipleValues, "true",     NULL                     }, //60 enable_allow_guest_default
-    { kDontAllowMultipleValues, "2",        NULL                     }, //61 run_num_msg_threads
-	{ kDontAllowMultipleValues , "121.41.73.249", NULL				 }, //62 dss_ip
-	{ kDontAllowMultipleValues , "554",		NULL					 }	//63 dss_port
+    { kDontAllowMultipleValues, "2",        NULL                     }  //61 run_num_msg_threads
 };
  
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
@@ -325,9 +323,6 @@ void QTSServerPrefs::SetupAttributes()
 	
     this->SetVal(qtssPrefsEnableAllowGuestDefault,      &fAllowGuestAuthorizeDefault,   sizeof(fAllowGuestAuthorizeDefault)); //enable_allow_guest_authorize_default
     this->SetVal(qtssPrefsNumMsgThreads,				&fNumMsgThreads,               sizeof(fNumMsgThreads));
-	
-	this->SetVal(qtssPrefsDssIP, &fDssIP, sizeof(fDssIP));
-	this->SetVal(qtssPrefsDssPort, &fDssPort, sizeof(fDssPort));
 }
 
 
