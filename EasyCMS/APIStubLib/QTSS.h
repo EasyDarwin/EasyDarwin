@@ -119,20 +119,6 @@ enum
 };
 typedef UInt32 Easy_SessionType;
 
-/**********************************/
-// PAYLOAD TYPES
-//
-// When a module adds an RTP stream to a client session, it must specify
-// the stream's payload type. This is so that other modules can find out
-// this information in a generalized fashion. Here are the currently
-// defined payload types
-enum
-{
-    qtssUnknownPayloadType  = 0,
-    qtssVideoPayloadType    = 1,
-    qtssAudioPayloadType    = 2
-};
-typedef UInt32 QTSS_RTPPayloadType;
 
 /**********************************/
 // QTSS API OBJECT TYPES
@@ -207,16 +193,6 @@ enum
 {
     qtssIllegalAttrID               = -1,
     qtssIllegalServiceID            = -1
-};
-
-//*********************************/
-// QTSS DON'T CALL SENDPACKETS AGAIN
-// If this time is specified as the next packet time when returning
-// from QTSS_SendPackets_Role, the module won't get called again in
-// that role until another QTSS_Play is issued
-enum
-{
-    qtssDontCallSendPacketsAgain    = -1
 };
 
 // DATA TYPES
@@ -568,6 +544,7 @@ enum
     QTSS_ReadFile_Role =            FOUR_CHARS_TO_INT('r', 'd', 'f', 'l'),  //rdfl
     QTSS_CloseFile_Role =           FOUR_CHARS_TO_INT('c', 'l', 'f', 'l'),  //clfl
     QTSS_RequestEventFile_Role =    FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
+
     //add,角色的添加
 	QTSS_NONCE_ROLE    =            FOUR_CHARS_TO_INT('o','n','c','e'),//once
 	QTSS_AUTH_ROLE     =            FOUR_CHARS_TO_INT('a','u','t','r')//autr,auth已经使用
@@ -586,8 +563,6 @@ typedef SInt32          QTSS_ServiceID;
 typedef SInt64          QTSS_TimeVal;
 
 typedef QTSS_Object             QTSS_RTSPSessionObject;
-
-typedef QTSS_Object             QTSS_RTSPHeaderObject;
 typedef QTSS_Object             QTSS_ServerObject;
 typedef QTSS_Object             QTSS_PrefsObject;
 typedef QTSS_Object             QTSS_TextMessagesObject;
