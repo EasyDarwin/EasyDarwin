@@ -395,6 +395,19 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
         if (isClient)
             fStreamArray[y]->DecEyeCount();  
     }
+
+	//移除客户端之后判断fNumOutputs是否为0,add
+	if(fNumOutputs == 0)
+	{
+		//调用角色，停止推流
+		qtss_printf("客户端都不看啦\n");
+		QTSS_RoleParams theParams;
+		theParams.easyStreamStopParams.inSerial = fSerial;
+		theParams.easyStreamStopParams.inChannel= fChannel;
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
+		(void)theModule->CallDispatch(Easy_StreamStop_Role, &theParams);
+	}
+	//
 }
 
 void    ReflectorSession::TearDownAllOutputs()
