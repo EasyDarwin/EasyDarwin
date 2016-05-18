@@ -16,7 +16,7 @@
 		<PREF NAME="service_id" >CMS000</PREF>
 		<PREF NAME="redis_ip_addr" >127.0.0.1</PREF>
 		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
-		<PREF NAME="snap_local_path" >./snap/</PREF>
+		<PREF NAME="snap_local_path" >D:/snap/</PREF>
 		<PREF NAME="snap_web_path" >http://snap.easydarwin.org/</PREF>
 		<PREF NAME="auto_start" TYPE="Bool16" >false</PREF>
 		<PREF NAME="MSG_debug_printfs" TYPE="Bool16" >false</PREF>
