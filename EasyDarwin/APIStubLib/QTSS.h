@@ -1139,9 +1139,8 @@ typedef struct
 
 typedef struct
 {
-	char *	inSerial;
-	char *  inChannel;
-}Easy_StreamStop_Params;//test
+	char *	inStreamName;
+}Easy_StreamStop_Params;
 
 typedef struct
 {

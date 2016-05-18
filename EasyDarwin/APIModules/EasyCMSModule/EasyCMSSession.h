@@ -57,13 +57,6 @@ public:
 		kSendingMessage             = 3,
 		kCleaningUp                 = 4
     };
-		
-	//需要和CMS进行其他通讯的在这里填充类型，并调用相应的接口函数
-	typedef enum 
-	{
-		kStreamStopMsg = 0
-
-	}fEnumMsg;
 
 	UInt32 fState;
 
@@ -99,15 +92,15 @@ public:
 	UInt32				fContentBufferOffset;
 
 	//接口函数
-	void SetStreamStopInfo(const char * chSerial,const char * chChannel);
+	QTSS_Error FreeStream(const char * streamName);
 
-	void SetMsgType(fEnumMsg msg);
 private:
+
     virtual SInt64 Run();
-	char*	fSerial;//需要停止推流的设备序列号
-	char*   fChannel;//需要停止推流的通道号
-	fEnumMsg fMsg;
-	Bool16              fLiveSession;
+
+	char*	fStreamName;//需要停止推流的StreamID/Serial/Channel组合
+	UInt32	fEasyMsgType;
+	Bool16	fLiveSession;
 
 	// 初步判断Session Socket是否已连接
 	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }

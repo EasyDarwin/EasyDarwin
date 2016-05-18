@@ -95,12 +95,11 @@ QTSS_Error StreamStop_EasyCMSModule(Easy_StreamStop_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_Unimplemented;
 
-	if((inParams->inSerial != NULL) && (inParams->inChannel != NULL) )
+	if( inParams->inStreamName != NULL )
 	{
 		//创建并开始EasyCMSSession对象
 		EasyCMSSession * pCMSSession = new EasyCMSSession();
-		pCMSSession->SetStreamStopInfo(inParams->inSerial,inParams->inChannel);
-		pCMSSession->SetMsgType(EasyCMSSession::kStreamStopMsg);
+		pCMSSession->FreeStream(inParams->inStreamName);
 		pCMSSession->Signal(Task::kStartEvent);
 	}
 

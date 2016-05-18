@@ -23,35 +23,17 @@ EasyCMSSession::EasyCMSSession()
 	fMutex(),
 	fContentBufferOffset(0),
 	fContentBuffer(NULL),
-	fSerial(NULL),
-	fChannel(NULL),
+	fStreamName(NULL),
 	fLiveSession(true)
 {
 	this->SetTaskName("EasyCMSSession");
-
-	char *chCMSIP = "127.0.0.1";//test,实际上CMS的IP和端口应该从redis获取
-	UInt16 uCMSPort = 10000;
-
-	UInt32 inAddr = SocketUtils::ConvertStringToAddr(chCMSIP);
-
-	if(inAddr)
-	{
-		fSocket->Set(inAddr, uCMSPort);
-	}
-	else
-	{
-		//TODO:连接备用默认EasyCMS服务器
-		;
-	}
-
 	fTimeoutTask.RefreshTimeout();
 
 }
 
 EasyCMSSession::~EasyCMSSession()
 {
-	delete[] fSerial;
-	delete[] fChannel;
+	delete[] fStreamName;
 
 	if(fSocket)
 	{
@@ -101,11 +83,13 @@ SInt64 EasyCMSSession::Run()
 					//根据事件类型执行不同的动作
 					if(events & Task::kStartEvent)
 					{
-						switch(fMsg)
+						switch(fEasyMsgType)
 						{
-						case kStreamStopMsg:
-							CSFreeStream();
-							break;
+						case MSG_CS_FREE_STREAM_REQ:
+							{
+								CSFreeStream();
+								break;
+							}
 						default:
 							break;
 						}
@@ -359,8 +343,8 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 #endif
 
 
-	body[EASY_TAG_SERIAL]		=	fSerial;
-	body[EASY_TAG_CHANNEL]		=	fChannel;
+	body[EASY_TAG_SERIAL]		=	fStreamName;
+	//body[EASY_TAG_CHANNEL]		=	fChannel;
 	body[EASY_TAG_PROTOCOL]		=	EasyProtocol::GetProtocolString(EASY_PROTOCOL_TYPE_RTSP);
 	body[EASY_TAG_RESERVE]		=	"1";
 
@@ -390,17 +374,46 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 	return QTSS_NoErr;
 }
 
-void EasyCMSSession::SetStreamStopInfo(const char * chSerial,const char * chChannel)
+QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 {
-	fSerial = new char[strlen(chSerial) + 1];
-	strcpy(fSerial,chSerial);
+	QTSS_Error theErr = QTSS_NoErr;
 
-	fChannel = new char[strlen(chChannel) + 1];
-	strcpy(fChannel,chChannel);
+	do{
+		//1.参数解析
+		fEasyMsgType = MSG_CS_FREE_STREAM_REQ;
 
-}
+		if(strlen(streamName) == 0)
+		{
+			theErr = QTSS_BadArgument;
+			break;
+		}
+		fStreamName = new char[strlen(streamName) + 1];
+		strcpy(fStreamName,streamName);
 
-void EasyCMSSession::SetMsgType(fEnumMsg msg)
-{
-	fMsg = msg;
+		//TODO::解析fStreamName出StreamID/Serial/Channel
+		//如果解析失败,返回QTSS_BadArgument
+
+		//2.根据Serial查询到设备所在的EasyCMS信息
+		//TODO::
+		//如果查询失败，返回QTSS_ValueNotFound
+
+
+		//3.获取到EasyCMS参数进行Socket初始化
+		char *chCMSIP = "127.0.0.1";//实际上CMS的IP和端口应该从redis获取
+		UInt16 uCMSPort = 10000;
+
+		UInt32 inAddr = SocketUtils::ConvertStringToAddr(chCMSIP);
+		if(inAddr)
+		{
+			fSocket->Set(inAddr, uCMSPort);
+		}
+		else
+		{
+			theErr = QTSS_IllegalService;
+			break;
+		}
+
+	}while(0);
+
+	return theErr;
 }
