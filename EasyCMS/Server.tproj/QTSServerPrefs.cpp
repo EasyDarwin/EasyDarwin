@@ -55,8 +55,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "90",      NULL                     },  //0 session_timeout
 
     { kDontAllowMultipleValues, "1000",     NULL                    },  //1 maximum_connections
-    { kDontAllowMultipleValues, "102400",   NULL                    },  //2 maximum_bandwidth
-	{ kDontAllowMultipleValues,	"127.0.0.1",NULL					},	//3 cms_ip_addr
+
     { kAllowMultipleValues,     "0",        NULL                    },  //4 bind_ip_addr
     { kDontAllowMultipleValues, "false",    NULL                    },  //5 break_on_assert
     { kDontAllowMultipleValues, "true",     NULL                    },  //6 auto_restart
@@ -93,8 +92,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
     /* 0 */ { "session_timeout",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 1 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 2 */ { "maximum_bandwidth",                      NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 3 */ { "cms_ip_addr",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+
     /* 4 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 5 */ { "break_on_assert",                        NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 6 */ { "auto_restart",                           NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -130,7 +128,6 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
 :   QTSSPrefs(inPrefsSource, NULL, QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex), false),
     fSessionTimeoutInSecs(0),
     fMaximumConnections(0),
-    fMaxBandwidthInKBits(0),
     fBreakOnAssert(false),
     fAutoRestart(false),
     fErrorRollIntervalInDays(0),
@@ -142,11 +139,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fEnableMSGDebugPrintfs(false),
     fNumThreads(0),
     fNumMsgThreads(0),
-#if __MacOSX__
     fEnableMonitorStatsFile(false),
-#else
-    fEnableMonitorStatsFile(false),
-#endif 
     fStatsFileIntervalSeconds(10),
     fCloseLogsOnWrite(false),
 	fMonitorLANPort(0),
@@ -170,7 +163,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsSessionTimeout,	&fSessionTimeoutInSecs,    sizeof(fSessionTimeoutInSecs));
 
     this->SetVal(qtssPrefsMaximumConnections,&fMaximumConnections,      sizeof(fMaximumConnections));
-    this->SetVal(qtssPrefsMaximumBandwidth, &fMaxBandwidthInKBits,      sizeof(fMaxBandwidthInKBits));
     this->SetVal(qtssPrefsBreakOnAssert,    &fBreakOnAssert,            sizeof(fBreakOnAssert));
     this->SetVal(qtssPrefsAutoRestart,      &fAutoRestart,              sizeof(fAutoRestart));
 

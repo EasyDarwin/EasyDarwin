@@ -63,7 +63,6 @@ class QTSServerPrefs : public QTSSPrefs
         
         //-1 means unlimited
         SInt32  GetMaxConnections()         { return fMaximumConnections; }
-        SInt32  GetMaxKBitsBandwidth()      { return fMaxBandwidthInKBits; }       
                 
         //for debugging, mainly
         Bool16      ShouldServerBreakOnAssert()         { return fBreakOnAssert; }
@@ -117,7 +116,6 @@ class QTSServerPrefs : public QTSSPrefs
         char* GetMonitorLANIP()    { return this->GetStringPref(qtssPrefsMonitorLANIPAddr); }
         char* GetMonitorWANIP()     { return this->GetStringPref(qtssPrefsMonitorWANIPAddr); }
 
-		char* GetCMSIP()			{ return this->GetStringPref(qtssPrefsCMSIPAddr); }
 		char* GetSnapLocalPath()	{ return this->GetStringPref(qtssPrefsSnapLocalPath); }
 		char* GetSnapWebPath()		{ return this->GetStringPref(qtssPrefsSnapWebPath); }
 
@@ -127,7 +125,6 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32      fSessionTimeoutInSecs;
         
         SInt32  fMaximumConnections;
-        SInt32  fMaxBandwidthInKBits;
         
         Bool16  fBreakOnAssert;
         Bool16  fAutoRestart;

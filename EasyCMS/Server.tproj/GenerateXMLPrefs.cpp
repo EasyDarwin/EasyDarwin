@@ -49,9 +49,8 @@ static const PrefConversionInfo kPrefs[] =
 {
 	/* 0 */ { "session_timeout",						NULL,                   qtssAttrDataTypeUInt32 },
 	/* 1 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32 },
-    /* 2 */ { "maximum_bandwidth",                      NULL,                   qtssAttrDataTypeSInt32 },
-    /* 3 */ { "cms_ip_addr",							NULL,                   qtssAttrDataTypeCharArray },
-    /* 4 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray },
+
+	/* 4 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray },
     /* 5 */ { "break_on_assert",                        NULL,                   qtssAttrDataTypeBool16 },
     /* 6 */ { "auto_restart",                           NULL,                   qtssAttrDataTypeBool16 },
 	/* 7 */ { "module_folder",                          NULL,                   qtssAttrDataTypeCharArray },

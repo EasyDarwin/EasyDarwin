@@ -183,7 +183,7 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 	delete[] chTemp;
 	fRedisPort=fSrvrPrefs->GetRedisPort();
 
-	chTemp=fSrvrPrefs->GetCMSIP();
+	chTemp=fSrvrPrefs->GetMonitorWANIP();
 	fCMSIP=chTemp;
 	delete[] chTemp;
 	fCMSPort=fSrvrPrefs->GetMonitorWANPort();
