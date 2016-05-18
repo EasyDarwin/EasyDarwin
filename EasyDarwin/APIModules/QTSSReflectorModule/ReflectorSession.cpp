@@ -374,9 +374,9 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
 	{
 		//调用角色，停止推流
 		QTSS_RoleParams theParams;
-		theParams.easyStreamStopParams.inStreamName = fSessionName;
+		theParams.easyFreeStreamParams.inStreamName = fSessionName;
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
-		(void)theModule->CallDispatch(Easy_StreamStop_Role, &theParams);
+		(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
 	}
 }
 
@@ -439,9 +439,9 @@ SInt64 ReflectorSession::Run()
 			//调用角色，停止推流
 			qtss_printf("没有客户端观看当前转发媒体\n");
 			QTSS_RoleParams theParams;
-			theParams.easyStreamStopParams.inStreamName = fSessionName;
+			theParams.easyFreeStreamParams.inStreamName = fSessionName;
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
-			(void)theModule->CallDispatch(Easy_StreamStop_Role, &theParams);
+			(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
 		}
 	}
 	return 15*1000;

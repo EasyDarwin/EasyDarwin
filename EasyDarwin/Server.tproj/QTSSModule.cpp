@@ -24,10 +24,7 @@
  */
 /*
     File:       QTSSModule.cpp
-
     Contains:   Implements object defined in QTSSModule.h
-                    
-    
 */
 
 #include <errno.h>
@@ -256,7 +253,7 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         case QTSS_Interval_Role:            return kTimedIntervalRole       ;
 		case Easy_HLSOpen_Role:				return kHLSOpenRole				;
 		case Easy_HLSClose_Role:			return kHLSCloseRole			;
-		case Easy_StreamStop_Role:			return kStreamStopRole			;//test		
+		case Easy_FreeStream_Role:			return kStreamStopRole			;//test		
         default:
             return -1;
     }

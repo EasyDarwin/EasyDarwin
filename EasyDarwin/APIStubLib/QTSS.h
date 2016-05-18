@@ -1064,8 +1064,8 @@ enum
 	Easy_HLSOpen_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'o'),  //hlso
 	Easy_HLSClose_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
-	//stream stop role//test
-	Easy_StreamStop_Role	=			FOUR_CHARS_TO_INT('s', 's', 't', 'p')  //sstp
+	//Easy FreeStream Role
+	Easy_FreeStream_Role	=			FOUR_CHARS_TO_INT('e', 'f', 's', 'r')  //efsr
 };
 typedef UInt32 QTSS_Role;
 
@@ -1140,7 +1140,7 @@ typedef struct
 typedef struct
 {
 	char *	inStreamName;
-}Easy_StreamStop_Params;
+}Easy_FreeStream_Params;
 
 typedef struct
 {
@@ -1282,7 +1282,7 @@ typedef union
 	Easy_HLSOpen_Params					easyHLSOpenParams;
 	Easy_HLSClose_Params				easyHLSCloseParams;
 
-	Easy_StreamStop_Params				easyStreamStopParams;//test			
+	Easy_FreeStream_Params				easyFreeStreamParams;			
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 typedef struct
