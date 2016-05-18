@@ -2095,6 +2095,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
 #endif
 				sSessionMap->UnRegister(theSessionRef);
                 //delete inSession;
+				CSdpCache::GetInstance()->eraseSdpMap(inSession->GetSourcePath()->GetAsCString());  
 				inSession->Signal(Task::kKillEvent);
             }
         }

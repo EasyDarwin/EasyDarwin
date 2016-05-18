@@ -40,7 +40,6 @@
 
 #include "QTSSModuleUtils.h"
 #include "QTSServerInterface.h"
-#include "sdpCache.h"
 
 #include <errno.h>
 
@@ -136,7 +135,6 @@ ReflectorSession::~ReflectorSession()
         fStreamArray[x] = NULL;
     }
 
-	CSdpCache::GetInstance()->eraseSdpMap(GetSourcePath()->GetAsCString());  
     // We own this object when it is given to us, so delete it now
     delete [] fStreamArray;
     delete fSourceInfo;
