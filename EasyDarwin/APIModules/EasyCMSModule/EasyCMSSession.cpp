@@ -50,7 +50,6 @@ EasyCMSSession::EasyCMSSession()
 
 EasyCMSSession::~EasyCMSSession()
 {
-	qtss_printf("~EasyCMSSession\n");
 	delete[] fSerial;
 	delete[] fChannel;
 
@@ -99,7 +98,6 @@ SInt64 EasyCMSSession::Run()
 		{
 			case kIdle:
 				{
-					qtss_printf("kIdle state \n");
 					//根据事件类型执行不同的动作
 					if(events & Task::kStartEvent)
 					{
@@ -145,7 +143,6 @@ SInt64 EasyCMSSession::Run()
 
 			case kReadingMessage:
 				{
-					qtss_printf("kReadingMessage state \n");
 					// 网络请求报文存储在fInputStream中
 					if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
 					{
@@ -188,8 +185,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kProcessingMessage:
 				{
-					qtss_printf("kProcessingMessage state \n");
-
 					// 处理网络报文
 					Assert( fInputStream.GetRequestBuffer() );
 					Assert(fRequest == NULL);
@@ -218,8 +213,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kSendingMessage:
 				{
-					qtss_printf("kSendingMessage state \n");
-
 					//发送响应报文
 					theErr = fOutputStream.Flush();
                 
@@ -249,7 +242,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kCleaningUp:
 				{
-					qtss_printf("kCleaningUp state \n");
 					// 一次请求的读取、处理、响应过程完整，等待下一次网络报文！
 					this->CleanupRequest();
 					fState = kIdle;
@@ -410,5 +402,5 @@ void EasyCMSSession::SetStreamStopInfo(const char * chSerial,const char * chChan
 
 void EasyCMSSession::SetMsgType(fEnumMsg msg)
 {
-	fMsg=msg;
+	fMsg = msg;
 }

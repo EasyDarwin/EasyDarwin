@@ -26,9 +26,6 @@
     File:       ReflectorSession.cpp
 
     Contains:   Implementation of object defined in ReflectorSession.h. 
-                    
-    
-
 */
 
 
@@ -99,7 +96,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo):  
 	fSessionName(NULL),
 	fHLSLive(false),
 	fHasVideoKeyFrameUpdate(false),
-	fIfFirstRun(true)//add
+	fIfFirstRun(true)
 {
 
     fQueueElem.SetEnclosingObject(this);
@@ -114,8 +111,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo):  
 		this->SetSessionName();
     }
 
-	//自动停止推流，add
-	this->Signal(Task::kStartEvent);//开始干活,不想使用自动停止推流，注释掉这一句
+	//开始转发客户端数量自检流程，不想使用自动停止推流，注释掉这一句
+	this->Signal(Task::kStartEvent);
 }
 
 
@@ -145,6 +142,7 @@ ReflectorSession::~ReflectorSession()
     delete fSourceInfo;
     fLocalSDP.Delete();
     fSourceID.Delete();
+
 	if(fSessionName) delete[] fSessionName;
 }
 
@@ -377,7 +375,6 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
 	if(fNumOutputs == 0)
 	{
 		//调用角色，停止推流
-		qtss_printf("客户端都不看啦\n");
 		QTSS_RoleParams theParams;
 		theParams.easyStreamStopParams.inSerial = fSessionName;
 		theParams.easyStreamStopParams.inChannel= "01";
