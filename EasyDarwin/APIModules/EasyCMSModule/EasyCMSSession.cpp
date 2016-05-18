@@ -69,10 +69,13 @@ void EasyCMSSession::CleanupRequest()
 
 SInt64 EasyCMSSession::Run()
 {	
-	//OSMutexLocker locker(&fMutex);
+	OSMutexLocker locker(&fMutex);
 
 	OS_Error theErr = OS_NoErr;
 	EventFlags events = this->GetEvents();
+
+    if ((events & Task::kTimeoutEvent) || (events & Task::kKillEvent))
+        fLiveSession = false;
 
 	while(fLiveSession)
 	{
@@ -99,16 +102,6 @@ SInt64 EasyCMSSession::Run()
 					{
 						// 已连接，有新消息需要读取(数据或者断开)
 						fState = kReadingMessage;
-					}
-
-					if(events & Task::kTimeoutEvent)
-					{
-						return -1;//超时则进入析构，表示EasyCMS还没有进行请求的回复
-					}
-
-					if(events & Task::kUpdateEvent)
-					{
-
 					}
 
 					// 如果有消息需要发送则进入发送流程

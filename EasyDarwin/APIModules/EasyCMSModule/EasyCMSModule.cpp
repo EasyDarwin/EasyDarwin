@@ -93,14 +93,17 @@ QTSS_Error RereadPrefs_EasyCMSModule()
 //如果在一定时间内没有收到EasyCMS的回应，则进行重发（或者析构）
 QTSS_Error FreeStream_EasyCMSModule(Easy_FreeStream_Params* inParams)
 {
-	QTSS_Error theErr = QTSS_Unimplemented;
+	QTSS_Error theErr = QTSS_NoErr;
 
 	if( inParams->inStreamName != NULL )
 	{
 		//创建并开始EasyCMSSession对象
 		EasyCMSSession * pCMSSession = new EasyCMSSession();
-		pCMSSession->FreeStream(inParams->inStreamName);
-		pCMSSession->Signal(Task::kStartEvent);
+		theErr = pCMSSession->FreeStream(inParams->inStreamName);
+		if(theErr == QTSS_NoErr)
+			pCMSSession->Signal(Task::kStartEvent);
+		else
+			pCMSSession->Signal(Task::kKillEvent);
 	}
 
 	return theErr;
