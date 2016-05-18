@@ -111,7 +111,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo):  
     }
 
 	//开始转发客户端数量自检流程，不想使用自动停止推流，注释掉这一句
-	//this->Signal(Task::kStartEvent);
+	this->Signal(Task::kStartEvent);
 }
 
 
@@ -369,15 +369,15 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
             fStreamArray[y]->DecEyeCount();  
     }
 
-	////移除客户端之后判断fNumOutputs是否为0,add
-	//if(fNumOutputs == 0)
-	//{
-	//	//调用角色，停止推流
-	//	QTSS_RoleParams theParams;
-	//	theParams.easyFreeStreamParams.inStreamName = fSessionName;
-	//	QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
-	//	(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
-	//}
+	//移除客户端之后判断fNumOutputs是否为0,add
+	if(fNumOutputs == 0)
+	{
+		//调用角色，停止推流
+		QTSS_RoleParams theParams;
+		theParams.easyFreeStreamParams.inStreamName = fSessionName;
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
+		(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
+	}
 }
 
 void    ReflectorSession::TearDownAllOutputs()
@@ -419,7 +419,7 @@ void*   ReflectorSession::GetStreamCookie(UInt32 inStreamID)
     return NULL;
 }
 
-//自动停止推流
+//自动停止推流，add
 SInt64 ReflectorSession::Run()
 {
     EventFlags events = this->GetEvents();
