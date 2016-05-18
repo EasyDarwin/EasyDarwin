@@ -1065,7 +1065,7 @@ enum
 	Easy_HLSClose_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
 	//stream stop role//test
-	Easy_StreamStop_Role	=			FOUR_CHARS_TO_INT('s', 's', 't', 'p'),  //sstp
+	Easy_StreamStop_Role	=			FOUR_CHARS_TO_INT('s', 's', 't', 'p')  //sstp
 };
 typedef UInt32 QTSS_Role;
 

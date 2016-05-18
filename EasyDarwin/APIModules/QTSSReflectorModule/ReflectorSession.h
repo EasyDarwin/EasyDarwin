@@ -29,12 +29,7 @@
                 RTPStreams. It spaces out the packet send times in order to
                 maximize the randomness of the sending pattern and smooth
                 the stream.
-                    
-    
-
 */
-
-        
 
 #include "QTSS.h"
 #include "OSRef.h"
@@ -58,9 +53,7 @@ class FileDeleter
     private:
         StrPtrLen fFilePath;
 };
-
 #endif
-
 
 #ifndef __REFLECTOR_SESSION__
 #define __REFLECTOR_SESSION__
@@ -217,15 +210,11 @@ class ReflectorSession : public Task//每一个ReflectorSession自己循环判断是否转发
 	public:
 		QTSS_Object GetRTSPRelaySession()	{ return fRTSPRelaySession;}
 		void SetRTSPRelaySession(QTSS_Object relaySession)	{ fRTSPRelaySession = relaySession; }
+
 	//自动停止推流，add
-	public:
-		char * GetSerial(){return fSerial;}
-		char * GetChannel(){return fChannel;}
 	private:
 		virtual SInt64 Run();
 		bool fIfFirstRun;
-		char fSerial[32];
-		char fChannel[16];
 };
 
 #endif

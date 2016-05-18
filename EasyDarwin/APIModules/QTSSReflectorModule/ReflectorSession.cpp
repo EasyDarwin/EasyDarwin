@@ -115,29 +115,6 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo):  
     }
 
 	//×Ô¶¯Í£Ö¹ÍÆÁ÷£¬add
-	memset(fSerial,0,sizeof(fSerial));
-	memset(fChannel,0,sizeof(fChannel));
-	if(inSourceID != NULL)//½âÎö³öfSerialºÍfChannel,fSourceID = "./Movies/\123456\010.sdp"
-	{
-#ifdef __Win32__
-		char * pPos1 = strstr(fSourceID.Ptr,"\\");
-		if(pPos1 != NULL)
-		{
-			char * pPos2 = strstr(pPos1+1,"\\");
-			if(pPos2 != NULL)
-			{
-				char * pPos3 = strstr(pPos2+1,".");
-				if(pPos3 != NULL)
-				{
-					memcpy(fSerial,pPos1+1,pPos2-pPos1-1);
-					memcpy(fChannel,pPos2+1,pPos3-pPos2-1);
-				}
-			}
-		}
-#else
-//for linux
-#endif
-	}
 	this->Signal(Task::kStartEvent);//¿ªÊ¼¸É»î,²»ÏëÊ¹ÓÃ×Ô¶¯Í£Ö¹ÍÆÁ÷£¬×¢ÊÍµôÕâÒ»¾ä
 }
 
@@ -402,12 +379,11 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
 		//µ÷ÓÃ½ÇÉ«£¬Í£Ö¹ÍÆÁ÷
 		qtss_printf("¿Í»§¶Ë¶¼²»¿´À²\n");
 		QTSS_RoleParams theParams;
-		theParams.easyStreamStopParams.inSerial = fSerial;
-		theParams.easyStreamStopParams.inChannel= fChannel;
+		theParams.easyStreamStopParams.inSerial = fSessionName;
+		theParams.easyStreamStopParams.inChannel= "01";
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
 		(void)theModule->CallDispatch(Easy_StreamStop_Role, &theParams);
 	}
-	//
 }
 
 void    ReflectorSession::TearDownAllOutputs()
@@ -450,10 +426,18 @@ void*   ReflectorSession::GetStreamCookie(UInt32 inStreamID)
 }
 
 //×Ô¶¯Í£Ö¹ÍÆÁ÷£¬add
-SInt64 ReflectorSession::Run()//²»Ê¹ÓÃTimeoutTaskÊµÏÖÑ­»·ÅÐ¶Ï¶øÊ¹ÓÃretuen ***µÄ·½Ê½£¬ÒòÎªÇ°Õß²»ÄÜ¾«È·¿ØÖÆÊ±¼ä£¨ÎÒÈÏÎª£©¡£
+SInt64 ReflectorSession::Run()
 {
+    EventFlags events = this->GetEvents();
+
+    if (events & Task::kKillEvent)
+        return -1;
+
 	if(fIfFirstRun)
-		fIfFirstRun = false;//µÚÒ»´ÎµÄÊ±ºò»¹Ã»ÓÐÀ­Á÷£¬¾Í²»Òª½øÐÐ´¦ÀíÁË;¿Í»§¶ËÀ­Á÷²»Òª¹ýÂý¡£
+	{
+		//µÚÒ»´ÎµÄÊ±ºò»¹Ã»ÓÐÀ­Á÷£¬¾Í²»Òª½øÐÐ´¦ÀíÁË;¿Í»§¶ËÀ­Á÷²»Òª¹ýÂý
+		fIfFirstRun = false;
+	}
 	else
 	{
 		if(fNumOutputs == 0)
@@ -461,10 +445,10 @@ SInt64 ReflectorSession::Run()//²»Ê¹ÓÃTimeoutTaskÊµÏÖÑ­»·ÅÐ¶Ï¶øÊ¹ÓÃretuen ***µÄ·
 			//µ÷ÓÃ½ÇÉ«£¬Í£Ö¹ÍÆÁ÷
 			qtss_printf("Ã»ÓÐ¿Í»§¶Ë¹Û¿´µ±Ç°×ª·¢Ã½Ìå\n");
 			QTSS_RoleParams theParams;
-			theParams.easyStreamStopParams.inSerial = fSerial;
-			theParams.easyStreamStopParams.inChannel= fChannel;
+			theParams.easyStreamStopParams.inSerial = fSessionName;
+			theParams.easyStreamStopParams.inChannel= "01";
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
-			 (void)theModule->CallDispatch(Easy_StreamStop_Role, &theParams);
+			(void)theModule->CallDispatch(Easy_StreamStop_Role, &theParams);
 		}
 	}
 	return 15*1000;

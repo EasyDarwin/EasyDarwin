@@ -1370,7 +1370,8 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
         QTSS_Error theErr = theSession->SetupReflectorSession(theInfo, inParams, theSetupFlag,sOneSSRCPerStream, sTimeoutSSRCSecs);
         if (theErr != QTSS_NoErr)
         {   
-			delete theSession;
+			//delete theSession;
+			theSession->Signal(Task::kKillEvent);
             return NULL;
         }
         
@@ -1459,7 +1460,8 @@ void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSes
     {               
         theSession->TearDownAllOutputs(); // just to be sure because we are about to delete the session.
         sSessionMap->UnRegister(theSessionRef);// we had an error while setting up-- don't let anyone get the session
-        delete theSession;  
+        //delete theSession;
+		theSession->Signal(Task::kKillEvent);
     }
 }
 
@@ -2092,7 +2094,8 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
 	qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
 #endif
 				sSessionMap->UnRegister(theSessionRef);
-                delete inSession;
+                //delete inSession;
+				inSession->Signal(Task::kKillEvent);
             }
         }
     }
