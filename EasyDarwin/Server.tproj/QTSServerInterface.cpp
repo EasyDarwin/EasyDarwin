@@ -634,4 +634,245 @@ void QTSSErrorLogStream::LogAssert(char* inMessage)
     QTSServerInterface::LogError(qtssAssertVerbosity, inMessage);
 }
 
+//redis,add,begin
+bool QTSServerInterface::ConRedis()//连接redis服务器
+{
+	if(fIfConSucess)
+		return true;
+
+	struct timeval timeout = { 0, 500000 }; // 0.5 seconds
+	fRedisCon = redisConnectWithTimeout(fRedisIP, fRedisPort, timeout);
+	if (fRedisCon == NULL || fRedisCon->err)
+	{
+		if (fRedisCon) {
+			qtss_printf("INFO:Connect redis failed,%s\n", fRedisCon->errstr);
+			redisFree(fRedisCon);
+		} else {
+			qtss_printf("INFO:Connect redis failed,can't allocate redis context\n");
+		}
+		fIfConSucess = false;
+	}
+	else
+	{
+		fIfConSucess = true;
+		struct timeval timeoutEx = { 1, 0 }; // 1seconds,设置socket接收和发送超时
+		redisSetTimeout(fRedisCon,timeoutEx);
+
+		RedisInit();//可能在这个函数的执行过程中，redis连接又失败了，所以真正的连接失败或者成功要看fIfConSucess
+		qtss_printf("INFO:Connect redis sucess\n");
+	}
+	return fIfConSucess;
+}
+
+bool QTSServerInterface::RedisCommand(const char * strCommand)//执行一些不关心结果的命令，只要知道成功或者失败，一般为写
+{
+	OSMutexLocker mutexLock(&fRedisMutex);
+
+	if(!ConRedis())//每一次执行命令之前都先连接redis,如果当前redis还没有成功连接
+		return false;
+	redisReply* reply = (redisReply*)redisCommand(fRedisCon,strCommand);
+	//需要注意的是，如果返回的对象是NULL，则表示客户端和服务器之间出现严重错误，必须重新链接。
+	if (NULL == reply) 
+	{
+		redisFree(fRedisCon);
+		fIfConSucess = false;
+		return false;
+	}
+	//qtss_printf("%s\n",strCommand);
+	//qtss_printf("%s\n",reply->str);
+	freeReplyObject(reply);
+	return true;
+}
+
+bool QTSServerInterface::RedisChangeRtpMum()//更改rtp数
+{
+	char chTemp[128] = {0};
+	sprintf(chTemp,"hset %s:%d_Info RTP %d",fEasyDarWInIP,fEasyDarWInPort,fNumRTPSessions);//hset对RTP属性进行覆盖更新
+	return RedisCommand(chTemp);
+}
+
+bool QTSServerInterface::RedisAddPushName(const char * strPushNmae)
+{
+	char chTemp[128] = {0};
+	sprintf(chTemp,"sadd %s:%d_PushName %s",fEasyDarWInIP,fEasyDarWInPort,strPushNmae);//将推流名称加入到set中
+	return RedisCommand(chTemp);
+}
+
+bool QTSServerInterface::RedisDelPushName(const char * strPushNmae)
+{
+	char chTemp[128] = {0};
+	sprintf(chTemp,"srem %s:%d_PushName %s",fEasyDarWInIP,fEasyDarWInPort,strPushNmae);//将推流名称从set中移除
+	return RedisCommand(chTemp);
+}
+
+bool QTSServerInterface::RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而key被删除，这时应该重新设置该key
+{
+	OSMutexLocker mutexLock(&fRedisMutex);
+
+	bool bReval = false;
+	if(!ConRedis())//每一次执行命令之前都先连接redis,如果当前redis还没有成功连接
+		return false;
+
+	char chTemp[128] = {0};//注意128位是否足够
+	sprintf(chTemp,"expire  %s:%d_Live 15",fEasyDarWInIP,fEasyDarWInPort);//更改超时时间
+
+	redisReply* reply = (redisReply*)redisCommand(fRedisCon,chTemp);
+	//需要注意的是，如果返回的对象是NULL，则表示客户端和服务器之间出现严重错误，必须重新链接。
+	if (NULL == reply) 
+	{
+		redisFree(fRedisCon);
+		fIfConSucess = false;
+		return false;
+	}
+
+	if( (reply->type == REDIS_REPLY_INTEGER) && (reply->integer == 1) )//正常情况
+	{
+		bReval = true;
+	}
+	else if( (reply->type == REDIS_REPLY_INTEGER) && (reply->integer == 0) )//说明当前key已经不存在了,那么我们需要重新生成该key
+	{
+		sprintf(chTemp,"setex %s:%d_Live 15 1",fEasyDarWInIP,fEasyDarWInPort);
+		bReval = RedisCommand(chTemp);
+	}
+	else//其他情况，这是不可能发生的。实际上是有可能发生的，经测试，如果redis没有写的权限，就会发生。
+	{
+		Assert(0);
+	}
+	freeReplyObject(reply);
+	return bReval;
+}
+
+bool QTSServerInterface::RedisJudgeSessionID(const char * strSessionID)//验证SessionID的合法性
+{
+	//算法描述，删除指定sessionID对应的key，如果成功删除，表明SessionID存在，验证通过，否则验证失败
+	OSMutexLocker mutexLocker(&fRedisMutex);
+
+	if(!ConRedis())
+		return false;
+
+	bool bReval = false;
+	char chTemp[128] = {0};
+	sprintf(chTemp,"del SessionID_%s",strSessionID);//如果key存在则返回整数类型1，否则返回整数类型0
+
+	redisReply* reply = (redisReply*)redisCommand(fRedisCon,chTemp);
+	//需要注意的是，如果返回的对象是NULL，则表示客户端和服务器之间出现严重错误，必须重新链接。
+	//这里只是举例说明，简便起见，后面的命令就不再做这样的判断了。
+	if (NULL == reply) 
+	{
+		redisFree(fRedisCon);
+		fIfConSucess = false;
+		return false;
+	}
+	if( (reply->type == REDIS_REPLY_INTEGER) && (reply->integer == 1) )
+		bReval = true;
+	else
+		bReval = false;
+
+	freeReplyObject(reply);
+	return bReval;
+}
+
+bool QTSServerInterface::RedisInit()//连接redis成功之后调用该函数执行一些初始化的工作
+{
+	//每一次与redis连接后，都应该清除上一次的数据存储，使用覆盖或者直接清除的方式,串行命令使用管线更加高效
+	char chTemp[128] = {0};
+	char chPassword[]="~ziguangwulian~iguangwulian~guangwulian~uangwulian";
+	do 
+	{
+		//1,redis密码认证
+		sprintf(chTemp,"auth %s",chPassword);
+		if(redisAppendCommand(fRedisCon,chTemp) != REDIS_OK)
+			break;
+		
+		//2,EasyDarWin唯一信息存储(覆盖上一次的存储)
+		sprintf(chTemp,"sadd EasyDarWinName %s:%d",fEasyDarWInIP,fEasyDarWInPort);
+		if(redisAppendCommand(fRedisCon,chTemp) != REDIS_OK)
+			break;
+
+		//3,EasyDarWin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
+		sprintf(chTemp,"hmset %s:%d_Info IP %s PORT %d RTP %d",fEasyDarWInIP,fEasyDarWInPort,fEasyDarWInIP,fEasyDarWInPort,fNumRTPSessions);
+		if(redisAppendCommand(fRedisCon,chTemp) != REDIS_OK)
+			break;
+		
+		//4,清除推流名称存储
+		sprintf(chTemp,"del %s:%d_PushName",fEasyDarWInIP,fEasyDarWInPort);
+		if(redisAppendCommand(fRedisCon,chTemp) != REDIS_OK)
+			break;
+
+		char* strAllPushName;
+		OSMutex *mutexMap = fReflectorSessionMap->GetMutex();
+		int iPos = 0,iLen = 0;
+		
+		mutexMap->Lock();
+		strAllPushName = new char[fReflectorSessionMap->GetNumRefsInTable()*128 + 1];//为每一个推流名称分配128字节的内存
+		memset(strAllPushName,0,fReflectorSessionMap->GetNumRefsInTable()*128 + 1);//内存初始化为0
+		for (OSRefHashTableIter theIter(fReflectorSessionMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+		{
+			OSRef* theRef			=	theIter.GetCurrent();
+			StrPtrLen* strPushName  =	theRef->GetString();
+
+			char *ppos1 = strstr(strPushName->Ptr,"/");//"./Movies/12345678/0001.sdp"->"12345678/0001.sdp"
+			if(ppos1 != NULL)
+			{
+				char *ppos2 = strstr(ppos1+1,"/");
+				if(ppos2 != NULL)
+				{
+					iLen = strPushName->Len-(ppos2-strPushName->Ptr+1);
+					strAllPushName[iPos] = ' ';
+					memcpy(strAllPushName+iPos+1,ppos2+1,iLen);
+					iPos += 1+iLen;
+				}
+			}
+			/*
+			string strTemp(strPushName->Ptr,strPushName->Len);
+			int npos=strTemp.find('\\');
+			if(npos!=string::npos)
+			{
+				strAllPushName=strAllPushName+' '+strTemp.substr(npos+1);
+			}*/
+		}   
+		mutexMap->Unlock();
+
+		char *chNewTemp = new char[strlen(strAllPushName)+128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
+		
+		//5,推流名称存储
+		sprintf(chNewTemp,"sadd %s:%d_PushName%s",fEasyDarWInIP,fEasyDarWInPort,strAllPushName);
+		if(redisAppendCommand(fRedisCon,chNewTemp) != REDIS_OK)
+		{
+			delete[] chNewTemp;
+			delete[] strAllPushName;
+			break;
+		}
+		delete[] chNewTemp;
+		delete[] strAllPushName;
+		
+		//6,保活，设置15秒，这之后当前CMS已经开始提供服务了
+		sprintf(chTemp,"setex %s:%d_Live 15 1",fEasyDarWInIP,fEasyDarWInPort);
+		if(redisAppendCommand(fRedisCon,chTemp) != REDIS_OK)
+			break;
+
+		bool bBreak = false;
+		redisReply* reply = NULL;
+		for(int i=0;i<6;i++)
+		{
+			if(REDIS_OK != redisGetReply(fRedisCon,(void**)&reply))
+			{
+				bBreak = true;
+				//freeReplyObject(reply);//经测试，如果在redisGetReply时，连接关闭，freeReplyObject会引起崩溃，因为reply为空
+				break;
+			}
+			freeReplyObject(reply);
+		}
+		if(bBreak)//说明redisGetReply出现了错误
+			break;
+		return true;
+	} while (0);
+	//走到这说明出现了错误，需要进行重连,重连操作再下一次执行命令时进行,在这仅仅是置标志位
+	redisFree(fRedisCon);
+	fIfConSucess = false;
+
+	return false;
+}
+//redis,add,end
+
 

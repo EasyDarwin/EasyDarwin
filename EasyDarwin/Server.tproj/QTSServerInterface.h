@@ -50,6 +50,10 @@
 #include "TCPListenerSocket.h"
 #include "ResizeableStringFormatter.h"
 
+//redis,add
+#include"hiredis.h"
+
+
 // OSRefTable;
 class UDPSocketPool;
 class QTSServerPrefs;
@@ -412,6 +416,27 @@ class QTSServerInterface : public QTSSDictionary
         
         friend class RTPStatsUpdaterTask;
         friend class SessionTimeoutTask;
+
+		//redis
+	public:
+		bool ConRedis();//连接redis
+		bool RedisInit();//redis初始化，连接redis成功之后调用该函数执行一些初始化的工作
+		bool RedisCommand(const char * strCommand);//执行一些我们并不关注结果的redisCommand，主要是一些写操作
+		bool RedisTTL();//保活
+		bool RedisChangeRtpMum();//更改rtp数
+		bool RedisAddPushName(const char * strPushNmae);//增加推流名称
+		bool RedisDelPushName(const char * strPushNmae);//删除推流名称
+		bool RedisJudgeSessionID(const char * strSessionID);//验证SessionID的合法性
+	protected:
+		redisContext *fRedisCon;//所有线程公用一个连接
+		bool fIfConSucess;//redis是否连接成功
+		OSMutex fRedisMutex;
+
+		char fRedisIP[20];
+		UInt16 fRedisPort;
+		char fEasyDarWInIP[20];
+		UInt16 fEasyDarWInPort;
+		//redis
 };
 
 
