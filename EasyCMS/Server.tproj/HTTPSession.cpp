@@ -49,9 +49,6 @@ HTTPSession::HTTPSession( )
 	fModuleState.curRole = 0;
 	fModuleState.globalLockRequested = false;
 
-	//fDeviceSnap = NEW char[EASY_MAX_URL_LENGTH];
-	//fDeviceSnap[0] = '\0';
-
 	qtss_printf("Create HTTPSession:%s\n", fSessionID);
 }
 
@@ -61,9 +58,6 @@ HTTPSession::~HTTPSession()
 	this->CleanupRequest();// Make sure that all our objects are deleted
 	
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(-1);
-
-	//if (fDeviceSnap != NULL)
-		//delete [] fDeviceSnap;
 
 	qtss_printf("Release HTTPSession:%s\n", fSessionID);
 }
@@ -491,8 +485,8 @@ QTSS_Error HTTPSession::SetupRequest()
 	//执行到这说明已经接收了完整的HTTPHeader+JSON部分
 	fRequestBody = theRequestBody;//将数据部分保存起来，让ProcessRequest函数去处理请求。
 	Assert(theErr == QTSS_NoErr);
-	qtss_printf("Recv message: %s\n", fRequestBody);
-
+	if(theBufferOffset < 2048)
+		qtss_printf("Recv message: %s\n", fRequestBody);
 
 	UInt32 offset = 0;
 	(void)QTSS_SetValue(this, EasyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
