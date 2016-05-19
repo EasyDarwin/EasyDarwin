@@ -774,16 +774,35 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 
 QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö¹Ö±²¥ÇëÇó
 {
-	//Ëã·¨ÃèÊö£º²éÕÒÖ¸¶¨Éè±¸£¬ÈôÉè±¸´æÔÚ£¬É¾³ısetÖĞµÄµ±Ç°¿Í»§¶ËÔªËØ²¢ÅĞ¶ÏsetÊÇ·ñÎª¿Õ£¬Îª¿ÕÔòÏòÉè±¸·¢³öÍ£Ö¹Á÷ÇëÇó
+	//Ëã·¨ÃèÊö£º²éÕÒÖ¸¶¨Éè±¸£¬ÈôÉè±¸´æÔÚ£¬ÔòÏòÉè±¸·¢³öÍ£Ö¹Á÷ÇëÇó
 	/*//ÔİÊ±×¢ÊÍµô£¬Êµ¼ÊÉÏÊÇĞèÒªÈÏÖ¤µÄ
 	if(!fAuthenticated)//Ã»ÓĞ½øĞĞÈÏÖ¤ÇëÇó
 	return httpUnAuthorized;
 	*/
 
 	EasyDarwin::Protocol::EasyProtocol req(json);
+	//´Ósession/serial/channel.sdp ÖĞ½âÎö³öserialºÍchannel
+	string strStreamName	=	req.GetBodyValue(EASY_TAG_SERIAL);//Á÷Ãû³Æ
+	if(strStreamName.size()<=0)
+		return QTSS_BadArgument;
 
-	string strDeviceSerial	=	req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ĞòÁĞºÅ
-	string strCameraSerial	=	req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ĞòÁĞºÅ
+	int iPos1 = strStreamName.find('/');
+	if(iPos1 == string::npos )
+		return QTSS_BadArgument;
+
+	int iPos2 = strStreamName.find('/',iPos1+1);
+	if(iPos2 == string::npos )
+		return QTSS_BadArgument;
+
+	int iPos3 = strStreamName.find('/',iPos2+1);
+	if(iPos3 == string::npos )
+		return QTSS_BadArgument;
+
+	string  strDeviceSerial = strStreamName.substr(iPos1+1,iPos2-iPos1-1);
+	string  strCameraSerial = strStreamName.substr(iPos2+1,iPos3-iPos2-1);
+
+	//string strDeviceSerial	=	req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ĞòÁĞºÅ
+	//string strCameraSerial	=	req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ĞòÁĞºÅ
 	string strStreamID		=   req.GetBodyValue(EASY_TAG_RESERVE);//StreamID
 	string strProtocol		=	req.GetBodyValue(EASY_TAG_PROTOCOL);//Protocol
 
@@ -1199,6 +1218,11 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(char *queryString)//
 		value[EASY_TAG_TAG]			=	deviceInfo->tag_;
 		value[EASY_TAG_APP_TYPE]	=	EasyProtocol::GetAppTypeString(deviceInfo->eAppType);
 		value[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetTerminalTypeString(deviceInfo->eDeviceType);
+		//Èç¹ûÉè±¸ÊÇEasyCamera,Ôò·µ»ØÉè±¸¿ìÕÕĞÅÏ¢
+		if(deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
+		{
+			value[EASY_TAG_SNAP_URL] = deviceInfo->snapJpgPath_;
+		}
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES].append(value);
 	}
 	mutexMap->Unlock();
@@ -1263,6 +1287,11 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉ
 		value[EASY_TAG_TAG]				=	deviceInfo->tag_;
 		value[EASY_TAG_APP_TYPE]		=	EasyProtocol::GetAppTypeString(deviceInfo->eAppType);
 		value[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetTerminalTypeString(deviceInfo->eDeviceType);
+		//Èç¹ûÉè±¸ÊÇEasyCamera,Ôò·µ»ØÉè±¸¿ìÕÕĞÅÏ¢
+		if(deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
+		{
+			value[EASY_TAG_SNAP_URL] = deviceInfo->snapJpgPath_;
+		}
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES].append(value);
 	}
 	mutexMap->Unlock();
