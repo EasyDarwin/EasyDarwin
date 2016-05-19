@@ -117,6 +117,7 @@
 #define EASY_TAG_PLAY_COUNT								"PlayCount"
 #define EASY_TAG_SESSION_COUNT							"SessionCount"
 #define EASY_TAG_RECORDS								"Records"
+#define EASY_TAG_AUDIENCE_NUM							"AudienceNum"
 /*!
 \}
 */
