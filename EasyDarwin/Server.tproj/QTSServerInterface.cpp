@@ -231,7 +231,8 @@ QTSServerInterface::QTSServerInterface()
     fCurrentMaxLate(0),
     fTotalQuality(0),
     fNumThinned(0),
-    fNumThreads(0)
+    fNumThreads(0),
+	fIfConSucess(false)
 {
     for (UInt32 y = 0; y < QTSSModule::kNumRoles; y++)
     {
@@ -846,7 +847,7 @@ bool QTSServerInterface::RedisInit()//Á¬½Óredis³É¹¦Ö®ºóµ÷ÓÃ¸Ãº¯ÊýÖ´ÐÐÒ»Ð©³õÊ¼»¯µ
 		delete[] chNewTemp;
 		delete[] strAllPushName;
 		
-		//6,±£»î£¬ÉèÖÃ15Ãë£¬ÕâÖ®ºóµ±Ç°CMSÒÑ¾­¿ªÊ¼Ìá¹©·þÎñÁË
+		//6,±£»î£¬ÉèÖÃ15Ãë£¬ÕâÖ®ºóµ±Ç°EasyDarwinÒÑ¾­¿ªÊ¼Ìá¹©·þÎñÁË
 		sprintf(chTemp,"setex %s:%d_Live 15 1",fEasyDarWInIP,fEasyDarWInPort);
 		if(redisAppendCommand(fRedisCon,chTemp) != REDIS_OK)
 			break;

@@ -271,6 +271,20 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
         return false;
     }
 
+	//for redis
+	//获取redis和CMS的IP和端口
+	char * chTemp=fSrvrPrefs->GetRedisIP();
+	strcpy(fRedisIP,chTemp);
+	delete[] chTemp;
+	fRedisPort=fSrvrPrefs->GetRedisPort();
+
+	chTemp=fSrvrPrefs->GetEasyDarWinIP();
+	strcpy(fEasyDarWInIP,chTemp);
+	delete[] chTemp;
+	fEasyDarWInPort=fSrvrPrefs->GetEasyDarWinPort();
+
+	ConRedis();//连接redis
+	//for redis
     
     fServerState = qtssStartingUpState;
     return true;

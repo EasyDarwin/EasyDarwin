@@ -194,8 +194,13 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "3000",     NULL                        }, //3gpp_target_time_milliseconds
     { kAllowMultipleValues,     "",         sDisable_Thinning_Players   }, //player_requires_disable_thinning
     
-    { kDontAllowMultipleValues, "8080",     NULL                        }  //http_service_port
-    
+    { kDontAllowMultipleValues, "8080",     NULL                        },  //http_service_port
+     
+	//增加EasyDarWin和Redis的外部IP和端口
+    { kDontAllowMultipleValues, "127.0.0.1",     NULL                        },  //easydarwin_ip_addr
+    { kDontAllowMultipleValues, "554",			 NULL                        },  //easydarwin_port
+    { kDontAllowMultipleValues, "127.0.0.1",     NULL                        },  //redis_ip_addr
+	{ kDontAllowMultipleValues, "6379",			 NULL						 }  //redis_port
     
     
     
@@ -296,7 +301,11 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 88 */ { "3gpp_target_time_milliseconds",   NULL,                         qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 89 */ { "player_requires_disable_thinning", NULL,                        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     
-    /* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
+    /* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 91 */ { "monitor_wan_ip",					NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 92 */ { "monitor_wan_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 93 */ { "redis_ip_addr",					NULL,                           qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 94 */ { "redis_port",					NULL,                           qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
 
 };
 
@@ -473,10 +482,12 @@ void QTSServerPrefs::SetupAttributes()
 
 	this->SetVal(easyPrefsHTTPServicePort,				&fHTTPServicePort,				sizeof(fHTTPServicePort));
 
+    //增加EasyDarWin和Redis的外部IP和端口
+    this->SetVal(qtssPrefsEasyDarWinIP,					&fMonitorWANAddr,					sizeof(fMonitorWANAddr));
+    this->SetVal(qtssPrefsEasyDarWinPort,				&fMonitorWANPort,				sizeof(fMonitorWANPort));
+    this->SetVal(qtssPrefsRedisIP,						&fRedisAddr,						sizeof(fRedisAddr));
+	this->SetVal(qtssPrefsRedisPort,					&fRedisPort,					sizeof(fRedisPort));
     
-    
-    
-
 }
 
 

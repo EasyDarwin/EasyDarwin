@@ -112,9 +112,9 @@ class QTSServerInterface : public QTSSDictionary
                                         
         // Also increments current RTP session count
         void            IncrementTotalRTPSessions()
-            { OSMutexLocker locker(&fMutex); fNumRTPSessions++; fTotalRTPSessions++; }            
+            { OSMutexLocker locker(&fMutex); fNumRTPSessions++; fTotalRTPSessions++; RedisChangeRtpMum();}//redis            
         void            AlterCurrentRTPSessionCount(SInt32 inDifference)
-            { OSMutexLocker locker(&fMutex); fNumRTPSessions += inDifference; }
+            { OSMutexLocker locker(&fMutex); fNumRTPSessions += inDifference; RedisChangeRtpMum();}//redis
 
         //track how many sessions are playing
         void            AlterRTPPlayingSessions(SInt32 inDifference)

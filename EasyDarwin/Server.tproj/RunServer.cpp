@@ -624,7 +624,7 @@ void RunServer()
     UInt32 debugLevel = 0;
     Bool16 printHeader = false;
     Bool16 printStatus = false;
-
+	UInt32 num=0;
 
     //just wait until someone stops the server or a fatal error occurs.
     QTSS_ServerState theServerState = sServer->GetServerState();
@@ -636,6 +636,15 @@ void RunServer()
 #else
         OSThread::Sleep(1000);
 #endif
+
+		//add,redis,定时保活
+		num++;
+		if(num%5==0)
+		{
+			num=0;
+			QTSServerInterface::GetServer()->RedisTTL();
+		}
+		//
 
         LogStatus(theServerState);
 

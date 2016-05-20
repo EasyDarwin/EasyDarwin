@@ -198,7 +198,10 @@ QTSS_Error HTTPRequest::ParseRequestLine(StringParser* parser)
 			}
 			return QTSS_NoErr;
 		}
-	} 
+	}
+	else if(fMethod == httpIllegalMethod)
+		return QTSS_AttrDoesntExist;
+
     // Consume whitespace
     parser->ConsumeWhitespace();
  

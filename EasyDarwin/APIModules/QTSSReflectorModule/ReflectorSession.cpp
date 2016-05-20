@@ -108,6 +108,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo):  
         fRef.Set(fSourceID, this);
 
 		this->SetSessionName();
+		
     }
 
 	//开始转发客户端数量自检流程，不想使用自动停止推流，注释掉这一句
@@ -141,6 +142,14 @@ ReflectorSession::~ReflectorSession()
     fLocalSDP.Delete();
     fSourceID.Delete();
 
+	//将推流名称从redis中删除,使用fSessionName+".sdp"
+	char * chStreamName = new char[strlen(fSessionName)+5];
+	sprintf(chStreamName,"%s.sdp",fSessionName);
+	QTSServerInterface::GetServer()->RedisDelPushName(chStreamName);
+	qtss_printf("从redis中删除推流名称%s\n",chStreamName);
+	delete[] chStreamName;
+
+
 	if(fSessionName) delete[] fSessionName;
 }
 
@@ -161,6 +170,14 @@ QTSS_Error ReflectorSession::SetSessionName()
 		fSessionName = NEW char[strName.Len + 1];
 		::memcpy(fSessionName, strName.Ptr, strName.Len);
 		fSessionName[strName.Len] = '\0';
+
+		//将推流名称加入到redis中,使用fSessionName+".sdp"
+		char * chStreamName = new char[strlen(fSessionName)+5];
+		sprintf(chStreamName,"%s.sdp",fSessionName);
+		QTSServerInterface::GetServer()->RedisAddPushName(chStreamName);
+		qtss_printf("向redis中添加推流名称%s\n",chStreamName);
+		delete[] chStreamName;
+
 		return QTSS_NoErr;
     }
 	return QTSS_Unimplemented;
