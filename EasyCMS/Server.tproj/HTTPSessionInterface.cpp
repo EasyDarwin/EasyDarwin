@@ -16,15 +16,7 @@
 #include <errno.h>
 #include "EasyUtil.h"
 
-
-
-#if DEBUG
-	#define RTSP_SESSION_INTERFACE_DEBUGGING 1
-#else
-    #define RTSP_SESSION_INTERFACE_DEBUGGING 0
-#endif
-
-unsigned int            HTTPSessionInterface::sSessionIndexCounter = kFirstCMSSessionID;
+unsigned int            HTTPSessionInterface::sSessionIndexCounter = kFirstHTTPSessionID;
 
 QTSSAttrInfoDict::AttrInfo  HTTPSessionInterface::sAttributes[] = 
 {   

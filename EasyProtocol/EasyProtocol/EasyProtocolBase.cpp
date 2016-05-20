@@ -412,7 +412,7 @@ std::string EasyProtocol::GetSnapTypeString(int iSnapType)
 
 std::string EasyProtocol::GetMsg()
 {   		
-    return writer.write(root);;
+    return writer.write(root);
 }
 
 bool EasyProtocol::GetMsg(char *dest, int size)

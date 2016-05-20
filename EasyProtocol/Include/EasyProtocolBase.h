@@ -68,7 +68,7 @@ public:
 	template <class type>
 	bool SetBodyValue(const char* tag, type value)
 	{
-		root[EASY_TAG_ROOT][EASY_TAG_BODY][tag] = boost::lexical_cast<std::string>(value);;
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][tag] = boost::lexical_cast<std::string>(value);
 		return true;
 	}
 

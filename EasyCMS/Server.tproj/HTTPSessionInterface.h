@@ -101,7 +101,7 @@ public:
 protected:
     enum
     {
-        kFirstCMSSessionID     = 1,    //UInt32
+        kFirstHTTPSessionID     = 1,    //UInt32
     };
 
     char                fSessionID[QTSS_MAX_SESSION_ID_LENGTH];
@@ -120,10 +120,7 @@ protected:
     HTTPRequestStream   fInputStream;
     HTTPResponseStream  fOutputStream;
     
-    // Any RTP session sending interleaved data on this RTSP session must
-    // be prevented from writing while an RTSP request is in progress
     OSMutex             fSessionMutex;
-
 
     //+rt  socket we get from "accept()"
     TCPSocket           fSocket;

@@ -842,7 +842,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	//Ö±½Ó¶Ô¿Í»§¶Ë£¨EasyDarWin)½øÐÐÕýÈ·»ØÓ¦
 	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_FREE_STREAM_ACK);
 	EasyJsonValue header,body;
-	header[EASY_TAG_CSEQ]			=	req.GetHeaderValue(EASY_TAG_CSEQ);;
+	header[EASY_TAG_CSEQ]			=	req.GetHeaderValue(EASY_TAG_CSEQ);
 	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
 	header[EASY_TAG_ERROR_NUM]		=	200;
 	header[EASY_TAG_ERROR_STRING]	=	EasyProtocol::GetErrorString(200);
