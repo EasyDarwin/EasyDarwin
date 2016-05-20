@@ -32,8 +32,10 @@ EasyDarwin本身提供了一个高性能的服务端框架，Linux/Windows跨平
 > 2. 运行缺少dll时，可以将dll复制到vs的EasyDarwin.vcproj同级目录，或者设置EasyDarwin.vcproj项目熟悉，将dll路径以环境变量的形式添加到vs：
 > ![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/0.png)
 
+
 - Linux版本编译，将从Github获取的EasyDarwin源码zip文件进行unzip解压，再进行具体编译：
 
+>
 	cd ./EasyDarwin-master/EasyDarwin/
 	chmod +x ./Buildit
 	./Buildit	（./Buildit i386 or ./Buildit x64编译出相应版本的可执行文件）
