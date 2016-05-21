@@ -305,7 +305,7 @@ void LogStatus(QTSS_ServerState theServerState)
         "qtssSvrServerVersion",
         "qtssSvrServerBuild",
         "qtssSvrServerPlatform",
-        "qtssSvrRTSPServerComment",
+        "qtssSvrHTTPServerComment",
         "qtssSvrServerBuildDate",
         "qtssSvrStartupTime",
         "qtssSvrCurrentTimeMilliseconds",
@@ -563,50 +563,17 @@ void PrintStatus(Bool16 printHeader)
 {
     char* thePrefStr = NULL;
     UInt32 theLen = 0;
-    
-    if ( printHeader )
-    {                       
-        qtss_printf("     RTP-Conns RTSP-Conns HTTP-Conns  kBits/Sec   Pkts/Sec    TotConn     TotBytes   TotPktsLost          Time\n");   
-    }
 
-    //(void)QTSS_GetValueAsString(sServer, qtssRTPSvrCurConn, 0, &thePrefStr);
-    //qtss_printf( "%11s", thePrefStr);
-    //delete [] thePrefStr; thePrefStr = NULL;
-    
     (void)QTSS_GetValueAsString(sServer, qtssCurrentSessionCount, 0, &thePrefStr);
     qtss_printf( "%11s", thePrefStr);
     delete [] thePrefStr; thePrefStr = NULL;
-    
-    //(void)QTSS_GetValueAsString(sServer, qtssRTSPHTTPCurrentSessionCount, 0, &thePrefStr);
-    //qtss_printf( "%11s", thePrefStr);
-    //delete [] thePrefStr; thePrefStr = NULL;
-    
-    //UInt32 curBandwidth = 0;
-    //theLen = sizeof(curBandwidth);
-    //(void)QTSS_GetValue(sServer, qtssRTPSvrCurBandwidth, 0, &curBandwidth, &theLen);
-    //qtss_printf("%11"_U32BITARG_, curBandwidth/1024);
-    //
-    //(void)QTSS_GetValueAsString(sServer, qtssRTPSvrCurPackets, 0, &thePrefStr);
-    //qtss_printf( "%11s", thePrefStr);
-    //delete [] thePrefStr; thePrefStr = NULL;
-    //
-    //(void)QTSS_GetValueAsString(sServer, qtssRTPSvrTotalConn, 0, &thePrefStr);
-    //qtss_printf( "%11s", thePrefStr);
-    //delete [] thePrefStr; thePrefStr = NULL;
-    
-    //UInt64 totalBytes = sServer->GetTotalRTPBytes();
-    //char  displayBuff[32] = "";
-    //FormattedTotalBytesBuffer(displayBuff, sizeof(displayBuff),totalBytes);
-    //qtss_printf( "%17s", displayBuff);
-    //
-    //qtss_printf( "%11"_64BITARG_"u", sServer->GetTotalRTPPacketsLost());
-                    
+
+	//获取当前时间
     char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
     (void) QTSSRollingLog::FormatDate(theDateBuffer, false);
     qtss_printf( "%25s",theDateBuffer);
-    
+
     qtss_printf( "\n");
-    
 }
 
 Bool16 PrintHeader(UInt32 loopCount)

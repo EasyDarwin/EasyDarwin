@@ -80,8 +80,8 @@ QTSSAttrInfoDict::AttrInfo  QTSServerInterface::sAttributes[] =
     /* 3  */ { "qtssSvrServerName",             NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
     /* 4  */ { "qtssRTSPSvrServerVersion",      NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
     /* 5  */ { "qtssRTSPSvrServerBuildDate",    NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 6  */ { "qtssSvrRTSPPorts",              NULL,   qtssAttrDataTypeUInt16,     qtssAttrModeRead },
-    /* 7  */ { "qtssSvrRTSPServerHeader",       NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 6  */ { "qtssSvrHTTPPorts",              NULL,   qtssAttrDataTypeUInt16,     qtssAttrModeRead },
+    /* 7  */ { "qtssSvrHTTPServerHeader",       NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
     /* 8  */ { "qtssSvrState",					NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite  },
     /* 9  */ { "qtssSvrIsOutOfDescriptors",     IsOutOfDescriptors,     qtssAttrDataTypeBool16, qtssAttrModeRead },
     /* 10 */ { "qtssCurrentSessionCount",		NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead },
@@ -102,7 +102,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerInterface::sAttributes[] =
     
     /* 22  */ { "qtssSvrServerBuild",           NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
     /* 23  */ { "qtssSvrServerPlatform",        NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 24  */ { "qtssSvrRTSPServerComment",     NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 24  */ { "qtssSvrHTTPServerComment",     NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
 	/* 25  */ { "qtssSvrNumThinned",            NULL,   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
     /* 26  */ { "qtssSvrNumThreads",            NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe }
 };
@@ -180,14 +180,14 @@ QTSServerInterface::QTSServerInterface()
     this->SetVal(qtssSvrServerName,         sServerNameStr.Ptr,         sServerNameStr.Len);
     this->SetVal(qtssSvrServerVersion,      sServerVersionStr.Ptr,      sServerVersionStr.Len);
     this->SetVal(qtssSvrServerBuildDate,    sServerBuildDateStr.Ptr,    sServerBuildDateStr.Len);
-    this->SetVal(qtssSvrRTSPServerHeader,   sServerHeaderPtr.Ptr,       sServerHeaderPtr.Len);
+    this->SetVal(qtssSvrHTTPServerHeader,   sServerHeaderPtr.Ptr,       sServerHeaderPtr.Len);
     this->SetVal(qtssCurrentSessionCount,	&fNumHTTPSessions,		sizeof(fNumHTTPSessions));
     this->SetVal(qtssSvrStartupTime,        &fStartupTime_UnixMilli,    sizeof(fStartupTime_UnixMilli));
     this->SetVal(qtssSvrGMTOffsetInHrs,     &fGMTOffset,                sizeof(fGMTOffset));
     this->SetVal(qtssSvrCPULoadPercent,     &fCPUPercent,               sizeof(fCPUPercent));
 
     this->SetVal(qtssSvrServerBuild,        sServerBuildStr.Ptr,    sServerBuildStr.Len);
-    this->SetVal(qtssSvrRTSPServerComment,  sServerCommentStr.Ptr,  sServerCommentStr.Len);
+    this->SetVal(qtssSvrHTTPServerComment,  sServerCommentStr.Ptr,  sServerCommentStr.Len);
     this->SetVal(qtssSvrServerPlatform,     sServerPlatformStr.Ptr, sServerPlatformStr.Len);
 
     this->SetVal(qtssSvrNumThinned,         &fNumThinned,               sizeof(fNumThinned));
