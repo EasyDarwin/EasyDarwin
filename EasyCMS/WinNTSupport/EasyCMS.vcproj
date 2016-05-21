@@ -45,10 +45,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSAuthModule/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug/CMS.pch"
+				PrecompiledHeaderFile=".\Debug/EasyCMS.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -71,14 +71,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib hiredis.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyCMS.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="../../Lib;../../redis"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/CMS.pdb"
+				ProgramDatabaseFile=".\Debug/EasyCMS.pdb"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -139,8 +139,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/"
-				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS"
+				AdditionalIncludeDirectories="../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../APIModules/EasyHLSModule/;../APIModules/EasyRelayModule/;../APIModules/EasyCMSModule/"
+				PreprocessorDefinitions="WIN32;_CONSOLE;DSS_USE_API_CALLBACKS;COMMON_UTILITIES_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -164,11 +164,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
-				OutputFile="..\WinNTSupport\Release\EasyCMS.exe"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib libEasyAACEncoder.lib"
+				OutputFile="..\WinNTSupport\Release\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="..\Lib\"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\Release/DarwinStreamingServer.pdb"
 				SubSystem="1"
@@ -202,129 +202,57 @@
 		</Configuration>
 	</Configurations>
 	<References>
-		<ProjectReference
-			ReferencedProjectIdentifier="{EEEB3A6E-B4AF-4C09-AB57-7F2576CFE38D}"
-			RelativePathToProject="..\APICommonCode\APICommonCode.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{21898038-6830-4B4D-BE2C-E32641F253BC}"
-			RelativePathToProject="..\APIStubLib\APIStubLib.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{4E4F758C-7CB5-471C-BD61-FB70BF69D48B}"
-			RelativePathToProject="..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{14F332E3-1771-4908-8850-9A2581A4AED2}"
-			RelativePathToProject="..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
-			RelativePathToProject="..\..\EasyProtocol\jsoncpp\makefiles\vs71\lib_json.vcproj"
-		/>
-		<ProjectReference
-			ReferencedProjectIdentifier="{230D5525-AEA7-4037-95FE-3B45BEF98E55}"
-			RelativePathToProject="..\..\SafeStdLib\SafeInternalStdLib.vcproj"
-		/>
 	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
-			<File
-				RelativePath="..\PrefsSourceLib\FilePrefsSource.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\OSMemoryLib\OSMemory.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\PrefsSourceLib\XMLParser.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\PrefsSourceLib\XMLPrefsParser.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						ForcedIncludeFiles=""
-					/>
-				</FileConfiguration>
-			</File>
 			<Filter
 				Name="API Modules"
 				>
+				<File
+					RelativePath="..\APIModules\QTSSAuthModule\QTSSAuthModule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\APIModules\QTSSAuthModule\QTSSAuthModule.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Core"
 				>
 				<File
+					RelativePath="..\PrefsSourceLib\FilePrefsSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\FilePrefsSource.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\GenerateXMLPrefs.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\GenerateXMLPrefs.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.h"
 					>
 				</File>
 				<File
@@ -332,7 +260,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPRequestStream.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\HTTPResponseStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPResponseStream.h"
 					>
 				</File>
 				<File
@@ -340,7 +292,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\HTTPSession.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\HTTPSessionInterface.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\HTTPSessionInterface.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\CommonUtilitiesLib\OSMapEx.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\CommonUtilitiesLib\OSMapEx.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\OSMemoryLib\OSMemory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\CommonUtilitiesLib\OSRefTableEx.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\CommonUtilitiesLib\OSRefTableEx.h"
 					>
 				</File>
 				<File
@@ -348,7 +328,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\QTSSCallbacks.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\QTSSDataConverter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\QTSSDataConverter.h"
 					>
 				</File>
 				<File
@@ -356,7 +344,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\QTSSDictionary.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\QTSSErrorLogModule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\QTSSErrorLogModule.h"
 					>
 				</File>
 				<File
@@ -364,7 +360,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\QTSServer.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\QTSServerInterface.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\QTSServerInterface.h"
 					>
 				</File>
 				<File
@@ -372,7 +376,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\QTSServerPrefs.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\QTSSExpirationDate.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\QTSSExpirationDate.h"
 					>
 				</File>
 				<File
@@ -380,7 +392,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\QTSSFile.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\QTSSMessages.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\QTSSMessages.h"
 					>
 				</File>
 				<File
@@ -388,7 +408,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\QTSSModule.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\QTSSPrefs.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\QTSSPrefs.h"
 					>
 				</File>
 				<File
@@ -396,7 +424,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\RTSPProtocol.cpp"
+					RelativePath="..\Server.tproj\QTSSSocket.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Server.tproj\QTSSStream.h"
 					>
 				</File>
 				<File
@@ -404,7 +436,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Server.tproj\RunServer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\redis\win32fixes.c"
+					>
+				</File>
+				<File
 					RelativePath="..\Server.tproj\win32main.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\XMLParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\XMLParser.h"
+					>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\XMLPrefsParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\PrefsSourceLib\XMLPrefsParser.h"
 					>
 				</File>
 			</Filter>
