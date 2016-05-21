@@ -402,7 +402,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				qtss_printf("Serial = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERIAL).c_str());
 				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP).c_str());
 				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT).c_str());
-
+				
 				QTSS_RoleParams params;
 
 				string ip = startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP);
@@ -436,7 +436,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				body[EASY_TAG_SERVER_IP] = params.startStreaParams.inIP;
 				body[EASY_TAG_SERVER_PORT] = params.startStreaParams.inPort;
 
-				EasyMsgDSPushSteamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), errCode == QTSS_NoErr ? 200 : 404);
 
 				string msg = rsp.GetMsg();
 				StrPtrLen jsonContent((char*)msg.data());
@@ -487,7 +487,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
 				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
 
-				EasyMsgDSStopStreamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), errCode == QTSS_NoErr ? 200 : 404);
 				string msg = rsp.GetMsg();
 
 				//ªÿ”¶

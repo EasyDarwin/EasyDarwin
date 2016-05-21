@@ -223,6 +223,12 @@ int EasyProtocol::GetTerminalType()
 	return GetTerminalType(sTerminalType);
 }
 
+int EasyProtocol::GetMsgCSeq()
+{
+	std::string cseq = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_CSEQ].asString();
+	return atoi(cseq.c_str());
+}
+
 std::string EasyProtocol::GetErrorString(int error)
 {
 	for (int i = 0; i < sizeof(ErrorMap) / sizeof(MsgType); i++)

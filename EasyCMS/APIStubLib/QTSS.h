@@ -287,7 +287,7 @@ enum
     qtssCurrentSessionCount			= 10,   //read  //UInt32            //Current number of connected clients over standard RTSP
     
     qtssSvrHandledMethods           = 11,   //r/w       //QTSS_RTSPMethod   //The methods that the server supports. Modules should append the methods they support to this attribute in their QTSS_Initialize_Role.
-    qtssSvrModuleObjects            = 12,   //read  // this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
+    qtssSvrModuleObjects            = 12,   //read		// this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
     qtssSvrStartupTime              = 13,   //read      //QTSS_TimeVal  //Time the server started up
     qtssSvrGMTOffsetInHrs           = 14,   //read      //SInt32        //Server time zone (offset from GMT in hours)
     qtssSvrDefaultIPAddrStr         = 15,   //read      //char array    //The "default" IP address of the server as a string
