@@ -3,28 +3,31 @@
 usage()
 {
 	echo "0. clean up ./Buildit clean"
-	echo "1. build program for GM8126 ./Buildit gm8126 [target in Bin]"	
-	echo "2. build program for HI3518 ./Buildit hi3518 [target in Bin]"		
+	echo "1. build program for hisiv100 ./Buildit hisiv100 [target in Bin]"	
 }
 
 build()
 {
 	if [ "$*" = "clean" ] ; then
-		make -f nbproject/Makefile-ARM.mk QMAKE= SUBPROJECTS= .clean-conf
 		make -f nbproject/Makefile-hisiv100.mk QMAKE= SUBPROJECTS= .clean-conf
-	elif [ "$*" = "gm8126" ] ; then
-		make -f nbproject/Makefile-ARM.mk QMAKE= SUBPROJECTS= .build-conf
-	elif [ "$*" = "hi3518" ] ; then
+	elif [ "$*" = "hisiv100" ] ; then
 		make -f nbproject/Makefile-hisiv100.mk QMAKE= SUBPROJECTS= .build-conf
 	fi
 }
 
 
-if [ "$*" = "clean" -o "$*" = "gm8126" -o "$*" = "hi3518" ] ; then 
-	cd CommonUtilitiesLib
+if [ "$*" = "clean" -o "$*" = "hisiv100" ] ; then 
+	cd ../CommonUtilitiesLib
+	build $1
+	
+	cd ../EasyProtocol/jsoncpp
+	build $1    
+
+	cd ../EasyProtocol
 	build $1
 
-	cd ../
+
+	cd ../../EasyCamera
 	build $1
 else
 	usage;

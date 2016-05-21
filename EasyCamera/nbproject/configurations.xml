@@ -1,39 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="95">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="src" displayName="src" projectFiles="true">
+    <logicalFolder name="EasyCamera" displayName="EasyCamera" projectFiles="true">
       <logicalFolder name="APICommonCode"
                      displayName="APICommonCode"
                      projectFiles="true">
+        <itemPath>APICommonCode/APICommonCode.vcproj</itemPath>
+        <itemPath>APICommonCode/APICommonCode.vcxproj</itemPath>
         <itemPath>APICommonCode/QTAccessFile.cpp</itemPath>
         <itemPath>APICommonCode/QTAccessFile.h</itemPath>
         <itemPath>APICommonCode/QTSSMemoryDeleter.h</itemPath>
         <itemPath>APICommonCode/QTSSModuleUtils.cpp</itemPath>
+        <itemPath>APICommonCode/QTSSModuleUtils.h</itemPath>
         <itemPath>APICommonCode/QTSSRollingLog.cpp</itemPath>
         <itemPath>APICommonCode/QTSSRollingLog.h</itemPath>
-        <itemPath>APICommonCode/qtssmoduleutils.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="APIModules" displayName="APIModules" projectFiles="true">
+        <logicalFolder name="EasyCameraModule"
+                       displayName="EasyCameraModule"
+                       projectFiles="true">
+          <itemPath>APIModules/EasyCameraModule/EasyCameraModule.cpp</itemPath>
+          <itemPath>APIModules/EasyCameraModule/EasyCameraModule.h</itemPath>
+          <itemPath>APIModules/EasyCameraModule/EasyCameraSource.cpp</itemPath>
+          <itemPath>APIModules/EasyCameraModule/EasyCameraSource.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="EasyCMSModule"
+                       displayName="EasyCMSModule"
+                       projectFiles="true">
+          <itemPath>APIModules/EasyCMSModule/EasyCMSModule.cpp</itemPath>
+          <itemPath>APIModules/EasyCMSModule/EasyCMSModule.h</itemPath>
+          <itemPath>APIModules/EasyCMSModule/EasyCMSSession.cpp</itemPath>
+          <itemPath>APIModules/EasyCMSModule/EasyCMSSession.h</itemPath>
+        </logicalFolder>
       </logicalFolder>
       <logicalFolder name="APIStubLib" displayName="APIStubLib" projectFiles="true">
+        <itemPath>APIStubLib/APIStubLib.vcproj</itemPath>
+        <itemPath>APIStubLib/APIStubLib.vcxproj</itemPath>
+        <itemPath>APIStubLib/BuildAPIStubLib</itemPath>
         <itemPath>APIStubLib/QTSS.h</itemPath>
-        <itemPath>APIStubLib/QTSSRTSPProtocol.h</itemPath>
         <itemPath>APIStubLib/QTSS_Private.cpp</itemPath>
         <itemPath>APIStubLib/QTSS_Private.h</itemPath>
+        <itemPath>APIStubLib/makefile.apistublib.POSIX</itemPath>
       </logicalFolder>
       <logicalFolder name="HTTPUtilitiesLib"
                      displayName="HTTPUtilitiesLib"
                      projectFiles="true">
-        <itemPath>HTTPUtilitiesLib/HTTPProtocol.cpp</itemPath>
-        <itemPath>HTTPUtilitiesLib/HTTPProtocol.h</itemPath>
-        <itemPath>HTTPUtilitiesLib/HTTPRequest.cpp</itemPath>
-        <itemPath>HTTPUtilitiesLib/HTTPRequest.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPProtocol.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPProtocol.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequest.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequest.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequestStream.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPRequestStream.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPResponseStream.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPResponseStream.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/Makefile.POSIX</itemPath>
       </logicalFolder>
       <logicalFolder name="Include" displayName="Include" projectFiles="true">
+        <itemPath>Include/EasyPusherAPI.h</itemPath>
+        <itemPath>Include/EasyTypes.h</itemPath>
         <itemPath>Include/hi_net_dev_errors.h</itemPath>
         <itemPath>Include/hi_net_dev_sdk.h</itemPath>
         <itemPath>Include/hi_type.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="OSMemoryLib" displayName="OSMemoryLib" projectFiles="true">
-        <itemPath>OSMemoryLib/OSMemory.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="PrefsSourceLib"
                      displayName="PrefsSourceLib"
@@ -46,14 +73,9 @@
         <itemPath>PrefsSourceLib/XMLPrefsParser.cpp</itemPath>
         <itemPath>PrefsSourceLib/XMLPrefsParser.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="SafeStdLib" displayName="SafeStdLib" projectFiles="true">
-        <itemPath>SafeStdLib/InternalStdLib.cpp</itemPath>
-      </logicalFolder>
       <logicalFolder name="Server.tproj"
                      displayName="Server.tproj"
                      projectFiles="true">
-        <itemPath>Server.tproj/EasyMediaSource.cpp</itemPath>
-        <itemPath>Server.tproj/EasyMediaSource.h</itemPath>
         <itemPath>Server.tproj/GenerateXMLPrefs.cpp</itemPath>
         <itemPath>Server.tproj/GenerateXMLPrefs.h</itemPath>
         <itemPath>Server.tproj/QTSSCallbacks.cpp</itemPath>
@@ -89,6 +111,7 @@
       </logicalFolder>
       <itemPath>PlatformHeader.h</itemPath>
       <itemPath>defaultPaths.h</itemPath>
+      <itemPath>libClientCommondef.h</itemPath>
       <itemPath>revision.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles" displayName="头文件" projectFiles="true">
@@ -111,6 +134,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
+    <Elem>../HTTPUtilitiesLib</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -158,6 +182,49 @@
           <commandLine>-ldl -lEasyCMS -lCommonUtilitiesLib -lEasyProtocol -lNetLib -ljsoncpp -leasypush</commandLine>
         </linkerTool>
       </compileType>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/Makefile.POSIX" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcxproj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
@@ -166,35 +233,78 @@
       </item>
       <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="APICommonCode/QTSSModuleUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="APICommonCode/QTSSRollingLog.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/qtssmoduleutils.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcxproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/BuildAPIStubLib" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APIStubLib/QTSSRTSPProtocol.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS_Private.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.cpp" ex="false" tool="1" flavor2="0">
+      <item path="APIStubLib/makefile.apistublib.POSIX"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_net_dev_errors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_net_dev_sdk.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_type.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PlatformHeader.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -211,12 +321,6 @@
       <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -292,6 +396,8 @@
       <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="defaultPaths.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="libClientCommondef.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="revision.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -348,6 +454,49 @@
           <commandLine>-ldl -lEasyCMS -lCommonUtilitiesLib -lEasyProtocol -lNetLib -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/Makefile.POSIX" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcxproj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
@@ -356,35 +505,78 @@
       </item>
       <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="APICommonCode/QTSSModuleUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="APICommonCode/QTSSRollingLog.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/qtssmoduleutils.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcxproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/BuildAPIStubLib" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APIStubLib/QTSSRTSPProtocol.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS_Private.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.cpp" ex="false" tool="1" flavor2="0">
+      <item path="APIStubLib/makefile.apistublib.POSIX"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_net_dev_errors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_net_dev_sdk.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_type.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PlatformHeader.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -401,12 +593,6 @@
       <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -483,6 +669,8 @@
       </item>
       <item path="defaultPaths.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="libClientCommondef.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="revision.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
@@ -538,35 +726,123 @@
           <commandLine>-ldl -lCommonUtilitiesLib -lNetLib -leasypusher -lpthread</commandLine>
         </linkerTool>
       </compileType>
-      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/Makefile.POSIX" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcxproj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSMemoryDeleter.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="APICommonCode/QTSSRollingLog.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APICommonCode/QTSSModuleUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTSSRollingLog.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/qtssmoduleutils.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcxproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/BuildAPIStubLib" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APIStubLib/QTSSRTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS_Private.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APIStubLib/makefile.apistublib.POSIX"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_net_dev_errors.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -574,104 +850,98 @@
       </item>
       <item path="Include/hi_type.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="9">
-      </item>
       <item path="PlatformHeader.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PrefsSourceLib/FilePrefsSource.cpp" ex="false" tool="1" flavor2="9">
+      <item path="PrefsSourceLib/FilePrefsSource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/FilePrefsSource.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PrefsSourceLib/PrefsSource.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PrefsSourceLib/XMLParser.cpp" ex="false" tool="1" flavor2="9">
+      <item path="PrefsSourceLib/XMLParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="9">
+      <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSCallbacks.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSDataConverter.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSDataConverter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSDataConverter.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSDictionary.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSDictionary.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSDictionary.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSErrorLogModule.cpp"
             ex="false"
             tool="1"
-            flavor2="9">
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSSErrorLogModule.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSExpirationDate.cpp"
             ex="false"
             tool="1"
-            flavor2="9">
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSSExpirationDate.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSFile.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSFile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSMessages.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSMessages.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSMessages.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSModule.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSModule.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSModule.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSPrefs.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSSocket.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSSocket.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSStream.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServerInterface.cpp"
             ex="false"
             tool="1"
-            flavor2="9">
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSServerInterface.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSServerPrefs.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSServerPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServerPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="defaultPaths.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="libClientCommondef.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="revision.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -698,13 +968,16 @@
           <incDir>
             <pElem>APICommonCode</pElem>
             <pElem>APIStubLib</pElem>
-            <pElem>CommonUtilitiesLib</pElem>
-            <pElem>HTTPUtilitiesLib</pElem>
+            <pElem>../CommonUtilitiesLib</pElem>
+            <pElem>../HTTPUtilitiesLib</pElem>
             <pElem>Include</pElem>
             <pElem>Server.tproj</pElem>
             <pElem>PrefsSourceLib</pElem>
-            <pElem>../../EasyDarwin/CMS/Include/libEasyCMS</pElem>
             <pElem>.</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
+            <pElem>APIModules/EasyCMSModule</pElem>
+            <pElem>APIModules/EasyCameraModule</pElem>
           </incDir>
           <incFile>
             <pElem>PlatformHeader.h</pElem>
@@ -723,41 +996,131 @@
         <linkerTool>
           <output>Bin/easycamera</output>
           <linkerAddLib>
-            <pElem>Lib/arm/hisi</pElem>
-            <pElem>CommonUtilitiesLib/${CND_CONF}</pElem>
+            <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
+            <pElem>Lib/arm/hisiv100</pElem>
           </linkerAddLib>
-          <commandLine>-ldl -lCommonUtilitiesLib -lNetLib -leasypusher -lpthread</commandLine>
+          <commandLine>-ldl -lCommonUtilitiesLib -lNetLib -leasypusher -lpthread -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
-      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/Makefile.POSIX" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/APICommonCode.vcxproj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSMemoryDeleter.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="APICommonCode/QTSSRollingLog.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APICommonCode/QTSSModuleUtils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTSSRollingLog.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/qtssmoduleutils.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyCameraModule/EasyCameraSource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/APIStubLib.vcxproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APIStubLib/BuildAPIStubLib" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APIStubLib/QTSSRTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APIStubLib/QTSS_Private.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APIStubLib/QTSS_Private.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.cpp" ex="false" tool="1" flavor2="9">
+      <item path="APIStubLib/makefile.apistublib.POSIX"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPProtocol.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyPusherAPI.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
+      <item path="Include/EasyTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Include/hi_net_dev_errors.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -765,104 +1128,98 @@
       </item>
       <item path="Include/hi_type.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="9">
-      </item>
       <item path="PlatformHeader.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PrefsSourceLib/FilePrefsSource.cpp" ex="false" tool="1" flavor2="9">
+      <item path="PrefsSourceLib/FilePrefsSource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/FilePrefsSource.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="PrefsSourceLib/PrefsSource.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PrefsSourceLib/XMLParser.cpp" ex="false" tool="1" flavor2="9">
+      <item path="PrefsSourceLib/XMLParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="9">
+      <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/EasyMediaSource.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSCallbacks.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSCallbacks.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSDataConverter.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSDataConverter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSDataConverter.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSDictionary.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSDictionary.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSDictionary.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSErrorLogModule.cpp"
             ex="false"
             tool="1"
-            flavor2="9">
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSSErrorLogModule.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSExpirationDate.cpp"
             ex="false"
             tool="1"
-            flavor2="9">
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSSExpirationDate.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSFile.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSFile.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSMessages.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSMessages.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSMessages.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSModule.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSModule.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSModule.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSPrefs.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSSSocket.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSSSocket.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSSocket.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSSStream.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSServer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServerInterface.cpp"
             ex="false"
             tool="1"
-            flavor2="9">
+            flavor2="0">
       </item>
       <item path="Server.tproj/QTSServerInterface.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/QTSServerPrefs.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/QTSServerPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/QTSServerPrefs.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/RunServer.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RunServer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="9">
+      <item path="Server.tproj/main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="defaultPaths.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="libClientCommondef.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="revision.h" ex="false" tool="3" flavor2="0">
       </item>

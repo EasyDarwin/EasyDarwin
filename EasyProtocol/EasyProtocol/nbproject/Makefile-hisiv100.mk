@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=hisiv100-Linux
 CND_DLIB_EXT=so
-CND_CONF=arm
+CND_CONF=hisiv100
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 

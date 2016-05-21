@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=hisiv100-Linux-x86
+CND_PLATFORM=hisiv100-Linux
 CND_DLIB_EXT=so
 CND_CONF=hisiv100
 CND_DISTDIR=dist
@@ -35,18 +35,21 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPRequestStream.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPResponseStream.o \
 	${OBJECTDIR}/APICommonCode/QTAccessFile.o \
 	${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o \
 	${OBJECTDIR}/APICommonCode/QTSSRollingLog.o \
+	${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSModule.o \
+	${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o \
+	${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraModule.o \
+	${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraSource.o \
 	${OBJECTDIR}/APIStubLib/QTSS_Private.o \
-	${OBJECTDIR}/HTTPUtilitiesLib/HTTPProtocol.o \
-	${OBJECTDIR}/HTTPUtilitiesLib/HTTPRequest.o \
-	${OBJECTDIR}/OSMemoryLib/OSMemory.o \
 	${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLParser.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o \
-	${OBJECTDIR}/SafeStdLib/InternalStdLib.o \
-	${OBJECTDIR}/Server.tproj/EasyMediaSource.o \
 	${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o \
 	${OBJECTDIR}/Server.tproj/QTSSCallbacks.o \
 	${OBJECTDIR}/Server.tproj/QTSSDataConverter.o \
@@ -79,7 +82,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-LLib/arm/hisi -LCommonUtilitiesLib/${CND_CONF}
+LDLIBSOPTIONS=-L../CommonUtilitiesLib/${CND_CONF} -L../EasyProtocol/jsoncpp/${CND_CONF} -L../EasyProtocol/EasyProtocol/${CND_CONF} -LLib/arm/hisiv100
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -87,147 +90,162 @@ LDLIBSOPTIONS=-LLib/arm/hisi -LCommonUtilitiesLib/${CND_CONF}
 
 Bin/easycamera: ${OBJECTFILES}
 	${MKDIR} -p Bin
-	${LINK.cc} -o Bin/easycamera ${OBJECTFILES} ${LDLIBSOPTIONS} -ldl -lCommonUtilitiesLib -lNetLib -leasypusher -lpthread
+	${LINK.cc} -o Bin/easycamera ${OBJECTFILES} ${LDLIBSOPTIONS} -ldl -lCommonUtilitiesLib -lNetLib -leasypusher -lpthread -lEasyProtocol -ljsoncpp
+
+${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o: ../HTTPUtilitiesLib/HTTPProtocol.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o ../HTTPUtilitiesLib/HTTPProtocol.cpp
+
+${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o: ../HTTPUtilitiesLib/HTTPRequest.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o ../HTTPUtilitiesLib/HTTPRequest.cpp
+
+${OBJECTDIR}/_ext/b9fc5c32/HTTPRequestStream.o: ../HTTPUtilitiesLib/HTTPRequestStream.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequestStream.o ../HTTPUtilitiesLib/HTTPRequestStream.cpp
+
+${OBJECTDIR}/_ext/b9fc5c32/HTTPResponseStream.o: ../HTTPUtilitiesLib/HTTPResponseStream.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPResponseStream.o ../HTTPUtilitiesLib/HTTPResponseStream.cpp
 
 ${OBJECTDIR}/APICommonCode/QTAccessFile.o: APICommonCode/QTAccessFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTAccessFile.o APICommonCode/QTAccessFile.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTAccessFile.o APICommonCode/QTAccessFile.cpp
 
 ${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o: APICommonCode/QTSSModuleUtils.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o APICommonCode/QTSSModuleUtils.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o APICommonCode/QTSSModuleUtils.cpp
 
 ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o: APICommonCode/QTSSRollingLog.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o APICommonCode/QTSSRollingLog.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o APICommonCode/QTSSRollingLog.cpp
+
+${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSModule.o: APIModules/EasyCMSModule/EasyCMSModule.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCMSModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSModule.o APIModules/EasyCMSModule/EasyCMSModule.cpp
+
+${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o: APIModules/EasyCMSModule/EasyCMSSession.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCMSModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o APIModules/EasyCMSModule/EasyCMSSession.cpp
+
+${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraModule.o: APIModules/EasyCameraModule/EasyCameraModule.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCameraModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraModule.o APIModules/EasyCameraModule/EasyCameraModule.cpp
+
+${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraSource.o: APIModules/EasyCameraModule/EasyCameraSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCameraModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraSource.o APIModules/EasyCameraModule/EasyCameraSource.cpp
 
 ${OBJECTDIR}/APIStubLib/QTSS_Private.o: APIStubLib/QTSS_Private.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APIStubLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIStubLib/QTSS_Private.o APIStubLib/QTSS_Private.cpp
-
-${OBJECTDIR}/HTTPUtilitiesLib/HTTPProtocol.o: HTTPUtilitiesLib/HTTPProtocol.cpp 
-	${MKDIR} -p ${OBJECTDIR}/HTTPUtilitiesLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HTTPUtilitiesLib/HTTPProtocol.o HTTPUtilitiesLib/HTTPProtocol.cpp
-
-${OBJECTDIR}/HTTPUtilitiesLib/HTTPRequest.o: HTTPUtilitiesLib/HTTPRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}/HTTPUtilitiesLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HTTPUtilitiesLib/HTTPRequest.o HTTPUtilitiesLib/HTTPRequest.cpp
-
-${OBJECTDIR}/OSMemoryLib/OSMemory.o: OSMemoryLib/OSMemory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/OSMemoryLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSMemoryLib/OSMemory.o OSMemoryLib/OSMemory.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIStubLib/QTSS_Private.o APIStubLib/QTSS_Private.cpp
 
 ${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o: PrefsSourceLib/FilePrefsSource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o PrefsSourceLib/FilePrefsSource.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o PrefsSourceLib/FilePrefsSource.cpp
 
 ${OBJECTDIR}/PrefsSourceLib/XMLParser.o: PrefsSourceLib/XMLParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLParser.o PrefsSourceLib/XMLParser.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLParser.o PrefsSourceLib/XMLParser.cpp
 
 ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o: PrefsSourceLib/XMLPrefsParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
-
-${OBJECTDIR}/SafeStdLib/InternalStdLib.o: SafeStdLib/InternalStdLib.cpp 
-	${MKDIR} -p ${OBJECTDIR}/SafeStdLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SafeStdLib/InternalStdLib.o SafeStdLib/InternalStdLib.cpp
-
-${OBJECTDIR}/Server.tproj/EasyMediaSource.o: Server.tproj/EasyMediaSource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/EasyMediaSource.o Server.tproj/EasyMediaSource.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
 
 ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o: Server.tproj/GenerateXMLPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o Server.tproj/GenerateXMLPrefs.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o Server.tproj/GenerateXMLPrefs.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSCallbacks.o: Server.tproj/QTSSCallbacks.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSCallbacks.o Server.tproj/QTSSCallbacks.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSCallbacks.o Server.tproj/QTSSCallbacks.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSDataConverter.o: Server.tproj/QTSSDataConverter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDataConverter.o Server.tproj/QTSSDataConverter.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDataConverter.o Server.tproj/QTSSDataConverter.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSDictionary.o: Server.tproj/QTSSDictionary.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDictionary.o Server.tproj/QTSSDictionary.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDictionary.o Server.tproj/QTSSDictionary.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSErrorLogModule.o: Server.tproj/QTSSErrorLogModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSErrorLogModule.o Server.tproj/QTSSErrorLogModule.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSErrorLogModule.o Server.tproj/QTSSErrorLogModule.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSExpirationDate.o: Server.tproj/QTSSExpirationDate.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSExpirationDate.o Server.tproj/QTSSExpirationDate.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSExpirationDate.o Server.tproj/QTSSExpirationDate.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSFile.o: Server.tproj/QTSSFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSFile.o Server.tproj/QTSSFile.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSFile.o Server.tproj/QTSSFile.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSMessages.o: Server.tproj/QTSSMessages.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSMessages.o Server.tproj/QTSSMessages.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSMessages.o Server.tproj/QTSSMessages.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSModule.o: Server.tproj/QTSSModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSModule.o Server.tproj/QTSSModule.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSModule.o Server.tproj/QTSSModule.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSPrefs.o: Server.tproj/QTSSPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSPrefs.o Server.tproj/QTSSPrefs.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSPrefs.o Server.tproj/QTSSPrefs.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSSocket.o: Server.tproj/QTSSSocket.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSSocket.o Server.tproj/QTSSSocket.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSSocket.o Server.tproj/QTSSSocket.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSServer.o: Server.tproj/QTSServer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServer.o Server.tproj/QTSServer.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServer.o Server.tproj/QTSServer.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSServerInterface.o: Server.tproj/QTSServerInterface.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerInterface.o Server.tproj/QTSServerInterface.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerInterface.o Server.tproj/QTSServerInterface.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o: Server.tproj/QTSServerPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o Server.tproj/QTSServerPrefs.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o Server.tproj/QTSServerPrefs.cpp
 
 ${OBJECTDIR}/Server.tproj/RunServer.o: Server.tproj/RunServer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/RunServer.o Server.tproj/RunServer.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/RunServer.o Server.tproj/RunServer.cpp
 
 ${OBJECTDIR}/Server.tproj/main.o: Server.tproj/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DHI_OS_LINUX -DHISI -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/main.o Server.tproj/main.cpp
+	$(COMPILE.cc) -O2 -DHISI -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyCameraModule -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/main.o Server.tproj/main.cpp
 
 # Subprojects
 .build-subprojects:

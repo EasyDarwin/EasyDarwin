@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
 CND_CONF=Debug
 CND_DISTDIR=dist
@@ -35,18 +35,21 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPRequestStream.o \
+	${OBJECTDIR}/_ext/b9fc5c32/HTTPResponseStream.o \
 	${OBJECTDIR}/APICommonCode/QTAccessFile.o \
 	${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o \
 	${OBJECTDIR}/APICommonCode/QTSSRollingLog.o \
+	${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSModule.o \
+	${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o \
+	${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraModule.o \
+	${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraSource.o \
 	${OBJECTDIR}/APIStubLib/QTSS_Private.o \
-	${OBJECTDIR}/HTTPUtilitiesLib/HTTPProtocol.o \
-	${OBJECTDIR}/HTTPUtilitiesLib/HTTPRequest.o \
-	${OBJECTDIR}/OSMemoryLib/OSMemory.o \
 	${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLParser.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o \
-	${OBJECTDIR}/SafeStdLib/InternalStdLib.o \
-	${OBJECTDIR}/Server.tproj/EasyMediaSource.o \
 	${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o \
 	${OBJECTDIR}/Server.tproj/QTSSCallbacks.o \
 	${OBJECTDIR}/Server.tproj/QTSSDataConverter.o \
@@ -89,6 +92,26 @@ Bin/easycamera: ${OBJECTFILES}
 	${MKDIR} -p Bin
 	${LINK.cc} -o Bin/easycamera ${OBJECTFILES} ${LDLIBSOPTIONS} -ldl -lEasyCMS -lCommonUtilitiesLib -lEasyProtocol -lNetLib -ljsoncpp -leasypush
 
+${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o: ../HTTPUtilitiesLib/HTTPProtocol.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o ../HTTPUtilitiesLib/HTTPProtocol.cpp
+
+${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o: ../HTTPUtilitiesLib/HTTPRequest.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o ../HTTPUtilitiesLib/HTTPRequest.cpp
+
+${OBJECTDIR}/_ext/b9fc5c32/HTTPRequestStream.o: ../HTTPUtilitiesLib/HTTPRequestStream.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequestStream.o ../HTTPUtilitiesLib/HTTPRequestStream.cpp
+
+${OBJECTDIR}/_ext/b9fc5c32/HTTPResponseStream.o: ../HTTPUtilitiesLib/HTTPResponseStream.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPResponseStream.o ../HTTPUtilitiesLib/HTTPResponseStream.cpp
+
 ${OBJECTDIR}/APICommonCode/QTAccessFile.o: APICommonCode/QTAccessFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode
 	${RM} "$@.d"
@@ -104,25 +127,30 @@ ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o: APICommonCode/QTSSRollingLog.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o APICommonCode/QTSSRollingLog.cpp
 
+${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSModule.o: APIModules/EasyCMSModule/EasyCMSModule.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCMSModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSModule.o APIModules/EasyCMSModule/EasyCMSModule.cpp
+
+${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o: APIModules/EasyCMSModule/EasyCMSSession.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCMSModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o APIModules/EasyCMSModule/EasyCMSSession.cpp
+
+${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraModule.o: APIModules/EasyCameraModule/EasyCameraModule.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCameraModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraModule.o APIModules/EasyCameraModule/EasyCameraModule.cpp
+
+${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraSource.o: APIModules/EasyCameraModule/EasyCameraSource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCameraModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCameraModule/EasyCameraSource.o APIModules/EasyCameraModule/EasyCameraSource.cpp
+
 ${OBJECTDIR}/APIStubLib/QTSS_Private.o: APIStubLib/QTSS_Private.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APIStubLib
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIStubLib/QTSS_Private.o APIStubLib/QTSS_Private.cpp
-
-${OBJECTDIR}/HTTPUtilitiesLib/HTTPProtocol.o: HTTPUtilitiesLib/HTTPProtocol.cpp 
-	${MKDIR} -p ${OBJECTDIR}/HTTPUtilitiesLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HTTPUtilitiesLib/HTTPProtocol.o HTTPUtilitiesLib/HTTPProtocol.cpp
-
-${OBJECTDIR}/HTTPUtilitiesLib/HTTPRequest.o: HTTPUtilitiesLib/HTTPRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}/HTTPUtilitiesLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HTTPUtilitiesLib/HTTPRequest.o HTTPUtilitiesLib/HTTPRequest.cpp
-
-${OBJECTDIR}/OSMemoryLib/OSMemory.o: OSMemoryLib/OSMemory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/OSMemoryLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSMemoryLib/OSMemory.o OSMemoryLib/OSMemory.cpp
 
 ${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o: PrefsSourceLib/FilePrefsSource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
@@ -138,16 +166,6 @@ ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o: PrefsSourceLib/XMLPrefsParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
-
-${OBJECTDIR}/SafeStdLib/InternalStdLib.o: SafeStdLib/InternalStdLib.cpp 
-	${MKDIR} -p ${OBJECTDIR}/SafeStdLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SafeStdLib/InternalStdLib.o SafeStdLib/InternalStdLib.cpp
-
-${OBJECTDIR}/Server.tproj/EasyMediaSource.o: Server.tproj/EasyMediaSource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -DHI_OS_LINUX -IAPICommonCode -IAPIStubLib -ICommonUtilitiesLib -IHTTPUtilitiesLib -IInclude -IServer.tproj -IPrefsSourceLib -I../../EasyDarwin/CMS/Include/libEasyCMS -I. -include PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/EasyMediaSource.o Server.tproj/EasyMediaSource.cpp
 
 ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o: Server.tproj/GenerateXMLPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj

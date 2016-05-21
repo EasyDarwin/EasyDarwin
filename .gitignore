@@ -52,3 +52,4 @@ Movies*/
 /EasyProtocol/EasyProtocol/build/
 *.dep.inc
 *.opensdf
+/EasyCamera/build/

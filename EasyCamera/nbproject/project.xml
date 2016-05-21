@@ -11,6 +11,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../HTTPUtilitiesLib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

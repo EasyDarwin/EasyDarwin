@@ -105,7 +105,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/RTCPUtilitiesLib/RTCPSRPacket.o \
 	${OBJECTDIR}/RTPMetaInfoLib/RTPMetaInfoPacket.o \
 	${OBJECTDIR}/RTSPClientLib/ClientSession.o \
-	${OBJECTDIR}/RTSPClientLib/ClientSocket.o \
 	${OBJECTDIR}/RTSPClientLib/RTSPClient.o \
 	${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o \
 	${OBJECTDIR}/Server.tproj/HTTPSession.o \
@@ -519,11 +518,6 @@ ${OBJECTDIR}/RTSPClientLib/ClientSession.o: RTSPClientLib/ClientSession.cpp
 	${MKDIR} -p ${OBJECTDIR}/RTSPClientLib
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -DDSS_USE_API_CALLBACKS -D_REENTRANT -D__USE_POSIX -D__linux__ -I../HTTPUtilitiesLib -I../CommonUtilitiesLib -IServer.tproj -IQTFileLib/ -IRTPMetaInfoLib/ -IPrefsSourceLib/ -IAPIStubLib/ -IAPICommonCode/ -IRTCPUtilitiesLib/ -IRTSPClientLib/ -IAPIModules/QTSSFileModule/ -IAPIModules/QTSSHttpFileModule/ -IAPIModules/QTSSAccessModule/ -IAPIModules/QTSSAccessLogModule/ -IAPIModules/QTSSPOSIXFileSysModule -IAPIModules/QTSSAdminModule/ -IAPIModules/QTSSReflectorModule/ -IAPIModules/QTSSWebStatsModule/ -IAPIModules/QTSSWebDebugModule/ -IAPIModules/QTSSFlowControlModule/ -IAPIModules/QTSSMP3StreamingModule/ -IAPIModules/EasyHLSModule -IAPIModules/EasyRelayModule -IInclude -I. -I../Include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/RTSPClientLib/ClientSession.o RTSPClientLib/ClientSession.cpp
-
-${OBJECTDIR}/RTSPClientLib/ClientSocket.o: RTSPClientLib/ClientSocket.cpp 
-	${MKDIR} -p ${OBJECTDIR}/RTSPClientLib
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -DDSS_USE_API_CALLBACKS -D_REENTRANT -D__USE_POSIX -D__linux__ -I../HTTPUtilitiesLib -I../CommonUtilitiesLib -IServer.tproj -IQTFileLib/ -IRTPMetaInfoLib/ -IPrefsSourceLib/ -IAPIStubLib/ -IAPICommonCode/ -IRTCPUtilitiesLib/ -IRTSPClientLib/ -IAPIModules/QTSSFileModule/ -IAPIModules/QTSSHttpFileModule/ -IAPIModules/QTSSAccessModule/ -IAPIModules/QTSSAccessLogModule/ -IAPIModules/QTSSPOSIXFileSysModule -IAPIModules/QTSSAdminModule/ -IAPIModules/QTSSReflectorModule/ -IAPIModules/QTSSWebStatsModule/ -IAPIModules/QTSSWebDebugModule/ -IAPIModules/QTSSFlowControlModule/ -IAPIModules/QTSSMP3StreamingModule/ -IAPIModules/EasyHLSModule -IAPIModules/EasyRelayModule -IInclude -I. -I../Include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/RTSPClientLib/ClientSocket.o RTSPClientLib/ClientSocket.cpp
 
 ${OBJECTDIR}/RTSPClientLib/RTSPClient.o: RTSPClientLib/RTSPClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}/RTSPClientLib

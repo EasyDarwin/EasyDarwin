@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug i386 arm x64 ti 
+ALLCONFS=Debug i386 hisiv100 x64 ti 
 
 
 # build

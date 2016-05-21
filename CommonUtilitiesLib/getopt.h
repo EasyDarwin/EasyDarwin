@@ -87,7 +87,7 @@
 extern "C" {
 #endif
 
-//#ifdef __Win32__
+#ifdef __Win32__
 
 extern char *optarg;
 extern int optreset;
@@ -96,7 +96,7 @@ extern int opterr;
 extern int optopt;
 int getopt(int argc, char* const *argv, const char *optstr);
 
-//#endif /* WIN32 */
+#endif /* WIN32 */
 
 #ifdef __cplusplus
 }

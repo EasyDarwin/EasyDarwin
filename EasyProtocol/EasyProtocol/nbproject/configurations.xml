@@ -103,7 +103,7 @@
       <item path="EasyUtil.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
-    <conf name="arm" type="3">
+    <conf name="hisiv100" type="3">
       <toolsSet>
         <compilerSet>hisiv100|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
