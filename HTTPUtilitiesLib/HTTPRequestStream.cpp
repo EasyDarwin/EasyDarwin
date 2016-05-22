@@ -29,7 +29,7 @@ HTTPRequestStream::HTTPRequestStream(ClientSocket* sock)
     fRequest(fRequestBuffer, 0),
     fRequestPtr(NULL),
     fDecode(false),
-    fPrintMsg(false)
+    fPrintMsg(true)
 {}
 
 void HTTPRequestStream::SnarfRetreat( HTTPRequestStream &fromRequest )

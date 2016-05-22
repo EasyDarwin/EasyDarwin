@@ -135,8 +135,6 @@ SInt64 EasyCMSSession::Run()
 		{
 			case kIdle:
 				{
-					qtss_printf("kIdle state \n");
-
 					if(!IsConnected())
 					{
 						// TCPSocket未连接的情况,首先进行登录连接
@@ -145,7 +143,6 @@ SInt64 EasyCMSSession::Run()
 					else
 					{
 						// TCPSocket已连接的情况下先区分具体事件类型
-						
 						if(events & Task::kStartEvent)
 						{
 							// 已连接，但状态为离线,重新进行上线动作
@@ -190,7 +187,6 @@ SInt64 EasyCMSSession::Run()
 
 			case kReadingMessage:
 				{
-					qtss_printf("kReadingMessage state \n");
 					// 网络请求报文存储在fInputStream中
 					if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
 					{
@@ -233,8 +229,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kProcessingMessage:
 				{
-					qtss_printf("kProcessingMessage state \n");
-
 					// 处理网络报文
 					Assert( fInputStream.GetRequestBuffer() );
 					Assert(fRequest == NULL);
@@ -263,21 +257,15 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kSendingMessage:
 				{
-					qtss_printf("kSendingMessage state \n");
-
-					//发送响应报文
+					//发送报文
 					theErr = fOutputStream.Flush();
                 
 					if (theErr == EAGAIN || theErr == EINPROGRESS)
 					{
-						// If we get this error, we are currently flow-controlled and should
-						// wait for the socket to become writeable again
-						// 如果收到Socket EAGAIN错误，那么我们需要等Socket再次可写的时候再调用发送
+						qtss_printf("EasyCMSSession::Run fOutputStream.Flush() theErr:%d \n", theErr);
 						fSocket->GetSocket()->SetTask(this);
 						fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask());
 						this->ForceSameThread();
-						// We are holding mutexes, so we need to force
-						// the same thread to be used for next Run()
 						return 0;
 					}
 					else if (theErr != QTSS_NoErr)
@@ -293,7 +281,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kCleaningUp:
 				{
-					qtss_printf("kCleaningUp state \n");
 					// 清理已经处理的请求或者已经发送的报文缓存
 					// Cleaning up consists of making sure we've read all the incoming Request Body
 					// data off of the socket

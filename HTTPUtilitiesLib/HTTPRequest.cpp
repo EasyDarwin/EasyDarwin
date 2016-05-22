@@ -156,11 +156,6 @@ QTSS_Error HTTPRequest::Parse()
     QTSS_Error err = ParseRequestLine(&parser);
     if (err != QTSS_NoErr)
 		return err;
-
-	if(fHTTPType == httpResponseType)
-	{
-		qtss_printf("recv HTTP Response\n");
-	}
   
     // Parse headers and set values of headers into fFieldValues array
     err = ParseHeaders(&parser);
@@ -200,7 +195,7 @@ QTSS_Error HTTPRequest::ParseRequestLine(StringParser* parser)
 		}
 	}
 	else if(fMethod == httpIllegalMethod)
-		return QTSS_AttrDoesntExist;
+		return QTSS_BadArgument;
 
     // Consume whitespace
     parser->ConsumeWhitespace();
