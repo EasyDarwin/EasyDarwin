@@ -55,8 +55,7 @@ class QTSServer : public QTSServerInterface
         // This function *must* be called before the server creates any threads,
         // because one of its actions is to change the server to the right UID / GID.
         // Threads will only inherit these if they are created afterwards.
-        Bool16 Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource,
-                            UInt16 inPortOverride, Bool16 createListeners);
+        Bool16 Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource);
         
         //
         // InitModules

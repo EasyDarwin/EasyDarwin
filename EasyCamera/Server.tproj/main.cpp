@@ -82,10 +82,9 @@ void usage()
                                         QTSServerInterface::GetServerPlatform().Ptr,
                                         QTSServerInterface::GetServerComment().Ptr,
                                         QTSServerInterface::GetServerBuildDate().Ptr);
-    qtss_printf("usage: %s [ -d | -p port | -v | -c /myconfigpath.xml | -o /myconfigpath.conf | -x | -S numseconds | -I | -h ]\n", usage_name);
+    qtss_printf("usage: %s [ -d | -v | -c /myconfigpath.xml | -o /myconfigpath.conf | -x | -S numseconds | -I | -h ]\n", usage_name);
     qtss_printf("-d: Run in the foreground\n");
     qtss_printf("-D: Display performance data\n");
-    qtss_printf("-p XXX: Specify the default RTSP listening port of the server\n");
     qtss_printf("-c /myconfigpath.xml: Specify a config file\n");
     qtss_printf("-o /myconfigpath.conf: Specify a DSS 1.x / 2.x config file to build XML file from\n");
     qtss_printf("-x: Force create new .xml config file and exit.\n");
@@ -293,7 +292,6 @@ int main(int argc, char * argv[])
     
     //First thing to do is to read command-line arguments.
     int ch;
-    int thePort = 0; //port can be set on the command line
     int statsUpdateInterval = 0;
     QTSS_ServerState theInitialState = qtssRunningState;
     
@@ -315,7 +313,6 @@ int main(int argc, char * argv[])
                 ::exit(0);  
             case 'd':
                 dontFork = RunInForeground();
-                
                 break;                
             case 'D':
                dontFork = RunInForeground();
@@ -327,19 +324,13 @@ int main(int argc, char * argv[])
                     
                if (statsUpdateInterval == 0)
                     statsUpdateInterval = 3;
-                    
                break;            
             case 'Z':
                 Assert(optarg != NULL);// this means we didn't declare getopt options correctly or there is a bug in getopt.
                 debugLevel = (UInt32) ::atoi(optarg);
-                                
                 break;
             case 'f':
 				theXMLFilePath  = DEFAULTPATHS_ETC_DIR "streamingserver.xml";
-                break;
-            case 'p':
-                Assert(optarg != NULL);// this means we didn't declare getopt options correctly or there is a bug in getopt.
-                thePort = ::atoi(optarg);
                 break;
             case 'S':
                 dontFork = RunInForeground();
@@ -368,14 +359,6 @@ int main(int argc, char * argv[])
             default:
                 break;
         }
-    }
-    
-  
-    // Check port
-    if (thePort < 0 || thePort > 65535)
-    { 
-        qtss_printf("Invalid port value = %d max value = 65535\n",thePort);
-        exit (-1);
     }
 
     // Check expiration date
@@ -578,7 +561,7 @@ int main(int argc, char * argv[])
 #endif
 
     //This function starts, runs, and shuts down the server
-    if (::StartServer(&theXMLParser, &theMessagesSource, thePort, statsUpdateInterval, theInitialState, dontFork, debugLevel, debugOptions) != qtssFatalErrorState)
+    if (::StartServer(&theXMLParser, &theMessagesSource, statsUpdateInterval, theInitialState, dontFork, debugLevel, debugOptions) != qtssFatalErrorState)
     {    ::RunServer();
          CleanPid(false);
          exit (EXIT_SUCCESS);

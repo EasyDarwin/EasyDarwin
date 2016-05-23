@@ -95,7 +95,7 @@ QTSServer::~QTSServer()
     delete fSrvrPrefs;
 }
 
-Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, Bool16 createListeners)
+Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource)
 {
     fServerState = qtssFatalErrorState;
     sPrefsSource = inPrefsSource;
@@ -134,12 +134,6 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     fStartupTime_UnixMilli = OS::Milliseconds();
     fGMTOffset = OS::GetGMTOffset();
     
-    if ( fNumListeners == 0 )
-    {  
-		if (createListeners)
-            QTSSModuleUtils::LogError(qtssWarningVerbosity, qtssMsgNoPortsSucceeded, 0);
-    }
-
     fServerState = qtssStartingUpState;
     return true;
 }
