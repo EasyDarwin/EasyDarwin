@@ -140,7 +140,7 @@ QTSS_Error StartStream(Easy_StartStream_Params* inParams)
 
 	if(sCameraSource)
 	{
-		theErr = sCameraSource->StartStreaming(inParams->inSerial, inParams->inChannel, inParams->inStreamID, inParams->inProtocol, inParams->inIP, inParams->inPort);
+		theErr = sCameraSource->StartStreaming(inParams);
 	}
 	return theErr;
 }
@@ -151,7 +151,7 @@ QTSS_Error StopStream(Easy_StopStream_Params* inParams)
 
 	if(sCameraSource)
 	{
-		theErr = sCameraSource->StopStreaming(inParams->inSerial, inParams->inChannel, inParams->inProtocol);
+		theErr = sCameraSource->StopStreaming(inParams);
 	}
 	return theErr;
 }

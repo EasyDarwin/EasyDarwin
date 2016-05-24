@@ -310,7 +310,7 @@ SInt64 EasyCameraSource::Run()
 }
 
 
-QTSS_Error EasyCameraSource::StartStreaming(const char* inSerial, const char* inChannel, const char* inStreamID, const char* inProtocol, const char* inIP, UInt16 inPort)
+QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 {
 	if(NULL == fPusherHandle)
 	{
@@ -328,28 +328,29 @@ QTSS_Error EasyCameraSource::StartStreaming(const char* inSerial, const char* in
 
 		// 根据接收到的命令生成流信息
 		char sdpName[64] = { 0 };
-		sprintf(sdpName,"%s/%s/%s.sdp", inStreamID, inSerial, inChannel); 
+		sprintf(sdpName,"%s/%s/%s.sdp", inParams->inStreamID, inParams->inSerial, inParams->inChannel); 
 
 		// 开始推送流媒体数据
-		EasyPusher_StartStream(fPusherHandle, (char*)inIP, inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
+		EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
 	}
 
 	NetDevStartStream();
 
 	// 推送成功后，我们需要保留当前正在推送的参数信息
 	{
-		fStartStreamParams.startStreaParams.inSerial = inSerial;
-		fStartStreamParams.startStreaParams.inChannel = inChannel;
-		fStartStreamParams.startStreaParams.inStreamID = inStreamID;
-		fStartStreamParams.startStreaParams.inProtocol = inProtocol;
-		fStartStreamParams.startStreaParams.inIP = inIP;
-		fStartStreamParams.startStreaParams.inPort = inPort;
+		/*fStartStreamParams.startStreaParams.inSerial = inParams->inSerial;
+		fStartStreamParams.startStreaParams.inChannel = inParams->inChannel;
+		fStartStreamParams.startStreaParams.inStreamID = inParams->inStreamID;
+		fStartStreamParams.startStreaParams.inProtocol = inParams->inProtocol;
+		fStartStreamParams.startStreaParams.inIP = inParams->inIP;
+		fStartStreamParams.startStreaParams.inPort = inParams->inPort;*/
+		fStartStreamParams.startStreaParams = *inParams;
 	}
 
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyCameraSource::StopStreaming(const char* inSerial, const char* inChannel, const char* inProtocol)
+QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 {
 	if(fPusherHandle)
 	{

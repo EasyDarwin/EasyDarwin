@@ -32,8 +32,8 @@ public:
 
 	static void Initialize(QTSS_ModulePrefsObject modulePrefs);
 
-	QTSS_Error StartStreaming(const char* inSerial, const char* inChannel, const char* inStreamID, const char* inProtocol, const char* inIP, UInt16 inPort);
-	QTSS_Error StopStreaming(const char* inSerial, const char* inChannel, const char* inProtocol);
+	QTSS_Error StartStreaming(Easy_StartStream_Params* params);
+	QTSS_Error StopStreaming(Easy_StopStream_Params* params);
 
 	QTSS_Error PushFrame(unsigned char* frame, int len);
 
