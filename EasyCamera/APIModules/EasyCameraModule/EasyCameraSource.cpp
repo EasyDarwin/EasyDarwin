@@ -334,20 +334,22 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 		EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
 	}
 
-	NetDevStartStream();
+	QTSS_Error result = NetDevStartStream();
 
 	// 推送成功后，我们需要保留当前正在推送的参数信息
+	if (result == QTSS_NoErr)
 	{
-		/*fStartStreamParams.startStreaParams.inSerial = inParams->inSerial;
-		fStartStreamParams.startStreaParams.inChannel = inParams->inChannel;
-		fStartStreamParams.startStreaParams.inStreamID = inParams->inStreamID;
-		fStartStreamParams.startStreaParams.inProtocol = inParams->inProtocol;
-		fStartStreamParams.startStreaParams.inIP = inParams->inIP;
-		fStartStreamParams.startStreaParams.inPort = inParams->inPort;*/
-		fStartStreamParams.startStreaParams = *inParams;
+		memcpy(fStartStreamInfo.serial, inParams->inSerial, strlen(inParams->inSerial) + 1);
+		memcpy(fStartStreamInfo.channel, inParams->inChannel, strlen(inParams->inChannel) + 1);
+		memcpy(fStartStreamInfo.streamId, inParams->inStreamID, strlen(inParams->inStreamID) + 1);
+		memcpy(fStartStreamInfo.protocal, inParams->inProtocol, strlen(inParams->inProtocol) + 1);
+		memcpy(fStartStreamInfo.ip, inParams->inIP, strlen(inParams->inIP) + 1);
+		fStartStreamInfo.port = inParams->inPort;
+		
+		return QTSS_NoErr;
 	}
 
-	return QTSS_NoErr;
+	return result;
 }
 
 QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
