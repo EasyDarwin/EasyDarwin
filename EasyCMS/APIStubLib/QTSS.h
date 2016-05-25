@@ -276,8 +276,8 @@ enum
     qtssSvrServerName               = 3,    //read  //char array        //Name of the server
     qtssSvrServerVersion            = 4,    //read  //char array        //Version of the server
     qtssSvrServerBuildDate          = 5,    //read  //char array        //When was the server built?
-    qtssSvrRTSPPorts                = 6,    //read  // NOT PREEMPTIVE SAFE!//UInt16         //Indexed parameter: all the ports the server is listening on
-    qtssSvrRTSPServerHeader         = 7,    //read  //char array        //Server: header that the server uses to respond to RTSP clients
+    qtssSvrHTTPPorts                = 6,    //read  // NOT PREEMPTIVE SAFE!//UInt16         //Indexed parameter: all the ports the server is listening on
+    qtssSvrHTTPServerHeader         = 7,    //read  //char array        //Server: header that the server uses to respond to RTSP clients
 
     // These parameters are NOT pre-emptive safe, they cannot be accessed
     // via. QTSS_GetValuePtr. Some exceptions noted below
@@ -287,7 +287,7 @@ enum
     qtssCurrentSessionCount			= 10,   //read  //UInt32            //Current number of connected clients over standard RTSP
     
     qtssSvrHandledMethods           = 11,   //r/w       //QTSS_RTSPMethod   //The methods that the server supports. Modules should append the methods they support to this attribute in their QTSS_Initialize_Role.
-    qtssSvrModuleObjects            = 12,   //read  // this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
+    qtssSvrModuleObjects            = 12,   //read		// this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
     qtssSvrStartupTime              = 13,   //read      //QTSS_TimeVal  //Time the server started up
     qtssSvrGMTOffsetInHrs           = 14,   //read      //SInt32        //Server time zone (offset from GMT in hours)
     qtssSvrDefaultIPAddrStr         = 15,   //read      //char array    //The "default" IP address of the server as a string
@@ -302,7 +302,7 @@ enum
 
 	qtssSvrServerBuild              = 22,   //read      //char array //build of the server
     qtssSvrServerPlatform           = 23,   //read      //char array //Platform (OS) of the server
-    qtssSvrRTSPServerComment        = 24,   //read      //char array //RTSP comment for the server header    
+    qtssSvrHTTPServerComment        = 24,   //read      //char array //HTTP comment for the server header    
     qtssSvrNumThinned               = 25,   //read      //SInt32    //Number of thinned sessions
     qtssSvrNumThreads               = 26,   //read     //UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
     qtssSvrNumParams                = 27

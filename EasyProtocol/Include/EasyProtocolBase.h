@@ -54,6 +54,8 @@ public:
 	int GetAppType();
 	int GetTerminalType();
 
+	int GetMsgCSeq();
+
 	std::string GetSerialNumber();
     void Reset();
     

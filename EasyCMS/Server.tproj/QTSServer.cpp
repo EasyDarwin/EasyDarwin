@@ -418,7 +418,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
         if  (fListeners[count6]->GetLocalAddr() != INADDR_LOOPBACK)
         {
             UInt16 thePort = fListeners[count6]->GetLocalPort();
-            (void)this->SetValue(qtssSvrRTSPPorts, portIndex, &thePort, sizeof(thePort), QTSSDictionary::kDontObeyReadOnly);
+            (void)this->SetValue(qtssSvrHTTPPorts, portIndex, &thePort, sizeof(thePort), QTSSDictionary::kDontObeyReadOnly);
             portIndex++;
         }
     }

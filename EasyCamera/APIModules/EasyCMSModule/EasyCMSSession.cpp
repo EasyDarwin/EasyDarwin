@@ -135,8 +135,6 @@ SInt64 EasyCMSSession::Run()
 		{
 			case kIdle:
 				{
-					qtss_printf("kIdle state \n");
-
 					if(!IsConnected())
 					{
 						// TCPSocket未连接的情况,首先进行登录连接
@@ -145,7 +143,6 @@ SInt64 EasyCMSSession::Run()
 					else
 					{
 						// TCPSocket已连接的情况下先区分具体事件类型
-						
 						if(events & Task::kStartEvent)
 						{
 							// 已连接，但状态为离线,重新进行上线动作
@@ -190,7 +187,6 @@ SInt64 EasyCMSSession::Run()
 
 			case kReadingMessage:
 				{
-					qtss_printf("kReadingMessage state \n");
 					// 网络请求报文存储在fInputStream中
 					if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
 					{
@@ -233,8 +229,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kProcessingMessage:
 				{
-					qtss_printf("kProcessingMessage state \n");
-
 					// 处理网络报文
 					Assert( fInputStream.GetRequestBuffer() );
 					Assert(fRequest == NULL);
@@ -263,21 +257,15 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kSendingMessage:
 				{
-					qtss_printf("kSendingMessage state \n");
-
-					//发送响应报文
+					//发送报文
 					theErr = fOutputStream.Flush();
                 
 					if (theErr == EAGAIN || theErr == EINPROGRESS)
 					{
-						// If we get this error, we are currently flow-controlled and should
-						// wait for the socket to become writeable again
-						// 如果收到Socket EAGAIN错误，那么我们需要等Socket再次可写的时候再调用发送
+						qtss_printf("EasyCMSSession::Run fOutputStream.Flush() theErr:%d \n", theErr);
 						fSocket->GetSocket()->SetTask(this);
 						fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask());
 						this->ForceSameThread();
-						// We are holding mutexes, so we need to force
-						// the same thread to be used for next Run()
 						return 0;
 					}
 					else if (theErr != QTSS_NoErr)
@@ -293,7 +281,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kCleaningUp:
 				{
-					qtss_printf("kCleaningUp state \n");
 					// 清理已经处理的请求或者已经发送的报文缓存
 					// Cleaning up consists of making sure we've read all the incoming Request Body
 					// data off of the socket
@@ -403,6 +390,8 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP).c_str());
 				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT).c_str());
 
+				//TODO::这里需要对传入的Serial/StreamID/Channel做一下容错处理
+				
 				QTSS_RoleParams params;
 
 				string ip = startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP);
@@ -436,7 +425,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				body[EASY_TAG_SERVER_IP] = params.startStreaParams.inIP;
 				body[EASY_TAG_SERVER_PORT] = params.startStreaParams.inPort;
 
-				EasyMsgDSPushSteamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), errCode == QTSS_NoErr ? 200 : 404);
 
 				string msg = rsp.GetMsg();
 				StrPtrLen jsonContent((char*)msg.data());
@@ -487,7 +476,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
 				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
 
-				EasyMsgDSStopStreamACK rsp(body, 1, errCode == QTSS_NoErr ? 200 : 404);
+				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), errCode == QTSS_NoErr ? 200 : 404);
 				string msg = rsp.GetMsg();
 
 				//回应
@@ -576,21 +565,21 @@ QTSS_Error EasyCMSSession::DSRegister()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyCMSSession::UpdateSnapCache(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
+QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_PostSnap_Params* inParams)
 {
 	if(fSnapReq == NULL)
 	{
-		char szTime[32] = {0,};
+		char szTime[32] = { 0, };
 		EasyJsonValue body;
 		body[EASY_TAG_SERIAL] = sEasy_Serial;
 
-		string type = EasyProtocol::GetSnapTypeString(snapType);
+		string type = EasyProtocol::GetSnapTypeString(inParams->snapType);
 
 		body[EASY_TAG_TYPE] = type.c_str();
 		body[EASY_TAG_TIME] = szTime;	
-		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
+		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)inParams->snapPtr, inParams->snapLen);
 		
-		fSnapReq = new EasyMsgDSPostSnapREQ(body,1);
+		fSnapReq = new EasyMsgDSPostSnapREQ(body, 1);
 	}
 
 	this->Signal(Task::kUpdateEvent);

@@ -32,7 +32,7 @@ class HTTPResponseStream : public ResizeableStringFormatter
         // on the socket.
         HTTPResponseStream(ClientSocket* inSocket, TimeoutTask* inTimeoutTask)
             :   ResizeableStringFormatter(fOutputBuf, kOutputBufferSizeInBytes),
-                fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask),fPrintMsg(false) {}
+                fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask),fPrintMsg(true) {}
         
         virtual ~HTTPResponseStream() {}
 

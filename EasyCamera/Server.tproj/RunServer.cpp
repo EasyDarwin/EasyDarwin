@@ -59,14 +59,13 @@
 QTSServer* sServer = NULL;
 int sStatusUpdateInterval = 0;
 Bool16 sHasPID = false;
-UInt64 sLastStatusPackets = 0;
 UInt64 sLastDebugPackets = 0;
 SInt64 sLastDebugTotalQuality = 0;
 #ifdef __sgi__ 
 #include <sched.h>
 #endif
 
-QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, int statsUpdateInterval, QTSS_ServerState inInitialState, Bool16 inDontFork, UInt32 debugLevel, UInt32 debugOptions)
+QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, int statsUpdateInterval, QTSS_ServerState inInitialState, Bool16 inDontFork, UInt32 debugLevel, UInt32 debugOptions)
 {
     //Mark when we are done starting up. If auto-restart is enabled, we want to make sure
     //to always exit with a status of 0 if we encountered a problem WHILE STARTING UP. This
@@ -83,9 +82,9 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     Socket::Initialize();
     SocketUtils::Initialize(!inDontFork);
 
-#if !MACOSXEVENTQUEUE
-    ::select_startevents();//initialize the select() implementation of the event queue
-#endif
+//#if !MACOSXEVENTQUEUE
+//    ::select_startevents();//initialize the select() implementation of the event queue
+//#endif
     
     //start the server
     QTSSDictionaryMap::Initialize();
@@ -96,11 +95,8 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     
     // re-parse config file
     inPrefsSource->Parse();
-
-	// EasyCamera只对接服务,不做本地监听
-    Bool16 createListeners = false;
-    
-    sServer->Initialize(inPrefsSource, inMessagesSource, inPortOverride,createListeners);
+   
+    sServer->Initialize(inPrefsSource, inMessagesSource);
 
     if (inInitialState == qtssShuttingDownState)
     {  
@@ -108,10 +104,6 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
         return inInitialState;
     }
     
-    //OSCharArrayDeleter runGroupName(sServer->GetPrefs()->GetRunGroupName());
-    //OSCharArrayDeleter runUserName(sServer->GetPrefs()->GetRunUserName());
-    //OSThread::SetPersonality(runUserName.GetObject(), runGroupName.GetObject());
-
     if (sServer->GetServerState() != qtssFatalErrorState)
     {
         UInt32 numShortTaskThreads = 0;
