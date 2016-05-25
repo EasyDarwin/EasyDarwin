@@ -873,7 +873,7 @@ bool QTSServerInterface::RedisInit()//Á¬½Óredis³É¹¦Ö®ºóµ÷ÓÃ¸Ãº¯ÊýÖ´ÐÐÒ»Ð©³õÊ¼»¯µ
 		OSRefIt itRef;
 		string strAllDevices;
 		mutexMap->Lock();
-		for(itRef=deviceMap->begin();itRef!=deviceMap->end();itRef++)
+		for(itRef = deviceMap->begin();itRef != deviceMap->end();itRef++)
 		{
 			strDevice *deviceInfo=(((HTTPSessionInterface*)(itRef->second->GetObjectPtr()))->GetDeviceInfo());
 			strAllDevices=strAllDevices+' '+deviceInfo->serial_;

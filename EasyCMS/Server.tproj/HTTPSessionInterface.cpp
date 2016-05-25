@@ -249,6 +249,10 @@ void HTTPSessionInterface::UnRegDevSession()
 {
 	if (fAuthenticated)
 	{
+		char msgStr[512];
+		qtss_snprintf(msgStr, sizeof(msgStr), "Device unregister，Device_serial[%s]\n", fDevice.serial_.c_str());
+		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+
 		QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(fDevice.serial_);//add
 		//在redis上删除设备
 		QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());

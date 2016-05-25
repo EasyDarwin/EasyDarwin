@@ -715,6 +715,10 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 		if(regErr == OS_NoErr)
 		{
 			//ÔÚredisÉÏÔö¼ÓÉè±¸
+			char msgStr[512];
+			qtss_snprintf(msgStr, sizeof(msgStr), "Device register£¬Device_serial[%s]\n", fDevice.serial_.c_str());
+			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+
 			QTSServerInterface::GetServer()->RedisAddDevName(fDevice.serial_.c_str());
 			fAuthenticated = true;
 		}
@@ -775,7 +779,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	*/
 
 	EasyDarwin::Protocol::EasyProtocol req(json);
-	//´Ósession/serial/channel.sdp ÖÐ½âÎö³öserialºÍchannel
+	//´Óserial/channel.sdp ÖÐ½âÎö³öserialºÍchannel
 	string strStreamName	=	req.GetBodyValue(EASY_TAG_SERIAL);//Á÷Ãû³Æ
 	if(strStreamName.size()<=0)
 		return QTSS_BadArgument;
@@ -784,16 +788,12 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	if(iPos1 == string::npos )
 		return QTSS_BadArgument;
 
-	int iPos2 = strStreamName.find('/',iPos1+1);
+	int iPos2 = strStreamName.find('.',iPos1+1);
 	if(iPos2 == string::npos )
 		return QTSS_BadArgument;
 
-	int iPos3 = strStreamName.find('/',iPos2+1);
-	if(iPos3 == string::npos )
-		return QTSS_BadArgument;
-
-	string  strDeviceSerial = strStreamName.substr(iPos1+1,iPos2-iPos1-1);
-	string  strCameraSerial = strStreamName.substr(iPos2+1,iPos3-iPos2-1);
+	string  strDeviceSerial = strStreamName.substr(0,iPos1);
+	string  strCameraSerial = strStreamName.substr(iPos1+1,iPos2-iPos1-1);
 
 	//string strDeviceSerial	=	req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ÐòÁÐºÅ
 	//string strCameraSerial	=	req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
@@ -1146,6 +1146,12 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 
 	string strCSeq			=	req.GetHeaderValue(EASY_TAG_CSEQ);//Õâ¸öÊÇ¹Ø¼ü×Ö
 	string strStateCode     =   req.GetHeaderValue(EASY_TAG_ERROR_NUM);//×´Ì¬Âë
+
+
+	if(strCameraSerial.empty())
+		strCameraSerial = "01";
+	if(strStreamID.empty())
+		strCameraSerial = "1";
 
 	UInt32 uCSeq = atoi(strCSeq.c_str());
 	int iStateCode = atoi(strStateCode.c_str());
