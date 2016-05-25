@@ -386,27 +386,31 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 		case MSG_SD_PUSH_STREAM_REQ:
 			{
 				EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
-				qtss_printf("Serial = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERIAL).c_str());
-				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP).c_str());
-				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT).c_str());
+
+				string serial = startStreamReq.GetBodyValue(EASY_TAG_SERIAL);
+				string ip = startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP);
+				string port = startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT);
+				string protocol = startStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
+				string channel = startStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
+				string streamID = startStreamReq.GetBodyValue(EASY_TAG_STREAM_ID);
+
+				qtss_printf("Serial = %s\n", serial.c_str());
+				qtss_printf("Server_IP = %s\n", ip.c_str());
+				qtss_printf("Server_Port = %s\n", port.c_str());
 
 				//TODO::这里需要对传入的Serial/StreamID/Channel做一下容错处理
+				if (serial.empty() || ip.empty() || port.empty())
+				{
+					return QTSS_ValueNotFound;
+				}
 				
 				QTSS_RoleParams params;
 
-				string ip = startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP);
 				params.startStreaParams.inIP = ip.c_str();
-				string port = startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT);
 				params.startStreaParams.inPort = atoi(port.c_str());
-				string serial = startStreamReq.GetBodyValue(EASY_TAG_SERIAL);
 				params.startStreaParams.inSerial = serial.c_str();
-				string protocol = startStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
 				params.startStreaParams.inProtocol = protocol.c_str();
-
-				string channel = startStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				params.startStreaParams.inChannel = channel.c_str();
-
-				string streamID = startStreamReq.GetBodyValue(EASY_TAG_STREAM_ID);
 				params.startStreaParams.inStreamID = streamID.c_str();
 
 				QTSS_Error	errCode = QTSS_NoErr;
