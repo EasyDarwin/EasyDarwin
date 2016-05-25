@@ -6,7 +6,7 @@
 */
 /*
 	File:       HTTPSession.cpp
-	Contains:   实现对服务单元每一个Session会话的网络报文处理
+	Contains:   EasyCMS HTTPSession
 */
 
 #include "HTTPSession.h"
@@ -40,7 +40,7 @@ HTTPSession::HTTPSession( )
 {
 	this->SetTaskName("HTTPSession");
 
-	//所有HTTPSession数量(包括EasyCameraSession/EasyNVRSession/EasyHTTPSession类型)
+	//All EasyCameraSession/EasyNVRSession/EasyHTTPSession
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(1);
 
 	fModuleState.curModule = NULL;
@@ -178,7 +178,7 @@ SInt64 HTTPSession::Run()
 					fInputSocketP->RequestEvent(EV_RE);
 					// We are holding mutexes, so we need to force
 					// the same thread to be used for next Run()
-					return 0;//返回0表示有事件才进行通知，返回>0表示规定事件后调用Run
+					return 0;
 				}
 
 				if(theErr != QTSS_NoErr)
@@ -186,7 +186,6 @@ SInt64 HTTPSession::Run()
 					ExecNetMsgErrorReqHandler(httpBadRequest);
 				}
 
-				//每一步都检测响应报文是否已完成，完成则直接进行回复响应
 				if (fOutputStream.GetBytesWritten() > 0)
 				{
 					fState = kSendingResponse;
@@ -199,26 +198,27 @@ SInt64 HTTPSession::Run()
 
 		case kPreprocessingRequest:
 			{
-				QTSS_Error theErr = ProcessRequest();//处理请求
+				QTSS_Error theErr = ProcessRequest();
 
-				if (fOutputStream.GetBytesWritten() > 0)//每一步都检测响应报文是否已完成，完成则直接进行回复响应
+				if (fOutputStream.GetBytesWritten() > 0)
 				{
-					delete[] fRequestBody;//释放数据部分
+					delete[] fRequestBody;
 					fRequestBody = NULL;
 					fState = kSendingResponse;
 					break;
 				}
-				//走到这说明没有进行请求处理，应该是等待其他HTTPSession的回应
+
 				if(fInfo.uWaitingTime>0)
 				{
 					this->ForceSameThread();
 					// We are holding mutexes, so we need to force
 					// the same thread to be used for next Run()
 					UInt32 iTemp=fInfo.uWaitingTime;
-					fInfo.uWaitingTime = 0;//下次等待时间需要重新被赋值
-					return iTemp;//等待下一个周期被调用
+					fInfo.uWaitingTime = 0;
+					return iTemp;
 				}
-				delete[] fRequestBody;//释放数据部分,注意在此可能指针为空
+
+				delete[] fRequestBody;
 				fRequestBody = NULL;
 				fState = kCleaningUp;
 				break;
@@ -228,7 +228,6 @@ SInt64 HTTPSession::Run()
 			{
 				if (fOutputStream.GetBytesWritten() == 0)
 				{
-					//返回HTTP报文
 					ExecNetMsgErrorReqHandler(httpInternalServerError);
 					fState = kSendingResponse;
 					break;
@@ -240,14 +239,12 @@ SInt64 HTTPSession::Run()
 			{
 				Assert(fRequest != NULL);
 
-				//发送响应报文
 				err = fOutputStream.Flush();
 
 				if (err == EAGAIN)
 				{
 					// If we get this error, we are currently flow-controlled and should
 					// wait for the socket to become writeable again
-					//如果收到Socket EAGAIN错误，那么我们需要等Socket再次可写的时候再调用发送
 					fSocket.RequestEvent(EV_WR);
 					this->ForceSameThread();
 					// We are holding mutexes, so we need to force
@@ -281,17 +278,14 @@ SInt64 HTTPSession::Run()
 					}
 				}
 
-				//一次请求的读取、处理、响应过程完整，等待下一次网络报文！
 				this->CleanupRequest();
 				fState = kReadingRequest;
 			}
 		}
 	} 
 
-	//清空Session占用的所有资源
 	this->CleanupRequest();
 
-	//Session引用数为0，返回-1后，系统会将此Session删除
 	if (fObjectHolders == 0)
 		return -1;
 
@@ -322,7 +316,6 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 		pOutputStream->Flush();
 	}
 
-	//将对HTTPSession的引用减少一
 	if(fObjectHolders && decrement)
 		DecrementObjectHolderCount();
 
@@ -334,7 +327,6 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 
 QTSS_Error HTTPSession::SetupRequest()
 {
-	//解析请求报文
 	QTSS_Error theErr = fRequest->Parse();
 	if (theErr != QTSS_NoErr)
 		return QTSS_BadArgument;
@@ -342,9 +334,7 @@ QTSS_Error HTTPSession::SetupRequest()
 	if (fRequest->GetRequestPath() != NULL)
 	{
 		string sRequest(fRequest->GetRequestPath());
-		//数据是放在Json部分还是放在HTTP头部分
-		//1.数据放在头部则是 post http://****/123,则123为数据部分，或者使用post /123则123为数据部分。
-		//2.数据放在JSON部分，则是post http://****/,头部不包含数据部分，跳过进入JSON部分的处理。
+
 		if (!sRequest.empty())
 		{
 			boost::to_lower(sRequest);
@@ -359,25 +349,24 @@ QTSS_Error HTTPSession::SetupRequest()
 			{
 				if(path[0]=="api"&&path[1]=="getdevicelist")
 				{
-					ExecNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());//获得设备列表
+					ExecNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());
 					return 0;
 				}
 				else if(path[0]=="api"&&path[1]=="getdeviceinfo")
 				{
-					ExecNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());//获得某个设备详细信息
+					ExecNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());
 					return 0;
 				}
 				else if(path[0]=="api"&&path[1]=="getdevicestream")
 				{
-					ExecNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());//客户端的直播请求
+					ExecNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());
 					return 0;
 				}
 			}
 
-			// 执行到这的都说明需要进行异常处理
 			EasyMsgExceptionACK rsp;
 			string msg = rsp.GetMsg();
-			// 构造响应报文(HTTP Header)
+
 			HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 			httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
 			if (!msg.empty())
@@ -405,9 +394,9 @@ QTSS_Error HTTPSession::SetupRequest()
 	char *body = NULL;
 	UInt32 bodySizeBytes = 0;
 
-	//获取具体Content json数据部分
+	//READ json Content
 
-	//1、获取json部分长度
+	//1、get json content length
 	StrPtrLen* lengthPtr = fRequest->GetHeaderValue(httpContentLengthHeader);
 
 	StringParser theContentLenParser(lengthPtr);
@@ -474,9 +463,12 @@ QTSS_Error HTTPSession::SetupRequest()
 		Assert(theErr == QTSS_NoErr);
 		return QTSS_WouldBlock;
 	}
-	//执行到这说明已经接收了完整的HTTPHeader+JSON部分
-	fRequestBody = theRequestBody;//将数据部分保存起来，让ProcessRequest函数去处理请求。
+
+	// get complete HTTPHeader+JSONContent
+	fRequestBody = theRequestBody;
 	Assert(theErr == QTSS_NoErr);
+
+	//TODO:://
 	if(theBufferOffset < 2048)
 		qtss_printf("Recv message: %s\n", fRequestBody);
 
@@ -532,7 +524,7 @@ QTSS_Error HTTPSession::DumpRequestData()
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
+QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 {
 	if(!fAuthenticated) return httpUnAuthorized;
 
@@ -541,14 +533,14 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	string image			=	parse.GetBodyValue(EASY_TAG_IMAGE);	
 	string channel			=	parse.GetBodyValue(EASY_TAG_CHANNEL);
 	string device_serial	=	parse.GetBodyValue(EASY_TAG_SERIAL);
-	string strType			=	parse.GetBodyValue(EASY_TAG_TYPE);//类型就是图片的扩展名
-	string strTime			=	parse.GetBodyValue(EASY_TAG_TIME);//时间属性
+	string strType			=	parse.GetBodyValue(EASY_TAG_TYPE);
+	string strTime			=	parse.GetBodyValue(EASY_TAG_TIME);
 
-	if(channel.empty())//为可选项填充默认值
+	if(channel.empty())
 		channel = "01";
-	if(strTime.empty())//如果没有时间属性，则服务端自动为其生成一个
+	if(strTime.empty())
 		strTime = EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx);
-	else//过滤Time里面的非法字符，2015-07-20 12:55:30->20150720125530
+	else//Time Filter 2015-07-20 12:55:30->20150720125530
 	{
 		EasyUtil::DelChar(strTime,'-');
 		EasyUtil::DelChar(strTime,':');
@@ -558,22 +550,19 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	if( (image.size() <= 0) || (device_serial.size() <= 0) || (strType.size() <= 0) || (strTime.size() <= 0) )
 		return QTSS_BadArgument;
 
-	//先对数据进行Base64解码
 	image = EasyUtil::Base64Decode(image.data(), image.size());
 
-	//文件夹路径，由快照路径+Serial合成
 	char jpgDir[512] = { 0 };
 	qtss_sprintf(jpgDir,"%s%s", QTSServerInterface::GetServer()->GetPrefs()->GetSnapLocalPath() ,device_serial.c_str());
 	OS::RecursiveMakeDir(jpgDir);
 
 	char jpgPath[512] = { 0 };
 
-	//文件全路径，文件名由Serial_Channel_Time.Type合成
+	//local path
 	qtss_sprintf(jpgPath,"%s/%s_%s_%s.%s", jpgDir, device_serial.c_str(), channel.c_str(),strTime.c_str(),strType.c_str());
 
-	//保存快照数据
 	FILE* fSnap = ::fopen(jpgPath, "wb");
-	if(fSnap==NULL)//错误原因有很多，比如扩展名不规范，文件名不规范,该文件已经被其他文件打开
+	if(fSnap==NULL)
 	{
 		//DWORD e=GetLastError();
 		return QTSS_NoErr;
@@ -581,6 +570,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	fwrite(image.data(), 1, image.size(), fSnap);
 	::fclose(fSnap);
 	
+	//web path
 	char snapURL[512] = { 0 };
 	qtss_sprintf(snapURL, "%s%s/%s_%s_%s.%s",QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(),channel.c_str(), strTime.c_str(), strType.c_str());
 	fDevice.HoldSnapPath(snapURL,channel);
@@ -601,7 +591,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
 
-	//构造响应报文(HTTP Header)
+	//HTTP Header
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(!msg.empty()?httpOK:httpNotImplemented);
 	if (!msg.empty())
@@ -614,15 +604,15 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)//设备快照请求
 	HTTPResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
 
-	//将相应报文添加到HTTP输出缓冲区中
 	if (!msg.empty()) 
 		pOutputStream->Put((char*)msg.data(), msg.length());
+
 	return QTSS_NoErr;
 }
 
 QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 {
-	//构造响应报文(HTTP Header)
+	//HTTP Header
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(errCode);
 
@@ -1022,7 +1012,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			msgTemp.uCseq = uCSeq;//当前请求的cseq
 
 			pDevSession->InsertToMsgMap(uDevCseq,msgTemp);//加入到Map中等待客户端的回应
-			IncrementObjectHolderCount();//增加引用，防止设备回应时当前Session已经终止
+			IncrementObjectHolderCount();
 			Easy_SendMsg(pDevSession,(char*)buffer.c_str(),buffer.size(),false,false);
 			DeviceMap->Release(strDeviceSerial);//////////////////////////////////////////////////////////--
 
