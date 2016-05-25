@@ -29,7 +29,6 @@
 #endif
 
 using namespace std;
-
 static const int sWaitDeviceRspTimeout = 10;
 
 HTTPSession::HTTPSession( )
@@ -54,8 +53,8 @@ HTTPSession::HTTPSession( )
 
 HTTPSession::~HTTPSession()
 {
-	fLiveSession = false; //used in Clean up request to remove the RTP session.
-	this->CleanupRequest();// Make sure that all our objects are deleted
+	fLiveSession = false;
+	this->CleanupRequest();
 	
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(-1);
 
@@ -68,7 +67,7 @@ SInt64 HTTPSession::Run()
 	QTSS_Error err = QTSS_NoErr;
 	QTSSModule* theModule = NULL;
 	UInt32 numModules = 0;
-	// Some callbacks look for this struct in the thread object
+
 	OSThreadDataSetter theSetter(&fModuleState, NULL);
 
 	if (events & Task::kKillEvent)
@@ -115,8 +114,6 @@ SInt64 HTTPSession::Run()
 
 				if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
 				{
-					//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
-					//但，还不能构成一个整体报文，还要继续等待读取...
 					fInputSocketP->RequestEvent(EV_RE);
 					return 0;
 				}
@@ -151,18 +148,13 @@ SInt64 HTTPSession::Run()
 				Assert( fInputStream.GetRequestBuffer() );
 
 				Assert(fRequest == NULL);
-				//根据具体请求报文构造HTTPRequest请求类
 				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
-				//在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
-				//在此过程中，此Session的Socket不进行任何网络数据的读/写；
 				fReadMutex.Lock();
 				fSessionMutex.Lock();
 
-				//清空发送缓冲区
 				fOutputStream.ResetBytesWritten();
 
-				//网络请求超过了缓冲区，返回Bad Request
 				if ((err == E2BIG) || (err == QTSS_BadArgument))
 				{
 					ExecNetMsgErrorReqHandler(httpBadRequest);
@@ -176,12 +168,10 @@ SInt64 HTTPSession::Run()
 
 		case kFilteringRequest:
 			{
-				//刷新Session保活时间
 				fTimeoutTask.RefreshTimeout();
 
-				//对请求报文进行解析
 				QTSS_Error theErr = SetupRequest();
-				//当SetupRequest步骤未读取到完整的网络报文，需要进行等待
+
 				if(theErr == QTSS_WouldBlock)
 				{
 					this->ForceSameThread();
@@ -189,10 +179,12 @@ SInt64 HTTPSession::Run()
 					// We are holding mutexes, so we need to force
 					// the same thread to be used for next Run()
 					return 0;//返回0表示有事件才进行通知，返回>0表示规定事件后调用Run
-
 				}
-				//TODO:应该再就加上theErr的判断！QTSS_NoErr就应该直接断开连接或者返回错误码，否则下面不一定够得到有效的数据
-				//
+
+				if(theErr != QTSS_NoErr)
+				{
+					ExecNetMsgErrorReqHandler(httpBadRequest);
+				}
 
 				//每一步都检测响应报文是否已完成，完成则直接进行回复响应
 				if (fOutputStream.GetBytesWritten() > 0)
@@ -465,7 +457,7 @@ QTSS_Error HTTPSession::SetupRequest()
 	if (theErr == QTSS_RequestFailed)
 	{
 		OSCharArrayDeleter charArrayPathDeleter(theRequestBody);
-		//
+
 		// NEED TO RETURN HTTP ERROR RESPONSE
 		return QTSS_RequestFailed;
 	}
