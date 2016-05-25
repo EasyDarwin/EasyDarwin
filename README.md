@@ -42,6 +42,9 @@
 ## 基本流程 ##
 ![](http://www.easydarwin.org/skin/easydarwin/images/architecture20150825.png)
 
+## 视频教程 ##
+
+CSDN课堂：[http://edu.csdn.net/agency/index/213](http://edu.csdn.net/agency/index/213 "EasyDarwin")
 
 ## 商务合作 ##
 #### 我们欢迎的合作模式： ####
