@@ -68,7 +68,7 @@ private:
 	{
 		char serial[32];
 		char ip[32];
-		char protocal[16];
+		char protocol[16];
 		char channel[8];
 		char streamId[64];
 		UInt16 port;

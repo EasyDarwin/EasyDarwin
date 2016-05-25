@@ -389,6 +389,8 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				qtss_printf("Serial = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERIAL).c_str());
 				qtss_printf("Server_IP = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP).c_str());
 				qtss_printf("Server_Port = %s\n", startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT).c_str());
+
+				//TODO::这里需要对传入的Serial/StreamID/Channel做一下容错处理
 				
 				QTSS_RoleParams params;
 

@@ -175,8 +175,8 @@ QTSS_Error EasyCameraSource::NetDevStartStream()
 	//如果未登录,返回失败
 	if(!CameraLogin()) return QTSS_RequestFailed;
 	
-	//已经在流传输中，返回Easy_AttrNameExists
-	if(m_bStreamFlag) return QTSS_AttrNameExists;
+	//已经在流传输中，返回QTSS_NoErr
+	if(m_bStreamFlag) return QTSS_NoErr;
 
 	OSMutexLocker locker(this->GetMutex());
 
@@ -312,44 +312,82 @@ SInt64 EasyCameraSource::Run()
 
 QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 {
-	if(NULL == fPusherHandle)
-	{
-		// 实际这里应该都是先通过Camera硬件的SDK接口获取到主/子码流具体流媒体参数信息动态设置的
-		EASY_MEDIA_INFO_T	mediainfo;
-		memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
-		mediainfo.u32VideoCodec =   EASY_SDK_VIDEO_CODEC_H264;
-		mediainfo.u32AudioCodec	=	EASY_SDK_AUDIO_CODEC_G711A;
-		mediainfo.u32AudioSamplerate = 8000;
-		mediainfo.u32AudioChannel = 1;
-		mediainfo.u32VideoFps = 25;
+	QTSS_Error theErr = QTSS_NoErr;
 
-		fPusherHandle = EasyPusher_Create();
-		EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
+	//1.先开始与流媒体服务器建立流媒体传输
+	//2.设备开启视频流获取
+	//3.返回给调用者当前正在推送的流媒体参数信息
+	do{
+		if(NULL == fPusherHandle)
+		{
+			//TODO::实际这里应该都是先通过Camera硬件的SDK接口获取到主/子码流具体流媒体参数信息动态设置的
+			EASY_MEDIA_INFO_T	mediainfo;
+			memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
+			mediainfo.u32VideoCodec =   EASY_SDK_VIDEO_CODEC_H264;
+			mediainfo.u32AudioCodec	=	EASY_SDK_AUDIO_CODEC_G711A;
+			mediainfo.u32AudioSamplerate = 8000;
+			mediainfo.u32AudioChannel = 1;
+			mediainfo.u32VideoFps = 25;
 
-		// 根据接收到的命令生成流信息
-		char sdpName[64] = { 0 };
-		sprintf(sdpName,"%s/%s/%s.sdp", inParams->inStreamID, inParams->inSerial, inParams->inChannel); 
+			fPusherHandle = EasyPusher_Create();
+			if(fPusherHandle == NULL)
+			{
+				//EasyPusher初始化创建失败,可能是EasyPusher SDK未授权
+				theErr = QTSS_Unimplemented;
+				break;
+			}
 
-		// 开始推送流媒体数据
-		EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
-	}
+			// 注册流推送事件回调
+			EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
 
-	QTSS_Error result = NetDevStartStream();
+			// 根据接收到的命令生成流信息
+			char sdpName[128] = { 0 };
+			sprintf(sdpName,"%s/%s/%s.sdp", inParams->inStreamID, inParams->inSerial, inParams->inChannel); 
 
-	// 推送成功后，我们需要保留当前正在推送的参数信息
-	if (result == QTSS_NoErr)
-	{
-		memcpy(fStartStreamInfo.serial, inParams->inSerial, strlen(inParams->inSerial) + 1);
-		memcpy(fStartStreamInfo.channel, inParams->inChannel, strlen(inParams->inChannel) + 1);
-		memcpy(fStartStreamInfo.streamId, inParams->inStreamID, strlen(inParams->inStreamID) + 1);
-		memcpy(fStartStreamInfo.protocal, inParams->inProtocol, strlen(inParams->inProtocol) + 1);
-		memcpy(fStartStreamInfo.ip, inParams->inIP, strlen(inParams->inIP) + 1);
-		fStartStreamInfo.port = inParams->inPort;
+			// 开始推送流媒体数据
+			EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
+
+			// 保存最新推送参数
+			strncpy(fStartStreamInfo.serial, inParams->inSerial, strlen(inParams->inSerial));
+			fStartStreamInfo.serial[strlen(inParams->inSerial)] = 0;
+			
+			strncpy(fStartStreamInfo.channel, inParams->inChannel, strlen(inParams->inChannel));
+			fStartStreamInfo.channel[strlen(inParams->inChannel)] = 0;
+
+			strncpy(fStartStreamInfo.streamId, inParams->inStreamID, strlen(inParams->inStreamID));
+			fStartStreamInfo.streamId[strlen(inParams->inStreamID)] = 0;
+
+			strncpy(fStartStreamInfo.protocol, inParams->inProtocol, strlen(inParams->inProtocol));
+			fStartStreamInfo.protocol[strlen(inParams->inProtocol)] = 0;
+
+			memcpy(fStartStreamInfo.ip, inParams->inIP, strlen(inParams->inIP));
+			fStartStreamInfo.ip[strlen(inParams->inIP)] = 0;
+
+			fStartStreamInfo.port = inParams->inPort;
+		}
 		
-		return QTSS_NoErr;
+		theErr = NetDevStartStream();
+
+	}while(0);
+
+
+	if (theErr != QTSS_NoErr)
+	{	
+		// 如果推送不成功，需要释放之前已经开启的资源
+		StopStreaming(NULL);
+	}
+	else
+	{
+		// 推送成功，将当前正在推送的参数信息回调
+		inParams->inChannel = fStartStreamInfo.channel;
+		inParams->inIP = fStartStreamInfo.ip;
+		inParams->inPort = fStartStreamInfo.port;
+		inParams->inProtocol = fStartStreamInfo.protocol;
+		inParams->inSerial = fStartStreamInfo.serial;
+		inParams->inStreamID = fStartStreamInfo.streamId;
 	}
 
-	return result;
+	return theErr;
 }
 
 QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
