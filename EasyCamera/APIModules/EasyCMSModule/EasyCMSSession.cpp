@@ -563,21 +563,21 @@ QTSS_Error EasyCMSSession::DSRegister()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyCMSSession::UpdateSnapCache(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType)
+QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_PostSnap_Params* inParams)
 {
 	if(fSnapReq == NULL)
 	{
-		char szTime[32] = {0,};
+		char szTime[32] = { 0, };
 		EasyJsonValue body;
 		body[EASY_TAG_SERIAL] = sEasy_Serial;
 
-		string type = EasyProtocol::GetSnapTypeString(snapType);
+		string type = EasyProtocol::GetSnapTypeString(inParams->snapType);
 
 		body[EASY_TAG_TYPE] = type.c_str();
 		body[EASY_TAG_TIME] = szTime;	
-		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)snapPtr, snapLen);
+		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)inParams->snapPtr, inParams->snapLen);
 		
-		fSnapReq = new EasyMsgDSPostSnapREQ(body,1);
+		fSnapReq = new EasyMsgDSPostSnapREQ(body, 1);
 	}
 
 	this->Signal(Task::kUpdateEvent);

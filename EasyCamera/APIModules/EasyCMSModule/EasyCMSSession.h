@@ -78,7 +78,7 @@ public:
 	QTSS_Error DSPostSnap();
 
 	// 更新最新快照缓存
-	QTSS_Error UpdateSnapCache(unsigned char *snapPtr, int snapLen, EasyDarwinSnapType snapType = EASY_SNAP_TYPE_JPEG);
+	QTSS_Error UpdateSnapCache(Easy_PostSnap_Params* params);
 
 	// 处理HTTPRequest请求报文
 	QTSS_Error ProcessMessage();

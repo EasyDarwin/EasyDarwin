@@ -64,8 +64,19 @@ private:
 	//客户端信息操作互斥量
 	OSMutex fMutex;
 
+	typedef struct StartStreamInfo_Tag
+	{
+		char serial[32];
+		char ip[32];
+		char protocal[16];
+		char channel[8];
+		char streamId[64];
+		UInt16 port;
+	} StartStreamInfo;
+
 	// 当前正在推送流的信息
-	QTSS_RoleParams fStartStreamParams;
+	//QTSS_RoleParams fStartStreamParams;
+	StartStreamInfo fStartStreamInfo;
 
 	SInt64 Run();
 };

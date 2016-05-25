@@ -103,7 +103,7 @@ QTSS_Error Post_EasyCMSModule(Easy_PostSnap_Params* inParams)
 
 	if(sCMSSession)
 	{
-		theErr = sCMSSession->UpdateSnapCache(inParams->snapPtr, inParams->snapLen, (EasyDarwinSnapType)inParams->snapType);
+		theErr = sCMSSession->UpdateSnapCache(inParams);
 	}
 	return theErr;
 }
