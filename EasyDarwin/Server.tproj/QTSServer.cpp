@@ -274,12 +274,10 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 
 	//for redis
 	//获取redis和CMS的IP和端口
-	char * chTemp = "127.0.0.1";
-	strcpy(fRedisIP,chTemp);
-	delete[] chTemp;
+	sprintf(fRedisIP, "%s","127.0.0.1");
 	fRedisPort= 6379;
 
-	chTemp=fSrvrPrefs->GetEasyDarWinIP();
+	char* chTemp=fSrvrPrefs->GetEasyDarWinIP();
 	strcpy(fEasyDarWInIP,chTemp);
 	delete[] chTemp;
 	fEasyDarWInPort=fSrvrPrefs->GetEasyDarWinPort();
