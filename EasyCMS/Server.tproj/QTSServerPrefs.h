@@ -118,9 +118,6 @@ class QTSServerPrefs : public QTSSPrefs
 
 		char* GetSnapLocalPath()	{ return this->GetStringPref(qtssPrefsSnapLocalPath); }
 		char* GetSnapWebPath()		{ return this->GetStringPref(qtssPrefsSnapWebPath); }
-
-		char* GetRedisIP()			{return this->GetStringPref(qtssPrefsRedisIPAddr); }
-        UInt16 GetRedisPort(){return fRedisPort;}
     private:
         UInt32      fSessionTimeoutInSecs;
         
@@ -148,11 +145,9 @@ class QTSServerPrefs : public QTSSPrefs
 
         UInt16 fMonitorLANPort;    
         UInt16 fMonitorWANPort;
-		UInt16 fRedisPort;
 
         char   fMonitorWANAddr[20];
         char   fMonitorLANAddr[20];
-		char   fRedisAddr[20];
 		char   fServiceID[64];
         
         enum

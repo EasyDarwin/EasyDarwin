@@ -179,12 +179,10 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     }
 	
 	//for redis
-	char * chTemp=fSrvrPrefs->GetRedisIP();
-	fRedisIP=chTemp;
-	delete[] chTemp;
-	fRedisPort=fSrvrPrefs->GetRedisPort();
+	fRedisIP = "127.0.0.1";
+	fRedisPort= 6379;
 
-	chTemp=fSrvrPrefs->GetMonitorWANIP();
+	char* chTemp=fSrvrPrefs->GetMonitorWANIP();
 	fCMSIP=chTemp;
 	delete[] chTemp;
 	fCMSPort=fSrvrPrefs->GetMonitorWANPort();
