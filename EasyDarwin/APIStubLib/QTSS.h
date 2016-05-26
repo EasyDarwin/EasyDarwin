@@ -867,10 +867,8 @@ enum
 	//增加EasyDarWin和Redis的外部IP和端口
 	qtssPrefsEasyDarWinIP					= 91,	//"easydarwin_ip_addr"
 	qtssPrefsEasyDarWinPort					= 92,	//easydarwin_port
-	qtssPrefsRedisIP						= 93,	//redis_ip_addr
-	qtssPrefsRedisPort						= 94,	//redis_port
     
-	qtssPrefsNumParams                      = 95
+	qtssPrefsNumParams                      = 93
 };
 
 typedef UInt32 QTSS_PrefsAttributes;

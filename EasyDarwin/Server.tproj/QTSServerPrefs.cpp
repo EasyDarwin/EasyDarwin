@@ -198,9 +198,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
      
 	//增加EasyDarWin和Redis的外部IP和端口
     { kDontAllowMultipleValues, "127.0.0.1",     NULL                        },  //easydarwin_ip_addr
-    { kDontAllowMultipleValues, "554",			 NULL                        },  //easydarwin_port
-    { kDontAllowMultipleValues, "127.0.0.1",     NULL                        },  //redis_ip_addr
-	{ kDontAllowMultipleValues, "6379",			 NULL						 }  //redis_port
+    { kDontAllowMultipleValues, "554",			 NULL                        }  //easydarwin_port
     
     
     
@@ -303,9 +301,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     
     /* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 91 */ { "monitor_wan_ip",					NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 92 */ { "monitor_wan_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 93 */ { "redis_ip_addr",					NULL,                           qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 94 */ { "redis_port",					NULL,                           qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
+	/* 92 */ { "monitor_wan_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
 
 };
 
@@ -484,10 +480,7 @@ void QTSServerPrefs::SetupAttributes()
 
     //增加EasyDarWin和Redis的外部IP和端口
     this->SetVal(qtssPrefsEasyDarWinIP,					&fMonitorWANAddr,					sizeof(fMonitorWANAddr));
-    this->SetVal(qtssPrefsEasyDarWinPort,				&fMonitorWANPort,				sizeof(fMonitorWANPort));
-    this->SetVal(qtssPrefsRedisIP,						&fRedisAddr,						sizeof(fRedisAddr));
-	this->SetVal(qtssPrefsRedisPort,					&fRedisPort,					sizeof(fRedisPort));
-    
+    this->SetVal(qtssPrefsEasyDarWinPort,				&fMonitorWANPort,				sizeof(fMonitorWANPort));    
 }
 
 

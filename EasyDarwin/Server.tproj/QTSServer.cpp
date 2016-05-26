@@ -65,6 +65,7 @@
 #include "EasyRelayModule.h"
 #include "EasyHLSModule.h"
 #include "EasyCMSModule.h"
+#include "EasyRedisModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
@@ -273,12 +274,10 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 
 	//for redis
 	//获取redis和CMS的IP和端口
-	char * chTemp=fSrvrPrefs->GetRedisIP();
-	strcpy(fRedisIP,chTemp);
-	delete[] chTemp;
-	fRedisPort=fSrvrPrefs->GetRedisPort();
+	sprintf(fRedisIP, "%s","127.0.0.1");
+	fRedisPort= 6379;
 
-	chTemp=fSrvrPrefs->GetEasyDarWinIP();
+	char* chTemp=fSrvrPrefs->GetEasyDarWinIP();
 	strcpy(fEasyDarWInIP,chTemp);
 	delete[] chTemp;
 	fEasyDarWInPort=fSrvrPrefs->GetEasyDarWinPort();
@@ -806,6 +805,10 @@ void    QTSServer::LoadCompiledInModules()
     QTSSModule* theAdminModule = new QTSSModule("QTSSAdminModule");
     (void)theAdminModule->SetupModule(&sCallbacks, &QTSSAdminModule_Main);
     (void)AddModule(theAdminModule);
+
+    QTSSModule* theRedisModule = new QTSSModule("EasyRedisModule");
+    (void)theRedisModule->SetupModule(&sCallbacks, &EasyRedisModule_Main);
+    (void)AddModule(theRedisModule);
 
     //QTSSModule* theMP3StreamingModule = new QTSSModule("QTSSMP3StreamingModule");
     //(void)theMP3StreamingModule->SetupModule(&sCallbacks, &QTSSMP3StreamingModule_Main);

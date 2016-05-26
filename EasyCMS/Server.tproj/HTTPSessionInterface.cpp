@@ -16,7 +16,7 @@
 #include <errno.h>
 #include "EasyUtil.h"
 
-unsigned int            HTTPSessionInterface::sSessionIndexCounter = kFirstHTTPSessionID;
+unsigned int HTTPSessionInterface::sSessionIndexCounter = kFirstHTTPSessionID;
 
 QTSSAttrInfoDict::AttrInfo  HTTPSessionInterface::sAttributes[] = 
 {   
@@ -31,7 +31,7 @@ QTSSAttrInfoDict::AttrInfo  HTTPSessionInterface::sAttributes[] =
     /* 7 */ { "EasyHTTPSesType",            NULL,           qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
     /* 8 */ { "EasyHTTPSesSerial",			NULL,           qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
     
-    /* 9 */{ "EasyHTTPSessionID",			NULL,			qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe  },
+    /* 9 */ { "EasyHTTPSessionID",			NULL,			qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe  },
     /* 10 */{ "EasyHTTPSesLocalPort",       SetupParams,    qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
     /* 11 */{ "EasyHTTPSesRemotePort",      SetupParams,    qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
     

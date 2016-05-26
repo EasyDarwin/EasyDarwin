@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "QTSSAuthModule.h"
+#include "EasyAuthModule.h"
 #include "OSHeaders.h"
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
@@ -25,19 +25,14 @@
 #include"OSMapEx.h"
 static OSMapEx sSessionIdMap;
 //add
-//Turns on printfs that are useful for debugging
-#define FLOW_CONTROL_DEBUGGING 0
-
 
 // STATIC VARIABLES
-
 static QTSS_ModulePrefsObject sPrefs = NULL;
 static QTSS_PrefsObject     sServerPrefs    = NULL;
 static QTSS_ServerObject    sServer     = NULL;
 
-
 // FUNCTION PROTOTYPES
-static QTSS_Error   QTSSAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
+static QTSS_Error   EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
 static QTSS_Error   Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error   RereadPrefs();
@@ -61,12 +56,12 @@ SInt64 SessionIDCheckTask::Run()
 	sSessionIdMap.CheckTimeoutAndDelete();//检查超时的SessionID并进行删除
 	return 60*1000;//一分钟一检查
 }
-QTSS_Error QTSSAuthModule_Main(void* inPrivateArgs)
+QTSS_Error EasyAuthModule_Main(void* inPrivateArgs)
 {
-	return _stublibrary_main(inPrivateArgs, QTSSAuthModuleDispatch);
+	return _stublibrary_main(inPrivateArgs, EasyAuthModuleDispatch);
 }
 
-QTSS_Error  QTSSAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock)
+QTSS_Error  EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock)
 {
 	switch (inRole)
 	{
@@ -91,6 +86,11 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(QTSS_NONCE_ROLE);
 	(void)QTSS_AddRole(QTSS_AUTH_ROLE);
+
+    // Tell the server our name!
+    static char* sModuleName = "EasyAuthModule";
+    ::strcpy(inParams->outModuleName, sModuleName);
+
 	return QTSS_NoErr;
 }
 
@@ -104,7 +104,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	//string strTest("123456");
 	//sSessionIdMap.Insert(strTest);
-	pSessionIdTask=new SessionIDCheckTask();//add,检查SessionID是否超时的TASK
+	pSessionIdTask = new SessionIDCheckTask();//add,检查SessionID是否超时的TASK
 	return RereadPrefs();
 }
 

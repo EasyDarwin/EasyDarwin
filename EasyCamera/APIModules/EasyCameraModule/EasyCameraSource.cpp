@@ -8,6 +8,8 @@
 #include "QTSServerInterface.h"
 #include "EasyProtocolDef.h"
 
+#include <map>
+
 static unsigned int sLastVPTS = 0;
 static unsigned int sLastAPTS = 0;
 
@@ -27,8 +29,6 @@ static char*            sDefaultCameraPassword	= "admin";
 static UInt32			sStreamType				= 1;
 static UInt32			sDefaultStreamType		= 1;
 
-
-// 初始化读取配置文件中各项配置
 void EasyCameraSource::Initialize(QTSS_ModulePrefsObject modulePrefs)
 {
 	delete [] sCamera_IP;
@@ -104,6 +104,17 @@ HI_S32 NETSDK_APICALL OnEventCallback(	HI_U32 u32Handle,	/* 句柄 */
 										HI_VOID* pUserData  /* 用户数据*/
                                 )
 {
+	if (u32Event == HI_NET_DEV_ABORTIBE_DISCONNECTED || u32Event == HI_NET_DEV_NORMAL_DISCONNECTED || u32Event == HI_NET_DEV_CONNECT_FAILED)
+	{
+		EasyCameraSource* easyCameraSource = (EasyCameraSource*)pUserData;
+		easyCameraSource->fCameraLogin = false;
+	}
+	else if (u32Event == HI_NET_DEV_CONNECTED)
+	{
+		EasyCameraSource* easyCameraSource = (EasyCameraSource*)pUserData;
+		easyCameraSource->fCameraLogin = true;
+	}
+
 	return HI_SUCCESS;
 }
 
@@ -131,6 +142,9 @@ EasyCameraSource::EasyCameraSource()
 
 	//SDK初始化，全局调用一次
 	HI_NET_DEV_Init();
+
+	//登陆摄像机，否则无法
+	CameraLogin();
 
 	fTimeoutTask.RefreshTimeout();
 }
@@ -309,25 +323,60 @@ SInt64 EasyCameraSource::Run()
 	return 0;
 }
 
-
 QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
-	//1.先开始与流媒体服务器建立流媒体传输
-	//2.设备开启视频流获取
-	//3.返回给调用者当前正在推送的流媒体参数信息
 	do{
-		if(NULL == fPusherHandle)
+		if (NULL == fPusherHandle)
 		{
-			//TODO::实际这里应该都是先通过Camera硬件的SDK接口获取到主/子码流具体流媒体参数信息动态设置的
-			EASY_MEDIA_INFO_T	mediainfo;
+			if(!CameraLogin())
+			{
+				theErr = QTSS_RequestFailed;
+				break;
+			}
+
+			std::map<HI_U32, Easy_U32> mapSDK2This;
+			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G711] = EASY_SDK_AUDIO_CODEC_G711A;
+			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G726] = EASY_SDK_AUDIO_CODEC_G726;
+
+			EASY_MEDIA_INFO_T mediainfo;
 			memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
-			mediainfo.u32VideoCodec =   EASY_SDK_VIDEO_CODEC_H264;
-			mediainfo.u32AudioCodec	=	EASY_SDK_AUDIO_CODEC_G711A;
+			mediainfo.u32VideoCodec = EASY_SDK_VIDEO_CODEC_H264;
+
+			HI_S32 s32Ret = HI_FAILURE;
+			HI_S_Video sVideo;
+			sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
+			sVideo.blFlag = sStreamType?HI_TRUE:HI_FALSE;
+
+			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
+			if (s32Ret == HI_SUCCESS)
+			{
+				mediainfo.u32VideoFps = sVideo.u32Frame;
+			}
+			else
+			{
+				mediainfo.u32VideoFps = 25;
+			}
+
+			HI_S_Audio sAudio;
+			sAudio.u32Channel = HI_NET_DEV_CHANNEL_1;
+			sAudio.blFlag = sStreamType?HI_TRUE:HI_FALSE;
+
+			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_AUDIO_PARAM, &sAudio, sizeof(HI_S_Audio));
+			if (s32Ret == HI_SUCCESS)
+			{
+				mediainfo.u32AudioCodec = mapSDK2This[sAudio.u32Type];
+				mediainfo.u32AudioChannel = sAudio.u32Channel;
+			}
+			else
+			{
+				mediainfo.u32AudioCodec	= EASY_SDK_AUDIO_CODEC_G711A;
+				mediainfo.u32AudioChannel = 1;
+			}
+			
 			mediainfo.u32AudioSamplerate = 8000;
-			mediainfo.u32AudioChannel = 1;
-			mediainfo.u32VideoFps = 25;
+			
 
 			fPusherHandle = EasyPusher_Create();
 			if(fPusherHandle == NULL)
@@ -368,7 +417,7 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 		
 		theErr = NetDevStartStream();
 
-	}while(0);
+	} while(0);
 
 
 	if (theErr != QTSS_NoErr)

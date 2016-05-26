@@ -193,7 +193,7 @@ EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(const char *msg)
 
 // MSG_SD_STREAM_STOP_REQ消息构造
 EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq, size_t error)
-: EasyProtocol(MSG_SD_STREAM_STOP_REQ)
+: EasyProtocol(MSG_DS_STREAM_STOP_ACK)
 {
 	SetHeaderValue(EASY_TAG_CSEQ, cseq);
 	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
