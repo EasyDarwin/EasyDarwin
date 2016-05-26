@@ -336,6 +336,9 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 			HI_S32 s32Ret = HI_FAILURE;
 			HI_S_Video sVideo;
+			sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
+			sVideo.blFlag = sStreamType?HI_TRUE:HI_FALSE;
+
 			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
 			if (s32Ret == HI_SUCCESS)
 			{
@@ -345,7 +348,11 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 			{
 				mediainfo.u32VideoFps = 25;
 			}
+
 			HI_S_Audio sAudio;
+			sAudio.u32Channel = HI_NET_DEV_CHANNEL_1;
+			sAudio.blFlag = sStreamType?HI_TRUE:HI_FALSE;
+
 			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_AUDIO_PARAM, &sAudio, sizeof(HI_S_Audio));
 			if (s32Ret == HI_SUCCESS)
 			{
