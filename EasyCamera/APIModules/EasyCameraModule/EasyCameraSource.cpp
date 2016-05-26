@@ -319,13 +319,15 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
-	//1.先开始与流媒体服务器建立流媒体传输
-	//2.设备开启视频流获取
-	//3.返回给调用者当前正在推送的流媒体参数信息
 	do{
 		if (NULL == fPusherHandle)
 		{
-			//TODO::实际这里应该都是先通过Camera硬件的SDK接口获取到主/子码流具体流媒体参数信息动态设置的
+			if(!CameraLogin())
+			{
+				theErr = QTSS_RequestFailed;
+				break;
+			}
+
 			std::map<HI_U32, Easy_U32> mapSDK2This;
 			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G711] = EASY_SDK_AUDIO_CODEC_G711A;
 			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G726] = EASY_SDK_AUDIO_CODEC_G726;
