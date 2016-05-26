@@ -284,6 +284,7 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 	fEasyDarWInPort=fSrvrPrefs->GetEasyDarWinPort();
 
 	ConRedis();//Á¬½Óredis
+
 	//for redis
     
     fServerState = qtssStartingUpState;
