@@ -99,7 +99,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	//string strTest("123456");
 	//sSessionIdMap.Insert(strTest);
-	pSessionIdTask=new SessionIDCheckTask();//add,检查SessionID是否超时的TASK
+	pSessionIdTask = new SessionIDCheckTask();//add,检查SessionID是否超时的TASK
 	return RereadPrefs();
 }
 
