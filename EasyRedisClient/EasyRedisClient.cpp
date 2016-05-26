@@ -1,11 +1,11 @@
 /*
-	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
 /* 
- * File:   AVSRedisClient.cpp
+ * File:   EasyRedisClient.cpp
  * Author: Wellsen
  * 
  * Created on 2015年4月23日, 下午5:11
@@ -28,7 +28,7 @@
 #define RedisContextPtr(redis) ((redisContext*)(redis))
 #define RedisReplyPtr(reply) ((redisReply*)(reply))
 
-AVSRedisClient::AVSRedisClient()
+EasyRedisClient::EasyRedisClient()
 : fRedisContext(NULL)
 {
 #ifdef _WIN32
@@ -37,7 +37,7 @@ AVSRedisClient::AVSRedisClient()
 #endif
 }
 
-AVSRedisClient::~AVSRedisClient()
+EasyRedisClient::~EasyRedisClient()
 {
     if (fRedisContext != NULL)
     {
@@ -48,7 +48,7 @@ AVSRedisClient::~AVSRedisClient()
 #endif
 }
 
-int AVSRedisClient::Connect(const char* host, std::size_t port)
+int EasyRedisClient::Connect(const char* host, std::size_t port)
 {
     fRedisContext = redisConnect(host, port);
     if (fRedisContext != NULL)
@@ -56,7 +56,7 @@ int AVSRedisClient::Connect(const char* host, std::size_t port)
     return -1;
 }
 
-int AVSRedisClient::ConnectWithTimeOut(const char* host, std::size_t port, std::size_t timeout)
+int EasyRedisClient::ConnectWithTimeOut(const char* host, std::size_t port, std::size_t timeout)
 {
     struct timeval timeout_ = {timeout, 0};
     fRedisContext = redisConnectWithTimeout(host, port, timeout_);
@@ -65,7 +65,7 @@ int AVSRedisClient::ConnectWithTimeOut(const char* host, std::size_t port, std::
     return -1;
 }
 
-int AVSRedisClient::Delete(const char* key)
+int EasyRedisClient::Delete(const char* key)
 {
     if (fRedisContext != NULL)
     {
@@ -77,7 +77,7 @@ int AVSRedisClient::Delete(const char* key)
     return -1;
 }
 
-int AVSRedisClient::Get(const char* key, std::string& value)
+int EasyRedisClient::Get(const char* key, std::string& value)
 {
     int ret = -1;
 
@@ -85,10 +85,10 @@ int AVSRedisClient::Get(const char* key, std::string& value)
     {
         redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "GET %s", key);
         ret = GetValue(reply, value);
-        //printf("[AVSRedisClient]GET: %s\n",  reply->str);        
+        //printf("[EasyRedisClient]GET: %s\n",  reply->str);        
         if(ret < 0)
         {
-            printf("AVSRedisClient::Get(key[%s]) error: %s\n", key, value.c_str());
+            printf("EasyRedisClient::Get(key[%s]) error: %s\n", key, value.c_str());
         }
         freeReplyObject(reply);
         return RedisContextPtr(fRedisContext)->err;
@@ -96,23 +96,23 @@ int AVSRedisClient::Get(const char* key, std::string& value)
     return ret;
 }
 
-int AVSRedisClient::Set(std::string& key, std::string& value)
+int EasyRedisClient::Set(std::string& key, std::string& value)
 {
     int ret = -1;
     if (fRedisContext != NULL)
     {
         redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "SET %b %b", key.c_str(), key.size(), value.c_str(), value.size());
-        //printf("[AVSRedisClient]SET (binary API): %s\n",  reply->str);
+        //printf("[EasyRedisClient]SET (binary API): %s\n",  reply->str);
         if(reply == NULL)
         {
-            printf("AVSRedisClient::Set error:key[%s], value[%s](%s)\n", key.c_str(), value.c_str(), GetErrorString());
+            printf("EasyRedisClient::Set error:key[%s], value[%s](%s)\n", key.c_str(), value.c_str(), GetErrorString());
             return -1;
         }
         std::string res;
         ret = GetValue(reply, res);
         if(ret < 0)
         {
-            printf("AVSRedisClient::Set(key[%s], value[%s]) error: %s\n", key.c_str(), value.c_str(), res.c_str());
+            printf("EasyRedisClient::Set(key[%s], value[%s]) error: %s\n", key.c_str(), value.c_str(), res.c_str());
         }
         freeReplyObject(reply);
         return RedisContextPtr(fRedisContext)->err;
@@ -120,7 +120,7 @@ int AVSRedisClient::Set(std::string& key, std::string& value)
     return ret;
 }
 
-const char* AVSRedisClient::GetErrorString()
+const char* EasyRedisClient::GetErrorString()
 {
     if (fRedisContext != NULL)
     {
@@ -129,7 +129,7 @@ const char* AVSRedisClient::GetErrorString()
     return std::string().c_str();
 }
 
-int AVSRedisClient::HashGet(const char* key, const char* field, std::string& value)
+int EasyRedisClient::HashGet(const char* key, const char* field, std::string& value)
 {
     int ret = -1;
     if (fRedisContext != NULL)
@@ -138,13 +138,13 @@ int AVSRedisClient::HashGet(const char* key, const char* field, std::string& val
         
         if(reply == NULL)
         {
-           printf("AVSRedisClient::HashGet error:key[%s], field[%s], value[%s](%s)\n", key, field, value.c_str(), GetErrorString());
+           printf("EasyRedisClient::HashGet error:key[%s], field[%s], value[%s](%s)\n", key, field, value.c_str(), GetErrorString());
            return -1;
         }
         ret = GetValue(reply, value);
         if(ret < 0)
         {
-            printf("AVSRedisClient::HashGet(key[%s], field[%s]) error: %s\n", key, field, value.c_str());
+            printf("EasyRedisClient::HashGet(key[%s], field[%s]) error: %s\n", key, field, value.c_str());
         }
         freeReplyObject(reply);       
     }
@@ -152,23 +152,23 @@ int AVSRedisClient::HashGet(const char* key, const char* field, std::string& val
     return ret;
 }
 
-int AVSRedisClient::HashSet(std::string &key, std::string &field, std::string &value)
+int EasyRedisClient::HashSet(std::string &key, std::string &field, std::string &value)
 {
     int ret = -1;
     if (fRedisContext != NULL)
     {
         redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "HSET %s %s %s", key.c_str(), field.c_str(), value.c_str());
-        //printf("[AVSRedisClient]HSET (binary API): %s\n",  reply->str);
+        //printf("[EasyRedisClient]HSET (binary API): %s\n",  reply->str);
         if(reply == NULL)
         {
-            printf("AVSRedisClient::HashSet error:key[%s], field[%s], value[%s](%s)\n", key.c_str(), field.c_str(), value.c_str(), GetErrorString());
+            printf("EasyRedisClient::HashSet error:key[%s], field[%s], value[%s](%s)\n", key.c_str(), field.c_str(), value.c_str(), GetErrorString());
             return -1;
         }
         std::string res;
         ret = GetValue(reply, res);
         if(ret < 0)
         {
-            printf("AVSRedisClient::HashSet(key[%s], field[%s], value[%s]) error: %s\n", key.c_str(), field.c_str(), value.c_str(), res.c_str());
+            printf("EasyRedisClient::HashSet(key[%s], field[%s], value[%s]) error: %s\n", key.c_str(), field.c_str(), value.c_str(), res.c_str());
         }
         freeReplyObject(reply);       
     }
@@ -176,13 +176,13 @@ int AVSRedisClient::HashSet(std::string &key, std::string &field, std::string &v
 }
 
 
-int AVSRedisClient::HashSet(const char *key, const char *field, const char *value)
+int EasyRedisClient::HashSet(const char *key, const char *field, const char *value)
 {
 	std::string key_ = key, field_ = field, value_ = value;
 	return HashSet(key_, field_, value_);
 }
 
-int AVSRedisClient::GetValue(AVSRedisReplyObject reply, std::string& value)
+int EasyRedisClient::GetValue(AVSRedisReplyObject reply, std::string& value)
 {
     int ret = -1;
     if (reply != NULL)
@@ -221,7 +221,7 @@ int AVSRedisClient::GetValue(AVSRedisReplyObject reply, std::string& value)
     return ret;
 }
 
-std::string AVSRedisClient::IntToString(int value)
+std::string EasyRedisClient::IntToString(int value)
 {
     std::string value_;
     try
@@ -230,12 +230,12 @@ std::string AVSRedisClient::IntToString(int value)
     }
     catch(std::exception &e)
     {
-        printf("AVSRedisClient::IntToString error: %s\n", e.what());
+        printf("EasyRedisClient::IntToString error: %s\n", e.what());
     }
     return value_;
 }
 
-int AVSRedisClient::StringToInt(std::string value)
+int EasyRedisClient::StringToInt(std::string value)
 { 
     int value_ = -1;
     try
@@ -244,12 +244,12 @@ int AVSRedisClient::StringToInt(std::string value)
     }
     catch(std::exception &e)
     {
-        printf("AVSRedisClient::StringToInt error: %s\n", e.what());
+        printf("EasyRedisClient::StringToInt error: %s\n", e.what());
     }
     return value_;
 }
 
-std::string AVSRedisClient::FloatToString(float value)
+std::string EasyRedisClient::FloatToString(float value)
 {
     std::string value_;
     try
@@ -258,12 +258,12 @@ std::string AVSRedisClient::FloatToString(float value)
     }
     catch(std::exception &e)
     {
-        printf("AVSRedisClient::FloatToString error: %s\n", e.what());
+        printf("EasyRedisClient::FloatToString error: %s\n", e.what());
     }
     return value_;
 }
 
-float AVSRedisClient::StringToFloat(std::string value)
+float EasyRedisClient::StringToFloat(std::string value)
 {
     float value_ = -1;
     try
@@ -272,28 +272,28 @@ float AVSRedisClient::StringToFloat(std::string value)
     }
     catch(std::exception &e)
     {
-        printf("AVSRedisClient::StringToFloat error: %s\n", e.what());
+        printf("EasyRedisClient::StringToFloat error: %s\n", e.what());
     }
     return value_;
 }
 
-int AVSRedisClient::SetExpire(const char* key, std::size_t expire)
+int EasyRedisClient::SetExpire(const char* key, std::size_t expire)
 {
     int ret = -1;
     if (fRedisContext != NULL)
     {
         redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "EXPIRE %s %d", key, expire);
-        //printf("[AVSRedisClient]SET (binary API): %s\n",  reply->str);
+        //printf("[EasyRedisClient]SET (binary API): %s\n",  reply->str);
         if(reply == NULL)
         {
-            printf("AVSRedisClient::SetExpire[line:%d] error:key[%s], expire[%d](%s)\n", __LINE__, key, expire, GetErrorString());
+            printf("EasyRedisClient::SetExpire[line:%d] error:key[%s], expire[%d](%s)\n", __LINE__, key, expire, GetErrorString());
             return -1;
         }
         std::string res;
         ret = GetValue(reply, res);
         if(ret < 0)
         {
-            printf("AVSRedisClient::SetExpire[line:%d] error:key[%s], expire[%d](%s)\n", __LINE__, key, expire, res.c_str());
+            printf("EasyRedisClient::SetExpire[line:%d] error:key[%s], expire[%d](%s)\n", __LINE__, key, expire, res.c_str());
         }
         freeReplyObject(reply);
         return RedisContextPtr(fRedisContext)->err;
@@ -301,23 +301,23 @@ int AVSRedisClient::SetExpire(const char* key, std::size_t expire)
     return ret;
 }
 
-int AVSRedisClient::ZAdd(const char* key, float score, const char* member)
+int EasyRedisClient::ZAdd(const char* key, float score, const char* member)
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
 	{
 		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "ZADD %s %s %s", key, FloatToString(score).c_str(), member);
-		//printf("[AVSRedisClient]SET (binary API): %s\n",  reply->str);
+		//printf("[EasyRedisClient]SET (binary API): %s\n",  reply->str);
 		if (reply == NULL)
 		{
-			printf("AVSRedisClient::ZAdd error:key[%s], score[%f], member[%s](%s)\n", key, score, member, GetErrorString());
+			printf("EasyRedisClient::ZAdd error:key[%s], score[%f], member[%s](%s)\n", key, score, member, GetErrorString());
 			return -1;
 		}
 		std::string res;
 		ret = GetValue(reply, res);
 		if (ret < 0)
 		{
-			printf("AVSRedisClient::ZAdd(key[%s], score[%f], member[%s]) error: %s\n", key, score, member, res.c_str());
+			printf("EasyRedisClient::ZAdd(key[%s], score[%f], member[%s]) error: %s\n", key, score, member, res.c_str());
 		}
 		freeReplyObject(reply);
 		return RedisContextPtr(fRedisContext)->err;
@@ -325,11 +325,11 @@ int AVSRedisClient::ZAdd(const char* key, float score, const char* member)
 	return ret;
 }
 
-int AVSRedisClient::ZRem(const char* key, ZSetsMembers_t& members)
+int EasyRedisClient::ZRem(const char* key, ZSetsMembers_t& members)
 {
 	if (members.empty())
 	{
-		printf("AVSRedisClient::ZRem members is empty\n");
+		printf("EasyRedisClient::ZRem members is empty\n");
 		return -1;
 	}
 	int ret = -1;
@@ -341,17 +341,17 @@ int AVSRedisClient::ZRem(const char* key, ZSetsMembers_t& members)
 			strMembers += members[i] + " ";
 		}
 		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "ZREM %s %s", key, strMembers.c_str());
-		//printf("[AVSRedisClient]SET (binary API): %s\n",  reply->str);
+		//printf("[EasyRedisClient]SET (binary API): %s\n",  reply->str);
 		if (reply == NULL)
 		{
-			printf("AVSRedisClient::ZRem error:key[%s], member[%s](%s)\n", key, strMembers.c_str(), GetErrorString());
+			printf("EasyRedisClient::ZRem error:key[%s], member[%s](%s)\n", key, strMembers.c_str(), GetErrorString());
 			return -1;
 		}
 		std::string res;
 		ret = GetValue(reply, res);
 		if (ret < 0)
 		{
-			printf("AVSRedisClient::ZAdd(key[%s], member[%s]) error: %s\n", key, strMembers.c_str(), res.c_str());
+			printf("EasyRedisClient::ZAdd(key[%s], member[%s]) error: %s\n", key, strMembers.c_str(), res.c_str());
 		}
 		freeReplyObject(reply);
 		return RedisContextPtr(fRedisContext)->err;
@@ -359,7 +359,7 @@ int AVSRedisClient::ZRem(const char* key, ZSetsMembers_t& members)
 	return ret;
 }
 
-int AVSRedisClient::ZRange(const char* key, ZSetsMembers_t& members)
+int EasyRedisClient::ZRange(const char* key, ZSetsMembers_t& members)
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
@@ -368,7 +368,7 @@ int AVSRedisClient::ZRange(const char* key, ZSetsMembers_t& members)
 
 		if (reply == NULL)
 		{
-			printf("AVSRedisClient::ZRange error:key[%s](%s)\n", key, GetErrorString());
+			printf("EasyRedisClient::ZRange error:key[%s](%s)\n", key, GetErrorString());
 			return -1;
 		}
 		
@@ -381,7 +381,7 @@ int AVSRedisClient::ZRange(const char* key, ZSetsMembers_t& members)
 		}
 		else
 		{
-			printf("AVSRedisClient::ZRange(key[%s]) error: %s\n", key, reply->str);
+			printf("EasyRedisClient::ZRange(key[%s]) error: %s\n", key, reply->str);
 		}
 		freeReplyObject(reply);
 	}
@@ -389,7 +389,7 @@ int AVSRedisClient::ZRange(const char* key, ZSetsMembers_t& members)
 	return ret;
 }
 
-int AVSRedisClient::ZRange(const char* key, ZSetsMembersWithScore_t &members)
+int EasyRedisClient::ZRange(const char* key, ZSetsMembersWithScore_t &members)
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
@@ -398,7 +398,7 @@ int AVSRedisClient::ZRange(const char* key, ZSetsMembersWithScore_t &members)
 
 		if (reply == NULL)
 		{
-			printf("AVSRedisClient::ZRange error:key[%s](%s)\n", key, GetErrorString());
+			printf("EasyRedisClient::ZRange error:key[%s](%s)\n", key, GetErrorString());
 			return -1;
 		}
 
@@ -411,7 +411,7 @@ int AVSRedisClient::ZRange(const char* key, ZSetsMembersWithScore_t &members)
 		}
 		else
 		{
-			printf("AVSRedisClient::ZRange(key[%s]) error: %s\n", key, reply->str);
+			printf("EasyRedisClient::ZRange(key[%s]) error: %s\n", key, reply->str);
 		}
 		freeReplyObject(reply);
 	}
@@ -420,34 +420,34 @@ int AVSRedisClient::ZRange(const char* key, ZSetsMembersWithScore_t &members)
 }
 
 /*
-int AVSRedisClient::ZRevRange(const char* key, ZSetsMembers_t& members)
+int EasyRedisClient::ZRevRange(const char* key, ZSetsMembers_t& members)
 {
 	return -1;
 }
 
-int AVSRedisClient::ZRevRange(const char* key, ZSetsMembersWithScore_t &members)
+int EasyRedisClient::ZRevRange(const char* key, ZSetsMembersWithScore_t &members)
 {
 	return -1;
 }
 */
 
-int AVSRedisClient::ZIncrBy(const char* key, float value, const char* member)
+int EasyRedisClient::ZIncrBy(const char* key, float value, const char* member)
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
 	{
 		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "ZINCRBY %s %s %s", key, FloatToString(value).c_str(), member);
-		//printf("[AVSRedisClient]SET (binary API): %s\n",  reply->str);
+		//printf("[EasyRedisClient]SET (binary API): %s\n",  reply->str);
 		if (reply == NULL)
 		{
-			printf("AVSRedisClient::ZIncrBy error:key[%s], score[%f], member[%s](%s)\n", key, value, member, GetErrorString());
+			printf("EasyRedisClient::ZIncrBy error:key[%s], score[%f], member[%s](%s)\n", key, value, member, GetErrorString());
 			return -1;
 		}
 		std::string res;
 		ret = GetValue(reply, res);
 		if (ret < 0)
 		{
-			printf("AVSRedisClient::ZIncrBy(key[%s], score[%f], member[%s]) error: %s\n", key, value, member, res.c_str());
+			printf("EasyRedisClient::ZIncrBy(key[%s], score[%f], member[%s]) error: %s\n", key, value, member, res.c_str());
 		}
 		freeReplyObject(reply);
 		return RedisContextPtr(fRedisContext)->err;

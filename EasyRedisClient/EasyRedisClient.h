@@ -1,11 +1,11 @@
 /*
-	Copyright (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
 /* 
- * File:   AVSRedisClient.h
+ * File:   EasyRedisClient.h
  * Author: Wellsen
  *
  * Created on 2015年4月23日, 下午5:11
@@ -18,11 +18,11 @@
 #include <vector>
 #include <map>
 
-class AVSRedisClient
+class EasyRedisClient
 {
 public:
-    AVSRedisClient();
-    virtual ~AVSRedisClient();
+    EasyRedisClient();
+    virtual ~EasyRedisClient();
     
 public:
     // return 0 when there is no error
