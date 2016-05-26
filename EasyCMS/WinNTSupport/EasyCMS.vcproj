@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSAuthModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/EasyAuthModule/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/EasyCMS.pch"
@@ -211,14 +211,18 @@
 			<Filter
 				Name="API Modules"
 				>
-				<File
-					RelativePath="..\APIModules\QTSSAuthModule\QTSSAuthModule.cpp"
+				<Filter
+					Name="EasyAuthModule"
 					>
-				</File>
-				<File
-					RelativePath="..\APIModules\QTSSAuthModule\QTSSAuthModule.h"
-					>
-				</File>
+					<File
+						RelativePath="..\APIModules\EasyAuthModule\EasyAuthModule.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyAuthModule\EasyAuthModule.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Core"

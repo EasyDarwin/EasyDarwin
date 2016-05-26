@@ -63,7 +63,7 @@
 
 //Compile time modules
 #include "QTSSErrorLogModule.h"
-#include "QTSSAuthModule.h"
+#include "EasyAuthModule.h"
 
 // CLASS DEFINITIONS
 class HTTPListenerSocket : public TCPListenerSocket
@@ -539,8 +539,8 @@ void    QTSServer::LoadCompiledInModules()
 {
 #ifndef DSS_DYNAMIC_MODULES_ONLY
 
-	QTSSModule* theAuthModule = new QTSSModule("QTSSAuthModule");
-	(void)theAuthModule->SetupModule(&sCallbacks, &QTSSAuthModule_Main);
+	QTSSModule* theAuthModule = new QTSSModule("EasyAuthModule");
+	(void)theAuthModule->SetupModule(&sCallbacks, &EasyAuthModule_Main);
 	(void)AddModule(theAuthModule);
 
     // MODULE DEVELOPERS SHOULD ADD THE FOLLOWING THREE LINES OF CODE TO THIS

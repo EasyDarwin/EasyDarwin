@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "QTSSAuthModule.h"
+#include "EasyAuthModule.h"
 #include "OSHeaders.h"
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
@@ -37,7 +37,7 @@ static QTSS_ServerObject    sServer     = NULL;
 
 
 // FUNCTION PROTOTYPES
-static QTSS_Error   QTSSAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
+static QTSS_Error   EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
 static QTSS_Error   Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error   RereadPrefs();
@@ -61,12 +61,12 @@ SInt64 SessionIDCheckTask::Run()
 	sSessionIdMap.CheckTimeoutAndDelete();//检查超时的SessionID并进行删除
 	return 60*1000;//一分钟一检查
 }
-QTSS_Error QTSSAuthModule_Main(void* inPrivateArgs)
+QTSS_Error EasyAuthModule_Main(void* inPrivateArgs)
 {
-	return _stublibrary_main(inPrivateArgs, QTSSAuthModuleDispatch);
+	return _stublibrary_main(inPrivateArgs, EasyAuthModuleDispatch);
 }
 
-QTSS_Error  QTSSAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock)
+QTSS_Error  EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock)
 {
 	switch (inRole)
 	{
