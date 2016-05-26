@@ -40,6 +40,11 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	// Do role setup
 	(void)QTSS_AddRole(QTSS_Initialize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
+
+    // Tell the server our name!
+    static char* sModuleName = "EasyRedisModule";
+    ::strcpy(inParams->outModuleName, sModuleName);
+
 	return QTSS_NoErr;
 }
 

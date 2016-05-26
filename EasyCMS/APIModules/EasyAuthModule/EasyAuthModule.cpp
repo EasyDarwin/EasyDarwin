@@ -86,6 +86,11 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(QTSS_NONCE_ROLE);
 	(void)QTSS_AddRole(QTSS_AUTH_ROLE);
+
+    // Tell the server our name!
+    static char* sModuleName = "EasyAuthModule";
+    ::strcpy(inParams->outModuleName, sModuleName);
+
 	return QTSS_NoErr;
 }
 
