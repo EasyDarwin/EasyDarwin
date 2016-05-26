@@ -214,9 +214,7 @@ class QTSServerPrefs : public QTSSPrefs
 		UInt16 GetHTTPServicePort()					{return fHTTPServicePort; }
         
 		char* GetEasyDarWinIP()		{return this->GetStringPref(qtssPrefsEasyDarWinIP);}
-		char* GetRedisIP()			{return this->GetStringPref(qtssPrefsRedisIP);}
 		UInt16 GetEasyDarWinPort()	{return fMonitorWANPort;}
-		UInt16 GetRedisPort()		{return fRedisPort;}
     private:
 
         UInt32      fRTSPTimeoutInSecs;
@@ -310,9 +308,7 @@ class QTSServerPrefs : public QTSSPrefs
 
 
 		char   fMonitorWANAddr[20];//EasyDarwin的外部地址和端口
-		char   fRedisAddr[20];//redis的地址和端口
 		UInt16 fMonitorWANPort;
-		UInt16 fRedisPort;
 
 
         enum //fPacketHeaderPrintfOptions

@@ -182,7 +182,7 @@ int EasyRedisClient::HashSet(const char *key, const char *field, const char *val
 	return HashSet(key_, field_, value_);
 }
 
-int EasyRedisClient::GetValue(AVSRedisReplyObject reply, std::string& value)
+int EasyRedisClient::GetValue(EasyRedisReplyObject reply, std::string& value)
 {
     int ret = -1;
     if (reply != NULL)

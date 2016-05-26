@@ -11,8 +11,8 @@
  * Created on 2015年4月23日, 下午5:11
  */
 
-#ifndef AVSREDISCLIENT_H
-#define	AVSREDISCLIENT_H
+#ifndef EASYREDISCLIENT_H
+#define	EASYREDISCLIENT_H
 
 #include <string>
 #include <vector>
@@ -63,17 +63,17 @@ public:
     static float StringToFloat(std::string value);
         
 private:
-    typedef void* AVSRedisContextObject;
-    typedef void* AVSRedisReplyObject;
+    typedef void* EasyRedisContextObject;
+    typedef void* EasyRedisReplyObject;
     
 private:
-    int GetValue(AVSRedisReplyObject reply, std::string &value);
+    int GetValue(EasyRedisReplyObject reply, std::string &value);
     
 
     
 private:
-    AVSRedisContextObject fRedisContext;
+    EasyRedisContextObject fRedisContext;
 };
 
-#endif	/* AVSREDISCLIENT_H */
+#endif	/* EASYREDISCLIENT_H */
 

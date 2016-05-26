@@ -64,6 +64,7 @@
 //Compile time modules
 #include "QTSSErrorLogModule.h"
 #include "EasyAuthModule.h"
+#include "EasyRedisModule.h"
 
 // CLASS DEFINITIONS
 class HTTPListenerSocket : public TCPListenerSocket
@@ -542,6 +543,11 @@ void    QTSServer::LoadCompiledInModules()
 	QTSSModule* theAuthModule = new QTSSModule("EasyAuthModule");
 	(void)theAuthModule->SetupModule(&sCallbacks, &EasyAuthModule_Main);
 	(void)AddModule(theAuthModule);
+
+	
+	QTSSModule* theRedisModule = new QTSSModule("EasyRedisModule");
+	(void)theRedisModule->SetupModule(&sCallbacks, &EasyRedisModule_Main);
+	(void)AddModule(theRedisModule);
 
     // MODULE DEVELOPERS SHOULD ADD THE FOLLOWING THREE LINES OF CODE TO THIS
     // FUNCTION IF THEIR MODULE IS BEING COMPILED INTO THE SERVER.
