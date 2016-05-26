@@ -25,16 +25,11 @@
 #include"OSMapEx.h"
 static OSMapEx sSessionIdMap;
 //add
-//Turns on printfs that are useful for debugging
-#define FLOW_CONTROL_DEBUGGING 0
-
 
 // STATIC VARIABLES
-
 static QTSS_ModulePrefsObject sPrefs = NULL;
 static QTSS_PrefsObject     sServerPrefs    = NULL;
 static QTSS_ServerObject    sServer     = NULL;
-
 
 // FUNCTION PROTOTYPES
 static QTSS_Error   EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
