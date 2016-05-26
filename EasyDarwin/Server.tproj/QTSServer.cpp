@@ -65,6 +65,7 @@
 #include "EasyRelayModule.h"
 #include "EasyHLSModule.h"
 #include "EasyCMSModule.h"
+#include "EasyRedisModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
@@ -805,6 +806,10 @@ void    QTSServer::LoadCompiledInModules()
     QTSSModule* theAdminModule = new QTSSModule("QTSSAdminModule");
     (void)theAdminModule->SetupModule(&sCallbacks, &QTSSAdminModule_Main);
     (void)AddModule(theAdminModule);
+
+    QTSSModule* theRedisModule = new QTSSModule("EasyRedisModule");
+    (void)theRedisModule->SetupModule(&sCallbacks, &EasyRedisModule_Main);
+    (void)AddModule(theRedisModule);
 
     //QTSSModule* theMP3StreamingModule = new QTSSModule("QTSSMP3StreamingModule");
     //(void)theMP3StreamingModule->SetupModule(&sCallbacks, &QTSSMP3StreamingModule_Main);
