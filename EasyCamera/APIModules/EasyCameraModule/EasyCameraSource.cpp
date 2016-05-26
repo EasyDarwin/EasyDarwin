@@ -29,8 +29,6 @@ static char*            sDefaultCameraPassword	= "admin";
 static UInt32			sStreamType				= 1;
 static UInt32			sDefaultStreamType		= 1;
 
-
-// 初始化读取配置文件中各项配置
 void EasyCameraSource::Initialize(QTSS_ModulePrefsObject modulePrefs)
 {
 	delete [] sCamera_IP;
@@ -313,7 +311,6 @@ SInt64 EasyCameraSource::Run()
 
 	return 0;
 }
-
 
 QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 {

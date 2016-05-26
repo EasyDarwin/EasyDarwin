@@ -241,8 +241,7 @@ SInt64 EasyCMSSession::Run()
 
 					Assert(theErr == QTSS_RequestArrived);
 
-					// 处理收到的具体报文
-					ProcessMessage();
+					QTSS_Error theErr = ProcessMessage();
 
 					// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
 					if (fOutputStream.GetBytesWritten() > 0)
@@ -257,7 +256,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kSendingMessage:
 				{
-					//发送报文
 					theErr = fOutputStream.Flush();
                 
 					if (theErr == EAGAIN || theErr == EINPROGRESS)
@@ -281,7 +279,6 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kCleaningUp:
 				{
-					// 清理已经处理的请求或者已经发送的报文缓存
 					// Cleaning up consists of making sure we've read all the incoming Request Body
 					// data off of the socket
 					////if (this->GetRemainingReqBodyLen() > 0)
@@ -297,7 +294,7 @@ SInt64 EasyCMSSession::Run()
 					////	}
 					////}
 
-					// 一次请求的读取、处理、响应过程完整，等待下一次网络报文！
+					// clean up and wait for next run
 					this->CleanupRequest();
 					fState = kIdle;
 					
@@ -317,9 +314,9 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 {
 	if(NULL == fRequest) return QTSS_BadArgument;
 
-    //解析HTTPRequest报文
     QTSS_Error theErr = fRequest->Parse();
-    if (theErr != QTSS_NoErr) return QTSS_BadArgument;
+    if (theErr != QTSS_NoErr) 
+		return QTSS_BadArgument;
 
 	//获取具体Content json数据部分
 	StrPtrLen* lengthPtr = fRequest->GetHeaderValue(httpContentLengthHeader);
