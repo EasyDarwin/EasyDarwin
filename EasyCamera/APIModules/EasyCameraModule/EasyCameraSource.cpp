@@ -104,6 +104,17 @@ HI_S32 NETSDK_APICALL OnEventCallback(	HI_U32 u32Handle,	/* 句柄 */
 										HI_VOID* pUserData  /* 用户数据*/
                                 )
 {
+	if (u32Event == HI_NET_DEV_ABORTIBE_DISCONNECTED || u32Event == HI_NET_DEV_NORMAL_DISCONNECTED || u32Event == HI_NET_DEV_CONNECT_FAILED)
+	{
+		EasyCameraSource* easyCameraSource = (EasyCameraSource*)pUserData;
+		easyCameraSource->fCameraLogin = false;
+	}
+	else if (u32Event == HI_NET_DEV_CONNECTED)
+	{
+		EasyCameraSource* easyCameraSource = (EasyCameraSource*)pUserData;
+		easyCameraSource->fCameraLogin = true;
+	}
+
 	return HI_SUCCESS;
 }
 
