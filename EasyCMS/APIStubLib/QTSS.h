@@ -327,8 +327,8 @@ enum
     qtssPrefsScreenLogging					= 11,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
     qtssPrefsErrorLogEnabled				= 12,   //"error_logging"               //Bool16        //Is error logging enabled?
     qtssPrefsServiceID						= 13,   //"service_id"    //SInt32 // Don't send video packets later than this
-	qtssPrefsSnapLocalPath					= 14,   //"snap_local_path"		// char array   //快照本地存储路径
-    qtssPrefsSnapWebPath			        = 15,   //"snap_web_path"		// char array   //快照网络存储路径
+	qtssPrefsSnapLocalPath					= 14,   //"snap_local_path"		// char array   //snap local path
+    qtssPrefsSnapWebPath			        = 15,   //"snap_web_path"		// char array   //snap web path
 	qtssPrefsAutoStart                      = 16,   //"auto_start" //Bool16 //If true, streaming server likes to be started at system startup
 	qtssPrefsEnableMSGDebugPrintfs			= 17,	//"MSG_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
     qtssPrefsEnableMonitorStatsFile         = 18,   //"enable_monitor_stats_file" //Bool16 //write server stats to the monitor file
