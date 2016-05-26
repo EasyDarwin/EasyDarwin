@@ -11,7 +11,7 @@
  * Created on 2015年4月23日, 下午5:11
  */
 
-#include "AVSRedisClient.h"
+#include "EasyRedisClient.h"
 
 #ifndef _WIN32
 #include "hiredis.h"

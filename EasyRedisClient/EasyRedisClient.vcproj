@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../Include/"
+				AdditionalIncludeDirectories="../;../EasyProtocol/Include/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/EasyRedisClient.pch"
@@ -184,6 +184,14 @@
 			</File>
 			<File
 				RelativePath=".\Windows\dict.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EasyRedisClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EasyRedisClient.h"
 				>
 			</File>
 			<File
