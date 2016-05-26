@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSAuthModule/"
+				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/EasyAuthModule/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/EasyCMS.pch"
@@ -211,14 +211,18 @@
 			<Filter
 				Name="API Modules"
 				>
-				<File
-					RelativePath="..\APIModules\QTSSAuthModule\QTSSAuthModule.cpp"
+				<Filter
+					Name="EasyAuthModule"
 					>
-				</File>
-				<File
-					RelativePath="..\APIModules\QTSSAuthModule\QTSSAuthModule.h"
-					>
-				</File>
+					<File
+						RelativePath="..\APIModules\EasyAuthModule\EasyAuthModule.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\EasyAuthModule\EasyAuthModule.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Core"
@@ -228,15 +232,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\PrefsSourceLib\FilePrefsSource.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\GenerateXMLPrefs.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\GenerateXMLPrefs.h"
 					>
 				</File>
 				<File
@@ -244,15 +240,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPProtocol.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequest.h"
 					>
 				</File>
 				<File
@@ -260,31 +248,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPRequestStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\HTTPRequestStream.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\HTTPResponseStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\HTTPUtilitiesLib\HTTPResponseStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\HTTPResponseStream.h"
 					>
 				</File>
 				<File
@@ -292,23 +256,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\HTTPSession.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\HTTPSessionInterface.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\HTTPSessionInterface.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\CommonUtilitiesLib\OSMapEx.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\CommonUtilitiesLib\OSMapEx.h"
 					>
 				</File>
 				<File
@@ -320,15 +272,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\CommonUtilitiesLib\OSRefTableEx.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\QTSSCallbacks.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSSCallbacks.h"
 					>
 				</File>
 				<File
@@ -336,15 +280,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\QTSSDataConverter.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\QTSSDictionary.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSSDictionary.h"
 					>
 				</File>
 				<File
@@ -352,15 +288,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\QTSSErrorLogModule.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\QTSServer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSServer.h"
 					>
 				</File>
 				<File
@@ -368,15 +296,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\QTSServerInterface.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\QTSServerPrefs.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSServerPrefs.h"
 					>
 				</File>
 				<File
@@ -384,15 +304,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\QTSSExpirationDate.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\QTSSFile.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSSFile.h"
 					>
 				</File>
 				<File
@@ -400,15 +312,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\QTSSMessages.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\QTSSModule.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSSModule.h"
 					>
 				</File>
 				<File
@@ -416,27 +320,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\QTSSPrefs.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\QTSSSocket.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Server.tproj\QTSSSocket.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\QTSSStream.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Server.tproj\RunServer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Server.tproj\RunServer.h"
 					>
 				</File>
 				<File
@@ -452,15 +340,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\PrefsSourceLib\XMLParser.h"
-					>
-				</File>
-				<File
 					RelativePath="..\PrefsSourceLib\XMLPrefsParser.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\PrefsSourceLib\XMLPrefsParser.h"
 					>
 				</File>
 			</Filter>
