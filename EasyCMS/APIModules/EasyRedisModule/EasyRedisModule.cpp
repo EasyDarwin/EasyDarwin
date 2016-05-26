@@ -4,6 +4,7 @@
 #include "OSHeaders.h"
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
+#include "EasyRedisClient.h"
 
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject sPrefs = NULL;
@@ -54,6 +55,10 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	sServer = inParams->inServer;
 	sServerPrefs = inParams->inPrefs;
 	sPrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
+
+	//for demo
+	EasyRedisClient redis;
+	redis.ConnectWithTimeOut("127.0.0.1", 6937, 5);
 
 	return RereadPrefs();
 }
