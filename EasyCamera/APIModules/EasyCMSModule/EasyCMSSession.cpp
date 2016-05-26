@@ -70,13 +70,14 @@ EasyCMSSession::EasyCMSSession()
 	fMutex(),
 	fContentBufferOffset(0),
 	fContentBuffer(NULL),
-	fSnapReq(NULL)
+	fSnapReq(NULL),
+	fSendMessageCount(0)
 {
 	this->SetTaskName("EasyCMSSession");
 
 	UInt32 inAddr = SocketUtils::ConvertStringToAddr(sEasyCMS_IP);
 
-	if(inAddr)
+	if (inAddr)
 	{
 		fSocket->Set(inAddr, sEasyCMSPort);
 	}
@@ -92,19 +93,19 @@ EasyCMSSession::EasyCMSSession()
 
 EasyCMSSession::~EasyCMSSession()
 {
-	if(fSocket)
+	if (fSocket)
 	{
 		delete fSocket;
 		fSocket = NULL;
 	}
-	if(fRequest)
+	if (fRequest)
 	{
 		delete fRequest;
 		fRequest = NULL;
 	}
-	if(fContentBuffer)
+	if (fContentBuffer)
 	{
-		delete [] fContentBuffer;
+		delete[] fContentBuffer;
 		fContentBuffer = NULL;
 	}
 }
@@ -211,6 +212,10 @@ SInt64 EasyCMSSession::Run()
 						// needlessly lingering around, taking up space.
 						Assert(!fSocket->GetSocket()->IsConnected());
 						this->ResetClientSocket();
+
+						// make zero
+						fSendMessageCount = 0;
+
 						return 0;
 					}
 
@@ -256,6 +261,14 @@ SInt64 EasyCMSSession::Run()
 				}
 			case kSendingMessage:
 				{
+					if (fSendMessageCount >= 3)
+					{
+						fState = kIdle;
+						fSendMessageCount = 0;
+
+						return 0;
+					}
+
 					theErr = fOutputStream.Flush();
                 
 					if (theErr == EAGAIN || theErr == EINPROGRESS)
@@ -271,6 +284,9 @@ SInt64 EasyCMSSession::Run()
 						// Any other error means that the client has disconnected, right?
 						Assert(!this->IsConnected());
 						ResetClientSocket();
+						// make zero
+						fSendMessageCount = 0;
+
 						return 0;
 					}
             
@@ -376,8 +392,17 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 			{	
 				EasyMsgSDRegisterACK ack(fContentBuffer);
 
+				// make zero
+				fSendMessageCount = 0;
+
 				qtss_printf("session id = %s\n", ack.GetBodyValue(EASY_TAG_SESSION_ID).c_str());
 				qtss_printf("device serial = %s\n", ack.GetBodyValue(EASY_TAG_SERIAL).c_str());
+			}
+			break;
+		case MSG_SD_POST_SNAP_ACK:
+			{
+				// make zero
+				fSendMessageCount = 0;
 			}
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
@@ -524,11 +549,11 @@ void EasyCMSSession::ResetClientSocket()
 	CleanupRequest();
 
 	fSocket->GetSocket()->Cleanup();
-	if(fSocket) delete fSocket;
+	if (fSocket) delete fSocket;
 
 	fSocket = NEW TCPClientSocket(Socket::kNonBlockingSocketType);
 	UInt32 inAddr = SocketUtils::ConvertStringToAddr(sEasyCMS_IP);
-	if(inAddr) fSocket->Set(inAddr, sEasyCMSPort);
+	if (inAddr) fSocket->Set(inAddr, sEasyCMSPort);
 
 	fInputStream.AttachToSocket(fSocket);
 	fOutputStream.AttachToSocket(fSocket);
@@ -550,7 +575,7 @@ QTSS_Error EasyCMSSession::DSRegister()
 	// 构造HTTP注册报文,提交给fOutputStream进行发送
 	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
 
-	if(!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
+	if (!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
 
 	if (jsonContent.Len)
 		httpReq.AppendContentLengthHeader(jsonContent.Len);
@@ -563,12 +588,15 @@ QTSS_Error EasyCMSSession::DSRegister()
 	if (jsonContent.Len > 0) 
 		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
 
+	// count+1
+	++fSendMessageCount;
+
 	return QTSS_NoErr;
 }
 
 QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_PostSnap_Params* inParams)
 {
-	if(fSnapReq == NULL)
+	if (fSnapReq == NULL)
 	{
 		char szTime[32] = { 0, };
 		EasyJsonValue body;
@@ -589,7 +617,7 @@ QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_PostSnap_Params* inParams)
 
 QTSS_Error EasyCMSSession::DSPostSnap()
 {
-	if(fSnapReq)
+	if (fSnapReq)
 	{
 		string msg = fSnapReq->GetMsg();
 
@@ -597,7 +625,7 @@ QTSS_Error EasyCMSSession::DSPostSnap()
 		StrPtrLen jsonContent((char*)msg.data());
 		HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
 
-		if(httpReq.CreateRequestHeader())
+		if (httpReq.CreateRequestHeader())
 		{
 			if (jsonContent.Len)
 				httpReq.AppendContentLengthHeader(jsonContent.Len);
@@ -610,6 +638,9 @@ QTSS_Error EasyCMSSession::DSPostSnap()
 			fOutputStream.Put(respHeader);
 			if (jsonContent.Len > 0) 
 				fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+
+			// count+1
+			++fSendMessageCount;
 		}
 
 		delete fSnapReq;

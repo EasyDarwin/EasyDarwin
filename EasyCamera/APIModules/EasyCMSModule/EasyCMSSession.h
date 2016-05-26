@@ -116,6 +116,9 @@ private:
 
 	EasyMsgDSPostSnapREQ* fSnapReq;
 
+	// send message count
+	unsigned int fSendMessageCount;
+
 };
 
 #endif

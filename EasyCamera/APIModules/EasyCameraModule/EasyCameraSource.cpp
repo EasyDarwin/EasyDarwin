@@ -143,7 +143,7 @@ EasyCameraSource::EasyCameraSource()
 	//SDK初始化，全局调用一次
 	HI_NET_DEV_Init();
 
-	//登陆摄像机，否则无法
+	//登陆摄像机
 	CameraLogin();
 
 	fTimeoutTask.RefreshTimeout();
