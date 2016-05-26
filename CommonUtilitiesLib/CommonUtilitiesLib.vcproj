@@ -591,6 +591,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\OSMapEx.cpp"
+				>
+			</File>
+			<File
 				RelativePath="OSMutex.cpp"
 				>
 				<FileConfiguration
@@ -685,6 +689,10 @@
 						ForcedIncludeFiles=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\OSRefTableEx.cpp"
+				>
 			</File>
 			<File
 				RelativePath="OSThread.cpp"
@@ -1155,6 +1163,14 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\OSMapEx.h"
+			>
+		</File>
+		<File
+			RelativePath=".\OSRefTableEx.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

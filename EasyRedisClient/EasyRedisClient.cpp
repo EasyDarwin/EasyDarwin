@@ -48,7 +48,7 @@ EasyRedisClient::~EasyRedisClient()
 #endif
 }
 
-int EasyRedisClient::Connect(const char* host, std::size_t port)
+int EasyRedisClient::Connect(const char* host, std::size_t port)//connect asynchronous
 {
     fRedisContext = redisConnect(host, port);
     if (fRedisContext != NULL)
@@ -56,7 +56,7 @@ int EasyRedisClient::Connect(const char* host, std::size_t port)
     return -1;
 }
 
-int EasyRedisClient::ConnectWithTimeOut(const char* host, std::size_t port, std::size_t timeout)
+int EasyRedisClient::ConnectWithTimeOut(const char* host, std::size_t port, std::size_t timeout)//connect synchronous with timeout
 {
     struct timeval timeout_ = {timeout, 0};
     fRedisContext = redisConnectWithTimeout(host, port, timeout_);
@@ -65,7 +65,7 @@ int EasyRedisClient::ConnectWithTimeOut(const char* host, std::size_t port, std:
     return -1;
 }
 
-int EasyRedisClient::Delete(const char* key)
+int EasyRedisClient::Delete(const char* key)//del
 {
     if (fRedisContext != NULL)
     {
@@ -77,7 +77,7 @@ int EasyRedisClient::Delete(const char* key)
     return -1;
 }
 
-int EasyRedisClient::Get(const char* key, std::string& value)
+int EasyRedisClient::Get(const char* key, std::string& value)//get
 {
     int ret = -1;
 
@@ -96,7 +96,7 @@ int EasyRedisClient::Get(const char* key, std::string& value)
     return ret;
 }
 
-int EasyRedisClient::Set(std::string& key, std::string& value)
+int EasyRedisClient::Set(std::string& key, std::string& value)//set
 {
     int ret = -1;
     if (fRedisContext != NULL)
@@ -120,7 +120,7 @@ int EasyRedisClient::Set(std::string& key, std::string& value)
     return ret;
 }
 
-const char* EasyRedisClient::GetErrorString()
+const char* EasyRedisClient::GetErrorString()//get error string
 {
     if (fRedisContext != NULL)
     {
@@ -129,7 +129,7 @@ const char* EasyRedisClient::GetErrorString()
     return std::string().c_str();
 }
 
-int EasyRedisClient::HashGet(const char* key, const char* field, std::string& value)
+int EasyRedisClient::HashGet(const char* key, const char* field, std::string& value)//hget
 {
     int ret = -1;
     if (fRedisContext != NULL)
@@ -152,7 +152,7 @@ int EasyRedisClient::HashGet(const char* key, const char* field, std::string& va
     return ret;
 }
 
-int EasyRedisClient::HashSet(std::string &key, std::string &field, std::string &value)
+int EasyRedisClient::HashSet(std::string &key, std::string &field, std::string &value)//hset
 {
     int ret = -1;
     if (fRedisContext != NULL)
@@ -176,13 +176,13 @@ int EasyRedisClient::HashSet(std::string &key, std::string &field, std::string &
 }
 
 
-int EasyRedisClient::HashSet(const char *key, const char *field, const char *value)
+int EasyRedisClient::HashSet(const char *key, const char *field, const char *value)//hset
 {
 	std::string key_ = key, field_ = field, value_ = value;
 	return HashSet(key_, field_, value_);
 }
 
-int EasyRedisClient::GetValue(EasyRedisReplyObject reply, std::string& value)
+int EasyRedisClient::GetValue(EasyRedisReplyObject reply, std::string& value)//get value based on defferent type
 {
     int ret = -1;
     if (reply != NULL)
@@ -221,7 +221,7 @@ int EasyRedisClient::GetValue(EasyRedisReplyObject reply, std::string& value)
     return ret;
 }
 
-std::string EasyRedisClient::IntToString(int value)
+std::string EasyRedisClient::IntToString(int value)//int to string
 {
     std::string value_;
     try
@@ -235,7 +235,7 @@ std::string EasyRedisClient::IntToString(int value)
     return value_;
 }
 
-int EasyRedisClient::StringToInt(std::string value)
+int EasyRedisClient::StringToInt(std::string value)// string to int
 { 
     int value_ = -1;
     try
@@ -249,7 +249,7 @@ int EasyRedisClient::StringToInt(std::string value)
     return value_;
 }
 
-std::string EasyRedisClient::FloatToString(float value)
+std::string EasyRedisClient::FloatToString(float value)//float to string
 {
     std::string value_;
     try
@@ -263,7 +263,7 @@ std::string EasyRedisClient::FloatToString(float value)
     return value_;
 }
 
-float EasyRedisClient::StringToFloat(std::string value)
+float EasyRedisClient::StringToFloat(std::string value)//string to float
 {
     float value_ = -1;
     try
@@ -277,7 +277,7 @@ float EasyRedisClient::StringToFloat(std::string value)
     return value_;
 }
 
-int EasyRedisClient::SetExpire(const char* key, std::size_t expire)
+int EasyRedisClient::SetExpire(const char* key, std::size_t expire)//expire key in seconds
 {
     int ret = -1;
     if (fRedisContext != NULL)
@@ -301,7 +301,7 @@ int EasyRedisClient::SetExpire(const char* key, std::size_t expire)
     return ret;
 }
 
-int EasyRedisClient::ZAdd(const char* key, float score, const char* member)
+int EasyRedisClient::ZAdd(const char* key, float score, const char* member)//zset zadd
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
@@ -325,7 +325,7 @@ int EasyRedisClient::ZAdd(const char* key, float score, const char* member)
 	return ret;
 }
 
-int EasyRedisClient::ZRem(const char* key, ZSetsMembers_t& members)
+int EasyRedisClient::ZRem(const char* key, ZSetsMembers_t& members)//zset zrem
 {
 	if (members.empty())
 	{
@@ -359,7 +359,7 @@ int EasyRedisClient::ZRem(const char* key, ZSetsMembers_t& members)
 	return ret;
 }
 
-int EasyRedisClient::ZRange(const char* key, ZSetsMembers_t& members)
+int EasyRedisClient::ZRange(const char* key, ZSetsMembers_t& members)//zset zrange
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
@@ -389,7 +389,7 @@ int EasyRedisClient::ZRange(const char* key, ZSetsMembers_t& members)
 	return ret;
 }
 
-int EasyRedisClient::ZRange(const char* key, ZSetsMembersWithScore_t &members)
+int EasyRedisClient::ZRange(const char* key, ZSetsMembersWithScore_t &members)//zset zrange
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
@@ -431,7 +431,7 @@ int EasyRedisClient::ZRevRange(const char* key, ZSetsMembersWithScore_t &members
 }
 */
 
-int EasyRedisClient::ZIncrBy(const char* key, float value, const char* member)
+int EasyRedisClient::ZIncrBy(const char* key, float value, const char* member)//zset ZINCRBY
 {
 	int ret = -1;
 	if (fRedisContext != NULL)
@@ -455,3 +455,30 @@ int EasyRedisClient::ZIncrBy(const char* key, float value, const char* member)
 	return ret;
 }
 
+int EasyRedisClient::SetTimeout(std::size_t timeout)//set socket timeout
+{
+	struct timeval timeout_ = {timeout, 0};
+
+	if (fRedisContext != NULL)
+		return redisSetTimeout(RedisContextPtr(fRedisContext),timeout_);
+	return -1;
+}
+
+void EasyRedisClient::AppendCommand(const char * command)//redisAppendCommand
+{
+	if (fRedisContext != NULL)
+		return redisAppendCommand(RedisContextPtr(fRedisContext),command);
+}
+
+int EasyRedisClient::GetReply(void ** reply)
+{
+	if (fRedisContext != NULL)
+		return redisGetReply(RedisContextPtr(fRedisContext),reply);
+	return -1;
+}
+
+void EasyRedisClient::Free()
+{
+	if (fRedisContext != NULL)
+		redisFree(RedisContextPtr(fRedisContext));
+}

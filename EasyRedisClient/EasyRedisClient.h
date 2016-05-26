@@ -56,6 +56,11 @@ public:
 	int ZIncrBy(const char* key, float value, const char* member);
 
 	//useful cast
+
+	int SetTimeout(std::size_t timeout);
+	void AppendCommand(const char * command);//redisAppendCommand return void
+	int GetReply(void ** reply);
+	void Free();
 public:
     static std::string IntToString(int value);
     static int StringToInt(std::string value);
