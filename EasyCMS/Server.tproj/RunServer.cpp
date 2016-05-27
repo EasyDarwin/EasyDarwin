@@ -301,27 +301,36 @@ void LogStatus(QTSS_ServerState theServerState)
     
     static char *sAttributes[] =
     {
-        "qtssSvrServerName",
-        "qtssSvrServerVersion",
-        "qtssSvrServerBuild",
-        "qtssSvrServerPlatform",
-        "qtssSvrHTTPServerComment",
-        "qtssSvrServerBuildDate",
-        "qtssSvrStartupTime",
-        "qtssSvrCurrentTimeMilliseconds",
-        "qtssSvrCPULoadPercent",
-        "qtssSvrState",
-        "qtssRTPSvrCurConn",
-        "qtssCurrentSessionCount",
-        "qtssRTSPHTTPCurrentSessionCount",
-        "qtssRTPSvrCurBandwidth",
-        "qtssRTPSvrCurPackets",
-        "qtssRTPSvrTotalConn",
-        "qtssRTPSvrTotalBytes",
-        "qtssMP3SvrCurConn",
-        "qtssMP3SvrTotalConn",
-        "qtssMP3SvrCurBandwidth",
-        "qtssMP3SvrTotalBytes"
+    /* 0  */ "qtssServerAPIVersion",
+    /* 1  */ "qtssSvrDefaultDNSName", 
+    /* 2  */ "qtssSvrDefaultIPAddr", 
+    /* 3  */ "qtssSvrServerName",
+    /* 4  */ "qtssSvrServerVersion",
+    /* 5  */ "qtssSvrServerBuildDate", 
+    /* 6  */ "qtssSvrHTTPPorts", 
+    /* 7  */ "qtssSvrHTTPServerHeader", 
+    /* 8  */ "qtssSvrState",
+    /* 9  */ "qtssSvrIsOutOfDescriptors", 
+    /* 10 */ "qtssCurrentSessionCount",
+	
+    /* 11 */ "qtssSvrHandledMethods", 
+    /* 12 */ "qtssSvrModuleObjects", 
+    /* 13 */ "qtssSvrStartupTime", 
+    /* 14 */ "qtssSvrGMTOffsetInHrs",
+    /* 15 */ "qtssSvrDefaultIPAddrStr",
+    
+    /* 16 */ "qtssSvrPreferences", 
+    /* 17 */ "qtssSvrMessages", 
+    /* 18 */ "qtssSvrClientSessions",
+    /* 19 */ "qtssSvrCurrentTimeMilliseconds",
+    /* 20 */ "qtssSvrCPULoadPercent", 
+    
+    /* 21 */ "qtssSvrConnectedUsers",
+    /* 22 */ "qtssSvrServerBuild", 
+    /* 23 */ "qtssSvrServerPlatform",
+    /* 24 */ "qtssSvrHTTPServerComment",
+    /* 25 */ "qtssSvrNumThinned", 
+    /* 26 */ "qtssSvrNumThreads"
     };
     static int numAttributes = sizeof(sAttributes) / sizeof(char*);
         
