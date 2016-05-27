@@ -261,8 +261,3 @@ void HTTPSessionInterface::UnRegDevSession()
 		}
 	}
 }
-
-QTSS_Error HTTPSessionInterface::UpdateDevRedis()
-{
-	return QTSS_NoErr;
-}

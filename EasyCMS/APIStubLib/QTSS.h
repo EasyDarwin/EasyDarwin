@@ -634,7 +634,8 @@ typedef union
 	// EasyCMS
 	QTSS_Sync_Params					SyncParams;
     QTSS_Nonce_Params                   NonceParams;
-	//EasyRedis
+
+	//EasyRedisModule
 	QTSS_StreamName_Params              StreamNameParams;
 	QTSS_GetAssociatedDarwin_Params	    GetAssociatedDarwinParams;
 	QTSS_GetBestDarwin_Params			GetBestDarwinParams;    
