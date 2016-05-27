@@ -114,6 +114,9 @@ private:
 	// 初步判断Session Socket是否已连接
 	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
 
+	// transfer error code for http status code
+	size_t GetStatusNo(QTSS_Error errNo);
+
 	EasyMsgDSPostSnapREQ* fSnapReq;
 
 	// send message count
