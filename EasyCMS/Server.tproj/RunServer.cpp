@@ -301,27 +301,36 @@ void LogStatus(QTSS_ServerState theServerState)
     
     static char *sAttributes[] =
     {
-        "qtssSvrServerName",
-        "qtssSvrServerVersion",
-        "qtssSvrServerBuild",
-        "qtssSvrServerPlatform",
-        "qtssSvrHTTPServerComment",
-        "qtssSvrServerBuildDate",
-        "qtssSvrStartupTime",
-        "qtssSvrCurrentTimeMilliseconds",
-        "qtssSvrCPULoadPercent",
-        "qtssSvrState",
-        "qtssRTPSvrCurConn",
-        "qtssCurrentSessionCount",
-        "qtssRTSPHTTPCurrentSessionCount",
-        "qtssRTPSvrCurBandwidth",
-        "qtssRTPSvrCurPackets",
-        "qtssRTPSvrTotalConn",
-        "qtssRTPSvrTotalBytes",
-        "qtssMP3SvrCurConn",
-        "qtssMP3SvrTotalConn",
-        "qtssMP3SvrCurBandwidth",
-        "qtssMP3SvrTotalBytes"
+    /* 0  */ "qtssServerAPIVersion",
+    /* 1  */ "qtssSvrDefaultDNSName", 
+    /* 2  */ "qtssSvrDefaultIPAddr", 
+    /* 3  */ "qtssSvrServerName",
+    /* 4  */ "qtssSvrServerVersion",
+    /* 5  */ "qtssSvrServerBuildDate", 
+    /* 6  */ "qtssSvrHTTPPorts", 
+    /* 7  */ "qtssSvrHTTPServerHeader", 
+    /* 8  */ "qtssSvrState",
+    /* 9  */ "qtssSvrIsOutOfDescriptors", 
+    /* 10 */ "qtssCurrentSessionCount",
+	
+    /* 11 */ "qtssSvrHandledMethods", 
+    /* 12 */ "qtssSvrModuleObjects", 
+    /* 13 */ "qtssSvrStartupTime", 
+    /* 14 */ "qtssSvrGMTOffsetInHrs",
+    /* 15 */ "qtssSvrDefaultIPAddrStr",
+    
+    /* 16 */ "qtssSvrPreferences", 
+    /* 17 */ "qtssSvrMessages", 
+    /* 18 */ "qtssSvrClientSessions",
+    /* 19 */ "qtssSvrCurrentTimeMilliseconds",
+    /* 20 */ "qtssSvrCPULoadPercent", 
+    
+    /* 21 */ "qtssSvrConnectedUsers",
+    /* 22 */ "qtssSvrServerBuild", 
+    /* 23 */ "qtssSvrServerPlatform",
+    /* 24 */ "qtssSvrHTTPServerComment",
+    /* 25 */ "qtssSvrNumThinned", 
+    /* 26 */ "qtssSvrNumThreads"
     };
     static int numAttributes = sizeof(sAttributes) / sizeof(char*);
         
@@ -334,31 +343,30 @@ void LogStatus(QTSS_ServerState theServerState)
     if (interval == 0 || (OS::UnixTime_Secs() % interval) > 0 ) 
         return;
     
-    // If the total number of RTSP sessions is 0  then we 
+    // If the total number of HTTP sessions is 0  then we 
     // might not need to update the "server_status" file.
     char* thePrefStr = NULL;
-    // We start lastRTSPSessionCount off with an impossible value so that
+    // We start lastHTTPSessionCount off with an impossible value so that
     // we force the "server_status" file to be written at least once.
-    static int lastRTSPSessionCount = -1; 
-    // Get the RTSP session count from the server.
+    static int lastHTTPSessionCount = -1; 
+    // Get the HTTP session count from the server.
     (void)QTSS_GetValueAsString(sServer, qtssCurrentSessionCount, 0, &thePrefStr);
-    int currentRTSPSessionCount = ::atoi(thePrefStr);
+    int currentHTTPSessionCount = ::atoi(thePrefStr);
     delete [] thePrefStr; thePrefStr = NULL;
-    if (currentRTSPSessionCount == 0 && currentRTSPSessionCount == lastRTSPSessionCount)
+    if (currentHTTPSessionCount == 0 && currentHTTPSessionCount == lastHTTPSessionCount)
     {
         // we don't need to update the "server_status" file except the
         // first time we are in the idle state.
         if (theServerState == qtssIdleState && lastServerState == qtssIdleState)
         {
-            lastRTSPSessionCount = currentRTSPSessionCount;
+            lastHTTPSessionCount = currentHTTPSessionCount;
             lastServerState = theServerState;
             return;
         }
     }
     else
     {
-        // save the RTSP session count for the next time we execute.
-        lastRTSPSessionCount = currentRTSPSessionCount;
+        lastHTTPSessionCount = currentHTTPSessionCount;
     }
 
     StrPtrLenDel pathStr(sServer->GetPrefs()->GetErrorLogDir());
@@ -420,64 +428,14 @@ void DebugLevel_1(FILE*   statusFile, FILE*   stdOut,  Bool16 printHeader )
 
     if ( printHeader )
     {                   
-        print_status(statusFile,stdOut,"%s", "     RTP-Conns RTSP-Conns HTTP-Conns  kBits/Sec   Pkts/Sec   RTP-Playing   AvgDelay CurMaxDelay  MaxDelay  AvgQuality  NumThinned      Time\n");
-    }
-    
-    //(void)QTSS_GetValueAsString(sServer, qtssRTPSvrCurConn, 0, &thePrefStr);
-    //print_status(statusFile, stdOut,"%11s", thePrefStr);
-    
+        printf("****************************************");
+	}
+       
     delete [] thePrefStr; thePrefStr = NULL;
     
     (void)QTSS_GetValueAsString(sServer, qtssCurrentSessionCount, 0, &thePrefStr);
     print_status(statusFile, stdOut,"%11s", thePrefStr);
     delete [] thePrefStr; thePrefStr = NULL;
-    
-    //(void)QTSS_GetValueAsString(sServer, qtssRTSPHTTPCurrentSessionCount, 0, &thePrefStr);
-    //print_status(statusFile, stdOut,"%11s", thePrefStr);
-    //delete [] thePrefStr; thePrefStr = NULL;
-    
-    //UInt32 curBandwidth = 0;
-    //theLen = sizeof(curBandwidth);
-    //(void)QTSS_GetValue(sServer, qtssRTPSvrCurBandwidth, 0, &curBandwidth, &theLen);
-    //qtss_snprintf(numStr, 11, "%"_U32BITARG_"", curBandwidth/1024);
-    //print_status(statusFile, stdOut,"%11s", numStr);
-
-    //(void)QTSS_GetValueAsString(sServer, qtssRTPSvrCurPackets, 0, &thePrefStr);
-    //print_status(statusFile, stdOut,"%11s", thePrefStr);
-    //delete [] thePrefStr; thePrefStr = NULL;
-   
-    //is the server keeping up with the streams?
-    //what quality are the streams?
-    //SInt64 totalRTPPaackets = sServer->GetTotalRTPPackets();
-    //SInt64 deltaPackets = totalRTPPaackets - sLastDebugPackets;
-    //sLastDebugPackets = totalRTPPaackets;
-
-    SInt64 totalQuality = sServer->GetTotalQuality();
-    SInt64 deltaQuality = totalQuality - sLastDebugTotalQuality;
-    sLastDebugTotalQuality = totalQuality;
-
-    SInt64 currentMaxLate =  sServer->GetCurrentMaxLate();
-    SInt64 totalLate =  sServer->GetTotalLate();
-
-    sServer->ClearTotalLate();
-    sServer->ClearCurrentMaxLate();
-    sServer->ClearTotalQuality();
-    
-    ::qtss_snprintf(numStr, sizeof(numStr) -1, "%s", "0");
-    //if (deltaPackets > 0)
-    //    qtss_snprintf(numStr, sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) ((SInt64)totalLate /  (SInt64) deltaPackets ));
-    print_status(statusFile, stdOut,"%11s", numStr);
-
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) currentMaxLate);
-    print_status(statusFile, stdOut,"%11s", numStr);
-    
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32)  sServer->GetMaxLate() );
-    print_status(statusFile, stdOut,"%11s", numStr);
-
-    //::qtss_snprintf(numStr, sizeof(numStr) -1, "%s", "0");
-    //if (deltaPackets > 0)
-    //    qtss_snprintf(numStr, sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) ((SInt64) deltaQuality /  (SInt64) deltaPackets));
-    //print_status(statusFile, stdOut,"%11s", numStr);
 
     qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) sServer->GetNumThinned() );
     print_status(statusFile, stdOut,"%11s", numStr);

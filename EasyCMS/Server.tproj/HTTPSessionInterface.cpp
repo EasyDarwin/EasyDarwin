@@ -184,25 +184,19 @@ QTSS_Error HTTPSessionInterface::RequestEvent(QTSS_EventType inEventMask)
     return QTSS_NoErr;
 }
 
-/*
-    take the TCP socket away from a RTSP session that's
-    waiting to be snarfed.
-    
-*/
-
-void    HTTPSessionInterface::SnarfInputSocket( HTTPSessionInterface* fromRTSPSession )
+void    HTTPSessionInterface::SnarfInputSocket( HTTPSessionInterface* fromHTTPSession )
 {
-    Assert( fromRTSPSession != NULL );
-    Assert( fromRTSPSession->fOutputSocketP != NULL );
+    Assert( fromHTTPSession != NULL );
+    Assert( fromHTTPSession->fOutputSocketP != NULL );
     
-    fInputStream.SnarfRetreat( fromRTSPSession->fInputStream );
+    fInputStream.SnarfRetreat( fromHTTPSession->fInputStream );
 
     if (fInputSocketP == fOutputSocketP)
         fInputSocketP = NEW TCPSocket( this, Socket::kNonBlockingSocketType );
     else
         fInputSocketP->Cleanup();   // if this is a socket replacing an old socket, we need
                                     // to make sure the file descriptor gets closed
-    fInputSocketP->SnarfSocket( fromRTSPSession->fSocket );
+    fInputSocketP->SnarfSocket( fromHTTPSession->fSocket );
     
     // fInputStream, meet your new input socket
     fInputStream.AttachToSocket( fInputSocketP );

@@ -829,8 +829,6 @@ void QTSServer::DoInitRole()
     OSThread::SetMainThreadData(&theModuleState);
 
     //
-    // Add the OPTIONS method as the one method the server handles by default (it handles
-    // it internally). Modules that handle other RTSP methods will add 
     HTTPMethod theOptionsMethod = httpGetMethod;
     (void)this->SetValue(qtssSvrHandledMethods, 0, &theOptionsMethod, sizeof(theOptionsMethod));
 

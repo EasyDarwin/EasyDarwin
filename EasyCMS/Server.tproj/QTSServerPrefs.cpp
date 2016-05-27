@@ -65,24 +65,22 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "2",        NULL                    },  //10 error_logfile_verbosity
     { kDontAllowMultipleValues, "true",     NULL                    },  //11 screen_logging
     { kDontAllowMultipleValues, "true",     NULL                    },  //12 error_logging
-    { kDontAllowMultipleValues, "CMS000",   NULL                    },  //13 service_id
-    { kDontAllowMultipleValues, "127.0.0.1",NULL					},  //14 redis_ip_addr
-    { kDontAllowMultipleValues, "6379",     NULL					},	//15 redis_port
-    { kDontAllowMultipleValues, "./snap/",      NULL                },  //16 snap_local_path
-    { kDontAllowMultipleValues, "http://snap.easydarwin.org/", NULL },  //17 snap_web_path
-    { kDontAllowMultipleValues, "false",    NULL                    },  //18 auto_start
-    { kDontAllowMultipleValues, "false",    NULL                    },  //19 MSG_debug_printfs
-    { kDontAllowMultipleValues, "false",    NULL                    },  //20 enable_monitor_stats_file
-    { kDontAllowMultipleValues, "10",       NULL                    },  //21 monitor_stats_file_interval_seconds
-    { kDontAllowMultipleValues, "server_status",        NULL        },  //22 monitor_stats_file_name
-	{ kDontAllowMultipleValues, "0",        NULL                    },  //23 run_num_threads
-    { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR "easycms" ".pid",	NULL	},	//24 pid_file
-    { kDontAllowMultipleValues, "false",    NULL                    },  //25 force_logs_close_on_write
-    { kDontAllowMultipleValues, "10000",    NULL                     }, //26 monitor_lan_port
-    { kDontAllowMultipleValues, "10000",    NULL                     }, //27 monitor_wan_port
-    { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //28 monitor_lan_ip
-    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //29 monitor_wan_ip
-    { kDontAllowMultipleValues, "2",        NULL                     }  //30 run_num_msg_threads
+    { kDontAllowMultipleValues, "EasyCMS0",	NULL                    },  //13 service_id
+    { kDontAllowMultipleValues, "./snap/",	NULL					},  //14 snap_local_path
+    { kDontAllowMultipleValues, "http://snap.easydarwin.org/", NULL },  //15 snap_web_path
+    { kDontAllowMultipleValues, "false",    NULL                    },  //16 auto_start
+    { kDontAllowMultipleValues, "false",    NULL                    },  //17 MSG_debug_printfs
+    { kDontAllowMultipleValues, "false",    NULL                    },  //18 enable_monitor_stats_file
+    { kDontAllowMultipleValues, "10",       NULL                    },  //19 monitor_stats_file_interval_seconds
+    { kDontAllowMultipleValues, "server_status",        NULL        },  //20 monitor_stats_file_name
+	{ kDontAllowMultipleValues, "0",        NULL                    },  //21 run_num_threads
+    { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR "easycms" ".pid",	NULL	},	//22 pid_file
+    { kDontAllowMultipleValues, "false",    NULL                    },  //23 force_logs_close_on_write
+    { kDontAllowMultipleValues, "10000",    NULL                     }, //24 monitor_lan_port
+    { kDontAllowMultipleValues, "10000",    NULL                     }, //25 monitor_wan_port
+    { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //26 monitor_lan_ip
+    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //27 monitor_wan_ip
+    { kDontAllowMultipleValues, "2",        NULL                     }  //28 run_num_msg_threads
 };
  
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
@@ -101,23 +99,21 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 11 */ { "screen_logging",                        NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 12 */ { "error_logging",                         NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 13 */ { "service_id",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 14 */ { "redis_ip_addr",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 15 */ { "redis_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 16 */ { "snap_local_path",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 17 */ { "snap_web_path",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 18 */ { "auto_start",                            NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 19 */ { "MSG_debug_printfs",						NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 20 */ { "enable_monitor_stats_file",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 21 */ { "monitor_stats_file_interval_seconds",   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 22 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 23 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 24 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
-    /* 25 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 26 */ { "monitor_lan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 27 */ { "monitor_wan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 28 */ { "monitor_lan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 29 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 30 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
+	/* 14 */ { "snap_local_path",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 15 */ { "snap_web_path",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 16 */ { "auto_start",                            NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 17 */ { "MSG_debug_printfs",						NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 18 */ { "enable_monitor_stats_file",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 19 */ { "monitor_stats_file_interval_seconds",   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 20 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 21 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 22 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
+    /* 23 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 24 */ { "monitor_lan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 25 */ { "monitor_wan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 26 */ { "monitor_lan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 27 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 28 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
 QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs)
@@ -184,8 +180,6 @@ void QTSServerPrefs::SetupAttributes()
 
 	this->SetVal(qtssPrefsServiceID,					&fServiceID,            sizeof(fServiceID));
 
-	this->SetVal(qtssPrefsRedisIPAddr,					&fRedisAddr,            sizeof(fRedisAddr));
-	this->SetVal(qtssPrefsRedisPorts,					&fRedisPort,          sizeof(fRedisPort));
     this->SetVal(qtssPrefsNumMsgThreads,				&fNumMsgThreads,               sizeof(fNumMsgThreads));
 }
 

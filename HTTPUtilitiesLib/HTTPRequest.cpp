@@ -244,7 +244,6 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
     }
 
     StrPtrLen queryString;
-    //this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
     if ( parser->GetDataRemaining() > 0 )
     {   
         if ( parser->PeekFast() == '?' )
@@ -266,7 +265,6 @@ QTSS_Error HTTPRequest::ParseURI(StringParser* parser)
 				fQueryString = NEW char[queryString.Len + 1];
 				::memcpy(fQueryString, queryString.Ptr, queryString.Len); 
 				fQueryString[queryString.Len] = '\0';
-				//this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
 			}
         }
     }

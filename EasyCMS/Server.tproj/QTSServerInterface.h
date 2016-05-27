@@ -103,26 +103,9 @@ class QTSServerInterface : public QTSSDictionary
         
         void                AlterCurrentHTTPSessionCount(SInt32 inDifference)
             { OSMutexLocker locker(&fMutex); fNumHTTPSessions += inDifference; }
-            
-		void            IncrementTotalLate(SInt64 milliseconds)
-           {    OSMutexLocker locker(&fMutex); 
-                fTotalLate += milliseconds;
-                if (milliseconds > fCurrentMaxLate) fCurrentMaxLate = milliseconds;
-                if (milliseconds > fMaxLate) fMaxLate = milliseconds;
-           }
-           
-        void            IncrementTotalQuality(SInt32 level)
-           { OSMutexLocker locker(&fMutex); fTotalQuality += level; }
            
         void            IncrementNumThinned(SInt32 inDifference)
            { OSMutexLocker locker(&fMutex); fNumThinned += inDifference; }
-
-        void            ClearTotalLate()
-           { OSMutexLocker locker(&fMutex); fTotalLate = 0;  }
-        void            ClearCurrentMaxLate()
-           { OSMutexLocker locker(&fMutex); fCurrentMaxLate = 0;  }
-        void            ClearTotalQuality()
-           { OSMutexLocker locker(&fMutex); fTotalQuality = 0;  }
 
 		void 			InitNumThreads(UInt32 numThreads) {  fNumThreads = numThreads; }
         //
@@ -139,11 +122,7 @@ class QTSServerInterface : public QTSSDictionary
         UInt32              GetDebugOptions()                   { return fDebugOptions; }
         void                SetDebugLevel(UInt32 debugLevel)    { fDebugLevel = debugLevel; }
         void                SetDebugOptions(UInt32 debugOptions){ fDebugOptions = debugOptions; }
-        
-        SInt64          GetMaxLate()                { return fMaxLate; };
-        SInt64          GetTotalLate()              { return fTotalLate; };
-        SInt64          GetCurrentMaxLate()         { return fCurrentMaxLate; };
-        SInt64          GetTotalQuality()           { return fTotalQuality; };
+
         SInt32          GetNumThinned()             { return fNumThinned; };
         UInt32          GetNumThreads()             { return fNumThreads; };
 
@@ -281,11 +260,6 @@ class QTSServerInterface : public QTSSDictionary
         UInt32              fDebugLevel;
         UInt32              fDebugOptions;
         
-
-        SInt64          fMaxLate;
-        SInt64          fTotalLate;
-        SInt64          fCurrentMaxLate;
-        SInt64          fTotalQuality;
         SInt32          fNumThinned;
         UInt32          fNumThreads;
  
