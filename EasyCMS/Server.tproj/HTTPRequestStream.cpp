@@ -5,9 +5,9 @@
 	Website: http://www.EasyDarwin.org
 */
 /*
-    File:       RTSPRequestStream.cpp
+    File:       HTTPRequestStream.cpp
 
-    Contains:   Implementation of RTSPRequestStream class. 
+    Contains:   Implementation of HTTPRequestStream class. 
 */
 
 

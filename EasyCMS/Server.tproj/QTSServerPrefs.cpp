@@ -66,7 +66,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "true",     NULL                    },  //11 screen_logging
     { kDontAllowMultipleValues, "true",     NULL                    },  //12 error_logging
     { kDontAllowMultipleValues, "EasyCMS0",	NULL                    },  //13 service_id
-    { kDontAllowMultipleValues, "./snap/",      NULL                },  //14 snap_local_path
+    { kDontAllowMultipleValues, "./snap/",	NULL					},  //14 snap_local_path
     { kDontAllowMultipleValues, "http://snap.easydarwin.org/", NULL },  //15 snap_web_path
     { kDontAllowMultipleValues, "false",    NULL                    },  //16 auto_start
     { kDontAllowMultipleValues, "false",    NULL                    },  //17 MSG_debug_printfs

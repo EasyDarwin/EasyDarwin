@@ -29,7 +29,7 @@
 	Website: http://www.EasyDarwin.org
 */
  /*
-    Contains:   Object store for RTSP server preferences.
+    Contains:   Object store for HTTP server preferences.
 */
 
 #ifndef __QTSSERVERPREFS_H__
@@ -107,8 +107,8 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16 ServerStatFileEnabled()      { return fEnableMonitorStatsFile; }
         UInt32 GetStatFileIntervalSec()     { return fStatsFileIntervalSeconds; }
                  
-        UInt32  GetNumThreads()                   { return fNumThreads; } //short tasks threads
-        UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
+        UInt32  GetNumThreads()                   { return fNumThreads; }
+        UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } 
 
         UInt16  GetMonitorLANPort()			{ return fMonitorLANPort; }       
         UInt16  GetMonitorWANPort()         { return fMonitorWANPort; }  
@@ -171,9 +171,5 @@ class QTSServerPrefs : public QTSSPrefs
         
         static QTSSAttrInfoDict::AttrInfo   sAttributes[];
         static PrefInfo sPrefInfo[];
-        
-        // Prefs that have multiple default values (rtsp_ports) have
-        // to be dealt with specially
-        static char*    sAdditionalDefaultPorts[];   
 };
 #endif //__QTSSPREFS_H__

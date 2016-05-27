@@ -342,15 +342,15 @@ void LogStatus(QTSS_ServerState theServerState)
     static int lastRTSPSessionCount = -1; 
     // Get the RTSP session count from the server.
     (void)QTSS_GetValueAsString(sServer, qtssCurrentSessionCount, 0, &thePrefStr);
-    int currentRTSPSessionCount = ::atoi(thePrefStr);
+    int currentHTTPSessionCount = ::atoi(thePrefStr);
     delete [] thePrefStr; thePrefStr = NULL;
-    if (currentRTSPSessionCount == 0 && currentRTSPSessionCount == lastRTSPSessionCount)
+    if (currentHTTPSessionCount == 0 && currentHTTPSessionCount == lastRTSPSessionCount)
     {
         // we don't need to update the "server_status" file except the
         // first time we are in the idle state.
         if (theServerState == qtssIdleState && lastServerState == qtssIdleState)
         {
-            lastRTSPSessionCount = currentRTSPSessionCount;
+            lastRTSPSessionCount = currentHTTPSessionCount;
             lastServerState = theServerState;
             return;
         }
@@ -358,7 +358,7 @@ void LogStatus(QTSS_ServerState theServerState)
     else
     {
         // save the RTSP session count for the next time we execute.
-        lastRTSPSessionCount = currentRTSPSessionCount;
+        lastRTSPSessionCount = currentHTTPSessionCount;
     }
 
     StrPtrLenDel pathStr(sServer->GetPrefs()->GetErrorLogDir());
