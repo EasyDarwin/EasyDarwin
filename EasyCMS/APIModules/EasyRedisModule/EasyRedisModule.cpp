@@ -8,6 +8,12 @@
 #include "QTSServerInterface.h"
 #include "HTTPSessionInterface.h"
 
+#ifndef _WIN32
+#include "hiredis.h"
+#else
+#include "Windows/hiredis.h"
+#endif
+
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject modulePrefs = NULL;
 static QTSS_PrefsObject     sServerPrefs    = NULL;

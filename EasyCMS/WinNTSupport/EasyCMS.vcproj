@@ -71,11 +71,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib hiredis.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyCMS.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Lib;../../redis"
+				AdditionalLibraryDirectories="../../Lib;"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/EasyCMS.pdb"
@@ -337,10 +337,6 @@
 				</File>
 				<File
 					RelativePath="..\Server.tproj\RunServer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\redis\win32fixes.c"
 					>
 				</File>
 				<File

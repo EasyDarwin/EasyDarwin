@@ -60,10 +60,6 @@
 using namespace EasyDarwin::Protocol;
 
 
-//redis
-#include"hiredis.h"
-//#include"win32fixes.h"
-
 
 // OSRefTable;
 class QTSServerPrefs;
