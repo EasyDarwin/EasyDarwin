@@ -249,11 +249,15 @@ void HTTPSessionInterface::UnRegDevSession()
 
 		QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(fDevice.serial_);//add
 		//在redis上删除设备
-		QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
-	}
-}
+		//QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
 
-QTSS_Error HTTPSessionInterface::UpdateDevRedis()
-{
-	return QTSS_NoErr;
+		QTSS_RoleParams theParams;
+		theParams.StreamNameParams.inStreamName = (char *)(fDevice.serial_.c_str());
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kDelDevNameRole);
+		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+		{
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kDelDevNameRole, currentModule);
+			(void)theModule->CallDispatch(QTSS_DelDevName_Role, &theParams);
+		}
+	}
 }

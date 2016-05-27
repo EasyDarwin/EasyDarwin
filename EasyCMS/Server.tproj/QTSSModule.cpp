@@ -236,6 +236,12 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         case QTSS_Interval_Role:            return kTimedIntervalRole       ;
 		case QTSS_NONCE_ROLE:               return kNonceRole               ;
 		case QTSS_AUTH_ROLE:                return kAuthRole                ;
+		case QTSS_TTL_Role:					return kTTLRole					;
+		case QTSS_AddDevName_Role:			return kAddDevNameRole			;
+		case QTSS_DelDevName_Role:			return kDelDevNameRole			;
+		case QTSS_GetAssociatedDarwin_Role: return kGetAssociatedDarwinRole	;
+		case QTSS_GetBestDarwin_Role:		return kGetBestDarwinRole		;
+		case QTSS_GenStreamID_Role:			return kGenStreamIDRole			;
         default:
             return -1;
     }

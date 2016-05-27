@@ -23,7 +23,11 @@ class EasyRedisClient
 public:
     EasyRedisClient();
     virtual ~EasyRedisClient();
-    
+
+private:
+	typedef void* EasyRedisContextObject;
+	typedef void* EasyRedisReplyObject;
+
 public:
     // return 0 when there is no error
     int Connect(const char *host, std::size_t port);
@@ -61,15 +65,16 @@ public:
 	void AppendCommand(const char * command);//redisAppendCommand return void
 	int GetReply(void ** reply);
 	void Free();
+	int SAdd(const char* key, const char * member);
+	int SRem(const char* key, const char * member);
+	int SetEX(const char* key,std::size_t timeout,const char * value);
+	EasyRedisReplyObject Exists(const char * key);
+	EasyRedisReplyObject SMembers(const char * key);
 public:
     static std::string IntToString(int value);
     static int StringToInt(std::string value);
     static std::string FloatToString(float value);
     static float StringToFloat(std::string value);
-        
-private:
-    typedef void* EasyRedisContextObject;
-    typedef void* EasyRedisReplyObject;
     
 private:
     int GetValue(EasyRedisReplyObject reply, std::string &value);

@@ -482,3 +482,91 @@ void EasyRedisClient::Free()
 	if (fRedisContext != NULL)
 		redisFree(RedisContextPtr(fRedisContext));
 }
+
+int EasyRedisClient::SAdd(const char* key, const char * member)//SADD
+{
+	int ret = -1;
+	if (fRedisContext != NULL)
+	{
+		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "SADD %s %s", key, member);
+		if(reply == NULL)
+		{
+			printf("EasyRedisClient::SADD error:key[%s], member[%s](%s)\n", key, member, GetErrorString());
+			return -1;
+		}
+		std::string res;
+		ret = GetValue(reply, res);
+		if(ret < 0)
+		{
+			printf("EasyRedisClient::SADD(key[%s], member[%s]) error: %s\n", key, member, res.c_str());
+		}
+		freeReplyObject(reply);
+		return RedisContextPtr(fRedisContext)->err;
+	}
+	return ret;
+};
+
+
+int EasyRedisClient::SRem(const char* key, const char * member)//SREM
+{
+	int ret = -1;
+	if (fRedisContext != NULL)
+	{
+		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "SREM %s %s", key, member);
+		if(reply == NULL)
+		{
+			printf("EasyRedisClient::SREM error:key[%s], member[%s](%s)\n", key, member, GetErrorString());
+			return -1;
+		}
+		std::string res;
+		ret = GetValue(reply, res);
+		if(ret < 0)
+		{
+			printf("EasyRedisClient::SREM(key[%s], member[%s]) error: %s\n", key, member, res.c_str());
+		}
+		freeReplyObject(reply);
+		return RedisContextPtr(fRedisContext)->err;
+	}
+	return ret;
+};
+
+int EasyRedisClient::SetEX(const char* key, std::size_t timeout,const char * value)
+{
+	int ret = -1;
+	if (fRedisContext != NULL)
+	{
+		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "SETEX %s %d %s", key, timeout,value);
+		if(reply == NULL)
+		{
+			printf("EasyRedisClient::SETEX error:key[%s], timeout[%d],value[%s](%s)\n", key, timeout, value,GetErrorString());
+			return -1;
+		}
+		std::string res;
+		ret = GetValue(reply, res);
+		if(ret < 0)
+		{
+			printf("EasyRedisClient::SETEX(key[%s], timeout[%d], value[%s]) error: %s\n", key, timeout,value, res.c_str());
+		}
+		freeReplyObject(reply);
+		return RedisContextPtr(fRedisContext)->err;
+	}
+	return ret;
+}
+
+EasyRedisClient::EasyRedisReplyObject EasyRedisClient::SMembers(const char * key)
+{
+	if (fRedisContext != NULL)
+	{
+		return redisCommand(RedisContextPtr(fRedisContext), "SMEMBERS %s", key);
+	}
+	return NULL;
+}
+
+EasyRedisClient::EasyRedisReplyObject EasyRedisClient::Exists(const char * key)
+{
+	if (fRedisContext != NULL)
+	{
+		return redisCommand(RedisContextPtr(fRedisContext), "EXISTS %s", key);
+	}
+	return NULL;
+}
