@@ -611,7 +611,12 @@ void RunServer()
 		if(num%5==0)
 		{
 			num=0;
-			QTSServerInterface::GetServer()->RedisTTL();
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kTTLRole);
+			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kTTLRole, currentModule);
+				(void)theModule->CallDispatch(QTSS_TTL_Role, NULL);
+			}
 		}
 		//
         LogStatus(theServerState);

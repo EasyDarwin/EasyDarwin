@@ -480,7 +480,15 @@ enum
 
     //add,角色的添加
 	QTSS_NONCE_ROLE    =            FOUR_CHARS_TO_INT('o','n','c','e'),//once
-	QTSS_AUTH_ROLE     =            FOUR_CHARS_TO_INT('a','u','t','r')//autr,auth已经使用
+	QTSS_AUTH_ROLE     =            FOUR_CHARS_TO_INT('a','u','t','r'),//autr,auth已经使用
+
+	//redis module roles
+	QTSS_AddDevName_Role =			FOUR_CHARS_TO_INT('a','d','n','r'),//adnr
+	QTSS_DelDevName_Role =			FOUR_CHARS_TO_INT('d','d','n','r'),//ddnr
+	QTSS_TTL_Role =					FOUR_CHARS_TO_INT('t','t','l','r'),//ttlr
+	QTSS_GetAssociatedDarwin_Role =	FOUR_CHARS_TO_INT('g','a','d','r'),//gadr
+	QTSS_GetBestDarwin_Role =		FOUR_CHARS_TO_INT('g','b','d','r'),//gbdr
+	QTSS_GenStreamID_Role =			FOUR_CHARS_TO_INT('g','s','i','d'),//gsid
 };
 typedef UInt32 QTSS_Role;
 
@@ -583,6 +591,31 @@ typedef struct//add
 
 typedef struct
 {
+	char * inStreamName;
+}QTSS_StreamName_Params;
+
+typedef struct
+{
+	char * inSerial;
+	char * inChannel;
+	char * outDssIP;
+	char * outDssPort;//UINT16 * outDssPort;
+}QTSS_GetAssociatedDarwin_Params;
+
+typedef struct
+{
+	char * outDssIP;
+	char * outDssPort;//UINT16 * outDssPort;
+}QTSS_GetBestDarwin_Params;
+
+typedef struct  
+{
+	char * outStreanID;
+	UInt32 inTimeoutMil;
+}QTSS_GenStreamID_Params;
+
+typedef struct
+{
 	UInt32						currentPlaying;
 } QTSS_Sync_Params;
 
@@ -603,6 +636,11 @@ typedef union
 	// EasyCMS
 	QTSS_Sync_Params					SyncParams;
     QTSS_Nonce_Params                   NonceParams;
+	//EasyRedis
+	QTSS_StreamName_Params              StreamNameParams;
+	QTSS_GetAssociatedDarwin_Params	    GetAssociatedDarwinParams;
+	QTSS_GetBestDarwin_Params			GetBestDarwinParams;    
+	QTSS_GenStreamID_Params				GenStreamIDParams;	
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 

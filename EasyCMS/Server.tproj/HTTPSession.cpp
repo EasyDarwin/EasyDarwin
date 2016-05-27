@@ -701,7 +701,14 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 			qtss_snprintf(msgStr, sizeof(msgStr), "Device register，Device_serial[%s]\n", fDevice.serial_.c_str());
 			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
-			QTSServerInterface::GetServer()->RedisAddDevName(fDevice.serial_.c_str());
+			QTSS_RoleParams theParams;
+			theParams.StreamNameParams.inStreamName = (char *)(fDevice.serial_.c_str());
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kAddDevNameRole);
+			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kAddDevNameRole, currentModule);
+				(void)theModule->CallDispatch(QTSS_AddDevName_Role, &theParams);
+			}
 			fAuthenticated = true;
 		}
 		else
@@ -946,17 +953,46 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 
 		//走到这说明存在指定设备
 		HTTPSession * pDevSession = (HTTPSession *)theDevRef->GetObjectPtr();//获得当前设备回话
+		
 		string strDssIP,strDssPort;
-		if(QTSServerInterface::GetServer()->RedisGetAssociatedDarWin(strDeviceSerial,strCameraSerial,strDssIP,strDssPort))//是否存在关联的EasyDarWin转发服务器test,应该用Redis上的数据，因为推流是不可靠的，而EasyDarWin上的数据是可靠的
+		char chDssIP[20] = {0},chDssPort[6] = {0};
+
+		QTSS_RoleParams theParams;
+		theParams.GetAssociatedDarwinParams.inSerial = (char*)strDeviceSerial.c_str();
+		theParams.GetAssociatedDarwinParams.inChannel = (char*)strCameraSerial.c_str();
+		theParams.GetAssociatedDarwinParams.outDssIP = chDssIP;
+		theParams.GetAssociatedDarwinParams.outDssPort = chDssPort;
+
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetAssociatedDarwinRole);
+		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetAssociatedDarwinRole, currentModule);
+			(void)theModule->CallDispatch(QTSS_GetAssociatedDarwin_Role, &theParams);
+		}
+		if(chDssIP[0] != 0)//是否存在关联的EasyDarWin转发服务器test,应该用Redis上的数据，因为推流是不可靠的，而EasyDarWin上的数据是可靠的
+		{
+			strDssIP = chDssIP;
+			strDssPort = chDssPort;
 			//合成直播的RTSP地址，后续有可能根据请求流的协议不同而生成不同的直播地址，如RTMP、HLS等
 			string strSessionID;
-			bool bReval = QTSServerInterface::GetServer()->RedisGenSession(strSessionID,SessionIDTimeout);
-			if(!bReval)//sessionID在redis上的存储失败
+			char chSessionID[128] = {0};
+
+			QTSS_RoleParams theParams;
+			theParams.GenStreamIDParams.outStreanID = chSessionID;
+			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
+
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGenStreamIDRole);
+			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGenStreamIDRole, currentModule);
+				(void)theModule->CallDispatch(QTSS_GenStreamID_Role, &theParams);
+			}
+			if(chSessionID[0] == 0)//sessionID在redis上的存储失败
 			{
 				DeviceMap->Release(strDeviceSerial);/////////////////////////////////////////////--
 				return EASY_ERROR_SERVER_INTERNAL_ERROR;
 			}
+			strSessionID = chSessionID;
 			strURL="rtsp://"+strDssIP+':'+strDssPort+'/'
 				+strSessionID+'/'
 				+strDeviceSerial+'/'
@@ -967,14 +1003,27 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 		}
 		else
 		{//不存在关联的EasyDarWin
-			bool bErr = QTSServerInterface::GetServer()->RedisGetBestDarWin(strDssIP,strDssPort);
-			if(!bErr)//不存在DarWin
+
+			char chDssIP[20] = {0},chDssPort[6] = {0};
+			QTSS_RoleParams theParams;
+			theParams.GetBestDarwinParams.outDssIP = chDssIP;
+			theParams.GetBestDarwinParams.outDssPort = chDssPort;
+
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetBestDarwinRole);
+			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetBestDarwinRole, currentModule);
+				(void)theModule->CallDispatch(QTSS_GetBestDarwin_Role, &theParams);
+			}
+			if(chDssIP[0] == 0)//不存在DarWin
 			{
 				DeviceMap->Release(strDeviceSerial);/////////////////////////////////////////////--
 				return EASY_ERROR_SERVICE_NOT_FOUND;
 			}
 			//向指定设备发送开始流请求
 
+			strDssIP = chDssIP;
+			strDssPort = chDssPort;
 			EasyDarwin::Protocol::EasyProtocolACK		reqreq(MSG_SD_PUSH_STREAM_REQ);
 			EasyJsonValue headerheader,bodybody;
 
@@ -985,13 +1034,25 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			headerheader[EASY_TAG_VERSION]=		EASY_PROTOCOL_VERSION;
 
 			string strSessionID;
-			bool bReval = QTSServerInterface::GetServer()->RedisGenSession(strSessionID,SessionIDTimeout);
-			if(!bReval)//sessionID再redis上的存储失败
+			char chSessionID[128] = {0};
+
+			//QTSS_RoleParams theParams;
+			theParams.GenStreamIDParams.outStreanID = chSessionID;
+			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
+
+			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGenStreamIDRole);
+			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGenStreamIDRole, currentModule);
+				(void)theModule->CallDispatch(QTSS_GenStreamID_Role, &theParams);
+			}
+			if(chSessionID[0] == 0)//sessionID再redis上的存储失败
 			{
 				DeviceMap->Release(strDeviceSerial);/////////////////////////////////////////////--
 				return EASY_ERROR_SERVER_INTERNAL_ERROR;
 			}
 
+			strSessionID = chSessionID;
 			bodybody[EASY_TAG_STREAM_ID]		=		strSessionID;
 			bodybody[EASY_TAG_SERVER_IP]		=		strDssIP;
 			bodybody[EASY_TAG_SERVER_PORT]		=		strDssPort;
@@ -1054,12 +1115,23 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			//合成直播地址
 
 			string strSessionID;
-			bool bReval=QTSServerInterface::GetServer()->RedisGenSession(strSessionID,SessionIDTimeout);
-			if(!bReval)//sessionID在redis上的存储失败
+			char chSessionID[128] = {0};
+
+			QTSS_RoleParams theParams;
+			theParams.GenStreamIDParams.outStreanID = chSessionID;
+			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
+
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGenStreamIDRole);
+			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGenStreamIDRole, currentModule);
+				(void)theModule->CallDispatch(QTSS_GenStreamID_Role, &theParams);
+			}
+			if(chSessionID[0] == 0)//sessionID在redis上的存储失败
 			{
 				return EASY_ERROR_SERVER_INTERNAL_ERROR;
 			}
-
+			strSessionID = chSessionID;
 			strURL = "rtsp://"+fInfo.strDssIP+':'+fInfo.strDssPort+'/'
 				+strSessionID+'/'
 				+strDeviceSerial+'/'

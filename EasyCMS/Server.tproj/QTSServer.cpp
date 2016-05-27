@@ -177,20 +177,6 @@ Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
             QTSSModuleUtils::LogError(qtssWarningVerbosity, qtssMsgNoPortsSucceeded, 0);
         return false;
     }
-	
-	//for redis
-	char * chTemp=fSrvrPrefs->GetRedisIP();
-	fRedisIP=chTemp;
-	delete[] chTemp;
-	fRedisPort=fSrvrPrefs->GetRedisPort();
-
-	chTemp=fSrvrPrefs->GetMonitorWANIP();
-	fCMSIP=chTemp;
-	delete[] chTemp;
-	fCMSPort=fSrvrPrefs->GetMonitorWANPort();
-	
-	ConRedis();//Á¬½Óredis
-	//for redis
 
     fServerState = qtssStartingUpState;
     return true;
