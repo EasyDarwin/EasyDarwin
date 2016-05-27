@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 #include "EasyRedisModule.h"
 #include "OSHeaders.h"
 #include "QTSSModuleUtils.h"
@@ -15,9 +14,9 @@
 #endif
 
 // STATIC VARIABLES
-static QTSS_ModulePrefsObject modulePrefs = NULL;
-static QTSS_PrefsObject     sServerPrefs    = NULL;
-static QTSS_ServerObject    sServer     = NULL;
+static QTSS_ModulePrefsObject	modulePrefs		= NULL;
+static QTSS_PrefsObject			sServerPrefs    = NULL;
+static QTSS_ServerObject		sServer			= NULL;
 
 // Redis IP
 static char*            sRedis_IP				= NULL;
@@ -31,18 +30,18 @@ static char*            sDefaultRedisUser		= "admin";
 // Redis password
 static char*            sRedisPassword			= NULL;
 static char*            sDefaultRedisPassword	= "admin";
+// EasyCMS
+static char*			sCMSIP					= NULL;
+static UInt16			sCMSPort				= 10000;
+static EasyRedisClient* sRedisClient			= NULL;//the object pointer that package the redis operation
+static bool				sIfConSucess			= false;
+static OSMutex			sMutex;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error   EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
 static QTSS_Error   Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error   RereadPrefs();
-
-static EasyRedisClient * sRedisClient = NULL;//the object pointer that package the redis operation
-static bool sIfConSucess = false;
-static OSMutex sMutex;
-static char * sCMSIP = NULL;
-static UInt16 sCMSPort = 10000;
 
 static QTSS_Error RedisConnect();
 static QTSS_Error RedisInit();
@@ -52,6 +51,7 @@ static QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams);
 static QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams);
 static QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams);
 static QTSS_Error RedisGenStreamID(QTSS_GenStreamID_Params* inParams);
+
 QTSS_Error EasyRedisModule_Main(void* inPrivateArgs)
 {
 	return _stublibrary_main(inPrivateArgs, EasyRedisModuleDispatch);
@@ -199,7 +199,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		}
 		mutexMap->Unlock();
 
-		char *chNewTemp=new char[strAllDevices.size()+128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
+		char *chNewTemp = new char[strAllDevices.size()+128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
 		//5,设备名称存储
 		sprintf(chNewTemp,"sadd %s:%d_DevName%s",sCMSIP,sCMSPort,strAllDevices.c_str());
 		sRedisClient->AppendCommand(chNewTemp);
@@ -215,8 +215,9 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		{
 			if(REDIS_OK != sRedisClient->GetReply((void**)&reply))
 			{
-				bBreak=true;
-				freeReplyObject(reply);
+				bBreak = true;
+				if(reply)
+					freeReplyObject(reply);
 				break;
 			}
 			freeReplyObject(reply);
@@ -268,6 +269,7 @@ QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams)
 	}
 	return ret;
 }
+
 QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key被删除，这时应该重新设置该key
 {
 
@@ -306,6 +308,7 @@ QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key
 		return ret;
 	}
 }
+
 QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
@@ -378,6 +381,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	freeReplyObject(reply);
 	return QTSS_NoErr;
 }
+
 QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
