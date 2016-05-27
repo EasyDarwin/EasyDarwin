@@ -430,42 +430,12 @@ void DebugLevel_1(FILE*   statusFile, FILE*   stdOut,  Bool16 printHeader )
     {                   
         printf("****************************************");
 	}
-    
-    //(void)QTSS_GetValueAsString(sServer, qtssRTPSvrCurConn, 0, &thePrefStr);
-    //print_status(statusFile, stdOut,"%11s", thePrefStr);
-    
+       
     delete [] thePrefStr; thePrefStr = NULL;
     
     (void)QTSS_GetValueAsString(sServer, qtssCurrentSessionCount, 0, &thePrefStr);
     print_status(statusFile, stdOut,"%11s", thePrefStr);
     delete [] thePrefStr; thePrefStr = NULL;
-
-    SInt64 totalQuality = sServer->GetTotalQuality();
-    SInt64 deltaQuality = totalQuality - sLastDebugTotalQuality;
-    sLastDebugTotalQuality = totalQuality;
-
-    SInt64 currentMaxLate =  sServer->GetCurrentMaxLate();
-    SInt64 totalLate =  sServer->GetTotalLate();
-
-    sServer->ClearTotalLate();
-    sServer->ClearCurrentMaxLate();
-    sServer->ClearTotalQuality();
-    
-    ::qtss_snprintf(numStr, sizeof(numStr) -1, "%s", "0");
-    //if (deltaPackets > 0)
-    //    qtss_snprintf(numStr, sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) ((SInt64)totalLate /  (SInt64) deltaPackets ));
-    print_status(statusFile, stdOut,"%11s", numStr);
-
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) currentMaxLate);
-    print_status(statusFile, stdOut,"%11s", numStr);
-    
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32)  sServer->GetMaxLate() );
-    print_status(statusFile, stdOut,"%11s", numStr);
-
-    //::qtss_snprintf(numStr, sizeof(numStr) -1, "%s", "0");
-    //if (deltaPackets > 0)
-    //    qtss_snprintf(numStr, sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) ((SInt64) deltaQuality /  (SInt64) deltaPackets));
-    //print_status(statusFile, stdOut,"%11s", numStr);
 
     qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) sServer->GetNumThinned() );
     print_status(statusFile, stdOut,"%11s", numStr);

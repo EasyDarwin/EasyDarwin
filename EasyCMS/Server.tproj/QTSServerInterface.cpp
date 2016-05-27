@@ -160,10 +160,6 @@ QTSServerInterface::QTSServerInterface()
     fSigTerm(false),
     fDebugLevel(0),
     fDebugOptions(0),    
-    fMaxLate(0),
-    fTotalLate(0),
-    fCurrentMaxLate(0),
-    fTotalQuality(0),
     fNumThinned(0),
     fNumThreads(0),
 	fIfConSucess(false)//add
