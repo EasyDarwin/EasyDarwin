@@ -3,7 +3,7 @@
 ## 一、问题描述 ##
 Easydarwin中大量使用gettimeofday来获取系统时间，对系统性能造成了一定的影响。我们来做个测试：
 
-![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/doc/gettimeofday/20160519222500202)
+![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/doc/gettimeofday/20160519222500202.jpg)
 
 
 	While(1)
@@ -12,7 +12,7 @@ Easydarwin中大量使用gettimeofday来获取系统时间，对系统性能造�
 	}
 
 
-![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/doc/gettimeofday/20160519222553786)
+![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/doc/gettimeofday/20160519222553786.jpg)
 
 每秒执行次数为约3000w次；
 
@@ -87,7 +87,7 @@ Easydarwin中大量使用gettimeofday来获取系统时间，对系统性能造�
 
 ## 四、优化后的测试效果 ##
 
-![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/doc/gettimeofday/20160519223006766)
+![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/doc/gettimeofday/20160519223006766.jpg)
 
 8000w+次每秒，性能提高了2-3倍。
 在EasyDarwin上测试，通过easypusher_file推送100路，经过my_gettimeofday优化后，cpu消耗降低8%左右。
