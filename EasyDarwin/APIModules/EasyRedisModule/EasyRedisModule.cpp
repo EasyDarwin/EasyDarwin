@@ -112,10 +112,11 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	sRedisClient = new EasyRedisClient();
 
+	RereadPrefs();
+
 	RedisConnect();
 
-
-	return RereadPrefs();
+	return QTSS_NoErr;
 }
 
 QTSS_Error RereadPrefs()
@@ -130,7 +131,6 @@ QTSS_Error RereadPrefs()
 	
 	delete [] sRedisPassword;
     sRedisPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_password", sDefaultRedisPassword);
-	return QTSS_NoErr;
 
 	//get EasyDarwin ip and port
 	delete [] sEasyDarwinIP;
@@ -138,6 +138,8 @@ QTSS_Error RereadPrefs()
 
 	UInt32 len = sizeof(SInt32);
 	(void) QTSS_GetValue(sServerPrefs, qtssPrefsEasyDarWinPort, 0, (void*)&sEasyDarwinPort, &len);
+
+	return QTSS_NoErr;
 
 }
 
@@ -272,7 +274,7 @@ QTSS_Error RedisDelPushName(QTSS_StreamName_Params* inParams)
 		QTSS_NotConnected;
 
 	char chKey[128]={0};
-	sprintf(chKey,"%s:%d_DevName",sEasyDarwinIP,sEasyDarwinPort);
+	sprintf(chKey,"%s:%d_PushName",sEasyDarwinIP,sEasyDarwinPort);
 
 	int ret = sRedisClient->SRem(chKey,inParams->inStreamName);
 	if( ret == -1)//fatal err,need reconnect
