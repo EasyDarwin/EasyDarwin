@@ -292,7 +292,7 @@ QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key
 	{
 		return QTSS_NoErr;
 	}
-	else if(ret == 0)//the ksy not exist, reset
+	else if(ret == 0)//the key doesn't exist, reset
 	{
 		sprintf(chKey,"%s:%d_Live",sCMSIP,sCMSPort);
 		int retret = sRedisClient->SetEX(chKey,15,"1");

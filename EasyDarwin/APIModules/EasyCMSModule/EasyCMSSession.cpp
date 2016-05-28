@@ -299,8 +299,8 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 		case  MSG_SC_FREE_STREAM_ACK:
 			{
 				string strErrorNum		=	protocol.GetHeaderValue(EASY_TAG_ERROR_NUM);
-				string strSerial		=	protocol.GetHeaderValue(EASY_TAG_SERIAL);
-				string strChannle		=	protocol.GetHeaderValue(EASY_TAG_CHANNEL);
+				string strSerial		=	protocol.GetBodyValue(EASY_TAG_SERIAL);
+				string strChannle		=	protocol.GetBodyValue(EASY_TAG_CHANNEL);
 				
 				qtss_printf("EasyCMS停止推流响应:%s,Serial=%s,Channel=%s",strErrorNum.c_str(),strSerial.c_str(),strChannle.c_str());
 				fLiveSession=false;//进入析构
@@ -328,11 +328,11 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 	header[EASY_TAG_APP_TYPE]	=	EasyProtocol::GetAppTypeString(EASY_APP_TYPE_EASYDARWIN);
 
 #ifdef __Win32__
-	header[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetAppTypeString(EASY_TERMINAL_TYPE_WINDOWS);
+	header[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetTerminalTypeString(EASY_TERMINAL_TYPE_WINDOWS);
 #elif defined __linux__
-	header[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetAppTypeString(EASY_TERMINAL_TYPE_LINUX);
+	header[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetTerminalTypeString(EASY_TERMINAL_TYPE_LINUX);
 #elif defined __MacOSX__
-	header[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetAppTypeString(EASY_TERMINAL_TYPE_IOS);
+	header[EASY_TAG_TERMINAL_TYPE]	=	EasyProtocol::GetTerminalTypeString(EASY_TERMINAL_TYPE_IOS);
 #endif
 
 
@@ -382,19 +382,49 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		}
 		fStreamName = new char[strlen(streamName) + 1];
 		strcpy(fStreamName,streamName);
+		
+		char chSerial[32] = {0};
+		char * chPos = strstr(fStreamName,"/");
+		if(chPos == NULL)
+			return QTSS_BadArgument;
 
-		//TODO::解析fStreamName出StreamID/Serial/Channel
+		memcpy(chSerial,fStreamName,chPos-fStreamName);
+		//TODO::解析fStreamName出Serial/Channel.sdp
 		//如果解析失败,返回QTSS_BadArgument
 
 		//2.根据Serial查询到设备所在的EasyCMS信息
+		char chCMSIP[20]={0};
+		char chCMSPort[6] = {0};
+		UInt16 uCMSPort;
+
+		//if(!QTSServerInterface::GetServer()->RedisGetAssociatedCMS(chSerial,chCMSIP,uCMSPort))
+
+		QTSS_RoleParams theParams;
+		theParams.GetAssociatedCMSParams.outCMSIP = chCMSIP;
+		theParams.GetAssociatedCMSParams.outCMSPort = chCMSPort;
+		theParams.GetAssociatedCMSParams.inSerial = chSerial;
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetAssociatedCMSRole);
+		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+		{
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetAssociatedCMSRole, currentModule);
+			(void)theModule->CallDispatch(QTSS_GetAssociatedCMS_Role, &theParams);
+		}
+
+		if(chCMSIP[0] == 0)
+		{
+			qtss_printf("获取关联CMS失败\n");
+			return QTSS_ValueNotFound;
+		}
+		else
+		{
+			uCMSPort = atoi(chCMSPort);
+			qtss_printf("获取关联CMS成功\n");
+		}
 		//TODO::
 		//如果查询失败，返回QTSS_ValueNotFound
 
 
 		//3.获取到EasyCMS参数进行Socket初始化
-		char *chCMSIP = "127.0.0.1";//实际上CMS的IP和端口应该从redis获取
-		UInt16 uCMSPort = 10000;
-
 		UInt32 inAddr = SocketUtils::ConvertStringToAddr(chCMSIP);
 		if(inAddr)
 		{

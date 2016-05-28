@@ -1069,7 +1069,15 @@ enum
 	Easy_HLSClose_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
 	//Easy FreeStream Role
-	Easy_FreeStream_Role	=			FOUR_CHARS_TO_INT('e', 'f', 's', 'r')  //efsr
+	Easy_FreeStream_Role	=			FOUR_CHARS_TO_INT('e', 'f', 's', 'r'),  //efsr
+
+	//redis module roles
+	QTSS_ChangeRtpNum_Role =		FOUR_CHARS_TO_INT('c','r','n','r'),//crnr
+	QTSS_AddPushName_Role =			FOUR_CHARS_TO_INT('a','p','n','r'),//apnr
+	QTSS_DelPushName_Role =			FOUR_CHARS_TO_INT('d','p','n','r'),//dpnr
+	QTSS_TTL_Role =					FOUR_CHARS_TO_INT('t','t','l','r'),//ttlr
+	QTSS_GetAssociatedCMS_Role =	FOUR_CHARS_TO_INT('g','a','c','r'),//gacr
+	QTSS_JudgeStreamID_Role =		FOUR_CHARS_TO_INT('j','s','i','r')//jsir
 };
 typedef UInt32 QTSS_Role;
 
@@ -1255,6 +1263,32 @@ typedef struct
     char*                       inStreamName;
 } Easy_HLSClose_Params;
 
+//redis module
+typedef struct
+{
+	char * inStreamName;
+}QTSS_StreamName_Params;
+
+typedef struct
+{
+	char * inSerial;
+	char * outCMSIP;
+	char * outCMSPort;//UINT16 * outDssPort;
+}QTSS_GetAssociatedCMS_Params;
+
+/*
+typedef struct
+{
+	UInt32 inRtpNum;
+}QTSS_ChangeRtpMum_Params;
+*/
+
+typedef struct  
+{
+	char * inStreanID;
+	char * outresult;
+}QTSS_JudgeStreamID_Params;
+
 typedef union
 {
     QTSS_Register_Params                regParams;
@@ -1286,7 +1320,12 @@ typedef union
 	Easy_HLSOpen_Params					easyHLSOpenParams;
 	Easy_HLSClose_Params				easyHLSCloseParams;
 
-	Easy_FreeStream_Params				easyFreeStreamParams;			
+	Easy_FreeStream_Params				easyFreeStreamParams;
+	//EasyRedisModule
+	QTSS_StreamName_Params              StreamNameParams;
+	QTSS_GetAssociatedCMS_Params	    GetAssociatedCMSParams;
+	//QTSS_ChangeRtpMum_Params			ChangeRtpNumParams;    
+	QTSS_JudgeStreamID_Params			JudgeStreamIDParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 typedef struct

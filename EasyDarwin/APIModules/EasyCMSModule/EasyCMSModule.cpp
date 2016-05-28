@@ -16,6 +16,7 @@
 #include "StringParser.h"
 #include "QTSServerInterface.h"
 #include "EasyCMSSession.h"
+#include "ReflectorSession.h"
 
 // STATIC DATA
 static QTSS_PrefsObject				sServerPrefs		= NULL;	//服务器主配置
@@ -28,6 +29,50 @@ static QTSS_Error EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inPa
 static QTSS_Error Register_EasyCMSModule(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize_EasyCMSModule(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs_EasyCMSModule();
+
+class ReflectorSessionCheckTask : public Task
+{
+public:
+	ReflectorSessionCheckTask() : Task() {this->SetTaskName("ReflectorSessionCheckTask"); this->Signal(Task::kStartEvent); }
+	virtual ~ReflectorSessionCheckTask() {}
+
+private:
+	virtual SInt64 Run();
+};
+static ReflectorSessionCheckTask *pTask=NULL;
+
+
+SInt64 ReflectorSessionCheckTask::Run()
+{
+	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
+
+	OSMutexLocker locker(reflectorSessionMap->GetMutex());
+
+	SInt64 sNowTime = OS::Milliseconds();
+	for (OSRefHashTableIter theIter(reflectorSessionMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+	{
+		OSRef* theRef = theIter.GetCurrent();
+		ReflectorSession* theSession = (ReflectorSession*)theRef->GetObject();
+
+		SInt64  sCreateTime = theSession->GetInitTimeMS();
+		if( (theSession->GetNumOutputs()==0) && (sNowTime-sCreateTime>=20*1000) )//当前客户端列表为0，并且是在ReflectorSession创建20秒之后
+		{
+			qtss_printf("没有客户端观看当前转发媒体\n");
+			QTSS_RoleParams theParams;
+			theParams.easyFreeStreamParams.inStreamName = theSession->GetStreamName();
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
+			(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
+		}
+	}  
+	return 30*1000;//每30秒检查一次
+}
+
+
+
+
+
+
+
 
 //向EasyCMS发送MSG_CS_FREE_STREAM_REQ
 static QTSS_Error FreeStream_EasyCMSModule(Easy_FreeStream_Params* inParams);
@@ -81,6 +126,7 @@ QTSS_Error Initialize_EasyCMSModule(QTSS_Initialize_Params* inParams)
 	//读取EasyCMSModule配置
 	RereadPrefs_EasyCMSModule();
 
+	pTask = new ReflectorSessionCheckTask();
     return QTSS_NoErr;
 }
 

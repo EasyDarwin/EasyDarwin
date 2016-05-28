@@ -150,7 +150,14 @@ class QTSSModule : public QTSSDictionary, public Task
 			kHLSCloseRole	=			25,
             
 			kStreamStopRole =			26,
-            kNumRoles =                 27
+
+			kTTLRole =					27,
+			kChangeRtpNumRole =			28,
+			kAddPushNameRole =			29,
+			kDelPushNameRole =			30,
+			kGetAssociatedCMSRole =		31,
+			kJudgeStreamIDRole	=		32,
+            kNumRoles =                 33
         };
         typedef UInt32 RoleIndex;
         
