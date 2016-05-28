@@ -76,10 +76,10 @@ HI_S32 NETSDK_APICALL OnStreamCallback(	HI_U32 u32Handle,		/* 句柄 */
 		if (pstruAV->u32AVFrameFlag == HI_NET_DEV_VIDEO_FRAME_FLAG)
 		{
 			//强制要求第一帧为I关键帧
-			if(pThis->m_bForceIFrame)
+			if(pThis->GetForceIFrameFlag())
 			{
 				if(pstruAV->u32VFrameType == HI_NET_DEV_VIDEO_FRAME_I)
-					pThis->m_bForceIFrame = false;
+					pThis->SetForceIFrameFlag(false);
 				else
 					return HI_SUCCESS;
 			}
@@ -107,12 +107,12 @@ HI_S32 NETSDK_APICALL OnEventCallback(	HI_U32 u32Handle,	/* 句柄 */
 	if (u32Event == HI_NET_DEV_ABORTIBE_DISCONNECTED || u32Event == HI_NET_DEV_NORMAL_DISCONNECTED || u32Event == HI_NET_DEV_CONNECT_FAILED)
 	{
 		EasyCameraSource* easyCameraSource = (EasyCameraSource*)pUserData;
-		easyCameraSource->fCameraLogin = false;
+		easyCameraSource->SetCameraLoginFlag(false);
 	}
 	else if (u32Event == HI_NET_DEV_CONNECTED)
 	{
 		EasyCameraSource* easyCameraSource = (EasyCameraSource*)pUserData;
-		easyCameraSource->fCameraLogin = true;
+		easyCameraSource->SetCameraLoginFlag(true);
 	}
 
 	return HI_SUCCESS;
@@ -135,7 +135,6 @@ EasyCameraSource::EasyCameraSource()
 	fCameraLogin(false),
 	m_bStreamFlag(false),
 	m_bForceIFrame(true),
-	fTimeoutTask(this, 30 * 1000),
 	fPusherHandle(NULL)
 {
 	this->SetTaskName("EasyCameraSource");
@@ -144,30 +143,38 @@ EasyCameraSource::EasyCameraSource()
 	HI_NET_DEV_Init();
 
 	//登陆摄像机
-	CameraLogin();
+	cameraLogin();
 
-	fTimeoutTask.RefreshTimeout();
+	fTimeoutTask = new TimeoutTask(this, 30 * 1000);
+
+	fTimeoutTask->RefreshTimeout();
 }
 
-EasyCameraSource::~EasyCameraSource(void)
+EasyCameraSource::~EasyCameraSource()
 {
-	//先停止Stream，内部有是否在Stream的判断
-	NetDevStopStream();
+	if (fTimeoutTask)
+	{
+		delete fTimeoutTask;
+		fTimeoutTask = NULL;
+	}
 
-	if(fCameraLogin)
+	//先停止Stream，内部有是否在Stream的判断
+	netDevStopStream();
+
+	if (fCameraLogin)
 		HI_NET_DEV_Logout(m_u32Handle);
 
 	//SDK释放，全局调用一次
 	HI_NET_DEV_DeInit();
 }
 
-bool EasyCameraSource::CameraLogin()
+bool EasyCameraSource::cameraLogin()
 {
 	//如果已登录，返回true
-	if(fCameraLogin) return true;
+	if (fCameraLogin) return true;
 	//登录到摄像机
 	HI_S32 s32Ret = HI_SUCCESS;
-	s32Ret = HI_NET_DEV_Login(	&m_u32Handle, sCameraUser, sCameraPassword, sCamera_IP, sCameraPort);
+	s32Ret = HI_NET_DEV_Login(&m_u32Handle, sCameraUser, sCameraPassword, sCamera_IP, sCameraPort);
 
 	if (s32Ret != HI_SUCCESS)
 	{
@@ -184,13 +191,13 @@ bool EasyCameraSource::CameraLogin()
 	return true;
 }
 
-QTSS_Error EasyCameraSource::NetDevStartStream()
+QTSS_Error EasyCameraSource::netDevStartStream()
 {
 	//如果未登录,返回失败
-	if(!CameraLogin()) return QTSS_RequestFailed;
+	if (!cameraLogin()) return QTSS_RequestFailed;
 	
 	//已经在流传输中，返回QTSS_NoErr
-	if(m_bStreamFlag) return QTSS_NoErr;
+	if (m_bStreamFlag) return QTSS_NoErr;
 
 	OSMutexLocker locker(this->GetMutex());
 
@@ -203,7 +210,7 @@ QTSS_Error EasyCameraSource::NetDevStartStream()
 	HI_NET_DEV_SetDataCallBack(m_u32Handle, (HI_ON_DATA_CALLBACK)OnDataCallback, this);
 
 	struStreamInfo.u32Channel = HI_NET_DEV_CHANNEL_1;
-	struStreamInfo.blFlag = sStreamType?HI_TRUE:HI_FALSE;
+	struStreamInfo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
 	struStreamInfo.u32Mode = HI_NET_DEV_STREAM_MODE_TCP;
 	struStreamInfo.u8Type = HI_NET_DEV_STREAM_ALL;
 	s32Ret = HI_NET_DEV_StartStream(m_u32Handle, &struStreamInfo);
@@ -220,9 +227,9 @@ QTSS_Error EasyCameraSource::NetDevStartStream()
 	return QTSS_NoErr;
 }
 
-void EasyCameraSource::NetDevStopStream()
+void EasyCameraSource::netDevStopStream()
 {
-	if( m_bStreamFlag )
+	if (m_bStreamFlag)
 	{
 		qtss_printf("HI_NET_DEV_StopStream\n");
 		HI_NET_DEV_StopStream(m_u32Handle);
@@ -232,7 +239,7 @@ void EasyCameraSource::NetDevStopStream()
 
 void EasyCameraSource::handleClosure(void* clientData) 
 {
-	if(clientData != NULL)
+	if (clientData != NULL)
 	{
 		EasyCameraSource* source = (EasyCameraSource*)clientData;
 		source->handleClosure();
@@ -257,13 +264,13 @@ void EasyCameraSource::stopGettingFrames()
 void EasyCameraSource::doStopGettingFrames() 
 {
 	qtss_printf("doStopGettingFrames()\n");
-	NetDevStopStream();
+	netDevStopStream();
 }
 
-bool EasyCameraSource::GetSnapData(unsigned char* pBuf, UInt32 uBufLen, int* uSnapLen)
+bool EasyCameraSource::getSnapData(unsigned char* pBuf, UInt32 uBufLen, int* uSnapLen)
 {
 	//如果摄像机未登录，返回false
-	if(!CameraLogin()) return false;
+	if(!cameraLogin()) return false;
 
 	//调用SDK获取数据
 	HI_S32 s32Ret = HI_FAILURE; 
@@ -284,12 +291,13 @@ SInt64 EasyCameraSource::Run()
 	if(events & Task::kTimeoutEvent)
 	{
 		//向设备获取快照数据
-		unsigned char *sData = (unsigned char*)malloc(EASY_SNAP_BUFFER_SIZE);
+		//unsigned char *sData = (unsigned char*)malloc(EASY_SNAP_BUFFER_SIZE);
+		unsigned char *sData = new unsigned char[EASY_SNAP_BUFFER_SIZE];
 		int snapBufLen = 0;
 
 		do{
 			//如果获取到摄像机快照数据，Base64编码/发送
-			if(!GetSnapData(sData, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
+			if (!getSnapData(sData, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
 			{
 				//未获取到数据
 				qtss_printf("EasyCameraSource::Run::GetSnapData() => Get Snap Data Fail \n");
@@ -314,10 +322,11 @@ SInt64 EasyCameraSource::Run()
 
 		}while(0);
 
-		free((void*)sData);
+		//free((void*)sData);
+		delete []sData;
 		sData = NULL;
 
-		fTimeoutTask.RefreshTimeout();
+		fTimeoutTask->RefreshTimeout();
 	}
 
 	return 0;
@@ -327,10 +336,11 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
-	do{
+	do 
+	{
 		if (NULL == fPusherHandle)
 		{
-			if(!CameraLogin())
+			if (!cameraLogin())
 			{
 				theErr = QTSS_RequestFailed;
 				break;
@@ -347,7 +357,7 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 			HI_S32 s32Ret = HI_FAILURE;
 			HI_S_Video sVideo;
 			sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
-			sVideo.blFlag = sStreamType?HI_TRUE:HI_FALSE;
+			sVideo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
 
 			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
 			if (s32Ret == HI_SUCCESS)
@@ -361,7 +371,7 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 			HI_S_Audio sAudio;
 			sAudio.u32Channel = HI_NET_DEV_CHANNEL_1;
-			sAudio.blFlag = sStreamType?HI_TRUE:HI_FALSE;
+			sAudio.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
 
 			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_AUDIO_PARAM, &sAudio, sizeof(HI_S_Audio));
 			if (s32Ret == HI_SUCCESS)
@@ -371,15 +381,15 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 			}
 			else
 			{
-				mediainfo.u32AudioCodec	= EASY_SDK_AUDIO_CODEC_G711A;
+				mediainfo.u32AudioCodec = EASY_SDK_AUDIO_CODEC_G711A;
 				mediainfo.u32AudioChannel = 1;
 			}
-			
+
 			mediainfo.u32AudioSamplerate = 8000;
-			
+
 
 			fPusherHandle = EasyPusher_Create();
-			if(fPusherHandle == NULL)
+			if (fPusherHandle == NULL)
 			{
 				//EasyPusher初始化创建失败,可能是EasyPusher SDK未授权
 				theErr = QTSS_Unimplemented;
@@ -391,33 +401,17 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 			// 根据接收到的命令生成流信息
 			char sdpName[128] = { 0 };
-			sprintf(sdpName,"%s/%s/%s.sdp", inParams->inStreamID, inParams->inSerial, inParams->inChannel); 
+			sprintf(sdpName, "%s/%s/%s.sdp", inParams->inStreamID, inParams->inSerial, inParams->inChannel);
 
 			// 开始推送流媒体数据
 			EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
 
-			// 保存最新推送参数
-			strncpy(fStartStreamInfo.serial, inParams->inSerial, strlen(inParams->inSerial));
-			fStartStreamInfo.serial[strlen(inParams->inSerial)] = 0;
-			
-			strncpy(fStartStreamInfo.channel, inParams->inChannel, strlen(inParams->inChannel));
-			fStartStreamInfo.channel[strlen(inParams->inChannel)] = 0;
-
-			strncpy(fStartStreamInfo.streamId, inParams->inStreamID, strlen(inParams->inStreamID));
-			fStartStreamInfo.streamId[strlen(inParams->inStreamID)] = 0;
-
-			strncpy(fStartStreamInfo.protocol, inParams->inProtocol, strlen(inParams->inProtocol));
-			fStartStreamInfo.protocol[strlen(inParams->inProtocol)] = 0;
-
-			memcpy(fStartStreamInfo.ip, inParams->inIP, strlen(inParams->inIP));
-			fStartStreamInfo.ip[strlen(inParams->inIP)] = 0;
-
-			fStartStreamInfo.port = inParams->inPort;
+			saveStartStreamParams(inParams);
 		}
-		
-		theErr = NetDevStartStream();
 
-	} while(0);
+		theErr = netDevStartStream();
+
+	} while (0);
 
 
 	if (theErr != QTSS_NoErr)
@@ -437,6 +431,27 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 	}
 
 	return theErr;
+}
+
+void EasyCameraSource::saveStartStreamParams(Easy_StartStream_Params * inParams)
+{
+	// 保存最新推送参数
+	strncpy(fStartStreamInfo.serial, inParams->inSerial, strlen(inParams->inSerial));
+	fStartStreamInfo.serial[strlen(inParams->inSerial)] = 0;
+
+	strncpy(fStartStreamInfo.channel, inParams->inChannel, strlen(inParams->inChannel));
+	fStartStreamInfo.channel[strlen(inParams->inChannel)] = 0;
+
+	strncpy(fStartStreamInfo.streamId, inParams->inStreamID, strlen(inParams->inStreamID));
+	fStartStreamInfo.streamId[strlen(inParams->inStreamID)] = 0;
+
+	strncpy(fStartStreamInfo.protocol, inParams->inProtocol, strlen(inParams->inProtocol));
+	fStartStreamInfo.protocol[strlen(inParams->inProtocol)] = 0;
+
+	memcpy(fStartStreamInfo.ip, inParams->inIP, strlen(inParams->inIP));
+	fStartStreamInfo.ip[strlen(inParams->inIP)] = 0;
+
+	fStartStreamInfo.port = inParams->inPort;
 }
 
 QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
