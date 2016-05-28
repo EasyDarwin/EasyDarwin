@@ -409,8 +409,14 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
 		//调用角色，停止推流
 		QTSS_RoleParams theParams;
 		theParams.easyFreeStreamParams.inStreamName = fStreamName;
-		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
-		(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
+		UInt32 fCurrentModule = 0;
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kFreeStreamRole);
+		for (; fCurrentModule < numModules; fCurrentModule++)
+		{
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kFreeStreamRole, 0);
+			(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
+			break;
+		}
 	}
 }
 
@@ -476,7 +482,7 @@ if(fNumOutputs == 0)
 qtss_printf("没有客户端观看当前转发媒体\n");
 QTSS_RoleParams theParams;
 theParams.easyFreeStreamParams.inStreamName = fSessionName;
-QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
+QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kFreeStreamRole, 0);
 (void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
 }
 }
