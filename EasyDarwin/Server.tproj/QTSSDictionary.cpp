@@ -49,7 +49,14 @@ QTSSDictionary::QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex)
     fMap(inMap), fInstanceMap(NULL), fMutexP(inMutex), fMyMutex(false), fLocked(false)
 {
     if (fMap != NULL)
-        fAttributes = NEW DictValueElement[inMap->GetNumAttrs()];
+    {
+        if(fMap->GetNumAttrs() > QTSS_MAX_ATTRIBUTE_NUMS)
+        {
+            qtss_printf("QTSS_MAX_ATTRIBUTE_NUMS not big enough,please check!");
+            exit(0);
+        }
+    }
+    //    fAttributes = NEW DictValueElement[inMap->GetNumAttrs()];
 	if (fMutexP == NULL)
 	{
 		fMyMutex = true;
@@ -61,8 +68,8 @@ QTSSDictionary::~QTSSDictionary()
 {
     if (fMap != NULL)
         this->DeleteAttributeData(fAttributes, fMap->GetNumAttrs(), fMap);
-    if (fAttributes != NULL)
-        delete [] fAttributes;
+  //  if (fAttributes != NULL)
+  //      delete [] fAttributes;
     this->DeleteAttributeData(fInstanceAttrs, fInstanceArraySize, fInstanceMap);
     delete [] fInstanceAttrs;
     delete fInstanceMap;

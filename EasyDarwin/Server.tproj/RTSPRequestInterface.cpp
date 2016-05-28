@@ -147,6 +147,16 @@ void  RTSPRequestInterface::Initialize(void)
         theHeaderMap->SetAttribute(y, RTSPProtocol::GetHeaderString(y).Ptr, NULL, qtssAttrDataTypeCharArray, qtssAttrModeRead | qtssAttrModePreempSafe);
 }
 
+void RTSPRequestInterface::ReInit(RTSPSessionInterface *session)
+{       
+ //   fSession=session;
+ //   fOutputStream=session->GetOutputStream();
+    fStandardHeadersWritten=false; // private initializes after protected and public storage above
+       
+    RTSPRequestStream* input = session->GetInputStream();
+    this->SetVal(qtssRTSPReqFullRequest, input->GetRequestBuffer()->Ptr, input->GetRequestBuffer()->Len);
+}
+
 //CONSTRUCTOR / DESTRUCTOR: very simple stuff
 RTSPRequestInterface::RTSPRequestInterface(RTSPSessionInterface *session)
 :   QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kRTSPRequestDictIndex)),

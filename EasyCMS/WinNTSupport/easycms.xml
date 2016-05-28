@@ -34,4 +34,11 @@
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSAuthModule" ></MODULE>
+	<MODULE NAME="EasyAuthModule" ></MODULE>
+	<MODULE NAME="EasyRedisModule" >
+		<PREF NAME="redis_ip" >127.0.0.1</PREF>
+		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
+		<PREF NAME="redis_user" >admin</PREF>
+		<PREF NAME="redis_password" >admin</PREF>
+	</MODULE>
 </CONFIGURATION>

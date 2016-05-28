@@ -206,7 +206,7 @@ class QTSSDictionary : public QTSSStream
             Bool16      fIsDynamicDictionary; //is this a dictionary object?
         };
         
-        DictValueElement*   fAttributes;
+        DictValueElement    fAttributes[QTSS_MAX_ATTRIBUTE_NUMS];
         DictValueElement*   fInstanceAttrs;
         UInt32              fInstanceArraySize;
         QTSSDictionaryMap*  fMap;

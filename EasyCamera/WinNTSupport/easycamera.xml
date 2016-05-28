@@ -17,14 +17,14 @@
 	<MODULE NAME="EasyCMSModule" >
 		<PREF NAME="easycms_ip" >121.40.50.44</PREF>
 		<PREF NAME="easycms_port" TYPE="UInt16" >10000</PREF>
-		<PREF NAME="device_serial" >010100000001</PREF>
-		<PREF NAME="device_name" >Babosa_Camera</PREF>
+		<PREF NAME="device_serial" >001001000099</PREF>
+		<PREF NAME="device_name" >Anonymous</PREF>
 		<PREF NAME="device_key" >123456</PREF>
 		<PREF NAME="device_tag" >dev</PREF>
-		<PREF NAME="keep_alive_interval" TYPE="UInt32" >6</PREF>
+		<PREF NAME="keep_alive_interval" TYPE="UInt32" >30</PREF>
 	</MODULE>
 	<MODULE NAME="EasyCameraModule" >
-		<PREF NAME="camera_ip" >127.0.0.1</PREF>
+		<PREF NAME="camera_ip" >192.168.1.189</PREF>
 		<PREF NAME="camera_port" TYPE="UInt16" >80</PREF>
 		<PREF NAME="camera_user" >admin</PREF>
 		<PREF NAME="camera_password" >admin</PREF>

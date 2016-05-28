@@ -45,6 +45,8 @@ extern "C" {
 #define QTSS_MAX_REQUEST_BUFFER_SIZE	2*1024
 #define EASY_ACCENCODER_BUFFER_SIZE_LEN	16*1024*4
 
+#define QTSS_MAX_ATTRIBUTE_NUMS			128
+
 //*******************************
 // ENUMERATED TYPES
 
