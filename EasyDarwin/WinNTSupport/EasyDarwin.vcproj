@@ -71,11 +71,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib libEasyAACEncoder.lib hiredis.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib libEasyAACEncoder.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\Lib\;..\..\redis\"
+				AdditionalLibraryDirectories="..\Lib\;"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/EasyDarwin.pdb"
