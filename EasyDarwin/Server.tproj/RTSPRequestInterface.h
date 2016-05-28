@@ -57,6 +57,7 @@ class RTSPRequestInterface : public QTSSDictionary
         //Call initialize before instantiating this class. For maximum performance, this class builds
         //any response header it can at startup time.
         static void         Initialize();
+		void ReInit(RTSPSessionInterface *session);
         
         //CONSTRUCTOR:
         RTSPRequestInterface(RTSPSessionInterface *session);
