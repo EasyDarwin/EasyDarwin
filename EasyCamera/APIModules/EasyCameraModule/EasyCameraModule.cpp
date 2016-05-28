@@ -47,7 +47,7 @@ QTSS_Error EasyCameraModule_Main(void* inPrivateArgs)
     return _stublibrary_main(inPrivateArgs, EasyCameraModuleDispatch);
 }
 
-QTSS_Error  EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
+QTSS_Error EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
     switch (inRole)
     {
@@ -62,6 +62,7 @@ QTSS_Error  EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParam
 		case Easy_StopStream_Role:
 			return StopStream(&inParams->stopStreamParams);
 	}
+
     return QTSS_NoErr;
 }
 
@@ -69,7 +70,7 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
 {
 	//加载前进行授权验证
 	int isEasyPusherActivated = EasyPusher_Activate(EasyPusher_KEY);
-	switch(isEasyPusherActivated)
+	switch (isEasyPusherActivated)
 	{
 	case EASY_ACTIVATE_INVALID_KEY:
 		printf("EasyPusher_KEY is EASY_ACTIVATE_INVALID_KEY!\n");
@@ -91,7 +92,7 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
 		break;
 	}
 
-	if(EASY_ACTIVATE_SUCCESS != isEasyPusherActivated)
+	if (EASY_ACTIVATE_SUCCESS != isEasyPusherActivated)
 		return QTSS_RequestFailed;
 
     // Do role & attribute setup
@@ -122,7 +123,7 @@ QTSS_Error Initialize_EasyCameraModule(QTSS_Initialize_Params* inParams)
 
 	EasyCameraSource::Initialize(sEasyCameraModulePrefs);
 
-	//创建并开始EasyCMSSession对象
+	//创建并开始EasyCMSSession对象 !!!!!
 	sCameraSource = new EasyCameraSource();
 	sCameraSource->Signal(Task::kStartEvent);
 
@@ -138,7 +139,7 @@ QTSS_Error StartStream(Easy_StartStream_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_Unimplemented;
 
-	if(sCameraSource)
+	if (sCameraSource)
 	{
 		theErr = sCameraSource->StartStreaming(inParams);
 	}
@@ -149,7 +150,7 @@ QTSS_Error StopStream(Easy_StopStream_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_Unimplemented;
 
-	if(sCameraSource)
+	if (sCameraSource)
 	{
 		theErr = sCameraSource->StopStreaming(inParams);
 	}

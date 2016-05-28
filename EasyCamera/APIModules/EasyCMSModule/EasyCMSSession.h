@@ -44,10 +44,6 @@ public:
     virtual ~EasyCMSSession();
 
 	static void Initialize(QTSS_ModulePrefsObject inPrefs);
-
-	ClientSocket* fSocket;
-
-	TimeoutTask fTimeoutTask;
     
 	enum
 	{
@@ -55,36 +51,51 @@ public:
 		kSessionOnline		= 1
 	};
 	typedef UInt32	SessionStatus;
-	SessionStatus	fSessionStatus;
 
-	enum
-    {
-		kIdle						= 0,
-		kReadingMessage				= 1,
-		kProcessingMessage          = 2,
-		kSendingMessage            = 3,
-		kCleaningUp                 = 4
-    };
-	UInt32 fState;
-
-	void CleanupRequest();
-
-	SessionStatus GetSessionStatus() { return fSessionStatus; } 
-
-	// 设备注册到EasyCMS
-	QTSS_Error DSRegister();
-
-	// 上传快照图片到EasyCMS
-	QTSS_Error DSPostSnap();
+	SessionStatus GetSessionStatus() { return fSessionStatus; }
+	void SetSessionStatus(SessionStatus status) { fSessionStatus = status; }
 
 	// 更新最新快照缓存
 	QTSS_Error UpdateSnapCache(Easy_PostSnap_Params* params);
 
+private:
+    virtual SInt64 Run();
+
+	// 初步判断Session Socket是否已连接
+	Bool16 isConnected() { return fSocket->GetSocket()->IsConnected(); }
+
+	// transfer error code for http status code
+	size_t getStatusNo(QTSS_Error errNo);
+
+	void cleanupRequest();
+
+	// 设备注册到EasyCMS
+	QTSS_Error doDSRegister();
+
+	// 上传快照图片到EasyCMS
+	QTSS_Error doDSPostSnap();
+
 	// 处理HTTPRequest请求报文
-	QTSS_Error ProcessMessage();
-	
+	QTSS_Error processMessage();
+
 	// 重置客户端参数
-	void ResetClientSocket();
+	void resetClientSocket();
+
+private:
+	enum
+	{
+		kIdle = 0,
+		kReadingMessage = 1,
+		kProcessingMessage = 2,
+		kSendingMessage = 3,
+		kCleaningUp = 4
+	};
+	UInt32 fState;
+
+	SessionStatus	fSessionStatus;
+
+	TimeoutTask fTimeoutTask;
+	ClientSocket* fSocket;
 
 	// 为CMSSession专门进行网络数据包读取的对象
 	HTTPRequestStream   fInputStream;
@@ -94,10 +105,10 @@ public:
 	// 初始化时为NULL
 	// 在每一次请求发出或者接收命令时,都有可能生成HTTPRequest对象并进行处理
 	// 每一次状态机流程在处理完成kIdle~kCleanUp的流程都需要清理HTTPRequest对象
-    HTTPRequest*        fRequest;
-	
+	HTTPRequest*        fRequest;
+
 	// 读取网络报文前先锁住Session防止重入读取
-    OSMutex             fReadMutex;
+	OSMutex             fReadMutex;
 
 	// Session锁
 	OSMutex             fMutex;
@@ -107,15 +118,6 @@ public:
 
 	// 请求报文的Content读取偏移量,在多次读取到完整Content部分时用到
 	UInt32				fContentBufferOffset;
-
-private:
-    virtual SInt64 Run();
-
-	// 初步判断Session Socket是否已连接
-	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
-
-	// transfer error code for http status code
-	size_t GetStatusNo(QTSS_Error errNo);
 
 	EasyMsgDSPostSnapREQ* fSnapReq;
 
