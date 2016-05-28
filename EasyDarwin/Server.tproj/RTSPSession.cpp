@@ -214,6 +214,11 @@ RTSPSession::~RTSPSession()
 #endif      
         sHTTPProxyTunnelMap->UnRegister( &fProxyRef );  
     }
+    if(fRequest)
+    {
+        delete fRequest;
+        fRequest = NULL;
+    }    
 }
 
 /*
@@ -387,9 +392,14 @@ SInt64 RTSPSession::Run()
                 
                 Assert( fInputStream.GetRequestBuffer() );
                 
-                Assert(fRequest == NULL);
 				// 创建RTSPRequest对象，用于解析RTSP消息
-                fRequest = NEW RTSPRequest(this);
+				if(fRequest == NULL)
+                {    
+//                    printf("RTSPRequest size########## %d\n",sizeof(RTSPRequest));
+                    fRequest = NEW RTSPRequest(this);
+                }
+                fRequest->ReInit(this);
+                
                 fRoleParams.rtspRequestParams.inRTSPRequest = fRequest;
                 fRoleParams.rtspRequestParams.inRTSPHeaders = fRequest->GetHeaderDictionary();
 
@@ -1131,11 +1141,9 @@ SInt64 RTSPSession::Run()
 	OSRefTable* theMap = QTSServerInterface::GetServer()->GetRTPSessionMap();  
 	OSRef* theRef = theMap->Resolve(&fLastRTPSessionIDPtr);  
 	if (theRef != NULL){  
-		OSMutexLocker locker(theMap->GetMutex());
 		fRTPSession = (RTPSession*)theRef->GetObject();  
-		if(fRTPSession) fRTPSession->Teardown();
-		while(theRef->GetRefCount()>0)
-			theMap->Release(fRTPSession->GetRef());  
+		if(fRTPSession) fRTPSession->Teardown();  
+		theMap->Release(fRTPSession->GetRef());  
 		fRTPSession = NULL;  
 		}   
 	}    
