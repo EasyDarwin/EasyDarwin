@@ -45,7 +45,7 @@
 
 
 QTSSDictionary::QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex) 
-:   fAttributes(NULL), fInstanceAttrs(NULL), fInstanceArraySize(0),
+:   fInstanceAttrs(NULL), fInstanceArraySize(0),
     fMap(inMap), fInstanceMap(NULL), fMutexP(inMutex), fMyMutex(false), fLocked(false)
 {
     if (fMap != NULL)
