@@ -1131,9 +1131,11 @@ SInt64 RTSPSession::Run()
 	OSRefTable* theMap = QTSServerInterface::GetServer()->GetRTPSessionMap();  
 	OSRef* theRef = theMap->Resolve(&fLastRTPSessionIDPtr);  
 	if (theRef != NULL){  
+		OSMutexLocker locker(theMap->GetMutex());
 		fRTPSession = (RTPSession*)theRef->GetObject();  
-		if(fRTPSession) fRTPSession->Teardown();  
-		theMap->Release(fRTPSession->GetRef());  
+		if(fRTPSession) fRTPSession->Teardown();
+		while(theRef->GetRefCount()>0)
+			theMap->Release(fRTPSession->GetRef());  
 		fRTPSession = NULL;  
 		}   
 	}    
