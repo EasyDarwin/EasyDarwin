@@ -415,6 +415,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				string protocol = startStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
 				string channel = startStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				string streamID = startStreamReq.GetBodyValue(EASY_TAG_STREAM_ID);
+				string reserve = startStreamReq.GetBodyValue(EASY_TAG_RESERVE);
 
 				qtss_printf("Serial = %s\n", serial.c_str());
 				qtss_printf("Server_IP = %s\n", ip.c_str());
@@ -435,10 +436,10 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				params.startStreaParams.inChannel = channel.c_str();
 				params.startStreaParams.inStreamID = streamID.c_str();
 
-				QTSS_Error	errCode = QTSS_NoErr;
-				UInt32 fCurrentModule=0;
+				QTSS_Error errCode = QTSS_NoErr;
+				UInt32 fCurrentModule = 0;
 				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStartStreamRole);
-				for (; fCurrentModule < numModules; fCurrentModule++)
+				for (; fCurrentModule < numModules; ++fCurrentModule)
 				{
 					QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStartStreamRole, fCurrentModule);
 					errCode = theModule->CallDispatch(Easy_StartStream_Role, &params);
@@ -447,11 +448,13 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 
 				EasyJsonValue body;
 				body[EASY_TAG_SERIAL] = params.startStreaParams.inSerial;
+				body[EASY_TAG_CHANNEL] = params.startStreaParams.inChannel;
 				body[EASY_TAG_PROTOCOL] = params.startStreaParams.inProtocol;
 				body[EASY_TAG_SERVER_IP] = params.startStreaParams.inIP;
 				body[EASY_TAG_SERVER_PORT] = params.startStreaParams.inPort;
+				body[EASY_TAG_RESERVE] = reserve;
 
-				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), errCode == QTSS_NoErr ? 200 : 404);
+				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), GetStatusNo(errCode));
 
 				string msg = rsp.GetMsg();
 				StrPtrLen jsonContent((char*)msg.data());
@@ -465,7 +468,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 					//Push msg to OutputBuffer
 					char respHeader[2048] = { 0 };
 					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-					strncpy(respHeader,ackPtr->Ptr, ackPtr->Len);
+					strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 		
 					fOutputStream.Put(respHeader);
 					if (jsonContent.Len > 0) 
@@ -486,11 +489,10 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				string channel = stopStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				params.stopStreamParams.inChannel = channel.c_str();
 
-
 				QTSS_Error	errCode = QTSS_NoErr;
-				UInt32 fCurrentModule=0;
+				UInt32 fCurrentModule = 0;
 				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
-				for (; fCurrentModule < numModules; fCurrentModule++)
+				for (; fCurrentModule < numModules; ++fCurrentModule)
 				{
 					QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
 					errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
@@ -500,9 +502,9 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 				EasyJsonValue body;
 				body[EASY_TAG_SERIAL] = params.stopStreamParams.inSerial;
 				body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
-				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
+				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;				
 
-				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), errCode == QTSS_NoErr ? 200 : 404);
+				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), GetStatusNo(errCode));
 				string msg = rsp.GetMsg();
 
 				//ªÿ”¶
@@ -535,6 +537,68 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 	fContentBuffer = NULL;
 
 	return QTSS_NoErr;
+}
+
+// transfer error code for http status code
+size_t EasyCMSSession::GetStatusNo(QTSS_Error inError)
+{
+	size_t error(404);
+
+	switch (inError)
+	{
+	case QTSS_NoErr:
+		error = 200;
+		break;
+	case QTSS_RequestFailed:
+		error = 404;
+		break;
+	case QTSS_Unimplemented:
+		error = 405;
+		break;
+	case QTSS_RequestArrived:
+		error = 500;
+		break;
+	case QTSS_OutOfState:
+		break;
+	case QTSS_WrongVersion:
+		break;
+	case QTSS_NotAModule:
+	case QTSS_IllegalService:
+		error = 605;
+		break;
+	case QTSS_BadIndex:
+	case QTSS_ValueNotFound:
+		error = 603;
+		break;
+	case QTSS_BadArgument:
+		error = 400;
+		break;
+	case QTSS_ReadOnly:
+		break;
+	case QTSS_NotPreemptiveSafe:
+		break;
+	case QTSS_NotEnoughSpace:
+		break;
+	case QTSS_WouldBlock:
+		break;
+	case QTSS_NotConnected:
+		break;
+	case QTSS_FileNotFound:
+		break;
+	case QTSS_NoMoreData:
+		break;
+	case QTSS_AttrDoesntExist:
+		break;
+	case QTSS_AttrNameExists:
+		break;
+	case QTSS_InstanceAttrsNotAllowed:
+		break;
+	default:
+		error = 404;
+		break;
+	}
+
+	return error;
 }
 
 //
