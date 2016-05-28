@@ -60,7 +60,7 @@ SInt64 ReflectorSessionCheckTask::Run()
 			qtss_printf("没有客户端观看当前转发媒体\n");
 			QTSS_RoleParams theParams;
 			theParams.easyFreeStreamParams.inStreamName = theSession->GetStreamName();
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStreamStopRole, 0);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kFreeStreamRole, 0);
 			(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
 		}
 	}  
