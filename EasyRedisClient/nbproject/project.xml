@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>libavsredisclient</name>
+            <name>libEasyRedisClient</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions>cpp</cpp-extensions>
             <header-extensions>h</header-extensions>
@@ -13,10 +13,14 @@
             <confList>
                 <confElem>
                     <name>Debug</name>
-                    <type>2</type>
+                    <type>3</type>
                 </confElem>
                 <confElem>
-                    <name>Release</name>
+                    <name>i386</name>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>x64</name>
                     <type>3</type>
                 </confElem>
             </confList>

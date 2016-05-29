@@ -27,12 +27,16 @@ build()
 if [ "$*" = "clean" -o "$*" = "x64" -o "$*" = "i386" -o "$*" = "debug" ] ; then 
 	cd ../CommonUtilitiesLib
 	build $1
+	
+	cd ../EasyRedisClient
+	build $1	
 
 	cd ../EasyProtocol/jsoncpp
 	build $1    
 
 	cd ../EasyProtocol
 	build $1
+	
 	cd ../../EasyDarwin
 	build $1
 else

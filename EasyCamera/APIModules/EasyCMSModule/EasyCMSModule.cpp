@@ -40,7 +40,7 @@ QTSS_Error EasyCMSModule_Main(void* inPrivateArgs)
     return _stublibrary_main(inPrivateArgs, EasyCMSModuleDispatch);
 }
 
-QTSS_Error  EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
+QTSS_Error EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
     switch (inRole)
     {
@@ -101,7 +101,7 @@ QTSS_Error Post_EasyCMSModule(Easy_PostSnap_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_Unimplemented;
 
-	if(sCMSSession)
+	if (sCMSSession)
 	{
 		theErr = sCMSSession->UpdateSnapCache(inParams);
 	}

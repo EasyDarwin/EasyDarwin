@@ -21,9 +21,9 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
-CND_CONF=Release
+CND_CONF=i386
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/AVSRedisClient.o \
+	${OBJECTDIR}/EasyRedisClient.o \
 	${OBJECTDIR}/async.o \
 	${OBJECTDIR}/dict.o \
 	${OBJECTDIR}/hiredis.o \
@@ -45,11 +45,11 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-std=c99
+CFLAGS=-m32 -std=c99
 
 # CC Compiler Flags
-CCFLAGS=-std=c++0x
-CXXFLAGS=-std=c++0x
+CCFLAGS=-m32 -std=c++0x
+CXXFLAGS=-m32 -std=c++0x
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -62,18 +62,18 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${AVS_ROOT}/lib/libavsredisclient.a
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_CONF}/libeasyredisclient.a
 
-${AVS_ROOT}/lib/libavsredisclient.a: ${OBJECTFILES}
-	${MKDIR} -p ${AVS_ROOT}/lib
-	${RM} ${AVS_ROOT}/lib/libavsredisclient.a
-	${AR} -rv ${AVS_ROOT}/lib/libavsredisclient.a ${OBJECTFILES} 
-	$(RANLIB) ${AVS_ROOT}/lib/libavsredisclient.a
+${CND_CONF}/libeasyredisclient.a: ${OBJECTFILES}
+	${MKDIR} -p ${CND_CONF}
+	${RM} ${CND_CONF}/libeasyredisclient.a
+	${AR} -rv ${CND_CONF}/libeasyredisclient.a ${OBJECTFILES} 
+	$(RANLIB) ${CND_CONF}/libeasyredisclient.a
 
-${OBJECTDIR}/AVSRedisClient.o: AVSRedisClient.cpp 
+${OBJECTDIR}/EasyRedisClient.o: EasyRedisClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I${AVS_ROOT}/include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AVSRedisClient.o AVSRedisClient.cpp
+	$(COMPILE.cc) -O2 -I../EasyProtocol/Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyRedisClient.o EasyRedisClient.cpp
 
 ${OBJECTDIR}/async.o: async.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -111,7 +111,7 @@ ${OBJECTDIR}/sds.o: sds.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${AVS_ROOT}/lib/libavsredisclient.a
+	${RM} ${CND_CONF}/libeasyredisclient.a
 
 # Subprojects
 .clean-subprojects:

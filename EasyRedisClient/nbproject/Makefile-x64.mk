@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=x64
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -45,11 +45,11 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-std=c99
+CFLAGS=-m64 -std=c99
 
 # CC Compiler Flags
-CCFLAGS=-std=c++0x
-CXXFLAGS=-std=c++0x
+CCFLAGS=-m64 -std=c++0x
+CXXFLAGS=-m64 -std=c++0x
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -73,37 +73,37 @@ ${CND_CONF}/libeasyredisclient.a: ${OBJECTFILES}
 ${OBJECTDIR}/EasyRedisClient.o: EasyRedisClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I../EasyProtocol/Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyRedisClient.o EasyRedisClient.cpp
+	$(COMPILE.cc) -O2 -I../EasyProtocol/Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyRedisClient.o EasyRedisClient.cpp
 
 ${OBJECTDIR}/async.o: async.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/async.o async.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/async.o async.c
 
 ${OBJECTDIR}/dict.o: dict.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
 
 ${OBJECTDIR}/hiredis.o: hiredis.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hiredis.o hiredis.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hiredis.o hiredis.c
 
 ${OBJECTDIR}/net.o: net.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/net.o net.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/net.o net.c
 
 ${OBJECTDIR}/read.o: read.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/read.o read.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/read.o read.c
 
 ${OBJECTDIR}/sds.o: sds.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sds.o sds.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sds.o sds.c
 
 # Subprojects
 .build-subprojects:

@@ -50,10 +50,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/OSCond.o \
 	${OBJECTDIR}/OSFileSource.o \
 	${OBJECTDIR}/OSHeap.o \
+	${OBJECTDIR}/OSMapEx.o \
 	${OBJECTDIR}/OSMutex.o \
 	${OBJECTDIR}/OSMutexRW.o \
 	${OBJECTDIR}/OSQueue.o \
 	${OBJECTDIR}/OSRef.o \
+	${OBJECTDIR}/OSRefTableEx.o \
 	${OBJECTDIR}/OSThread.o \
 	${OBJECTDIR}/QueryParamList.o \
 	${OBJECTDIR}/ResizeableStringFormatter.o \
@@ -185,6 +187,11 @@ ${OBJECTDIR}/OSHeap.o: OSHeap.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSHeap.o OSHeap.cpp
 
+${OBJECTDIR}/OSMapEx.o: OSMapEx.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSMapEx.o OSMapEx.cpp
+
 ${OBJECTDIR}/OSMutex.o: OSMutex.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -204,6 +211,11 @@ ${OBJECTDIR}/OSRef.o: OSRef.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSRef.o OSRef.cpp
+
+${OBJECTDIR}/OSRefTableEx.o: OSRefTableEx.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OSRefTableEx.o OSRefTableEx.cpp
 
 ${OBJECTDIR}/OSThread.o: OSThread.cpp 
 	${MKDIR} -p ${OBJECTDIR}

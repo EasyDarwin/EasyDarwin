@@ -18,6 +18,7 @@
                 <sourceRootElem>PrefsSourceLib</sourceRootElem>
                 <sourceRootElem>../OSMemoryLib</sourceRootElem>
                 <sourceRootElem>../HTTPUtilitiesLib</sourceRootElem>
+                <sourceRootElem>APIModules</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

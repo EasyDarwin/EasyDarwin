@@ -53,3 +53,4 @@ Movies*/
 *.dep.inc
 *.opensdf
 /EasyCamera/build/
+/EasyRedisClient/build/

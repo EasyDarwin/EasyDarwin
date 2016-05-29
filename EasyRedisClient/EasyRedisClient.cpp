@@ -467,7 +467,9 @@ int EasyRedisClient::SetTimeout(std::size_t timeout)//set socket timeout
 void EasyRedisClient::AppendCommand(const char * command)//redisAppendCommand
 {
 	if (fRedisContext != NULL)
-		return redisAppendCommand(RedisContextPtr(fRedisContext),command);
+        {
+            redisAppendCommand(RedisContextPtr(fRedisContext),command);
+        }
 }
 
 int EasyRedisClient::GetReply(void ** reply)
@@ -475,6 +477,11 @@ int EasyRedisClient::GetReply(void ** reply)
 	if (fRedisContext != NULL)
 		return redisGetReply(RedisContextPtr(fRedisContext),reply);
 	return -1;
+}
+
+void EasyFreeReplyObject(void *reply)
+{
+	freeReplyObject(reply);
 }
 
 void EasyRedisClient::Free()

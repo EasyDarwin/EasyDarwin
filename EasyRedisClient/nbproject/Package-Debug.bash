@@ -6,16 +6,16 @@
 
 # Macros
 TOP=`pwd`
-CND_PLATFORM=GNU-Linux-x86
+CND_PLATFORM=GNU-Linux
 CND_CONF=Debug
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 CND_DLIB_EXT=so
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=${AVS_ROOT}/lib/libavsredisclient.${CND_DLIB_EXT}
-OUTPUT_BASENAME=libavsredisclient.${CND_DLIB_EXT}
-PACKAGE_TOP_DIR=liblibavsredisclient.so/
+OUTPUT_PATH=${CND_CONF}/libeasyredisclient.a
+OUTPUT_BASENAME=libeasyredisclient.a
+PACKAGE_TOP_DIR=EasyRedisClient/
 
 # Functions
 function checkReturnCode
@@ -60,15 +60,15 @@ mkdir -p ${NBTMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory "${NBTMPDIR}/liblibavsredisclient.so/lib"
+makeDirectory "${NBTMPDIR}/EasyRedisClient/lib"
 copyFileToTmpDir "${OUTPUT_PATH}" "${NBTMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASENAME}" 0644
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/liblibavsredisclient.so.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/EasyRedisClient.tar
 cd ${NBTMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/liblibavsredisclient.so.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/EasyRedisClient.tar *
 checkReturnCode
 
 # Cleanup

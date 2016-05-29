@@ -800,11 +800,11 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
 		else
 		{
 			char strNewFullPath[256]={0};//add
-#ifdef __Win32__
+//#ifdef __Win32__
 			char movieFolder[256] = { 0 };
 			UInt32 thePathLen = 256;
 			QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
-			StringParser parser(&StrPtrLen(theFullPathStr));
+			StringParser parser(&theFullPath);
 			StrPtrLen strStreamID;
 			parser.ConsumeLength(NULL,thePathLen);
 			parser.Expect('\\');
@@ -817,9 +817,9 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
 			memcpy(strNewFullPath+strlen(movieFolder),strStreamName.Ptr,strStreamName.Len);
 			MakeTheSameFormat(strNewFullPath);
 			StrPtrLen theNewFullPath(strNewFullPath);
-#else
+//#else
 
-#endif
+//#endif
 			if (resultFilePath != NULL)
 				*resultFilePath = theNewFullPath.GetAsCString();
 			return FindOrCreateSession(&theNewFullPath, inParams);
@@ -852,11 +852,11 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
 				else
 				{
 					char strNewFullPath[256]={0};//add
-#ifdef __Win32__
+//#ifdef __Win32__
 					char movieFolder[256] = { 0 };
 					UInt32 thePathLen = 256;
 					QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
-					StringParser parser(&StrPtrLen(theFullPathStr));
+					StringParser parser(&theFullPath);
 					StrPtrLen strStreamID;
 					parser.ConsumeLength(NULL,thePathLen);
 					parser.Expect('\\');
@@ -869,9 +869,9 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
 					memcpy(strNewFullPath+strlen(movieFolder),strStreamName.Ptr,strStreamName.Len);
 					MakeTheSameFormat(strNewFullPath);
 					StrPtrLen theNewFullPath(strNewFullPath);
-#else
+//#else
 
-#endif
+//#endif
 
 					if (resultFilePath != NULL)
 						*resultFilePath = theNewFullPath.GetAsCString();
