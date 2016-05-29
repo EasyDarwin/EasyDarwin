@@ -40,6 +40,7 @@
       <itemPath>OSFileSource.h</itemPath>
       <itemPath>OSHeap.cpp</itemPath>
       <itemPath>OSHeap.h</itemPath>
+      <itemPath>OSMapEx.cpp</itemPath>
       <itemPath>../OSMemoryLib/OSMemory.cpp</itemPath>
       <itemPath>OSMutex.cpp</itemPath>
       <itemPath>OSMutex.h</itemPath>
@@ -49,6 +50,7 @@
       <itemPath>OSQueue.h</itemPath>
       <itemPath>OSRef.cpp</itemPath>
       <itemPath>OSRef.h</itemPath>
+      <itemPath>OSRefTableEx.cpp</itemPath>
       <itemPath>OSThread.cpp</itemPath>
       <itemPath>OSThread.h</itemPath>
       <itemPath>QueryParamList.cpp</itemPath>
@@ -220,6 +222,8 @@
       </item>
       <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="OSMapEx.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSMutex.cpp" ex="false" tool="1" flavor2="0">
@@ -237,6 +241,8 @@
       <item path="OSRef.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRefTableEx.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -459,6 +465,8 @@
       </item>
       <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="OSMapEx.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSMutex.cpp" ex="false" tool="1" flavor2="0">
@@ -476,6 +484,8 @@
       <item path="OSRef.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRefTableEx.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -698,6 +708,8 @@
       </item>
       <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="OSMapEx.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSMutex.cpp" ex="false" tool="1" flavor2="9">
@@ -715,6 +727,8 @@
       <item path="OSRef.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRefTableEx.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -937,6 +951,8 @@
       </item>
       <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="OSMapEx.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSMutex.cpp" ex="false" tool="1" flavor2="9">
@@ -954,6 +970,8 @@
       <item path="OSRef.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRefTableEx.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -1176,6 +1194,8 @@
       </item>
       <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="OSMapEx.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSMutex.cpp" ex="false" tool="1" flavor2="9">
@@ -1193,6 +1213,8 @@
       <item path="OSRef.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRefTableEx.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -1415,6 +1437,8 @@
       </item>
       <item path="OSHeap.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="OSMapEx.cpp" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="OSMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OSMutex.cpp" ex="false" tool="1" flavor2="0">
@@ -1432,6 +1456,8 @@
       <item path="OSRef.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSRef.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OSRefTableEx.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="OSThread.cpp" ex="false" tool="1" flavor2="0">
       </item>

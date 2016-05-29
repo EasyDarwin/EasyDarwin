@@ -7,21 +7,29 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # Debug configuration
-CND_PLATFORM_Debug=GNU-Linux-x86
-CND_ARTIFACT_DIR_Debug=${AVS_ROOT}/lib
-CND_ARTIFACT_NAME_Debug=libavsredisclient.so
-CND_ARTIFACT_PATH_Debug=${AVS_ROOT}/lib/libavsredisclient.so
-CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=liblibavsredisclient.so.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/liblibavsredisclient.so.tar
-# Release configuration
-CND_PLATFORM_Release=GNU-Linux-x86
-CND_ARTIFACT_DIR_Release=${AVS_ROOT}/lib
-CND_ARTIFACT_NAME_Release=libavsredisclient.a
-CND_ARTIFACT_PATH_Release=${AVS_ROOT}/lib/libavsredisclient.a
-CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=libavsredisclient.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/libavsredisclient.tar
+CND_PLATFORM_Debug=GNU-Linux
+CND_ARTIFACT_DIR_Debug=Debug
+CND_ARTIFACT_NAME_Debug=libeasyredisclient.a
+CND_ARTIFACT_PATH_Debug=Debug/libeasyredisclient.a
+CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
+CND_PACKAGE_NAME_Debug=EasyRedisClient.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/EasyRedisClient.tar
+# i386 configuration
+CND_PLATFORM_i386=GNU-Linux
+CND_ARTIFACT_DIR_i386=i386
+CND_ARTIFACT_NAME_i386=libeasyredisclient.a
+CND_ARTIFACT_PATH_i386=i386/libeasyredisclient.a
+CND_PACKAGE_DIR_i386=dist/i386/GNU-Linux/package
+CND_PACKAGE_NAME_i386=EasyRedisClient.tar
+CND_PACKAGE_PATH_i386=dist/i386/GNU-Linux/package/EasyRedisClient.tar
+# x64 configuration
+CND_PLATFORM_x64=GNU-Linux
+CND_ARTIFACT_DIR_x64=x64
+CND_ARTIFACT_NAME_x64=libeasyredisclient.a
+CND_ARTIFACT_PATH_x64=x64/libeasyredisclient.a
+CND_PACKAGE_DIR_x64=dist/x64/GNU-Linux/package
+CND_PACKAGE_NAME_x64=EasyRedisClient.tar
+CND_PACKAGE_PATH_x64=dist/x64/GNU-Linux/package/EasyRedisClient.tar
 #
 # include compiler specific variables
 #

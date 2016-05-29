@@ -194,7 +194,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		for (OSRefHashTableIter theIter(reflectorTable->GetHashTable()); !theIter.IsDone(); theIter.Next())
 		{
 			OSRef* theRef			=	theIter.GetCurrent();
-			ReflectorSession  * theSession = (ReflectorSession  *)theRef->GetObjectA();
+			ReflectorSession  * theSession = (ReflectorSession  *)theRef->GetObject();
 			char * chPushName = theSession->GetStreamName();
 			if(chPushName)
 			{

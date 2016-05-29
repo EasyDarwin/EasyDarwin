@@ -5,8 +5,6 @@
                    displayName="APICommonCode"
                    projectFiles="true">
       <itemPath>APICommonCode/APICommonCode.vcproj</itemPath>
-      <itemPath>APICommonCode/APICommonCode.vcxproj</itemPath>
-      <itemPath>APICommonCode/APICommonCode.vcxproj.filters</itemPath>
       <itemPath>APICommonCode/QTAccessFile.cpp</itemPath>
       <itemPath>APICommonCode/QTAccessFile.h</itemPath>
       <itemPath>APICommonCode/QTSSMemoryDeleter.h</itemPath>
@@ -14,8 +12,20 @@
       <itemPath>APICommonCode/QTSSModuleUtils.h</itemPath>
       <itemPath>APICommonCode/QTSSRollingLog.cpp</itemPath>
       <itemPath>APICommonCode/QTSSRollingLog.h</itemPath>
-      <itemPath>APICommonCode/SDPSourceInfo.h</itemPath>
-      <itemPath>APICommonCode/SourceInfo.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="APIModules" displayName="APIModules" projectFiles="true">
+      <logicalFolder name="EasyAuthModule"
+                     displayName="EasyAuthModule"
+                     projectFiles="true">
+        <itemPath>APIModules/EasyAuthModule/EasyAuthModule.cpp</itemPath>
+        <itemPath>APIModules/EasyAuthModule/EasyAuthModule.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="EasyRedisModule"
+                     displayName="EasyRedisModule"
+                     projectFiles="true">
+        <itemPath>APIModules/EasyRedisModule/EasyRedisModule.cpp</itemPath>
+        <itemPath>APIModules/EasyRedisModule/EasyRedisModule.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="APIStubLib" displayName="APIStubLib" projectFiles="true">
       <itemPath>APIStubLib/QTSS.h</itemPath>
@@ -118,6 +128,7 @@
     <Elem>PrefsSourceLib</Elem>
     <Elem>../OSMemoryLib</Elem>
     <Elem>../HTTPUtilitiesLib</Elem>
+    <Elem>APIModules</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -140,6 +151,9 @@
             <pElem>.</pElem>
             <pElem>../EasyProtocol/Include</pElem>
             <pElem>../EasyProtocol/jsoncpp/include</pElem>
+            <pElem>APIModules/EasyAuthModule</pElem>
+            <pElem>APIModules/EasyRedisModule</pElem>
+            <pElem>../EasyRedisClient</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -151,8 +165,10 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../Lib/x64</pElem>
+            <pElem>../EasyRedisClient/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system</commandLine>
+          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -175,16 +191,6 @@
       </item>
       <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/APICommonCode.vcxproj"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APICommonCode/APICommonCode.vcxproj.filters"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
@@ -199,9 +205,25 @@
       </item>
       <item path="APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/SDPSourceInfo.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyAuthModule/EasyAuthModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
-      <item path="APICommonCode/SourceInfo.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyAuthModule/EasyAuthModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyRedisModule/EasyRedisModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -342,6 +364,9 @@
             <pElem>.</pElem>
             <pElem>../EasyProtocol/Include</pElem>
             <pElem>../EasyProtocol/jsoncpp/include</pElem>
+            <pElem>APIModules/EasyAuthModule</pElem>
+            <pElem>APIModules/EasyRedisModule</pElem>
+            <pElem>../EasyRedisClient</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -361,8 +386,9 @@
             <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>../Lib/${CND_CONF}</pElem>
+            <pElem>../EasyRedisClient/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt</commandLine>
+          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -385,16 +411,6 @@
       </item>
       <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/APICommonCode.vcxproj"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APICommonCode/APICommonCode.vcxproj.filters"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
@@ -409,9 +425,25 @@
       </item>
       <item path="APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/SDPSourceInfo.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyAuthModule/EasyAuthModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
-      <item path="APICommonCode/SourceInfo.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyAuthModule/EasyAuthModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyRedisModule/EasyRedisModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -552,6 +584,9 @@
             <pElem>.</pElem>
             <pElem>../EasyProtocol/Include</pElem>
             <pElem>../EasyProtocol/jsoncpp/include</pElem>
+            <pElem>APIModules/EasyAuthModule</pElem>
+            <pElem>APIModules/EasyRedisModule</pElem>
+            <pElem>../EasyRedisClient</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -570,8 +605,9 @@
             <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>../Lib/${CND_CONF}</pElem>
+            <pElem>../EasyRedisClient/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt</commandLine>
+          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -594,16 +630,6 @@
       </item>
       <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/APICommonCode.vcxproj"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APICommonCode/APICommonCode.vcxproj.filters"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
@@ -618,9 +644,25 @@
       </item>
       <item path="APICommonCode/QTSSRollingLog.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/SDPSourceInfo.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyAuthModule/EasyAuthModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
-      <item path="APICommonCode/SourceInfo.h" ex="false" tool="3" flavor2="0">
+      <item path="APIModules/EasyAuthModule/EasyAuthModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyRedisModule/EasyRedisModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="APIStubLib/QTSS.h" ex="false" tool="3" flavor2="0">
       </item>

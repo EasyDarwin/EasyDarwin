@@ -480,6 +480,7 @@ UInt16 QTSServer::GetServicePorts(QTSServerPrefs* inPrefs)
 
 Bool16  QTSServer::SwitchPersonality()
 {
+#if 0
 #ifndef __Win32__  //not supported
     OSCharArrayDeleter runGroupName(fSrvrPrefs->GetRunGroupName());
     OSCharArrayDeleter runUserName(fSrvrPrefs->GetRunUserName());
@@ -518,6 +519,7 @@ Bool16  QTSServer::SwitchPersonality()
     }
 
 #endif  
+#endif
    return true;
 }
 
