@@ -791,39 +791,9 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
                 thePathPtr.Len -= sSDPSuffix.Len;
             }
         }
-		if(false)
-		{
-			if (resultFilePath != NULL)
-				*resultFilePath = thePathPtr.GetAsCString();
-			return FindOrCreateSession(&thePathPtr, inParams);
-		}
-		else
-		{
-			char strNewFullPath[256]={0};//add
-//#ifdef __Win32__
-			char movieFolder[256] = { 0 };
-			UInt32 thePathLen = 256;
-			QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
-			StringParser parser(&theFullPath);
-			StrPtrLen strStreamID;
-			parser.ConsumeLength(NULL,thePathLen);
-			parser.Expect('\\');
-			parser.ConsumeUntil(&strStreamID,'\\');
-			parser.Expect('\\');
-			StrPtrLen strStreamName;
-			parser.ConsumeUntil(&strStreamName,'\0');
-
-			memcpy(strNewFullPath,movieFolder,strlen(movieFolder));
-			memcpy(strNewFullPath+strlen(movieFolder),strStreamName.Ptr,strStreamName.Len);
-			MakeTheSameFormat(strNewFullPath);
-			StrPtrLen theNewFullPath(strNewFullPath);
-//#else
-
-//#endif
-			if (resultFilePath != NULL)
-				*resultFilePath = theNewFullPath.GetAsCString();
-			return FindOrCreateSession(&theNewFullPath, inParams);
-		}
+        if (resultFilePath != NULL)
+            *resultFilePath = thePathPtr.GetAsCString();
+        return FindOrCreateSession(&thePathPtr, inParams);
     }
     else
     {
@@ -842,42 +812,9 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
             // attempt to get a reflector session for this URL.
             StrPtrLen endOfPath2(&theFullPath.Ptr[theFullPath.Len - sSDPSuffix.Len], sSDPSuffix.Len);
             if (endOfPath2.Equal(sSDPSuffix))
-            {  
-				if(false)//if not use streamid/serial/channel.sdp,make it "if(true)"
-				{
-					if (resultFilePath != NULL)
-						*resultFilePath = theFullPath.GetAsCString();
-					return FindOrCreateSession(&theFullPath, inParams,NULL, isPush,foundSessionPtr);
-				}
-				else
-				{
-					char strNewFullPath[256]={0};//add
-//#ifdef __Win32__
-					char movieFolder[256] = { 0 };
-					UInt32 thePathLen = 256;
-					QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
-					StringParser parser(&theFullPath);
-					StrPtrLen strStreamID;
-					parser.ConsumeLength(NULL,thePathLen);
-					parser.Expect('\\');
-					parser.ConsumeUntil(&strStreamID,'\\');
-					parser.Expect('\\');
-					StrPtrLen strStreamName;
-					parser.ConsumeUntil(&strStreamName,'\0');
-
-					memcpy(strNewFullPath,movieFolder,strlen(movieFolder));
-					memcpy(strNewFullPath+strlen(movieFolder),strStreamName.Ptr,strStreamName.Len);
-					MakeTheSameFormat(strNewFullPath);
-					StrPtrLen theNewFullPath(strNewFullPath);
-//#else
-
-//#endif
-
-					if (resultFilePath != NULL)
-						*resultFilePath = theNewFullPath.GetAsCString();
-					return FindOrCreateSession(&theNewFullPath, inParams,NULL, isPush,foundSessionPtr);
-				}
-
+            {   if (resultFilePath != NULL)
+                    *resultFilePath = theFullPath.GetAsCString();
+                return FindOrCreateSession(&theFullPath, inParams,NULL, isPush,foundSessionPtr);
             }
         }
         return NULL;
@@ -962,7 +899,7 @@ void DoAnnounceAddRequiredSDPLines(QTSS_StandardRTSP_Params* inParams, Resizeabl
 
 QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 {
-    if (!sAnnounceEnabled)
+	if (!sAnnounceEnabled)
         return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssPreconditionFailed, sAnnounceDisabledNameErr);
 
     // If this is SDP data, the reflector has the ability to write the data
@@ -1008,55 +945,6 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
     // Ok, this is an sdp file. Retreive the entire contents of the SDP.
     // This has to be done asynchronously (in case the SDP stuff is fragmented across
     // multiple packets. So, we have to have a simple state machine.
-	//redis,对形如streamid/serial/channel.sdp形式的流名称对streamid进行验证,如 "./Movies/\streamid\serial\channel0.sdp"
-	
-	 StrPtrLen theNewFullPath;
-	 if(true)//不想验证streamid，使用if(false)代替
-	{
-		//1.解析出StreamID
-		char chStreamId[64] = {0};
-		char strNewFullPath[256] = {0};
-#ifdef __Win32__//winodws下的流名称和linux不一样
-
-		char movieFolder[256] = { 0 };
-		UInt32 thePathLen = 256;
-		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
-		StringParser parser(&StrPtrLen(theFullPathStr));
-		StrPtrLen strName;
-		parser.ConsumeLength(NULL,thePathLen);
-		parser.Expect('\\');
-		parser.ConsumeUntil(&strName,'\\');
-		memcpy(chStreamId,strName.Ptr,strName.Len);
-		parser.Expect('\\');
-		StrPtrLen strStreamName;
-		parser.ConsumeUntil(&strStreamName,'\0');
-		memcpy(strNewFullPath,movieFolder,strlen(movieFolder));
-		memcpy(strNewFullPath+strlen(movieFolder),strStreamName.Ptr,strStreamName.Len);
-		MakeTheSameFormat(strNewFullPath);
-		theNewFullPath.Set(strNewFullPath);
-#else 
-
-#endif
-		//2.在redis上验证streamid的合法性
-		char chResult = 0;
-		QTSS_RoleParams theParams;
-		theParams.JudgeStreamIDParams.inStreanID = chStreamId;
-		theParams.JudgeStreamIDParams.outresult = &chResult;
-
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kJudgeStreamIDRole);
-		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
-		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kJudgeStreamIDRole, currentModule);
-			(void)theModule->CallDispatch(QTSS_JudgeStreamID_Role, &theParams);
-		}
-		//if(chResult == 0)
-		if(false)
-		{
-			return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientBadRequest,0);;
-		}
-		//走到这说明streamid成功认证
-	}
-	//redis
 
     //
     // We need to know the content length to manage memory
@@ -1204,16 +1092,7 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 #endif 
 	   char sdpContext[1024] = {0};
 	   sprintf(sdpContext,"%s%s",sessionHeaders,mediaHeaders);
-
-	   if(false)
-	   {
-		   CSdpCache::GetInstance()->setSdpMap(theFullPath.Ptr,sdpContext);
-	   }
-	   else//streamid/serial/channel.sdp
-	   {
-		   CSdpCache::GetInstance()->setSdpMap(theNewFullPath.Ptr,sdpContext);
-	   }
-
+	   CSdpCache::GetInstance()->setSdpMap(theFullPath.Ptr,sdpContext);
 	   
 
     //qtss_printf("QTSSReflectorModule:DoAnnounce SendResponse OK=200\n");
@@ -1282,52 +1161,53 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
     if (theSession == NULL)
         return QTSS_RequestFailed;
 
-	//redis,streamid/serial/channel.sdp,for example "./Movies/\streamid\serial\channel0.sdp"
-	if(true)//Don't forget relese ref that used in DoSessionSetup
-	{
-		//1.get the path
-		char* theFullPathStr = NULL;
-		QTSS_Error theErrEx = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqLocalPath, 0, &theFullPathStr);
-		Assert(theErrEx == QTSS_NoErr);
-		QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
+//	//redis,streamid/serial/channel.sdp,for example "./Movies/\streamid\serial\channel0.sdp"
+//	if(true)//Don't forget relese ref that used in DoSessionSetup
+//	{
+//		//1.get the path
+//		char* theFullPathStr = NULL;
+//		QTSS_Error theErrEx = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqLocalPath, 0, &theFullPathStr);
+//		Assert(theErrEx == QTSS_NoErr);
+//		QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
+//
+//		//2.get SessionID
+//		char chStreamId[64]={0};
+//#ifdef __Win32__//it's different between linux and windows
+//
+//		char movieFolder[256] = { 0 };
+//		UInt32 thePathLen = 256;
+//		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
+//		StringParser parser(&StrPtrLen(theFullPathStr));
+//		StrPtrLen strName;
+//		parser.ConsumeLength(NULL,thePathLen);
+//		parser.Expect('\\');
+//		parser.ConsumeUntil(&strName,'\\');
+//		memcpy(chStreamId,strName.Ptr,strName.Len);
+//#else 
+//
+//#endif
+//		//3.auth the streamid in redis
+//		char chResult = 0;
+//		QTSS_RoleParams theParams;
+//		theParams.JudgeStreamIDParams.inStreanID = chStreamId;
+//		theParams.JudgeStreamIDParams.outresult = &chResult;
+//
+//		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kJudgeStreamIDRole);
+//		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+//		{
+//			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kJudgeStreamIDRole, currentModule);
+//			(void)theModule->CallDispatch(QTSS_JudgeStreamID_Role, &theParams);
+//		}
+//		//if(chResult == 0)
+//		if(false)
+//		{
+//			sSessionMap->Release(theSession->GetRef());//don't forget
+//			return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientBadRequest,0);;
+//		}
+//		//auth sucessfully
+//	}
+//	//redis
 
-		//2.get SessionID
-		char chStreamId[64]={0};
-#ifdef __Win32__//it's different between linux and windows
-
-		char movieFolder[256] = { 0 };
-		UInt32 thePathLen = 256;
-		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
-		StringParser parser(&StrPtrLen(theFullPathStr));
-		StrPtrLen strName;
-		parser.ConsumeLength(NULL,thePathLen);
-		parser.Expect('\\');
-		parser.ConsumeUntil(&strName,'\\');
-		memcpy(chStreamId,strName.Ptr,strName.Len);
-#else 
-
-#endif
-		//3.auth the streamid in redis
-		char chResult = 0;
-		QTSS_RoleParams theParams;
-		theParams.JudgeStreamIDParams.inStreanID = chStreamId;
-		theParams.JudgeStreamIDParams.outresult = &chResult;
-
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kJudgeStreamIDRole);
-		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
-		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kJudgeStreamIDRole, currentModule);
-			(void)theModule->CallDispatch(QTSS_JudgeStreamID_Role, &theParams);
-		}
-		//if(chResult == 0)
-		if(false)
-		{
-			sSessionMap->Release(theSession->GetRef());//don't forget
-			return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientBadRequest,0);;
-		}
-		//auth sucessfully
-	}
-	//redis
     RTPSessionOutput** theOutput = NULL;
     UInt32 theLen = 0;
     QTSS_Error theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
@@ -1549,7 +1429,6 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
         if (theErr != QTSS_NoErr)
         {   
 			delete theSession;
-			//theSession->Signal(Task::kKillEvent);
             return NULL;
         }
         
@@ -1639,7 +1518,6 @@ void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSes
         theSession->TearDownAllOutputs(); // just to be sure because we are about to delete the session.
         sSessionMap->UnRegister(theSessionRef);// we had an error while setting up-- don't let anyone get the session
         delete theSession;
-		//theSession->Signal(Task::kKillEvent);
     }
 }
 
@@ -2273,7 +2151,6 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
 				sSessionMap->UnRegister(theSessionRef);
 				CSdpCache::GetInstance()->eraseSdpMap(inSession->GetSourcePath()->GetAsCString());
 				delete inSession;
-				//inSession->Signal(Task::kKillEvent);
             }
         }
     }
