@@ -192,7 +192,15 @@ SInt64 EasyCMSSession::Run()
 				{
 					//发送响应报文
 					theErr = fOutputStream.Flush();
-                
+
+					if(theErr == 115)
+					{
+						fSocket->GetSocket()->SetTask(this);
+						fSocket->GetSocket()->RequestEvent(EV_WR);
+						this->ForceSameThread();
+						return 0;
+					}
+
 					if (theErr == EAGAIN || theErr == EINPROGRESS)
 					{
 						// If we get this error, we are currently flow-controlled and should
