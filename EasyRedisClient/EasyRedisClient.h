@@ -18,6 +18,29 @@
 #include <vector>
 #include <map>
 
+#define EASY_REDIS_ERR -1
+#define EASY_REDIS_OK 0
+
+#define EASY_REDIS_REPLY_STRING 1
+#define EASY_REDIS_REPLY_ARRAY 2
+#define EASY_REDIS_REPLY_INTEGER 3
+#define EASY_REDIS_REPLY_NIL 4
+#define EASY_REDIS_REPLY_STATUS 5
+#define EASY_REDIS_REPLY_ERROR 6
+
+/* This is the reply object returned by redisCommand() */
+typedef struct easyRedisReply {
+    int type; /* REDIS_REPLY_* */
+    long long integer; /* The integer when type is REDIS_REPLY_INTEGER */
+    int len; /* Length of string */
+    char *str; /* Used for both REDIS_REPLY_ERROR and REDIS_REPLY_STRING */
+    size_t elements; /* number of elements, for REDIS_REPLY_ARRAY */
+    struct easyRedisReply **element; /* elements vector for REDIS_REPLY_ARRAY */
+} easyRedisReply;
+
+void EasyFreeReplyObject(void *reply);
+
+
 class EasyRedisClient
 {
 public:
@@ -60,7 +83,6 @@ public:
 	int ZIncrBy(const char* key, float value, const char* member);
 
 	//useful cast
-
 	int SetTimeout(std::size_t timeout);
 	void AppendCommand(const char * command);//redisAppendCommand return void
 	int GetReply(void ** reply);
@@ -68,8 +90,10 @@ public:
 	int SAdd(const char* key, const char * member);
 	int SRem(const char* key, const char * member);
 	int SetEX(const char* key,std::size_t timeout,const char * value);
+
 	EasyRedisReplyObject Exists(const char * key);
 	EasyRedisReplyObject SMembers(const char * key);
+
 public:
     static std::string IntToString(int value);
     static int StringToInt(std::string value);

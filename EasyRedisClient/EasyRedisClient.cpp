@@ -477,6 +477,11 @@ int EasyRedisClient::GetReply(void ** reply)
 	return -1;
 }
 
+void EasyFreeReplyObject(void *reply)
+{
+	freeReplyObject(reply);
+}
+
 void EasyRedisClient::Free()
 {
 	if (fRedisContext != NULL)
