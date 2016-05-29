@@ -623,6 +623,8 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 	HTTPResponseStream *pOutputStream = GetOutputStream();
 	pOutputStream->Put(respHeader);
 
+	this->fLiveSession = false;
+
 	return QTSS_NoErr;
 }
 
