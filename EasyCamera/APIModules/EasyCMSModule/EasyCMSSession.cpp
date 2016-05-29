@@ -71,7 +71,8 @@ EasyCMSSession::EasyCMSSession()
 	fContentBufferOffset(0),
 	fContentBuffer(NULL),
 	fSnapReq(NULL),
-	fSendMessageCount(0)
+	fSendMessageCount(0),
+	fCSeqCount(1)
 {
 	this->SetTaskName("EasyCMSSession");
 
@@ -388,7 +389,7 @@ QTSS_Error EasyCMSSession::processMessage()
 		int nNetMsg = protocol.GetMessageType();
 		switch (nNetMsg)
 		{
-		case  MSG_SD_REGISTER_ACK:
+		case MSG_SD_REGISTER_ACK:
 			{
 				EasyMsgSDRegisterACK ack(fContentBuffer);
 
@@ -478,7 +479,7 @@ QTSS_Error EasyCMSSession::processMessage()
 			break;
 		case MSG_SD_STREAM_STOP_REQ:
 			{
-				EasyMsgSDStopStreamREQ	stopStreamReq(fContentBuffer);
+				EasyMsgSDStopStreamREQ stopStreamReq(fContentBuffer);
 
 				QTSS_RoleParams params;
 
@@ -504,7 +505,8 @@ QTSS_Error EasyCMSSession::processMessage()
 				body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
 				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
 
-				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), getStatusNo(errCode));
+
+				EasyMsgDSStopStreamACK rsp(body, fCSeqCount++, getStatusNo(errCode));
 				string msg = rsp.GetMsg();
 
 				//»ØÓ¦
@@ -631,7 +633,7 @@ QTSS_Error EasyCMSSession::doDSRegister()
 
 	EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
 
-	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr);
+	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr, fCSeqCount++);
 	string msg = req.GetMsg();
 
 	StrPtrLen jsonContent((char*)msg.data());
@@ -672,7 +674,7 @@ QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_PostSnap_Params* inParams)
 		body[EASY_TAG_TIME] = szTime;
 		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)inParams->snapPtr, inParams->snapLen);
 
-		fSnapReq = new EasyMsgDSPostSnapREQ(body, 1);
+		fSnapReq = new EasyMsgDSPostSnapREQ(body, fCSeqCount++);
 	}
 
 	this->Signal(Task::kUpdateEvent);
