@@ -8,12 +8,6 @@
 #include "QTSServerInterface.h"
 #include "ReflectorSession.h"
 
-#ifndef _WIN32
-#include "hiredis.h"
-#else
-#include "Windows/hiredis.h"
-#endif
-
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject modulePrefs = NULL;
 static QTSS_PrefsObject     sServerPrefs    = NULL;
@@ -226,17 +220,17 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sRedisClient->AppendCommand(chTemp);
 
 		bool bBreak = false;
-		redisReply* reply = NULL;
+		easyRedisReply* reply = NULL;
 		for(int i=0;i<6;i++)
 		{
-			if(REDIS_OK != sRedisClient->GetReply((void**)&reply))
+			if(EASY_REDIS_OK != sRedisClient->GetReply((void**)&reply))
 			{
 				bBreak = true;
 				if(reply)
-					freeReplyObject(reply);
+					EasyFreeReplyObject(reply);
 				break;
 			}
-			freeReplyObject(reply);
+			EasyFreeReplyObject(reply);
 		}
 		if(bBreak)//说明redisGetReply出现了错误
 			break;
@@ -334,7 +328,7 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 	char chTemp[128] = {0};
 
 	//1. get the list of EasyDarwin
-	redisReply * reply = (redisReply *)sRedisClient->SMembers("CMSName");
+	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("CMSName");
 	if(reply == NULL)
 	{
 		sRedisClient->Free();
@@ -343,9 +337,9 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 	}
 
 	//2.judge if the EasyCMS is ilve and contain serial  device
-	if( (reply->elements>0) && (reply->type == REDIS_REPLY_ARRAY) )
+	if( (reply->elements>0) && (reply->type == EASY_REDIS_REPLY_ARRAY) )
 	{
-		redisReply* childReply = NULL;
+		easyRedisReply* childReply = NULL;
 		for(size_t i = 0;i<reply->elements;i++)
 		{
 			childReply		=	reply->element[i];
@@ -358,28 +352,28 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 			sRedisClient->AppendCommand(chTemp);
 		}
 
-		redisReply *reply2 = NULL,*reply3 = NULL;
+		easyRedisReply *reply2 = NULL,*reply3 = NULL;
 		for(size_t i = 0;i<reply->elements;i++)
 		{
-			if(sRedisClient->GetReply((void**)&reply2) != REDIS_OK)
+			if(sRedisClient->GetReply((void**)&reply2) != EASY_REDIS_OK)
 			{
-				freeReplyObject(reply);
-				freeReplyObject(reply2);
+				EasyFreeReplyObject(reply);
+				EasyFreeReplyObject(reply2);
 				sRedisClient->Free();
 				sIfConSucess = false;
 				return QTSS_NotConnected;
 			}
-			if(sRedisClient->GetReply((void**)&reply3) != REDIS_OK)
+			if(sRedisClient->GetReply((void**)&reply3) != EASY_REDIS_OK)
 			{
-				freeReplyObject(reply);
-				freeReplyObject(reply3);
+				EasyFreeReplyObject(reply);
+				EasyFreeReplyObject(reply3);
 				sRedisClient->Free();
 				sIfConSucess = false;
 				return QTSS_NotConnected;
 			}
 
-			if( (reply2->type==REDIS_REPLY_INTEGER) && (reply2->integer==1) &&
-				(reply3->type==REDIS_REPLY_INTEGER) && (reply3->integer==1) )
+			if( (reply2->type == EASY_REDIS_REPLY_INTEGER) && (reply2->integer==1) &&
+				(reply3->type == EASY_REDIS_REPLY_INTEGER) && (reply3->integer==1) )
 			{//find it
 				std::string strIpPort(reply->element[i]->str);
 				int ipos = strIpPort.find(':');//judge error
@@ -387,11 +381,11 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 				memcpy(inParams->outCMSPort,&strIpPort[ipos+1],strIpPort.size()-ipos-1);
 				//break;//can't break,as 1 to 1
 			}
-			freeReplyObject(reply2);
-			freeReplyObject(reply3);
+			EasyFreeReplyObject(reply2);
+			EasyFreeReplyObject(reply3);
 		}
 	}
-	freeReplyObject(reply);
+	EasyFreeReplyObject(reply);
 	return QTSS_NoErr;
 }
 
