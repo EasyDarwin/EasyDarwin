@@ -23,11 +23,9 @@
 *
 */
 /*
-File:       ReflectorSession.cpp
-
-Contains:   Implementation of object defined in ReflectorSession.h. 
+	File:       ReflectorSession.cpp
+	Contains:   Implementation of object defined in ReflectorSession.h. 
 */
-
 
 #include "ReflectorSession.h"
 #include "RTCPPacket.h"
@@ -40,9 +38,7 @@ Contains:   Implementation of object defined in ReflectorSession.h.
 
 #include "QTSSModuleUtils.h"
 #include "QTSServerInterface.h"
-
 #include <errno.h>
-
 
 #ifndef __Win32__
 #include <unistd.h>
@@ -54,7 +50,6 @@ Contains:   Implementation of object defined in ReflectorSession.h.
 #define REFLECTOR_SESSION_DEBUGGING 0
 #endif
 
-
 FileDeleter::FileDeleter(StrPtrLen* inSDPPath)
 {
 	Assert (inSDPPath);
@@ -64,7 +59,6 @@ FileDeleter::FileDeleter(StrPtrLen* inSDPPath)
 	memcpy(fFilePath.Ptr, inSDPPath->Ptr,inSDPPath->Len);
 	fFilePath.Ptr[inSDPPath->Len] = 0;
 }
-
 
 FileDeleter::~FileDeleter()
 {
@@ -94,8 +88,7 @@ fHasBufferedStreams(false),
 fRTSPRelaySession(NULL),
 fSessionName(NULL),
 fHLSLive(false),
-fHasVideoKeyFrameUpdate(false),
-fStreamName(NULL)
+fHasVideoKeyFrameUpdate(false)
 {
 
 	fQueueElem.SetEnclosingObject(this);
@@ -140,12 +133,10 @@ ReflectorSession::~ReflectorSession()
 	fSourceID.Delete();
 
 	//将推流名称从redis中删除,使用fSessionName+".sdp"
-	if(fStreamName)
+	if(fSessionName)
 	{
-		//QTSServerInterface::GetServer()->RedisDelPushName(fStreamName);
-
 		QTSS_RoleParams theParams;
-		theParams.StreamNameParams.inStreamName = fStreamName;
+		theParams.StreamNameParams.inStreamName = fSessionName;
 
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kDelPushNameRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
@@ -154,10 +145,9 @@ ReflectorSession::~ReflectorSession()
 			(void)theModule->CallDispatch(QTSS_DelPushName_Role, &theParams);
 		}
 
-		qtss_printf("从redis中删除推流名称%s\n",fStreamName);
-		delete[] fStreamName;
+		qtss_printf("从redis中删除推流名称%s\n",fSessionName);
+		delete[] fSessionName;
 	}
-	if(fSessionName) delete[] fSessionName;
 }
 
 QTSS_Error ReflectorSession::SetSessionName()
@@ -178,23 +168,18 @@ QTSS_Error ReflectorSession::SetSessionName()
 		::memcpy(fSessionName, strName.Ptr, strName.Len);
 		fSessionName[strName.Len] = '\0';
 
-#ifdef __Win32__
 		//将推流名称加入到redis中
-		fStreamName = new char[strlen(fSessionName)+5];
-		sprintf(fStreamName,"%s.sdp",fSessionName);
 		QTSS_RoleParams theParams;
-		theParams.StreamNameParams.inStreamName = fStreamName;
+		theParams.StreamNameParams.inStreamName = fSessionName;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kAddPushNameRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kAddPushNameRole, currentModule);
 			(void)theModule->CallDispatch(QTSS_AddPushName_Role, &theParams);
 		}
-		//QTSServerInterface::GetServer()->RedisAddPushName(fStreamName);
-		qtss_printf("向redis中添加推流名称%s\n",fStreamName);
-#else
-		//对于streammid/serial/channel.sdp,添加serial/channel.sdp
-#endif
+
+		qtss_printf("向redis中添加推流名称%s\n",fSessionName);
+
 		return QTSS_NoErr;
 	}
 	return QTSS_Unimplemented;
@@ -408,7 +393,7 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
 	{
 		//调用角色，停止推流
 		QTSS_RoleParams theParams;
-		theParams.easyFreeStreamParams.inStreamName = fStreamName;
+		theParams.easyFreeStreamParams.inStreamName = fSessionName;
 		UInt32 fCurrentModule = 0;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kFreeStreamRole);
 		for (; fCurrentModule < numModules; fCurrentModule++)
@@ -459,32 +444,3 @@ void*   ReflectorSession::GetStreamCookie(UInt32 inStreamID)
 	}
 	return NULL;
 }
-
-/*
-//自动停止推流，add
-SInt64 ReflectorSession::Run()
-{
-EventFlags events = this->GetEvents();
-
-if (events & Task::kKillEvent)
-return -1;
-
-if(fIfFirstRun)
-{
-//第一次的时候还没有拉流，就不要进行处理了;客户端拉流不要过慢
-fIfFirstRun = false;
-}
-else
-{
-if(fNumOutputs == 0)
-{
-//调用角色，停止推流
-qtss_printf("没有客户端观看当前转发媒体\n");
-QTSS_RoleParams theParams;
-theParams.easyFreeStreamParams.inStreamName = fSessionName;
-QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kFreeStreamRole, 0);
-(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
-}
-}
-return 30*1000;
-}*/
