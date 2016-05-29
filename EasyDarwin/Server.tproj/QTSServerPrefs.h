@@ -213,8 +213,8 @@ class QTSServerPrefs : public QTSSPrefs
 
 		UInt16 GetHTTPServicePort()					{return fHTTPServicePort; }
         
-		char* GetEasyDarWinIP()		{return this->GetStringPref(qtssPrefsEasyDarWinIP);}
-		UInt16 GetEasyDarWinPort()	{return fMonitorWANPort;}
+		char* GetEasyDarwinIP()		{return this->GetStringPref(qtssPrefsEasyDarwinIP);}
+		UInt16 GetEasyDarwinPort()	{return fMonitorWANPort;}
     private:
 
         UInt32      fRTSPTimeoutInSecs;
