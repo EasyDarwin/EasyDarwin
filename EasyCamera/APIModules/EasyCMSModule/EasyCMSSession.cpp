@@ -506,7 +506,7 @@ QTSS_Error EasyCMSSession::processMessage()
 				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
 
 
-				EasyMsgDSStopStreamACK rsp(body, fCSeqCount++, getStatusNo(errCode));
+				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), getStatusNo(errCode));
 				string msg = rsp.GetMsg();
 
 				//ªÿ”¶
