@@ -888,9 +888,9 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(char *queryString)//放到
 	const char* chReserve	=	parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);//获取通道
 
 	//为可选参数填充默认值
-	if(chChannel==NULL)
+	if(chChannel == NULL)
 		chChannel = "01";
-	if(chReserve==NULL)
+	if(chReserve == NULL)
 		chReserve = "1";
 
 	if(chSerial==NULL||chProtocol==NULL)
@@ -904,7 +904,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(char *queryString)//放到
 	sprintf(chTemp,"%d",uCseq);
 
 	header[EASY_TAG_CSEQ]		=		chTemp;
-	header[EASY_TAG_VERSION]	=		"1.0";
+	header[EASY_TAG_VERSION]	=		EASY_PROTOCOL_VERSION;
 	body[EASY_TAG_SERIAL]		=		chSerial;
 	body[EASY_TAG_CHANNEL]		=		chChannel;
 	body[EASY_TAG_PROTOCOL]		=		chProtocol;
@@ -943,14 +943,14 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 	if(strStreamID.empty())//没有码流需求时默认为标清
 		strStreamID = "1";
 
-	if(strDeviceSerial.size()<=0||strProtocol.size()<=0)//参数判断
+	if( (strDeviceSerial.size() <= 0 ) || (strProtocol.size() <= 0 ) )//参数判断
 		return QTSS_BadArgument;
 
-	if(fInfo.cWaitingState==0)//第一次处理请求
+	if( fInfo.cWaitingState == 0 )//第一次处理请求
 	{
 		OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 		OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(strDeviceSerial);////////////////////////////////++
-		if(theDevRef==NULL)//找不到指定设备
+		if(theDevRef == NULL)//找不到指定设备
 			return EASY_ERROR_DEVICE_NOT_FOUND;
 
 		//走到这说明存在指定设备
