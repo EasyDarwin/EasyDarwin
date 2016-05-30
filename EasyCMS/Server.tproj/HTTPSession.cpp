@@ -996,9 +996,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			}
 			strSessionID = chSessionID;
 			strURL="rtsp://"+strDssIP+':'+strDssPort+'/'
-				+strSessionID+'/'
+				//+strSessionID+'/'
 				+strDeviceSerial+'/'
-				+strCameraSerial+".sdp";
+				+strCameraSerial+".sdp"
+				+"?streamid="+strSessionID;
 
 			//下面已经用不到设备回话了，释放引用
 			DeviceMap->Release(strDeviceSerial);/////////////////////////////////////////////--
@@ -1135,9 +1136,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			}
 			strSessionID = chSessionID;
 			strURL = "rtsp://"+fInfo.strDssIP+':'+fInfo.strDssPort+'/'
-				+strSessionID+'/'
+				//+strSessionID+'/'
 				+strDeviceSerial+'/'
-				+strCameraSerial+".sdp";
+				+strCameraSerial+".sdp"
+				+"?streamid="+strSessionID;
 		}
 		else//设备错误回应
 		{

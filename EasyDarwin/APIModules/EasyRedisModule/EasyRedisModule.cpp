@@ -144,7 +144,7 @@ QTSS_Error RedisConnect()
 		return QTSS_NoErr;
 
 	std::size_t timeout = 1;//timeout second
-	if(sRedisClient->ConnectWithTimeOut(sRedis_IP,sRedisPort,timeout) != -1)
+	if(sRedisClient->ConnectWithTimeOut(sRedis_IP,sRedisPort,timeout) == 0)//return 0 if connect sucess
 	{
 		qtss_printf("Connect redis sucess\n");
 		sIfConSucess = true;
@@ -265,7 +265,7 @@ QTSS_Error RedisDelPushName(QTSS_StreamName_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if(!sIfConSucess)
-		QTSS_NotConnected;
+		return QTSS_NotConnected;
 
 	char chKey[128]={0};
 	sprintf(chKey,"%s:%d_PushName",sEasyDarwinIP,sEasyDarwinPort);

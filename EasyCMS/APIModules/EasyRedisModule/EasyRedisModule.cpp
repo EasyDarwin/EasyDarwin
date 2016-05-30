@@ -140,7 +140,7 @@ QTSS_Error RedisConnect()
 		return QTSS_NoErr;
 
 	std::size_t timeout = 1;//timeout second
-	if(sRedisClient->ConnectWithTimeOut(sRedis_IP,sRedisPort,timeout) != -1)
+	if(sRedisClient->ConnectWithTimeOut(sRedis_IP,sRedisPort,timeout) ==0)//return 0 if connect sucess
 	{
 		qtss_printf("Connect redis sucess\n");
 		sIfConSucess = true;
