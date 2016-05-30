@@ -47,28 +47,26 @@
 
 char* QTSServerPrefs::sAdditionalDefaultPorts[] =
 {
-    "7070",
-	"8000",
-	"8001",
+    "8554",
     NULL
 };
 
 char* QTSServerPrefs::sRTP_Header_Players[] =
 {
-	"Real",
+	"vlc",
     NULL
 };
 
 char* QTSServerPrefs::sAdjust_Bandwidth_Players[] =
 {
-	"Real",
+	"vlc",
     NULL
 };
 
 char* QTSServerPrefs::sNo_Pause_Time_Adjustment_Players[] =
 {
-    "Real",
-    "PVPlayer",
+    "vlc",
+    "EasyPlayer",
     NULL
 };
 
@@ -196,7 +194,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     
     { kDontAllowMultipleValues, "8080",     NULL                        },  //http_service_port
      
-	//增加EasyDarWin和Redis的外部IP和端口
+	//增加EasyDarwin外部IP和端口
     { kDontAllowMultipleValues, "127.0.0.1",     NULL                        },  //easydarwin_ip_addr
     { kDontAllowMultipleValues, "554",			 NULL                        }  //easydarwin_port
     
@@ -300,7 +298,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 89 */ { "player_requires_disable_thinning", NULL,                        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     
     /* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 91 */ { "monitor_wan_ip",					NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 91 */ { "monitor_wan_ip",					NULL,						qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 92 */ { "monitor_wan_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
 
 };
@@ -479,8 +477,8 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(easyPrefsHTTPServicePort,				&fHTTPServicePort,				sizeof(fHTTPServicePort));
 
     //增加EasyDarWin和Redis的外部IP和端口
-    this->SetVal(qtssPrefsEasyDarWinIP,					&fMonitorWANAddr,					sizeof(fMonitorWANAddr));
-    this->SetVal(qtssPrefsEasyDarWinPort,				&fMonitorWANPort,				sizeof(fMonitorWANPort));    
+    this->SetVal(qtssPrefsEasyDarwinIP,					&fMonitorWANAddr,					sizeof(fMonitorWANAddr));
+    this->SetVal(qtssPrefsEasyDarwinPort,				&fMonitorWANPort,				sizeof(fMonitorWANPort));    
 }
 
 

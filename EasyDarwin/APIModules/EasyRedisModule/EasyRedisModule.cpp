@@ -128,10 +128,10 @@ QTSS_Error RereadPrefs()
 
 	//get EasyDarwin ip and port
 	delete [] sEasyDarwinIP;
-	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsEasyDarWinIP, 0, &sEasyDarwinIP);
+	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsEasyDarwinIP, 0, &sEasyDarwinIP);
 
 	UInt32 len = sizeof(SInt32);
-	(void) QTSS_GetValue(sServerPrefs, qtssPrefsEasyDarWinPort, 0, (void*)&sEasyDarwinPort, &len);
+	(void) QTSS_GetValue(sServerPrefs, qtssPrefsEasyDarwinPort, 0, (void*)&sEasyDarwinPort, &len);
 
 	return QTSS_NoErr;
 
@@ -195,7 +195,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		{
 			OSRef* theRef			=	theIter.GetCurrent();
 			ReflectorSession  * theSession = (ReflectorSession  *)theRef->GetObject();
-			char * chPushName = theSession->GetStreamName();
+			char * chPushName = theSession->GetSessionName();
 			if(chPushName)
 			{
 				strAllPushName[iPos++]=' ';

@@ -212,12 +212,6 @@ class ReflectorSession
 	public:
 		QTSS_Object GetRTSPRelaySession()	{ return fRTSPRelaySession;}
 		void SetRTSPRelaySession(QTSS_Object relaySession)	{ fRTSPRelaySession = relaySession; }
-
-	//自动停止推流，add
-	public:
-		char * GetStreamName( ){return fStreamName;}
-	private:
-		char * fStreamName;
 };
 
 #endif

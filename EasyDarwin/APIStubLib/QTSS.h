@@ -835,12 +835,12 @@ enum
 
     qtssPrefsEnablePacketHeaderPrintfs      = 60,   // "enable_packet_header_printfs" //Bool16 // RTP and RTCP printfs of outgoing packets.
     qtssPrefsPacketHeaderPrintfOptions      = 61,   // "packet_header_printf_options" //char //set of printfs to print. Form is [text option] [;]  default is "rtp;rr;sr;". This means rtp packets, rtcp sender reports, and rtcp receiver reports.
-    qtssPrefsOverbufferRate                 = 62,    // "overbuffer_rate"    //Float32
-    qtssPrefsMediumWindowSizeInK            = 63,    // "medium_window_size" // UInt32    //default size that will be used for medium bitrate movies
-    qtssPrefsWindowSizeMaxThreshold         = 64,    //"window_size_threshold"  // UInt32    //bitrate at which we switch from medium to large window size
+    qtssPrefsOverbufferRate                 = 62,   // "overbuffer_rate"    //Float32
+    qtssPrefsMediumWindowSizeInK            = 63,   // "medium_window_size" // UInt32    //default size that will be used for medium bitrate movies
+    qtssPrefsWindowSizeMaxThreshold         = 64,   //"window_size_threshold"  // UInt32    //bitrate at which we switch from medium to large window size
     qtssPrefsEnableRTSPServerInfo           = 65,   //"RTSP_server_info" //Boo1l6 // Adds server info to the RTSP responses.
     qtssPrefsRunNumThreads                  = 66,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
-    qtssPrefsPidFile                        = 67,    //"pid_file" //Char Array //path to pid file
+    qtssPrefsPidFile                        = 67,   //"pid_file" //Char Array //path to pid file
     qtssPrefsCloseLogsOnWrite               = 68,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
     qtssPrefsDisableThinning                = 69,   // "disable_thinning" //Bool16 // Usually used for performance testing. Turn off stream thinning from packet loss or stream lateness.
     qtssPrefsPlayersReqRTPHeader            = 70,   // "player_requires_rtp_header_info" //Char array //name of player to match against the player's user agent header
@@ -867,8 +867,8 @@ enum
 	easyPrefsHTTPServicePort				= 90,	// "http_service_port"
 
 	//增加EasyDarWin和Redis的外部IP和端口
-	qtssPrefsEasyDarWinIP					= 91,	//"easydarwin_ip_addr"
-	qtssPrefsEasyDarWinPort					= 92,	//easydarwin_port
+	qtssPrefsEasyDarwinIP					= 91,	//"easydarwin_ip_addr"
+	qtssPrefsEasyDarwinPort					= 92,	//easydarwin_port
     
 	qtssPrefsNumParams                      = 93
 };
