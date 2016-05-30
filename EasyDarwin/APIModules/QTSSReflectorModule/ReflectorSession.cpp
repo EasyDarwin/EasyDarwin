@@ -39,6 +39,7 @@
 #include "QTSSModuleUtils.h"
 #include "QTSServerInterface.h"
 #include <errno.h>
+#include "sdpCache.h"
 
 #ifndef __Win32__
 #include <unistd.h>
@@ -126,6 +127,8 @@ ReflectorSession::~ReflectorSession()
 		fStreamArray[x] = NULL;
 	}
 
+	CSdpCache::GetInstance()->eraseSdpMap(GetSourcePath()->GetAsCString());
+
 	// We own this object when it is given to us, so delete it now
 	delete [] fStreamArray;
 	delete fSourceInfo;
@@ -137,15 +140,15 @@ ReflectorSession::~ReflectorSession()
 	{
 		QTSS_RoleParams theParams;
 		theParams.StreamNameParams.inStreamName = fSessionName;
-
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kDelPushNameRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
-		{
+		{		
+			qtss_printf("从redis中删除推流名称%s\n",fSessionName);
+
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kDelPushNameRole, currentModule);
 			(void)theModule->CallDispatch(QTSS_DelPushName_Role, &theParams);
 		}
 
-		qtss_printf("从redis中删除推流名称%s\n",fSessionName);
 		delete[] fSessionName;
 	}
 }
@@ -173,12 +176,12 @@ QTSS_Error ReflectorSession::SetSessionName()
 		theParams.StreamNameParams.inStreamName = fSessionName;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kAddPushNameRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
-		{
+		{		
+			qtss_printf("向redis中添加推流名称%s\n",fSessionName);
+
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kAddPushNameRole, currentModule);
 			(void)theModule->CallDispatch(QTSS_AddPushName_Role, &theParams);
 		}
-
-		qtss_printf("向redis中添加推流名称%s\n",fSessionName);
 
 		return QTSS_NoErr;
 	}

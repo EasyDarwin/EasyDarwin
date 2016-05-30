@@ -2149,7 +2149,6 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16
 	qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
 #endif
 				sSessionMap->UnRegister(theSessionRef);
-				CSdpCache::GetInstance()->eraseSdpMap(inSession->GetSourcePath()->GetAsCString());
 				delete inSession;
             }
         }
