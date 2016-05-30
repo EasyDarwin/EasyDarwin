@@ -481,12 +481,13 @@ enum
 	Easy_Auth_Role     =            FOUR_CHARS_TO_INT('a','u','t','r'),//autr,auth
 
 	//redis module roles
-	QTSS_AddDevName_Role =			FOUR_CHARS_TO_INT('a','d','n','r'),//adnr
-	QTSS_DelDevName_Role =			FOUR_CHARS_TO_INT('d','d','n','r'),//ddnr
-	QTSS_TTL_Role =					FOUR_CHARS_TO_INT('t','t','l','r'),//ttlr
-	QTSS_GetAssociatedDarwin_Role =	FOUR_CHARS_TO_INT('g','a','d','r'),//gadr
-	QTSS_GetBestDarwin_Role =		FOUR_CHARS_TO_INT('g','b','d','r'),//gbdr
-	QTSS_GenStreamID_Role =			FOUR_CHARS_TO_INT('g','s','i','d'),//gsid
+	Easy_RedisAddDevName_Role =		FOUR_CHARS_TO_INT('a','d','n','r'),//adnr
+	Easy_RedisDelDevName_Role =		FOUR_CHARS_TO_INT('d','d','n','r'),//ddnr
+	Easy_RedisTTL_Role =			FOUR_CHARS_TO_INT('t','t','l','r'),//ttlr
+	Easy_RedisGetEasyDarwin_Role =	FOUR_CHARS_TO_INT('g','a','d','r'),//gadr
+	Easy_RedisGetBestEasyDarwin_Role =	FOUR_CHARS_TO_INT('g','b','d','r'),//gbdr
+	Easy_RedisGenStreamID_Role =	FOUR_CHARS_TO_INT('g','s','i','d'),//gsid
+
 };
 typedef UInt32 QTSS_Role;
 

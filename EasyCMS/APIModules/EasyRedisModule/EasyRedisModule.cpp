@@ -61,17 +61,17 @@ QTSS_Error  EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamB
 		return Initialize(&inParamBlock->initParams);
 	case QTSS_RereadPrefs_Role:
 		return RereadPrefs();
-	case QTSS_AddDevName_Role:
+	case Easy_RedisAddDevName_Role:
 		return RedisAddDevName(&inParamBlock->StreamNameParams);
-	case QTSS_DelDevName_Role:
+	case Easy_RedisDelDevName_Role:
 		return RedisDelDevName(&inParamBlock->StreamNameParams);
-	case QTSS_TTL_Role:
+	case Easy_RedisTTL_Role:
 		return RedisTTL();
-	case QTSS_GetAssociatedDarwin_Role:
+	case Easy_RedisGetEasyDarwin_Role:
 		return RedisGetAssociatedDarwin(&inParamBlock->GetAssociatedDarwinParams);
-	case QTSS_GetBestDarwin_Role:
+	case Easy_RedisGetBestEasyDarwin_Role:
 		return RedisGetBestDarwin(&inParamBlock->GetBestDarwinParams);
-	case QTSS_GenStreamID_Role:
+	case Easy_RedisGenStreamID_Role:
 		return RedisGenStreamID(&inParamBlock->GenStreamIDParams);
 	}
 	return QTSS_NoErr;
@@ -82,12 +82,12 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	// Do role setup
 	(void)QTSS_AddRole(QTSS_Initialize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
-	(void)QTSS_AddRole(QTSS_TTL_Role);
-	(void)QTSS_AddRole(QTSS_AddDevName_Role);
-	(void)QTSS_AddRole(QTSS_DelDevName_Role);
-	(void)QTSS_AddRole(QTSS_GetAssociatedDarwin_Role);
-	(void)QTSS_AddRole(QTSS_GetBestDarwin_Role);
-	(void)QTSS_AddRole(QTSS_GenStreamID_Role);
+	(void)QTSS_AddRole(Easy_RedisTTL_Role);
+	(void)QTSS_AddRole(Easy_RedisAddDevName_Role);
+	(void)QTSS_AddRole(Easy_RedisDelDevName_Role);
+	(void)QTSS_AddRole(Easy_RedisGetEasyDarwin_Role);
+	(void)QTSS_AddRole(Easy_RedisGetBestEasyDarwin_Role);
+	(void)QTSS_AddRole(Easy_RedisGenStreamID_Role);
     // Tell the server our name!
     static char* sModuleName = "EasyRedisModule";
     ::strcpy(inParams->outModuleName, sModuleName);

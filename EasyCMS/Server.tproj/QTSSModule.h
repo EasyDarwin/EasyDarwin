@@ -141,6 +141,7 @@ class QTSSModule : public QTSSDictionary, public Task
             kTimedIntervalRole =        11,
             kNonceRole        =         12,//add
 			kAuthRole         =         13,//add
+
 			kTTLRole		  =			14,
 			kAddDevNameRole	=			15,
 			kDelDevNameRole =			16,

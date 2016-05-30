@@ -257,7 +257,7 @@ void HTTPSessionInterface::UnRegDevSession()
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kDelDevNameRole, currentModule);
-			(void)theModule->CallDispatch(QTSS_DelDevName_Role, &theParams);
+			(void)theModule->CallDispatch(Easy_RedisDelDevName_Role, &theParams);
 		}
 	}
 }
