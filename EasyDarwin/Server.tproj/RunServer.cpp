@@ -647,7 +647,7 @@ void RunServer()
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 			{
 				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kTTLRole, currentModule);
-				(void)theModule->CallDispatch(QTSS_TTL_Role, NULL);
+				(void)theModule->CallDispatch(Easy_RedisTTL_Role, NULL);
 			}
 		}
 		//

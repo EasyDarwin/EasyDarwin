@@ -146,7 +146,7 @@ ReflectorSession::~ReflectorSession()
 			qtss_printf("从redis中删除推流名称%s\n",fSessionName);
 
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kDelPushNameRole, currentModule);
-			(void)theModule->CallDispatch(QTSS_DelPushName_Role, &theParams);
+			(void)theModule->CallDispatch(Easy_RedisDelPushStream_Role, &theParams);
 		}
 
 		delete[] fSessionName;
@@ -180,7 +180,7 @@ QTSS_Error ReflectorSession::SetSessionName()
 			qtss_printf("向redis中添加推流名称%s\n",fSessionName);
 
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kAddPushNameRole, currentModule);
-			(void)theModule->CallDispatch(QTSS_AddPushName_Role, &theParams);
+			(void)theModule->CallDispatch(Easy_RedisAddPushStream_Role, &theParams);
 		}
 
 		return QTSS_NoErr;

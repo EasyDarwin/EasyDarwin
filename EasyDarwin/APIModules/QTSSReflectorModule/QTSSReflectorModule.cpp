@@ -1196,7 +1196,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 //		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 //		{
 //			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kJudgeStreamIDRole, currentModule);
-//			(void)theModule->CallDispatch(QTSS_JudgeStreamID_Role, &theParams);
+//			(void)theModule->CallDispatch(Easy_RedisJudgeStreamID_Role, &theParams);
 //		}
 //		//if(chResult == 0)
 //		if(false)

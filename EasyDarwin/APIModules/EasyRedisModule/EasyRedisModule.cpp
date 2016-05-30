@@ -66,17 +66,17 @@ QTSS_Error  EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamB
 		return Initialize(&inParamBlock->initParams);
 	case QTSS_RereadPrefs_Role:
 		return RereadPrefs();
-	case QTSS_TTL_Role:
+	case Easy_RedisTTL_Role:
 		return RedisTTL();
-	case QTSS_ChangeRtpNum_Role:
+	case Easy_RedisChangeRTPNum_Role:
 		return RedisChangeRtpNum();
-	case QTSS_AddPushName_Role:
+	case Easy_RedisAddPushStream_Role:
 		return RedisAddPushName(&inParamBlock->StreamNameParams);
-	case QTSS_DelPushName_Role:
+	case Easy_RedisDelPushStream_Role:
 		return RedisDelPushName(&inParamBlock->StreamNameParams);
-	case QTSS_GetAssociatedCMS_Role:
+	case Easy_RedisGetAssociatedCMS_Role:
 		return RedisGetAssociatedCMS(&inParamBlock->GetAssociatedCMSParams);
-	case QTSS_JudgeStreamID_Role:
+	case Easy_RedisJudgeStreamID_Role:
 		return RedisJudgeStreamID(&inParamBlock->JudgeStreamIDParams);
 	}
 	return QTSS_NoErr;
@@ -87,12 +87,12 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	// Do role setup
 	(void)QTSS_AddRole(QTSS_Initialize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
-	(void)QTSS_AddRole(QTSS_TTL_Role);
-	(void)QTSS_AddRole(QTSS_ChangeRtpNum_Role);
-	(void)QTSS_AddRole(QTSS_AddPushName_Role);
-	(void)QTSS_AddRole(QTSS_DelPushName_Role);
-	(void)QTSS_AddRole(QTSS_GetAssociatedCMS_Role);
-	(void)QTSS_AddRole(QTSS_JudgeStreamID_Role);
+	(void)QTSS_AddRole(Easy_RedisTTL_Role);
+	(void)QTSS_AddRole(Easy_RedisChangeRTPNum_Role);
+	(void)QTSS_AddRole(Easy_RedisAddPushStream_Role);
+	(void)QTSS_AddRole(Easy_RedisDelPushStream_Role);
+	(void)QTSS_AddRole(Easy_RedisGetAssociatedCMS_Role);
+	(void)QTSS_AddRole(Easy_RedisJudgeStreamID_Role);
 
     // Tell the server our name!
     static char* sModuleName = "EasyRedisModule";

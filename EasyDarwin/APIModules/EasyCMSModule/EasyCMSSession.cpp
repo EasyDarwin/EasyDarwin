@@ -415,7 +415,7 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetAssociatedCMSRole, currentModule);
-			(void)theModule->CallDispatch(QTSS_GetAssociatedCMS_Role, &theParams);
+			(void)theModule->CallDispatch(Easy_RedisGetAssociatedCMS_Role, &theParams);
 		}
 
 		if(chCMSIP[0] == 0)
