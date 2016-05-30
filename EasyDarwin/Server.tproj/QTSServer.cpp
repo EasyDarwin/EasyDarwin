@@ -750,10 +750,6 @@ void    QTSServer::LoadCompiledInModules()
     // (void)AddModule(myModule);
     //
     // The following modules are all compiled into the server. 
-	QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");
-	(void)theCMSModule->SetupModule(&sCallbacks, &EasyCMSModule_Main);
-	(void)AddModule(theCMSModule);
-
     QTSSModule* theFileModule = new QTSSModule("QTSSFileModule");
     (void)theFileModule->SetupModule(&sCallbacks, &QTSSFileModule_Main);
     (void)AddModule(theFileModule);
@@ -793,9 +789,16 @@ void    QTSServer::LoadCompiledInModules()
     (void)theAdminModule->SetupModule(&sCallbacks, &QTSSAdminModule_Main);
     (void)AddModule(theAdminModule);
 
-    QTSSModule* theRedisModule = new QTSSModule("EasyRedisModule");
-    (void)theRedisModule->SetupModule(&sCallbacks, &EasyRedisModule_Main);
-    (void)AddModule(theRedisModule);
+	if(this->GetPrefs()->CloudPlatformEnabled())
+	{
+		QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");
+		(void)theCMSModule->SetupModule(&sCallbacks, &EasyCMSModule_Main);
+		(void)AddModule(theCMSModule);
+
+		QTSSModule* theRedisModule = new QTSSModule("EasyRedisModule");
+		(void)theRedisModule->SetupModule(&sCallbacks, &EasyRedisModule_Main);
+		(void)AddModule(theRedisModule);
+	}
 
     //QTSSModule* theMP3StreamingModule = new QTSSModule("QTSSMP3StreamingModule");
     //(void)theMP3StreamingModule->SetupModule(&sCallbacks, &QTSSMP3StreamingModule_Main);

@@ -76,7 +76,6 @@
 		<PREF NAME="send_interval" TYPE="UInt32" >50</PREF>
 		<PREF NAME="max_send_ahead_time" TYPE="UInt32" >25</PREF>
 		<PREF NAME="reliable_udp_slow_start" TYPE="Bool16" >true</PREF>
-		<PREF NAME="auto_delete_sdp_files" TYPE="Bool16" >false</PREF>
 		<PREF NAME="authentication_scheme" >digest</PREF>
 		<PREF NAME="sdp_file_delete_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="reliable_udp" TYPE="Bool16" >true</PREF>
@@ -127,6 +126,7 @@
 		<PREF NAME="3gpp_target_time_milliseconds" TYPE="UInt32" >3000</PREF>
 		<PREF NAME="player_requires_disable_thinning" ></PREF>
 		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
+		<PREF NAME="enable_cloud_platform" TYPE="Bool16" >false</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
 		<PREF NAME="request_logfile_interval" TYPE="UInt32" >7</PREF>
