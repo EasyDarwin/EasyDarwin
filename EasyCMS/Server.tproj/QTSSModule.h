@@ -142,12 +142,13 @@ class QTSSModule : public QTSSDictionary, public Task
             kNonceRole        =         12,//add
 			kAuthRole         =         13,//add
 
-			kTTLRole		  =			14,
-			kAddDevNameRole	=			15,
-			kDelDevNameRole =			16,
-			kGetAssociatedDarwinRole =	17,
-			kGetBestDarwinRole =		18,
-			kGenStreamIDRole =			19,
+			kRedisTTLRole		=		14,
+			kRedisAddDevNameRole	=	15,
+			kRedisDelDevNameRole	=	16,
+			kRedisGetEasyDarwinRole =	17,
+			kRedisGetBestEasyDarwinRole = 18,
+			kRedisGenStreamIDRole =		19,
+
             kNumRoles =                 20
         };
         typedef UInt32 RoleIndex;

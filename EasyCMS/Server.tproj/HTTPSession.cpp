@@ -705,10 +705,10 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 
 			QTSS_RoleParams theParams;
 			theParams.StreamNameParams.inStreamName = (char *)(fDevice.serial_.c_str());
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kAddDevNameRole);
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDevNameRole);
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kAddDevNameRole, currentModule);
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDevNameRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisAddDevName_Role, &theParams);
 			}
 			fAuthenticated = true;
@@ -965,10 +965,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 		theParams.GetAssociatedDarwinParams.outDssIP = chDssIP;
 		theParams.GetAssociatedDarwinParams.outDssPort = chDssPort;
 
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetAssociatedDarwinRole);
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetEasyDarwinRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetAssociatedDarwinRole, currentModule);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetEasyDarwinRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisGetEasyDarwin_Role, &theParams);
 		}
 		if(chDssIP[0] != 0)//是否存在关联的EasyDarWin转发服务器test,应该用Redis上的数据，因为推流是不可靠的，而EasyDarWin上的数据是可靠的
@@ -983,10 +983,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			theParams.GenStreamIDParams.outStreanID = chSessionID;
 			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
 
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGenStreamIDRole);
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGenStreamIDRole, currentModule);
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParams);
 			}
 			if(chSessionID[0] == 0)//sessionID在redis上的存储失败
@@ -1012,10 +1012,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			theParams.GetBestDarwinParams.outDssIP = chDssIP;
 			theParams.GetBestDarwinParams.outDssPort = chDssPort;
 
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetBestDarwinRole);
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetBestEasyDarwinRole);
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetBestDarwinRole, currentModule);
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetBestEasyDarwinRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisGetBestEasyDarwin_Role, &theParams);
 			}
 			if(chDssIP[0] == 0)//不存在DarWin
@@ -1043,10 +1043,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			theParams.GenStreamIDParams.outStreanID = chSessionID;
 			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
 
-			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGenStreamIDRole);
+			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGenStreamIDRole, currentModule);
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParams);
 			}
 			if(chSessionID[0] == 0)//sessionID再redis上的存储失败
@@ -1124,10 +1124,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			theParams.GenStreamIDParams.outStreanID = chSessionID;
 			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
 
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGenStreamIDRole);
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGenStreamIDRole, currentModule);
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParams);
 			}
 			if(chSessionID[0] == 0)//sessionID在redis上的存储失败
