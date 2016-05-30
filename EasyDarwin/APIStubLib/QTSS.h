@@ -1067,7 +1067,7 @@ enum
 	Easy_HLSClose_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
 	//Easy FreeStream Role
-	Easy_FreeStream_Role	=			FOUR_CHARS_TO_INT('e', 'f', 's', 'r'),  //efsr
+	Easy_CMSFreeStream_Role	=			FOUR_CHARS_TO_INT('e', 'f', 's', 'r'),  //efsr
 
 	//redis module roles
 	QTSS_ChangeRtpNum_Role =		FOUR_CHARS_TO_INT('c','r','n','r'),//crnr

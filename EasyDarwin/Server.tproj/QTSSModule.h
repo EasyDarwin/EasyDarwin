@@ -146,10 +146,10 @@ class QTSSModule : public QTSSDictionary, public Task
             kStateChangeRole =          22,
             kTimedIntervalRole =        23,
 
-			kHLSOpenRole	=			24,
-			kHLSCloseRole	=			25,
+			kEasyHLSOpenRole	=		24,
+			kEasyHLSCloseRole	=		25,
             
-			kFreeStreamRole =			26,
+			kEasyCMSFreeStreamRole =	26,
 
 			kTTLRole =					27,
 			kChangeRtpNumRole =			28,

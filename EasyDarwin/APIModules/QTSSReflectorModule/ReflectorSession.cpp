@@ -398,11 +398,11 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
 		QTSS_RoleParams theParams;
 		theParams.easyFreeStreamParams.inStreamName = fSessionName;
 		UInt32 fCurrentModule = 0;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kFreeStreamRole);
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
 		for (; fCurrentModule < numModules; fCurrentModule++)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kFreeStreamRole, 0);
-			(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, 0);
+			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
 			break;
 		}
 	}

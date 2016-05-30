@@ -971,10 +971,10 @@ QTSS_Error QTSSCallbacks::Easy_StartHLSession(const char* inSessionName, const c
 	params.easyHLSOpenParams.outHLSUrl = outURL;
 
 	UInt32 fCurrentModule = 0;
-	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSOpenRole);
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyHLSOpenRole);
 	for (; fCurrentModule < numModules; fCurrentModule++)
 	{
-		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSOpenRole, fCurrentModule);
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyHLSOpenRole, fCurrentModule);
 		(void)theModule->CallDispatch(Easy_HLSOpen_Role, &params);	
 		return QTSS_NoErr;
 	}
@@ -988,10 +988,10 @@ QTSS_Error QTSSCallbacks::Easy_StopHLSession(const char* inSessionName)
 	packetParams.easyHLSCloseParams.inStreamName = (char*)inSessionName;
 
 	UInt32 fCurrentModule = 0;
-	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kHLSCloseRole);
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyHLSCloseRole);
 	for (; fCurrentModule < numModules; fCurrentModule++)
 	{
-		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kHLSCloseRole, fCurrentModule);
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyHLSCloseRole, fCurrentModule);
 		(void)theModule->CallDispatch(Easy_HLSClose_Role, &packetParams);
 		return QTSS_NoErr;
 	}

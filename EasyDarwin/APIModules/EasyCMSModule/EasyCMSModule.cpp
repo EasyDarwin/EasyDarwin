@@ -60,8 +60,8 @@ SInt64 ReflectorSessionCheckTask::Run()
 			qtss_printf("没有客户端观看当前转发媒体\n");
 			QTSS_RoleParams theParams;
 			theParams.easyFreeStreamParams.inStreamName = theSession->GetSessionName();
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kFreeStreamRole, 0);
-			(void)theModule->CallDispatch(Easy_FreeStream_Role, &theParams);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, 0);
+			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
 		}
 	}  
 	return 30*1000;//每30秒检查一次
@@ -93,7 +93,7 @@ QTSS_Error  EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize_EasyCMSModule(&inParams->initParams);
         case QTSS_RereadPrefs_Role:
             return RereadPrefs_EasyCMSModule();
-		case Easy_FreeStream_Role:
+		case Easy_CMSFreeStream_Role:
 			return FreeStream_EasyCMSModule(&inParams->easyFreeStreamParams);
 	}
     return QTSS_NoErr;
@@ -104,7 +104,7 @@ QTSS_Error Register_EasyCMSModule(QTSS_Register_Params* inParams)
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
-	(void)QTSS_AddRole(Easy_FreeStream_Role);
+	(void)QTSS_AddRole(Easy_CMSFreeStream_Role);
    
     // Tell the server our name!
     static char* sModuleName = "EasyCMSModule";
