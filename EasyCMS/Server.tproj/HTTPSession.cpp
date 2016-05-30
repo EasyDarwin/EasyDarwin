@@ -999,7 +999,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 				//+strSessionID+'/'
 				+strDeviceSerial+'/'
 				+strCameraSerial+".sdp"
-				+"?streamid="+strSessionID;
+				+"?token="+strSessionID;
 
 			//下面已经用不到设备回话了，释放引用
 			DeviceMap->Release(strDeviceSerial);/////////////////////////////////////////////--
@@ -1139,7 +1139,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 				//+strSessionID+'/'
 				+strDeviceSerial+'/'
 				+strCameraSerial+".sdp"
-				+"?streamid="+strSessionID;
+				+"?token="+strSessionID;
 		}
 		else//设备错误回应
 		{
