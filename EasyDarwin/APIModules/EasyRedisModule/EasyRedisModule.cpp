@@ -26,8 +26,12 @@ static char*            sDefaultRedisUser		= "admin";
 static char*            sRedisPassword			= NULL;
 static char*            sDefaultRedisPassword	= "admin";
 
-static char*			sEasyDarwinIP			= NULL;
-static UInt16			sEasyDarwinPort			= 554;
+static char*			sRTSPWanIP				= NULL;
+static char*			sDefaultRTSPWanIP		= "127.0.0.1";
+
+static UInt16			sRTSPWanPort			= 554;
+static UInt16			sDefaultRTSPWanPort		= 554;
+
 static EasyRedisClient* sRedisClient			= NULL;//the object pointer that package the redis operation
 static bool				sIfConSucess			= false;
 static OSMutex			sMutex;
@@ -126,12 +130,11 @@ QTSS_Error RereadPrefs()
 	delete [] sRedisPassword;
     sRedisPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_password", sDefaultRedisPassword);
 
-	//get EasyDarwin ip and port
-	delete [] sEasyDarwinIP;
-	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsEasyDarwinIP, 0, &sEasyDarwinIP);
+	//get EasyDarwin WAN ip and port
+	delete [] sRTSPWanIP;
+    sRTSPWanIP = QTSSModuleUtils::GetStringAttribute(modulePrefs, "rtsp_wan_ip", sDefaultRTSPWanIP);
 
-	UInt32 len = sizeof(SInt32);
-	(void) QTSS_GetValue(sServerPrefs, qtssPrefsEasyDarwinPort, 0, (void*)&sEasyDarwinPort, &len);
+	QTSSModuleUtils::GetAttribute(modulePrefs, "rtsp_wan_port", qtssAttrDataTypeUInt16, &sRTSPWanPort, &sDefaultRTSPWanPort, sizeof(sRTSPWanPort));
 
 	return QTSS_NoErr;
 
@@ -172,15 +175,15 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sRedisClient->AppendCommand(chTemp);
 
 		//2,EasyDarWin唯一信息存储(覆盖上一次的存储)
-		sprintf(chTemp,"sadd EasyDarWinName %s:%d",sEasyDarwinIP,sEasyDarwinPort);
+		sprintf(chTemp,"sadd EasyDarWinName %s:%d",sRTSPWanIP,sRTSPWanPort);
 		sRedisClient->AppendCommand(chTemp);
 
 		//3,EasyDarWin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
-		sprintf(chTemp,"hmset %s:%d_Info IP %s PORT %d RTP %d",sEasyDarwinIP,sEasyDarwinPort,sEasyDarwinIP,sEasyDarwinPort,QTSServerInterface::GetServer()->GetNumRTPSessions());
+		sprintf(chTemp,"hmset %s:%d_Info IP %s PORT %d RTP %d",sRTSPWanIP,sRTSPWanPort,sRTSPWanIP,sRTSPWanPort,QTSServerInterface::GetServer()->GetNumRTPSessions());
 		sRedisClient->AppendCommand(chTemp);
 
 		//4,清除推流名称存储
-		sprintf(chTemp,"del %s:%d_PushName",sEasyDarwinIP,sEasyDarwinPort);
+		sprintf(chTemp,"del %s:%d_PushName",sRTSPWanIP,sRTSPWanPort);
 		sRedisClient->AppendCommand(chTemp);
 
 		char* strAllPushName;
@@ -208,7 +211,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		char *chNewTemp = new char[strlen(strAllPushName)+128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
 
 		//5,推流名称存储
-		sprintf(chNewTemp,"sadd %s:%d_PushName%s",sEasyDarwinIP,sEasyDarwinPort,strAllPushName);
+		sprintf(chNewTemp,"sadd %s:%d_PushName%s",sRTSPWanIP,sRTSPWanPort,strAllPushName);
 		sRedisClient->AppendCommand(chTemp);
 
 
@@ -216,7 +219,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		delete[] strAllPushName;
 
 		//6,保活，设置15秒，这之后当前EasyDarwin已经开始提供服务了
-		sprintf(chTemp,"setex %s:%d_Live 15 1",sEasyDarwinIP,sEasyDarwinPort);
+		sprintf(chTemp,"setex %s:%d_Live 15 1",sRTSPWanIP,sRTSPWanPort);
 		sRedisClient->AppendCommand(chTemp);
 
 		bool bBreak = false;
@@ -249,7 +252,7 @@ QTSS_Error RedisAddPushName(QTSS_StreamName_Params* inParams)
 		return QTSS_NotConnected;
 
 	char chKey[128]={0};
-	sprintf(chKey,"%s:%d_PushName",sEasyDarwinIP,sEasyDarwinPort);
+	sprintf(chKey,"%s:%d_PushName",sRTSPWanIP,sRTSPWanPort);
 
 	int ret = sRedisClient->SAdd(chKey,inParams->inStreamName);
 	if( ret == -1)//fatal err,need reconnect
@@ -268,7 +271,7 @@ QTSS_Error RedisDelPushName(QTSS_StreamName_Params* inParams)
 		return QTSS_NotConnected;
 
 	char chKey[128]={0};
-	sprintf(chKey,"%s:%d_PushName",sEasyDarwinIP,sEasyDarwinPort);
+	sprintf(chKey,"%s:%d_PushName",sRTSPWanIP,sRTSPWanPort);
 
 	int ret = sRedisClient->SRem(chKey,inParams->inStreamName);
 	if( ret == -1)//fatal err,need reconnect
@@ -288,7 +291,7 @@ QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key
 		return QTSS_NotConnected;
 
 	char chKey[128]={0};//注意128位是否足够
-	sprintf(chKey,"%s:%d_Live 15",sEasyDarwinIP,sEasyDarwinPort);//更改超时时间
+	sprintf(chKey,"%s:%d_Live 15",sRTSPWanIP,sRTSPWanPort);//更改超时时间
 
 	int ret =  sRedisClient->SetExpire(chKey,15);
 	if(ret == -1)//fatal error
@@ -303,7 +306,7 @@ QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key
 	}
 	else if(ret == 0)//the key doesn't exist, reset
 	{
-		sprintf(chKey,"%s:%d_Live",sEasyDarwinIP,sEasyDarwinPort);
+		sprintf(chKey,"%s:%d_Live",sRTSPWanIP,sRTSPWanPort);
 		int retret = sRedisClient->SetEX(chKey,15,"1");
 		if(retret == -1)//fatal error
 		{
@@ -396,7 +399,7 @@ QTSS_Error RedisChangeRtpNum()
 		return QTSS_NotConnected;
 
 	char chKey[128] = {0};
-	sprintf(chKey,"%s:%d_Info",sEasyDarwinIP,sEasyDarwinPort);//hset对RTP属性进行覆盖更新
+	sprintf(chKey,"%s:%d_Info",sRTSPWanIP,sRTSPWanPort);//hset对RTP属性进行覆盖更新
 
 	char chRtpNum[16] = {0};
 	sprintf(chRtpNum,"%d",QTSServerInterface::GetServer()->GetNumRTPSessions());
