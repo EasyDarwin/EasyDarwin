@@ -59,9 +59,13 @@ SInt64 ReflectorSessionCheckTask::Run()
 		{
 			qtss_printf("没有客户端观看当前转发媒体\n");
 			QTSS_RoleParams theParams;
-			theParams.easyFreeStreamParams.inStreamName = theSession->GetSessionName();
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, 0);
-			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+			theParams.easyFreeStreamParams.inStreamName = theSession->GetStreamName();
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
+			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
+				(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+			}
 		}
 	}  
 	return 30*1000;//每30秒检查一次

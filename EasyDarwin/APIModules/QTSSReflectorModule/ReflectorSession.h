@@ -168,7 +168,7 @@ class ReflectorSession
 
 		void	SetHasBufferedStreams(Bool16 enableBuffer) { fHasBufferedStreams = enableBuffer; }
 		void	SetHasVideoKeyFrameUpdate(Bool16 indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
-     
+		char *   GetStreamName(){ return fStreamName;}
     private:
     
         // Is this session setup?
@@ -178,6 +178,7 @@ class ReflectorSession
         OSRef       fRef;
         StrPtrLen   fSourceID;
 		char*	fSessionName;
+		char*   fStreamName;
 
 		// HLS Session
 		Bool16		fHLSLive;
