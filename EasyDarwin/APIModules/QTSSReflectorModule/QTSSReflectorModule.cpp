@@ -1192,10 +1192,10 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 //		theParams.JudgeStreamIDParams.inStreanID = chStreamId;
 //		theParams.JudgeStreamIDParams.outresult = &chResult;
 //
-//		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kJudgeStreamIDRole);
+//		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisJudgeStreamIDRole);
 //		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 //		{
-//			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kJudgeStreamIDRole, currentModule);
+//			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisJudgeStreamIDRole, currentModule);
 //			(void)theModule->CallDispatch(Easy_RedisJudgeStreamID_Role, &theParams);
 //		}
 //		//if(chResult == 0)

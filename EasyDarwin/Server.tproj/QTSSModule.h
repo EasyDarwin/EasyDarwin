@@ -151,12 +151,13 @@ class QTSSModule : public QTSSDictionary, public Task
             
 			kEasyCMSFreeStreamRole =	26,
 
-			kTTLRole =					27,
-			kChangeRtpNumRole =			28,
-			kAddPushNameRole =			29,
-			kDelPushNameRole =			30,
-			kGetAssociatedCMSRole =		31,
-			kJudgeStreamIDRole	=		32,
+			kRedisTTLRole =				27,
+			kRedisChangeRTPNumRole =	28,
+			kRedisAddPushStreamRole =	29,
+			kRedisDelPushStreamRole =	30,
+			kRedisGetAssociatedCMSRole =31,
+			kRedisJudgeStreamIDRole	=	32,
+
             kNumRoles =                 33
         };
         typedef UInt32 RoleIndex;

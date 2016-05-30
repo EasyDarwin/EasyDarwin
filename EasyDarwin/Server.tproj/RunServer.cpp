@@ -643,10 +643,10 @@ void RunServer()
 		{
 			num=0;
 
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kTTLRole);
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisTTLRole);
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kTTLRole, currentModule);
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisTTLRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisTTL_Role, NULL);
 			}
 		}

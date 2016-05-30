@@ -140,12 +140,12 @@ ReflectorSession::~ReflectorSession()
 	{
 		QTSS_RoleParams theParams;
 		theParams.StreamNameParams.inStreamName = fSessionName;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kDelPushNameRole);
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelPushStreamRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{		
 			qtss_printf("从redis中删除推流名称%s\n",fSessionName);
 
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kDelPushNameRole, currentModule);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisDelPushStreamRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisDelPushStream_Role, &theParams);
 		}
 
@@ -174,12 +174,12 @@ QTSS_Error ReflectorSession::SetSessionName()
 		//将推流名称加入到redis中
 		QTSS_RoleParams theParams;
 		theParams.StreamNameParams.inStreamName = fSessionName;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kAddPushNameRole);
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddPushStreamRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{		
 			qtss_printf("向redis中添加推流名称%s\n",fSessionName);
 
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kAddPushNameRole, currentModule);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddPushStreamRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisAddPushStream_Role, &theParams);
 		}
 
