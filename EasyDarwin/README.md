@@ -4,6 +4,10 @@ EasyDarwin开源流媒体服务器是EasyDarwin开源流媒体云平台的流媒
 
 EasyDarwin本身提供了一个高性能的服务端框架，Linux/Windows跨平台支持，是开发流媒体服务以及其他类型服务的极佳框架工具，EasyDarwin具备一套完整的网络I/O框架以及Utility，EasyDarwin开源团队也在不断进行更优的性能优化（epoll、线程池、内存池、堆栈调用、寄存器调用等）、应用优化（RESTful接口、WEB管理后台、配套APP等），开发者很容易在EasyDarwin的基础上开发跨平台服务程序，例如Windows、Linux、Mac、Solaris等系统平台，只要一次熟悉，将会受用终身，并且部署和开发过程简单，文档和支持完备，是互联网<sup>+</sup>时代，对企业和开发者来说，最接地气的开源流媒体服务器；
 
+## 视频教程 ##
+
+EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn.net/course/detail/2431](http://edu.csdn.net/course/detail/2431 "EasyDarwin开源流媒体服务器视频教程")
+
 ## EasyDarwin目前支持 ##
 1. MP4点播(QTSSFileModule)；
 2. 标准RTSP推模式直播(QTSSReflectorModule)；
