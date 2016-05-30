@@ -759,88 +759,88 @@ enum
     
     // All of these parameters are read-write. 
     
-    qtssPrefsRTSPTimeout            = 0,    //"rtsp_timeout"                //UInt32    //RTSP timeout in seconds sent to the client.
-    qtssPrefsRealRTSPTimeout        = 1,    //"real_rtsp_timeout"           //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
-    qtssPrefsRTPTimeout             = 2,    //"rtp_timeout"                 //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTP clients. 0 means no timeout
-    qtssPrefsMaximumConnections     = 3,    //"maximum_connections"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
-    qtssPrefsMaximumBandwidth       = 4,    //"maximum_bandwidth"           //SInt32    //Maximum amt of bandwidth the server is allowed to serve in K bits. -1 means unlimited.
-    qtssPrefsMovieFolder            = 5,    //"movie_folder"                //char array    //Path to the root movie folder
-    qtssPrefsRTSPIPAddr             = 6,    //"bind_ip_addr"                //char array    //IP address the server should accept RTSP connections on. 0.0.0.0 means all addresses on the machine.
-    qtssPrefsBreakOnAssert          = 7,    //"break_on_assert"             //Bool16        //If true, the server will break in the debugger when an assert fails.
-    qtssPrefsAutoRestart            = 8,    //"auto_restart"                //Bool16        //If true, the server will automatically restart itself if it crashes.
-    qtssPrefsTotalBytesUpdate       = 9,    //"total_bytes_update"          //UInt32    //Interval in seconds between updates of the server's total bytes and current bandwidth statistics
-    qtssPrefsAvgBandwidthUpdate     = 10,   //"average_bandwidth_update"    //UInt32    //Interval in seconds between computations of the server's average bandwidth
-    qtssPrefsSafePlayDuration       = 11,   //"safe_play_duration"          //UInt32    //Hard to explain... see streamingserver.conf
-    qtssPrefsModuleFolder           = 12,   //"module_folder"               //char array    //Path to the module folder
+    qtssPrefsRTSPTimeout					= 0,    //"rtsp_timeout"                //UInt32    //RTSP timeout in seconds sent to the client.
+    qtssPrefsRealRTSPTimeout				= 1,    //"real_rtsp_timeout"           //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
+    qtssPrefsRTPTimeout						= 2,    //"rtp_timeout"                 //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTP clients. 0 means no timeout
+    qtssPrefsMaximumConnections				= 3,    //"maximum_connections"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
+    qtssPrefsMaximumBandwidth				= 4,    //"maximum_bandwidth"           //SInt32    //Maximum amt of bandwidth the server is allowed to serve in K bits. -1 means unlimited.
+    qtssPrefsMovieFolder					= 5,    //"movie_folder"                //char array    //Path to the root movie folder
+    qtssPrefsRTSPIPAddr						= 6,    //"bind_ip_addr"                //char array    //IP address the server should accept RTSP connections on. 0.0.0.0 means all addresses on the machine.
+    qtssPrefsBreakOnAssert					= 7,    //"break_on_assert"             //Bool16        //If true, the server will break in the debugger when an assert fails.
+    qtssPrefsAutoRestart					= 8,    //"auto_restart"                //Bool16        //If true, the server will automatically restart itself if it crashes.
+    qtssPrefsTotalBytesUpdate				= 9,    //"total_bytes_update"          //UInt32    //Interval in seconds between updates of the server's total bytes and current bandwidth statistics
+    qtssPrefsAvgBandwidthUpdate				= 10,   //"average_bandwidth_update"    //UInt32    //Interval in seconds between computations of the server's average bandwidth
+    qtssPrefsSafePlayDuration				= 11,   //"safe_play_duration"          //UInt32    //Hard to explain... see streamingserver.conf
+    qtssPrefsModuleFolder					= 12,   //"module_folder"               //char array    //Path to the module folder
 
     // There is a compiled-in error log module that loads before all the other modules
     // (so it can log errors from the get-go). It uses these prefs.
     
-    qtssPrefsErrorLogName           = 13,   //"error_logfile_name"          //char array        //Name of error log file
-    qtssPrefsErrorLogDir            = 14,   //"error_logfile_dir"           //char array        //Path to error log file directory
-    qtssPrefsErrorRollInterval      = 15,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
-    qtssPrefsMaxErrorLogSize        = 16,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
-    qtssPrefsErrorLogVerbosity      = 17,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
-    qtssPrefsScreenLogging          = 18,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
-    qtssPrefsErrorLogEnabled        = 19,   //"error_logging"               //Bool16        //Is error logging enabled?
+    qtssPrefsErrorLogName					= 13,   //"error_logfile_name"          //char array        //Name of error log file
+    qtssPrefsErrorLogDir					= 14,   //"error_logfile_dir"           //char array        //Path to error log file directory
+    qtssPrefsErrorRollInterval				= 15,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
+    qtssPrefsMaxErrorLogSize				= 16,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
+    qtssPrefsErrorLogVerbosity				= 17,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
+    qtssPrefsScreenLogging					= 18,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
+    qtssPrefsErrorLogEnabled				= 19,   //"error_logging"               //Bool16        //Is error logging enabled?
 
-    qtssPrefsDropVideoAllPacketsDelayInMsec = 20,   //"drop_all_video_delay"//SInt32 // Don't send video packets later than this
-    qtssPrefsStartThinningDelayInMsec       = 21,   //"start_thinning_delay"//SInt32 // lateness at which we might start thinning
-    qtssPrefsLargeWindowSizeInK             = 22,   //"large_window_size"	// UInt32    //default size that will be used for high bitrate movies
-    qtssPrefsWindowSizeThreshold            = 23,   //"window_size_threshold"  // UInt32    //bitrate at which we switch to larger window size
+    qtssPrefsDropVideoAllPacketsDelayInMsec = 20,   // "drop_all_video_delay"//SInt32 // Don't send video packets later than this
+    qtssPrefsStartThinningDelayInMsec       = 21,   // "start_thinning_delay"//SInt32 // lateness at which we might start thinning
+    qtssPrefsLargeWindowSizeInK             = 22,   // "large_window_size"	// UInt32    //default size that will be used for high bitrate movies
+    qtssPrefsWindowSizeThreshold            = 23,   // "window_size_threshold"  // UInt32    //bitrate at which we switch to larger window size
     
-    qtssPrefsMinTCPBufferSizeInBytes        = 24,   //"min_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the minimum size the TCP socket send buffer can be set to
-    qtssPrefsMaxTCPBufferSizeInBytes        = 25,   //"max_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the maximum size the TCP socket send buffer can be set to
-    qtssPrefsTCPSecondsToBuffer             = 26,   //"tcp_seconds_to_buffer" //Float32 // When streaming over TCP, the size of the TCP send buffer is scaled based on the bitrate of the movie. It will fit all the data that gets sent in this amount of time.
+    qtssPrefsMinTCPBufferSizeInBytes        = 24,   // "min_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the minimum size the TCP socket send buffer can be set to
+    qtssPrefsMaxTCPBufferSizeInBytes        = 25,   // "max_tcp_buffer_size" //UInt32    // When streaming over TCP, this is the maximum size the TCP socket send buffer can be set to
+    qtssPrefsTCPSecondsToBuffer             = 26,   // "tcp_seconds_to_buffer" //Float32 // When streaming over TCP, the size of the TCP send buffer is scaled based on the bitrate of the movie. It will fit all the data that gets sent in this amount of time.
     
-    qtssPrefsDoReportHTTPConnectionAddress  = 27,   //"do_report_http_connection_ip_address"    //Bool16    // when behind a round robin DNS, the client needs to be told the specific ip address of the maching handling its request. this pref tells the server to repot its IP address in the reply to the HTTP GET request when tunneling RTSP through HTTP
+    qtssPrefsDoReportHTTPConnectionAddress  = 27,   // "do_report_http_connection_ip_address"    //Bool16    // when behind a round robin DNS, the client needs to be told the specific ip address of the maching handling its request. this pref tells the server to repot its IP address in the reply to the HTTP GET request when tunneling RTSP through HTTP
 
     qtssPrefsDefaultAuthorizationRealm      = 28,   // "default_authorization_realm" //char array   //
     
-    qtssPrefsRunUserName                    = 29,   //"run_user_name"       //char array        //Run under this user's account
-    qtssPrefsRunGroupName                   = 30,   //"run_group_name"      //char array        //Run under this group's account
+    qtssPrefsRunUserName                    = 29,   // "run_user_name"       //char array        //Run under this user's account
+    qtssPrefsRunGroupName                   = 30,   // "run_group_name"      //char array        //Run under this group's account
     
-    qtssPrefsSrcAddrInTransport             = 31,   //"append_source_addr_in_transport" // Bool16   //If true, the server will append the src address to the Transport header responses
-    qtssPrefsRTSPPorts                      = 32,   //"rtsp_ports"          // UInt16   
+    qtssPrefsSrcAddrInTransport             = 31,   // "append_source_addr_in_transport" // Bool16   //If true, the server will append the src address to the Transport header responses
+    qtssPrefsRTSPPorts                      = 32,   // "rtsp_ports"          // UInt16   
 
-    qtssPrefsMaxRetransDelayInMsec          = 33,   //"max_retransmit_delay" // UInt32  //maximum interval between when a retransmit is supposed to be sent and when it actually gets sent. Lower values means smoother flow but slower server performance
-    qtssPrefsSmallWindowSizeInK             = 34,   //"small_window_size"  // UInt32    //default size that will be used for low bitrate movies
-    qtssPrefsAckLoggingEnabled              = 35,   //"ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of UDP acks / retransmits
-    qtssPrefsRTCPPollIntervalInMsec         = 36,   //"rtcp_poll_interval"      // UInt32   //interval (in Msec) between poll for RTCP packets
-    qtssPrefsRTCPSockRcvBufSizeInK          = 37,   //"rtcp_rcv_buf_size"   // UInt32   //Size of the receive socket buffer for udp sockets used to receive rtcp packets
-    qtssPrefsSendInterval                   = 38,   //"send_interval"  // UInt32    //
-    qtssPrefsThickAllTheWayDelayInMsec      = 39,   //"thick_all_the_way_delay"     // UInt32   //
-    qtssPrefsAltTransportIPAddr             = 40,   //"alt_transport_src_ipaddr"// char     //If empty, the server uses its own IP addr in the source= param of the transport header. Otherwise, it uses this addr.
-    qtssPrefsMaxAdvanceSendTimeInSec        = 41,   //"max_send_ahead_time"     // UInt32   //This is the farthest in advance the server will send a packet to a client that supports overbuffering.
-    qtssPrefsReliableUDPSlowStart           = 42,   //"reliable_udp_slow_start" // Bool16   //Is reliable UDP slow start enabled?
-    qtssPrefsAutoDeleteSDPFiles             = 43,   //"auto_delete_sdp_files"   // Bool16   //SDP files in the Movies directory tree are deleted after a Broadcaster's RTSP controlled SDP session ends. 
-    qtssPrefsAuthenticationScheme           = 44,   //"authentication_scheme" // char   //Set this to be the authentication scheme you want the server to use. "basic", "digest", and "none" are the currently supported values
-    qtssPrefsDeleteSDPFilesInterval         = 45,   //"sdp_file_delete_interval_seconds" //UInt32 //Feature rem
-    qtssPrefsAutoStart                      = 46,   //"auto_start" //Bool16 //If true, streaming server likes to be started at system startup
-    qtssPrefsReliableUDP                    = 47,   //"reliable_udp" //Bool16 //If true, uses reliable udp transport if requested by the client
-    qtssPrefsReliableUDPDirs                = 48,   //"reliable_udp_dirs" //CharArray
-    qtssPrefsReliableUDPPrintfs             = 49,   //"reliable_udp_printfs" //Bool16 //If enabled, server prints out interesting statistics for the reliable UDP clients
+    qtssPrefsMaxRetransDelayInMsec          = 33,   // "max_retransmit_delay" // UInt32  //maximum interval between when a retransmit is supposed to be sent and when it actually gets sent. Lower values means smoother flow but slower server performance
+    qtssPrefsSmallWindowSizeInK             = 34,   // "small_window_size"  // UInt32    //default size that will be used for low bitrate movies
+    qtssPrefsAckLoggingEnabled              = 35,   // "ack_logging_enabled"  // Bool16  //Debugging only: turns on detailed logging of UDP acks / retransmits
+    qtssPrefsRTCPPollIntervalInMsec         = 36,   // "rtcp_poll_interval"      // UInt32   //interval (in Msec) between poll for RTCP packets
+    qtssPrefsRTCPSockRcvBufSizeInK          = 37,   // "rtcp_rcv_buf_size"   // UInt32   //Size of the receive socket buffer for udp sockets used to receive rtcp packets
+    qtssPrefsSendInterval                   = 38,   // "send_interval"  // UInt32    //
+    qtssPrefsThickAllTheWayDelayInMsec      = 39,   // "thick_all_the_way_delay"     // UInt32   //
+    qtssPrefsAltTransportIPAddr             = 40,   // "alt_transport_src_ipaddr"// char     //If empty, the server uses its own IP addr in the source= param of the transport header. Otherwise, it uses this addr.
+    qtssPrefsMaxAdvanceSendTimeInSec        = 41,   // "max_send_ahead_time"     // UInt32   //This is the farthest in advance the server will send a packet to a client that supports overbuffering.
+    qtssPrefsReliableUDPSlowStart           = 42,   // "reliable_udp_slow_start" // Bool16   //Is reliable UDP slow start enabled?
+    qtssPrefsEnableCloudPlatform            = 43,   // "enable_cloud_platform"   // Bool16   
+    qtssPrefsAuthenticationScheme           = 44,   // "authentication_scheme" // char   //Set this to be the authentication scheme you want the server to use. "basic", "digest", and "none" are the currently supported values
+    qtssPrefsDeleteSDPFilesInterval         = 45,   // "sdp_file_delete_interval_seconds" //UInt32 //Feature rem
+    qtssPrefsAutoStart                      = 46,   // "auto_start" //Bool16 //If true, streaming server likes to be started at system startup
+    qtssPrefsReliableUDP                    = 47,   // "reliable_udp" //Bool16 //If true, uses reliable udp transport if requested by the client
+    qtssPrefsReliableUDPDirs                = 48,   // "reliable_udp_dirs" //CharArray
+    qtssPrefsReliableUDPPrintfs             = 49,   // "reliable_udp_printfs" //Bool16 //If enabled, server prints out interesting statistics for the reliable UDP clients
     
-    qtssPrefsDropAllPacketsDelayInMsec      = 50,   //"drop_all_packets_delay" // SInt32    // don't send any packets later than this
-    qtssPrefsThinAllTheWayDelayInMsec       = 51,   //"thin_all_the_way_delay" // SInt32    // thin to key frames
-    qtssPrefsAlwaysThinDelayInMsec          = 52,   //"always_thin_delay" // SInt32         // we always start to thin at this point
-    qtssPrefsStartThickingDelayInMsec       = 53,   //"start_thicking_delay" // SInt32      // maybe start thicking at this point
-    qtssPrefsQualityCheckIntervalInMsec     = 54,   //"quality_check_interval" // UInt32    // adjust thinnning params this often   
-    qtssPrefsEnableRTSPErrorMessage         = 55,   //"RTSP_error_message" //Bool16 // Appends a content body string error message for reported RTSP errors.
-    qtssPrefsEnableRTSPDebugPrintfs         = 56,   //"RTSP_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
+    qtssPrefsDropAllPacketsDelayInMsec      = 50,   // "drop_all_packets_delay" // SInt32    // don't send any packets later than this
+    qtssPrefsThinAllTheWayDelayInMsec       = 51,   // "thin_all_the_way_delay" // SInt32    // thin to key frames
+    qtssPrefsAlwaysThinDelayInMsec          = 52,   // "always_thin_delay" // SInt32         // we always start to thin at this point
+    qtssPrefsStartThickingDelayInMsec       = 53,   // "start_thicking_delay" // SInt32      // maybe start thicking at this point
+    qtssPrefsQualityCheckIntervalInMsec     = 54,   // "quality_check_interval" // UInt32    // adjust thinnning params this often   
+    qtssPrefsEnableRTSPErrorMessage         = 55,   // "RTSP_error_message" //Bool16 // Appends a content body string error message for reported RTSP errors.
+    qtssPrefsEnableRTSPDebugPrintfs         = 56,   // "RTSP_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
 
-    qtssPrefsEnableMonitorStatsFile         = 57,   //"enable_monitor_stats_file" //Bool16 //write server stats to the monitor file
-    qtssPrefsMonitorStatsFileIntervalSec    = 58,   //"monitor_stats_file_interval_seconds" // private
-    qtssPrefsMonitorStatsFileName           = 59,   //"monitor_stats_file_name" // private
+    qtssPrefsEnableMonitorStatsFile         = 57,   // "enable_monitor_stats_file" //Bool16 //write server stats to the monitor file
+    qtssPrefsMonitorStatsFileIntervalSec    = 58,   // "monitor_stats_file_interval_seconds" // private
+    qtssPrefsMonitorStatsFileName           = 59,   // "monitor_stats_file_name" // private
 
     qtssPrefsEnablePacketHeaderPrintfs      = 60,   // "enable_packet_header_printfs" //Bool16 // RTP and RTCP printfs of outgoing packets.
     qtssPrefsPacketHeaderPrintfOptions      = 61,   // "packet_header_printf_options" //char //set of printfs to print. Form is [text option] [;]  default is "rtp;rr;sr;". This means rtp packets, rtcp sender reports, and rtcp receiver reports.
     qtssPrefsOverbufferRate                 = 62,   // "overbuffer_rate"    //Float32
     qtssPrefsMediumWindowSizeInK            = 63,   // "medium_window_size" // UInt32    //default size that will be used for medium bitrate movies
-    qtssPrefsWindowSizeMaxThreshold         = 64,   //"window_size_threshold"  // UInt32    //bitrate at which we switch from medium to large window size
-    qtssPrefsEnableRTSPServerInfo           = 65,   //"RTSP_server_info" //Boo1l6 // Adds server info to the RTSP responses.
-    qtssPrefsRunNumThreads                  = 66,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
-    qtssPrefsPidFile                        = 67,   //"pid_file" //Char Array //path to pid file
+    qtssPrefsWindowSizeMaxThreshold         = 64,   // "window_size_threshold"  // UInt32    //bitrate at which we switch from medium to large window size
+    qtssPrefsEnableRTSPServerInfo           = 65,   // "RTSP_server_info" //Boo1l6 // Adds server info to the RTSP responses.
+    qtssPrefsRunNumThreads                  = 66,   // "run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
+    qtssPrefsPidFile                        = 67,   // "pid_file" //Char Array //path to pid file
     qtssPrefsCloseLogsOnWrite               = 68,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
     qtssPrefsDisableThinning                = 69,   // "disable_thinning" //Bool16 // Usually used for performance testing. Turn off stream thinning from packet loss or stream lateness.
     qtssPrefsPlayersReqRTPHeader            = 70,   // "player_requires_rtp_header_info" //Char array //name of player to match against the player's user agent header

@@ -177,7 +177,7 @@ class QTSServerPrefs : public QTSSPrefs
 
         Bool16 ServerStatFileEnabled()      { return fEnableMonitorStatsFile; }
         UInt32 GetStatFileIntervalSec()     { return fStatsFileIntervalSeconds; }
-        Bool16  AutoDeleteSDPFiles()        { return fauto_delete_sdp_files; }
+        Bool16 CloudPlatformEnabled()		{ return fCloudPlatformEnabled; }
         QTSS_AuthScheme GetAuthScheme()     { return fAuthScheme; }
         
         Bool16 PacketHeaderPrintfsEnabled() { return fEnablePacketHeaderPrintfs; }
@@ -264,7 +264,9 @@ class QTSServerPrefs : public QTSSPrefs
         Bool16  fIsSlowStartEnabled;
         UInt32  fSendIntervalInMsec;
         UInt32  fMaxSendAheadTimeInSecs;
-        Bool16  fauto_delete_sdp_files;
+
+        Bool16  fCloudPlatformEnabled;
+
         QTSS_AuthScheme fAuthScheme;
         UInt32  fsdp_file_delete_interval_seconds;
         Bool16  fAutoStart;

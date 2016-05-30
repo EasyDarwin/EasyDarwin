@@ -140,7 +140,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "",         NULL                    },  //alt_transport_src_ipaddr
     { kDontAllowMultipleValues, "25",       NULL                    },  //max_send_ahead_time
     { kDontAllowMultipleValues, "true",     NULL                    },  //reliable_udp_slow_start
-    { kDontAllowMultipleValues, "false",    NULL                    },  //auto_delete_sdp_files
+    { kDontAllowMultipleValues, "false",    NULL                    },  //enable_cloud_platform
     { kDontAllowMultipleValues, "digest",   NULL                    },  //authentication_scheme
     { kDontAllowMultipleValues, "10",       NULL                    },  //sdp_file_delete_interval_seconds
     { kDontAllowMultipleValues, "false",    NULL                    },  //auto_start
@@ -171,9 +171,9 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//pid_file
     { kDontAllowMultipleValues, "false",    NULL                    },   //force_logs_close_on_write
     { kDontAllowMultipleValues, "false",    NULL                    },   //disable_thinning
-    { kAllowMultipleValues,     "Nokia",    sRTP_Header_Players     },  //player_requires_rtp_header_info
-    { kAllowMultipleValues,     "Nokia",    sAdjust_Bandwidth_Players     },  //player_requires_bandwidth_adjustment
-    { kAllowMultipleValues,     "Nokia",    sNo_Pause_Time_Adjustment_Players     },  //player_requires_no_pause_time_adjustment
+    { kAllowMultipleValues,     "Android",    sRTP_Header_Players     },  //player_requires_rtp_header_info
+    { kAllowMultipleValues,     "Android",    sAdjust_Bandwidth_Players     },  //player_requires_bandwidth_adjustment
+    { kAllowMultipleValues,     "Android",    sNo_Pause_Time_Adjustment_Players     },  //player_requires_no_pause_time_adjustment
     { kDontAllowMultipleValues, "true",     NULL                     }, //enable_3gpp_protocol
     { kDontAllowMultipleValues, "true",     NULL                     }, //enable_3gpp_protocol_rate_adaptation
     { kDontAllowMultipleValues, "1",        NULL                     }, //3gpp_protocol_rate_adaptation_report_frequency
@@ -192,13 +192,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "3000",     NULL                        }, //3gpp_target_time_milliseconds
     { kAllowMultipleValues,     "",         sDisable_Thinning_Players   }, //player_requires_disable_thinning
     
-    { kDontAllowMultipleValues, "8080",     NULL                        },  //http_service_port
-     
-	//增加EasyDarwin外部IP和端口
-    { kDontAllowMultipleValues, "127.0.0.1",     NULL                        },  //easydarwin_ip_addr
-    { kDontAllowMultipleValues, "554",			 NULL                        }  //easydarwin_port
-    
-    
+    { kDontAllowMultipleValues, "8080",     NULL                        }  //http_service_port   
     
 };
 
@@ -247,7 +241,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 40 */ { "alt_transport_src_ipaddr",              NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 41 */ { "max_send_ahead_time",                   NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 42 */ { "reliable_udp_slow_start",               NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 43 */ { "auto_delete_sdp_files",                 NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 43 */ { "enable_cloud_platform",                 NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 44 */ { "authentication_scheme",                 NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 45 */ { "sdp_file_delete_interval_seconds",      NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 46 */ { "auto_start",                            NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -343,7 +337,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
     fIsSlowStartEnabled(false),
     fSendIntervalInMsec(0),
     fMaxSendAheadTimeInSecs(0),
-    fauto_delete_sdp_files(false),
+    fCloudPlatformEnabled(false),
     fAuthScheme(qtssAuthDigest),
     fsdp_file_delete_interval_seconds(10),
     fAutoStart(false),
@@ -430,7 +424,7 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefsSendInterval,             &fSendIntervalInMsec,       sizeof(fSendIntervalInMsec));
     this->SetVal(qtssPrefsMaxAdvanceSendTimeInSec,  &fMaxSendAheadTimeInSecs,   sizeof(fMaxSendAheadTimeInSecs));
     this->SetVal(qtssPrefsReliableUDPSlowStart,     &fIsSlowStartEnabled,       sizeof(fIsSlowStartEnabled));
-    this->SetVal(qtssPrefsAutoDeleteSDPFiles,       &fauto_delete_sdp_files,    sizeof(fauto_delete_sdp_files));
+    this->SetVal(qtssPrefsEnableCloudPlatform,       &fCloudPlatformEnabled,    sizeof(fCloudPlatformEnabled));
     this->SetVal(qtssPrefsDeleteSDPFilesInterval,   &fsdp_file_delete_interval_seconds,   sizeof(fsdp_file_delete_interval_seconds));
     this->SetVal(qtssPrefsAutoStart,                &fAutoStart,                sizeof(fAutoStart));
     this->SetVal(qtssPrefsReliableUDP,              &fReliableUDP,              sizeof(fReliableUDP));

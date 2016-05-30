@@ -311,7 +311,7 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
 		//Rate adaptation will start when EITHER of the two low watermarks for thinning have passed, OR the media has been playing for the target buffering delay.
         //The ideal situation for the current code is 2x or more buffer size to target time. So target time converted to bytes should be 50% or less the buffer size to avoid overrun
        
-		//this one is agressive and works well with Nokia when all is good and there is extra bandwidth so it makes a good network look good
+		//this one is agressive and works well with Android when all is good and there is extra bandwidth so it makes a good network look good
         if (bufferUsageRatio >= 0.7) //start active rate adapt when client is 70% full
             fStartDoingAdaptation = true;
         else if (curTime - fRTPStream.GetSession().GetFirstPlayTime() >= 15000) // but don't wait longer than 15 seconds
@@ -330,7 +330,7 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
     {
           SInt32 currentQualityLevel = fRTPStream.GetQualityLevel();
  
- // new code works good for Nokia N93 on wifi and ok for slow links (needs some more comparison testing against non rate adapt code and against build 520 or earlier) 
+ // new code works good for Android N93 on wifi and ok for slow links (needs some more comparison testing against non rate adapt code and against build 520 or earlier) 
 
         if (bufferDelay != kUInt32_Max) //not supported
         {
