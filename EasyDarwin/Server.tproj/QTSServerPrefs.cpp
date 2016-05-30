@@ -202,8 +202,6 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     
 };
 
-
-
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
     /* 0 */ { "rtsp_timeout",                           NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -297,9 +295,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 88 */ { "3gpp_target_time_milliseconds",   NULL,                         qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 89 */ { "player_requires_disable_thinning", NULL,                        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     
-    /* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 91 */ { "monitor_wan_ip",					NULL,						qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 92 */ { "monitor_wan_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
+    /* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
 
 };
 
@@ -475,10 +471,6 @@ void QTSServerPrefs::SetupAttributes()
     this->SetVal(qtssPrefs3GPPTargetTime,               &f3GPPRateAdaptTargetTime,      sizeof(f3GPPRateAdaptTargetTime));
 
 	this->SetVal(easyPrefsHTTPServicePort,				&fHTTPServicePort,				sizeof(fHTTPServicePort));
-
-    //增加EasyDarWin和Redis的外部IP和端口
-    this->SetVal(qtssPrefsEasyDarwinIP,					&fMonitorWANAddr,					sizeof(fMonitorWANAddr));
-    this->SetVal(qtssPrefsEasyDarwinPort,				&fMonitorWANPort,				sizeof(fMonitorWANPort));    
 }
 
 

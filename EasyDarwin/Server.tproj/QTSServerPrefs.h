@@ -212,9 +212,6 @@ class QTSServerPrefs : public QTSSPrefs
         UInt32 Get3GPPForcedTargetTime()            {return f3GPPRateAdaptTargetTime; }
 
 		UInt16 GetHTTPServicePort()					{return fHTTPServicePort; }
-        
-		char* GetEasyDarwinIP()		{return this->GetStringPref(qtssPrefsEasyDarwinIP);}
-		UInt16 GetEasyDarwinPort()	{return fMonitorWANPort;}
     private:
 
         UInt32      fRTSPTimeoutInSecs;
@@ -304,12 +301,6 @@ class QTSServerPrefs : public QTSSPrefs
         char   fUDPMonitorDestAddr[20];
         char   fUDPMonitorSrcAddr[20];
         Bool16 fAllowGuestAuthorizeDefault;
-
-
-
-		char   fMonitorWANAddr[20];//EasyDarwin的外部地址和端口
-		UInt16 fMonitorWANPort;
-
 
         enum //fPacketHeaderPrintfOptions
         {

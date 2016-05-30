@@ -865,12 +865,8 @@ enum
     qtssPrefsPlayersReqDisableThinning 		= 89,   // "player_requires_disable_thinning" //Char array //name of player to set the target time for
 	
 	easyPrefsHTTPServicePort				= 90,	// "http_service_port"
-
-	//增加EasyDarwin的外部IP和端口
-	qtssPrefsEasyDarwinIP					= 91,	//"easydarwin_ip_addr"
-	qtssPrefsEasyDarwinPort					= 92,	//"easydarwin_port"
     
-	qtssPrefsNumParams                      = 93
+	qtssPrefsNumParams                      = 91
 };
 
 typedef UInt32 QTSS_PrefsAttributes;
