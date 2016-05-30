@@ -866,9 +866,9 @@ enum
 	
 	easyPrefsHTTPServicePort				= 90,	// "http_service_port"
 
-	//增加EasyDarWin和Redis的外部IP和端口
+	//增加EasyDarwin的外部IP和端口
 	qtssPrefsEasyDarwinIP					= 91,	//"easydarwin_ip_addr"
-	qtssPrefsEasyDarwinPort					= 92,	//easydarwin_port
+	qtssPrefsEasyDarwinPort					= 92,	//"easydarwin_port"
     
 	qtssPrefsNumParams                      = 93
 };
