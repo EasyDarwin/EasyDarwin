@@ -103,7 +103,6 @@ fStreamName(NULL)
 		fRef.Set(fSourceID, this);
 
 		this->SetSessionName();
-
 	}
 }
 
@@ -404,11 +403,11 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClien
 		//调用角色，停止推流
 		QTSS_RoleParams theParams;
 		theParams.easyFreeStreamParams.inStreamName = fStreamName;
-		UInt32 fCurrentModule = 0;
+		UInt32 currentModule = 0;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
-		for (; fCurrentModule < numModules; fCurrentModule++)
+		for (; currentModule < numModules; currentModule++)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, 0);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
 			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
 			break;
 		}
@@ -421,7 +420,6 @@ void    ReflectorSession::TearDownAllOutputs()
 		fStreamArray[y]->TearDownAllOutputs();
 }
 
-
 void    ReflectorSession::RemoveSessionFromOutput(QTSS_ClientSessionObject inSession)
 {
 	for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
@@ -430,7 +428,6 @@ void    ReflectorSession::RemoveSessionFromOutput(QTSS_ClientSessionObject inSes
 	}
 	fBroadcasterSession = NULL;
 }
-
 
 UInt32  ReflectorSession::GetBitRate()
 {
