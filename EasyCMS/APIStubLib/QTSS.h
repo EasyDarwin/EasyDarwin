@@ -477,8 +477,8 @@ enum
     QTSS_RequestEventFile_Role =    FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
 
     //add,角色的添加
-	QTSS_NONCE_ROLE    =            FOUR_CHARS_TO_INT('o','n','c','e'),//once
-	QTSS_AUTH_ROLE     =            FOUR_CHARS_TO_INT('a','u','t','r'),//autr,auth已经使用
+	Easy_Nonce_Role    =            FOUR_CHARS_TO_INT('o','n','c','e'),//once
+	Easy_Auth_Role     =            FOUR_CHARS_TO_INT('a','u','t','r'),//autr,auth
 
 	//redis module roles
 	QTSS_AddDevName_Role =			FOUR_CHARS_TO_INT('a','d','n','r'),//adnr

@@ -71,9 +71,9 @@ QTSS_Error  EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 		return Initialize(&inParamBlock->initParams);
 	case QTSS_RereadPrefs_Role:
 		return RereadPrefs();
-	case QTSS_NONCE_ROLE:
+	case Easy_Nonce_Role:
 		return MakeNonce(&inParamBlock->NonceParams);
-	case QTSS_AUTH_ROLE:
+	case Easy_Auth_Role:
 		return MakeAuth(&inParamBlock->NonceParams);
 	}
 	return QTSS_NoErr;
@@ -84,8 +84,8 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	// Do role setup
 	(void)QTSS_AddRole(QTSS_Initialize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
-	(void)QTSS_AddRole(QTSS_NONCE_ROLE);
-	(void)QTSS_AddRole(QTSS_AUTH_ROLE);
+	(void)QTSS_AddRole(Easy_Nonce_Role);
+	(void)QTSS_AddRole(Easy_Auth_Role);
 
     // Tell the server our name!
     static char* sModuleName = "EasyAuthModule";
