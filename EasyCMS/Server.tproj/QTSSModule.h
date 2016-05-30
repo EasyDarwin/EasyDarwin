@@ -139,17 +139,18 @@ class QTSSModule : public QTSSDictionary, public Task
             kRequestEventFileRole =     9,
             kStateChangeRole =          10,
             kTimedIntervalRole =        11,
-            kNonceRole        =         12,//add
-			kAuthRole         =         13,//add
 
-			kRedisTTLRole		=		14,
-			kRedisAddDevNameRole	=	15,
-			kRedisDelDevNameRole	=	16,
+            kEasyNonceRole =			12,
+			kEasyAuthRole =				13,
+
+			kRedisTTLRole =				14,
+			kRedisAddDevNameRole =		15,
+			kRedisDelDevNameRole =		16,
 			kRedisGetEasyDarwinRole =	17,
 			kRedisGetBestEasyDarwinRole = 18,
 			kRedisGenStreamIDRole =		19,
 
-            kNumRoles =                 20
+            kNumRoles =					20
         };
         typedef UInt32 RoleIndex;
         
