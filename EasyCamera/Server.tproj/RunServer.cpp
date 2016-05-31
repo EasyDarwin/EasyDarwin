@@ -80,10 +80,10 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
     OSThread::Initialize();
 
     Socket::Initialize();
-    SocketUtils::Initialize(!inDontFork);
+    //SocketUtils::Initialize(!inDontFork);
 
 //#if !MACOSXEVENTQUEUE
-//    ::select_startevents();//initialize the select() implementation of the event queue
+    ::select_startevents();//initialize the select() implementation of the event queue
 //#endif
     
     //start the server
