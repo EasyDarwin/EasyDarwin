@@ -637,6 +637,7 @@
           <commandLine>-fPIC</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
+            <Elem>EASY_DEVICE</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>
@@ -1123,6 +1124,7 @@
           <commandLine>-fPIC</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
+            <Elem>EASY_DEVICE</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>
