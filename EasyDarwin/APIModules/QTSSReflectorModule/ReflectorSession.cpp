@@ -172,9 +172,9 @@ QTSS_Error ReflectorSession::SetSessionName()
 		fSessionName[strName.Len] = '\0';
 
 		//将推流名称加入到redis中
-		int iLen = strlen(fSessionName)+5;
+		int iLen = strlen(fSessionName)+1;
 		fStreamName = new char[iLen];
-		sprintf(fStreamName,"%s.sdp",fSessionName);
+		sprintf(fStreamName,"%s",fSessionName);
 		for(int i=0;i<iLen;i++)
 		{
 			if(fStreamName[i] == '\\')
