@@ -34,9 +34,10 @@
 #include <stdlib.h>
 #include "SafeStdLib.h"
 #include "defaultPaths.h"
-#ifndef __MacOSX__ 
-#include "getopt.h"
-#endif
+
+//#ifndef __MacOSX__ 
+//#include "getopt.h"
+//#endif
 
 #include <sys/time.h>
 #include <signal.h>
