@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release ARM hisiv100 
+ALLCONFS=Debug Release gm8126 hisiv100 
 
 
 # build

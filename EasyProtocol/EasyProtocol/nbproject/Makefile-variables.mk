@@ -46,6 +46,14 @@ CND_ARTIFACT_PATH_ti=ti/libEasyProtocol.a
 CND_PACKAGE_DIR_ti=dist/ti/devkit-Linux/package
 CND_PACKAGE_NAME_ti=EasyProtocol.tar
 CND_PACKAGE_PATH_ti=dist/ti/devkit-Linux/package/EasyProtocol.tar
+# gm8126 configuration
+CND_PLATFORM_gm8126=GM8126-Linux
+CND_ARTIFACT_DIR_gm8126=gm8126
+CND_ARTIFACT_NAME_gm8126=libEasyProtocol.a
+CND_ARTIFACT_PATH_gm8126=gm8126/libEasyProtocol.a
+CND_PACKAGE_DIR_gm8126=dist/gm8126/GM8126-Linux/package
+CND_PACKAGE_NAME_gm8126=EasyProtocol.tar
+CND_PACKAGE_PATH_gm8126=dist/gm8126/GM8126-Linux/package/EasyProtocol.tar
 #
 # include compiler specific variables
 #

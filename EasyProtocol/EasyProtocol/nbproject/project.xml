@@ -7,7 +7,7 @@
             <c-extensions/>
             <cpp-extensions>cpp</cpp-extensions>
             <header-extensions>h</header-extensions>
-            <sourceEncoding>GB2312</sourceEncoding>
+            <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList/>
             <confList>
@@ -29,6 +29,10 @@
                 </confElem>
                 <confElem>
                     <name>ti</name>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>gm8126</name>
                     <type>3</type>
                 </confElem>
             </confList>

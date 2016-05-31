@@ -14,16 +14,16 @@ GREP=grep
 NM=nm
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=arm-hisiv100-linux-uclibcgnueabi-gcc
-CCC=arm-hisiv100-linux-uclibcgnueabi-g++
-CXX=arm-hisiv100-linux-uclibcgnueabi-g++
+CC=arm-none-linux-gnueabi-gcc
+CCC=arm-none-linux-gnueabi-g++
+CXX=arm-none-linux-gnueabi-g++
 FC=gfortran
-AS=as
+AS=arm-none-linux-gnueabi-as
 
 # Macros
-CND_PLATFORM=hisiv100-Linux
+CND_PLATFORM=GM8126-Linux
 CND_DLIB_EXT=so
-CND_CONF=arm
+CND_CONF=gm8126
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 

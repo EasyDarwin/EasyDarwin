@@ -30,14 +30,14 @@ CND_ARTIFACT_PATH_x64=x64/libjsoncpp.a
 CND_PACKAGE_DIR_x64=dist/x64/GNU-Linux/package
 CND_PACKAGE_NAME_x64=jsoncpp.tar
 CND_PACKAGE_PATH_x64=dist/x64/GNU-Linux/package/jsoncpp.tar
-# arm configuration
-CND_PLATFORM_arm=hisiv100-Linux
-CND_ARTIFACT_DIR_arm=arm
-CND_ARTIFACT_NAME_arm=libjsoncpp.a
-CND_ARTIFACT_PATH_arm=arm/libjsoncpp.a
-CND_PACKAGE_DIR_arm=dist/arm/hisiv100-Linux/package
-CND_PACKAGE_NAME_arm=jsoncpp.tar
-CND_PACKAGE_PATH_arm=dist/arm/hisiv100-Linux/package/jsoncpp.tar
+# gm8126 configuration
+CND_PLATFORM_gm8126=GM8126-Linux
+CND_ARTIFACT_DIR_gm8126=gm8126
+CND_ARTIFACT_NAME_gm8126=libjsoncpp.a
+CND_ARTIFACT_PATH_gm8126=gm8126/libjsoncpp.a
+CND_PACKAGE_DIR_gm8126=dist/gm8126/GM8126-Linux/package
+CND_PACKAGE_NAME_gm8126=jsoncpp.tar
+CND_PACKAGE_PATH_gm8126=dist/gm8126/GM8126-Linux/package/jsoncpp.tar
 # hisiv100 configuration
 CND_PLATFORM_hisiv100=hisiv100-Linux
 CND_ARTIFACT_DIR_hisiv100=hisiv100
