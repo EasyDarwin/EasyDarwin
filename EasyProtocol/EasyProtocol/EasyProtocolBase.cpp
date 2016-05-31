@@ -128,7 +128,7 @@ EasyProtocol::MsgType EasyProtocol::SnapTypeMap[] = {
 EasyProtocol::EasyProtocol(int iMsgType)
 :fMsgType(iMsgType)
 {	
-	SetHeaderValue(EASY_TAG_VERSION, "1.0");
+	SetHeaderValue(EASY_TAG_VERSION, EASY_PROTOCOL_VERSION);
 	root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);	
 }
 

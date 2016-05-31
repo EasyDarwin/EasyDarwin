@@ -34,9 +34,10 @@
 #include <stdlib.h>
 #include "SafeStdLib.h"
 #include "defaultPaths.h"
-#ifndef __MacOSX__ 
-#include "getopt.h"
-#endif
+
+//#ifndef __MacOSX__ 
+//#include "getopt.h"
+//#endif
 
 #include <sys/time.h>
 #include <signal.h>
@@ -299,8 +300,8 @@ int main(int argc, char * argv[])
     Bool16 theXMLPrefsExist = true;
     UInt32 debugLevel = 0;
     UInt32 debugOptions = kRunServerDebug_Off;
-	static char* sDefaultConfigFilePath = DEFAULTPATHS_ETC_DIR_OLD "streamingserver.conf";
-	static char* sDefaultXMLFilePath = DEFAULTPATHS_ETC_DIR "streamingserver.xml";
+	static char* sDefaultConfigFilePath = DEFAULTPATHS_ETC_DIR_OLD "easycamera.conf";
+	static char* sDefaultXMLFilePath = DEFAULTPATHS_ETC_DIR "easycamera.xml";
 
     char* theConfigFilePath = sDefaultConfigFilePath;
     char* theXMLFilePath = sDefaultXMLFilePath;
@@ -330,7 +331,7 @@ int main(int argc, char * argv[])
                 debugLevel = (UInt32) ::atoi(optarg);
                 break;
             case 'f':
-				theXMLFilePath  = DEFAULTPATHS_ETC_DIR "streamingserver.xml";
+				theXMLFilePath  = DEFAULTPATHS_ETC_DIR "easycamera.xml";
                 break;
             case 'S':
                 dontFork = RunInForeground();
@@ -365,7 +366,7 @@ int main(int argc, char * argv[])
     QTSSExpirationDate::PrintExpirationDate();
     if (QTSSExpirationDate::IsSoftwareExpired())
     {
-        qtss_printf("Streaming Server has expired\n");
+        qtss_printf("EasyCamera has expired\n");
         ::exit(0);
     }
 
@@ -385,7 +386,7 @@ int main(int argc, char * argv[])
     // Check to see if we can write to the file
     if (!theXMLParser.CanWriteFile())
     {
-        qtss_printf("Cannot write to the streaming server prefs file.\n");
+        qtss_printf("Cannot write to the easycamera prefs file.\n");
         exit(-1);
     }
 
