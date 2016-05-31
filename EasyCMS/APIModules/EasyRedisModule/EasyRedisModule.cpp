@@ -185,13 +185,14 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		OSHashMap  *deviceMap = deviceRefTable->GetMap();
 		OSRefIt itRef;
 		string strAllDevices;
-		mutexMap->Lock();
-		for(itRef = deviceMap->begin();itRef != deviceMap->end();itRef++)
 		{
-			strDevice *deviceInfo=(((HTTPSessionInterface*)(itRef->second->GetObjectPtr()))->GetDeviceInfo());
-			strAllDevices=strAllDevices+' '+deviceInfo->serial_;
+			OSMutexLocker lock(mutexMap);
+			for (itRef = deviceMap->begin(); itRef != deviceMap->end(); itRef++)
+			{
+				strDevice *deviceInfo = (((HTTPSessionInterface*)(itRef->second->GetObjectPtr()))->GetDeviceInfo());
+				strAllDevices = strAllDevices + ' ' + deviceInfo->serial_;
+			}
 		}
-		mutexMap->Unlock();
 
 		char *chNewTemp = new char[strAllDevices.size()+128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
 		//5,设备名称存储
