@@ -430,6 +430,7 @@ int main(int argc, char * argv[])
     }
     
     //Unless the command line option is set, fork & daemonize the process at this point
+#if 0
     if (!dontFork)
     {
 #ifdef __sgi__
@@ -449,6 +450,7 @@ int main(int argc, char * argv[])
             exit(-1);
         }
     }
+#endif
     
     //Construct a Prefs Source object to get server text messages
     FilePrefsSource theMessagesSource;
