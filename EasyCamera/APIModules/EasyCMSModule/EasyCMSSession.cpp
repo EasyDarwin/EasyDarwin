@@ -284,6 +284,7 @@ SInt64 EasyCMSSession::Run()
 					// Any other error means that the client has disconnected, right?
 					Assert(!this->isConnected());
 					resetClientSocket();
+
 					// make zero
 					fSendMessageCount = 0;
 
@@ -325,6 +326,21 @@ SInt64 EasyCMSSession::Run()
 		}
 	}
 	return 0;
+}
+
+void EasyCMSSession::stopPushStream()
+{
+	QTSS_RoleParams params;
+
+	QTSS_Error errCode = QTSS_NoErr;
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
+	for (; fCurrentModule < numModules; ++fCurrentModule)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
+		errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
+	}
+	fCurrentModule = 0;
 }
 
 QTSS_Error EasyCMSSession::processMessage()
@@ -490,7 +506,7 @@ QTSS_Error EasyCMSSession::processMessage()
 				string channel = stopStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				params.stopStreamParams.inChannel = channel.c_str();
 
-				QTSS_Error	errCode = QTSS_NoErr;
+				QTSS_Error errCode = QTSS_NoErr;
 				UInt32 fCurrentModule = 0;
 				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
 				for (; fCurrentModule < numModules; ++fCurrentModule)
@@ -611,6 +627,8 @@ size_t EasyCMSSession::getStatusNo(QTSS_Error inError)
 void EasyCMSSession::resetClientSocket()
 {
 	qtss_printf("EasyCMSSession::ResetClientSocket()\n");
+
+	stopPushStream();
 
 	cleanupRequest();
 

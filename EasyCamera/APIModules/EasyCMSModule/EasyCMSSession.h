@@ -61,6 +61,8 @@ public:
 private:
     virtual SInt64 Run();
 
+	void stopPushStream();
+
 	// 初步判断Session Socket是否已连接
 	Bool16 isConnected() { return fSocket->GetSocket()->IsConnected(); }
 
