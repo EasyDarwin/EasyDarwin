@@ -770,21 +770,17 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	*/
 
 	EasyDarwin::Protocol::EasyProtocol req(json);
-	//´Óserial/channel.sdp ÖĞ½âÎö³öserialºÍchannel
+	//´Óserial/channelÖĞ½âÎö³öserialºÍchannel
 	string strStreamName	=	req.GetBodyValue(EASY_TAG_SERIAL);//Á÷Ãû³Æ
 	if(strStreamName.size()<=0)
 		return QTSS_BadArgument;
 
-	int iPos1 = strStreamName.find('/');
-	if(iPos1 == string::npos )
+	int iPos = strStreamName.find('/');
+	if(iPos == string::npos )
 		return QTSS_BadArgument;
 
-	int iPos2 = strStreamName.find('.',iPos1+1);
-	if(iPos2 == string::npos )
-		return QTSS_BadArgument;
-
-	string  strDeviceSerial = strStreamName.substr(0,iPos1);
-	string  strCameraSerial = strStreamName.substr(iPos1+1,iPos2-iPos1-1);
+	string  strDeviceSerial = strStreamName.substr(0,iPos);
+	string  strCameraSerial = strStreamName.substr(iPos+1,strStreamName.size()-iPos-1);
 
 	//string strDeviceSerial	=	req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ĞòÁĞºÅ
 	//string strCameraSerial	=	req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ĞòÁĞºÅ

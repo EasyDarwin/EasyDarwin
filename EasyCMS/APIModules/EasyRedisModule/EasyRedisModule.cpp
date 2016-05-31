@@ -168,7 +168,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sRedisClient->AppendCommand(chTemp);
 
 		//2,CMS唯一信息存储(覆盖上一次的存储)
-		sprintf(chTemp,"sadd CMSName %s:%d",sCMSIP,sCMSPort);
+		sprintf(chTemp,"sadd EasyCMSName %s:%d",sCMSIP,sCMSPort);
 		sRedisClient->AppendCommand(chTemp);
 
 
@@ -311,11 +311,11 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		return QTSS_NotConnected;
 
 	char chPushName[128] = {0};
-	sprintf(chPushName,"%s/%s.sdp",inParams->inSerial,inParams->inChannel);
+	sprintf(chPushName,"%s/%s",inParams->inSerial,inParams->inChannel);
 	char chTemp[128] = {0};
 
 	//1. get the list of EasyDarwin
-	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarWinName");
+	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarwinName");
 	if(reply == NULL)
 	{
 		sRedisClient->Free();
@@ -389,7 +389,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 	char chTemp[128]={0};
 
 	//1. get the list of EasyDarwin
-	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarWinName");
+	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarwinName");
 	if(reply == NULL)
 	{
 		sRedisClient->Free();
