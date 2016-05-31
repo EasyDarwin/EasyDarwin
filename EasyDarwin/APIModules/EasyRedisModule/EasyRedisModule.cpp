@@ -175,7 +175,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sRedisClient->AppendCommand(chTemp);
 
 		//2,EasyDarWin唯一信息存储(覆盖上一次的存储)
-		sprintf(chTemp,"sadd EasyDarWinName %s:%d",sRTSPWanIP,sRTSPWanPort);
+		sprintf(chTemp,"sadd EasyDarwinName %s:%d",sRTSPWanIP,sRTSPWanPort);
 		sRedisClient->AppendCommand(chTemp);
 
 		//3,EasyDarWin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
@@ -331,7 +331,7 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 	char chTemp[128] = {0};
 
 	//1. get the list of EasyDarwin
-	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("CMSName");
+	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyCMSName");
 	if(reply == NULL)
 	{
 		sRedisClient->Free();
