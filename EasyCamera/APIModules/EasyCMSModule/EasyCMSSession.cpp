@@ -70,7 +70,7 @@ EasyCMSSession::EasyCMSSession()
 	fMutex(),
 	fContentBufferOffset(0),
 	fContentBuffer(NULL),
-	fSendMessageCount(0),
+	fNoneACKMsgCount(0),
 	fCSeq(1)
 {
 	this->SetTaskName("EasyCMSSession");
@@ -143,7 +143,7 @@ SInt64 EasyCMSSession::Run()
 				}
 				else
 				{
-					if (fSendMessageCount > 3)
+					if (fNoneACKMsgCount > 3)
 					{
 						this->resetClientSocket();
 
@@ -282,7 +282,7 @@ SInt64 EasyCMSSession::Run()
 					return 0;
 				}
 
-				++fSendMessageCount;
+				++fNoneACKMsgCount;
 
 				fState = kCleaningUp;
 				break;
@@ -394,7 +394,7 @@ QTSS_Error EasyCMSSession::processMessage()
 
 		qtss_printf("EasyCMSSession::ProcessMessage() Get Complete Msg:\n%s", fContentBuffer);
 
-		fSendMessageCount = 0;
+		fNoneACKMsgCount = 0;
 
 		EasyProtocol protocol(fContentBuffer);
 		int nNetMsg = protocol.GetMessageType();
@@ -634,7 +634,7 @@ void EasyCMSSession::resetClientSocket()
 	fOutputStream.AttachToSocket(fSocket);
 	fState = kIdle;
 
-	fSendMessageCount = 0;
+	fNoneACKMsgCount = 0;
 }
 
 QTSS_Error EasyCMSSession::doDSRegister()

@@ -119,7 +119,7 @@ private:
 	UInt32				fContentBufferOffset;
 
 	// send message count
-	unsigned int fSendMessageCount;
+	unsigned int fNoneACKMsgCount;
 
 	UInt32 fCSeq;
 
