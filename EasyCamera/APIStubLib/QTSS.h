@@ -450,7 +450,8 @@ enum
 	//EasyCamera Role
 	Easy_StartStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'o'),  //camo
 	Easy_StopStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'c'),  //camc
-	Easy_GetCameraSnap_Role =		FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),  //cams
+	Easy_GetCameraState_Role =		FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),	//cams
+	Easy_GetCameraSnap_Role =		FOUR_CHARS_TO_INT('g', 'c', 'a', 'm')	//gcam
     
 };
 typedef UInt32 QTSS_Role;
