@@ -45,11 +45,11 @@
 #include "DateTranslator.h"
 #include "QTSSRollingLog.h"
 
-
 #ifndef __Win32__
     #include <sys/types.h>
     #include <unistd.h>
 #endif
+
 #include "QTSServerInterface.h"
 #include "QTSServer.h"
 
