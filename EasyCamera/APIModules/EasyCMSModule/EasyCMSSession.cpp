@@ -167,7 +167,11 @@ SInt64 EasyCMSSession::Run()
 					if (events & Task::kTimeoutEvent)
 					{
 						// 已连接，保活时间到需要发送保活报文
-						doDSRegister();
+						if(fCSeq%3 == 0)
+							doDSPostSnap();
+						else
+							doDSRegister();
+
 						fTimeoutTask.RefreshTimeout();
 					}
 
