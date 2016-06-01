@@ -643,32 +643,50 @@ void EasyCMSSession::resetClientSocket()
 
 QTSS_Error EasyCMSSession::doDSRegister()
 {
-	EasyDevices channels;
 
-	EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
+	QTSS_Error theErr = QTSS_NoErr;
 
-	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr, fCSeq++);
-	string msg = req.GetMsg();
+	QTSS_RoleParams params;
+	params.cameraStateParams.outIsLogin = 0;
 
-	StrPtrLen jsonContent((char*)msg.data());
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetCameraStateRole);
+	for (; fCurrentModule < numModules; fCurrentModule++)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraStateRole, fCurrentModule);
+		theErr = theModule->CallDispatch(Easy_GetCameraState_Role, &params);	
+		break;
+	}
 
-	// 构造HTTP注册报文,提交给fOutputStream进行发送
-	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
+	if( (theErr == QTSS_NoErr) && params.cameraStateParams.outIsLogin )
+	{
+		EasyDevices channels;
 
-	if (!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
+		EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
 
-	if (jsonContent.Len)
-		httpReq.AppendContentLengthHeader(jsonContent.Len);
+		EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr, fCSeq++);
+		string msg = req.GetMsg();
 
-	char respHeader[2048] = { 0 };
-	StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		StrPtrLen jsonContent((char*)msg.data());
 
-	fOutputStream.Put(respHeader);
-	if (jsonContent.Len > 0)
-		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+		// 构造HTTP注册报文,提交给fOutputStream进行发送
+		HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
 
-	return QTSS_NoErr;
+		if (!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
+
+		if (jsonContent.Len)
+			httpReq.AppendContentLengthHeader(jsonContent.Len);
+
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		fOutputStream.Put(respHeader);
+		if (jsonContent.Len > 0)
+			fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+	}
+
+	return theErr;
 }
 
 QTSS_Error EasyCMSSession::doDSPostSnap()
