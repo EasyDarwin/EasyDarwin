@@ -307,75 +307,78 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 	do 
 	{
-		if (NULL == fPusherHandle)
 		{
-			if (!cameraLogin())
+			OSMutexLocker locker(&fStringMutex);
+			if (NULL == fPusherHandle)
 			{
-				theErr = QTSS_RequestFailed;
-				break;
+				if (!cameraLogin())
+				{
+					theErr = QTSS_RequestFailed;
+					break;
+				}
+
+				std::map<HI_U32, Easy_U32> mapSDK2This;
+				mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G711] = EASY_SDK_AUDIO_CODEC_G711A;
+				mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G726] = EASY_SDK_AUDIO_CODEC_G726;
+
+				EASY_MEDIA_INFO_T mediainfo;
+				memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
+				mediainfo.u32VideoCodec = EASY_SDK_VIDEO_CODEC_H264;
+
+				HI_S32 s32Ret = HI_FAILURE;
+				HI_S_Video sVideo;
+				sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
+				sVideo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
+
+				s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
+				if (s32Ret == HI_SUCCESS)
+				{
+					mediainfo.u32VideoFps = sVideo.u32Frame;
+				}
+				else
+				{
+					mediainfo.u32VideoFps = 25;
+				}
+
+				HI_S_Audio sAudio;
+				sAudio.u32Channel = HI_NET_DEV_CHANNEL_1;
+				sAudio.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
+
+				s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_AUDIO_PARAM, &sAudio, sizeof(HI_S_Audio));
+				if (s32Ret == HI_SUCCESS)
+				{
+					mediainfo.u32AudioCodec = mapSDK2This[sAudio.u32Type];
+					mediainfo.u32AudioChannel = sAudio.u32Channel;
+				}
+				else
+				{
+					mediainfo.u32AudioCodec = EASY_SDK_AUDIO_CODEC_G711A;
+					mediainfo.u32AudioChannel = 1;
+				}
+
+				mediainfo.u32AudioSamplerate = 8000;
+
+
+				fPusherHandle = EasyPusher_Create();
+				if (fPusherHandle == NULL)
+				{
+					//EasyPusher初始化创建失败,可能是EasyPusher SDK未授权
+					theErr = QTSS_Unimplemented;
+					break;
+				}
+
+				// 注册流推送事件回调
+				EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
+
+				// 根据接收到的命令生成流信息
+				char sdpName[128] = { 0 };
+				sprintf(sdpName, "%s/%s.sdp", /*inParams->inStreamID,*/ inParams->inSerial, inParams->inChannel);
+
+				// 开始推送流媒体数据
+				EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
+
+				saveStartStreamParams(inParams);
 			}
-
-			std::map<HI_U32, Easy_U32> mapSDK2This;
-			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G711] = EASY_SDK_AUDIO_CODEC_G711A;
-			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G726] = EASY_SDK_AUDIO_CODEC_G726;
-
-			EASY_MEDIA_INFO_T mediainfo;
-			memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
-			mediainfo.u32VideoCodec = EASY_SDK_VIDEO_CODEC_H264;
-
-			HI_S32 s32Ret = HI_FAILURE;
-			HI_S_Video sVideo;
-			sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
-			sVideo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
-
-			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
-			if (s32Ret == HI_SUCCESS)
-			{
-				mediainfo.u32VideoFps = sVideo.u32Frame;
-			}
-			else
-			{
-				mediainfo.u32VideoFps = 25;
-			}
-
-			HI_S_Audio sAudio;
-			sAudio.u32Channel = HI_NET_DEV_CHANNEL_1;
-			sAudio.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
-
-			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_AUDIO_PARAM, &sAudio, sizeof(HI_S_Audio));
-			if (s32Ret == HI_SUCCESS)
-			{
-				mediainfo.u32AudioCodec = mapSDK2This[sAudio.u32Type];
-				mediainfo.u32AudioChannel = sAudio.u32Channel;
-			}
-			else
-			{
-				mediainfo.u32AudioCodec = EASY_SDK_AUDIO_CODEC_G711A;
-				mediainfo.u32AudioChannel = 1;
-			}
-
-			mediainfo.u32AudioSamplerate = 8000;
-
-
-			fPusherHandle = EasyPusher_Create();
-			if (fPusherHandle == NULL)
-			{
-				//EasyPusher初始化创建失败,可能是EasyPusher SDK未授权
-				theErr = QTSS_Unimplemented;
-				break;
-			}
-
-			// 注册流推送事件回调
-			EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
-
-			// 根据接收到的命令生成流信息
-			char sdpName[128] = { 0 };
-			sprintf(sdpName, "%s/%s.sdp", /*inParams->inStreamID,*/ inParams->inSerial, inParams->inChannel);
-
-			// 开始推送流媒体数据
-			EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
-
-			saveStartStreamParams(inParams);
 		}
 
 		theErr = netDevStartStream();
@@ -425,11 +428,14 @@ void EasyCameraSource::saveStartStreamParams(Easy_StartStream_Params * inParams)
 
 QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 {
-	if(fPusherHandle)
 	{
-		EasyPusher_StopStream(fPusherHandle);
-		EasyPusher_Release(fPusherHandle);
-		fPusherHandle = 0;
+		OSMutexLocker locker(&fStringMutex);
+		if (fPusherHandle)
+		{
+			EasyPusher_StopStream(fPusherHandle);
+			EasyPusher_Release(fPusherHandle);
+			fPusherHandle = 0;
+		}
 	}
 
 	stopGettingFrames();
@@ -439,6 +445,7 @@ QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 
 QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 {	
+	OSMutexLocker locker(&fStringMutex);
 	if(fPusherHandle == NULL) return QTSS_Unimplemented;
 
 	HI_S_AVFrame* pstruAV = (HI_S_AVFrame*)frame;

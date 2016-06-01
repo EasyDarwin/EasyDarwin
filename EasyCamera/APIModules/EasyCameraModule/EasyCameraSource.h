@@ -74,6 +74,7 @@ private:
 	onCloseFunc* fOnCloseFunc;
 	void* fOnCloseClientData;
 	OSMutex fMutex;
+	OSMutex fStringMutex;
 
 	typedef struct StartStreamInfo_Tag
 	{

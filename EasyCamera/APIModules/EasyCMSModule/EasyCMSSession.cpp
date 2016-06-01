@@ -167,7 +167,7 @@ SInt64 EasyCMSSession::Run()
 					if (events & Task::kTimeoutEvent)
 					{
 						// 已连接，保活时间到需要发送保活报文
-						if(fCSeq%3 == 0)
+						if(fCSeq%3 == 1)
 							doDSPostSnap();
 						else
 							doDSRegister();
@@ -628,7 +628,11 @@ void EasyCMSSession::resetClientSocket()
 	cleanupRequest();
 
 	fSocket->GetSocket()->Cleanup();
-	if (fSocket) delete fSocket;
+	if (fSocket)
+	{
+		delete fSocket;
+		fSocket = NULL;
+	}
 
 	fSocket = NEW TCPClientSocket(Socket::kNonBlockingSocketType);
 	UInt32 inAddr = SocketUtils::ConvertStringToAddr(sEasyCMS_IP);
