@@ -308,7 +308,7 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 	do 
 	{
 		{
-			OSMutexLocker locker(&fStringMutex);
+			OSMutexLocker locker(&fStreamingMutex);
 			if (NULL == fPusherHandle)
 			{
 				if (!cameraLogin())
@@ -429,7 +429,7 @@ void EasyCameraSource::saveStartStreamParams(Easy_StartStream_Params * inParams)
 QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 {
 	{
-		OSMutexLocker locker(&fStringMutex);
+		OSMutexLocker locker(&fStreamingMutex);
 		if (fPusherHandle)
 		{
 			EasyPusher_StopStream(fPusherHandle);
@@ -445,7 +445,7 @@ QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 
 QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 {	
-	OSMutexLocker locker(&fStringMutex);
+	OSMutexLocker locker(&fStreamingMutex);
 	if(fPusherHandle == NULL) return QTSS_Unimplemented;
 
 	HI_S_AVFrame* pstruAV = (HI_S_AVFrame*)frame;
