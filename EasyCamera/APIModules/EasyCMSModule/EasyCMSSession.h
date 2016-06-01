@@ -121,7 +121,7 @@ private:
 	// send message count
 	unsigned int fSendMessageCount;
 
-	size_t fCSeqCount;
+	UInt32 fCSeq;
 
 };
 

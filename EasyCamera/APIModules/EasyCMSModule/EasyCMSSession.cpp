@@ -71,7 +71,7 @@ EasyCMSSession::EasyCMSSession()
 	fContentBufferOffset(0),
 	fContentBuffer(NULL),
 	fSendMessageCount(0),
-	fCSeqCount(1)
+	fCSeq(1)
 {
 	this->SetTaskName("EasyCMSSession");
 
@@ -643,7 +643,7 @@ QTSS_Error EasyCMSSession::doDSRegister()
 
 	EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
 
-	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr, fCSeqCount++);
+	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr, fCSeq++);
 	string msg = req.GetMsg();
 
 	StrPtrLen jsonContent((char*)msg.data());
@@ -696,7 +696,7 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 		body[EASY_TAG_TIME] = szTime;
 		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)params.cameraSnapParams.outSnapPtr, params.cameraSnapParams.outSnapLen);
 
-		EasyMsgDSPostSnapREQ req(body, fCSeqCount++);
+		EasyMsgDSPostSnapREQ req(body, fCSeq++);
 		string msg = req.GetMsg();
 
 		//请求上传快照
