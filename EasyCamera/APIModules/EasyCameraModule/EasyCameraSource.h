@@ -45,10 +45,6 @@ private:
 
 	SInt64 Run();
 
-	typedef void (onCloseFunc)(void* clientData);
-	static void handleClosure(void* clientData);
-	void handleClosure();
-
 	void stopGettingFrames();
 	void doStopGettingFrames();
 
@@ -71,8 +67,6 @@ private:
 
 	Easy_Pusher_Handle fPusherHandle;
 
-	onCloseFunc* fOnCloseFunc;
-	void* fOnCloseClientData;
 	OSMutex fMutex;
 	OSMutex fStreamingMutex;
 

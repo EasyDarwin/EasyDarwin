@@ -241,27 +241,9 @@ void EasyCameraSource::netDevStopStream()
 	}
 }
 
-void EasyCameraSource::handleClosure(void* clientData) 
-{
-	if (clientData != NULL)
-	{
-		EasyCameraSource* source = (EasyCameraSource*)clientData;
-		source->handleClosure();
-	}
-}
-
-void EasyCameraSource::handleClosure() 
-{
-	if (fOnCloseFunc != NULL) 
-	{
-		(*fOnCloseFunc)(fOnCloseClientData);
-	}
-}
-
 void EasyCameraSource::stopGettingFrames() 
 {
 	OSMutexLocker locker(this->GetMutex());
-	fOnCloseFunc = NULL;
 	doStopGettingFrames();
 }
 
