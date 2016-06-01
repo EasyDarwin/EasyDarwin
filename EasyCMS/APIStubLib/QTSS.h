@@ -378,7 +378,6 @@ enum
     qtssMsgFileNameTooLong          = 21,
     qtssMsgNoClientPortInTransport  = 22,
 
-
     qtssMsgOutOfPorts               = 23,
     qtssMsgNoModuleForRequest       = 24,
     qtssMsgAltDestNotAllowed        = 25,

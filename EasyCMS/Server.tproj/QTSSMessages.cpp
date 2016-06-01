@@ -137,40 +137,7 @@ char*       QTSSMessages::sMessages[] =
 /* 38*/ "The following pref, %s, has the wrong type. Using a default value of: %s",
 /* 39*/ "Couldn't re-write server prefs file",
 /* 40*/ "Couldn't set desired UDP receive socket buffer size. Using size of %s K",
-/* 41*/ "The request is incorrectly formatted.",
-
-// module specific messages follow (these are dynamically numbered)
-
-/* 44*/ "Fatal error: Can't register Mach Ports.",
-/* 45*/ "A fatal error occcured while starting up server control module",
-/* 46*/ "Can't bind reflector sockets",
-/* 47*/ "Reflector sockets couldn't join multicast",
-/* 48*/ "Couldn't seek to specified time.",
-/* 49*/ "No SDP file found for the following URL: %s",
-/* 50*/ "The requested file is not a movie file.",
-/* 51*/ "Requested movie hasn't been hinted.",
-/* 52*/ "Expected a digit at the end of the following URL: %s",
-/* 53*/ "Specified trackID doesn't exist in the movie",
-/* 54*/ "Expected a digit at the end of the following URL: %s",
-/* 55*/ "Too many connections from your IP address!",
-/* 56*/ "TrackID doesn't match any trackID for this ReflectorSession",
-/* 57*/ "Invalid config value for qtaccessfilename: name contains %s. Now using default name:%s",
-/* 58*/ "The relay configuration file at: %s has no relay_source lines",
-/* 59*/ "Could not find any relay_destination lines for one of the relay_source lines of the relay configuration file",
-/* 60*/ "Could not find any input stream information for one of the relay_source lines of the relay configuration file",
-/* 61*/ "Found an empty relay configuration file at %s",
-/* 62*/ "A broadcast stream is already setup for this URL",
-/* 63*/ "No users file found at %s.",
-/* 64*/ "No groups file found at %s.",
-/* 65*/ "Unable to read the users file at %s. It may be corrupted.",
-/* 66*/ "Unable to read the groups file at %s. It may be corrupted.",
-/* 67*/ "The Announced file does not end with .sdp",
-/* 68*/ "The Announce feature is disabled. Your request is denied.",
-/* 69*/ "The SDP file's static port %s is less than the QTSSReflectorModule's minimum_static_sdp_port preference.",
-/* 70*/ "The SDP file's static port %s is greater than the QTSSReflectorModule's maximum_static_sdp_port preference.",
-/* 71*/ "The QTSSReflectorModule's minimum_static_sdp_port and maximum_static_sdp_port preferences conflict with the client and dynamic broadcast port range= %s to %s.",
-/* 72*/ "The QTSSReflectorModule's minimum_static_sdp_port and maximum_static_sdp_port preferences define an invalid range (min=%s > max=%s).",
-/* 73*/ "The QTSSRelayModule encountered an error while parsing the relay config file. No relays setup in relayconfig.xml."
+/* 41*/ "The request is incorrectly formatted."
 };
 
 // need to maintain numbers to update kNumMessages in QTSSMessages.h.
