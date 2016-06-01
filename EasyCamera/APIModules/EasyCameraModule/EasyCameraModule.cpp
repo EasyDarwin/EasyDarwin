@@ -39,6 +39,8 @@ static QTSS_Error RereadPrefs_EasyCameraModule();
 
 static QTSS_Error StartStream(Easy_StartStream_Params* inParams);
 static QTSS_Error StopStream(Easy_StopStream_Params* inParams);
+static QTSS_Error GetCameraState(Easy_CameraState_Params* inParams);
+static QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* inParams);
 
 
 // FUNCTION IMPLEMENTATIONS
@@ -61,6 +63,10 @@ QTSS_Error EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
 			return StartStream(&inParams->startStreaParams);
 		case Easy_StopStream_Role:
 			return StopStream(&inParams->stopStreamParams);
+		case Easy_GetCameraState_Role:
+			return GetCameraState(&inParams->cameraStateParams);
+		case Easy_GetCameraSnap_Role:
+			return GetCameraSnap(&inParams->cameraSnapParams);
 	}
 
     return QTSS_NoErr;
@@ -98,8 +104,11 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
+
 	(void)QTSS_AddRole(Easy_StartStream_Role);
 	(void)QTSS_AddRole(Easy_StopStream_Role);
+	(void)QTSS_AddRole(Easy_GetCameraState_Role);
+	(void)QTSS_AddRole(Easy_GetCameraSnap_Role);
    
     // Tell the server our name!
     static char* sModuleName = "EasyCameraModule";
@@ -155,4 +164,14 @@ QTSS_Error StopStream(Easy_StopStream_Params* inParams)
 		theErr = sCameraSource->StopStreaming(inParams);
 	}
 	return theErr;
+}
+
+QTSS_Error GetCameraState(Easy_CameraState_Params* inParams)
+{
+	return QTSS_NoErr;
+}
+
+QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* inParams)
+{
+	return QTSS_NoErr;
 }

@@ -595,6 +595,8 @@ typedef union
 
 	Easy_StartStream_Params				startStreaParams;
 	Easy_StopStream_Params				stopStreamParams;
+
+	Easy_CameraState_Params				cameraStateParams;
 	Easy_CameraSnap_Params				cameraSnapParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
