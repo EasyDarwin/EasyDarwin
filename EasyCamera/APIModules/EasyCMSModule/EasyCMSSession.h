@@ -55,9 +55,6 @@ public:
 	SessionStatus GetSessionStatus() { return fSessionStatus; }
 	void SetSessionStatus(SessionStatus status) { fSessionStatus = status; }
 
-	// 更新最新快照缓存
-	QTSS_Error UpdateSnapCache(Easy_CameraSnap_Params* params);
-
 private:
     virtual SInt64 Run();
 
@@ -120,8 +117,6 @@ private:
 
 	// 请求报文的Content读取偏移量,在多次读取到完整Content部分时用到
 	UInt32				fContentBufferOffset;
-
-	EasyMsgDSPostSnapREQ* fSnapReq;
 
 	// send message count
 	unsigned int fSendMessageCount;

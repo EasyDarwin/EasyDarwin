@@ -70,7 +70,6 @@ EasyCMSSession::EasyCMSSession()
 	fMutex(),
 	fContentBufferOffset(0),
 	fContentBuffer(NULL),
-	fSnapReq(NULL),
 	fSendMessageCount(0),
 	fCSeqCount(1)
 {
@@ -638,7 +637,6 @@ void EasyCMSSession::resetClientSocket()
 	fSendMessageCount = 0;
 }
 
-
 QTSS_Error EasyCMSSession::doDSRegister()
 {
 	EasyDevices channels;
@@ -669,32 +667,37 @@ QTSS_Error EasyCMSSession::doDSRegister()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_CameraSnap_Params* inParams)
+QTSS_Error EasyCMSSession::doDSPostSnap()
 {
-	if (fSnapReq == NULL)
+	QTSS_Error theErr = QTSS_NoErr;
+
+	QTSS_RoleParams params;
+	params.cameraSnapParams.outSnapLen = 0;
+
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetCameraSnapRole);
+	for (; fCurrentModule < numModules; fCurrentModule++)
+	{
+		qtss_printf("EasyCameraSource::Run::kGetCameraSnapRole\n");
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraSnapRole, fCurrentModule);
+		theErr = theModule->CallDispatch(Easy_GetCameraSnap_Role, &params);	
+		break;
+	}
+
+	if( (theErr == QTSS_NoErr) && (params.cameraSnapParams.outSnapLen > 0))
 	{
 		char szTime[32] = { 0, };
 		EasyJsonValue body;
 		body[EASY_TAG_SERIAL] = sEasy_Serial;
 
-		string type = EasyProtocol::GetSnapTypeString(inParams->outSnapType);
+		string type = EasyProtocol::GetSnapTypeString(params.cameraSnapParams.outSnapType);
 
 		body[EASY_TAG_TYPE] = type.c_str();
 		body[EASY_TAG_TIME] = szTime;
-		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)inParams->outSnapPtr, inParams->outSnapLen);
+		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)params.cameraSnapParams.outSnapPtr, params.cameraSnapParams.outSnapLen);
 
-		fSnapReq = new EasyMsgDSPostSnapREQ(body, fCSeqCount++);
-	}
-
-	this->Signal(Task::kUpdateEvent);
-	return QTSS_NoErr;
-}
-
-QTSS_Error EasyCMSSession::doDSPostSnap()
-{
-	if (fSnapReq)
-	{
-		string msg = fSnapReq->GetMsg();
+		EasyMsgDSPostSnapREQ req(body, fCSeqCount++);
+		string msg = req.GetMsg();
 
 		//请求上传快照
 		StrPtrLen jsonContent((char*)msg.data());
@@ -714,10 +717,7 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 			if (jsonContent.Len > 0)
 				fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
 		}
-
-		delete fSnapReq;
-		fSnapReq = NULL;
 	}
 
-	return QTSS_NoErr;
+	return theErr;
 }
