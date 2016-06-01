@@ -515,6 +515,8 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 
 QTSS_Error EasyCameraSource::GetCameraState(Easy_CameraState_Params* params)
 {
+	params->outIsLogin = cameraLogin();
+	params->outIsStreaming = m_bStreamFlag;
 	return 0;
 }
 
