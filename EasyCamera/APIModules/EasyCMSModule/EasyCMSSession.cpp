@@ -643,7 +643,6 @@ void EasyCMSSession::resetClientSocket()
 
 QTSS_Error EasyCMSSession::doDSRegister()
 {
-
 	QTSS_Error theErr = QTSS_NoErr;
 
 	QTSS_RoleParams params;

@@ -294,42 +294,7 @@ SInt64 EasyCameraSource::Run()
 
 	if(events & Task::kTimeoutEvent)
 	{
-		//向设备获取快照数据
-		//unsigned char *sData = (unsigned char*)malloc(EASY_SNAP_BUFFER_SIZE);
-		unsigned char *sData = new unsigned char[EASY_SNAP_BUFFER_SIZE];
-		int snapBufLen = 0;
-
-		do{
-			//如果获取到摄像机快照数据，Base64编码/发送
-			if (!getSnapData(sData, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
-			{
-				//未获取到数据
-				qtss_printf("EasyCameraSource::Run::GetSnapData() => Get Snap Data Fail \n");
-				theErr = QTSS_ValueNotFound;
-				break;
-			}
-
-			QTSS_RoleParams params;
-			params.cameraSnapParams.outSnapLen = snapBufLen;
-			params.cameraSnapParams.outSnapPtr = sData;
-			params.cameraSnapParams.outSnapType = EASY_SNAP_TYPE_JPEG;
-			UInt32 fCurrentModule = 0;
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetCameraSnapRole);
-			for (; fCurrentModule < numModules; fCurrentModule++)
-			{
-				qtss_printf("EasyCameraSource::Run::kGetCameraSnapRole\n");
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraSnapRole, fCurrentModule);
-				(void)theModule->CallDispatch(Easy_GetCameraSnap_Role, &params);	
-				break;
-			}
-			break;
-
-		}while(0);
-
-		//free((void*)sData);
-		delete []sData;
-		sData = NULL;
-
+		//do nothing
 		fTimeoutTask->RefreshTimeout();
 	}
 
