@@ -669,7 +669,7 @@ QTSS_Error EasyCMSSession::doDSRegister()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_PostSnap_Params* inParams)
+QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_CameraSnap_Params* inParams)
 {
 	if (fSnapReq == NULL)
 	{

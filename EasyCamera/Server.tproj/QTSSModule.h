@@ -138,7 +138,7 @@ class QTSSModule : public QTSSDictionary, public Task
 			//EasyCamera Role
 			kStartStreamRole =			12,
 			kStopStreamRole =			13,
-			kPostSnapRole =				14,
+			kGetCameraSnapRole =		14,
             
             kNumRoles =                 15
         };

@@ -450,7 +450,7 @@ enum
 	//EasyCamera Role
 	Easy_StartStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'o'),  //camo
 	Easy_StopStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'c'),  //camc
-	Easy_PostSnap_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),  //cams
+	Easy_GetCameraSnap_Role =		FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),  //cams
     
 };
 typedef UInt32 QTSS_Role;
@@ -570,7 +570,7 @@ typedef struct
 	int							snapType;
 	int							snapLen;
 	unsigned char*				snapPtr;
-}Easy_PostSnap_Params;
+}Easy_CameraSnap_Params;
 
 typedef union
 {
@@ -588,7 +588,7 @@ typedef union
 
 	Easy_StartStream_Params				startStreaParams;
 	Easy_StopStream_Params				stopStreamParams;
-	Easy_PostSnap_Params				postSnapParams;
+	Easy_CameraSnap_Params				cameraSnapParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 /********************************************************************/

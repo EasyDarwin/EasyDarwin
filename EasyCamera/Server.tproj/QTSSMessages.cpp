@@ -39,13 +39,10 @@
 char*       QTSSMessages::sMessagesKeyStrings[] =
 { /* index */
 /* 0 */ "qtssMsgNoMessage",
-
 /* 1*/ "qtssMsgInitFailed",
-
 /* 2*/ "qtssServerPrefMissing",
 /* 3*/ "qtssServerPrefWrongType",
 /* 4*/ "qtssMsgCantWriteFile"
-
 };
 
 // see QTSS.h (QTSS_TextMessagesObject) for list of enums to map these strings
@@ -53,9 +50,7 @@ char*       QTSSMessages::sMessagesKeyStrings[] =
 char*       QTSSMessages::sMessages[] =
 {
 /* 0 */ "%s%s",
-
 /* 1 */ "The module %s failed to Initialize.",
-
 /* 2 */ "The following pref, %s, wasn't found. Using a default value of: %s",
 /* 3 */ "The following pref, %s, has the wrong type. Using a default value of: %s",
 /* 4 */ "Couldn't re-write server prefs file"

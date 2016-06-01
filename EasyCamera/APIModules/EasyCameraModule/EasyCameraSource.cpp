@@ -306,16 +306,16 @@ SInt64 EasyCameraSource::Run()
 			}
 
 			QTSS_RoleParams params;
-			params.postSnapParams.snapLen = snapBufLen;
-			params.postSnapParams.snapPtr = sData;
-			params.postSnapParams.snapType = EASY_SNAP_TYPE_JPEG;
+			params.cameraSnapParams.snapLen = snapBufLen;
+			params.cameraSnapParams.snapPtr = sData;
+			params.cameraSnapParams.snapType = EASY_SNAP_TYPE_JPEG;
 			UInt32 fCurrentModule = 0;
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kPostSnapRole);
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetCameraSnapRole);
 			for (; fCurrentModule < numModules; fCurrentModule++)
 			{
-				qtss_printf("EasyCameraSource::Run::kPostSnapRole\n");
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kPostSnapRole, fCurrentModule);
-				(void)theModule->CallDispatch(Easy_PostSnap_Role, &params);	
+				qtss_printf("EasyCameraSource::Run::kGetCameraSnapRole\n");
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraSnapRole, fCurrentModule);
+				(void)theModule->CallDispatch(Easy_GetCameraSnap_Role, &params);	
 				break;
 			}
 			break;
