@@ -356,7 +356,7 @@ QTSS_Error EasyCMSSession::processMessage()
 
 	if (content_length)
 	{
-		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%d \n", content_length);
+		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%lu \n", content_length);
 		// 检查content的fContentBuffer和fContentBufferOffset是否有值存在,如果存在，说明我们已经开始
 		// 进行content请求处理,如果不存在,我们需要创建并初始化fContentBuffer和fContentBufferOffset
 		if (fContentBuffer == NULL)
@@ -380,7 +380,7 @@ QTSS_Error EasyCMSSession::processMessage()
 			return QTSS_RequestFailed;
 		}
 
-		qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%d \n", theLen);
+		qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%lu \n", theLen);
 		if ((theErr == QTSS_WouldBlock) || (theLen < (content_length - fContentBufferOffset)))
 		{
 			//
@@ -627,9 +627,9 @@ void EasyCMSSession::resetClientSocket()
 
 	cleanupRequest();
 
-	fSocket->GetSocket()->Cleanup();
 	if (fSocket)
 	{
+		fSocket->GetSocket()->Cleanup();
 		delete fSocket;
 		fSocket = NULL;
 	}
@@ -658,7 +658,6 @@ QTSS_Error EasyCMSSession::doDSRegister()
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraStateRole, fCurrentModule);
 		theErr = theModule->CallDispatch(Easy_GetCameraState_Role, &params);	
-		break;
 	}
 
 	if( (theErr == QTSS_NoErr) && params.cameraStateParams.outIsLogin )
@@ -706,7 +705,6 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 		qtss_printf("EasyCameraSource::Run::kGetCameraSnapRole\n");
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraSnapRole, fCurrentModule);
 		theErr = theModule->CallDispatch(Easy_GetCameraSnap_Role, &params);	
-		break;
 	}
 
 	if( (theErr == QTSS_NoErr) && (params.cameraSnapParams.outSnapLen > 0))
