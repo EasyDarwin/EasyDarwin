@@ -32,9 +32,6 @@
     File:       QTSSMessages.cpp
 
     Contains:   Implementation of object defined in .h
-    
-    
-    
 */
 
 #include "QTSSMessages.h"

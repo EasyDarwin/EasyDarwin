@@ -1158,7 +1158,6 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//øÕªß∂Àø™ º¡˜
 	header[EASY_TAG_ERROR_NUM]	=	200;
 	header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(200);
 
-
 	rsp.SetHead(header);
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
@@ -1190,7 +1189,6 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡
 	//∂‘”⁄…Ë±∏µƒÕ∆¡˜ªÿ”¶ «≤ª–Ë“™‘⁄Ω¯––ªÿ”¶µƒ£¨÷±Ω”Ω‚Œˆ’“µΩ∂‘”¶µƒøÕªß∂ÀSession£¨∏≥÷µº¥ø…	
 	EasyDarwin::Protocol::EasyProtocol req(json);
 
-
 	string strDeviceSerial	=	req.GetBodyValue(EASY_TAG_SERIAL);//…Ë±∏–Ú¡–∫≈
 	string strCameraSerial	=	req.GetBodyValue(EASY_TAG_CHANNEL);//…„œÒÕ∑–Ú¡–∫≈
 	//string strProtocol		=	req.GetBodyValue("Protocol");//–≠“È,÷’∂ÀΩˆ÷ß≥÷RTSPÕ∆ÀÕ
@@ -1200,7 +1198,6 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡
 
 	string strCSeq			=	req.GetHeaderValue(EASY_TAG_CSEQ);//’‚∏ˆ «πÿº¸◊÷
 	string strStateCode     =   req.GetHeaderValue(EASY_TAG_ERROR_NUM);//◊¥Ã¨¬Î
-
 
 	if(strCameraSerial.empty())
 		strCameraSerial = "01";
@@ -1325,7 +1322,6 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//øÕªß∂ÀªÒµ√…
 	header[EASY_TAG_ERROR_NUM]		=	200;
 	header[EASY_TAG_ERROR_STRING]	=	EasyDarwin::Protocol::EasyProtocol::GetErrorString(200);
 
-
 	OSMutex *mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
 	OSHashMap  *deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
 	OSRefIt itRef;
@@ -1378,8 +1374,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//øÕªß∂ÀªÒµ√…
 QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 {
 	/*	
-	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
-	return httpUnAuthorized;
+		if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
+		return httpUnAuthorized;
 	*/
 
 	QueryParamList parList(queryString);
