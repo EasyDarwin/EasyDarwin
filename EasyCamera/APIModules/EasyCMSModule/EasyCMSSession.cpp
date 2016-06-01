@@ -677,11 +677,11 @@ QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_CameraSnap_Params* inParams)
 		EasyJsonValue body;
 		body[EASY_TAG_SERIAL] = sEasy_Serial;
 
-		string type = EasyProtocol::GetSnapTypeString(inParams->snapType);
+		string type = EasyProtocol::GetSnapTypeString(inParams->outSnapType);
 
 		body[EASY_TAG_TYPE] = type.c_str();
 		body[EASY_TAG_TIME] = szTime;
-		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)inParams->snapPtr, inParams->snapLen);
+		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)inParams->outSnapPtr, inParams->outSnapLen);
 
 		fSnapReq = new EasyMsgDSPostSnapREQ(body, fCSeqCount++);
 	}

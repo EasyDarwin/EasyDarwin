@@ -306,9 +306,9 @@ SInt64 EasyCameraSource::Run()
 			}
 
 			QTSS_RoleParams params;
-			params.cameraSnapParams.snapLen = snapBufLen;
-			params.cameraSnapParams.snapPtr = sData;
-			params.cameraSnapParams.snapType = EASY_SNAP_TYPE_JPEG;
+			params.cameraSnapParams.outSnapLen = snapBufLen;
+			params.cameraSnapParams.outSnapPtr = sData;
+			params.cameraSnapParams.outSnapType = EASY_SNAP_TYPE_JPEG;
 			UInt32 fCurrentModule = 0;
 			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetCameraSnapRole);
 			for (; fCurrentModule < numModules; fCurrentModule++)

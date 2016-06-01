@@ -551,41 +551,47 @@ typedef struct
 
 typedef struct
 {
-	const char*						inSerial;
-	const char*						inProtocol;
-	const char*						inIP;
-	const char*						inStreamID;
-	const char*						inChannel;
-	UInt16							inPort;
+	const char*					inSerial;
+	const char*					inProtocol;
+	const char*					inIP;
+	const char*					inStreamID;
+	const char*					inChannel;
+	UInt16						inPort;
 }Easy_StartStream_Params;
 
 typedef struct
 {
-	const char*						inSerial;
-	const char*						inProtocol;
-	const char*						inChannel;
+	const char*					inSerial;
+	const char*					inProtocol;
+	const char*					inChannel;
 }Easy_StopStream_Params;
 
 typedef struct
 {
-	int							snapType;
-	int							snapLen;
-	unsigned char*				snapPtr;
+	UInt32						outIsLogin;
+	UInt32						outIsStreaming;
+}Easy_CameraState_Params;
+
+typedef struct
+{
+	int							outSnapType;
+	int							outSnapLen;
+	unsigned char*				outSnapPtr;
 }Easy_CameraSnap_Params;
 
 typedef union
 {
-    QTSS_Register_Params                regParams;
-    QTSS_Initialize_Params              initParams;
-    QTSS_ErrorLog_Params                errorParams;
-    QTSS_StateChange_Params             stateChangeParams;
+    QTSS_Register_Params				regParams;
+    QTSS_Initialize_Params				initParams;
+    QTSS_ErrorLog_Params				errorParams;
+    QTSS_StateChange_Params				stateChangeParams;
     
-    QTSS_OpenFile_Params                openFilePreProcessParams;
-    QTSS_OpenFile_Params                openFileParams;
-    QTSS_AdviseFile_Params              adviseFileParams;
-    QTSS_ReadFile_Params                readFileParams;
-    QTSS_CloseFile_Params               closeFileParams;
-    QTSS_RequestEventFile_Params        reqEventFileParams; 
+    QTSS_OpenFile_Params				openFilePreProcessParams;
+    QTSS_OpenFile_Params				openFileParams;
+    QTSS_AdviseFile_Params				adviseFileParams;
+    QTSS_ReadFile_Params				readFileParams;
+    QTSS_CloseFile_Params				closeFileParams;
+    QTSS_RequestEventFile_Params		reqEventFileParams; 
 
 	Easy_StartStream_Params				startStreaParams;
 	Easy_StopStream_Params				stopStreamParams;
