@@ -145,6 +145,8 @@ EasyCameraSource::EasyCameraSource()
 	//登陆摄像机
 	cameraLogin();
 
+	fCameraSnapPtr = new unsigned char[EASY_SNAP_BUFFER_SIZE];
+
 	fTimeoutTask = new TimeoutTask(this, 30 * 1000);
 
 	fTimeoutTask->RefreshTimeout();
@@ -152,6 +154,8 @@ EasyCameraSource::EasyCameraSource()
 
 EasyCameraSource::~EasyCameraSource()
 {
+	delete [] fCameraSnapPtr;
+
 	if (fTimeoutTask)
 	{
 		delete fTimeoutTask;
@@ -522,5 +526,24 @@ QTSS_Error EasyCameraSource::GetCameraState(Easy_CameraState_Params* params)
 
 QTSS_Error EasyCameraSource::GetCameraSnap(Easy_CameraSnap_Params* params)
 {
-	return 0;
+	QTSS_Error theErr = QTSS_NoErr;
+
+	params->outSnapLen = 0;
+
+	int snapBufLen = 0;
+	do{
+		if (!getSnapData(fCameraSnapPtr, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
+		{
+			//未获取到数据
+			qtss_printf("EasyCameraSource::GetCameraSnap::getSnapData() => Get Snap Data Fail \n");
+			theErr = QTSS_ValueNotFound;
+			break;
+		}
+
+		params->outSnapLen = snapBufLen;
+		params->outSnapPtr = fCameraSnapPtr;
+		params->outSnapType = EASY_SNAP_TYPE_JPEG;
+	}while(0);
+
+	return theErr;
 }

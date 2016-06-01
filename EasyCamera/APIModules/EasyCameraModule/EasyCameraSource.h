@@ -73,7 +73,6 @@ private:
 
 	onCloseFunc* fOnCloseFunc;
 	void* fOnCloseClientData;
-	//客户端信息操作互斥量
 	OSMutex fMutex;
 
 	typedef struct StartStreamInfo_Tag
@@ -86,9 +85,9 @@ private:
 		UInt16 port;
 	} StartStreamInfo;
 
-	// 当前正在推送流的信息
-	//QTSS_RoleParams fStartStreamParams;
 	StartStreamInfo fStartStreamInfo;
+
+	unsigned char* fCameraSnapPtr;
 
 };
 
