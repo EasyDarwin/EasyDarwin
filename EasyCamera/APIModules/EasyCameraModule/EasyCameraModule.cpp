@@ -168,10 +168,22 @@ QTSS_Error StopStream(Easy_StopStream_Params* inParams)
 
 QTSS_Error GetCameraState(Easy_CameraState_Params* inParams)
 {
-	return QTSS_NoErr;
+	QTSS_Error theErr = QTSS_Unimplemented;
+
+	if (sCameraSource)
+	{
+		theErr = sCameraSource->GetCameraState(inParams);
+	}
+	return theErr;
 }
 
 QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* inParams)
 {
-	return QTSS_NoErr;
+	QTSS_Error theErr = QTSS_Unimplemented;
+
+	if (sCameraSource)
+	{
+		theErr = sCameraSource->GetCameraSnap(inParams);
+	}
+	return theErr;
 }

@@ -27,6 +27,8 @@ public:
 
 	QTSS_Error StartStreaming(Easy_StartStream_Params* params);
 	QTSS_Error StopStreaming(Easy_StopStream_Params* params);
+	QTSS_Error GetCameraState(Easy_CameraState_Params* params);
+	QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* params);
 
 	QTSS_Error PushFrame(unsigned char* frame, int len);
 

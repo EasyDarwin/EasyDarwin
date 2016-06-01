@@ -512,3 +512,13 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 	}
 	return Easy_NoErr;
 }
+
+QTSS_Error EasyCameraSource::GetCameraState(Easy_CameraState_Params* params)
+{
+	return 0;
+}
+
+QTSS_Error EasyCameraSource::GetCameraSnap(Easy_CameraSnap_Params* params)
+{
+	return 0;
+}
