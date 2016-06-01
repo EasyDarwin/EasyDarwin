@@ -13,7 +13,7 @@
 
 // EasyCMS IP
 static char*            sEasyCMS_IP = NULL;
-static char*            sDefaultEasyCMS_IP_Addr = "127.0.0.1";
+static char*            sDefaultEasyCMS_IP_Addr = "www.easydss.com";
 // EasyCMS Port
 static UInt16			sEasyCMSPort = 10000;
 static UInt16			sDefaultEasyCMSPort = 10000;
@@ -85,7 +85,7 @@ EasyCMSSession::EasyCMSSession()
 	else
 	{
 		//connect default EasyCMS server
-		fSocket->Set(SocketUtils::ConvertStringToAddr("121.40.50.44"), sEasyCMSPort);
+		fSocket->Set(SocketUtils::ConvertStringToAddr("www.easydss.com"), sEasyCMSPort);
 	}
 
 	fTimeoutTask.RefreshTimeout();
@@ -144,6 +144,13 @@ SInt64 EasyCMSSession::Run()
 				}
 				else
 				{
+					if (fSendMessageCount > 3)
+					{
+						this->resetClientSocket();
+
+						return 0;
+					}
+
 					// TCPSocket已连接的情况下先区分具体事件类型
 					if (events & Task::kStartEvent)
 					{
@@ -213,9 +220,6 @@ SInt64 EasyCMSSession::Run()
 					Assert(!fSocket->GetSocket()->IsConnected());
 					this->resetClientSocket();
 
-					// make zero
-					fSendMessageCount = 0;
-
 					return 0;
 				}
 
@@ -261,14 +265,6 @@ SInt64 EasyCMSSession::Run()
 			}
 		case kSendingMessage:
 			{
-				if (fSendMessageCount >= 3)
-				{
-					fState = kIdle;
-					fSendMessageCount = 0;
-
-					return 0;
-				}
-
 				theErr = fOutputStream.Flush();
 
 				if (theErr == EAGAIN || theErr == EINPROGRESS)
@@ -284,12 +280,10 @@ SInt64 EasyCMSSession::Run()
 					// Any other error means that the client has disconnected, right?
 					Assert(!this->isConnected());
 					resetClientSocket();
-
-					// make zero
-					fSendMessageCount = 0;
-
 					return 0;
 				}
+
+				++fSendMessageCount;
 
 				fState = kCleaningUp;
 				break;
@@ -401,6 +395,8 @@ QTSS_Error EasyCMSSession::processMessage()
 
 		qtss_printf("EasyCMSSession::ProcessMessage() Get Complete Msg:\n%s", fContentBuffer);
 
+		fSendMessageCount = 0;
+
 		EasyProtocol protocol(fContentBuffer);
 		int nNetMsg = protocol.GetMessageType();
 		switch (nNetMsg)
@@ -409,17 +405,13 @@ QTSS_Error EasyCMSSession::processMessage()
 			{
 				EasyMsgSDRegisterACK ack(fContentBuffer);
 
-				// make zero
-				fSendMessageCount = 0;
-
 				qtss_printf("session id = %s\n", ack.GetBodyValue(EASY_TAG_SESSION_ID).c_str());
 				qtss_printf("device serial = %s\n", ack.GetBodyValue(EASY_TAG_SERIAL).c_str());
 			}
 			break;
 		case MSG_SD_POST_SNAP_ACK:
 			{
-				// make zero
-				fSendMessageCount = 0;
+				;
 			}
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
@@ -642,6 +634,8 @@ void EasyCMSSession::resetClientSocket()
 	fInputStream.AttachToSocket(fSocket);
 	fOutputStream.AttachToSocket(fSocket);
 	fState = kIdle;
+
+	fSendMessageCount = 0;
 }
 
 
@@ -671,9 +665,6 @@ QTSS_Error EasyCMSSession::doDSRegister()
 	fOutputStream.Put(respHeader);
 	if (jsonContent.Len > 0)
 		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
-
-	// count+1
-	++fSendMessageCount;
 
 	return QTSS_NoErr;
 }
@@ -722,9 +713,6 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 			fOutputStream.Put(respHeader);
 			if (jsonContent.Len > 0)
 				fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
-
-			// count+1
-			++fSendMessageCount;
 		}
 
 		delete fSnapReq;
