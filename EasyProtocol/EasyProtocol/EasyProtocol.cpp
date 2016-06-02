@@ -18,14 +18,14 @@ EasyDevice::EasyDevice()
 	snapJpgPath_.clear();
 }
 
-EasyDevice::EasyDevice(std::string channel, std::string name)
+EasyDevice::EasyDevice(const string& channel, const string& name)
 : serial_(channel)
 , name_(name)
 {
 
 }
 
-EasyDevice::EasyDevice(std::string channel, std::string name, std::string status)
+EasyDevice::EasyDevice(const string& channel, const string& name, const string& status)
 : serial_(channel)
 , name_(name)
 , status_(status)
@@ -37,7 +37,7 @@ EasyNVR::EasyNVR()
 {
 }
 
-EasyNVR::EasyNVR(std::string serial, std::string name, std::string password, string tag, EasyDevices &channel)
+EasyNVR::EasyNVR(const string& serial, const string& name, const string& password, const string& tag, EasyDevices &channel)
 : channels_(channel)
 {
 	serial_ = serial;	
@@ -292,7 +292,7 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const char * msg)
 	}
 }
 
-EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices & cameras, string device_serial, size_t cseq, size_t error)
+EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices& cameras, const string& device_serial, size_t cseq, size_t error)
 : EasyProtocol(MSG_SC_CAMERA_LIST_ACK)
 {
 	SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -436,7 +436,7 @@ EasyMsgSCListRecordACK::EasyMsgSCListRecordACK(const char *msg)
 {
 }
 
-bool EasyMsgSCListRecordACK::AddRecord(std::string record)
+bool EasyMsgSCListRecordACK::AddRecord(const string& record)
 {
 	Json::Value value;	
 	value[EASY_TAG_L_URL] = record;	
@@ -462,7 +462,7 @@ void EasyProtocolACK::SetBody(EasyJsonValue &body)
 	}
 }
 
-void EasyMsgSCRecordListACK::AddRecord(std::string record)
+void EasyMsgSCRecordListACK::AddRecord(const string& record)
 {
 	Json::Value value;	
 	value[EASY_TAG_L_URL] = record;	
@@ -523,7 +523,7 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 	return false;
 }
 
-void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//保留快照的时间属性
+void strDevice::HoldSnapPath(const string& strJpgPath, const string& strChannel)//保留快照的时间属性
 {
 	if(EASY_APP_TYPE_CAMERA==eDeviceType)//如果是摄像头类型，那么只保留一个路径
 		snapJpgPath_=strJpgPath;
