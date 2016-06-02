@@ -1933,9 +1933,8 @@ void RTSPSession::CleanupRequest()
             delete [] fRequest->GetValue(qtssRTSPReqFullRequest)->Ptr;
             
         // NULL out any references to the current request
-		// 释放申请的fRequest，并将参数赋值为NULL
-        delete fRequest;
-        fRequest = NULL;
+        //delete fRequest;
+        //fRequest = NULL;
         fRoleParams.rtspRequestParams.inRTSPRequest = NULL;
         fRoleParams.rtspRequestParams.inRTSPHeaders = NULL;
     }
