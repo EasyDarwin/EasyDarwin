@@ -42,7 +42,7 @@
 ## 基本流程 ##
 ![](http://www.easydarwin.org/skin/easydarwin/images/architecture20150825.png)
 
-## 视频教程 ##
+## 系列视频教程 ##
 
 CSDN课堂：[http://edu.csdn.net/agency/index/213](http://edu.csdn.net/agency/index/213 "EasyDarwin")
 
@@ -83,6 +83,6 @@ WEB：[www.EasyDarwin.org](http://www.easydarwin.org)
 
 QQ交流群：[288214068](http://jq.qq.com/?_wv=1027&k=2Dlyhr7 "EasyDarwin交流群1") / [496258327](http://jq.qq.com/?_wv=1027&k=2Hyz2ea "EasyDarwin交流群2")
 
-Copyright &copy; EasyDarwin.org 2012-2015
+Copyright &copy; EasyDarwin.org 2012-2016
 
 ![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
