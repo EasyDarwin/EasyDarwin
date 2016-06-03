@@ -107,7 +107,6 @@
           <incDir>
             <pElem>../EasyProtocol/Include</pElem>
           </incDir>
-          <commandLine>-std=c++0x</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -168,7 +167,6 @@
           <incDir>
             <pElem>../EasyProtocol/Include</pElem>
           </incDir>
-          <commandLine>-std=c++0x</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

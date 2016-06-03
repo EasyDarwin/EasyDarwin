@@ -48,8 +48,8 @@ OBJECTFILES= \
 CFLAGS=-m32 -std=c99
 
 # CC Compiler Flags
-CCFLAGS=-m32 -std=c++0x
-CXXFLAGS=-m32 -std=c++0x
+CCFLAGS=-m32
+CXXFLAGS=-m32
 
 # Fortran Compiler Flags
 FFLAGS=
