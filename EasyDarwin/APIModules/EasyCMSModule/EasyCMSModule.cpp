@@ -19,10 +19,9 @@
 #include "ReflectorSession.h"
 
 // STATIC DATA
-static QTSS_PrefsObject				sServerPrefs		= NULL;	//服务器主配置
-static QTSS_ServerObject			sServer				= NULL;	//服务器对象
-static QTSS_ModulePrefsObject		sEasyCMSModulePrefs	= NULL;	//当前模块配置
-
+static QTSS_PrefsObject				sServerPrefs		= NULL;
+static QTSS_ServerObject			sServer				= NULL;
+static QTSS_ModulePrefsObject		sEasyCMSModulePrefs	= NULL;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -39,8 +38,8 @@ public:
 private:
 	virtual SInt64 Run();
 };
-static ReflectorSessionCheckTask *pTask=NULL;
 
+static ReflectorSessionCheckTask* pTask=NULL;
 
 SInt64 ReflectorSessionCheckTask::Run()
 {
@@ -55,20 +54,20 @@ SInt64 ReflectorSessionCheckTask::Run()
 		ReflectorSession* theSession = (ReflectorSession*)theRef->GetObject();
 
 		SInt64  sCreateTime = theSession->GetInitTimeMS();
-		if( (theSession->GetNumOutputs()==0) && (sNowTime-sCreateTime>=20*1000) )//当前客户端列表为0，并且是在ReflectorSession创建20秒之后
+		if( (theSession->GetNumOutputs() == 0) && (sNowTime-sCreateTime >= 20*1000) )
 		{
-			qtss_printf("没有客户端观看当前转发媒体\n");
 			QTSS_RoleParams theParams;
 			theParams.easyFreeStreamParams.inStreamName = theSession->GetStreamName();
 			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
 			for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
-			{
+			{			
+				qtss_printf("没有客户端观看当前转发媒体\n");
 				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
 				(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
 			}
 		}
 	}  
-	return 30*1000;//每30秒检查一次
+	return 30*1000;//30s
 }
 
 

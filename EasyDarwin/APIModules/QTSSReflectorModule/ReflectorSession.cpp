@@ -138,12 +138,12 @@ ReflectorSession::~ReflectorSession()
 	//将推流名称从redis中删除,使用fSessionName+".sdp"
 	if(fStreamName)
 	{
-		qtss_printf("从redis中删除推流名称%s\n",fStreamName);
 		QTSS_RoleParams theParams;
 		theParams.StreamNameParams.inStreamName = fStreamName;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelPushStreamRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{		
+			qtss_printf("从redis中删除推流名称%s\n",fStreamName);
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisDelPushStreamRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisDelPushStream_Role, &theParams);
 		}
