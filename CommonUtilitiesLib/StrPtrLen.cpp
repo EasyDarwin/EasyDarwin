@@ -313,7 +313,7 @@ void StrPtrLen::PrintStr()
     if (thestr != NULL)
     {   
         qtss_printf(thestr);
-        delete thestr;
+        delete []thestr;
     }   
 }
 
@@ -404,7 +404,7 @@ void StrPtrLen::PrintStrEOL(char* stopStr, char *appendStr)
         }
     }
     qtss_printf(theStrLine);
-    delete thestr;
+    delete []thestr;
 
     if (appendStr != NULL)
         qtss_printf(appendStr);
