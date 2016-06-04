@@ -132,7 +132,7 @@ EasyProtocol::EasyProtocol(int iMsgType)
 	root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);	
 }
 
-EasyProtocol::EasyProtocol(const std::string msg, int iMsgType)
+EasyProtocol::EasyProtocol(const std::string& msg, int iMsgType)
 {	
 	reader.parse(msg, root);
 	//json = msg;
@@ -152,7 +152,7 @@ EasyProtocol::~EasyProtocol()
 {
 }
 
-void EasyProtocol::Read(const std::string msg, int iMsgType)
+void EasyProtocol::Read(const std::string& msg, int iMsgType)
 {
 	reader.parse(msg, root);
 
@@ -242,7 +242,7 @@ std::string EasyProtocol::GetErrorString(int error)
 	return std::string();
 }
 
-int EasyProtocol::GetMsgType(std::string sMessageType)
+int EasyProtocol::GetMsgType(const std::string& sMessageType)
 {
     for (int i = 0; i < sizeof(MsgTypeMap) / sizeof(MsgType); i++)
 	{
@@ -268,7 +268,7 @@ std::string EasyProtocol::GetDeviceStatusString(int status)
 	return std::string();
 }
 
-int EasyProtocol::GetDeviceStatus(std::string sStatus)
+int EasyProtocol::GetDeviceStatus(const std::string& sStatus)
 {
     for (int i = 0; i < sizeof(StatusMap) / sizeof(MsgType); i++)
 	{
@@ -281,7 +281,7 @@ int EasyProtocol::GetDeviceStatus(std::string sStatus)
     return -1;
 }
 
-int EasyProtocol::GetProtocolType(std::string sProtocolType)
+int EasyProtocol::GetProtocolType(const std::string& sProtocolType)
 {
 	for (int i = 0; i < sizeof(ProtocolTypeMap) / sizeof(MsgType); i++)
 	{
@@ -307,7 +307,7 @@ std::string EasyProtocol::GetProtocolString(int iProtocolType)
 	return std::string();
 }
 
-int EasyProtocol::GetMediaEncodeType(std::string sMediaEncode)
+int EasyProtocol::GetMediaEncodeType(const std::string& sMediaEncode)
 {
 	for (int i = 0; i < sizeof(MediaEncodeTypeMap) / sizeof(MsgType); i++)
 	{
@@ -333,7 +333,7 @@ std::string EasyProtocol::GetMediaEncodeTypeString(int iMediaEncodeType)
 	return std::string();
 }
 
-int EasyProtocol::GetTerminalType(std::string sTerminalType)
+int EasyProtocol::GetTerminalType(const std::string& sTerminalType)
 {
 	for (int i = 0; i < sizeof(TerminalTypeMap) / sizeof(MsgType); i++)
 	{
@@ -360,7 +360,7 @@ std::string EasyProtocol::GetTerminalTypeString(int iTerminalType)
 }
 
 
-int EasyProtocol::GetAppType(std::string sAppType)
+int EasyProtocol::GetAppType(const std::string& sAppType)
 {
 	for (int i = 0; i < sizeof(AppTypeMap) / sizeof(MsgType); i++)
 	{
@@ -388,7 +388,7 @@ std::string EasyProtocol::GetAppTypeString(int iAppType)
 }
 
 
-int EasyProtocol::GetSnapType(std::string sSnapType)
+int EasyProtocol::GetSnapType(const std::string& sSnapType)
 {
 	for (int i = 0; i < sizeof(SnapTypeMap) / sizeof(MsgType); i++)
 	{

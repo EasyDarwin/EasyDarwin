@@ -31,7 +31,7 @@ class Easy_API EasyProtocol
 {
 public:
 	EasyProtocol(int iMsgType);
-	EasyProtocol(const std::string msg, int iMsgType = -1);
+	EasyProtocol(const std::string& msg, int iMsgType = -1);
 	virtual ~EasyProtocol();
 
 	struct MsgType
@@ -41,7 +41,7 @@ public:
 	};
 
 public:
-	void Read(const std::string msg, int iMsgType = -1);
+	void Read(const std::string& msg, int iMsgType = -1);
 
 	std::string GetMsg();
 	bool GetMsg(char *dest, int size);
@@ -77,39 +77,39 @@ public:
 	std::string GetHeaderValue(const char* tag);
 	std::string GetBodyValue(const char* tag);
 
-	Json::Value * GetRoot(){return &root;}
+	Json::Value* GetRoot() { return &root; }
 public:
 	static std::string GetErrorString(int error);
 	
     static std::string GetMsgTypeString(int type);
-    static int GetMsgType(std::string sMessageType);
+    static int GetMsgType(const std::string& sMessageType);
     
 	//enum EasyDarwinDeviceStatus
     static std::string GetDeviceStatusString(int status);
-    static int GetDeviceStatus(std::string sStatus);
+    static int GetDeviceStatus(const std::string& sStatus);
         
 	//enum EasyDarwinPortType
-    static int GetPortType(std::string sPortType);
+    static int GetPortType(const std::string& sPortType);
     static std::string GetPortTypeString(int iPortType);
 
 	//enum EasyDarwinProtocolType
-	static int GetProtocolType(std::string sProtocolType);
+	static int GetProtocolType(const std::string& sProtocolType);
 	static std::string GetProtocolString(int iProtocolType);
 	
 	//enum EasyDarwinEncodeType
-	static int GetMediaEncodeType(std::string sMediaEncode);
+	static int GetMediaEncodeType(const std::string& sMediaEncode);
 	static std::string GetMediaEncodeTypeString(int iMediaEncodeType);
 
 	//enum EasyDarwinTerminalType
-	static int GetTerminalType(std::string sTerminalType);
+	static int GetTerminalType(const std::string& sTerminalType);
 	static std::string GetTerminalTypeString(int iTerminalType);
 
 	//enum EasyDarwinAppType
-	static int GetAppType(std::string sAppType);
+	static int GetAppType(const std::string& sAppType);
 	static std::string GetAppTypeString(int iAppType);
 
 	//enum EasyDarwinSnapType
-	static int GetSnapType(std::string sSnapType);
+	static int GetSnapType(const std::string& sSnapType);
 	static std::string GetSnapTypeString(int iSnapType);
 
     //common json tag define
