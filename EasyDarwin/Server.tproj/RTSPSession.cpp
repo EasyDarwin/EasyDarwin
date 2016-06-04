@@ -1929,8 +1929,11 @@ void RTSPSession::CleanupRequest()
     {
         // Check to see if a filter module has replaced the request. If so, delete
         // their request now.
-        if (fRequest->GetValue(qtssRTSPReqFullRequest)->Ptr != fInputStream.GetRequestBuffer()->Ptr)
-            delete [] fRequest->GetValue(qtssRTSPReqFullRequest)->Ptr;
+		if (fRequest->GetValue(qtssRTSPReqFullRequest) && fInputStream.GetRequestBuffer())
+		{
+			if (fRequest->GetValue(qtssRTSPReqFullRequest)->Ptr != fInputStream.GetRequestBuffer()->Ptr)
+				delete [] fRequest->GetValue(qtssRTSPReqFullRequest)->Ptr;
+		}
             
         // NULL out any references to the current request
         //delete fRequest;
