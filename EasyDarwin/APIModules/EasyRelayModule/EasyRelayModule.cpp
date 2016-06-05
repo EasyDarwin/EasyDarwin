@@ -83,7 +83,6 @@ QTSS_Error  EasyRelayModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
     return QTSS_NoErr;
 }
 
-
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
 	//加载前进行授权验证
@@ -196,6 +195,7 @@ QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
              
     return QTSS_NoErr;
 }
+
 QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 {
 	//解析命令
