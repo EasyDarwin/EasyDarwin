@@ -38,6 +38,7 @@ _ReSharper*/
 *.264
 *.ts
 *libEasyHLS/
+*EasyNVR/
 *.m3u8
 /EasyDarwin/build/
 /EasyDarwin/dist/
