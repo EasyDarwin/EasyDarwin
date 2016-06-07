@@ -66,7 +66,7 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 		for(EasyDevices::iterator it = nvr.channels_.begin(); it != nvr.channels_.end(); it++)
 		{
 			Json::Value value;
-			value[EASY_TAG_CHANNEL] = it->serial_;
+			value[EASY_TAG_CHANNEL] = it->channel_;
 			value[EASY_TAG_NAME] = it->name_;		
 			value[EASY_TAG_STATUS] = it->status_;
 			root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);		
