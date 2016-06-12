@@ -501,7 +501,7 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 		tag_			=	proTemp.GetBodyValue(EASY_TAG_TAG);//标签
 		channelCount_	=	proTemp.GetBodyValue(EASY_TAG_CHANNEL_COUNT);//当前设备包含的摄像头数量
 
-		if(eAppType==EASY_APP_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
+		if(eAppType == EASY_APP_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
 		{
 			channels_.clear();
 			Json::Value *proot=proTemp.GetRoot();
@@ -525,15 +525,15 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 
 void strDevice::HoldSnapPath(std::string strJpgPath,std::string strChannel)//保留快照的时间属性
 {
-	if(EASY_APP_TYPE_CAMERA==eDeviceType)//如果是摄像头类型，那么只保留一个路径
-		snapJpgPath_=strJpgPath;
+	if(EASY_APP_TYPE_CAMERA == eAppType)//如果是摄像头类型，那么只保留一个路径
+		snapJpgPath_ = strJpgPath;
 	else//否则就要保留到对应的摄像头属性里
 	{
 		EasyDevicesIterator it;
-		for(it=channels_.begin();it!=channels_.end();it++)
+		for(it=channels_.begin();it != channels_.end();it++)
 		{
 			if(it->channel_==strChannel)
-				it->snapJpgPath_=strJpgPath;
+				it->snapJpgPath_ = strJpgPath;
 		}
 	}
 }

@@ -294,6 +294,8 @@ SInt64 HTTPSession::Run()
 
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
+	OSMutexLocker mutexLock(&fReadMutex);//Prevent data chaos 
+
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(httpOK);
 	if (contentXML->Len)
@@ -313,7 +315,13 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 
 	if (pOutputStream->GetBytesWritten() != 0)
 	{
-		pOutputStream->Flush();
+		QTSS_Error theErr = pOutputStream->Flush();
+
+		if(theErr == EAGAIN)
+		{
+			fSocket.RequestEvent(EV_WR);
+			return QTSS_NoErr;
+		}
 	}
 
 	if(fObjectHolders && decrement)
@@ -538,6 +546,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 
 	if(channel.empty())
 		channel = "01";
+
 	if(strTime.empty())
 		strTime = EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx);
 	else//Time Filter 2015-07-20 12:55:30->20150720125530
@@ -643,19 +652,19 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	{
 		//1.获取TerminalType和AppType,进行逻辑验证，不符合则返回400 httpBadRequest;
 		int appType = regREQ.GetAppType();
-		int terminalType = regREQ.GetTerminalType();
+		//int terminalType = regREQ.GetTerminalType();
 		switch(appType)
 		{
 		case EASY_APP_TYPE_CAMERA:
 			{
-				fSessionType = EasyCameraSession;
-				fTerminalType = terminalType;
+				fSessionType  = EasyCameraSession;
+				//fTerminalType = terminalType;
 				break;
 			}
 		case EASY_APP_TYPE_NVR:
 			{
 				fSessionType = EasyNVRSession;
-				fTerminalType = terminalType;
+				//fTerminalType = terminalType;
 				break;
 			}
 		default:
@@ -729,13 +738,13 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	EasyProtocol req(json);
 	EasyProtocolACK rsp(MSG_SD_REGISTER_ACK);
 	EasyJsonValue header,body;
-	header[EASY_TAG_VERSION]=EASY_PROTOCOL_VERSION;
-	header[EASY_TAG_CSEQ]=req.GetHeaderValue(EASY_TAG_CSEQ);
-	header[EASY_TAG_ERROR_NUM]=200;
-	header[EASY_TAG_ERROR_STRING]=EasyProtocol::GetErrorString(200);
+	header[EASY_TAG_VERSION]		=	EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ]			=	req.GetHeaderValue(EASY_TAG_CSEQ);
+	header[EASY_TAG_ERROR_NUM]		=	200;
+	header[EASY_TAG_ERROR_STRING]	=	EasyProtocol::GetErrorString(200);
 
-	body[EASY_TAG_SERIAL]=fDevice.serial_;
-	body[EASY_TAG_SESSION_ID]=fSessionID;
+	body[EASY_TAG_SERIAL]			=	fDevice.serial_;
+	body[EASY_TAG_SESSION_ID]		=	fSessionID;
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
@@ -1029,14 +1038,14 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			char chTemp[16] = {0};
 			UInt32 uDevCseq = pDevSession->GetCSeq();
 			sprintf(chTemp,"%d",uDevCseq);
-			headerheader[EASY_TAG_CSEQ] = string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
-			headerheader[EASY_TAG_VERSION]=		EASY_PROTOCOL_VERSION;
+			headerheader[EASY_TAG_CSEQ]		=	string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+			headerheader[EASY_TAG_VERSION]	=	EASY_PROTOCOL_VERSION;
 
 			string strSessionID;
 			char chSessionID[128] = {0};
 
 			//QTSS_RoleParams theParams;
-			theParams.GenStreamIDParams.outStreanID = chSessionID;
+			theParams.GenStreamIDParams.outStreanID  = chSessionID;
 			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
 
 			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
@@ -1069,7 +1078,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 
 			msgTemp.iMsgType = MSG_CS_GET_STREAM_REQ;//当前请求的消息
 			msgTemp.pObject = this;//当前对象指针
-			msgTemp.uCseq = uCSeq;//当前请求的cseq
+			msgTemp.uCseq   = uCSeq;//当前请求的cseq
 
 			pDevSession->InsertToMsgMap(uDevCseq,msgTemp);//加入到Map中等待客户端的回应
 			IncrementObjectHolderCount();
@@ -1077,9 +1086,9 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//客户端开始流
 			DeviceMap->Release(strDeviceSerial);//////////////////////////////////////////////////////////--
 
 			fInfo.cWaitingState = 1;//等待设备回应
-			fInfo.iResponse = 0;//表示设备还没有回应
-			fInfo.uTimeoutNum = 0;//开始计算超时
-			fInfo.uWaitingTime = 100;//以100ms为周期循环等待，这样不占用CPU
+			fInfo.iResponse		= 0;//表示设备还没有回应
+			fInfo.uTimeoutNum	= 0;//开始计算超时
+			fInfo.uWaitingTime	= 100;//以100ms为周期循环等待，这样不占用CPU
 			return QTSS_NoErr;
 		}
 	}
@@ -1267,7 +1276,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(char *queryString)//
 	{
 		Json::Value value;
 		strDevice *deviceInfo		= ((HTTPSession*)(itRef->second->GetObjectPtr()))->GetDeviceInfo();
-		value[EASY_TAG_SERIAL]		=	deviceInfo->serial_;
+		value[EASY_TAG_SERIAL]		=	deviceInfo->serial_;//这个地方引起了崩溃,deviceMap里有数据，但是deviceInfo里面数据都是空
 		value[EASY_TAG_NAME]		=	deviceInfo->name_;
 		value[EASY_TAG_TAG]			=	deviceInfo->tag_;
 		value[EASY_TAG_APP_TYPE]	=	EasyProtocol::GetAppTypeString(deviceInfo->eAppType);
@@ -1406,9 +1415,9 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 		header[EASY_TAG_ERROR_NUM]    = 200;
 		header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(200);
 
-		Json::Value *proot=rsp.GetRoot();
-		strDevice *deviceInfo= ((HTTPSession*)theDevRef->GetObjectPtr())->GetDeviceInfo();
-		if(deviceInfo->eAppType==EASY_APP_TYPE_CAMERA)
+		Json::Value *proot = rsp.GetRoot();
+		strDevice *deviceInfo = ((HTTPSession*)theDevRef->GetObjectPtr())->GetDeviceInfo();
+		if(deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
 		{
 			body[EASY_TAG_SNAP_URL] = deviceInfo->snapJpgPath_;
 		}

@@ -58,7 +58,7 @@ HTTPSessionInterface::HTTPSessionInterface()
 	fOutputSocketP(&fSocket),
 	fInputSocketP(&fSocket),
 	fSessionType(EasyHTTPSession),
-	fTerminalType(0),
+	//fTerminalType(0),
 	fLiveSession(true),
 	fObjectHolders(0),
 	fRequestBodyLen(-1),
@@ -83,8 +83,8 @@ HTTPSessionInterface::HTTPSessionInterface()
     fOutputStream.ShowMSG(QTSServerInterface::GetServer()->GetPrefs()->GetMSGDebugPrintfs());
 
 	//add
-	fInfo.cWaitingState=0;	//初始为处理第一次请求状态
-	fInfo.uWaitingTime=0;	//初始为不用等待回应
+	fInfo.cWaitingState = 0;	//初始为处理第一次请求状态
+	fInfo.uWaitingTime  = 0;	//初始为不用等待回应
 }
 
 HTTPSessionInterface::~HTTPSessionInterface()
@@ -106,6 +106,8 @@ HTTPSessionInterface::~HTTPSessionInterface()
 		qtss_snprintf(msgStr, sizeof(msgStr), "EasyCameraSession offline from ip[%s], device_serial[%s]",remoteAddress, fDevice.serial_.c_str());
 		break;
 	case EasyNVRSession:
+		this->UnRegDevSession();
+		this->ReleaseMsgMap();
 		qtss_snprintf(msgStr, sizeof(msgStr), "EasyNVRSession offline from ip[%s]",remoteAddress);
 		break;
 	case EasyHTTPSession:
