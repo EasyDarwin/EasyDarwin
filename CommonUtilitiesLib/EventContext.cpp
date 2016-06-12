@@ -184,21 +184,51 @@ void EventContext::RequestEvent(int theMask)
     {
         //allocate a Unique ID for this socket, and add it to the ref table
         
+		//johnson find the bug
+		bool bFindValid = false;
 #ifdef __Win32__
         //
         // Kind of a hack. On Win32, the way that we pass around the unique ID is
         // by making it the message ID of our Win32 message (see win32ev.cpp).
         // Messages must be >= WM_USER. Hence this code to restrict the numberspace
-        // of our UniqueIDs. 
-        if (!compare_and_store(8192, WM_USER, &sUniqueID))  // Fix 2466667: message IDs above a
-            fUniqueID = (PointerSizedInt)atomic_add(&sUniqueID, 1);         // level are ignored, so wrap at 8192
-        else
-            fUniqueID = (PointerSizedInt)WM_USER;
+        // of our UniqueIDs.
+		do 
+		{
+			if (!compare_and_store(8192, WM_USER, &sUniqueID))  // Fix 2466667: message IDs above a
+				fUniqueID = (PointerSizedInt)atomic_add(&sUniqueID, 1);         // level are ignored, so wrap at 8192
+			else
+				fUniqueID = (PointerSizedInt)WM_USER;
+			
+			//If the fUniqueID is used, find a new one until it's free
+			OSRef * ref = fEventThread->fRefTable.Resolve(&fUniqueIDStr);
+			if(ref != NULL)
+			{
+				fEventThread->fRefTable.Release(ref);
+			}
+			else
+			{
+				bFindValid = true;// ok, it's free
+			}
+		} while (0);
 #else
-        if (!compare_and_store(10000000, 1, &sUniqueID))
-            fUniqueID = (PointerSizedInt)atomic_add(&sUniqueID, 1);
-        else
-            fUniqueID = 1;
+		do 
+		{
+			if (!compare_and_store(10000000, 1, &sUniqueID))
+				fUniqueID = (PointerSizedInt)atomic_add(&sUniqueID, 1);
+			else
+				fUniqueID = 1;
+
+			//If the fUniqueID is used, find a new one until it's free
+			OSRef * ref = fEventThread->fRefTable.Resolve(&fUniqueIDStr);
+			if(ref != NULL)
+			{
+				fEventThread->fRefTable.Release(ref);
+			}
+			else
+			{
+				bFindValid = true;// ok, it's free
+			}
+		} while (0);
 #endif
 
         fRef.Set(fUniqueIDStr, this);
