@@ -93,7 +93,7 @@ void EventContext::Cleanup()
 #if !MACOSXEVENTQUEUE
  //           select_removeevent(fFileDesc);//The eventqueue / select shim requires this
         
-        #if defined(__linux__)
+        #if defined(__linux__) && !defined(EASY_DEVICE)
             deleteEpollEvent(fFileDesc);
         #else
             select_removeevent(fFileDesc);//The eventqueue / select shim requires this
@@ -172,7 +172,7 @@ void EventContext::RequestEvent(int theMask)
 #if MACOSXEVENTQUEUE
         if (modwatch(&fEventReq, theMask) != 0)
 #else
-        #if defined(__linux__)
+        #if defined(__linux__) && !defined(EASY_DEVICE)
            if (addEpollEvent(&fEventReq, theMask) != 0)
         #else
            if(select_modwatch(&fEventReq, theMask) != 0)
@@ -245,7 +245,7 @@ void EventContext::RequestEvent(int theMask)
 #if MACOSXEVENTQUEUE
         if (watchevent(&fEventReq, theMask) != 0)
 #else
-        #if defined(__linux__)
+        #if defined(__linux__) && !defined(EASY_DEVICE)
            if (addEpollEvent(&fEventReq, theMask) != 0)
         #else
            if(select_modwatch(&fEventReq, theMask) != 0)
@@ -271,7 +271,7 @@ void EventThread::Entry()
             int theReturnValue = waitevent(&theCurrentEvent, NULL);
 #else
             
-            #if defined(__linux__)
+            #if defined(__linux__) && !defined(EASY_DEVICE)
             int theReturnValue = epoll_waitevent(&theCurrentEvent, NULL);
             #else
             int theReturnValue = select_waitevent(&theCurrentEvent, NULL);            
@@ -309,7 +309,7 @@ void EventThread::Entry()
         SInt64  yieldStart = OS::Milliseconds();
 #endif
 
-    #if 0//defined(__linux__)
+    #if 0//defined(__linux__) && !defined(EASY_DEVICE)
 
     #else
         this->ThreadYield();
