@@ -84,8 +84,6 @@ void    QTSSCallbacks::QTSS_ConvertToUnixTime(SInt64 *inQTSS_MilliSecondsPtr, ti
         *outSecondsPtr = OS::TimeMilli_To_UnixTimeSecs(*inQTSS_MilliSecondsPtr);
 }
 
-
-
 QTSS_Error  QTSSCallbacks::QTSS_AddRole(QTSS_Role inRole)
 {
     QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
@@ -98,8 +96,6 @@ QTSS_Error  QTSSCallbacks::QTSS_AddRole(QTSS_Role inRole)
         
     return theState->curModule->AddRole(inRole);
 }
-
-
 
 QTSS_Error QTSSCallbacks::QTSS_LockObject(QTSS_Object inDictionary)
 {
@@ -174,7 +170,6 @@ QTSS_Error QTSSCallbacks::QTSS_RemoveInstanceAttribute(QTSS_Object inObject, QTS
     
     return ((QTSSDictionary*)inObject)->RemoveInstanceAttribute(inID);
 }
-
 
 QTSS_Error  QTSSCallbacks::QTSS_IDForAttr(QTSS_ObjectType inType, const char* inName, QTSS_AttributeID* outID)
 {
@@ -342,8 +337,6 @@ QTSS_Error  QTSSCallbacks::QTSS_RemoveValue (QTSS_Object inObject, QTSS_Attribut
     return ((QTSSDictionary*)inObject)->RemoveValue(inID, inIndex);
 }
 
-
-
 QTSS_Error  QTSSCallbacks::QTSS_Write(QTSS_StreamRef inStream, void* inBuffer, UInt32 inLen, UInt32* outLenWritten, UInt32 inFlags)
 {
     if (inStream == NULL)
@@ -419,14 +412,12 @@ QTSS_Error  QTSSCallbacks::QTSS_Seek(QTSS_StreamRef inStream, UInt64 inNewPositi
     return ((QTSSStream*)inStream)->Seek(inNewPosition);
 }
 
-
 QTSS_Error  QTSSCallbacks::QTSS_Advise(QTSS_StreamRef inStream, UInt64 inPosition, UInt32 inAdviseSize)
 {
     if (inStream == NULL)
         return QTSS_BadArgument;
     return ((QTSSStream*)inStream)->Advise(inPosition, inAdviseSize);
 }
-
 
 QTSS_Error  QTSSCallbacks::QTSS_OpenFileObject(char* inPath, QTSS_OpenFileFlags inFlags, QTSS_Object* outFileObject)
 {
@@ -458,7 +449,6 @@ QTSS_Error  QTSSCallbacks::QTSS_CloseFileObject(QTSS_Object inFileObject)
     return QTSS_NoErr;
 }
 
-
 QTSS_Error  QTSSCallbacks::QTSS_CreateStreamFromSocket(int inFileDesc, QTSS_StreamRef* outStream)
 {
     if (outStream == NULL)
@@ -485,7 +475,6 @@ QTSS_Error  QTSSCallbacks::QTSS_DestroySocketStream(QTSS_StreamRef inStream)
     delete theSocket;
     return QTSS_NoErr;
 }
-
 
 QTSS_Error  QTSSCallbacks::QTSS_AddService(const char* inServiceName, QTSS_ServiceFunctionPtr inFunctionPtr)
 {
@@ -599,7 +588,6 @@ QTSS_Error  QTSSCallbacks::QTSS_SetIdleRoleTimer(SInt64 inMsecToWait)
     QTSS_ModuleState* thePrivateModuleState = theModule->GetModuleState();
     thePrivateModuleState->idleTime = inMsecToWait;
     theModule->Signal(Task::kUpdateEvent); 
-
 
     return QTSS_NoErr;
 }

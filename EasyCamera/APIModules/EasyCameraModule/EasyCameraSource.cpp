@@ -145,6 +145,8 @@ EasyCameraSource::EasyCameraSource()
 	//登陆摄像机
 	cameraLogin();
 
+	fCameraSnapPtr = new unsigned char[EASY_SNAP_BUFFER_SIZE];
+
 	fTimeoutTask = new TimeoutTask(this, 30 * 1000);
 
 	fTimeoutTask->RefreshTimeout();
@@ -152,6 +154,8 @@ EasyCameraSource::EasyCameraSource()
 
 EasyCameraSource::~EasyCameraSource()
 {
+	delete [] fCameraSnapPtr;
+
 	if (fTimeoutTask)
 	{
 		delete fTimeoutTask;
@@ -237,27 +241,9 @@ void EasyCameraSource::netDevStopStream()
 	}
 }
 
-void EasyCameraSource::handleClosure(void* clientData) 
-{
-	if (clientData != NULL)
-	{
-		EasyCameraSource* source = (EasyCameraSource*)clientData;
-		source->handleClosure();
-	}
-}
-
-void EasyCameraSource::handleClosure() 
-{
-	if (fOnCloseFunc != NULL) 
-	{
-		(*fOnCloseFunc)(fOnCloseClientData);
-	}
-}
-
 void EasyCameraSource::stopGettingFrames() 
 {
 	OSMutexLocker locker(this->GetMutex());
-	fOnCloseFunc = NULL;
 	doStopGettingFrames();
 }
 
@@ -290,42 +276,7 @@ SInt64 EasyCameraSource::Run()
 
 	if(events & Task::kTimeoutEvent)
 	{
-		//向设备获取快照数据
-		//unsigned char *sData = (unsigned char*)malloc(EASY_SNAP_BUFFER_SIZE);
-		unsigned char *sData = new unsigned char[EASY_SNAP_BUFFER_SIZE];
-		int snapBufLen = 0;
-
-		do{
-			//如果获取到摄像机快照数据，Base64编码/发送
-			if (!getSnapData(sData, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
-			{
-				//未获取到数据
-				qtss_printf("EasyCameraSource::Run::GetSnapData() => Get Snap Data Fail \n");
-				theErr = QTSS_ValueNotFound;
-				break;
-			}
-
-			QTSS_RoleParams params;
-			params.postSnapParams.snapLen = snapBufLen;
-			params.postSnapParams.snapPtr = sData;
-			params.postSnapParams.snapType = EASY_SNAP_TYPE_JPEG;
-			UInt32 fCurrentModule = 0;
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kPostSnapRole);
-			for (; fCurrentModule < numModules; fCurrentModule++)
-			{
-				qtss_printf("EasyCameraSource::Run::kPostSnapRole\n");
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kPostSnapRole, fCurrentModule);
-				(void)theModule->CallDispatch(Easy_PostSnap_Role, &params);	
-				break;
-			}
-			break;
-
-		}while(0);
-
-		//free((void*)sData);
-		delete []sData;
-		sData = NULL;
-
+		//do nothing
 		fTimeoutTask->RefreshTimeout();
 	}
 
@@ -338,75 +289,78 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 	do 
 	{
-		if (NULL == fPusherHandle)
 		{
-			if (!cameraLogin())
+			OSMutexLocker locker(&fStreamingMutex);
+			if (NULL == fPusherHandle)
 			{
-				theErr = QTSS_RequestFailed;
-				break;
+				if (!cameraLogin())
+				{
+					theErr = QTSS_RequestFailed;
+					break;
+				}
+
+				std::map<HI_U32, Easy_U32> mapSDK2This;
+				mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G711] = EASY_SDK_AUDIO_CODEC_G711A;
+				mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G726] = EASY_SDK_AUDIO_CODEC_G726;
+
+				EASY_MEDIA_INFO_T mediainfo;
+				memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
+				mediainfo.u32VideoCodec = EASY_SDK_VIDEO_CODEC_H264;
+
+				HI_S32 s32Ret = HI_FAILURE;
+				HI_S_Video sVideo;
+				sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
+				sVideo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
+
+				s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
+				if (s32Ret == HI_SUCCESS)
+				{
+					mediainfo.u32VideoFps = sVideo.u32Frame;
+				}
+				else
+				{
+					mediainfo.u32VideoFps = 25;
+				}
+
+				HI_S_Audio sAudio;
+				sAudio.u32Channel = HI_NET_DEV_CHANNEL_1;
+				sAudio.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
+
+				s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_AUDIO_PARAM, &sAudio, sizeof(HI_S_Audio));
+				if (s32Ret == HI_SUCCESS)
+				{
+					mediainfo.u32AudioCodec = mapSDK2This[sAudio.u32Type];
+					mediainfo.u32AudioChannel = sAudio.u32Channel;
+				}
+				else
+				{
+					mediainfo.u32AudioCodec = EASY_SDK_AUDIO_CODEC_G711A;
+					mediainfo.u32AudioChannel = 1;
+				}
+
+				mediainfo.u32AudioSamplerate = 8000;
+
+
+				fPusherHandle = EasyPusher_Create();
+				if (fPusherHandle == NULL)
+				{
+					//EasyPusher初始化创建失败,可能是EasyPusher SDK未授权
+					theErr = QTSS_Unimplemented;
+					break;
+				}
+
+				// 注册流推送事件回调
+				EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
+
+				// 根据接收到的命令生成流信息
+				char sdpName[128] = { 0 };
+				sprintf(sdpName, "%s/%s.sdp", /*inParams->inStreamID,*/ inParams->inSerial, inParams->inChannel);
+
+				// 开始推送流媒体数据
+				EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
+
+				saveStartStreamParams(inParams);
 			}
-
-			std::map<HI_U32, Easy_U32> mapSDK2This;
-			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G711] = EASY_SDK_AUDIO_CODEC_G711A;
-			mapSDK2This[HI_NET_DEV_AUDIO_TYPE_G726] = EASY_SDK_AUDIO_CODEC_G726;
-
-			EASY_MEDIA_INFO_T mediainfo;
-			memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
-			mediainfo.u32VideoCodec = EASY_SDK_VIDEO_CODEC_H264;
-
-			HI_S32 s32Ret = HI_FAILURE;
-			HI_S_Video sVideo;
-			sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
-			sVideo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
-
-			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
-			if (s32Ret == HI_SUCCESS)
-			{
-				mediainfo.u32VideoFps = sVideo.u32Frame;
-			}
-			else
-			{
-				mediainfo.u32VideoFps = 25;
-			}
-
-			HI_S_Audio sAudio;
-			sAudio.u32Channel = HI_NET_DEV_CHANNEL_1;
-			sAudio.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
-
-			s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_AUDIO_PARAM, &sAudio, sizeof(HI_S_Audio));
-			if (s32Ret == HI_SUCCESS)
-			{
-				mediainfo.u32AudioCodec = mapSDK2This[sAudio.u32Type];
-				mediainfo.u32AudioChannel = sAudio.u32Channel;
-			}
-			else
-			{
-				mediainfo.u32AudioCodec = EASY_SDK_AUDIO_CODEC_G711A;
-				mediainfo.u32AudioChannel = 1;
-			}
-
-			mediainfo.u32AudioSamplerate = 8000;
-
-
-			fPusherHandle = EasyPusher_Create();
-			if (fPusherHandle == NULL)
-			{
-				//EasyPusher初始化创建失败,可能是EasyPusher SDK未授权
-				theErr = QTSS_Unimplemented;
-				break;
-			}
-
-			// 注册流推送事件回调
-			EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
-
-			// 根据接收到的命令生成流信息
-			char sdpName[128] = { 0 };
-			sprintf(sdpName, "%s/%s/%s.sdp", inParams->inStreamID, inParams->inSerial, inParams->inChannel);
-
-			// 开始推送流媒体数据
-			EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
-
-			saveStartStreamParams(inParams);
 		}
 
 		theErr = netDevStartStream();
@@ -456,11 +410,14 @@ void EasyCameraSource::saveStartStreamParams(Easy_StartStream_Params * inParams)
 
 QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 {
-	if(fPusherHandle)
 	{
-		EasyPusher_StopStream(fPusherHandle);
-		EasyPusher_Release(fPusherHandle);
-		fPusherHandle = 0;
+		OSMutexLocker locker(&fStreamingMutex);
+		if (fPusherHandle)
+		{
+			EasyPusher_StopStream(fPusherHandle);
+			EasyPusher_Release(fPusherHandle);
+			fPusherHandle = 0;
+		}
 	}
 
 	stopGettingFrames();
@@ -470,6 +427,7 @@ QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 
 QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 {	
+	OSMutexLocker locker(&fStreamingMutex);
 	if(fPusherHandle == NULL) return QTSS_Unimplemented;
 
 	HI_S_AVFrame* pstruAV = (HI_S_AVFrame*)frame;
@@ -511,4 +469,35 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 		}			
 	}
 	return Easy_NoErr;
+}
+
+QTSS_Error EasyCameraSource::GetCameraState(Easy_CameraState_Params* params)
+{
+	params->outIsLogin = cameraLogin();
+	params->outIsStreaming = m_bStreamFlag;
+	return 0;
+}
+
+QTSS_Error EasyCameraSource::GetCameraSnap(Easy_CameraSnap_Params* params)
+{
+	QTSS_Error theErr = QTSS_NoErr;
+
+	params->outSnapLen = 0;
+
+	int snapBufLen = 0;
+	do{
+		if (!getSnapData(fCameraSnapPtr, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
+		{
+			//未获取到数据
+			qtss_printf("EasyCameraSource::GetCameraSnap::getSnapData() => Get Snap Data Fail \n");
+			theErr = QTSS_ValueNotFound;
+			break;
+		}
+
+		params->outSnapLen = snapBufLen;
+		params->outSnapPtr = fCameraSnapPtr;
+		params->outSnapType = EASY_SNAP_TYPE_JPEG;
+	}while(0);
+
+	return theErr;
 }

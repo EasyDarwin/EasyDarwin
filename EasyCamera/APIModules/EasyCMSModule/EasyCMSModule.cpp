@@ -31,9 +31,6 @@ static QTSS_Error Register_EasyCMSModule(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize_EasyCMSModule(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs_EasyCMSModule();
 
-// ÉÏ´«Camera¿ìÕÕ
-static QTSS_Error Post_EasyCMSModule(Easy_PostSnap_Params* inParams);
-
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyCMSModule_Main(void* inPrivateArgs)
 {
@@ -50,8 +47,6 @@ QTSS_Error EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize_EasyCMSModule(&inParams->initParams);
         case QTSS_RereadPrefs_Role:
             return RereadPrefs_EasyCMSModule();
-		case Easy_PostSnap_Role:
-			return Post_EasyCMSModule(&inParams->postSnapParams);
 	}
     return QTSS_NoErr;
 }
@@ -61,7 +56,6 @@ QTSS_Error Register_EasyCMSModule(QTSS_Register_Params* inParams)
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
-	(void)QTSS_AddRole(Easy_PostSnap_Role);
    
     // Tell the server our name!
     static char* sModuleName = "EasyCMSModule";
@@ -95,15 +89,4 @@ QTSS_Error Initialize_EasyCMSModule(QTSS_Initialize_Params* inParams)
 QTSS_Error RereadPrefs_EasyCMSModule()
 {
 	return QTSS_NoErr;
-}
-
-QTSS_Error Post_EasyCMSModule(Easy_PostSnap_Params* inParams)
-{
-	QTSS_Error theErr = QTSS_Unimplemented;
-
-	if (sCMSSession)
-	{
-		theErr = sCMSSession->UpdateSnapCache(inParams);
-	}
-	return theErr;
 }

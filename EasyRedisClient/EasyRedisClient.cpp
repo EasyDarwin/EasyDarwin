@@ -14,6 +14,7 @@
 #include "EasyRedisClient.h"
 
 #ifndef _WIN32
+#undef unix
 #include "hiredis.h"
 #else
 #include "Windows/hiredis.h"

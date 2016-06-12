@@ -600,7 +600,7 @@
       <item path="sdpCache.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
-    <conf name="ARM" type="3">
+    <conf name="gm8126" type="3">
       <toolsSet>
         <compilerSet>GM8126|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
@@ -637,6 +637,7 @@
           <commandLine>-fPIC</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
+            <Elem>EASY_DEVICE</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>
@@ -1123,6 +1124,7 @@
           <commandLine>-fPIC</commandLine>
           <preprocessorList>
             <Elem>COMMON_UTILITIES_LIB</Elem>
+            <Elem>EASY_DEVICE</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>

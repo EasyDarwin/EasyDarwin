@@ -13,7 +13,7 @@
 
 // EasyCMS IP
 static char*            sEasyCMS_IP = NULL;
-static char*            sDefaultEasyCMS_IP_Addr = "127.0.0.1";
+static char*            sDefaultEasyCMS_IP_Addr = "www.easydss.com";
 // EasyCMS Port
 static UInt16			sEasyCMSPort = 10000;
 static UInt16			sDefaultEasyCMSPort = 10000;
@@ -70,9 +70,8 @@ EasyCMSSession::EasyCMSSession()
 	fMutex(),
 	fContentBufferOffset(0),
 	fContentBuffer(NULL),
-	fSnapReq(NULL),
-	fSendMessageCount(0),
-	fCSeqCount(1)
+	fNoneACKMsgCount(0),
+	fCSeq(1)
 {
 	this->SetTaskName("EasyCMSSession");
 
@@ -85,7 +84,7 @@ EasyCMSSession::EasyCMSSession()
 	else
 	{
 		//connect default EasyCMS server
-		fSocket->Set(SocketUtils::ConvertStringToAddr("121.40.50.44"), sEasyCMSPort);
+		fSocket->Set(SocketUtils::ConvertStringToAddr("www.easydss.com"), sEasyCMSPort);
 	}
 
 	fTimeoutTask.RefreshTimeout();
@@ -144,6 +143,13 @@ SInt64 EasyCMSSession::Run()
 				}
 				else
 				{
+					if (fNoneACKMsgCount > 3)
+					{
+						this->resetClientSocket();
+
+						return 0;
+					}
+
 					// TCPSocket已连接的情况下先区分具体事件类型
 					if (events & Task::kStartEvent)
 					{
@@ -161,7 +167,11 @@ SInt64 EasyCMSSession::Run()
 					if (events & Task::kTimeoutEvent)
 					{
 						// 已连接，保活时间到需要发送保活报文
-						doDSRegister();
+						if(fCSeq%3 == 1)
+							doDSPostSnap();
+						else
+							doDSRegister();
+
 						fTimeoutTask.RefreshTimeout();
 					}
 
@@ -213,9 +223,6 @@ SInt64 EasyCMSSession::Run()
 					Assert(!fSocket->GetSocket()->IsConnected());
 					this->resetClientSocket();
 
-					// make zero
-					fSendMessageCount = 0;
-
 					return 0;
 				}
 
@@ -261,14 +268,6 @@ SInt64 EasyCMSSession::Run()
 			}
 		case kSendingMessage:
 			{
-				if (fSendMessageCount >= 3)
-				{
-					fState = kIdle;
-					fSendMessageCount = 0;
-
-					return 0;
-				}
-
 				theErr = fOutputStream.Flush();
 
 				if (theErr == EAGAIN || theErr == EINPROGRESS)
@@ -284,11 +283,10 @@ SInt64 EasyCMSSession::Run()
 					// Any other error means that the client has disconnected, right?
 					Assert(!this->isConnected());
 					resetClientSocket();
-					// make zero
-					fSendMessageCount = 0;
-
 					return 0;
 				}
+
+				++fNoneACKMsgCount;
 
 				fState = kCleaningUp;
 				break;
@@ -327,6 +325,21 @@ SInt64 EasyCMSSession::Run()
 	return 0;
 }
 
+void EasyCMSSession::stopPushStream()
+{
+	QTSS_RoleParams params;
+
+	QTSS_Error errCode = QTSS_NoErr;
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
+	for (; fCurrentModule < numModules; ++fCurrentModule)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
+		errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
+	}
+	fCurrentModule = 0;
+}
+
 QTSS_Error EasyCMSSession::processMessage()
 {
 	if (NULL == fRequest) return QTSS_BadArgument;
@@ -343,7 +356,7 @@ QTSS_Error EasyCMSSession::processMessage()
 
 	if (content_length)
 	{
-		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%d \n", content_length);
+		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%lu \n", content_length);
 		// 检查content的fContentBuffer和fContentBufferOffset是否有值存在,如果存在，说明我们已经开始
 		// 进行content请求处理,如果不存在,我们需要创建并初始化fContentBuffer和fContentBufferOffset
 		if (fContentBuffer == NULL)
@@ -367,7 +380,7 @@ QTSS_Error EasyCMSSession::processMessage()
 			return QTSS_RequestFailed;
 		}
 
-		qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%d \n", theLen);
+		qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%lu \n", theLen);
 		if ((theErr == QTSS_WouldBlock) || (theLen < (content_length - fContentBufferOffset)))
 		{
 			//
@@ -385,6 +398,8 @@ QTSS_Error EasyCMSSession::processMessage()
 
 		qtss_printf("EasyCMSSession::ProcessMessage() Get Complete Msg:\n%s", fContentBuffer);
 
+		fNoneACKMsgCount = 0;
+
 		EasyProtocol protocol(fContentBuffer);
 		int nNetMsg = protocol.GetMessageType();
 		switch (nNetMsg)
@@ -393,17 +408,13 @@ QTSS_Error EasyCMSSession::processMessage()
 			{
 				EasyMsgSDRegisterACK ack(fContentBuffer);
 
-				// make zero
-				fSendMessageCount = 0;
-
 				qtss_printf("session id = %s\n", ack.GetBodyValue(EASY_TAG_SESSION_ID).c_str());
 				qtss_printf("device serial = %s\n", ack.GetBodyValue(EASY_TAG_SERIAL).c_str());
 			}
 			break;
 		case MSG_SD_POST_SNAP_ACK:
 			{
-				// make zero
-				fSendMessageCount = 0;
+				;
 			}
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
@@ -490,7 +501,7 @@ QTSS_Error EasyCMSSession::processMessage()
 				string channel = stopStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				params.stopStreamParams.inChannel = channel.c_str();
 
-				QTSS_Error	errCode = QTSS_NoErr;
+				QTSS_Error errCode = QTSS_NoErr;
 				UInt32 fCurrentModule = 0;
 				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
 				for (; fCurrentModule < numModules; ++fCurrentModule)
@@ -612,10 +623,16 @@ void EasyCMSSession::resetClientSocket()
 {
 	qtss_printf("EasyCMSSession::ResetClientSocket()\n");
 
+	stopPushStream();
+
 	cleanupRequest();
 
-	fSocket->GetSocket()->Cleanup();
-	if (fSocket) delete fSocket;
+	if (fSocket)
+	{
+		fSocket->GetSocket()->Cleanup();
+		delete fSocket;
+		fSocket = NULL;
+	}
 
 	fSocket = NEW TCPClientSocket(Socket::kNonBlockingSocketType);
 	UInt32 inAddr = SocketUtils::ConvertStringToAddr(sEasyCMS_IP);
@@ -624,68 +641,86 @@ void EasyCMSSession::resetClientSocket()
 	fInputStream.AttachToSocket(fSocket);
 	fOutputStream.AttachToSocket(fSocket);
 	fState = kIdle;
-}
 
+	fNoneACKMsgCount = 0;
+}
 
 QTSS_Error EasyCMSSession::doDSRegister()
 {
-	EasyDevices channels;
+	QTSS_Error theErr = QTSS_NoErr;
 
-	EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
+	QTSS_RoleParams params;
+	params.cameraStateParams.outIsLogin = 0;
 
-	EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr, fCSeqCount++);
-	string msg = req.GetMsg();
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetCameraStateRole);
+	for (; fCurrentModule < numModules; fCurrentModule++)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraStateRole, fCurrentModule);
+		theErr = theModule->CallDispatch(Easy_GetCameraState_Role, &params);	
+	}
 
-	StrPtrLen jsonContent((char*)msg.data());
+	if( (theErr == QTSS_NoErr) && params.cameraStateParams.outIsLogin )
+	{
+		EasyDevices channels;
 
-	// 构造HTTP注册报文,提交给fOutputStream进行发送
-	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
+		EasyNVR nvr(sEasy_Serial, sEasy_Name, sEasy_Key, sEasy_Tag, channels);
 
-	if (!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
+		EasyMsgDSRegisterREQ req(EASY_TERMINAL_TYPE_ARM, EASY_APP_TYPE_CAMERA, nvr, fCSeq++);
+		string msg = req.GetMsg();
 
-	if (jsonContent.Len)
-		httpReq.AppendContentLengthHeader(jsonContent.Len);
+		StrPtrLen jsonContent((char*)msg.data());
 
-	char respHeader[2048] = { 0 };
-	StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		// 构造HTTP注册报文,提交给fOutputStream进行发送
+		HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
 
-	fOutputStream.Put(respHeader);
-	if (jsonContent.Len > 0)
-		fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+		if (!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
 
-	// count+1
-	++fSendMessageCount;
+		if (jsonContent.Len)
+			httpReq.AppendContentLengthHeader(jsonContent.Len);
 
-	return QTSS_NoErr;
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		fOutputStream.Put(respHeader);
+		if (jsonContent.Len > 0)
+			fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+	}
+
+	return theErr;
 }
 
-QTSS_Error EasyCMSSession::UpdateSnapCache(Easy_PostSnap_Params* inParams)
+QTSS_Error EasyCMSSession::doDSPostSnap()
 {
-	if (fSnapReq == NULL)
+	QTSS_Error theErr = QTSS_NoErr;
+
+	QTSS_RoleParams params;
+	params.cameraSnapParams.outSnapLen = 0;
+
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetCameraSnapRole);
+	for (; fCurrentModule < numModules; fCurrentModule++)
+	{
+		qtss_printf("EasyCameraSource::Run::kGetCameraSnapRole\n");
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetCameraSnapRole, fCurrentModule);
+		theErr = theModule->CallDispatch(Easy_GetCameraSnap_Role, &params);	
+	}
+
+	if( (theErr == QTSS_NoErr) && (params.cameraSnapParams.outSnapLen > 0))
 	{
 		char szTime[32] = { 0, };
 		EasyJsonValue body;
 		body[EASY_TAG_SERIAL] = sEasy_Serial;
 
-		string type = EasyProtocol::GetSnapTypeString(inParams->snapType);
+		string type = EasyProtocol::GetSnapTypeString(params.cameraSnapParams.outSnapType);
 
 		body[EASY_TAG_TYPE] = type.c_str();
 		body[EASY_TAG_TIME] = szTime;
-		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)inParams->snapPtr, inParams->snapLen);
+		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)params.cameraSnapParams.outSnapPtr, params.cameraSnapParams.outSnapLen);
 
-		fSnapReq = new EasyMsgDSPostSnapREQ(body, fCSeqCount++);
-	}
-
-	this->Signal(Task::kUpdateEvent);
-	return QTSS_NoErr;
-}
-
-QTSS_Error EasyCMSSession::doDSPostSnap()
-{
-	if (fSnapReq)
-	{
-		string msg = fSnapReq->GetMsg();
+		EasyMsgDSPostSnapREQ req(body, fCSeq++);
+		string msg = req.GetMsg();
 
 		//请求上传快照
 		StrPtrLen jsonContent((char*)msg.data());
@@ -704,14 +739,8 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 			fOutputStream.Put(respHeader);
 			if (jsonContent.Len > 0)
 				fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
-
-			// count+1
-			++fSendMessageCount;
 		}
-
-		delete fSnapReq;
-		fSnapReq = NULL;
 	}
 
-	return QTSS_NoErr;
+	return theErr;
 }

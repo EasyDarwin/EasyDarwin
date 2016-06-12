@@ -98,6 +98,7 @@ class StrPtrLen
         
         StrPtrLen& operator=(const StrPtrLen& newStr) { Ptr = newStr.Ptr; Len = newStr.Len;
                                                         return *this; }
+		StrPtrLen(const StrPtrLen& newStr) { Ptr = newStr.Ptr; Len = newStr.Len; }
         char operator[](int i) { /*Assert(i<Len);i*/ return Ptr[i]; }
         void Set(char* inPtr, UInt32 inLen) { Ptr = inPtr; Len = inLen; }
         void Set(char* inPtr) { Ptr = inPtr; Len = (inPtr) ?  ::strlen(inPtr) : 0; }

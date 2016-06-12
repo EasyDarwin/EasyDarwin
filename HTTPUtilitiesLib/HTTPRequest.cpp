@@ -34,6 +34,7 @@ StrPtrLen HTTPRequest::sColonSpace(": ", 2);
 static Bool16 sFalse = false;
 static Bool16 sTrue = true;
 static StrPtrLen sCloseString("close", 5);
+static StrPtrLen sAllString("*", 1);
 static StrPtrLen sKeepAliveString("keep-alive", 10);
 static StrPtrLen sDefaultRealm("Streaming Server", 19);
 UInt8 HTTPRequest::sURLStopConditions[] =
@@ -424,6 +425,9 @@ Bool16 HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion 
 
 	AppendResponseHeader(httpServerHeader,&fSvrHeader);
     fHTTPHeader->Len = fHTTPHeaderFormatter->GetCurrentOffset();
+
+	//Access-Control-Allow-Origin: *
+	AppendResponseHeader(httpAccessControlAllowOriginHeader, &sAllString);
 
 	return true;
 }

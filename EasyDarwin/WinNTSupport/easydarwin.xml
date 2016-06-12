@@ -26,7 +26,7 @@
 <CONFIGURATION>
 	<SERVER>
 		<LIST-PREF NAME="rtsp_port" TYPE="UInt16" >
-			<VALUE>554</VALUE>
+			<VALUE>6554</VALUE>
 		</LIST-PREF>
 		<PREF NAME="default_authorization_realm" >EasyDarwin</PREF>
 		<PREF NAME="do_report_http_connection_ip_address" TYPE="Bool16" >disabled</PREF>
@@ -125,8 +125,8 @@
 		<PREF NAME="player_requires_3gpp_target_time" ></PREF>
 		<PREF NAME="3gpp_target_time_milliseconds" TYPE="UInt32" >3000</PREF>
 		<PREF NAME="player_requires_disable_thinning" ></PREF>
-		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
-		<PREF NAME="enable_cloud_platform" TYPE="Bool16" >false</PREF>
+		<PREF NAME="http_service_port" TYPE="UInt16" >8888</PREF>
+		<PREF NAME="enable_cloud_platform" TYPE="Bool16" >true</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
 		<PREF NAME="request_logfile_interval" TYPE="UInt32" >7</PREF>
@@ -265,8 +265,8 @@
 		<PREF NAME="redis_ip" >127.0.0.1</PREF>
 		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
 		<PREF NAME="redis_user" >admin</PREF>
-		<PREF NAME="redis_password" >admin</PREF>
-		<PREF NAME="rtsp_wan_ip" >127.0.0.1</PREF>
-		<PREF NAME="rtsp_wan_port" TYPE="UInt16" >554</PREF>
+		<PREF NAME="redis_password" >~ziguangwulian~iguangwulian~guangwulian~uangwulian</PREF>
+		<PREF NAME="rtsp_wan_ip" >121.40.50.44</PREF>
+		<PREF NAME="rtsp_wan_port" TYPE="UInt16" >6554</PREF>
 	</MODULE>
 </CONFIGURATION>

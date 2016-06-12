@@ -55,11 +55,10 @@ public:
 	SessionStatus GetSessionStatus() { return fSessionStatus; }
 	void SetSessionStatus(SessionStatus status) { fSessionStatus = status; }
 
-	// 更新最新快照缓存
-	QTSS_Error UpdateSnapCache(Easy_PostSnap_Params* params);
-
 private:
     virtual SInt64 Run();
+
+	void stopPushStream();
 
 	// 初步判断Session Socket是否已连接
 	Bool16 isConnected() { return fSocket->GetSocket()->IsConnected(); }
@@ -119,12 +118,10 @@ private:
 	// 请求报文的Content读取偏移量,在多次读取到完整Content部分时用到
 	UInt32				fContentBufferOffset;
 
-	EasyMsgDSPostSnapREQ* fSnapReq;
-
 	// send message count
-	unsigned int fSendMessageCount;
+	unsigned int fNoneACKMsgCount;
 
-	size_t fCSeqCount;
+	UInt32 fCSeq;
 
 };
 

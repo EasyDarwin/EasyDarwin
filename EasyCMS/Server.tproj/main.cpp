@@ -23,17 +23,14 @@
  *
  */
 /*
-	Copyleft (c) 2013-2015 EasyDarwin.ORG.  All rights reserved.
+	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
 	Website: http://www.EasyDarwin.org
 */
 /*
     File:       main.cpp
-
-    Contains:   main function to drive streaming server.
-
-
+    Contains:   main function to drive EasyCMS server.
 */
 
 #include <stdio.h>
@@ -91,9 +88,9 @@ void usage()
     qtss_printf("usage: %s [ -d | -p port | -v | -c /myconfigpath.xml | -o /myconfigpath.conf | -x | -S numseconds | -I | -h ]\n", usage_name);
     qtss_printf("-d: Run in the foreground\n");
     qtss_printf("-D: Display performance data\n");
-    qtss_printf("-p XXX: Specify the default RTSP listening port of the server\n");
+    qtss_printf("-p XXX: Specify the default HTTP listening port of the server\n");
     qtss_printf("-c /myconfigpath.xml: Specify a config file\n");
-    qtss_printf("-o /myconfigpath.conf: Specify a DSS 1.x / 2.x config file to build XML file from\n");
+    qtss_printf("-o /myconfigpath.conf: Specify a config file to build XML file from\n");
     qtss_printf("-x: Force create new .xml config file and exit.\n");
     qtss_printf("-S n: Display server stats in the console every \"n\" seconds\n");
     qtss_printf("-I: Start the server in the idle state\n");
@@ -341,7 +338,7 @@ int main(int argc, char * argv[])
                                 
                 break;
             case 'f':
-				theXMLFilePath  = DEFAULTPATHS_ETC_DIR "streamingserver.xml";
+				theXMLFilePath  = DEFAULTPATHS_ETC_DIR "easycms.xml";
                 break;
             case 'p':
                 Assert(optarg != NULL);// this means we didn't declare getopt options correctly or there is a bug in getopt.
@@ -375,8 +372,7 @@ int main(int argc, char * argv[])
                 break;
         }
     }
-    
-  
+
     // Check port
     if (thePort < 0 || thePort > 65535)
     { 
@@ -388,19 +384,17 @@ int main(int argc, char * argv[])
     QTSSExpirationDate::PrintExpirationDate();
     if (QTSSExpirationDate::IsSoftwareExpired())
     {
-        qtss_printf("CMS Server has expired\n");
+        qtss_printf("EasyCMS Server has expired\n");
         ::exit(0);
     }
 
-
     XMLPrefsParser theXMLParser(theXMLFilePath);
-    
-    //
+
     // Check to see if the XML file exists as a directory. If it does,
     // just bail because we do not want to overwrite a directory
     if (theXMLParser.DoesFileExistAsDirectory())
     {
-        qtss_printf("Directory located at location where streaming server prefs file should be.\n");
+        qtss_printf("Directory located at location where EasyCMS server prefs file should be.\n");
         exit(-1);
     }
     
@@ -408,7 +402,7 @@ int main(int argc, char * argv[])
     // Check to see if we can write to the file
     if (!theXMLParser.CanWriteFile())
     {
-        qtss_printf("Cannot write to the streaming server prefs file.\n");
+        qtss_printf("Cannot write to the EasyCMS server prefs file.\n");
         exit(-1);
     }
 

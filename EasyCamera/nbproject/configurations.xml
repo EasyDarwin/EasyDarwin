@@ -674,7 +674,7 @@
       <item path="revision.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
-    <conf name="ARM" type="1">
+    <conf name="gm8126" type="1">
       <toolsSet>
         <compilerSet>GM8126|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
@@ -696,13 +696,16 @@
           <incDir>
             <pElem>APICommonCode</pElem>
             <pElem>APIStubLib</pElem>
-            <pElem>CommonUtilitiesLib</pElem>
-            <pElem>HTTPUtilitiesLib</pElem>
+            <pElem>../CommonUtilitiesLib</pElem>
+            <pElem>../HTTPUtilitiesLib</pElem>
             <pElem>Include</pElem>
             <pElem>Server.tproj</pElem>
             <pElem>PrefsSourceLib</pElem>
-            <pElem>../../EasyDarwin/CMS/Include/libEasyCMS</pElem>
             <pElem>.</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
+            <pElem>../EasyProtocol/jsoncpp/include</pElem>
+            <pElem>APIModules/EasyCMSModule</pElem>
+            <pElem>APIModules/EasyCameraModule</pElem>
           </incDir>
           <incFile>
             <pElem>PlatformHeader.h</pElem>
@@ -721,9 +724,11 @@
           <output>Bin/easycamera</output>
           <linkerAddLib>
             <pElem>Lib/arm/gm8126</pElem>
-            <pElem>CommonUtilitiesLib/${CND_CONF}</pElem>
+            <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
+            <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-ldl -lCommonUtilitiesLib -lNetLib -leasypusher -lpthread</commandLine>
+          <commandLine>-ldl -lCommonUtilitiesLib -lNetLib -leasypusher -lpthread -lEasyProtocol -ljsoncpp</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"

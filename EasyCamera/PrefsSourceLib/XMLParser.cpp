@@ -85,7 +85,7 @@ Bool16 XMLParser::ParseFile(char* errorBuffer, int errorBufferSize)
         fRootTag = NULL;
     }
     
-    delete fileData;
+	delete []fileData;
     
     fFile.Close();
 

@@ -27,6 +27,8 @@ public:
 
 	QTSS_Error StartStreaming(Easy_StartStream_Params* params);
 	QTSS_Error StopStreaming(Easy_StopStream_Params* params);
+	QTSS_Error GetCameraState(Easy_CameraState_Params* params);
+	QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* params);
 
 	QTSS_Error PushFrame(unsigned char* frame, int len);
 
@@ -42,10 +44,6 @@ private:
 	void saveStartStreamParams(Easy_StartStream_Params * inParams);
 
 	SInt64 Run();
-
-	typedef void (onCloseFunc)(void* clientData);
-	static void handleClosure(void* clientData);
-	void handleClosure();
 
 	void stopGettingFrames();
 	void doStopGettingFrames();
@@ -69,10 +67,8 @@ private:
 
 	Easy_Pusher_Handle fPusherHandle;
 
-	onCloseFunc* fOnCloseFunc;
-	void* fOnCloseClientData;
-	//客户端信息操作互斥量
 	OSMutex fMutex;
+	OSMutex fStreamingMutex;
 
 	typedef struct StartStreamInfo_Tag
 	{
@@ -84,9 +80,9 @@ private:
 		UInt16 port;
 	} StartStreamInfo;
 
-	// 当前正在推送流的信息
-	//QTSS_RoleParams fStartStreamParams;
 	StartStreamInfo fStartStreamInfo;
+
+	unsigned char* fCameraSnapPtr;
 
 };
 

@@ -145,9 +145,9 @@
       <item path="src/lib_json/version.h.in" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
-    <conf name="arm" type="3">
+    <conf name="gm8126" type="3">
       <toolsSet>
-        <compilerSet>hisiv100|GNU</compilerSet>
+        <compilerSet>GM8126|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>

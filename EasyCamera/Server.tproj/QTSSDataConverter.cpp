@@ -368,7 +368,7 @@ char* QTSSDataConverter::ValueToString( void* inValue,
             break;
 
         default:
-            delete theString;
+            delete []theString;
             theString = ConvertBytesToCHexString(inValue, inValueLen);
     }
 

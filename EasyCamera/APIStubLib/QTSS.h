@@ -323,50 +323,11 @@ enum
     // All of these parameters are read-only, char*'s, and preemptive-safe.
     
     qtssMsgNoMessage                = 0,    //"NoMessage"
-    qtssMsgNoURLInRequest           = 1,
-    qtssMsgBadRTSPMethod            = 2,
-    qtssMsgNoRTSPVersion            = 3,
-    qtssMsgNoRTSPInURL              = 4,
-    qtssMsgURLTooLong               = 5,
-    qtssMsgURLInBadFormat           = 6,
-    qtssMsgNoColonAfterHeader       = 7,
-    qtssMsgNoEOLAfterHeader         = 8,
-    qtssMsgRequestTooLong           = 9,
-    qtssMsgNoModuleFolder           = 10,
-    qtssMsgCouldntListen            = 11,
-    qtssMsgInitFailed               = 12,
-    qtssMsgNotConfiguredForIP       = 13,
-    qtssMsgDefaultRTSPAddrUnavail   = 14,
-    qtssMsgBadModule                = 15,
-    qtssMsgRegFailed                = 16,
-    qtssMsgRefusingConnections      = 17,
-    qtssMsgTooManyClients           = 18,
-    qtssMsgTooMuchThruput           = 19,
-    qtssMsgNoSessionID              = 20,
-    qtssMsgFileNameTooLong          = 21,
-    qtssMsgNoClientPortInTransport  = 22,
-    qtssMsgRTPPortMustBeEven        = 23,
-    qtssMsgRTCPPortMustBeOneBigger  = 24,
-    qtssMsgOutOfPorts               = 25,
-    qtssMsgNoModuleForRequest       = 26,
-    qtssMsgAltDestNotAllowed        = 27,
-    qtssMsgCantSetupMulticast       = 28,
-    qtssListenPortInUse             = 29,
-    qtssListenPortAccessDenied      = 30,
-    qtssListenPortError             = 31,
-    qtssMsgBadBase64                = 32,
-    qtssMsgSomePortsFailed          = 33,
-    qtssMsgNoPortsSucceeded         = 34,
-    qtssMsgCannotCreatePidFile      = 35,
-    qtssMsgCannotSetRunUser         = 36,
-    qtssMsgCannotSetRunGroup        = 37,
-    qtssMsgNoSesIDOnDescribe        = 38,
-    qtssServerPrefMissing           = 39,
-    qtssServerPrefWrongType         = 40,
-    qtssMsgCantWriteFile            = 41,
-    qtssMsgSockBufSizesTooLarge     = 42,
-    qtssMsgBadFormat                = 43,
-    qtssMsgNumParams                = 44
+    qtssMsgInitFailed               = 1,
+    qtssServerPrefMissing           = 2,
+    qtssServerPrefWrongType         = 3,
+    qtssMsgCantWriteFile            = 4,
+    qtssMsgNumParams                = 5
     
 };
 typedef UInt32 QTSS_TextMessagesAttributes;
@@ -489,7 +450,8 @@ enum
 	//EasyCamera Role
 	Easy_StartStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'o'),  //camo
 	Easy_StopStream_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 'c'),  //camc
-	Easy_PostSnap_Role =			FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),  //cams
+	Easy_GetCameraState_Role =		FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),	//cams
+	Easy_GetCameraSnap_Role =		FOUR_CHARS_TO_INT('g', 'c', 'a', 'm')	//gcam
     
 };
 typedef UInt32 QTSS_Role;
@@ -589,45 +551,53 @@ typedef struct
 
 typedef struct
 {
-	const char*						inSerial;
-	const char*						inProtocol;
-	const char*						inIP;
-	const char*						inStreamID;
-	const char*						inChannel;
-	UInt16							inPort;
+	const char*					inSerial;
+	const char*					inProtocol;
+	const char*					inIP;
+	const char*					inStreamID;
+	const char*					inChannel;
+	UInt16						inPort;
 }Easy_StartStream_Params;
 
 typedef struct
 {
-	const char*						inSerial;
-	const char*						inProtocol;
-	const char*						inChannel;
+	const char*					inSerial;
+	const char*					inProtocol;
+	const char*					inChannel;
 }Easy_StopStream_Params;
 
 typedef struct
 {
-	int							snapType;
-	int							snapLen;
-	unsigned char*				snapPtr;
-}Easy_PostSnap_Params;
+	UInt32						outIsLogin;
+	UInt32						outIsStreaming;
+}Easy_CameraState_Params;
+
+typedef struct
+{
+	int							outSnapType;
+	int							outSnapLen;
+	unsigned char*				outSnapPtr;
+}Easy_CameraSnap_Params;
 
 typedef union
 {
-    QTSS_Register_Params                regParams;
-    QTSS_Initialize_Params              initParams;
-    QTSS_ErrorLog_Params                errorParams;
-    QTSS_StateChange_Params             stateChangeParams;
+    QTSS_Register_Params				regParams;
+    QTSS_Initialize_Params				initParams;
+    QTSS_ErrorLog_Params				errorParams;
+    QTSS_StateChange_Params				stateChangeParams;
     
-    QTSS_OpenFile_Params                openFilePreProcessParams;
-    QTSS_OpenFile_Params                openFileParams;
-    QTSS_AdviseFile_Params              adviseFileParams;
-    QTSS_ReadFile_Params                readFileParams;
-    QTSS_CloseFile_Params               closeFileParams;
-    QTSS_RequestEventFile_Params        reqEventFileParams; 
+    QTSS_OpenFile_Params				openFilePreProcessParams;
+    QTSS_OpenFile_Params				openFileParams;
+    QTSS_AdviseFile_Params				adviseFileParams;
+    QTSS_ReadFile_Params				readFileParams;
+    QTSS_CloseFile_Params				closeFileParams;
+    QTSS_RequestEventFile_Params		reqEventFileParams; 
 
 	Easy_StartStream_Params				startStreaParams;
 	Easy_StopStream_Params				stopStreamParams;
-	Easy_PostSnap_Params				postSnapParams;
+
+	Easy_CameraState_Params				cameraStateParams;
+	Easy_CameraSnap_Params				cameraSnapParams;
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 /********************************************************************/

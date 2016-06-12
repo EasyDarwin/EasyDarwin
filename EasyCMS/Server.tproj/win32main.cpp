@@ -50,7 +50,6 @@ static int sStatsUpdateInterval = 0;
 static SERVICE_STATUS_HANDLE sServiceStatusHandle = 0;
 static QTSS_ServerState sInitialState = qtssRunningState;
 
-//
 // Functions
 static void ReportStatus(DWORD inCurrentState, DWORD inExitCode);
 static void InstallService(char* inServiceName);
@@ -59,10 +58,9 @@ static void RunAsService(char* inServiceName);
 void WINAPI ServiceControl(DWORD);
 void WINAPI ServiceMain(DWORD argc, LPTSTR *argv);
 
-
 int main(int argc, char * argv[]) 
 {
-    extern char* optarg;//命令参数，例如执行：EasyCMS.exe -d -v
+    extern char* optarg;
     int ch;
     
     char* theXMLFilePath = "./easycms.xml";
@@ -102,7 +100,7 @@ int main(int argc, char * argv[])
 
                 qtss_printf("usage: %s [ -d | -p port | -v | -c /myconfigpath.xml | -S numseconds | -I | -h ]\n", QTSServerInterface::GetServerName().Ptr);
 				qtss_printf("-d: Don't run as a Win32 Service\n");
-                qtss_printf("-p 60000: Specify the default listening port of the server\n");
+                qtss_printf("-p 10000: Specify the default listening port of the server\n");
                 qtss_printf("-c c:\\myconfigpath.xml: Specify a config file path\n");
                 qtss_printf("-i: Install the EasyCMS service\n");
                 qtss_printf("-r: Remove the EasyCMS service\n");
@@ -147,8 +145,7 @@ int main(int argc, char * argv[])
                 break;
         }
     }
-
-    //检测软件是否过期   
+   
     QTSSExpirationDate::PrintExpirationDate();
     if (QTSSExpirationDate::IsSoftwareExpired())
     {
@@ -156,17 +153,14 @@ int main(int argc, char * argv[])
         ::exit(0);
     }
 
-    //读取xml配置文件
     sXMLParser = new XMLPrefsParser(theXMLFilePath);
     
-    //检测xml文件是否是以目录形式存在
     if (sXMLParser->DoesFileExistAsDirectory())
     {
         qtss_printf("Directory located at location where config prefs file should be.\n");
         ::exit(0);
     }
     
-	//检测xml文件是否可Write
     if (!sXMLParser->CanWriteFile())
     {
         qtss_printf("Cannot write to the config prefs file.\n");
@@ -178,7 +172,6 @@ int main(int argc, char * argv[])
     if (theXMLPrefsExist)
         theXMLPrefsExist = sXMLParser->DoesFileExist();
     
-    //解析具体的xml文件
     int xmlParseErr = sXMLParser->Parse();
     if (xmlParseErr)
     {
@@ -186,10 +179,8 @@ int main(int argc, char * argv[])
         ::exit(-1);
     }
 
-    //根据qtssmessages.txt配置系统输出的本地化log
     sMessagesSource.InitFromConfigFile("qtssmessages.txt");
 
-    //
     // Start Win32 DLLs
     WORD wsVersion = MAKEWORD(1, 1);
     WSADATA wsData;
@@ -222,14 +213,11 @@ int main(int argc, char * argv[])
 
     return (0);
 }
-    
-//Windows服务
+
 void __stdcall ServiceMain(DWORD /*argc*/, LPTSTR *argv)
 {
     char* theServerName = argv[0];
 
-
-	//服务器控制函数
     sServiceStatusHandle = ::RegisterServiceCtrlHandler( theServerName, &ServiceControl );
     if (sServiceStatusHandle == 0)
     {
@@ -255,7 +243,6 @@ void __stdcall ServiceMain(DWORD /*argc*/, LPTSTR *argv)
     
 }
 
-//Windows服务控制
 void WINAPI ServiceControl(DWORD inControlCode)
 {
     QTSS_ServerState theState;
@@ -338,7 +325,6 @@ void WINAPI ServiceControl(DWORD inControlCode)
     ::ReportStatus(theStatusReport, NO_ERROR);
 }
 
-//向Windows服务管理器上报服务运行状态：SERVICE_RUNNING、SERVICE_STOPPED、SERVICE_PAUSE_PENDING...
 void ReportStatus(DWORD inCurrentState, DWORD inExitCode)
 {
     static Bool16 sFirstTime = 1;
@@ -375,7 +361,6 @@ void ReportStatus(DWORD inCurrentState, DWORD inExitCode)
     }
 }
 
-//以服务方式运行
 void RunAsService(char* inServiceName)
 {
     SC_HANDLE   theService;
@@ -412,7 +397,6 @@ void RunAsService(char* inServiceName)
     ::CloseServiceHandle(theSCManager);
 }
 
-//安装系统服务
 void InstallService(char* inServiceName)
 {
     SC_HANDLE   theService;
@@ -439,19 +423,19 @@ void InstallService(char* inServiceName)
     }
 
     theService = CreateService(
-        theSCManager,               // SCManager database
-        inServiceName,               // name of service
-        inServiceName,               // name to display
-        SERVICE_ALL_ACCESS,         // desired access
-        SERVICE_WIN32_OWN_PROCESS,  // service type
-        SERVICE_AUTO_START,       // start type
-        SERVICE_ERROR_NORMAL,       // error control type
-        theQuotedPath,               // service's binary
-        NULL,                       // no load ordering group
-        NULL,                       // no tag identifier
-        NULL,       // dependencies
-        NULL,                       // LocalSystem account
-        NULL);                      // no password
+        theSCManager,					// SCManager database
+        inServiceName,					// name of service
+        inServiceName,					// name to display
+        SERVICE_ALL_ACCESS,				// desired access
+        SERVICE_WIN32_OWN_PROCESS,		// service type
+        SERVICE_AUTO_START,				// start type
+        SERVICE_ERROR_NORMAL,			// error control type
+        theQuotedPath,					// service's binary
+        NULL,							// no load ordering group
+        NULL,							// no tag identifier
+        NULL,							// dependencies
+        NULL,							// LocalSystem account
+        NULL);							// no password
 
     if (theService)
     {
@@ -464,7 +448,6 @@ void InstallService(char* inServiceName)
     ::CloseServiceHandle(theSCManager);
 }
 
-//移出系统服务
 void RemoveService(char *inServiceName)
 {
     SC_HANDLE   theSCManager;
