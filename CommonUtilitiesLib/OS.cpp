@@ -26,10 +26,6 @@
     File:       OS.cpp
 
     Contains:   OS utility functions
-
-
-        
-    
 */
 
 #include <stdlib.h>
@@ -44,6 +40,7 @@
 
 #ifndef __Win32__
 #include <sys/time.h>
+#include "easy_gettimeofday.h"
 #endif
 
 #ifdef __sgi__ 
@@ -166,7 +163,7 @@ SInt64 OS::Milliseconds()
     return (curTimeMilli - sInitialMsec) + sMsecSince1970; // convert to application time
 #else
     struct timeval t;
-    int theErr = ::gettimeofday(&t, NULL);
+    int theErr = easy_gettimeofday(&t);
     Assert(theErr == 0);
 
     SInt64 curTime;
@@ -197,7 +194,7 @@ SInt64 OS::Microseconds()
     return curTime;
 #else
     struct timeval t;
-    int theErr = ::gettimeofday(&t, NULL);
+    int theErr = easy_gettimeofday(&t);
     Assert(theErr == 0);
 
     SInt64 curTime;
