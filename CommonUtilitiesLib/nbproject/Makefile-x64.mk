@@ -83,7 +83,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/keyframecache.o \
 	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/md5digest.o \
-	${OBJECTDIR}/sdpCache.o
+	${OBJECTDIR}/sdpCache.o\
+	${OBJECTDIR}/easy_gettimeofday.o
 
 
 # C Compiler Flags
@@ -356,6 +357,11 @@ ${OBJECTDIR}/sdpCache.o: sdpCache.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sdpCache.o sdpCache.cpp
+
+${OBJECTDIR}/easy_gettimeofday.o: easy_gettimeofday.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/easy_gettimeofday.o easy_gettimeofday.cpp
 
 # Subprojects
 .build-subprojects:

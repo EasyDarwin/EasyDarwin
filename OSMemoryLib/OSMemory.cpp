@@ -25,10 +25,7 @@
 /*
     File:       OSMemory_Server.cpp
 
-    Contains:   Implementation of OSMemory stuff, including all new & delete
-                operators.
-                    
-
+    Contains:   Implementation of OSMemory stuff, including all new & delete operators.
 */
 
 #include <string.h>
