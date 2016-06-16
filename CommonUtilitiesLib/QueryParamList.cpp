@@ -67,7 +67,8 @@ void QueryParamList::BulidList( StrPtrLen* querySPL )
         
         queryParser.ConsumeUntil(&theCGIParamName, '=');        // leaves "=..." in cgiParser, puts item keywd in theCGIParamName
         
-        if ( queryParser.GetDataRemaining() > 1  )
+        //if ( queryParser.GetDataRemaining() > 1  )
+		if ( queryParser.GetDataRemaining() >= 1  )//change,邵帅，20160614,对于"xxxxx="这种会陷入死循环，阻塞任务线程。
         {
             queryParser.ConsumeLength(&theCGIParamValue, 1 );   // the '='
 

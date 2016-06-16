@@ -144,7 +144,13 @@ QTSS_Error HTTPResponseStream::Flush()
         }
 
         UInt32 theLengthSent = 0;
-        (void)fSocket->Send(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer, &theLengthSent);
+        //(void)fSocket->Send(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer, &theLengthSent);
+
+		QTSS_Error theErr = fSocket->Send(this->GetBufPtr() + fBytesSentInBuffer, amtInBuffer, &theLengthSent);
+		if( (theErr !=  QTSS_NoErr) && (theErr !=  EAGAIN) )
+		{
+			return theErr;
+		}
        
         // Refresh the timeout if we were able to send any data
         if (theLengthSent > 0)

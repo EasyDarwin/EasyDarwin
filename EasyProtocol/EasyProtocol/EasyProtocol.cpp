@@ -526,7 +526,9 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 void strDevice::HoldSnapPath(const string& strJpgPath, const string& strChannel)//保留快照的时间属性
 {
 	if(EASY_APP_TYPE_CAMERA == eAppType)//如果是摄像头类型，那么只保留一个路径
+	{
 		snapJpgPath_ = strJpgPath;
+	}
 	else//否则就要保留到对应的摄像头属性里
 	{
 		EasyDevicesIterator it;
