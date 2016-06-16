@@ -899,7 +899,16 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(char *queryString)//放到
 	if(!fAuthenticated)//没有进行认证请求
 	return httpUnAuthorized;
 	*/
-	QueryParamList parList(queryString);
+
+	if (queryString == NULL)
+	{
+		return QTSS_BadArgument;
+	}
+
+	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
+	EasyUtil::Urldecode((unsigned char*)queryString, (unsigned char*)decQueryString);
+
+	QueryParamList parList(decQueryString);
 	const char* chSerial	=	parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
 	const char* chChannel	=	parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
 	const char* chProtocol  =   parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//获取通道
@@ -907,7 +916,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(char *queryString)//放到
 
 	//为可选参数填充默认值
 	if(chChannel == NULL)
-		chChannel = "01";
+		chChannel = "0";
 	if(chReserve == NULL)
 		chReserve = "1";
 
@@ -1264,7 +1273,16 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(char *queryString)//
 	if(!fAuthenticated)//没有进行认证请求
 	return httpUnAuthorized;
 	*/
-	QueryParamList parList(queryString);
+
+	if (queryString == NULL)
+	{
+		return QTSS_BadArgument;
+	}
+
+	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
+	EasyUtil::Urldecode((unsigned char*)queryString, (unsigned char*)decQueryString);
+
+	QueryParamList parList(decQueryString);
 	const char* chAppType		= parList.DoFindCGIValueForParam(EASY_TAG_APP_TYPE);//APPType
 	const char* chTerminalType	= parList.DoFindCGIValueForParam(EASY_TAG_TERMINAL_TYPE);//TerminalType
 
@@ -1417,7 +1435,15 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 		return httpUnAuthorized;
 	*/
 
-	QueryParamList parList(queryString);
+	if (queryString == NULL)
+	{
+		return QTSS_BadArgument;
+	}
+
+	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
+	EasyUtil::Urldecode((unsigned char*)queryString, (unsigned char*)decQueryString);
+
+	QueryParamList parList(decQueryString);
 	const char* device_serial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
 
 	if(device_serial==NULL)
