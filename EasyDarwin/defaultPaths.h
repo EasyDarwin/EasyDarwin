@@ -36,22 +36,22 @@
 
 # define DEFAULTPATHS_DIRECTORY_SEPARATOR	"\\"
 
-# define DEFAULTPATHS_ETC_DIR			"c:\\Program Files\\Darwin Streaming Server\\"
-# define DEFAULTPATHS_ETC_DIR_OLD		"c:\\Program Files\\Darwin Streaming Server\\"
-# define DEFAULTPATHS_SSM_DIR			"c:\\Program Files\\Darwin Streaming Server\\QTSSModules\\"
-# define DEFAULTPATHS_LOG_DIR			"c:\\Program Files\\Darwin Streaming Server\\Logs\\"
-# define DEFAULTPATHS_MOVIES_DIR        "c:\\Program Files\\Darwin Streaming Server\\Movies\\"
+# define DEFAULTPATHS_ETC_DIR			"c:\\Program Files\\EasyDarwin\\"
+# define DEFAULTPATHS_ETC_DIR_OLD		"c:\\Program Files\\EasyDarwin\\"
+# define DEFAULTPATHS_SSM_DIR			"c:\\Program Files\\EasyDarwin\\QTSSModules\\"
+# define DEFAULTPATHS_LOG_DIR			"c:\\Program Files\\EasyDarwin\\Logs\\"
+# define DEFAULTPATHS_MOVIES_DIR        "c:\\Program Files\\EasyDarwin\\Movies\\"
 # define DEFAULTPATHS_PID_FILE          ""
 # define DEFAULTPATHS_PID_DIR			""
 #elif __MacOSX__
 
 # define DEFAULTPATHS_DIRECTORY_SEPARATOR	"/"
 
-# define DEFAULTPATHS_ETC_DIR			"/Library/QuickTimeStreaming/Config/"
+# define DEFAULTPATHS_ETC_DIR			"/Library/EasyDarwin/Config/"
 # define DEFAULTPATHS_ETC_DIR_OLD		"/etc/"
-# define DEFAULTPATHS_SSM_DIR			"/Library/QuickTimeStreaming/Modules/"
-# define DEFAULTPATHS_LOG_DIR			"/Library/QuickTimeStreaming/Logs/"
-# define DEFAULTPATHS_MOVIES_DIR        "/Library/QuickTimeStreaming/Movies/"
+# define DEFAULTPATHS_SSM_DIR			"/Library/EasyDarwin/Modules/"
+# define DEFAULTPATHS_LOG_DIR			"/Library/EasyDarwin/Logs/"
+# define DEFAULTPATHS_MOVIES_DIR        "/Library/EasyDarwin/Movies/"
 # define DEFAULTPATHS_PID_DIR           "/var/run/"
 
 #else
@@ -60,7 +60,7 @@
 
 # define DEFAULTPATHS_ETC_DIR			"/etc/streaming/"
 # define DEFAULTPATHS_ETC_DIR_OLD		"/etc/"
-# define DEFAULTPATHS_SSM_DIR			"/usr/local/sbin/StreamingServerModules/"
+# define DEFAULTPATHS_SSM_DIR			"/usr/local/sbin/EasyDarwinModules/"
 # define DEFAULTPATHS_LOG_DIR			"/var/streaming/logs/"
 # define DEFAULTPATHS_MOVIES_DIR        "/usr/local/movies/"
 # define DEFAULTPATHS_PID_DIR           "/var/run/"
