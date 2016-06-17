@@ -182,7 +182,7 @@ void RTPPacketResender::SetLog( StrPtrLen *logname )
 
 void RTPPacketResender::LogClose(SInt64 inTimeSpentInFlowControl)
 {
-    this->logprintf("Flow control duration msec: %"_64BITARG_"d. Max outstanding packets: %d\n", inTimeSpentInFlowControl, this->GetMaxPacketsInList());
+    this->logprintf("Flow control duration msec: %" _64BITARG_ "d. Max outstanding packets: %d\n", inTimeSpentInFlowControl, this->GetMaxPacketsInList());
     
 }
 
@@ -245,7 +245,7 @@ RTPResenderEntry*   RTPPacketResender::GetEmptyEntry(UInt16 inSeqNum, UInt32 inP
         ::memcpy(tempArray,fPacketArray,sizeof(RTPResenderEntry) * fPacketsInList);
         delete [] fPacketArray;
         fPacketArray = tempArray;
-        //qtss_printf("NewArray size=%"_S32BITARG_" packetsInList=%"_S32BITARG_"\n",fPacketArraySize, fPacketsInList);
+        //qtss_printf("NewArray size=%" _S32BITARG_ " packetsInList=%" _S32BITARG_ "\n",fPacketArraySize, fPacketsInList);
     }
 
     if (fPacketsInList <  fPacketArraySize) // have an open spot
@@ -265,7 +265,7 @@ RTPResenderEntry*   RTPPacketResender::GetEmptyEntry(UInt16 inSeqNum, UInt32 inP
         else
             fLastUsed = 0;
             
-        //qtss_printf("array is full = %"_U32BITARG_" reusing index=%"_U32BITARG_"\n",fPacketsInList,fLastUsed); 
+        //qtss_printf("array is full = %"   _U32BITARG_   " reusing index=%"   _U32BITARG_   "\n",fPacketsInList,fLastUsed); 
         theEntry = &fPacketArray[fLastUsed];
         RemovePacket(fLastUsed, false); // delete packet in place don't fill we will use the spot
     }
@@ -535,7 +535,7 @@ void RTPPacketResender::ResendDueEntries()
             fNumResends++;
             
             numResends ++;
-            //qtss_printf("resend loop numResends=%"_S32BITARG_" packet theEntry->fNumResends=%"_S32BITARG_" stream fNumResends=\n",numResends,theEntry->fNumResends++, fNumResends);
+            //qtss_printf("resend loop numResends=%" _S32BITARG_ " packet theEntry->fNumResends=%" _S32BITARG_ " stream fNumResends=\n",numResends,theEntry->fNumResends++, fNumResends);
                         
             // ok -- lets try this.. add 1.5x of the INITIAL duration since the last send to the rto estimator
             // since we won't get an ack on this packet

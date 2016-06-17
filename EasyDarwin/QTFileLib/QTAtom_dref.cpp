@@ -237,7 +237,7 @@ Bool16 QTAtom_dref::Read(UInt32 RefID, UInt64 Offset, char * const Buffer, UInt3
     if( (RefID == 0) || (RefID > fNumRefs) )
         return false;
 
-//  qtss_printf("QTAtom_dref::Read Offset = %qd, Length = %"_S32BITARG_" \n", Offset, Length);
+//  qtss_printf("QTAtom_dref::Read Offset = %qd, Length = %" _S32BITARG_ " \n", Offset, Length);
     //
     // If this data reference is in the movie file itself, then we can forward
     // the request directly to QTFile.
@@ -316,7 +316,7 @@ void QTAtom_dref::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_dref::DumpAtom - Dumping atom.\n"));
     for( UInt32 CurRef = 1; CurRef <= fNumRefs; CurRef++ )
-        DEBUG_PRINT(("QTAtom_dref::DumpAtom - ..Ref #%"_U32BITARG_" is in file: %s\n", CurRef, IsRefInThisFile(CurRef) ? "yes" : "no"));
+        DEBUG_PRINT(("QTAtom_dref::DumpAtom - ..Ref #%"   _U32BITARG_   " is in file: %s\n", CurRef, IsRefInThisFile(CurRef) ? "yes" : "no"));
 }
 
 

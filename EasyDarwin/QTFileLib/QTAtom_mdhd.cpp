@@ -101,7 +101,7 @@ Bool16 QTAtom_mdhd::Initialize(void)
         // Verify that this atom is the correct length.
         if( fTOCEntry.AtomDataLength != 24 )
         {
-            DEEP_DEBUG_PRINT(("QTAtom_mdhd::Initialize failed. Expected AtomDataLength == 24 version: %d AtomDataLength: %"_64BITARG_"u\n",fVersion, fTOCEntry.AtomDataLength));
+            DEEP_DEBUG_PRINT(("QTAtom_mdhd::Initialize failed. Expected AtomDataLength == 24 version: %d AtomDataLength: %" _64BITARG_ "u\n",fVersion, fTOCEntry.AtomDataLength));
             return false;
         }
 
@@ -117,7 +117,7 @@ Bool16 QTAtom_mdhd::Initialize(void)
         // Verify that this atom is the correct length.
         if( fTOCEntry.AtomDataLength != 36 )
         {
-            DEEP_DEBUG_PRINT(("QTAtom_mdhd::Initialize failed. Expected AtomDataLength == 36 version: %d AtomDataLength: %"_64BITARG_"u\n",fVersion, fTOCEntry.AtomDataLength));
+            DEEP_DEBUG_PRINT(("QTAtom_mdhd::Initialize failed. Expected AtomDataLength == 36 version: %d AtomDataLength: %" _64BITARG_ "u\n",fVersion, fTOCEntry.AtomDataLength));
             return false;
         }
 

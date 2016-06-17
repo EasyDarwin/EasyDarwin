@@ -94,7 +94,7 @@ class RateAdapationStreamDataFields
         UInt32 GetSDPStreamID() { return fTrackID; }
         UInt32 GetBufferSizeBytes()  { return fBufferSizeBytes; }
         UInt32 GetTargetTimeMilliSec()  { return fTargetTimeMilli; }
-        void PrintData(StrPtrLen *streamDataStr = NULL) {if (streamDataStr != NULL) this->SetData(streamDataStr); qtss_printf("RateAdapationStreamDataFields::PrintData trackID=%"_U32BITARG_" bufferSize=%"_U32BITARG_" targetTime=%"_U32BITARG_"\n", GetSDPStreamID(), GetBufferSizeBytes(),GetTargetTimeMilliSec() ); }
+        void PrintData(StrPtrLen *streamDataStr = NULL) {if (streamDataStr != NULL) this->SetData(streamDataStr); qtss_printf("RateAdapationStreamDataFields::PrintData trackID=%" _U32BITARG_ " bufferSize=%" _U32BITARG_ " targetTime=%" _U32BITARG_ "\n", GetSDPStreamID(), GetBufferSizeBytes(),GetTargetTimeMilliSec() ); }
 
  
     private:
@@ -187,7 +187,7 @@ class LinkCharDataFields
         UInt32 GetMaxDelayMilliSecs()  { return fMaximumTransferDelayMilliSec; }
         StrPtrLen* GetURL() { return &fURL; }
         void PrintData(StrPtrLen *streamDataStr = NULL) 
-        {if (streamDataStr != NULL) this->SetData(streamDataStr); qtss_printf("LinkCharDataFields::PrintData fURL=%s fGuaranteedKBitsPerSec=%"_U32BITARG_" fMaximumKBitsPerSec=%"_U32BITARG_" fMaximumTransferDelayMilliSec=%"_U32BITARG_"\n",GetURL()->Ptr, GetGKbits(), GetMaxKBits(),GetMaxDelayMilliSecs() ); }
+        {if (streamDataStr != NULL) this->SetData(streamDataStr); qtss_printf("LinkCharDataFields::PrintData fURL=%s fGuaranteedKBitsPerSec=%" _U32BITARG_ " fMaximumKBitsPerSec=%" _U32BITARG_ " fMaximumTransferDelayMilliSec=%" _U32BITARG_ "\n",GetURL()->Ptr, GetGKbits(), GetMaxKBits(),GetMaxDelayMilliSecs() ); }
 
  
     private:

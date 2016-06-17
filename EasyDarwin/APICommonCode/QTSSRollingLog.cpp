@@ -337,7 +337,7 @@ Bool16 QTSSRollingLog::RenameLogFile(const char* inFileName)
         }
 
         //add the log number & suffix
-        qtss_sprintf(theNewNameBuffer + theBaseNameLength, "%03"_S32BITARG_".log", x);
+        qtss_sprintf(theNewNameBuffer + theBaseNameLength, "%03" _S32BITARG_ ".log", x);
 
         //assume that when ::stat returns an error, it is becase
         //the file doesnt exist. Once that happens, we have a unique name

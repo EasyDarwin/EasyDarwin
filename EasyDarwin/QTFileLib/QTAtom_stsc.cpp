@@ -241,7 +241,7 @@ Bool16 QTAtom_stsc::GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSam
      
     if (STCB->fCurEntry_GetChunkFirstLastSample > 0)
     {
-//      qtss_printf("GetChunkFirstLastSample cached loop chunk start = %d look for chunk = %"_S32BITARG_"\n",STCB->fLastFirstChunk_GetChunkFirstLastSample,chunkNumber);
+//      qtss_printf("GetChunkFirstLastSample cached loop chunk start = %d look for chunk = %" _S32BITARG_ "\n",STCB->fLastFirstChunk_GetChunkFirstLastSample,chunkNumber);
         samplesPerChunk = STCB->fLastSamplesPerChunk_GetChunkFirstLastSample;
         totalSamples = STCB->fLastTotalSamples_GetChunkFirstLastSample;
         thisFirstChunk = STCB->fLastFirstChunk_GetChunkFirstLastSample;
@@ -277,7 +277,7 @@ Bool16 QTAtom_stsc::GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSam
         
         if ( chunkNumber < thisFirstChunk ) // found chunk in group
         {   
-//          qtss_printf("found chunk in group numEntries = %"_S32BITARG_" this chunk = %"_S32BITARG_" \n",fNumEntries, chunkNumber);
+//          qtss_printf("found chunk in group numEntries = %" _S32BITARG_ " this chunk = %" _S32BITARG_ " \n",fNumEntries, chunkNumber);
             numSamplesInChunks = (chunkNumber - prevFirstChunk) * prevSamplesPerChunk;
             totalSamples += numSamplesInChunks;
             prevSamplesPerChunk = totalSamples - prevSamplesPerChunk;
@@ -309,7 +309,7 @@ Bool16 QTAtom_stsc::GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSam
     if (firstSample) *firstSample = prevSamplesPerChunk + 1;
     if (lastSample) *lastSample = totalSamples;
     
-//  qtss_printf("Get Chunk %"_S32BITARG_" First %"_S32BITARG_" Last %"_S32BITARG_" prevSamplesPerChunk %"_S32BITARG_" samplesPerChunk %"_S32BITARG_"\n",chunkNumber,*firstSample,*lastSample,prevSamplesPerChunk,samplesPerChunk);
+//  qtss_printf("Get Chunk %" _S32BITARG_ " First %" _S32BITARG_ " Last %" _S32BITARG_ " prevSamplesPerChunk %" _S32BITARG_ " samplesPerChunk %" _S32BITARG_ "\n",chunkNumber,*firstSample,*lastSample,prevSamplesPerChunk,samplesPerChunk);
 
     STCB->chunkNumber_GetChunkFirstLastSample = chunkNumber;
     STCB->firstSample_GetChunkFirstLastSample =  prevSamplesPerChunk + 1;
@@ -414,7 +414,7 @@ Bool16 QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber,  UInt32 *samplesPerCh
     gstscCallCount ++;
     if (gstscCallCount == 1000)
     {
-        qtss_printf("QTAtom_stsc::SampleToChunkInfo #calls = %"_S32BITARG_", cache hits = %"_S32BITARG_" \n",gstscCallCount, gstscCacheCount);
+        qtss_printf("QTAtom_stsc::SampleToChunkInfo #calls = %" _S32BITARG_ ", cache hits = %" _S32BITARG_ " \n",gstscCallCount, gstscCacheCount);
         gstscCacheCount = 0;
         gstscCallCount = 0;
 
@@ -426,11 +426,11 @@ Bool16 QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber,  UInt32 *samplesPerCh
     // STCB as we would have no way to know when we are seeking around in the
     // movie.
 
-//  qtss_printf("------ QTAtom_stsc::SampleToChunkInfo SampleNumber = %"_S32BITARG_"\n",SampleNumber);
+//  qtss_printf("------ QTAtom_stsc::SampleToChunkInfo SampleNumber = %" _S32BITARG_ "\n",SampleNumber);
 
     if (STCB->fFirstSampleNumber_SampleToChunkInfo == SampleNumber)
     {
-//      qtss_printf("------ QTAtom_stsc::SampleToChunkInfo cache hit SampleNumber = %"_S32BITARG_"\n",SampleNumber);
+//      qtss_printf("------ QTAtom_stsc::SampleToChunkInfo cache hit SampleNumber = %" _S32BITARG_ "\n",SampleNumber);
 
 //      gstscCacheCount ++;
         aChunkNumber = STCB->fFirstChunkNumber_SampleToChunkInfo;
@@ -449,7 +449,7 @@ Bool16 QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber,  UInt32 *samplesPerCh
 
         goto done;
     }
-//  qtss_printf("QTAtom_stsc::SampleToChunkInfo missed cache SampleNumber = %"_S32BITARG_"\n",SampleNumber);
+//  qtss_printf("QTAtom_stsc::SampleToChunkInfo missed cache SampleNumber = %" _S32BITARG_ "\n",SampleNumber);
 
     //
     // Assume that this sample came out of the last chunk.
@@ -474,7 +474,7 @@ Bool16 QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber,  UInt32 *samplesPerCh
     if (STCB->fCurSample_SampleToChunkInfo > SampleNumber) // we missed the cache start over
     {   
         missedCache = true;
-//      qtss_printf("missed loop Cache!! STCB = %"_S32BITARG_" STCB->fCurSample_SampleToChunkInfo = %"_S32BITARG_"  > SampleNumber = %"_S32BITARG_" \n",STCB, STCB->fCurSample_SampleToChunkInfo, SampleNumber);
+//      qtss_printf("missed loop Cache!! STCB = %" _S32BITARG_ " STCB->fCurSample_SampleToChunkInfo = %" _S32BITARG_ "  > SampleNumber = %" _S32BITARG_ " \n",STCB, STCB->fCurSample_SampleToChunkInfo, SampleNumber);
         STCB->fCurEntry_SampleToChunkInfo = 0;
         STCB->fCurSample_SampleToChunkInfo = 1;
         STCB->fLastFirstChunk_SampleToChunkInfo = 1;
@@ -512,14 +512,14 @@ Bool16 QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber,  UInt32 *samplesPerCh
         
             if (SampleNumber == 1 || missedCache)
             {
-//                  qtss_printf("QTAtom_stsc::SampleToChunkInfo (SampleNumber == %"_S32BITARG_") \n",SampleNumber);
+//                  qtss_printf("QTAtom_stsc::SampleToChunkInfo (SampleNumber == %" _S32BITARG_ ") \n",SampleNumber);
                     STCB->fFirstChunkNumber_SampleToChunkInfo = aChunkNumber;
                     STCB->fFirstSampleDescriptionIndex_SampleToChunkInfo = aSampleDescriptionIndex;
                     STCB->fFirstSamplesPerChunk_SampleToChunkInfo = aSamplesPerChunk;
                     STCB->fFirstSampleOffsetInChunk_SampleToChunkInfo = aSampleOffsetInChunk;
                     STCB->fFirstSampleNumber_SampleToChunkInfo = SampleNumber;
             }
-//          qtss_printf("GetSample Info in for loop returning offset %"_S32BITARG_" \n",aSampleOffsetInChunk);
+//          qtss_printf("GetSample Info in for loop returning offset %" _S32BITARG_ " \n",aSampleOffsetInChunk);
             goto done;
         }   
 
@@ -546,7 +546,7 @@ Bool16 QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber,  UInt32 *samplesPerCh
 
     }
 
-//  qtss_printf("GetSample Info fall out of loop returning offset%"_S32BITARG_" \n",aSampleOffsetInChunk);
+//  qtss_printf("GetSample Info fall out of loop returning offset%" _S32BITARG_ " \n",aSampleOffsetInChunk);
     //
     // Falling out of the loop means that the sample is in the last chunk of
     // the table.
@@ -583,7 +583,7 @@ done:
 void QTAtom_stsc::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_stsc::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_stsc::DumpAtom - ..Number of STC entries: %"_S32BITARG_"\n", fNumEntries));
+    DEBUG_PRINT(("QTAtom_stsc::DumpAtom - ..Number of STC entries: %" _S32BITARG_ "\n", fNumEntries));
 }
 
 void QTAtom_stsc::DumpTable(void)
@@ -613,7 +613,7 @@ void QTAtom_stsc::DumpTable(void)
         
         //
         // Print out a listing.
-        qtss_printf("  %10"_U32BITARG_" : %10"_U32BITARG_"   %10"_U32BITARG_"        %10"_U32BITARG_"\n",
+        qtss_printf("  %10"   _U32BITARG_   " : %10"   _U32BITARG_   "   %10"   _U32BITARG_   "        %10"   _U32BITARG_   "\n",
                CurEntry+1, FirstChunk, SamplesPerChunk, SampleDescription);
     }
 }

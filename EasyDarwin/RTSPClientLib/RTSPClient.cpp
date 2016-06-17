@@ -264,7 +264,7 @@ Bool16 DSSAuthenticator::GetParamValue(StringParser *valueSourcePtr, StrPtrLen *
         valueSourcePtr->ConsumeUntilWhitespace(outParamValuePtr);
     }
 
-    //qtss_printf("DSSAuthenticator::GetParamValue len = %"_U32BITARG_" =%s\n",outParamValuePtr->Len, STRTOCHAR(outParamValuePtr));
+    //qtss_printf("DSSAuthenticator::GetParamValue len = %"   _U32BITARG_   " =%s\n",outParamValuePtr->Len, STRTOCHAR(outParamValuePtr));
     
     return true;
 }
@@ -505,12 +505,12 @@ void DigestAuth::AddAuthParam(StrPtrLen *theTagPtr, StrPtrLen *theValuePtr, Bool
         fReqFields.fReqParamTags[fReqFields.fNumFields -1] = theTagPtr;
         fReqFields.fReqParamValues[fReqFields.fNumFields -1] = theValuePtr;
         fReqFields.fQuoted[fReqFields.fNumFields -1] = quoted;
-		//qtss_printf("DigestAuth::AddAuthParam [%"_U32BITARG_"] tag=%s ",fReqFields.fNumFields -1, STRTOCHAR(theTagPtr));
+		//qtss_printf("DigestAuth::AddAuthParam [%"   _U32BITARG_   "] tag=%s ",fReqFields.fNumFields -1, STRTOCHAR(theTagPtr));
         //qtss_printf("value=%s \n",STRTOCHAR(theValuePtr));
     }
     else
     {   
-		//qtss_printf("DigestAuth::AddAuthParam ignored [%"_U32BITARG_"] tag=%s value=%s \n",fReqFields.fNumFields -1, STRTOCHAR(theTagPtr),STRTOCHAR(theValuePtr));            
+		//qtss_printf("DigestAuth::AddAuthParam ignored [%"   _U32BITARG_   "] tag=%s value=%s \n",fReqFields.fNumFields -1, STRTOCHAR(theTagPtr),STRTOCHAR(theValuePtr));            
     }
     
 }
@@ -536,7 +536,7 @@ void DigestAuth::GenerateAuthorizationRequestLine(StrPtrLen *requestPtr)
     
     qtss_sprintf(fAuthBuffer.Ptr, "%s %s ",sAuthorizationStr.Ptr, sAuthDigestStr.Ptr);
     
-    //qtss_printf ("DigestAuth::GenerateAuthorizationRequestLine buffsize = %"_U32BITARG_" fAuthBuffer= %s\n",buffsize, fAuthBuffer.Ptr);
+    //qtss_printf ("DigestAuth::GenerateAuthorizationRequestLine buffsize = %"   _U32BITARG_   " fAuthBuffer= %s\n",buffsize, fAuthBuffer.Ptr);
         
     StrPtrLen *theTagPtr;
     StrPtrLen *theValuePtr;
@@ -572,12 +572,12 @@ void DigestAuth::GenerateAuthorizationRequestLine(StrPtrLen *requestPtr)
         if (paramIndex < fReqFields.fNumFields -1)
             strcat(fAuthBuffer.Ptr,",");
         
-        //qtss_printf("DigestAuth::GenerateAuthorizationRequestLine bufferLen=%"_S32BITARG_" fAuthBuffer= %s\n",::strlen(fAuthBuffer.Ptr),fAuthBuffer.Ptr);
+        //qtss_printf("DigestAuth::GenerateAuthorizationRequestLine bufferLen=%" _S32BITARG_ " fAuthBuffer= %s\n",::strlen(fAuthBuffer.Ptr),fAuthBuffer.Ptr);
     }
     
     ::strcat(fAuthBuffer.Ptr, "\r\n");
 
-    //qtss_printf("DigestAuth::GenerateAuthorizationRequestLine bufferLen=%"_S32BITARG_" fAuthBuffer= %s\n",::strlen(fAuthBuffer.Ptr),fAuthBuffer.Ptr);
+    //qtss_printf("DigestAuth::GenerateAuthorizationRequestLine bufferLen=%" _S32BITARG_ " fAuthBuffer= %s\n",::strlen(fAuthBuffer.Ptr),fAuthBuffer.Ptr);
 }
 
 void DigestAuth::ResetAuthParams()
@@ -626,7 +626,7 @@ void DigestAuth::MakeCNonce()
     fAuthTime = OS::UnixTime_Secs();
     
     char timeStr[64];
-    qtss_sprintf(timeStr,"%"_U32BITARG_"",(UInt32) fAuthTime);
+    qtss_sprintf(timeStr,"%"   _U32BITARG_   "",(UInt32) fAuthTime);
     StrPtrLen timeSPL(timeStr);
     
     delete [] fcnonce.Ptr;
@@ -966,12 +966,12 @@ OS_Error RTSPClient::SendDescribe(Bool16 inAppendJunkData)
 		StringFormatter fmt(fSendBuffer, kReqBufSize);
         fmt.PutFmtStr(
             	"DESCRIBE %s RTSP/1.0\r\n"
-				"CSeq: %"_U32BITARG_"\r\n"
+				"CSeq: %"   _U32BITARG_   "\r\n"
 				"Accept: application/sdp\r\n"
 				"User-agent: %s\r\n",
 				fURL.Ptr, fCSeq, fUserAgent);
 		if (fBandwidth != 0)
-			fmt.PutFmtStr("Bandwidth: %"_U32BITARG_"\r\n", fBandwidth);
+			fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
         if (inAppendJunkData)
         {
@@ -979,7 +979,7 @@ OS_Error RTSPClient::SendDescribe(Bool16 inAppendJunkData)
 			for(UInt32 i = 0; i < 200; ++i)
 				fmt.PutChar('d');
 			/*
-            qtss_sprintf(fSendBuffer, "DESCRIBE %s RTSP/1.0\r\nCSeq: %"_U32BITARG_"\r\nAccept: application/sdp\r\nContent-Length: 200\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
+            qtss_sprintf(fSendBuffer, "DESCRIBE %s RTSP/1.0\r\nCSeq: %"   _U32BITARG_   "\r\nAccept: application/sdp\r\nContent-Length: 200\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
             UInt32 theBufLen = ::strlen(fSendBuffer);
             Assert((theBufLen + 200) < kReqBufSize);
             for (UInt32 x = theBufLen; x < (theBufLen + 200); x++)
@@ -990,7 +990,7 @@ OS_Error RTSPClient::SendDescribe(Bool16 inAppendJunkData)
         else
         {
 			fmt.PutFmtStr("\r\n");
-            //qtss_sprintf(fSendBuffer, "DESCRIBE %s RTSP/1.0\r\nCSeq: %"_U32BITARG_"\r\nAccept: application/sdp\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
+            //qtss_sprintf(fSendBuffer, "DESCRIBE %s RTSP/1.0\r\nCSeq: %"   _U32BITARG_   "\r\nAccept: application/sdp\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
         }
 		fmt.PutTerminator();
     }
@@ -1002,7 +1002,7 @@ OS_Error RTSPClient::SendSetParameter()
     if (!IsTransactionInProgress())
     {
         qtss_sprintf(fMethod,"%s","SET_PARAMETER");
-        qtss_sprintf(fSendBuffer, "SET_PARAMETER %s RTSP/1.0\r\nCSeq:%"_U32BITARG_"\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
+        qtss_sprintf(fSendBuffer, "SET_PARAMETER %s RTSP/1.0\r\nCSeq:%"   _U32BITARG_   "\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
     }
     return this->DoTransaction();
 }
@@ -1012,7 +1012,7 @@ OS_Error RTSPClient::SendOptions()
     if (!IsTransactionInProgress())
     {
         qtss_sprintf(fMethod,"%s","OPTIONS");
-        qtss_sprintf(fSendBuffer, "OPTIONS * RTSP/1.0\r\nCSeq:%"_U32BITARG_"\r\nUser-agent: %s\r\n\r\n", fCSeq, fUserAgent);
+        qtss_sprintf(fSendBuffer, "OPTIONS * RTSP/1.0\r\nCSeq:%"   _U32BITARG_   "\r\nUser-agent: %s\r\n\r\n", fCSeq, fUserAgent);
      }
     return this->DoTransaction();
 }
@@ -1022,7 +1022,7 @@ OS_Error RTSPClient::SendOptionsWithRandomDataRequest(SInt32 dataSize)
     if (!IsTransactionInProgress())
     {
         qtss_sprintf(fMethod,"%s","OPTIONS");
-        qtss_sprintf(fSendBuffer, "OPTIONS * RTSP/1.0\r\nCSeq:%"_U32BITARG_"\r\nUser-agent: %s\r\nRequire: x-Random-Data-Size\r\nx-Random-Data-Size: %"_S32BITARG_"\r\n\r\n", fCSeq, fUserAgent, dataSize);
+        qtss_sprintf(fSendBuffer, "OPTIONS * RTSP/1.0\r\nCSeq:%"   _U32BITARG_   "\r\nUser-agent: %s\r\nRequire: x-Random-Data-Size\r\nx-Random-Data-Size: %" _S32BITARG_ "\r\n\r\n", fCSeq, fUserAgent, dataSize);
      }
     return this->DoTransaction();
 }
@@ -1040,23 +1040,23 @@ OS_Error RTSPClient::SendReliableUDPSetup(UInt32 inTrackID, UInt16 inClientPort)
 		
         if (fTransportMode == kPushMode)
 			fmt.PutFmtStr(
-                "SETUP %s/%s=%"_U32BITARG_" RTSP/1.0\r\n"
-                "CSeq: %"_U32BITARG_"\r\n"
+                "SETUP %s/%s=%"   _U32BITARG_   " RTSP/1.0\r\n"
+                "CSeq: %"   _U32BITARG_   "\r\n"
                 "%sTransport: RTP/AVP;unicast;client_port=%u-%u;mode=record\r\n"
                 "x-Retransmit: our-retransmit\r\n"
                 "User-agent: %s\r\n",
                 fURL.Ptr,fControlID, inTrackID, fCSeq, fSessionID.Ptr, inClientPort, inClientPort + 1, fUserAgent);
         else
             fmt.PutFmtStr(
-                "SETUP %s/%s=%"_U32BITARG_" RTSP/1.0\r\n"
-                "CSeq: %"_U32BITARG_"\r\n"
+                "SETUP %s/%s=%"   _U32BITARG_   " RTSP/1.0\r\n"
+                "CSeq: %"   _U32BITARG_   "\r\n"
                 "%sTransport: RTP/AVP;unicast;client_port=%u-%u\r\n"
                 "x-Retransmit: our-retransmit\r\n"
                 "User-agent: %s\r\n",
                 fURL.Ptr,fControlID, inTrackID, fCSeq, fSessionID.Ptr, inClientPort, inClientPort + 1, fUserAgent);
 
 		if (fBandwidth != 0)
-			fmt.PutFmtStr("Bandwidth: %"_U32BITARG_"\r\n", fBandwidth);
+			fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
         Attach3GPPHeaders(fmt, inTrackID);
 		fmt.PutFmtStr("\r\n");
@@ -1077,21 +1077,21 @@ OS_Error RTSPClient::SendUDPSetup(UInt32 inTrackID, UInt16 inClientPort)
 		
         if (fTransportMode == kPushMode)
 			fmt.PutFmtStr(
-                    "SETUP %s/%s=%"_U32BITARG_" RTSP/1.0\r\n"
-                    "CSeq: %"_U32BITARG_"\r\n"
+                    "SETUP %s/%s=%"   _U32BITARG_   " RTSP/1.0\r\n"
+                    "CSeq: %"   _U32BITARG_   "\r\n"
                     "%sTransport: RTP/AVP;unicast;client_port=%u-%u;mode=record\r\n"
                     "User-agent: %s\r\n",
                     fURL.Ptr,fControlID, inTrackID, fCSeq, fSessionID.Ptr, inClientPort, inClientPort + 1, fUserAgent);
         else
             fmt.PutFmtStr(
-                    "SETUP %s/%s=%"_U32BITARG_" RTSP/1.0\r\n"
-                    "CSeq: %"_U32BITARG_"\r\n"
+                    "SETUP %s/%s=%"   _U32BITARG_   " RTSP/1.0\r\n"
+                    "CSeq: %"   _U32BITARG_   "\r\n"
                     "%sTransport: RTP/AVP;unicast;client_port=%u-%u\r\n"
                     "%sUser-agent: %s\r\n",
                     fURL.Ptr,fControlID, inTrackID, fCSeq, fSessionID.Ptr, inClientPort, inClientPort + 1, fSetupHeaders, fUserAgent);
 
 		if (fBandwidth != 0)
-			fmt.PutFmtStr("Bandwidth: %"_U32BITARG_"\r\n", fBandwidth);
+			fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
 		Attach3GPPHeaders(fmt, inTrackID);
 		fmt.PutFmtStr("\r\n");
@@ -1108,7 +1108,7 @@ OS_Error RTSPClient::SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16
 	if(inTrackNamePtr)
 		::strncpy(trackName,inTrackNamePtr->Ptr, inTrackNamePtr->Len);
 	else
-		::sprintf(trackName,"%s=%"_U32BITARG_"",fControlID, inTrackID);
+		::sprintf(trackName,"%s=%"   _U32BITARG_   "",fControlID, inTrackID);
     
     if (!IsTransactionInProgress())
     {   
@@ -1119,20 +1119,20 @@ OS_Error RTSPClient::SendTCPSetup(UInt32 inTrackID, UInt16 inClientRTPid, UInt16
         if (fTransportMode == kPushMode)
 			fmt.PutFmtStr(
                     "SETUP %s/%s RTSP/1.0\r\n"
-                    "CSeq: %"_U32BITARG_"\r\n"
+                    "CSeq: %"   _U32BITARG_   "\r\n"
                     "%sTransport: RTP/AVP/TCP;unicast;mode=record;interleaved=%u-%u\r\n"
                     "User-agent: %s\r\n",
                     fURL.Ptr, trackName, fCSeq, fSessionID.Ptr,inClientRTPid, inClientRTCPid, fUserAgent);
         else
             fmt.PutFmtStr(
                     "SETUP %s/%s RTSP/1.0\r\n"
-                    "CSeq: %"_U32BITARG_"\r\n"
+                    "CSeq: %"   _U32BITARG_   "\r\n"
                     "%sTransport: RTP/AVP/TCP;unicast;interleaved=%u-%u\r\n"
                     "%sUser-agent: %s\r\n",
                     fURL.Ptr, trackName, fCSeq, fSessionID.Ptr, inClientRTPid, inClientRTCPid,fSetupHeaders, fUserAgent);
 
 		if (fBandwidth != 0)
-			fmt.PutFmtStr("Bandwidth: %"_U32BITARG_"\r\n", fBandwidth);
+			fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
         Attach3GPPHeaders(fmt, inTrackID);
 		fmt.PutFmtStr("\r\n");
@@ -1160,20 +1160,20 @@ OS_Error RTSPClient::SendPlay(UInt32 inStartPlayTimeInSec, Float32 inSpeed, UInt
 		
         fmt.PutFmtStr(
 				"PLAY %s RTSP/1.0\r\n"
-				"CSeq: %"_U32BITARG_"\r\n"
-				"%sRange: npt=%"_U32BITARG_".0-\r\n" 
+				"CSeq: %"   _U32BITARG_   "\r\n"
+				"%sRange: npt=%"   _U32BITARG_   ".0-\r\n" 
 				"%sx-prebuffer: maxtime=3.0\r\n" 
 				"User-agent: %s\r\n",
 				fURL.Ptr, fCSeq, fSessionID.Ptr, inStartPlayTimeInSec, speedBuf, fUserAgent);
 
 		if (fBandwidth != 0)
-			fmt.PutFmtStr("Bandwidth: %"_U32BITARG_"\r\n", fBandwidth);
+			fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
         Attach3GPPHeaders(fmt, inTrackID);
 		fmt.PutFmtStr("\r\n");
 		fmt.PutTerminator();
 
-        //qtss_sprintf(fSendBuffer, "PLAY %s RTSP/1.0\r\nCSeq: %"_U32BITARG_"\r\n%sRange: npt=7.0-\r\n%sx-prebuffer: maxtime=3.0\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fSessionID.Ptr, speedBuf, fUserAgent);
+        //qtss_sprintf(fSendBuffer, "PLAY %s RTSP/1.0\r\nCSeq: %"   _U32BITARG_   "\r\n%sRange: npt=7.0-\r\n%sx-prebuffer: maxtime=3.0\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fSessionID.Ptr, speedBuf, fUserAgent);
     }
     return this->DoTransaction();
 }
@@ -1194,13 +1194,13 @@ OS_Error RTSPClient::SendPacketRangePlay(char* inPacketRangeHeader, Float32 inSp
 		
         fmt.PutFmtStr(
                 "PLAY %s RTSP/1.0\r\n"
-                "CSeq: %"_U32BITARG_"\r\n"
+                "CSeq: %"   _U32BITARG_   "\r\n"
                 "%sx-Packet-Range: %s\r\n"
                 "%sUser-agent: %s\r\n\r\n",
                 fURL.Ptr, fCSeq, fSessionID.Ptr, inPacketRangeHeader, speedBuf, fUserAgent);
 
 		if (fBandwidth != 0)
-			fmt.PutFmtStr("Bandwidth: %"_U32BITARG_"\r\n", fBandwidth);
+			fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
         Attach3GPPHeaders(fmt);
 		fmt.PutFmtStr("\r\n");
@@ -1214,7 +1214,7 @@ OS_Error RTSPClient::SendReceive(UInt32 inStartPlayTimeInSec)
     if (!IsTransactionInProgress())
     {
         qtss_sprintf(fMethod,"%s","RECORD");
-        qtss_sprintf(fSendBuffer, "RECORD %s RTSP/1.0\r\nCSeq: %"_U32BITARG_"\r\n%sRange: npt=%"_U32BITARG_".0-\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fSessionID.Ptr, inStartPlayTimeInSec, fUserAgent);
+        qtss_sprintf(fSendBuffer, "RECORD %s RTSP/1.0\r\nCSeq: %"   _U32BITARG_   "\r\n%sRange: npt=%"   _U32BITARG_   ".0-\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fSessionID.Ptr, inStartPlayTimeInSec, fUserAgent);
     }
     return this->DoTransaction();
 }
@@ -1226,12 +1226,12 @@ OS_Error RTSPClient::SendAnnounce(char *sdp)
     {   
         qtss_sprintf(fMethod,"%s","ANNOUNCE");
         if (sdp == NULL)
-            qtss_sprintf(fSendBuffer, "ANNOUNCE %s RTSP/1.0\r\nCSeq: %"_U32BITARG_"\r\nAccept: application/sdp\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
+            qtss_sprintf(fSendBuffer, "ANNOUNCE %s RTSP/1.0\r\nCSeq: %"   _U32BITARG_   "\r\nAccept: application/sdp\r\nUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fUserAgent);
         else
         {   UInt32 len = strlen(sdp);
             if(len > kReqBufSize)
                 return OS_NotEnoughSpace;
-            qtss_sprintf(fSendBuffer, "ANNOUNCE %s RTSP/1.0\r\nCSeq: %"_U32BITARG_"\r\nContent-Type: application/sdp\r\nUser-agent: %s\r\nContent-Length: %"_U32BITARG_"\r\n\r\n%s", fURL.Ptr, fCSeq, fUserAgent, len, sdp);
+            qtss_sprintf(fSendBuffer, "ANNOUNCE %s RTSP/1.0\r\nCSeq: %"   _U32BITARG_   "\r\nContent-Type: application/sdp\r\nUser-agent: %s\r\nContent-Length: %"   _U32BITARG_   "\r\n\r\n%s", fURL.Ptr, fCSeq, fUserAgent, len, sdp);
         }   
     }
     return this->DoTransaction();
@@ -1321,12 +1321,12 @@ OS_Error RTSPClient::SendInterleavedWrite(UInt8 channel, UInt16 len, char*data,B
         outLenSent = 0;
 
     if(fVerboseLevel >= 3)
-		qtss_printf("RTSPClient::SendInterleavedWrite Send channel=%u bufferlen=%u err=%"_S32BITARG_" outLenSent=%"_U32BITARG_"\n",(UInt16) sInterleavedParams.extraChannel, sendLen,theErr,outLenSent);
+		qtss_printf("RTSPClient::SendInterleavedWrite Send channel=%u bufferlen=%u err=%" _S32BITARG_ " outLenSent=%"   _U32BITARG_   "\n",(UInt16) sInterleavedParams.extraChannel, sendLen,theErr,outLenSent);
     if (theErr == 0 && outLenSent != sendLen) 
     {   if (sInterleavedParams.extraLen > 0) // sending extra len so keep sending it.
         {   
 			if (fVerboseLevel >= 3)
-				qtss_printf("RTSPClient::SendInterleavedWrite partial Send channel=%u bufferlen=%u err=%"_S32BITARG_" amountSent=%"_U32BITARG_" \n",(UInt16) sInterleavedParams.extraChannel,sendLen,theErr,outLenSent);
+				qtss_printf("RTSPClient::SendInterleavedWrite partial Send channel=%u bufferlen=%u err=%" _S32BITARG_ " amountSent=%"   _U32BITARG_   " \n",(UInt16) sInterleavedParams.extraChannel,sendLen,theErr,outLenSent);
             sInterleavedParams.extraLen = sendLen - outLenSent;
             sInterleavedParams.extraByteOffset += outLenSent;
             sInterleavedParams.extraBytes = &fSendBuffer[sInterleavedParams.extraByteOffset];
@@ -1334,7 +1334,7 @@ OS_Error RTSPClient::SendInterleavedWrite(UInt8 channel, UInt16 len, char*data,B
         else // we were sending a new packet so record the data
         {   
 			if (fVerboseLevel >= 3)
-				qtss_printf("RTSPClient::SendInterleavedWrite partial Send channel=%u bufferlen=%u err=%"_S32BITARG_" amountSent=%"_U32BITARG_" \n",(UInt16) channel,sendLen,theErr,outLenSent);
+				qtss_printf("RTSPClient::SendInterleavedWrite partial Send channel=%u bufferlen=%u err=%" _S32BITARG_ " amountSent=%"   _U32BITARG_   " \n",(UInt16) channel,sendLen,theErr,outLenSent);
             sInterleavedParams.extraBytes = &fSendBuffer[outLenSent];
             sInterleavedParams.extraLen = sendLen - outLenSent;
             sInterleavedParams.extraChannel = channel;
@@ -1348,12 +1348,12 @@ OS_Error RTSPClient::SendInterleavedWrite(UInt8 channel, UInt16 len, char*data,B
             if (sInterleavedParams.extraLen > 0) // we were busy sending some old data and it all got sent
             {   
 				if (fVerboseLevel >= 3)
-					qtss_printf("RTSPClient::SendInterleavedWrite FULL Send channel=%u bufferlen=%u err=%"_S32BITARG_" amountSent=%"_U32BITARG_" \n",(UInt16) sInterleavedParams.extraChannel,sendLen,theErr,outLenSent);
+					qtss_printf("RTSPClient::SendInterleavedWrite FULL Send channel=%u bufferlen=%u err=%" _S32BITARG_ " amountSent=%"   _U32BITARG_   " \n",(UInt16) sInterleavedParams.extraChannel,sendLen,theErr,outLenSent);
             }
             else 
             {   // it all worked so ask for more data
 				if (fVerboseLevel >= 3)
-					qtss_printf("RTSPClient::SendInterleavedWrite FULL Send channel=%u bufferlen=%u err=%"_S32BITARG_" amountSent=%"_U32BITARG_" \n",(UInt16) channel,sendLen,theErr,outLenSent);
+					qtss_printf("RTSPClient::SendInterleavedWrite FULL Send channel=%u bufferlen=%u err=%" _S32BITARG_ " amountSent=%"   _U32BITARG_   " \n",(UInt16) channel,sendLen,theErr,outLenSent);
             }
             sInterleavedParams.extraLen = 0;
             sInterleavedParams.extraBytes = NULL;
@@ -1362,7 +1362,7 @@ OS_Error RTSPClient::SendInterleavedWrite(UInt8 channel, UInt16 len, char*data,B
         else // we got an error so nothing was sent
         {   
 			if (fVerboseLevel >= 3)
-				qtss_printf("RTSPClient::SendInterleavedWrite Send ERR sending=%"_S32BITARG_" \n",theErr);
+				qtss_printf("RTSPClient::SendInterleavedWrite Send ERR sending=%" _S32BITARG_ " \n",theErr);
 
             if (sInterleavedParams.extraLen == 0) // retry the new packet
             {   
@@ -1380,7 +1380,7 @@ OS_Error RTSPClient::SendTeardown()
 {
     if (!IsTransactionInProgress())
     {   qtss_sprintf(fMethod,"%s","TEARDOWN");
-        qtss_sprintf(fSendBuffer, "TEARDOWN %s RTSP/1.0\r\nCSeq: %"_U32BITARG_"\r\n%sUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fSessionID.Ptr, fUserAgent);
+        qtss_sprintf(fSendBuffer, "TEARDOWN %s RTSP/1.0\r\nCSeq: %"   _U32BITARG_   "\r\n%sUser-agent: %s\r\n\r\n", fURL.Ptr, fCSeq, fSessionID.Ptr, fUserAgent);
     }
     return this->DoTransaction();
 }
@@ -1423,7 +1423,7 @@ OS_Error    RTSPClient::GetMediaPacket(UInt32* outTrackID, Bool16* outIsRTCP, ch
         //
         // If there is some packet data in the header buffer, clear it out
         if (fVerboseLevel >= 3)
-			qtss_printf("%"_U32BITARG_" bytes of packet data in header buffer\n",fPacketDataInHeaderBufferLen);
+			qtss_printf("%"   _U32BITARG_   " bytes of packet data in header buffer\n",fPacketDataInHeaderBufferLen);
         
         Assert(fPacketDataInHeaderBuffer[0] == '$');
         Assert(fPacketDataInHeaderBufferLen < (kMaxPacketSize - fPacketBufferOffset));
@@ -1564,11 +1564,11 @@ OS_Error RTSPClient::DoTransaction()
         		if (theErr != OS_NoErr)
 				{
 					if (fVerboseLevel >= 3)
-						qtss_printf("RTSPClient::DoTransaction Send len=%"_U32BITARG_" err = %"_S32BITARG_"\n", theRequest.Len, theErr);
+						qtss_printf("RTSPClient::DoTransaction Send len=%"   _U32BITARG_   " err = %" _S32BITARG_ "\n", theRequest.Len, theErr);
             		return theErr;
 				}
         		if (fVerboseLevel >= 1)
-            		qtss_printf("\n-----REQUEST-----len=%"_U32BITARG_"\n%s\n", theRequest.Len, STRTOCHAR(&theRequest));
+            		qtss_printf("\n-----REQUEST-----len=%"   _U32BITARG_   "\n%s\n", theRequest.Len, STRTOCHAR(&theRequest));
         
 
 				//Done sending request; moving onto the response
@@ -1587,7 +1587,7 @@ OS_Error RTSPClient::DoTransaction()
         		theErr = this->ReceiveResponse();  //note that this function can change the fState
 
         		if (fVerboseLevel >= 3)
-					qtss_printf("RTSPClient::DoTransaction ReceiveResponse fStatus=%"_U32BITARG_" len=%"_U32BITARG_" err = %"_S32BITARG_"\n",fStatus, fHeaderRecvLen, theErr);
+					qtss_printf("RTSPClient::DoTransaction ReceiveResponse fStatus=%"   _U32BITARG_   " len=%"   _U32BITARG_   " err = %" _S32BITARG_ "\n",fStatus, fHeaderRecvLen, theErr);
     
         		if (theErr != OS_NoErr)
             		return theErr;
@@ -1623,7 +1623,7 @@ OS_Error RTSPClient::ReceiveResponse()
         fHeaderRecvLen += theRecvLen;
         fRecvHeaderBuffer[fHeaderRecvLen] = 0;
         if (fVerboseLevel >= 1)
-            qtss_printf("\n-----RESPONSE (len: %"_U32BITARG_")----\n%s\n", fHeaderRecvLen, fRecvHeaderBuffer);
+            qtss_printf("\n-----RESPONSE (len: %"   _U32BITARG_   ")----\n%s\n", fHeaderRecvLen, fRecvHeaderBuffer);
 
         //fRecvHeaderBuffer[fHeaderRecvLen] = '\0';
         // Check to see if we've gotten a complete header, and if the header has even started       
@@ -1937,11 +1937,11 @@ void RTSPClient::Attach3GPPHeaders(StringFormatter &fmt, UInt32 inTrackID)
         fmt.PutFmtStr("3GPP-Link-Char: url=\"%s\"", fURL.Ptr);
         
         if (fGuarenteedBitRate != 0)
-            fmt.PutFmtStr("; GBW=%"_U32BITARG_, fGuarenteedBitRate);
+            fmt.PutFmtStr("; GBW=%"   _U32BITARG_   , fGuarenteedBitRate);
         if (fMaxBitRate != 0)
-            fmt.PutFmtStr("; MBW=%"_U32BITARG_, fMaxBitRate);
+            fmt.PutFmtStr("; MBW=%"   _U32BITARG_   , fMaxBitRate);
         if (fMaxTransferDelay != 0)
-             fmt.PutFmtStr("; MTD=%"_U32BITARG_, fMaxTransferDelay);
+             fmt.PutFmtStr("; MTD=%"   _U32BITARG_   , fMaxTransferDelay);
         fmt.PutFmtStr("\r\n");
     }
 	
@@ -1949,11 +1949,11 @@ void RTSPClient::Attach3GPPHeaders(StringFormatter &fmt, UInt32 inTrackID)
     {
         fmt.PutFmtStr("3GPP-Adaptation: ");
 
-        fmt.PutFmtStr("url=\"%s/%s=%"_U32BITARG_"\"", fURL.Ptr, fControlID, inTrackID);
+        fmt.PutFmtStr("url=\"%s/%s=%"   _U32BITARG_   "\"", fURL.Ptr, fControlID, inTrackID);
         if (fBufferSpace != 0)
-            fmt.PutFmtStr("; size=%"_U32BITARG_, fBufferSpace);
+            fmt.PutFmtStr("; size=%"   _U32BITARG_   , fBufferSpace);
         if (fDelayTime != 0)
-            fmt.PutFmtStr("; target-time=%"_U32BITARG_, fDelayTime);
+            fmt.PutFmtStr("; target-time=%"   _U32BITARG_   , fDelayTime);
         fmt.PutFmtStr("\r\n");
     }
 }

@@ -218,5 +218,5 @@ UInt16 QTAtom_stsd::SampleDescriptionToDataReference(UInt32 SampleDescriptionID)
 void QTAtom_stsd::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_stsd::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_stsd::DumpAtom - ..Number of sample description entries: %"_S32BITARG_"\n", fNumEntries));
+    DEBUG_PRINT(("QTAtom_stsd::DumpAtom - ..Number of sample description entries: %" _S32BITARG_ "\n", fNumEntries));
 }

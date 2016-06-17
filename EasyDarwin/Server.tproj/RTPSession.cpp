@@ -97,9 +97,9 @@ RTPSession::~RTPSession()
         RTPBandwidthTracker* tracker = this->GetBandwidthTracker(); 
     
         qtss_printf("Client complete. URL: %s.\n",theURL);
-        qtss_printf("Max congestion window: %"_S32BITARG_". Min congestion window: %"_S32BITARG_". Avg congestion window: %"_S32BITARG_"\n", tracker->GetMaxCongestionWindowSize(), tracker->GetMinCongestionWindowSize(), tracker->GetAvgCongestionWindowSize());
-        qtss_printf("Max RTT: %"_S32BITARG_". Min RTT: %"_S32BITARG_". Avg RTT: %"_S32BITARG_"\n", tracker->GetMaxRTO(), tracker->GetMinRTO(), tracker->GetAvgRTO());
-        qtss_printf("Num resends: %"_S32BITARG_". Num skipped frames: %"_S32BITARG_". Num late packets dropped: %"_S32BITARG_"\n", theNumResends, this->GetFramesSkipped(), theNumLatePacketsDropped);
+        qtss_printf("Max congestion window: %" _S32BITARG_ ". Min congestion window: %" _S32BITARG_ ". Avg congestion window: %" _S32BITARG_ "\n", tracker->GetMaxCongestionWindowSize(), tracker->GetMinCongestionWindowSize(), tracker->GetAvgCongestionWindowSize());
+        qtss_printf("Max RTT: %" _S32BITARG_ ". Min RTT: %" _S32BITARG_ ". Avg RTT: %" _S32BITARG_ "\n", tracker->GetMaxRTO(), tracker->GetMinRTO(), tracker->GetAvgRTO());
+        qtss_printf("Num resends: %" _S32BITARG_ ". Num skipped frames: %" _S32BITARG_ ". Num late packets dropped: %" _S32BITARG_ "\n", theNumResends, this->GetFramesSkipped(), theNumLatePacketsDropped);
         
         delete [] theURL;
     }
@@ -409,7 +409,7 @@ QTSS_Error  RTPSession::Play(RTSPRequestInterface* request, QTSS_PlayFlags inFla
         
     
 #if RTPSESSION_DEBUGGING
-    qtss_printf("RTPSession %"_S32BITARG_": In Play, about to call Signal\n",(SInt32)this);
+    qtss_printf("RTPSession %" _S32BITARG_ ": In Play, about to call Signal\n",(SInt32)this);
 #endif
     this->Signal(Task::kStartEvent);
     
@@ -533,7 +533,7 @@ SInt64 RTPSession::Run()
                                                     //as the first parameter
     
 #if RTPSESSION_DEBUGGING
-    qtss_printf("RTPSession %"_S32BITARG_": In Run. Events %"_S32BITARG_"\n",(SInt32)this, (SInt32)events);
+    qtss_printf("RTPSession %" _S32BITARG_ ": In Run. Events %" _S32BITARG_ "\n",(SInt32)this, (SInt32)events);
 #endif
     // Some callbacks look for this struct in the thread object
     OSThreadDataSetter theSetter(&fModuleState, NULL);
@@ -553,7 +553,7 @@ SInt64 RTPSession::Run()
         //threads). We do this by first removing the session from the session map.
         
 #if RTPSESSION_DEBUGGING
-        qtss_printf("RTPSession %"_S32BITARG_": about to be killed. Eventmask = %"_S32BITARG_"\n",(SInt32)this, (SInt32)events);
+        qtss_printf("RTPSession %" _S32BITARG_ ": about to be killed. Eventmask = %" _S32BITARG_ "\n",(SInt32)this, (SInt32)events);
 #endif
         // We cannot block waiting to UnRegister, because we have to
         // give the RTSPSessionTask a chance to release the RTPSession.
@@ -640,7 +640,7 @@ SInt64 RTPSession::Run()
         else
         {           
     #if RTPSESSION_DEBUGGING
-            qtss_printf("RTPSession %"_S32BITARG_": about to call SendPackets\n",(SInt32)this);
+            qtss_printf("RTPSession %" _S32BITARG_ ": about to call SendPackets\n",(SInt32)this);
     #endif
             if ((theParams.rtpSendPacketsParams.inCurrentTime - fLastBandwidthTrackerStatsUpdate) > 1000)
                 this->GetBandwidthTracker()->UpdateStats();
@@ -651,7 +651,7 @@ SInt64 RTPSession::Run()
             Assert(fModule != NULL);
             (void)fModule->CallDispatch(QTSS_RTPSendPackets_Role, &theParams);
     #if RTPSESSION_DEBUGGING
-            qtss_printf("RTPSession %"_S32BITARG_": back from sendPackets, nextPacketTime = %"_64BITARG_"d\n",(SInt32)this, theParams.rtpSendPacketsParams.outNextPacketTime);
+            qtss_printf("RTPSession %" _S32BITARG_ ": back from sendPackets, nextPacketTime = %" _64BITARG_ "d\n",(SInt32)this, theParams.rtpSendPacketsParams.outNextPacketTime);
     #endif
             //make sure not to get deleted accidently!
             if (theParams.rtpSendPacketsParams.outNextPacketTime < 0)

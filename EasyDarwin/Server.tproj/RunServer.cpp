@@ -163,7 +163,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 		sServer->InitNumThreads(numThreads);
 		
     #if DEBUG
-        qtss_printf("Number of task threads: %"_U32BITARG_"\n",numThreads);
+        qtss_printf("Number of task threads: %"   _U32BITARG_   "\n",numThreads);
     #endif
     
         // Start up the server's global tasks, and start listening
@@ -428,7 +428,7 @@ void DebugLevel_1(FILE*   statusFile, FILE*   stdOut,  Bool16 printHeader )
     UInt32 curBandwidth = 0;
     theLen = sizeof(curBandwidth);
     (void)QTSS_GetValue(sServer, qtssRTPSvrCurBandwidth, 0, &curBandwidth, &theLen);
-    qtss_snprintf(numStr, 11, "%"_U32BITARG_"", curBandwidth/1024);
+    qtss_snprintf(numStr, 11, "%"   _U32BITARG_   "", curBandwidth/1024);
     print_status(statusFile, stdOut,"%11s", numStr);
 
     (void)QTSS_GetValueAsString(sServer, qtssRTPSvrCurPackets, 0, &thePrefStr);
@@ -437,7 +437,7 @@ void DebugLevel_1(FILE*   statusFile, FILE*   stdOut,  Bool16 printHeader )
 
 
     UInt32 currentPlaying = sServer->GetNumRTPPlayingSessions();
-    qtss_snprintf( numStr, sizeof(numStr) -1, "%"_U32BITARG_"", currentPlaying);
+    qtss_snprintf( numStr, sizeof(numStr) -1, "%"   _U32BITARG_   "", currentPlaying);
     print_status(statusFile, stdOut,"%14s", numStr);
 
    
@@ -460,21 +460,21 @@ void DebugLevel_1(FILE*   statusFile, FILE*   stdOut,  Bool16 printHeader )
     
     ::qtss_snprintf(numStr, sizeof(numStr) -1, "%s", "0");
     if (deltaPackets > 0)
-        qtss_snprintf(numStr, sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) ((SInt64)totalLate /  (SInt64) deltaPackets ));
+        qtss_snprintf(numStr, sizeof(numStr) -1, "%" _S32BITARG_ "", (SInt32) ((SInt64)totalLate /  (SInt64) deltaPackets ));
     print_status(statusFile, stdOut,"%11s", numStr);
 
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) currentMaxLate);
+    qtss_snprintf(numStr,sizeof(numStr) -1, "%" _S32BITARG_ "", (SInt32) currentMaxLate);
     print_status(statusFile, stdOut,"%11s", numStr);
     
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32)  sServer->GetMaxLate() );
+    qtss_snprintf(numStr,sizeof(numStr) -1, "%" _S32BITARG_ "", (SInt32)  sServer->GetMaxLate() );
     print_status(statusFile, stdOut,"%11s", numStr);
 
     ::qtss_snprintf(numStr, sizeof(numStr) -1, "%s", "0");
     if (deltaPackets > 0)
-        qtss_snprintf(numStr, sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) ((SInt64) deltaQuality /  (SInt64) deltaPackets));
+        qtss_snprintf(numStr, sizeof(numStr) -1, "%" _S32BITARG_ "", (SInt32) ((SInt64) deltaQuality /  (SInt64) deltaPackets));
     print_status(statusFile, stdOut,"%11s", numStr);
 
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) sServer->GetNumThinned() );
+    qtss_snprintf(numStr,sizeof(numStr) -1, "%" _S32BITARG_ "", (SInt32) sServer->GetNumThinned() );
     print_status(statusFile, stdOut,"%11s", numStr);
 
     
@@ -581,7 +581,7 @@ void PrintStatus(Bool16 printHeader)
     UInt32 curBandwidth = 0;
     theLen = sizeof(curBandwidth);
     (void)QTSS_GetValue(sServer, qtssRTPSvrCurBandwidth, 0, &curBandwidth, &theLen);
-    qtss_printf("%11"_U32BITARG_, curBandwidth/1024);
+    qtss_printf("%11"   _U32BITARG_   , curBandwidth/1024);
     
     (void)QTSS_GetValueAsString(sServer, qtssRTPSvrCurPackets, 0, &thePrefStr);
     qtss_printf( "%11s", thePrefStr);
@@ -596,7 +596,7 @@ void PrintStatus(Bool16 printHeader)
     FormattedTotalBytesBuffer(displayBuff, sizeof(displayBuff),totalBytes);
     qtss_printf( "%17s", displayBuff);
     
-    qtss_printf( "%11"_64BITARG_"u", sServer->GetTotalRTPPacketsLost());
+    qtss_printf( "%11" _64BITARG_ "u", sServer->GetTotalRTPPacketsLost());
                     
     char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
     (void) QTSSRollingLog::FormatDate(theDateBuffer, false);

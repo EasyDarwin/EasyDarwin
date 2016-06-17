@@ -74,7 +74,7 @@ any network headers.
 'nump' 8 bytes The total number of network packets that will be
 sent (if the application knows there is a 28-byte
 network header, it can multiply 28 by this number
-and add it to the ÔtrpyÕ value to get the true
+and add it to the Ôtrpy?value to get the true
 number of bytes sent.
 'npck' 4 bytes 4-byte version of 'nump'
 'tpyl' 8 bytes The total number of bytes that will be sent, not
@@ -187,26 +187,26 @@ Bool16 QTAtom_hinf::Initialize(void)
 void QTAtom_hinf::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_hinf::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total RTP bytes: %"_64BITARG_"u\n", this->GetTotalRTPBytes()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total RTP bytes: %" _64BITARG_ "u\n", this->GetTotalRTPBytes()));
 #ifndef __Win32__
     DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ....Average bitrate: %.2f Kbps\n", ((this->GetTotalRTPBytes() << 3) / fFile->GetDurationInSeconds()) / 1024));
 #endif
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total RTP packets: %"_64BITARG_"u\n", this->GetTotalRTPPackets()));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ....Average packet size: %"_64BITARG_"u\n", this->GetTotalRTPBytes() / this->GetTotalRTPPackets()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total RTP packets: %" _64BITARG_ "u\n", this->GetTotalRTPPackets()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ....Average packet size: %" _64BITARG_ "u\n", this->GetTotalRTPBytes() / this->GetTotalRTPPackets()));
     
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Payload bytes: %"_64BITARG_"u\n", this->GetTotalPayLoadBytes()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Payload bytes: %" _64BITARG_ "u\n", this->GetTotalPayLoadBytes()));
     
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Data Rate: %"_64BITARG_"u\n", this->GetMaxDataRate()));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Media Track bytes: %"_64BITARG_"u\n", this->GetTotalMediaBytes()));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Repeat Packet bytes: %"_64BITARG_"u\n", this->GetRepeatBytes()));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Immediate Bytes: %"_64BITARG_"u\n", this->GetTotalImmediateBytes()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Data Rate: %" _64BITARG_ "u\n", this->GetMaxDataRate()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Media Track bytes: %" _64BITARG_ "u\n", this->GetTotalMediaBytes()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Repeat Packet bytes: %" _64BITARG_ "u\n", this->GetRepeatBytes()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Total Immediate Bytes: %" _64BITARG_ "u\n", this->GetTotalImmediateBytes()));
 
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Minimum Transmission Time: %"_U32BITARG_"\n", this->GetMinTransTime()));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Transmission Time: %"_U32BITARG_"\n", this->GetMaxTransTime()));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Packet Size bytes: %"_U32BITARG_"\n", this->GetMaxPacketSizeBytes()));
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Maximum Packet Duration: %"_U32BITARG_"\n", this->GetMaxPacketDuration()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Minimum Transmission Time: %"   _U32BITARG_   "\n", this->GetMinTransTime()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Transmission Time: %"   _U32BITARG_   "\n", this->GetMaxTransTime()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Packet Size bytes: %"   _U32BITARG_   "\n", this->GetMaxPacketSizeBytes()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Maximum Maximum Packet Duration: %"   _U32BITARG_   "\n", this->GetMaxPacketDuration()));
     
-    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Payload ID: %"_U32BITARG_"\n", this->GetPayLoadID()));
+    DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Payload ID: %"   _U32BITARG_   "\n", this->GetPayLoadID()));
     DEBUG_PRINT(("QTAtom_hinf::DumpAtom - ..Payload string: %s\n", this->GetPayLoadStr()));
 
 }

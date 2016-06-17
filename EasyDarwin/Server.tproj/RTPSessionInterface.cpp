@@ -281,7 +281,7 @@ void RTPSessionInterface::UpdateBitRateInternal(const SInt64& curTime)
         fLastBitRateBytes = fBytesSent;
         fLastBitRateUpdateTime = curTime;
     }
-    //qtss_printf("fMovieCurrentBitRate=%"_U32BITARG_"\n",fMovieCurrentBitRate);
+    //qtss_printf("fMovieCurrentBitRate=%"   _U32BITARG_   "\n",fMovieCurrentBitRate);
     //qtss_printf("Cur bandwidth: %d. Cur ack timeout: %d.\n",fTracker.GetCurrentBandwidthInBps(), fTracker.RecommendedClientAckTimeout());
 }
 
@@ -322,12 +322,12 @@ void* RTPSessionInterface::PacketLossPercent(QTSSDictionary* inSession, UInt32* 
             UInt32 streamCurPacketsLost = 0;
             theLen = sizeof(UInt32);
             (void) theStream->GetValue(qtssRTPStrCurPacketsLostInRTCPInterval,0, &streamCurPacketsLost, &theLen);
-            //qtss_printf("stream = %d streamCurPacketsLost = %"_U32BITARG_" \n",x, streamCurPacketsLost);
+            //qtss_printf("stream = %d streamCurPacketsLost = %"   _U32BITARG_   " \n",x, streamCurPacketsLost);
             
             UInt32 streamCurPackets = 0;
             theLen = sizeof(UInt32);
             (void) theStream->GetValue(qtssRTPStrPacketCountInRTCPInterval,0, &streamCurPackets, &theLen);
-            //qtss_printf("stream = %d streamCurPackets = %"_U32BITARG_" \n",x, streamCurPackets);
+            //qtss_printf("stream = %d streamCurPackets = %"   _U32BITARG_   " \n",x, streamCurPackets);
                 
             packetsSent += (SInt64)  streamCurPackets;
             packetsLost += (SInt64) streamCurPacketsLost;
@@ -359,7 +359,7 @@ void RTPSessionInterface::CreateDigestAuthenticationNonce() {
     // Calculate nonce: MD5 of sessionid:timestamp
     SInt64 curTime = OS::Milliseconds();
     char* curTimeStr = NEW char[128];
-    qtss_sprintf(curTimeStr, "%"_64BITARG_"d", curTime);
+    qtss_sprintf(curTimeStr, "%" _64BITARG_ "d", curTime);
     
     // Delete old nonce before creating a new one
     if(fAuthNonce.Ptr != NULL)
@@ -405,7 +405,7 @@ void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop,
             ::srand((unsigned int)theMicroseconds);
             UInt32 randomNum = ::rand();
             char* randomNumStr = NEW char[128];
-            qtss_sprintf(randomNumStr, "%"_U32BITARG_"", randomNum);
+            qtss_sprintf(randomNumStr, "%"   _U32BITARG_   "", randomNum);
             int len = ::strlen(randomNumStr);
             fAuthOpaque.Len = Base64encode_len(len);
             char *opaqueStr = NEW char[fAuthOpaque.Len];
@@ -441,7 +441,7 @@ void RTPSessionInterface::UpdateDigestAuthChallengeParams(Bool16 newNonce, Bool1
         ::srand((unsigned int)theMicroseconds);
         UInt32 randomNum = ::rand();
         char* randomNumStr = NEW char[128];
-        qtss_sprintf(randomNumStr, "%"_U32BITARG_"", randomNum);
+        qtss_sprintf(randomNumStr, "%"   _U32BITARG_   "", randomNum);
         int len = ::strlen(randomNumStr);
         fAuthOpaque.Len = Base64encode_len(len);
         char *opaqueStr = NEW char[fAuthOpaque.Len];

@@ -172,7 +172,7 @@ QTTrack::ErrorCode QTTrack::Initialize(void)
     
     //
     // Load in the edit list atom for this track.
-    DEEP_DEBUG_PRINT(("Searching track #%"_U32BITARG_" 'elst' atom.\n", GetTrackID()));
+    DEEP_DEBUG_PRINT(("Searching track #%"   _U32BITARG_   " 'elst' atom.\n", GetTrackID()));
     if( fFile->FindTOCEntry(":edts:elst", &tempTOCEntry, &fTOCEntry) ) {
         fEditListAtom = NEW QTAtom_elst(fFile, tempTOCEntry, fDebug, fDeepDebug);
         if( fEditListAtom == NULL )
@@ -299,11 +299,11 @@ Bool16 QTTrack::GetSampleInfo(UInt32 SampleNumber, UInt32 * const Length, UInt64
     
     Assert(STCB != NULL);
     
-//  qtss_printf("GetSampleInfo QTTrack SampleNumber = %"_S32BITARG_" \n", SampleNumber);
+//  qtss_printf("GetSampleInfo QTTrack SampleNumber = %" _S32BITARG_ " \n", SampleNumber);
 
     if (STCB->fGetSampleInfo_SampleNumber == SampleNumber && STCB->fGetSampleInfo_Length > 0)
     {
-//      qtss_printf("----- GetSampleInfo Cache Hit QTTrack SampleNumber = %"_S32BITARG_" \n", SampleNumber);
+//      qtss_printf("----- GetSampleInfo Cache Hit QTTrack SampleNumber = %" _S32BITARG_ " \n", SampleNumber);
 
         if (Length) *Length = STCB->fGetSampleInfo_Length;
         if (Offset) *Offset = STCB->fGetSampleInfo_Offset;
@@ -396,7 +396,7 @@ Bool16 QTTrack::GetSizeOfSamplesInChunk(UInt32 chunkNumber, UInt32 * const sizeP
     
     if (stcbPtr && stcbPtr->fGetSizeOfSamplesInChunk_chunkNumber == chunkNumber)
     {
-//      qtss_printf("QTTrack::GetSizeOfSamplesInChunk cache hit %"_S32BITARG_" \n", chunkNumber);
+//      qtss_printf("QTTrack::GetSizeOfSamplesInChunk cache hit %" _S32BITARG_ " \n", chunkNumber);
         if (firstSampleNumPtr != NULL) *firstSampleNumPtr = stcbPtr->fGetSizeOfSamplesInChunk_firstSample;
         if (lastSampleNumPtr !=  NULL) *lastSampleNumPtr = stcbPtr->fGetSizeOfSamplesInChunk_lastSample;
         if (sizePtr != NULL) *sizePtr = stcbPtr->fGetSizeOfSamplesInChunk_size;

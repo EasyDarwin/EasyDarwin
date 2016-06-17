@@ -235,7 +235,7 @@ Bool16 QTAtom_stts::SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaT
 
     if ( STCB->fGetSampleMediaTime_SampleNumber == SampleNumber)
     {   
-//      qtss_printf("QTTrack::GetSampleMediaTime cache hit SampleNumber %"_S32BITARG_" \n", SampleNumber);
+//      qtss_printf("QTTrack::GetSampleMediaTime cache hit SampleNumber %" _S32BITARG_ " \n", SampleNumber);
         *MediaTime = STCB->fGetSampleMediaTime_MediaTime;
         return true;
     }
@@ -291,7 +291,7 @@ Bool16 QTAtom_stts::SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaT
 void QTAtom_stts::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_stts::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_stts::DumpAtom - ..Number of TTS entries: %"_S32BITARG_"\n", fNumEntries));
+    DEBUG_PRINT(("QTAtom_stts::DumpAtom - ..Number of TTS entries: %" _S32BITARG_ "\n", fNumEntries));
 }
 
 void QTAtom_stts::DumpTable(void)
@@ -317,7 +317,7 @@ void QTAtom_stts::DumpTable(void)
         SampleDuration = ntohl(SampleDuration);
 
         // Print out a listing.
-        qtss_printf("  %10"_U32BITARG_" : %10"_U32BITARG_"  %10"_U32BITARG_"\n", CurEntry, SampleCount, SampleDuration);
+        qtss_printf("  %10"   _U32BITARG_   " : %10"   _U32BITARG_   "  %10"   _U32BITARG_   "\n", CurEntry, SampleCount, SampleDuration);
     }
 }
 
@@ -494,7 +494,7 @@ Bool16 QTAtom_ctts::SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * 
 
     if ( STCB->fGetSampleMediaTime_SampleNumber == SampleNumber)
     {   
-//      qtss_printf("QTTrack::GetSampleMediaTime cache hit SampleNumber %"_S32BITARG_" \n", SampleNumber);
+//      qtss_printf("QTTrack::GetSampleMediaTime cache hit SampleNumber %" _S32BITARG_ " \n", SampleNumber);
         *MediaTimeOffset = STCB->fGetSampleMediaTime_MediaTime;
         return true;
     }
@@ -550,7 +550,7 @@ Bool16 QTAtom_ctts::SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * 
 void QTAtom_ctts::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_ctts::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_ctts::DumpAtom - ..Number of CTTS entries: %"_S32BITARG_"\n", fNumEntries));
+    DEBUG_PRINT(("QTAtom_ctts::DumpAtom - ..Number of CTTS entries: %" _S32BITARG_ "\n", fNumEntries));
 }
 
 void QTAtom_ctts::DumpTable(void)
@@ -576,6 +576,6 @@ void QTAtom_ctts::DumpTable(void)
         SampleOffset = ntohl(SampleOffset);
 
         // Print out a listing.
-        qtss_printf("  %10"_U32BITARG_" : %10"_U32BITARG_"  %10"_U32BITARG_"\n", CurEntry, SampleCount, SampleOffset);
+        qtss_printf("  %10"   _U32BITARG_   " : %10"   _U32BITARG_   "  %10"   _U32BITARG_   "\n", CurEntry, SampleCount, SampleOffset);
     }
 }

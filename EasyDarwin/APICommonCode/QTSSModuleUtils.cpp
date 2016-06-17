@@ -430,7 +430,7 @@ QTSS_Error  QTSSModuleUtils::SendErrorResponse( QTSS_RTSPRequestObject inRequest
         
         
         char buff[32];
-        qtss_sprintf(buff,"%"_U32BITARG_"",theErrorMsgFormatter.GetBytesWritten());
+        qtss_sprintf(buff,"%"   _U32BITARG_   "",theErrorMsgFormatter.GetBytesWritten());
         (void)QTSS_AppendRTSPHeader(inRequest, qtssContentLengthHeader, buff, ::strlen(buff));
     }
     
@@ -467,7 +467,7 @@ QTSS_Error	QTSSModuleUtils::SendErrorResponseWithMessage( QTSS_RTSPRequestObject
 		theErrorMessage.Set(inErrorMessagePtr->Ptr, inErrorMessagePtr->Len);
 		
         char buff[32];
-        qtss_sprintf(buff,"%"_U32BITARG_"",inErrorMessagePtr->Len);
+        qtss_sprintf(buff,"%"   _U32BITARG_   "",inErrorMessagePtr->Len);
         (void)QTSS_AppendRTSPHeader(inRequest, qtssContentLengthHeader, buff, ::strlen(buff));
     }
     
@@ -521,7 +521,7 @@ QTSS_Error	QTSSModuleUtils::SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequ
     (void) QTSS_GetValue(sServer, qtssSvrRTSPServerHeader, 0,  (void*)serverHeaderBuffer,&len);
     serverHeaderBuffer[len] = 0; // terminate.
  
-    qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "HTTP/1.1 %"_U32BITARG_" %s",realCode, errorMsg);
+    qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "HTTP/1.1 %"   _U32BITARG_   " %s",realCode, errorMsg);
     theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));
     theErrorMessage.PutEOL();
 
@@ -556,7 +556,7 @@ QTSS_Error	QTSSModuleUtils::SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequ
         theErrorMessage.Put(bodyHeaderType.Ptr,bodyHeaderType.Len);
         theErrorMessage.PutEOL();
 
-        qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "Content-Length: %"_U32BITARG_"", bodyMessage.GetBytesWritten());
+        qtss_snprintf(messageLineBuffer,maxMessageBufferChars, "Content-Length: %"   _U32BITARG_   "", bodyMessage.GetBytesWritten());
         theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));        
         theErrorMessage.PutEOL();
     }
@@ -589,7 +589,7 @@ void    QTSSModuleUtils::SendDescribeResponse(QTSS_RTSPRequestObject inRequest,
 {
     //write content size header
     char buf[32];
-    qtss_sprintf(buf, "%"_S32BITARG_"", inTotalLength);
+    qtss_sprintf(buf, "%" _S32BITARG_ "", inTotalLength);
     (void)QTSS_AppendRTSPHeader(inRequest, qtssContentLengthHeader, &buf[0], ::strlen(&buf[0]));
 
     (void)QTSS_SendStandardRTSPResponse(inRequest, inSession, 0);

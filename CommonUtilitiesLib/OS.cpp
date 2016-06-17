@@ -331,7 +331,7 @@ Bool16 OS::ThreadSafe()
 			*endMajor = 0;
 			
 		if (::strlen(releaseStr) > 0) //convert to an int
-			::sscanf(releaseStr, "%"_U32BITARG_"", &majorVers);
+			::sscanf(releaseStr, "%"   _U32BITARG_   "", &majorVers);
 	}
 	if (majorVers < 7) // less than OS X Panther 10.3 
 		return false; // force 1 worker thread because < 10.3 means std c lib is not thread safe.
@@ -425,7 +425,7 @@ UInt32  OS::GetNumProcessors()
             lineParser.ConsumeWhitespace();  //skip over leading whitespace
             lineParser.ConsumeUntilWhitespace(&word); //read the number of cpus
             if (word.Len > 0)
-                ::sscanf(word.Ptr, "%"_U32BITARG_"", &numCPUs);
+                ::sscanf(word.Ptr, "%"   _U32BITARG_   "", &numCPUs);
 
             break;
         }

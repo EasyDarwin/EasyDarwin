@@ -134,7 +134,7 @@ Bool16 QTAtom_mvhd::Initialize(void)
         // Verify that this atom is the correct length.
         if( fTOCEntry.AtomDataLength != 100 )
         {
-            DEEP_DEBUG_PRINT(("QTAtom_mvhd::Initialize failed. Expected AtomDataLength == 100 version: %d AtomDataLength: %"_64BITARG_"u\n",fVersion, fTOCEntry.AtomDataLength));
+            DEEP_DEBUG_PRINT(("QTAtom_mvhd::Initialize failed. Expected AtomDataLength == 100 version: %d AtomDataLength: %" _64BITARG_ "u\n",fVersion, fTOCEntry.AtomDataLength));
             return false;
         }
 
@@ -169,7 +169,7 @@ Bool16 QTAtom_mvhd::Initialize(void)
         // Verify that this atom is the correct length.
         if( fTOCEntry.AtomDataLength != 112 )
         {
-            DEEP_DEBUG_PRINT(("QTAtom_mvhd::Initialize failed. Expected AtomDataLength = 112 version: %d AtomDataLength: %"_64BITARG_"u\n",fVersion, fTOCEntry.AtomDataLength));
+            DEEP_DEBUG_PRINT(("QTAtom_mvhd::Initialize failed. Expected AtomDataLength = 112 version: %d AtomDataLength: %" _64BITARG_ "u\n",fVersion, fTOCEntry.AtomDataLength));
             return false;
         }
 

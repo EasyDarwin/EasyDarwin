@@ -245,12 +245,12 @@ void RTPBandwidthTracker::UpdateAckTimeout(UInt32 bitsSentInInterval, SInt64 int
     if (rto < fAckTimeout)
         rto = fAckTimeout;
     UInt32 adjustment = (rto - fAckTimeout) / 2;
-    //qtss_printf("UnadjustedTimeout = %"_U32BITARG_". rto: %"_S32BITARG_". Last ack timeout: %"_U32BITARG_". Adjustment = %"_U32BITARG_".", unadjustedTimeout, fUnadjustedRTO, fAckTimeout, adjustment);
+    //qtss_printf("UnadjustedTimeout = %"   _U32BITARG_   ". rto: %" _S32BITARG_ ". Last ack timeout: %"   _U32BITARG_   ". Adjustment = %"   _U32BITARG_   ".", unadjustedTimeout, fUnadjustedRTO, fAckTimeout, adjustment);
     if (adjustment > unadjustedTimeout)
         adjustment = unadjustedTimeout;
     fAckTimeout = unadjustedTimeout - adjustment;
     
-    //qtss_printf("AckTimeout: %"_U32BITARG_"\n",fAckTimeout);
+    //qtss_printf("AckTimeout: %"   _U32BITARG_   "\n",fAckTimeout);
     if (fAckTimeout > kMaxAckTimeout)
         fAckTimeout = kMaxAckTimeout;
     else if (fAckTimeout < kMinAckTimeout)

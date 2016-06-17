@@ -1168,7 +1168,7 @@ UInt32 QTRTPFile::GetSeekTimestamp(UInt32 trackID)
     UInt32*				timeStampP;
     
     
-    DEEP_DEBUG_PRINT(("Calculating RTP timestamp for track #%"_U32BITARG_" at time %.2f.\n", trackID, fRequestedSeekTime));
+    DEEP_DEBUG_PRINT(("Calculating RTP timestamp for track #%"   _U32BITARG_   " at time %.2f.\n", trackID, fRequestedSeekTime));
 
     //
     // Find this track.
@@ -1197,7 +1197,7 @@ UInt32 QTRTPFile::GetSeekTimestamp(UInt32 trackID)
 	
     //
     // Return the RTP timestamp.
-    DEEP_DEBUG_PRINT(("..timestamp=%"_U32BITARG_"\n", rtpTimestamp));
+    DEEP_DEBUG_PRINT(("..timestamp=%"   _U32BITARG_   "\n", rtpTimestamp));
 
     return rtpTimestamp;
 }

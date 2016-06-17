@@ -235,7 +235,7 @@ OS_Error HTTPClientSocket::Read(void* inBuffer, const UInt32 inLength, UInt32* o
 #if CLIENT_SOCKET_DEBUG
         qtss_printf("HTTPClientSocket::Read: Sending GET\n");
 #endif
-        qtss_sprintf(fSendBuffer.Ptr, "GET %s HTTP/1.0\r\nX-SessionCookie: %"_U32BITARG_"\r\nAccept: application/x-rtsp-rtp-interleaved\r\nUser-Agent: QTSS/2.0\r\n\r\n", fURL.Ptr, fCookie);
+        qtss_sprintf(fSendBuffer.Ptr, "GET %s HTTP/1.0\r\nX-SessionCookie: %"   _U32BITARG_   "\r\nAccept: application/x-rtsp-rtp-interleaved\r\nUser-Agent: QTSS/2.0\r\n\r\n", fURL.Ptr, fCookie);
         fSendBuffer.Len = ::strlen(fSendBuffer.Ptr);
         Assert(fSentLength == 0);
     }
@@ -326,7 +326,7 @@ OS_Error HTTPClientSocket::SendV(iovec* inVec, UInt32 inNumVecs)
 #if CLIENT_SOCKET_DEBUG
         qtss_printf("HTTPClientSocket::Send: Sending POST\n");
 #endif
-        qtss_sprintf(fSendBuffer.Ptr, "POST %s HTTP/1.0\r\nX-SessionCookie: %"_U32BITARG_"\r\nAccept: application/x-rtsp-rtp-interleaved\r\nUser-Agent: QTSS/2.0\r\n\r\n", fURL.Ptr, fCookie);
+        qtss_sprintf(fSendBuffer.Ptr, "POST %s HTTP/1.0\r\nX-SessionCookie: %"   _U32BITARG_   "\r\nAccept: application/x-rtsp-rtp-interleaved\r\nUser-Agent: QTSS/2.0\r\n\r\n", fURL.Ptr, fCookie);
         fSendBuffer.Len = ::strlen(fSendBuffer.Ptr);
         this->EncodeVec(inVec, inNumVecs);
     }

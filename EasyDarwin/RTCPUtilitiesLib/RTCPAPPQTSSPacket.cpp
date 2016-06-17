@@ -106,8 +106,8 @@ Bool16 RTCPCompressedQTSSPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPa
     char   printName[5];
     (void) this->GetAppPacketName(printName, sizeof(printName));
     APPEND_TO_DUMP_ARRAY("H_app_packet_name = %s, ", printName );
-    APPEND_TO_DUMP_ARRAY("H_ssrc = %"_U32BITARG_", ", this->GetPacketSSRC());
-    APPEND_TO_DUMP_ARRAY("H_src_ID = %"_U32BITARG_", ", this->GetQTSSReportSourceID());
+    APPEND_TO_DUMP_ARRAY("H_ssrc = %"   _U32BITARG_   ", ", this->GetPacketSSRC());
+    APPEND_TO_DUMP_ARRAY("H_src_ID = %"   _U32BITARG_   ", ", this->GetQTSSReportSourceID());
     APPEND_TO_DUMP_ARRAY("H_vers=%d, ", this->GetQTSSPacketVersion());
     APPEND_TO_DUMP_ARRAY("H_packt_len=%d", this->GetQTSSPacketLength());
 
@@ -146,7 +146,7 @@ Bool16 RTCPCompressedQTSSPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPa
             {
                 fReceiverBitRate = ntohl(OS::GetUInt32FromMemory((UInt32*)qtssDataBuffer));
                 qtssDataBuffer += sizeof(fReceiverBitRate);
-                APPEND_TO_DUMP_ARRAY(", rcvr_bit_rate=%"_U32BITARG_"", fReceiverBitRate);
+                APPEND_TO_DUMP_ARRAY(", rcvr_bit_rate=%"   _U32BITARG_   "", fReceiverBitRate);
             }
             break;
             
@@ -198,19 +198,19 @@ Bool16 RTCPCompressedQTSSPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPa
             {
                 fNumEyes = ntohl(OS::GetUInt32FromMemory((UInt32*)qtssDataBuffer));
                 qtssDataBuffer += sizeof(fNumEyes);             
-                APPEND_TO_DUMP_ARRAY(", eyes=%"_U32BITARG_"", fNumEyes);
+                APPEND_TO_DUMP_ARRAY(", eyes=%"   _U32BITARG_   "", fNumEyes);
 
                 if (itemLengthInBytes >= 2)
                 {
                     fNumEyesActive = ntohl(OS::GetUInt32FromMemory((UInt32*)qtssDataBuffer));
                     qtssDataBuffer += sizeof(fNumEyesActive);
-                    APPEND_TO_DUMP_ARRAY(", eyes_actv=%"_U32BITARG_"", fNumEyesActive);
+                    APPEND_TO_DUMP_ARRAY(", eyes_actv=%"   _U32BITARG_   "", fNumEyesActive);
                 }
                 if (itemLengthInBytes >= 3)
                 {
                     fNumEyesPaused = ntohl(OS::GetUInt32FromMemory((UInt32*)qtssDataBuffer));
                     qtssDataBuffer += sizeof(fNumEyesPaused);
-                    APPEND_TO_DUMP_ARRAY(", eyes_pausd=%"_U32BITARG_"", fNumEyesPaused);
+                    APPEND_TO_DUMP_ARRAY(", eyes_pausd=%"   _U32BITARG_   "", fNumEyesPaused);
                 }
             }
             break;
@@ -219,7 +219,7 @@ Bool16 RTCPCompressedQTSSPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPa
             {
                 fTotalPacketsReceived = ntohl(OS::GetUInt32FromMemory((UInt32*)qtssDataBuffer));
                 qtssDataBuffer += sizeof(fTotalPacketsReceived);
-                APPEND_TO_DUMP_ARRAY(", pckts_rcvd=%"_U32BITARG_"", fTotalPacketsReceived);
+                APPEND_TO_DUMP_ARRAY(", pckts_rcvd=%"   _U32BITARG_   "", fTotalPacketsReceived);
             }
             break;
             
@@ -279,7 +279,7 @@ Bool16 RTCPCompressedQTSSPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPa
             {
                 fOverbufferWindowSize = ntohl(OS::GetUInt32FromMemory((UInt32*)qtssDataBuffer));
                 qtssDataBuffer += sizeof(fOverbufferWindowSize);
-                APPEND_TO_DUMP_ARRAY(", ovr_buffr_windw_siz=%"_U32BITARG_"", fOverbufferWindowSize);
+                APPEND_TO_DUMP_ARRAY(", ovr_buffr_windw_siz=%"   _U32BITARG_   "", fOverbufferWindowSize);
             }
             break;
             

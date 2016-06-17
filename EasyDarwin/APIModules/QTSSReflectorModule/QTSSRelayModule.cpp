@@ -502,7 +502,7 @@ QTSS_Error Filter(QTSS_StandardRTSP_Params* inParams)
 
                 // Write current stats for this output
                 char theStatsBuf[1024];
-                qtss_sprintf(theStatsBuf, "Current stats for this relay: %"_U32BITARG_" packets per second. %"_U32BITARG_" bits per second. %"_64BITARG_"d packets since it started. %"_64BITARG_"d bits since it started<P>", theOutput->GetCurPacketsPerSecond(), theOutput->GetCurBitsPerSecond(), theOutput->GetTotalPacketsSent(), theOutput->GetTotalBytesSent());
+                qtss_sprintf(theStatsBuf, "Current stats for this relay: %"   _U32BITARG_   " packets per second. %"   _U32BITARG_   " bits per second. %" _64BITARG_ "d packets since it started. %" _64BITARG_ "d bits since it started<P>", theOutput->GetCurPacketsPerSecond(), theOutput->GetCurBitsPerSecond(), theOutput->GetTotalPacketsSent(), theOutput->GetTotalBytesSent());
                 (void)QTSS_Write(inParams->inRTSPRequest, &theStatsBuf[0], ::strlen(theStatsBuf), NULL, 0);
             }
         }

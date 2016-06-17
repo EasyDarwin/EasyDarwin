@@ -609,11 +609,11 @@ void QueryURI::ParseQueryString(StringParser *parserPtr,StrPtrLen *urlStreamPtr)
             tempQueryParse.ConsumeLength(NULL, 1);
             tempQueryParse.ConsumeUntil(NULL, '"');
             tempQueryParse.ConsumeLength(NULL, 1);
-            //qtss_printf("QueryURI::ParseQueryString is quote GetCurrentPosition = '%s' len = %"_U32BITARG_"\n",stopCharPtr, strlen(stopCharPtr));
+            //qtss_printf("QueryURI::ParseQueryString is quote GetCurrentPosition = '%s' len = %"   _U32BITARG_   "\n",stopCharPtr, strlen(stopCharPtr));
         }
         else
         {
-            //qtss_printf("QueryURI::ParseQueryString white or EOL GetCurrentPosition = '%s' len = %"_U32BITARG_"\n",stopCharPtr, strlen(stopCharPtr));
+            //qtss_printf("QueryURI::ParseQueryString white or EOL GetCurrentPosition = '%s' len = %"   _U32BITARG_   "\n",stopCharPtr, strlen(stopCharPtr));
             if (*stopCharPtr == ' ') 
             {   tempQueryParse.ConsumeWhitespace();
                 continue;
@@ -633,7 +633,7 @@ void QueryURI::ParseQueryString(StringParser *parserPtr,StrPtrLen *urlStreamPtr)
         fURIFieldsPtr[eQuery].fData = &fURIFieldSPL[eQuery];
     }
     
-    //qtss_printf("Query String = '%s' Query len = %"_U32BITARG_" parseLen = %"_U32BITARG_"\n",queryStr.Ptr, queryStr.Len,len);
+    //qtss_printf("Query String = '%s' Query len = %"   _U32BITARG_   " parseLen = %"   _U32BITARG_   "\n",queryStr.Ptr, queryStr.Len,len);
 
 };
 
@@ -647,7 +647,7 @@ void QueryURI::ParseURLString(StringParser *parserPtr,StrPtrLen *urlStreamPtr)
     if (urlStreamPtr->Len < QueryURI::eMaxBufferSize)
         memcpy(fURIBuffer,urlStreamPtr->Ptr,urlStreamPtr->Len); // make a local copy in fAdminFullURI
     
-    //qtss_printf("QueryURI::ParseURLString fURIBuffer =%s len = %"_U32BITARG_"\n", fURIBuffer,urlStreamPtr->Len);
+    //qtss_printf("QueryURI::ParseURLString fURIBuffer =%s len = %"   _U32BITARG_   "\n", fURIBuffer,urlStreamPtr->Len);
 
     StringParser tempURLParse(&fAdminFullURI);// point to local copy    
     tempURLParse.ConsumeUntil(&fURIFieldSPL[eURL],'?'); // pull out URL
@@ -698,7 +698,7 @@ void QueryURI::URLParse(StrPtrLen *inStream)
             
             if (decodedRequestStr.Len > QueryURI::eMaxBufferSize -1)
             {   
-                //qtss_printf("URL string bigger than Buffer size=%"_U32BITARG_"\n",decodedRequestStr.Len);
+                //qtss_printf("URL string bigger than Buffer size=%"   _U32BITARG_   "\n",decodedRequestStr.Len);
                 break;
             }       
     

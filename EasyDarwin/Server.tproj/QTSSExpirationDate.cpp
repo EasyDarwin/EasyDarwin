@@ -29,7 +29,7 @@
 
     Written by: Denis Serenyi
 
-    Copyright:  © 1998 by Apple Computer, Inc., all rights reserved.
+    Copyright:  ?1998 by Apple Computer, Inc., all rights reserved.
 
 
     
@@ -67,7 +67,7 @@ Bool16 QTSSExpirationDate::IsSoftwareExpired()
         return false;
         
     SInt32 expMonth, expDay, expYear;
-    if (EOF == ::sscanf(sExpirationDate, "%"_S32BITARG_"/%"_S32BITARG_"/%"_S32BITARG_"", &expMonth, &expDay, &expYear))
+    if (EOF == ::sscanf(sExpirationDate, "%" _S32BITARG_ "/%" _S32BITARG_ "/%" _S32BITARG_ "", &expMonth, &expDay, &expYear))
     {
         Assert(false);
         return true;

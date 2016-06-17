@@ -166,7 +166,7 @@ UInt32 SourceInfo::GetNumNewOutputs()
 Bool16  SourceInfo::SetActiveNTPTimes(UInt32 startTimeNTP,UInt32 endTimeNTP)
 {   // right now only handles earliest start and latest end time.
 
-    //qtss_printf("SourceInfo::SetActiveNTPTimes start=%"_U32BITARG_" end=%"_U32BITARG_"\n",startTimeNTP,endTimeNTP);
+    //qtss_printf("SourceInfo::SetActiveNTPTimes start=%"   _U32BITARG_   " end=%"   _U32BITARG_   "\n",startTimeNTP,endTimeNTP);
     Bool16 accepted = false;
     do 
     {
@@ -191,7 +191,7 @@ Bool16  SourceInfo::SetActiveNTPTimes(UInt32 startTimeNTP,UInt32 endTimeNTP)
     }  while(0);
     
     //char buffer[kTimeStrSize];
-    //qtss_printf("SourceInfo::SetActiveNTPTimes fStartTimeUnixSecs=%"_U32BITARG_" fEndTimeUnixSecs=%"_U32BITARG_"\n",fStartTimeUnixSecs,fEndTimeUnixSecs);
+    //qtss_printf("SourceInfo::SetActiveNTPTimes fStartTimeUnixSecs=%"   _U32BITARG_   " fEndTimeUnixSecs=%"   _U32BITARG_   "\n",fStartTimeUnixSecs,fEndTimeUnixSecs);
     //qtss_printf("SourceInfo::SetActiveNTPTimes start time = %s",qtss_ctime(&fStartTimeUnixSecs, buffer, sizeof(buffer)) );
     //qtss_printf("SourceInfo::SetActiveNTPTimes end time = %s",qtss_ctime(&fEndTimeUnixSecs, buffer, sizeof(buffer)) );
     fHasValidTime = accepted;

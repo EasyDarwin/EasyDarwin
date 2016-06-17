@@ -144,13 +144,13 @@ Bool16 QTAtom_stsz::SampleRangeSize(UInt32 firstSampleNumber, UInt32 lastSampleN
     {
         if (lastSampleNumber < firstSampleNumber) 
         {
-//          qtss_printf("QTAtom_stsz::SampleRangeSize (lastSampleNumber %"_S32BITARG_" < firstSampleNumber %"_S32BITARG_") \n",lastSampleNumber, firstSampleNumber);
+//          qtss_printf("QTAtom_stsz::SampleRangeSize (lastSampleNumber %" _S32BITARG_ " < firstSampleNumber %" _S32BITARG_ ") \n",lastSampleNumber, firstSampleNumber);
             break;
         }
         
         if(fCommonSampleSize) 
         { 
-//          qtss_printf("QTAtom_stsz::SampleRangeSize fCommonSampleSize %"_S32BITARG_" firstSampleNumber %"_S32BITARG_" lastSampleNumber %"_S32BITARG_" *sizePtr %"_S32BITARG_"\n",fCommonSampleSize,firstSampleNumber,lastSampleNumber,*sizePtr);
+//          qtss_printf("QTAtom_stsz::SampleRangeSize fCommonSampleSize %" _S32BITARG_ " firstSampleNumber %" _S32BITARG_ " lastSampleNumber %" _S32BITARG_ " *sizePtr %" _S32BITARG_ "\n",fCommonSampleSize,firstSampleNumber,lastSampleNumber,*sizePtr);
             if( sizePtr != NULL ) 
                 *sizePtr = fCommonSampleSize * (lastSampleNumber - firstSampleNumber + 1) ; 
                 
@@ -183,7 +183,7 @@ Bool16 QTAtom_stsz::SampleRangeSize(UInt32 firstSampleNumber, UInt32 lastSampleN
 void QTAtom_stsz::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_stsz::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_stsz::DumpAtom - ..Number of sample size entries: %"_S32BITARG_"\n", fNumEntries));
+    DEBUG_PRINT(("QTAtom_stsz::DumpAtom - ..Number of sample size entries: %" _S32BITARG_ "\n", fNumEntries));
 }
 
 void QTAtom_stsz::DumpTable(void)
@@ -200,6 +200,6 @@ void QTAtom_stsz::DumpTable(void)
     for( UInt32 CurEntry = 1; CurEntry <= fNumEntries; CurEntry++ ) {
         //
         // Print out a listing.
-        qtss_printf("  %10"_U32BITARG_" : %10"_U32BITARG_"\n", CurEntry, fTable[CurEntry-1]);
+        qtss_printf("  %10"   _U32BITARG_   " : %10"   _U32BITARG_   "\n", CurEntry, fTable[CurEntry-1]);
     }
 }

@@ -303,7 +303,7 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
                     bandwidth = 1;
                 
                 char bandwidthStr[10];
-                qtss_snprintf(bandwidthStr,sizeof(bandwidthStr) -1, "%"_U32BITARG_"", bandwidth);
+                qtss_snprintf(bandwidthStr,sizeof(bandwidthStr) -1, "%"   _U32BITARG_   "", bandwidth);
                 bandwidthStr[sizeof(bandwidthStr) -1] = 0;
                 
                 fSDPMediaHeaders.Put(sMaxBandwidthTag);

@@ -305,7 +305,7 @@ SInt32 ReflectorStream::AddOutput(ReflectorOutput* inOutput, SInt32 putInThisBuc
         {
             fOutputArray[putInThisBucket][y] = inOutput;
 #if REFLECTOR_STREAM_DEBUGGING 
-            qtss_printf("Adding new output (0x%lx) to bucket %"_S32BITARG_", index %"_S32BITARG_",\nnum buckets %li bucketSize: %li \n",(SInt32)inOutput, putInThisBucket, y, (SInt32)fNumBuckets, (SInt32)sBucketSize);
+            qtss_printf("Adding new output (0x%lx) to bucket %" _S32BITARG_ ", index %" _S32BITARG_ ",\nnum buckets %li bucketSize: %li \n",(SInt32)inOutput, putInThisBucket, y, (SInt32)fNumBuckets, (SInt32)sBucketSize);
 #endif
             fNumElements++;
             return putInThisBucket;
@@ -348,7 +348,7 @@ void  ReflectorStream::RemoveOutput(ReflectorOutput* inOutput)
                 fOutputArray[x][y] = NULL;//just clear out the pointer
                 
 #if REFLECTOR_STREAM_DEBUGGING  
-                qtss_printf("Removing output %x from bucket %"_S32BITARG_", index %"_S32BITARG_"\n",inOutput,x,y);
+                qtss_printf("Removing output %x from bucket %" _S32BITARG_ ", index %" _S32BITARG_ "\n",inOutput,x,y);
 #endif
                 fNumElements--;
                 return;             
@@ -372,7 +372,7 @@ void  ReflectorStream::TearDownAllOutputs()
             if (theOutputPtr != NULL)
             {   theOutputPtr->TearDown();
 #if REFLECTOR_STREAM_DEBUGGING  
-                qtss_printf("TearDownAllOutputs Removing output from bucket %"_S32BITARG_", index %"_S32BITARG_"\n",x,y);
+                qtss_printf("TearDownAllOutputs Removing output from bucket %" _S32BITARG_ ", index %" _S32BITARG_ "\n",x,y);
 #endif
             }
         }
@@ -530,7 +530,7 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
 		ReflectorPacket* thePacket = NULL;
 		if (isRTCP)
 		{	
-			//qtss_printf("ReflectorStream::PushPacket RTCP packetlen = %"_U32BITARG_"\n",packetLen);
+			//qtss_printf("ReflectorStream::PushPacket RTCP packetlen = %"   _U32BITARG_   "\n",packetLen);
 			thePacket = ((ReflectorSocket*)fSockets->GetSocketB())->GetPacket();
 			if (thePacket == NULL)
 			{	
@@ -545,7 +545,7 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
 		}
 		else
 		{	
-			//qtss_printf("ReflectorStream::PushPacket RTP packetlen = %"_U32BITARG_"\n",packetLen);
+			//qtss_printf("ReflectorStream::PushPacket RTP packetlen = %"   _U32BITARG_   "\n",packetLen);
 			thePacket =  ((ReflectorSocket*)fSockets->GetSocketA())->GetPacket();
 			if (thePacket == NULL)
 			{	
@@ -1704,7 +1704,7 @@ SInt64 ReflectorSocket::Run()
     {
         SInt32 temp = (SInt32)(fSleepTime - theMilliseconds);
         char tempBuf[20];
-        qtss_sprintf(tempBuf,"%"_S32BITARG_"",temp);
+        qtss_sprintf(tempBuf,"%" _S32BITARG_ "",temp);
         WarnV(fSleepTime <= theMilliseconds, tempBuf);
     }
 #endif
@@ -1742,7 +1742,7 @@ void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket,Bool16 isRTC
         if (0 == fValidSSRC)
         {   fValidSSRC = thePacket->GetSSRC(isRTCP); // SSRC of 0 is allowed
             fLastValidSSRCTime = currentTime;
-            //qtss_printf("socket=%"_U32BITARG_" FIRST PACKET fValidSSRC=%"_U32BITARG_" \n", (UInt32) this,fValidSSRC);
+            //qtss_printf("socket=%"   _U32BITARG_   " FIRST PACKET fValidSSRC=%"   _U32BITARG_   " \n", (UInt32) this,fValidSSRC);
             break;
         }
     
@@ -1751,11 +1751,11 @@ void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket,Bool16 isRTC
         {   
             if (packetSSRC == fValidSSRC)
             {   fLastValidSSRCTime = currentTime;
-                //qtss_printf("socket=%"_U32BITARG_" good packet\n", (UInt32) this );
+                //qtss_printf("socket=%"   _U32BITARG_   " good packet\n", (UInt32) this );
                 break;
             }
             
-            //qtss_printf("socket=%"_U32BITARG_" bad packet packetSSRC= %"_U32BITARG_" fValidSSRC=%"_U32BITARG_" \n", (UInt32) this,packetSSRC,fValidSSRC);
+            //qtss_printf("socket=%"   _U32BITARG_   " bad packet packetSSRC= %"   _U32BITARG_   " fValidSSRC=%"   _U32BITARG_   " \n", (UInt32) this,packetSSRC,fValidSSRC);
             thePacket->fPacketPtr.Len = 0; // ignore this packet wrong SSRC
         }
         
@@ -1995,12 +1995,12 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
         
         }
          
-        //printf("ReflectorSocket::GetIncomingData has packet from time=%qd src addr=%"_U32BITARG_" src port=%u packetlen=%"_U32BITARG_"\n",inMilliseconds, theRemoteAddr,theRemotePort,thePacket->fPacketPtr.Len);
+        //printf("ReflectorSocket::GetIncomingData has packet from time=%qd src addr=%"   _U32BITARG_   " src port=%u packetlen=%"   _U32BITARG_   "\n",inMilliseconds, theRemoteAddr,theRemotePort,thePacket->fPacketPtr.Len);
         if (0) //turn on / off buffer size checking --  pref can go here if we find we need to adjust this
         if (theSender->fPacketQueue.GetLength() > maxQSize) //don't grow memory too big
         { 
             char outMessage[256];
-            sprintf(outMessage,"Packet Queue for port=%d qsize = %"_S32BITARG_" hit max qSize=%"_U32BITARG_"", theRemotePort,theSender->fPacketQueue.GetLength(), maxQSize);
+            sprintf(outMessage,"Packet Queue for port=%d qsize = %" _S32BITARG_ " hit max qSize=%"   _U32BITARG_   "", theRemotePort,theSender->fPacketQueue.GetLength(), maxQSize);
             WarnV(false, outMessage); 
         }
 

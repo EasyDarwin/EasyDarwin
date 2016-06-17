@@ -125,7 +125,7 @@ Bool16 QTAtom_tkhd::Initialize(void)
        // Verify that this atom is the correct length.
         if( fTOCEntry.AtomDataLength != 84 )
         {
-            DEEP_DEBUG_PRINT(("QTAtom_tkhd::Initialize failed. Expected AtomDataLength == 84 version: %d AtomDataLength: %"_64BITARG_"u\n",fVersion, fTOCEntry.AtomDataLength));
+            DEEP_DEBUG_PRINT(("QTAtom_tkhd::Initialize failed. Expected AtomDataLength == 84 version: %d AtomDataLength: %" _64BITARG_ "u\n",fVersion, fTOCEntry.AtomDataLength));
             return false;
         }
 
@@ -154,7 +154,7 @@ Bool16 QTAtom_tkhd::Initialize(void)
        // Verify that this atom is the correct length.
         if (fTOCEntry.AtomDataLength != 96)
         {
-            DEEP_DEBUG_PRINT(("QTAtom_tkhd::Initialize failed. Expected AtomDataLength == 96 version: %d AtomDataLength: %"_64BITARG_"u\n",fVersion, fTOCEntry.AtomDataLength));
+            DEEP_DEBUG_PRINT(("QTAtom_tkhd::Initialize failed. Expected AtomDataLength == 96 version: %d AtomDataLength: %" _64BITARG_ "u\n",fVersion, fTOCEntry.AtomDataLength));
             return false;
         }
 
@@ -204,7 +204,7 @@ void QTAtom_tkhd::DumpAtom(void)
 
     DEBUG_PRINT(("QTAtom_tkhd::DumpAtom - Dumping atom.\n"));
     DEBUG_PRINT(("QTAtom_tkhd::DumpAtom - ..Version: %d.\n", (int) fVersion));
-    DEBUG_PRINT(("QTAtom_tkhd::DumpAtom - ..Track ID: %"_S32BITARG_"\n", fTrackID));
+    DEBUG_PRINT(("QTAtom_tkhd::DumpAtom - ..Track ID: %" _S32BITARG_ "\n", fTrackID));
     DEBUG_PRINT(("QTAtom_tkhd::DumpAtom - ..Flags:%s%s%s%s\n", (fFlags & flagEnabled) ? " Enabled" : "", (fFlags & flagInMovie) ? " InMovie" : "", (fFlags & flagInPreview) ? " InPreview" : "", (fFlags & flagInPoster) ? " InPoster" : ""));
     DEBUG_PRINT(("QTAtom_tkhd::DumpAtom - ..Creation date: %s", qtss_asctime(qtss_gmtime(&unixCreationTime, &timeResult),buffer,sizeof(buffer))));
 }

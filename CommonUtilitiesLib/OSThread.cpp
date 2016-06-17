@@ -220,7 +220,7 @@ void OSThread::Sleep(UInt32 inMsec)
             
     } while (timeSlept < inMsec);
 
-    //qtss_printf("total sleep = %qd request sleep=%"_U32BITARG_"\n", timeSlept,inMsec);
+    //qtss_printf("total sleep = %qd request sleep=%"   _U32BITARG_   "\n", timeSlept,inMsec);
 
 #elif defined(__osf__) || defined(__hpux__)
     if (inMsec < 1000)
@@ -272,11 +272,11 @@ Bool16  OSThread::SwitchPersonality()
         struct group* gr = ::getgrnam(sGroup);
         if (gr == NULL || ::setgid(gr->gr_gid) == -1)
         {
-            //qtss_printf("thread %"_U32BITARG_" setgid  to group=%s FAILED \n", (UInt32) this, sGroup);
+            //qtss_printf("thread %"   _U32BITARG_   " setgid  to group=%s FAILED \n", (UInt32) this, sGroup);
             return false;
         }
         
-        //qtss_printf("thread %"_U32BITARG_" setgid  to group=%s \n", (UInt32) this, sGroup);
+        //qtss_printf("thread %"   _U32BITARG_   " setgid  to group=%s \n", (UInt32) this, sGroup);
     }
     
         
@@ -285,11 +285,11 @@ Bool16  OSThread::SwitchPersonality()
         struct passwd* pw = ::getpwnam(sUser);
         if (pw == NULL || ::setuid(pw->pw_uid) == -1)
         {
-            //qtss_printf("thread %"_U32BITARG_" setuid  to user=%s FAILED \n", (UInt32) this, sUser);
+            //qtss_printf("thread %"   _U32BITARG_   " setuid  to user=%s FAILED \n", (UInt32) this, sUser);
             return false;
         }
 
-        //qtss_printf("thread %"_U32BITARG_" setuid  to user=%s \n", (UInt32) this, sUser);
+        //qtss_printf("thread %"   _U32BITARG_   " setuid  to user=%s \n", (UInt32) this, sUser);
    }
 #endif
 

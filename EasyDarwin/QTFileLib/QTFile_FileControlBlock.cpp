@@ -146,8 +146,8 @@ Bool16 QTFile_FileControlBlock::Read(FILE_SOURCE *dflt, UInt64 inPosition, void*
         )
     {
         //if ( !fCacheEnabled) qtss_printf("QTFile_FileControlBlock::Read  cache not enabled\n");
-        //if ( inLength > fDataBufferSize) qtss_printf("QTFile_FileControlBlock::Read  read too big for cache len=%"_U32BITARG_" max%"_U32BITARG_"\n",inLength,fDataBufferSize);
-        //if ( inPosition < fDataBufferPosStart) qtss_printf("QTFile_FileControlBlock::Read  backing up skipping cache missed by =%"_U32BITARG_" bytes\n", fDataBufferPosStart - inPosition);
+        //if ( inLength > fDataBufferSize) qtss_printf("QTFile_FileControlBlock::Read  read too big for cache len=%"   _U32BITARG_   " max%"   _U32BITARG_   "\n",inLength,fDataBufferSize);
+        //if ( inPosition < fDataBufferPosStart) qtss_printf("QTFile_FileControlBlock::Read  backing up skipping cache missed by =%"   _U32BITARG_   " bytes\n", fDataBufferPosStart - inPosition);
         result = this->ReadInternal(dataFD, inPosition, inBuffer, inLength);
         goto done;
     }
@@ -168,7 +168,7 @@ Bool16 QTFile_FileControlBlock::Read(FILE_SOURCE *dflt, UInt64 inPosition, void*
             // Temporary vars
             char        *TempDataBuffer;
                 
-            //qtss_printf("QTFile_FileControlBlock::Read forward read inPosition=%"_64BITARG_"u fPreviousDataBuffer=%"_64BITARG_"u start=%"_64BITARG_"u\n",inPosition,fDataBufferPosStart,fDataBufferPosEnd);
+            //qtss_printf("QTFile_FileControlBlock::Read forward read inPosition=%" _64BITARG_ "u fPreviousDataBuffer=%" _64BITARG_ "u start=%" _64BITARG_ "u\n",inPosition,fDataBufferPosStart,fDataBufferPosEnd);
                 
             // First, demote the current buffer.
             fDataBufferPosStart += fPreviousDataBufferLength;
@@ -191,7 +191,7 @@ Bool16 QTFile_FileControlBlock::Read(FILE_SOURCE *dflt, UInt64 inPosition, void*
         } 
         else 
         {   
-            //qtss_printf("QTFile_FileControlBlock::Read not a contiguous forward read inPosition=%"_64BITARG_"u fPreviousDataBuffer=%"_64BITARG_"u missed=%"_64BITARG_"d\n ",inPosition,fDataBufferPosStart,(fDataBufferPosStart > inPosition) ? fDataBufferPosStart-inPosition: inPosition - fDataBufferPosStart);
+            //qtss_printf("QTFile_FileControlBlock::Read not a contiguous forward read inPosition=%" _64BITARG_ "u fPreviousDataBuffer=%" _64BITARG_ "u missed=%" _64BITARG_ "d\n ",inPosition,fDataBufferPosStart,(fDataBufferPosStart > inPosition) ? fDataBufferPosStart-inPosition: inPosition - fDataBufferPosStart);
             
             // We need to play with our current and previous data buffers in
             // order to skip around while reading.
@@ -305,7 +305,7 @@ void QTFile_FileControlBlock::AdjustDataBufferBitRate(UInt32 inUnitSizeInK, UInt
     
     newDataBufferSize = newDataBufferSizeInUnits * kBlockByteSize;
     
-    //qtss_printf("QTFile_FileControlBlock::AdjustDataBuffer private buffers NewDataBufferSizeInUnits =%"_U32BITARG_" NewDataBufferSize = %"_U32BITARG_"\n",newDataBufferSizeInUnits,newDataBufferSize);
+    //qtss_printf("QTFile_FileControlBlock::AdjustDataBuffer private buffers NewDataBufferSizeInUnits =%"   _U32BITARG_   " NewDataBufferSize = %"   _U32BITARG_   "\n",newDataBufferSizeInUnits,newDataBufferSize);
 
     // Free the old buffer.
     delete[] fDataBufferPool;

@@ -393,7 +393,7 @@ QTSS_Error  RTPSessionOutput::TrackRTCPBaseTime(QTSS_RTPStreamObject *theStreamP
             (void) QTSS_SetValue(*theStreamPtr, qtssRTPStrFirstTimestamp, 0, &baseTimeStamp, sizeof(baseTimeStamp));   
             
             fMustSynch = false;
-            //printf("fBaseArrivalTime =%qd baseTimeStamp %"_U32BITARG_" streamStartTime=%qd diff =%qd\n", fBaseArrivalTime, baseTimeStamp, firstStreamArrivalTime, arrivalTimeDiffMSecs);
+            //printf("fBaseArrivalTime =%qd baseTimeStamp %"   _U32BITARG_   " streamStartTime=%qd diff =%qd\n", fBaseArrivalTime, baseTimeStamp, firstStreamArrivalTime, arrivalTimeDiffMSecs);
         }
     }
 
@@ -439,7 +439,7 @@ QTSS_Error  RTPSessionOutput::RewriteRTCP(QTSS_RTPStreamObject *theStreamPtr, St
 
     Float64 rtpTimeFromStart = (Float64) packetOffset / (Float64) 1000.0;
     UInt32 rtpTimeFromStartInScale =  (UInt32) (Float64) ((Float64) streamTimeScale * rtpTimeFromStart);
-    //printf("rtptime offset time =%f in scale =%"_U32BITARG_"\n", rtpTimeFromStart, rtpTimeFromStartInScale );
+    //printf("rtptime offset time =%f in scale =%"   _U32BITARG_   "\n", rtpTimeFromStart, rtpTimeFromStartInScale );
 
     theReport += 2; // point to the rtp time stamp of "now" synched and scaled in stream time
     *theReport = htonl(baseTimeStamp + rtpTimeFromStartInScale); 
@@ -509,7 +509,7 @@ QTSS_Error  RTPSessionOutput::TrackRTPPackets(QTSS_RTPStreamObject *theStreamPtr
         writeErr = QTSS_SetValue(*theStreamPtr, sStreamByteCountAttr, 0, &initValue, sizeof(UInt32));
         Assert(writeErr == QTSS_NoErr);
         
-        //printf("first rtp on stream stream=%"_U32BITARG_" ssrc=%"_U32BITARG_" rtpTime=%"_U32BITARG_" arrivalTimeMSecPtr=%qd currentTime=%qd\n",(UInt32) theStreamPtr, theSSRC, rtpTime, *arrivalTimeMSecPtr, *currentTimePtr);
+        //printf("first rtp on stream stream=%"   _U32BITARG_   " ssrc=%"   _U32BITARG_   " rtpTime=%"   _U32BITARG_   " arrivalTimeMSecPtr=%qd currentTime=%qd\n",(UInt32) theStreamPtr, theSSRC, rtpTime, *arrivalTimeMSecPtr, *currentTimePtr);
         
     }
     else
@@ -536,7 +536,7 @@ QTSS_Error  RTPSessionOutput::TrackRTPPackets(QTSS_RTPStreamObject *theStreamPtr
            (void) QTSS_RemoveValue(*theStreamPtr,sStreamByteCountAttr,0);
            fMustSynch = true;
            
-           //printf("found different ssrc =%"_U32BITARG_" packetssrc=%"_U32BITARG_"\n",*theSSRCPtr, packetContainer.GetSSRC(packetContainer.fIsRTCP));
+           //printf("found different ssrc =%"   _U32BITARG_   " packetssrc=%"   _U32BITARG_   "\n",*theSSRCPtr, packetContainer.GetSSRC(packetContainer.fIsRTCP));
            
         }
         
@@ -730,7 +730,7 @@ Bool16 RTPSessionOutput::PacketShouldBeThinned(QTSS_RTPStreamObject inStream, St
     if (*curQualityLevel > 0 && ((*lastChangeTime + 30000) < timeNow) ) // 30 seconds between reductions
     {   *curQualityLevel -= 1; // reduce quality value.  If we quality doesn't change then we may have hit some steady state which we can't get out of without thinning or increasing the quality
         *lastChangeTime =timeNow; 
-        //qtss_printf("RTPSessionOutput set quality to %"_U32BITARG_"\n",*curQualityLevel);
+        //qtss_printf("RTPSessionOutput set quality to %"   _U32BITARG_   "\n",*curQualityLevel);
     }
 
     //Check to see if we need to drop to audio only
