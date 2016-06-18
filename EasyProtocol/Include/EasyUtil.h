@@ -25,9 +25,9 @@ public:
     
     //if whatFormat == EASY_TIME_FORMAT_YYYYMMDD, the time will be set to now,
     //if whatFormat == EASY_TIME_FORMAT_HHMMSS, the date will be set to today   
-    static unsigned long String2TimeT(EasyDarwinTimeFormat whatFormat, std::string timeString);
+    static unsigned long String2TimeT(EasyDarwinTimeFormat whatFormat, const std::string &timeString);
     
-    static unsigned long String2TimeT(std::string dateYYMMDD/*2014-11-23*/, std::string timeHHMMSS/*08:30:00*/);
+    static unsigned long String2TimeT(const std::string &dateYYMMDD/*2014-11-23*/, const std::string &timeHHMMSS/*08:30:00*/);
     
     static std::string NowTime(EasyDarwinTimeFormat whatFormat);
     
@@ -35,16 +35,20 @@ public:
 
 	static std::string GetUUID();
 
-	static int String2Int(std::string value);
+	static int String2Int(const std::string &value);
 
 	static std::string Int2String(int value);
 
 	static string Base64Encode(const char* src, size_t len);
 	static string Base64Decode(const char* src, size_t len);
 
-	static bool Base64Encode(string &sInput, string &sOutput);
-	static bool Base64Decode(string &sInput, string &sOutput);
-	static void DelChar(std::string & sInput, char ch);//删除字符串中的某个特定字符 
+	static bool Base64Encode(const std::string &sInput, string &sOutput);
+	static bool Base64Decode(const std::string &sInput, string &sOutput);
+
+	static string Base64Encode(const string &sInput);
+	static string Base64Decode(const string &sInput);
+
+	static void DelChar(std::string &sInput, char ch);//删除字符串中的某个特定字符 
 
 	static unsigned char* Urldecode(unsigned char* encd, unsigned char* decd);
 };

@@ -68,7 +68,7 @@ std::string EasyUtil::TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned lon
     return std::string(timeStr);
 }
 
-unsigned long EasyUtil::String2TimeT(EasyDarwinTimeFormat whatFormat, std::string timeString)
+unsigned long EasyUtil::String2TimeT(EasyDarwinTimeFormat whatFormat, const std::string &timeString)
 {
     struct tm local;
        
@@ -105,7 +105,7 @@ unsigned long EasyUtil::String2TimeT(EasyDarwinTimeFormat whatFormat, std::strin
     return mktime(&local);
 }
 
-unsigned long EasyUtil::String2TimeT(std::string dateYYMMDD/*2014-11-23*/, std::string timeHHMMSS/*08:30:00*/)
+unsigned long EasyUtil::String2TimeT(const std::string &dateYYMMDD/*2014-11-23*/, const std::string &timeHHMMSS/*08:30:00*/)
 {
     std::string strTime = dateYYMMDD + " " + timeHHMMSS;
     return String2TimeT(EASY_TIME_FORMAT_YYYYMMDDHHMMSS, strTime);
@@ -139,7 +139,7 @@ std::string EasyUtil::GetUUID()
 	}	
 }
 
-int EasyUtil::String2Int(std::string value)
+int EasyUtil::String2Int(const std::string& value)
 {
 	try
 	{
@@ -165,7 +165,7 @@ std::string EasyUtil::Int2String(int value)
 	return std::string();
 }
 
-bool EasyUtil::Base64Decode(string& sInput, string& sOutput)
+bool EasyUtil::Base64Decode(const std::string &sInput, string &sOutput)
 {
 	typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<string::const_iterator>, 8, 6> Base64DecodeIterator;
 	stringstream result;
@@ -182,7 +182,7 @@ bool EasyUtil::Base64Decode(string& sInput, string& sOutput)
 	return !sOutput.empty();
 }
 
-bool EasyUtil::Base64Encode(string& sInput, string& sOutput)
+bool EasyUtil::Base64Encode(const std::string &sInput, string &sOutput)
 {
 	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<string::const_iterator, 6, 8> > Base64EncodeIterator;
 	stringstream result;
@@ -223,6 +223,36 @@ string EasyUtil::Base64Decode(const char* src, size_t len)
 		printf("util::Base64Decode error\n");
 	}
 	return std::string();
+}
+
+string EasyUtil::Base64Encode(const string &sInput)
+{
+	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<string::const_iterator, 6, 8> > Base64EncodeIterator;
+	stringstream result;
+	copy(Base64EncodeIterator(sInput.begin()), Base64EncodeIterator(sInput.end()), ostream_iterator<char>(result));
+	size_t equal_count = (3 - sInput.length() % 3) % 3;
+	for (size_t i = 0; i < equal_count; i++)
+	{
+		result.put('=');
+	}
+
+	return result.str();
+}
+
+string EasyUtil::Base64Decode(const string &sInput)
+{
+	typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<string::const_iterator>, 8, 6> Base64DecodeIterator;
+	stringstream result;
+	try
+	{
+		copy(Base64DecodeIterator(sInput.begin()), Base64DecodeIterator(sInput.end()), ostream_iterator<char>(result));
+	}
+	catch (...)
+	{
+		return string();
+	}
+
+	return result.str();
 }
 
 void EasyUtil::DelChar(std::string & sInput, char ch)
