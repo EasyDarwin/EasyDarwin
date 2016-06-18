@@ -208,14 +208,14 @@ QTSS_Error QTSSDataConverter::StringToValue(    char* inValueAsString,
         case qtssAttrDataTypeSInt64:
         {
             theBufSize = sizeof(SInt64);
-            theFormat = "%"_64BITARG_"d";
+            theFormat = "%" _64BITARG_ "d";
         }
         break;
         
         case qtssAttrDataTypeUInt64:
         {
             theBufSize = sizeof(UInt64);
-            theFormat = "%"_64BITARG_"u";
+            theFormat = "%" _64BITARG_ "u";
         }
         break;
         
@@ -236,7 +236,7 @@ QTSS_Error QTSSDataConverter::StringToValue(    char* inValueAsString,
         case qtssAttrDataTypeTimeVal:
         {
             theBufSize = sizeof(SInt64);
-            theFormat = "%"_64BITARG_"d";
+            theFormat = "%" _64BITARG_ "d";
         }
         break;
 
@@ -346,19 +346,19 @@ char* QTSSDataConverter::ValueToString( void* inValue,
             break;
         
         case qtssAttrDataTypeSInt32:
-            qtss_sprintf(theString, "%"_S32BITARG_, *( SInt32*)inValue);
+            qtss_sprintf(theString, "%"  _U32BITARG_  , *( SInt32*)inValue);
             break;
         
         case qtssAttrDataTypeUInt32:
-            qtss_sprintf(theString, "%"_U32BITARG_, *( UInt32*)inValue);
+            qtss_sprintf(theString, "%" _U32BITARG_ , *( UInt32*)inValue);
             break;
         
         case qtssAttrDataTypeSInt64:
-            qtss_sprintf(theString, "%"_64BITARG_"d", *( SInt64*)inValue);
+            qtss_sprintf(theString, "%" _64BITARG_ "d", *( SInt64*)inValue);
             break;
         
         case qtssAttrDataTypeUInt64:
-            qtss_sprintf(theString, "%"_64BITARG_"u", *( UInt64*)inValue);
+            qtss_sprintf(theString, "%" _64BITARG_ "u", *( UInt64*)inValue);
             break;
         
         case qtssAttrDataTypeFloat32:
@@ -370,7 +370,7 @@ char* QTSSDataConverter::ValueToString( void* inValue,
             break;
 
         case qtssAttrDataTypeTimeVal:
-            qtss_sprintf(theString, "%"_64BITARG_"d", *( SInt64*)inValue);
+            qtss_sprintf(theString, "%" _64BITARG_ "d", *( SInt64*)inValue);
             break;
 
         default:

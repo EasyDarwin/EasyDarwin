@@ -171,7 +171,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 		sServer->InitNumThreads(numThreads);
 		
     #if DEBUG
-        qtss_printf("Number of task threads: %"_U32BITARG_"\n",numThreads);
+        qtss_printf("Number of task threads: %" _U32BITARG_ "\n",numThreads);
     #endif
     
         // Start up the server's global tasks, and start listening
@@ -437,7 +437,7 @@ void DebugLevel_1(FILE*   statusFile, FILE*   stdOut,  Bool16 printHeader )
     print_status(statusFile, stdOut,"%11s", thePrefStr);
     delete [] thePrefStr; thePrefStr = NULL;
 
-    qtss_snprintf(numStr,sizeof(numStr) -1, "%"_S32BITARG_"", (SInt32) sServer->GetNumThinned() );
+    qtss_snprintf(numStr,sizeof(numStr) -1, "%"  _U32BITARG_  "", (SInt32) sServer->GetNumThinned() );
     print_status(statusFile, stdOut,"%11s", numStr);
  
     char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
