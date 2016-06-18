@@ -76,8 +76,8 @@ public:
     void                SetRequestBodyLength(SInt32 inLength)   { fRequestBodyLen = inLength; }
     SInt32              GetRemainingReqBodyLen()                { return fRequestBodyLen; }
 
-	QTSS_Error UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg);
-	void UnRegDevSession();
+	QTSS_Error UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg) const;
+	void UnRegDevSession() const;
     
     // QTSS STREAM FUNCTIONS
     
