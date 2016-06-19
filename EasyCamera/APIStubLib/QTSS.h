@@ -593,7 +593,7 @@ typedef union
     QTSS_CloseFile_Params				closeFileParams;
     QTSS_RequestEventFile_Params		reqEventFileParams; 
 
-	Easy_StartStream_Params				startStreaParams;
+	Easy_StartStream_Params				startStreamParams;
 	Easy_StopStream_Params				stopStreamParams;
 
 	Easy_CameraState_Params				cameraStateParams;

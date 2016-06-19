@@ -441,12 +441,12 @@ QTSS_Error EasyCMSSession::processMessage()
 
 				QTSS_RoleParams params;
 
-				params.startStreaParams.inIP = ip.c_str();
-				params.startStreaParams.inPort = atoi(port.c_str());
-				params.startStreaParams.inSerial = serial.c_str();
-				params.startStreaParams.inProtocol = protocol.c_str();
-				params.startStreaParams.inChannel = channel.c_str();
-				params.startStreaParams.inStreamID = streamID.c_str();
+				params.startStreamParams.inIP = ip.c_str();
+				params.startStreamParams.inPort = atoi(port.c_str());
+				params.startStreamParams.inSerial = serial.c_str();
+				params.startStreamParams.inProtocol = protocol.c_str();
+				params.startStreamParams.inChannel = channel.c_str();
+				params.startStreamParams.inStreamID = streamID.c_str();
 
 				QTSS_Error errCode = QTSS_NoErr;
 				UInt32 fCurrentModule = 0;
@@ -459,11 +459,11 @@ QTSS_Error EasyCMSSession::processMessage()
 				fCurrentModule = 0;
 
 				EasyJsonValue body;
-				body[EASY_TAG_SERIAL] = params.startStreaParams.inSerial;
-				body[EASY_TAG_CHANNEL] = params.startStreaParams.inChannel;
-				body[EASY_TAG_PROTOCOL] = params.startStreaParams.inProtocol;
-				body[EASY_TAG_SERVER_IP] = params.startStreaParams.inIP;
-				body[EASY_TAG_SERVER_PORT] = params.startStreaParams.inPort;
+				body[EASY_TAG_SERIAL] = params.startStreamParams.inSerial;
+				body[EASY_TAG_CHANNEL] = params.startStreamParams.inChannel;
+				body[EASY_TAG_PROTOCOL] = params.startStreamParams.inProtocol;
+				body[EASY_TAG_SERVER_IP] = params.startStreamParams.inIP;
+				body[EASY_TAG_SERVER_PORT] = params.startStreamParams.inPort;
 				body[EASY_TAG_RESERVE] = reserve;
 
 				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), getStatusNo(errCode));
