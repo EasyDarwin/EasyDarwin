@@ -60,9 +60,9 @@ void EasyCMSSession::Initialize(QTSS_ModulePrefsObject cmsModulePrefs)
 EasyCMSSession::EasyCMSSession()
 	: Task(),
 	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),
-	fTimeoutTask(this, sKeepAliveInterval * 1000),
-	fInputStream(fSocket),
-	fOutputStream(fSocket, &fTimeoutTask),
+	fTimeoutTask(NULL),
+	fInputStream(new HTTPRequestStream(fSocket)),
+	fOutputStream(NULL),
 	fSessionStatus(kSessionOffline),
 	fState(kIdle),
 	fRequest(NULL),
@@ -87,7 +87,9 @@ EasyCMSSession::EasyCMSSession()
 		fSocket->Set(SocketUtils::ConvertStringToAddr("www.easydss.com"), sEasyCMSPort);
 	}
 
-	fTimeoutTask.RefreshTimeout();
+	fTimeoutTask = new TimeoutTask(this, sKeepAliveInterval * 1000);
+	fOutputStream = new HTTPResponseStream(fSocket, fTimeoutTask);
+	fTimeoutTask->RefreshTimeout();
 
 }
 
@@ -108,6 +110,25 @@ EasyCMSSession::~EasyCMSSession()
 		delete[] fContentBuffer;
 		fContentBuffer = NULL;
 	}
+
+	if (fTimeoutTask)
+	{
+		delete fTimeoutTask;
+		fTimeoutTask = NULL;
+	}
+
+	if (fInputStream)
+	{
+		delete fInputStream;
+		fInputStream = NULL;
+	}
+
+	if (fOutputStream)
+	{
+		delete fOutputStream;
+		fOutputStream = NULL;
+	}
+
 }
 
 void EasyCMSSession::cleanupRequest()
@@ -120,7 +141,7 @@ void EasyCMSSession::cleanupRequest()
 	}
 
 	//清空发送缓冲区
-	fOutputStream.ResetBytesWritten();
+	fOutputStream->ResetBytesWritten();
 }
 
 SInt64 EasyCMSSession::Run()
@@ -139,7 +160,10 @@ SInt64 EasyCMSSession::Run()
 				if (!isConnected())
 				{
 					// TCPSocket未连接的情况,首先进行登录连接
-					doDSRegister();
+					if (doDSRegister() == QTSS_NoErr)
+					{
+						doDSPostSnap();
+					}
 				}
 				else
 				{
@@ -155,7 +179,13 @@ SInt64 EasyCMSSession::Run()
 					{
 						// 已连接，但状态为离线,重新进行上线动作
 						if (kSessionOffline == fSessionStatus)
-							doDSRegister();
+						{
+							if (doDSRegister() == QTSS_NoErr)
+							{
+								doDSPostSnap();
+							}
+						}
+					
 					}
 
 					if (events & Task::kReadEvent)
@@ -172,7 +202,7 @@ SInt64 EasyCMSSession::Run()
 						else
 							doDSRegister();
 
-						fTimeoutTask.RefreshTimeout();
+						fTimeoutTask->RefreshTimeout();
 					}
 
 					if (events & Task::kUpdateEvent)
@@ -183,7 +213,7 @@ SInt64 EasyCMSSession::Run()
 				}
 
 				// 如果有消息需要发送则进入发送流程
-				if (fOutputStream.GetBytesWritten() > 0)
+				if (fOutputStream->GetBytesWritten() > 0)
 				{
 					fState = kSendingMessage;
 				}
@@ -199,7 +229,7 @@ SInt64 EasyCMSSession::Run()
 		case kReadingMessage:
 			{
 				// 网络请求报文存储在fInputStream中
-				if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
+				if ((theErr = fInputStream->ReadRequest()) == QTSS_NoErr)
 				{
 					//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
 					//但！还不能构成一个整体报文Header部分，还要继续等待读取...
@@ -242,21 +272,21 @@ SInt64 EasyCMSSession::Run()
 		case kProcessingMessage:
 			{
 				// 处理网络报文
-				Assert(fInputStream.GetRequestBuffer());
+				Assert(fInputStream->GetRequestBuffer());
 				Assert(fRequest == NULL);
 
 				// 根据具体请求报文构造HTTPRequest请求类
-				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
+				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream->GetRequestBuffer());
 
 				// 清空发送缓冲区
-				fOutputStream.ResetBytesWritten();
+				fOutputStream->ResetBytesWritten();
 
 				Assert(theErr == QTSS_RequestArrived);
 
 				QTSS_Error theErr = processMessage();
 
 				// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
-				if (fOutputStream.GetBytesWritten() > 0)
+				if (fOutputStream->GetBytesWritten() > 0)
 				{
 					fState = kSendingMessage;
 				}
@@ -268,7 +298,7 @@ SInt64 EasyCMSSession::Run()
 			}
 		case kSendingMessage:
 			{
-				theErr = fOutputStream.Flush();
+				theErr = fOutputStream->Flush();
 
 				if (theErr == EAGAIN || theErr == EINPROGRESS)
 				{
@@ -368,7 +398,7 @@ QTSS_Error EasyCMSSession::processMessage()
 
 		UInt32 theLen = 0;
 		// 读取HTTP Content报文数据
-		theErr = fInputStream.Read(fContentBuffer + fContentBufferOffset, content_length - fContentBufferOffset, &theLen);
+		theErr = fInputStream->Read(fContentBuffer + fContentBufferOffset, content_length - fContentBufferOffset, &theLen);
 		Assert(theErr != QTSS_BadArgument);
 
 		if (theErr == QTSS_RequestFailed)
@@ -441,12 +471,12 @@ QTSS_Error EasyCMSSession::processMessage()
 
 				QTSS_RoleParams params;
 
-				params.startStreaParams.inIP = ip.c_str();
-				params.startStreaParams.inPort = atoi(port.c_str());
-				params.startStreaParams.inSerial = serial.c_str();
-				params.startStreaParams.inProtocol = protocol.c_str();
-				params.startStreaParams.inChannel = channel.c_str();
-				params.startStreaParams.inStreamID = streamID.c_str();
+				params.startStreamParams.inIP = ip.c_str();
+				params.startStreamParams.inPort = atoi(port.c_str());
+				params.startStreamParams.inSerial = serial.c_str();
+				params.startStreamParams.inProtocol = protocol.c_str();
+				params.startStreamParams.inChannel = channel.c_str();
+				params.startStreamParams.inStreamID = streamID.c_str();
 
 				QTSS_Error errCode = QTSS_NoErr;
 				UInt32 fCurrentModule = 0;
@@ -459,11 +489,11 @@ QTSS_Error EasyCMSSession::processMessage()
 				fCurrentModule = 0;
 
 				EasyJsonValue body;
-				body[EASY_TAG_SERIAL] = params.startStreaParams.inSerial;
-				body[EASY_TAG_CHANNEL] = params.startStreaParams.inChannel;
-				body[EASY_TAG_PROTOCOL] = params.startStreaParams.inProtocol;
-				body[EASY_TAG_SERVER_IP] = params.startStreaParams.inIP;
-				body[EASY_TAG_SERVER_PORT] = params.startStreaParams.inPort;
+				body[EASY_TAG_SERIAL] = params.startStreamParams.inSerial;
+				body[EASY_TAG_CHANNEL] = params.startStreamParams.inChannel;
+				body[EASY_TAG_PROTOCOL] = params.startStreamParams.inProtocol;
+				body[EASY_TAG_SERVER_IP] = params.startStreamParams.inIP;
+				body[EASY_TAG_SERVER_PORT] = params.startStreamParams.inPort;
 				body[EASY_TAG_RESERVE] = reserve;
 
 				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), getStatusNo(errCode));
@@ -482,9 +512,9 @@ QTSS_Error EasyCMSSession::processMessage()
 					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 					strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-					fOutputStream.Put(respHeader);
+					fOutputStream->Put(respHeader);
 					if (jsonContent.Len > 0)
-						fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+						fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
 				}
 			}
 			break;
@@ -534,9 +564,9 @@ QTSS_Error EasyCMSSession::processMessage()
 					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 					strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-					fOutputStream.Put(respHeader);
+					fOutputStream->Put(respHeader);
 					if (jsonContent.Len > 0)
-						fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+						fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
 				}
 			}
 			break;
@@ -638,8 +668,8 @@ void EasyCMSSession::resetClientSocket()
 	UInt32 inAddr = SocketUtils::ConvertStringToAddr(sEasyCMS_IP);
 	if (inAddr) fSocket->Set(inAddr, sEasyCMSPort);
 
-	fInputStream.AttachToSocket(fSocket);
-	fOutputStream.AttachToSocket(fSocket);
+	fInputStream->AttachToSocket(fSocket);
+	fOutputStream->AttachToSocket(fSocket);
 	fState = kIdle;
 
 	fNoneACKMsgCount = 0;
@@ -683,9 +713,9 @@ QTSS_Error EasyCMSSession::doDSRegister()
 		StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
 		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-		fOutputStream.Put(respHeader);
+		fOutputStream->Put(respHeader);
 		if (jsonContent.Len > 0)
-			fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+			fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
 	}
 
 	return theErr;
@@ -736,9 +766,9 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 			StrPtrLen* ackPtr = httpReq.GetCompleteHTTPHeader();
 			strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-			fOutputStream.Put(respHeader);
+			fOutputStream->Put(respHeader);
 			if (jsonContent.Len > 0)
-				fOutputStream.Put(jsonContent.Ptr, jsonContent.Len);
+				fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
 		}
 	}
 

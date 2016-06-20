@@ -780,7 +780,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParamBlock)
         
         // the first number is the NTP time used for the session identifier (this changes for each request)
         // the second number is the NTP date time of when the file was modified (this changes when the file changes)
-        qtss_sprintf(ownerLine, "o=StreamingServer %"_64BITARG_"d %"_64BITARG_"d IN IP4 %s", (SInt64) OS::UnixTime_Secs() + 2208988800LU, (SInt64) theFile->fFile.GetQTFile()->GetModDate(),ipCstr);
+        qtss_sprintf(ownerLine, "o=StreamingServer %" _64BITARG_ "d %" _64BITARG_ "d IN IP4 %s", (SInt64) OS::UnixTime_Secs() + 2208988800LU, (SInt64) theFile->fFile.GetQTFile()->GetModDate(),ipCstr);
         Assert(ownerLine[sLineSize - 1] == 0);
 
         StrPtrLen ownerStr(ownerLine);
@@ -891,7 +891,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParamBlock)
 	// findstring in line
 	// getline and insert line to media
 	/*
-	5.3.3.5 The bit-rate adaptation support attribute, “3GPP-Adaptation-Support” 
+	5.3.3.5 The bit-rate adaptation support attribute, ?GPP-Adaptation-Support?
 To signal the support of bit-rate adaptation, a media level only SDP attribute is defined in ABNF [53]: 
 sdp-Adaptation-line  = "a" "=" "3GPP-Adaptation-Support" ":" report-frequency CRLF 
 report-frequency  = NonZeroDIGIT [ DIGIT ] 

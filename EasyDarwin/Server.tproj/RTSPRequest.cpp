@@ -1085,7 +1085,7 @@ QTSS_Error RTSPRequest::SendBasicChallenge(void)
             
             memcpy(test,challenge.Ptr,challenge.Len);
             test[challenge.Len] = 0;
-            qtss_printf("the challenge string  =%s len = %"_S32BITARG_"\n",test, challenge.Len);
+            qtss_printf("the challenge string  =%s len = %" _S32BITARG_ "\n",test, challenge.Len);
         }
         #endif
 

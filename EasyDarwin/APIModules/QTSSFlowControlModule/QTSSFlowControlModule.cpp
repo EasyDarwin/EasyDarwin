@@ -295,7 +295,7 @@ QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
             else
             {
 #if FLOW_CONTROL_DEBUGGING
-                qtss_printf("Percent loss too high: Incrementing percent loss count to %"_U32BITARG_"\n", theNumLossesAboveTol);
+                qtss_printf("Percent loss too high: Incrementing percent loss count to %"   _U32BITARG_   "\n", theNumLossesAboveTol);
 #endif
                 (void)QTSS_SetValue(theStream, sNumLossesAboveTolAttr, 0, &theNumLossesAboveTol, sizeof(theNumLossesAboveTol));
                 clearPercentLossThinCount = false;
@@ -315,7 +315,7 @@ QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
             else
             {
 #if FLOW_CONTROL_DEBUGGING
-                qtss_printf("Percent is low: Incrementing percent loss count to %"_U32BITARG_"\n", theNumLossesBelowTol);
+                qtss_printf("Percent is low: Incrementing percent loss count to %"   _U32BITARG_   "\n", theNumLossesBelowTol);
 #endif
                 (void)QTSS_SetValue(theStream, sNumLossesBelowTolAttr, 0, &theNumLossesBelowTol, sizeof(theNumLossesBelowTol));
                 clearPercentLossThickCount = false;
@@ -344,7 +344,7 @@ QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
             else
             {
 #if FLOW_CONTROL_DEBUGGING
-                qtss_printf("Client reporting getting worse. Incrementing num worses count to %"_U32BITARG_"\n", theNumWorses);
+                qtss_printf("Client reporting getting worse. Incrementing num worses count to %"   _U32BITARG_   "\n", theNumWorses);
 #endif
                 (void)QTSS_SetValue(theStream, sNumWorsesAttr, 0, &theNumWorses, sizeof(theNumWorses));
             }

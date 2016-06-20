@@ -69,7 +69,7 @@ HTTPSessionInterface::HTTPSessionInterface()
     fTimeoutTask.SetTask(this);
     fSocket.SetTask(this);
 
-    fSessionIndex = (UInt32)atomic_add(&sSessionIndexCounter, 1);
+    fSessionIndex = static_cast<UInt32>(atomic_add(&sSessionIndexCounter, 1));
     this->SetVal(EasyHTTPSesIndex, &fSessionIndex, sizeof(fSessionIndex));
 
     this->SetVal(EasyHTTPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));
@@ -95,7 +95,7 @@ HTTPSessionInterface::~HTTPSessionInterface()
 	
 	char remoteAddress[20] = {0};
 	StrPtrLen theIPAddressStr(remoteAddress,sizeof(remoteAddress));
-	QTSS_GetValue(this, EasyHTTPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
+	QTSS_GetValue(this, EasyHTTPSesRemoteAddrStr, 0, static_cast<void*>(theIPAddressStr.Ptr), &theIPAddressStr.Len);
 	char msgStr[2048] = { 0 };
 	
 	switch(fSessionType)
@@ -142,7 +142,7 @@ QTSS_Error HTTPSessionInterface::Write(void* inBuffer, UInt32 inLength,
         sendType = HTTPResponseStream::kAlwaysBuffer;
     
     iovec theVec[2];
-    theVec[1].iov_base = (char*)inBuffer;
+    theVec[1].iov_base = static_cast<char*>(inBuffer);
     theVec[1].iov_len = inLength;
     return fOutputStream.WriteV(theVec, 2, inLength, outLenWritten, sendType);
 }
@@ -161,7 +161,7 @@ QTSS_Error HTTPSessionInterface::Read(void* ioBuffer, UInt32 inLength, UInt32* o
     if (fRequestBodyLen == 0)
         return QTSS_NoMoreData;
         
-    if ((fRequestBodyLen > 0) && ((SInt32)inLength > fRequestBodyLen))
+    if ((fRequestBodyLen > 0) && (static_cast<SInt32>(inLength) > fRequestBodyLen))
         inLength = fRequestBodyLen;
     
     UInt32 theLenRead = 0;
@@ -207,7 +207,7 @@ void    HTTPSessionInterface::SnarfInputSocket( HTTPSessionInterface* fromHTTPSe
 
 void* HTTPSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*outLen*/)
 {
-    HTTPSessionInterface* theSession = (HTTPSessionInterface*)inSession;
+    HTTPSessionInterface* theSession = static_cast<HTTPSessionInterface*>(inSession);
  
     theSession->fLocalAddr = theSession->fSocket.GetLocalAddr();
     theSession->fRemoteAddr = theSession->fSocket.GetRemoteAddr();
@@ -235,13 +235,13 @@ void* HTTPSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*out
     return NULL;
 }
 
-QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg)
+QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg) const
 {
 	if(!fAuthenticated) return QTSS_NoErr;
 	return QTSS_NoErr;
 }
 
-void HTTPSessionInterface::UnRegDevSession()
+void HTTPSessionInterface::UnRegDevSession() const
 {
 	if (fAuthenticated)
 	{
@@ -254,7 +254,7 @@ void HTTPSessionInterface::UnRegDevSession()
 		//QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
 
 		QTSS_RoleParams theParams;
-		theParams.StreamNameParams.inStreamName = (char *)(fDevice.serial_.c_str());
+		theParams.StreamNameParams.inStreamName = const_cast<char *>(fDevice.serial_.c_str());
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelDevNameRole);
 		for ( UInt32 currentModule=0;currentModule < numModules; currentModule++)
 		{

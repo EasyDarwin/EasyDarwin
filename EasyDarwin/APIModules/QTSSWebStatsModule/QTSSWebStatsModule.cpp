@@ -310,7 +310,7 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayH
 
     if (refreshInterval > 0)
     {
-        qtss_sprintf(buffer, "<META HTTP-EQUIV=Refresh CONTENT=%"_U32BITARG_">\n", refreshInterval);
+        qtss_sprintf(buffer, "<META HTTP-EQUIV=Refresh CONTENT=%"   _U32BITARG_   ">\n", refreshInterval);
         (void)QTSS_Write(inStream, buffer, ::strlen(buffer), NULL, 0);
     }
         
@@ -453,11 +453,11 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayH
                 UInt32 upTimeHours = (upTime % kDaySeconds) / kHourSeconds;
                 UInt32 upTimeMinutes = (upTime % kHourSeconds) / kMinuteSeconds;
                 UInt32 upTimeSeconds = (upTime % kMinuteSeconds);
-                qtss_snprintf(uptimebuffer,sizeof(uptimebuffer), "<b>Up Time Total Seconds: </b> %"_U32BITARG_"<BR>\n", upTime);
+                qtss_snprintf(uptimebuffer,sizeof(uptimebuffer), "<b>Up Time Total Seconds: </b> %"   _U32BITARG_   "<BR>\n", upTime);
                 uptimebuffer[sizeof(uptimebuffer) -1] = 0;
                 (void)QTSS_Write(inStream, uptimebuffer, ::strlen(uptimebuffer), NULL, 0);    
                        
-                qtss_snprintf(uptimebuffer,sizeof(uptimebuffer), "<b>Up Time: </b> %"_U32BITARG_" days %"_U32BITARG_" hours %"_U32BITARG_" minutes %"_U32BITARG_" seconds <BR>\n", upTimeDays, upTimeHours,upTimeMinutes, upTimeSeconds);
+                qtss_snprintf(uptimebuffer,sizeof(uptimebuffer), "<b>Up Time: </b> %"   _U32BITARG_   " days %"   _U32BITARG_   " hours %"   _U32BITARG_   " minutes %"   _U32BITARG_   " seconds <BR>\n", upTimeDays, upTimeHours,upTimeMinutes, upTimeSeconds);
                 uptimebuffer[sizeof(uptimebuffer) -1] = 0;
                 (void)QTSS_Write(inStream, uptimebuffer, ::strlen(uptimebuffer), NULL, 0);    
             }
@@ -592,7 +592,7 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayH
                 theLen = sizeof(curBandwidth);
                 (void)QTSS_GetValue(sServer, qtssRTPSvrCurBandwidth, 0, &curBandwidth, &theLen);
 
-                qtss_sprintf(buffer, "<b>Current Throughput: </b> %"_U32BITARG_" kbits<BR>\n", curBandwidth/1024);
+                qtss_sprintf(buffer, "<b>Current Throughput: </b> %"   _U32BITARG_   " kbits<BR>\n", curBandwidth/1024);
                 (void)QTSS_Write(inStream, buffer, ::strlen(buffer), NULL, 0);      
             }
             break;
@@ -917,7 +917,7 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayH
                 UInt32 reliableUDPBuffers = 0;
                 UInt32 blahSize = sizeof(reliableUDPBuffers);
                 (void)QTSS_GetValue(sServer, qtssSvrNumReliableUDPBuffers, 0, &reliableUDPBuffers, &blahSize);
-                qtss_sprintf(buffer, "<b>Num Reliable UDP Retransmit Buffers: </b> %"_U32BITARG_"<BR>\n", reliableUDPBuffers);
+                qtss_sprintf(buffer, "<b>Num Reliable UDP Retransmit Buffers: </b> %"   _U32BITARG_   "<BR>\n", reliableUDPBuffers);
                 (void)QTSS_Write(inStream, buffer, ::strlen(buffer), NULL, 0);      
             }
             break;
@@ -927,7 +927,7 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayH
                 UInt32 wastedBufSpace = 0;
                 UInt32 blahSize2 = sizeof(wastedBufSpace);
                 (void)QTSS_GetValue(sServer, qtssSvrReliableUDPWastageInBytes, 0, &wastedBufSpace, &blahSize2);
-                qtss_sprintf(buffer, "<b>Amount of buffer space being wasted in UDP Retrans buffers: </b> %"_U32BITARG_"<BR>\n", wastedBufSpace);
+                qtss_sprintf(buffer, "<b>Amount of buffer space being wasted in UDP Retrans buffers: </b> %"   _U32BITARG_   "<BR>\n", wastedBufSpace);
                 (void)QTSS_Write(inStream, buffer, ::strlen(buffer), NULL, 0);      
             }
             break;

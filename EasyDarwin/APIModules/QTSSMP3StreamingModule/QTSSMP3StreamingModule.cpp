@@ -516,7 +516,7 @@ QTSS_Error MP3BroadcasterSession::GetBroadcastHeaders()
     else
     {
         // The read failed with an error other than QTSS_WouldBlock
-        DTRACE1("MP3BroadcasterSession::GetBroadcastHeaders() - read failed with err = %"_S32BITARG_"\n", theErr);
+        DTRACE1("MP3BroadcasterSession::GetBroadcastHeaders() - read failed with err = %" _S32BITARG_ "\n", theErr);
         Assert(0);
     }
     return theErr;
@@ -559,7 +559,7 @@ QTSS_Error MP3BroadcasterSession::GetBroadcastData()
     }
     else
     {
-        DTRACE1("MP3BroadcasterSession::GetBroadcastData() - read failed with err = %"_S32BITARG_"\n", theErr);
+        DTRACE1("MP3BroadcasterSession::GetBroadcastData() - read failed with err = %" _S32BITARG_ "\n", theErr);
         Assert(0);
         ShutDownState();
     }
@@ -886,20 +886,20 @@ QTSS_Error MP3ClientSession::SendMP3Data(char* buffer, UInt32 bufferlen)
         SInt64 curTime = OS::Milliseconds();
         fWasBlocked = true;
         QTSS_RequestEvent(GetStreamRef(), QTSS_WriteableEvent);
-                DTRACE2("Got blocked at time %qd, numRetries = %"_S32BITARG_"\n", curTime, fRetryCount);
+                DTRACE2("Got blocked at time %qd, numRetries = %" _S32BITARG_ "\n", curTime, fRetryCount);
         if (fBlockTime == 0)
             fBlockTime = curTime;
         fRetryCount++;
         if (curTime - fBlockTime > sMaxFlowControlTimeInMSec)
         {
             SetResult(453);
-                        DTRACE1("MP3ClientSession::SendMP3Data - too many tries. Terminating client session = %"_S32BITARG_"\n", GetSessionID());
+                        DTRACE1("MP3ClientSession::SendMP3Data - too many tries. Terminating client session = %" _S32BITARG_ "\n", GetSessionID());
             SetState(MP3ClientSession::kClientShutDownState);
         }
     }
     else if (theErr != QTSS_NoErr)
     {
-                DTRACE1("MP3ClientSession::SendMP3Data - Terminating client session = %"_S32BITARG_"\n", GetSessionID());
+                DTRACE1("MP3ClientSession::SendMP3Data - Terminating client session = %" _S32BITARG_ "\n", GetSessionID());
         SetState(MP3ClientSession::kClientShutDownState);
     }
     else
@@ -1353,7 +1353,7 @@ QTSS_Error MP3BroadcasterQueue::CreateBroadcaster(QTSS_RTSPSessionObject sess, Q
     {
         OSMutexLocker locker(&fMutex);
         fQueue.EnQueue(elem);
-        DTRACE1("MP3BroadcasterQueue::CreateBroadcaster() Session(%"_S32BITARG_") broadcaster added!\n", uSessID);
+        DTRACE1("MP3BroadcasterQueue::CreateBroadcaster() Session(%" _S32BITARG_ ") broadcaster added!\n", uSessID);
         // send the "OK" back to the broadcaster
         theErr = broadcaster->SendOKResponse();
         // If we failed to send the "OK" probably becuase of flow control
@@ -1388,7 +1388,7 @@ QTSS_Error MP3BroadcasterQueue::RemoveBroadcaster(QTSS_RTSPSessionObject sess)
         {
             elem->Remove();
             uSessID = current->GetSessionID();
-            DTRACE1("MP3BroadcasterQueue::RemoveBroadcaster() Session(%"_S32BITARG_") broadcaster removed!\n", uSessID);
+            DTRACE1("MP3BroadcasterQueue::RemoveBroadcaster() Session(%" _S32BITARG_ ") broadcaster removed!\n", uSessID);
             delete elem;
             delete current;
             return QTSS_NoErr;
@@ -1604,7 +1604,7 @@ QTSS_Error MP3ClientQueue::AddClient(QTSS_RTSPSessionObject sess, QTSS_StreamRef
     {
         OSMutexLocker locker(&fMutex);
         fQueue.EnQueue(elem);
-        DTRACE1("MP3ClientQueue::AddClient() Session(%"_S32BITARG_") client added!\n", uSessID);
+        DTRACE1("MP3ClientQueue::AddClient() Session(%" _S32BITARG_ ") client added!\n", uSessID);
         // send the "OK" back to the broadcaster
         theErr = client->SendResponse();
     }
@@ -1634,7 +1634,7 @@ QTSS_Error MP3ClientQueue::RemoveClient(QTSS_RTSPSessionObject sess)
         {
             elem->Remove();
             uSessID = curClient->GetSessionID();
-            DTRACE1("MP3ClientQueue::RemoveClient() Session(%"_S32BITARG_") client removed!\n", uSessID);
+            DTRACE1("MP3ClientQueue::RemoveClient() Session(%" _S32BITARG_ ") client removed!\n", uSessID);
             delete elem;
             delete curClient;
             return QTSS_NoErr;
@@ -1904,7 +1904,7 @@ QTSS_Error SessionClosing(QTSS_RTSPSession_Params* inParams)
 #if DEBUG_MP3STREAMING_MODULE
     UInt32 uSessID = 0L;
     uSessID = GetRTSPSessionID(inParams->inRTSPSession);
-    DTRACE1("Closing SessionID = %"_S32BITARG_"\n", uSessID);
+    DTRACE1("Closing SessionID = %" _S32BITARG_ "\n", uSessID);
 #endif
     MP3Session* mp3sess = sMP3SessionTable.Resolve(inParams->inRTSPSession);
     // If Resolve() returns a non-NULL value then we are closing
@@ -1985,7 +1985,7 @@ void IncrementMP3SessionCount()
     }
     else
     {
-        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrCurConn failed with err = %"_S32BITARG_"\n", (SInt32)err);
+        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrCurConn failed with err = %" _S32BITARG_ "\n", (SInt32)err);
     }
     // bump the total sessions count up also
     err = QTSS_GetValuePtr(sServer, qtssMP3SvrTotalConn, 0, (void**)&ptrValue, &valueLen);
@@ -1995,7 +1995,7 @@ void IncrementMP3SessionCount()
     }
     else
     {
-        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrTotalConn failed with err = %"_S32BITARG_"\n", (SInt32)err);
+        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrTotalConn failed with err = %" _S32BITARG_ "\n", (SInt32)err);
     }
 }
 
@@ -2016,7 +2016,7 @@ void DecrementMP3SessionCount()
     }
     else
     {
-        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrCurConn failed with err = %"_S32BITARG_"\n", (SInt32)err);
+        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrCurConn failed with err = %" _S32BITARG_ "\n", (SInt32)err);
     }
 }
 
@@ -2037,7 +2037,7 @@ void IncrementTotalMP3Bytes(UInt32 bytes)
     }
     else
     {
-        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrTotalBytes failed with err = %"_S32BITARG_"\n", (SInt32)err);
+        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrTotalBytes failed with err = %" _S32BITARG_ "\n", (SInt32)err);
     }
 }
 
@@ -2059,7 +2059,7 @@ Bool16 CheckBandwidth(SInt32 bandwidth)
     }
     else
     {
-        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrCurBandwidth failed with err = %"_S32BITARG_"\n", (SInt32)err);
+        DTRACE1("QTSS_GetValuePtr() for qtssMP3SvrCurBandwidth failed with err = %" _S32BITARG_ "\n", (SInt32)err);
     }
     return false;
 }
@@ -2614,7 +2614,7 @@ QTSS_Error LogRequest(QTSS_RTSPSessionObject inRTSPSession, MP3ClientSession* cl
     reqResult = client->GetResult();
 
     // Format the access log entry parameters here...
-    qtss_sprintf(logbuffer, "%s \"%s\" [%s] \"%s\" %d %"_S32BITARG_" %"_S32BITARG_"\n",
+    qtss_sprintf(logbuffer, "%s \"%s\" [%s] \"%s\" %d %" _S32BITARG_ " %" _S32BITARG_ "\n",
         remoteAddress,
                 userAgent,
         theDateBuffer,
@@ -2779,7 +2779,7 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
     // Debugging info - Retrieve the RTSP session ID associated with this session.
     UInt32 uSessID = 0L;
     uSessID = GetRTSPSessionID(inParams->inRTSPSession);
-    DTRACE1("####\n###Filtering SessionID = %"_S32BITARG_"\n", uSessID);
+    DTRACE1("####\n###Filtering SessionID = %" _S32BITARG_ "\n", uSessID);
 #endif
     
     // See if we have exceeded our maximum number of client connections
@@ -2854,7 +2854,7 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
                         // construct the reply string for the client.
                         qtss_snprintf(tmp,sizeof(tmp) -1, "http://%d.%d.%d.%d:8000%s", x1,x2,x3,x4, theURL);
                         ulen = ::strlen(tmp);
-                        qtss_snprintf(tmpbuf,sizeof(tmpbuf) -1, "%s %"_U32BITARG_"\r\n\r\n%s\r\n", gM3UReplyHeader, ulen, tmp);
+                        qtss_snprintf(tmpbuf,sizeof(tmpbuf) -1, "%s %"   _U32BITARG_   "\r\n\r\n%s\r\n", gM3UReplyHeader, ulen, tmp);
                         ulen = ::strlen(tmpbuf);
             // send the reply to the client.
             err = QTSS_Write(inParams->inRTSPRequest, tmpbuf, ulen, NULL, qtssWriteFlagsBufferData);

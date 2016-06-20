@@ -680,7 +680,7 @@ QTTrack::ErrorCode QTHintTrack::GetNumPackets(UInt32 sampleNumber, UInt16 * numP
 QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock * htcb, char **buffPtr, char **ppPacketBufOut, UInt32 sampleNumber, UInt16 packetNumber, UInt32 buffOutLen )
 {
 
-//  qtss_printf("GetSampleData sampleNumber = %"_U32BITARG_" packetNumber = %"_U32BITARG_" buffOutLen = %"_U32BITARG_" \n",sampleNumber, packetNumber, buffOutLen);
+//  qtss_printf("GetSampleData sampleNumber = %"   _U32BITARG_   " packetNumber = %"   _U32BITARG_   " buffOutLen = %"   _U32BITARG_   " \n",sampleNumber, packetNumber, buffOutLen);
     // General vars
     SInt8       trackRefIndex = 0;
     UInt16      readLength = 0;
@@ -747,13 +747,13 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
     if( samplesPerCompressionBlock == 0 )
         samplesPerCompressionBlock = 1;
 
-    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - ....Sample entry found (sample#=%"_U32BITARG_"; offset=%"_U32BITARG_"; length=%u; BPCB=%u; SPCB=%u)\n", mediaSampleNumber, readOffset, readLength, bytesPerCompressionBlock, samplesPerCompressionBlock));
+    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - ....Sample entry found (sample#=%"   _U32BITARG_   "; offset=%"   _U32BITARG_   "; length=%u; BPCB=%u; SPCB=%u)\n", mediaSampleNumber, readOffset, readLength, bytesPerCompressionBlock, samplesPerCompressionBlock));
     
     if( trackRefIndex == -1 ) 
     {
         if (kUnknown == fHintType)
             fHintType = kOptimized;
-//      qtss_printf("hint track sample = %"_S32BITARG_" \n", mediaSampleNumber);
+//      qtss_printf("hint track sample = %" _S32BITARG_ " \n", mediaSampleNumber);
         //
         // We're getting data out of the hint track..
         #if TESTTIME
@@ -773,7 +773,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
                 && (readLength == htcb->fCachedHintTrackSampleLength)
             ) 
         {
-//          qtss_printf("found cached hint sample = %"_S32BITARG_" \n", mediaSampleNumber);
+//          qtss_printf("found cached hint sample = %" _S32BITARG_ " \n", mediaSampleNumber);
             if ( (char *) (*ppPacketBufOut + readLength -1) > maxBuffPtr )
             {   return errInvalidQuickTimeFile;
             }
@@ -788,7 +788,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
             } 
             if (hintPacketCount >= kMaxPacketCount)
             {
-//                  qtss_printf("hintPacketCount = %"_S32BITARG_" hint get info time = %f hint bytes read = %d read time = %f\n", hintPacketCount, (float) (totalHintSampleReadTime - totalHintReadTime)  / eMilli,totalHintLength, (float)  totalHintReadTime/ eMilli);
+//                  qtss_printf("hintPacketCount = %" _S32BITARG_ " hint get info time = %f hint bytes read = %d read time = %f\n", hintPacketCount, (float) (totalHintSampleReadTime - totalHintReadTime)  / eMilli,totalHintLength, (float)  totalHintReadTime/ eMilli);
                 hintPacketCount = 0;
                 totalHintSampleReadTime = 0;
                 totalHintLength = 0;
@@ -806,7 +806,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
                 && ((readOffset + readLength) <= htcb->fCachedSampleLength)
             ) 
         {
-//          qtss_printf("found currently cached sample = %"_S32BITARG_" \n", mediaSampleNumber);
+//          qtss_printf("found currently cached sample = %" _S32BITARG_ " \n", mediaSampleNumber);
             if ( (char *) (*ppPacketBufOut + readLength -1) > maxBuffPtr)
             {   return errInvalidQuickTimeFile;
             }
@@ -822,7 +822,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
             
             if (hintPacketCount >= kMaxPacketCount) 
             {
-//              qtss_printf("hintPacketCount = %"_S32BITARG_" hint get info time = %f hint bytes read = %d read time = %f\n", hintPacketCount, (float) (totalHintSampleReadTime - totalHintReadTime) / eMilli,totalHintLength, (float)  totalHintReadTime/ eMilli);
+//              qtss_printf("hintPacketCount = %" _S32BITARG_ " hint get info time = %f hint bytes read = %d read time = %f\n", hintPacketCount, (float) (totalHintSampleReadTime - totalHintReadTime) / eMilli,totalHintLength, (float)  totalHintReadTime/ eMilli);
                 hintPacketCount = 0;
                 totalHintSampleReadTime = 0;
                 totalHintLength = 0;
@@ -856,7 +856,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
         if (kUnknown == fHintType || kOptimized == fHintType) // if uninitialized or self-referencing then reset
             fHintType = kUnoptimized;
 
-//      qtss_printf("media track sample = %"_S32BITARG_" \n", mediaSampleNumber);
+//      qtss_printf("media track sample = %" _S32BITARG_ " \n", mediaSampleNumber);
             
         #if TESTTIME
                 isMediaSample = true;
@@ -900,8 +900,8 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
                 || (!isOneForOne)   // compressed data is normally defined by bytesPerCompressionBlock or samplesPerCompressionBlock 
             )
         {
-//          qtss_printf("track = %"_S32BITARG_" sample  = %"_S32BITARG_" is compressed \n",this, mediaSampleNumber);
-//          qtss_printf("is compressed bytesPerCompressionBlock = %"_S32BITARG_" samplesPerCompressionBlock = %d sampleLength = %"_S32BITARG_"\n", bytesPerCompressionBlock, samplesPerCompressionBlock, sampleLength);
+//          qtss_printf("track = %" _S32BITARG_ " sample  = %" _S32BITARG_ " is compressed \n",this, mediaSampleNumber);
+//          qtss_printf("is compressed bytesPerCompressionBlock = %" _S32BITARG_ " samplesPerCompressionBlock = %d sampleLength = %" _S32BITARG_ "\n", bytesPerCompressionBlock, samplesPerCompressionBlock, sampleLength);
             isCompressed = true;
         }
 
@@ -937,13 +937,13 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
 
             if ( (remainingLength > 0) && (sampleFirstPartLength > 0) ) // this packet is split across chunks
             {
-//              qtss_printf("mediaSampleNumber = %"_S32BITARG_" is compressed and split across chunks first part = %"_S32BITARG_" remaining = %"_S32BITARG_"\n",mediaSampleNumber, readLength, remainingLength);
+//              qtss_printf("mediaSampleNumber = %" _S32BITARG_ " is compressed and split across chunks first part = %" _S32BITARG_ " remaining = %" _S32BITARG_ "\n",mediaSampleNumber, readLength, remainingLength);
                 readLength = (UInt16) sampleFirstPartLength;
             }
             else
             {   // this is still needed. For some movies the compressed split packet calculation doesn't match the simple dataOffset calc below --a problem with sampleOffsetInChunk
 //              qtss_printf("compressed but not split across chunks \n");
-//              qtss_printf("chunkOffset = %"_S32BITARG_"  ",chunkOffset);
+//              qtss_printf("chunkOffset = %" _S32BITARG_ "  ",chunkOffset);
 //              qtss_printf("old dataOffset = %qd ",dataOffset);
                 remainingLength = 0;
                 dataOffset = chunkOffset + readOffset + (UInt64)(sampleOffsetInChunk * ((Float64)bytesPerCompressionBlock / (Float64)samplesPerCompressionBlock));
@@ -956,7 +956,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
             }
             
             #if TESTTIME
-//              qtss_printf("Read mediaSampleNumber = %"_S32BITARG_" dataOffset = %qd  readLength = %"_S32BITARG_" remaining = %"_S32BITARG_"\n",mediaSampleNumber, dataOffset, readLength, remainingLength);
+//              qtss_printf("Read mediaSampleNumber = %" _S32BITARG_ " dataOffset = %qd  readLength = %" _S32BITARG_ " remaining = %" _S32BITARG_ "\n",mediaSampleNumber, dataOffset, readLength, remainingLength);
                 readStart = GetMicroseconds();
                         
                 if ( (char *) (*ppPacketBufOut + readLength -1) > maxBuffPtr)
@@ -967,7 +967,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
                     return (errInvalidQuickTimeFile);
                 totalMediaReadTime += GetMicroseconds() - readStart;
             #else
-//              qtss_printf("Read mediaSampleNumber = %"_S32BITARG_" dataOffset = %qd  readLength = %"_S32BITARG_" remaining = %"_S32BITARG_"\n",mediaSampleNumber, dataOffset, readLength, remainingLength);
+//              qtss_printf("Read mediaSampleNumber = %" _S32BITARG_ " dataOffset = %qd  readLength = %" _S32BITARG_ " remaining = %" _S32BITARG_ "\n",mediaSampleNumber, dataOffset, readLength, remainingLength);
     
                 if ( (char *) (*ppPacketBufOut + readLength -1) > maxBuffPtr)
                 {   return errInvalidQuickTimeFile;
@@ -985,7 +985,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
     
             while (remainingLength > 0)  // loop if packet is split across more than just two chunks
             {   
-//              qtss_printf("mediaSampleNumber = %"_S32BITARG_" remaining read  = %"_S32BITARG_"\n",mediaSampleNumber, remainingLength);
+//              qtss_printf("mediaSampleNumber = %" _S32BITARG_ " remaining read  = %" _S32BITARG_ "\n",mediaSampleNumber, remainingLength);
             
                 readLength = (UInt16)  remainingLength; // set the read to what is left           
                 chunkNumber++; // The rest of the sample is in the next N chunks 
@@ -1021,7 +1021,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
                 }
                 
                 #if TESTTIME
-//                  qtss_printf("Read next parts mediaSampleNumber = %"_S32BITARG_" dataOffset = %qd  readLength = %"_S32BITARG_" remaining = %"_S32BITARG_"\n",mediaSampleNumber, dataOffset, readLength, remainingLength);
+//                  qtss_printf("Read next parts mediaSampleNumber = %" _S32BITARG_ " dataOffset = %qd  readLength = %" _S32BITARG_ " remaining = %" _S32BITARG_ "\n",mediaSampleNumber, dataOffset, readLength, remainingLength);
                     readStart = GetMicroseconds();
                     
                     if ( (char *) (*ppPacketBufOut + readLength -1) > maxBuffPtr)
@@ -1073,14 +1073,14 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
 
         if( htcb->fCachedHintTrackSample == NULL ) 
         {
-//          qtss_printf("create a cache buffer for %"_S32BITARG_" of size %"_S32BITARG_"\n",mediaSampleNumber,cacheHintSampleLen); 
+//          qtss_printf("create a cache buffer for %" _S32BITARG_ " of size %" _S32BITARG_ "\n",mediaSampleNumber,cacheHintSampleLen); 
             htcb->fCachedHintTrackSample = NEW char[ (SInt32) cacheHintSampleLen];
             htcb->fCachedHintTrackBufferLength = (SInt32) cacheHintSampleLen;
         
         }
         else if (htcb->fCachedHintTrackBufferLength < cacheHintSampleLen )
         {
-//          qtss_printf("reallocate a cache buffer for %"_S32BITARG_" of size %"_S32BITARG_"\n",mediaSampleNumber,cacheHintSampleLen); 
+//          qtss_printf("reallocate a cache buffer for %" _S32BITARG_ " of size %" _S32BITARG_ "\n",mediaSampleNumber,cacheHintSampleLen); 
             htcb->fCachedHintTrackSampleNumber = 0;
             htcb->fCachedHintTrackSampleOffset = 0;
             delete[] htcb->fCachedHintTrackSample;
@@ -1094,7 +1094,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
             
             if( htcb->fCachedHintTrackSample != NULL ) 
             {
-//              qtss_printf("cache a hint sample sampleNumber %"_S32BITARG_" readLength = %"_S32BITARG_"\n",mediaSampleNumber,cacheHintSampleLen); 
+//              qtss_printf("cache a hint sample sampleNumber %" _S32BITARG_ " readLength = %" _S32BITARG_ "\n",mediaSampleNumber,cacheHintSampleLen); 
                 ::memcpy(htcb->fCachedHintTrackSample, buffOutPtr, (UInt32) cacheHintSampleLen);
                 htcb->fCachedHintTrackSampleNumber = mediaSampleNumber;
                 htcb->fCachedHintTrackSampleOffset = readOffset;
@@ -1110,7 +1110,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
         }
         if (mediaPacketCount >= kMaxPacketCount)
         {   
-//          qtss_printf("mediaPacketCount = %"_S32BITARG_" media get info time = %f media bytes read = %d read time = %f\n", mediaPacketCount, (float) (totalMediaSampleReadTime - totalMediaReadTime) / eMilli, totalMediaLength, (float)  totalMediaReadTime/ eMilli);
+//          qtss_printf("mediaPacketCount = %" _S32BITARG_ " media get info time = %f media bytes read = %d read time = %f\n", mediaPacketCount, (float) (totalMediaSampleReadTime - totalMediaReadTime) / eMilli, totalMediaLength, (float)  totalMediaReadTime/ eMilli);
             totalMediaSampleReadTime = 0;
             mediaPacketCount = 0;
             totalMediaLength = 0;
@@ -1123,7 +1123,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData( QTHintTrack_HintTrackControlBlock
         } 
         else if (isHintSample && (hintPacketCount >= kMaxPacketCount) )
         {
-//          qtss_printf("hintPacketCount = %"_S32BITARG_" hint get info time = %f hint bytes read = %d read time = %f\n", hintPacketCount, (float) (totalHintSampleReadTime - totalHintReadTime) / eMilli,totalHintLength, (float)  totalHintReadTime/ eMilli);
+//          qtss_printf("hintPacketCount = %" _S32BITARG_ " hint get info time = %f hint bytes read = %d read time = %f\n", hintPacketCount, (float) (totalHintSampleReadTime - totalHintReadTime) / eMilli,totalHintLength, (float)  totalHintReadTime/ eMilli);
             hintPacketCount = 0;
             totalHintSampleReadTime = 0;
             totalHintLength = 0;
@@ -1168,7 +1168,7 @@ QTTrack::ErrorCode QTHintTrack::GetPacket(UInt32 sampleNumber, UInt16 packetNumb
     
     Assert(htcb != NULL);
     
-    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - Building packet #%u in sample %"_U32BITARG_".\n", packetNumber, sampleNumber));
+    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - Building packet #%u in sample %"   _U32BITARG_   ".\n", packetNumber, sampleNumber));
 
     //
     // Get the RTP timestamp for this sample.
@@ -1236,7 +1236,7 @@ QTTrack::ErrorCode QTHintTrack::GetPacket(UInt32 sampleNumber, UInt16 packetNumb
     
 
     
-    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - ..rtpTimestamp=%"_U32BITARG_"; rtpSequenceNumber=%u; transmitTime=%.2f\n", rtpTimestamp, hdrData.rtpSequenceNumber, *transmitTime));
+    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - ..rtpTimestamp=%"   _U32BITARG_   "; rtpSequenceNumber=%u; transmitTime=%.2f\n", rtpTimestamp, hdrData.rtpSequenceNumber, *transmitTime));
 
     //
     // We found this packet and the start of our data table.
@@ -1429,7 +1429,7 @@ QTTrack::ErrorCode QTHintTrack::GetPacket(UInt32 sampleNumber, UInt16 packetNumb
         pSampleBuffer += 16;
     }
     
-    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - ..Packet length is %"_U32BITARG_" bytes.\n", packetSize));
+    DEEP_DEBUG_PRINT(("QTHintTrack::GetPacket - ..Packet length is %"   _U32BITARG_   " bytes.\n", packetSize));
 
     *length = packetSize;
     

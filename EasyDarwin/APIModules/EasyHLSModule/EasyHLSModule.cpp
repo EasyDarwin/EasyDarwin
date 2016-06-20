@@ -231,7 +231,7 @@ QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 
     if (session->GetRef()->GetRefCount() == 0)
     {   
-        qtss_printf("EasyHLSModule.cpp:EasyHLSClose UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", session->GetRef(), session->GetRef()->GetRefCount() ) ;       
+        qtss_printf("EasyHLSModule.cpp:EasyHLSClose UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", session->GetRef(), session->GetRef()->GetRefCount() ) ;       
         sHLSSessionMap->UnRegister(session->GetRef());
 		session->Signal(Task::kKillEvent);
     }

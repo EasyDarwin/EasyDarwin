@@ -159,7 +159,7 @@ void RTPStream3GPP::AddNadu(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32
 	{
 		if (highestSeqNum != 0)
 			DEBUG_PRINTF((
-				"RTPStream3GPP::AddNadu sequence number error: seq=%hu, nextSeqNum=%"_U32BITARG_", highestSeqNum=%"_U32BITARG_"\n",
+				"RTPStream3GPP::AddNadu sequence number error: seq=%hu, nextSeqNum=%"   _U32BITARG_   ", highestSeqNum=%"   _U32BITARG_   "\n",
 				fNaduList.GetLastReportedNSN(), nextSeqNum, highestSeqNum));
 	}
 	else if (lastReportedPlayoutDelay != RTCPNaduPacket::kReservedPlayoutDelayValue) //Is the playout delay available?
@@ -171,7 +171,7 @@ void RTPStream3GPP::SetRTT(UInt32 minRTT, UInt32 curRTT)
 {
     int scaleFactor = 10;
     curRTT /= scaleFactor;
-    DEBUG_PRINTF(( "RTPStream3GPP::SetRTT curRTT ==%"_U32BITARG_" scaling by %d\n", curRTT,scaleFactor));
+    DEBUG_PRINTF(( "RTPStream3GPP::SetRTT curRTT ==%"   _U32BITARG_   " scaling by %d\n", curRTT,scaleFactor));
     
 	double ratio = curRTT / static_cast<double>(minRTT);
 	if (ratio < 1.6)
@@ -262,7 +262,7 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
         bufferUsage = fBufferSize / 2; // Have to pick something so use 50%.
     }
 
-    DEBUG_PRINTF(("reported buffer size = %"_U32BITARG_" reported Free Buffer=%"_U32BITARG_"  current calculated bufferUsage= %"_U32BITARG_"\n", fBufferSize, fLastReportedFreeBufferSpace,bufferUsage));
+    DEBUG_PRINTF(("reported buffer size = %"   _U32BITARG_   " reported Free Buffer=%"   _U32BITARG_   "  current calculated bufferUsage= %"   _U32BITARG_   "\n", fBufferSize, fLastReportedFreeBufferSpace,bufferUsage));
 	DEBUG_PRINTF(("Avg Movie BitRate = %lu original target delay=%lu adjusted TargetDelay =%ld \n",fMovieBitRate,fTargetBufferingDelay, adjustTargetDelay));
 	
 	if (qtssVideoPayloadType == fRTPStream.GetPayLoadType() && fMovieBitRate > 0 && adjustTargetDelay > 0) //limit how much we use
@@ -290,7 +290,7 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
 	}
         
 
-    DEBUG_PRINTF(("Calculated maxUsableBufferSize =%"_U32BITARG_" reported fBufferSize=%"_U32BITARG_"  reported buffer delay=%"_U32BITARG_" current calculated bufferUsage= %"_U32BITARG_"\n", maxUsableBufferSizeBytes, fBufferSize,bufferDelay, bufferUsage));
+    DEBUG_PRINTF(("Calculated maxUsableBufferSize =%"   _U32BITARG_   " reported fBufferSize=%"   _U32BITARG_   "  reported buffer delay=%"   _U32BITARG_   " current calculated bufferUsage= %"   _U32BITARG_   "\n", maxUsableBufferSizeBytes, fBufferSize,bufferDelay, bufferUsage));
 
 
 	
@@ -424,12 +424,12 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
 	{	
 	    if (fCurRTT <= 10)
 	    {
-             DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality fast network packet loss slowing down fNumRTCPWithoutPacketLoss=%"_S32BITARG_"\n",fNumRTCPWithoutPacketLoss));
+             DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality fast network packet loss slowing down fNumRTCPWithoutPacketLoss=%" _S32BITARG_ "\n",fNumRTCPWithoutPacketLoss));
              fAdjustTime = kAdjustDown; //slow down could be random packet loss. 
 	    }
 	    else
 	    {
-            DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality slow network packet loss decrease quality fNumRTCPWithoutPacketLoss=%"_S32BITARG_"\n",fNumRTCPWithoutPacketLoss));
+            DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality slow network packet loss decrease quality fNumRTCPWithoutPacketLoss=%" _S32BITARG_ "\n",fNumRTCPWithoutPacketLoss));
             fAdjustSize = kAdjustDown; //most likely out of bandwidth so reduce quality.
             fAdjustTime = kAdjustUpUp; //don't let the buffer drain while reducing quality.
 	    }
@@ -452,13 +452,13 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
 	{
 		fNumLargeRTT = 0;	//separate consecutive maximum quality lowering by at least 1 RTCP cycles.
 		fRTPStream.SetMaxQualityLevelLimit(fRTPStream.GetMaxQualityLevelLimit() + 1);
-		DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality fNumLargeRTT(%"_S32BITARG_") >= 4 maximum quality level decreased: %"_S32BITARG_"\n",fNumLargeRTT, fRTPStream.GetMaxQualityLevelLimit()));
+		DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality fNumLargeRTT(%" _S32BITARG_ ") >= 4 maximum quality level decreased: %" _S32BITARG_ "\n",fNumLargeRTT, fRTPStream.GetMaxQualityLevelLimit()));
 	}
 	else if (fNumSmallRTT >= levelTest) //Router is not congested(4 consecutive small RTT ratios); can start thickening.
 	{
 		fNumSmallRTT = 0;  //separate consecutive maximum quality raising by at least x RTCP cycles.
 		fRTPStream.SetMaxQualityLevelLimit(fRTPStream.GetMaxQualityLevelLimit() - 1);
-		DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality fNumSmallRTT (%"_S32BITARG_") >= levelTest(%"_S32BITARG_") maximum quality level increased: %"_S32BITARG_"\n",fNumSmallRTT,  levelTest, fRTPStream.GetMaxQualityLevelLimit()));
+		DEBUG_PRINTF(("RTPStream3GPP::UpdateTimeAndQuality fNumSmallRTT (%" _S32BITARG_ ") >= levelTest(%" _S32BITARG_ ") maximum quality level increased: %" _S32BITARG_ "\n",fNumSmallRTT,  levelTest, fRTPStream.GetMaxQualityLevelLimit()));
 	}
 
 	char *payload = "?";
@@ -473,8 +473,8 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
 	
 	if (bufferDelay != kUInt32_Max)
 		DEBUG_PRINTF((
-					"RTPStream3GPP::UpdateTimeAndQuality type=%s quality=%"_S32BITARG_",  qualitylimit=%"_S32BITARG_", fAdjustTime=%i bufferUsage=%"_U32BITARG_"(%.0f%%), "
-					"bufferDelay=%"_U32BITARG_"(%.0f%%)\n",
+					"RTPStream3GPP::UpdateTimeAndQuality type=%s quality=%" _S32BITARG_ ",  qualitylimit=%" _S32BITARG_ ", fAdjustTime=%i bufferUsage=%"   _U32BITARG_   "(%.0f%%), "
+					"bufferDelay=%"   _U32BITARG_   "(%.0f%%)\n",
 					payload,
 					fRTPStream.GetQualityLevel(), fRTPStream.GetMaxQualityLevelLimit(),
 					fAdjustTime,
@@ -483,7 +483,7 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
 		));
 	else
 		DEBUG_PRINTF((
-					"RTPStream3GPP::UpdateTimeAndQuality type=%s quality=%"_S32BITARG_", qualitylimit=%"_S32BITARG_", fAdjustTime=%i bufferUsage=%"_U32BITARG_"(%.0f%%), "
+					"RTPStream3GPP::UpdateTimeAndQuality type=%s quality=%" _S32BITARG_ ", qualitylimit=%" _S32BITARG_ ", fAdjustTime=%i bufferUsage=%"   _U32BITARG_   "(%.0f%%), "
 					"bufferDelay=?\n",
 					payload,
 					fRTPStream.GetQualityLevel(), fRTPStream.GetMaxQualityLevelLimit(),
@@ -525,7 +525,7 @@ SInt64 RTPStream3GPP::GetAdjustedTransmitTime(SInt64 packetTransmitTime, SInt64 
 			return packetTransmitTime + fPlayTimeOffset;
 			
 		//First packet after starting to play or after a pause.
-		DEBUG_PRINTF(("RTPStream3GPP::GetAdjustedTransmitTime: initial quality=%"_U32BITARG_"\n", fRTPStream.GetQualityLevel()));
+		DEBUG_PRINTF(("RTPStream3GPP::GetAdjustedTransmitTime: initial quality=%"   _U32BITARG_   "\n", fRTPStream.GetQualityLevel()));
 		fLastLocalTime = theTime;
 		fPlayTimeOffset = 0;
 		return packetTransmitTime;

@@ -181,7 +181,7 @@ QTSS_Error RTSPRequestStream::ReadRequest()
         {
             DateBuffer theDate;
             DateTranslator::UpdateDateBuffer(&theDate, 0); // get the current GMT date and time
-			qtss_printf("\n\n#C->S:\n#time: ms=%"_U32BITARG_" date=%s\n", (UInt32) OS::StartTimeMilli_Int(), theDate.GetDateBuffer());
+			qtss_printf("\n\n#C->S:\n#time: ms=%"   _U32BITARG_   " date=%s\n", (UInt32) OS::StartTimeMilli_Int(), theDate.GetDateBuffer());
 
             if (fSocket != NULL)    
             {

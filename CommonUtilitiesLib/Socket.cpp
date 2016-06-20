@@ -249,7 +249,7 @@ StrPtrLen*  Socket::GetLocalAddrStr()
 
         printf("Socket::GetLocalAddrStr Search IPs failed, numIPs=%d\n",SocketUtils::GetNumIPAddrs());
         for (UInt32 x = 0; x < SocketUtils::GetNumIPAddrs(); x++)
-        {    printf("ip[%"_U32BITARG_"]=",x); SocketUtils::GetIPAddrStr(x)->PrintStr("\n");
+        {    printf("ip[%"   _U32BITARG_   "]=",x); SocketUtils::GetIPAddrStr(x)->PrintStr("\n");
         }
         printf("this ip = %d = ",theAddr.s_addr); fLocalAddrStrPtr->PrintStr("\n");
 

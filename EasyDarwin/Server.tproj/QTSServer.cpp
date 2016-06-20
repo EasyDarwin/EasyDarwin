@@ -1339,7 +1339,7 @@ void RTPSocketPool::SetUDPSocketOptions(UDPSocketPair* inPair)
     if (theRcvBufSize != QTSServerInterface::GetServer()->GetPrefs()->GetRTCPSocketRcvBufSizeinK())
     {
         char theRcvBufSizeStr[20];
-        qtss_sprintf(theRcvBufSizeStr, "%"_U32BITARG_"", theRcvBufSize);
+        qtss_sprintf(theRcvBufSizeStr, "%"   _U32BITARG_   "", theRcvBufSize);
         //
         // For now, do not log an error, though we should enable this in the future.
         //QTSSModuleUtils::LogError(qtssWarningVerbosity, qtssMsgSockBufSizesTooLarge, theRcvBufSizeStr);

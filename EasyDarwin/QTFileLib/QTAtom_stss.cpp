@@ -209,7 +209,7 @@ void QTAtom_stss::NextSyncSample(UInt32 SampleNumber, UInt32 *SyncSampleNumber)
 void QTAtom_stss::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_stss::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_stss::DumpAtom - ..Number of sync sample entries: %"_S32BITARG_"\n", fNumEntries));
+    DEBUG_PRINT(("QTAtom_stss::DumpAtom - ..Number of sync sample entries: %" _S32BITARG_ "\n", fNumEntries));
 }
 
 void QTAtom_stss::DumpTable(void)
@@ -226,6 +226,6 @@ void QTAtom_stss::DumpTable(void)
     for( UInt32 CurEntry = 1; CurEntry <= fNumEntries; CurEntry++ ) {
         //
         // Print out a listing.
-        qtss_printf("  %10"_U32BITARG_" : %10"_U32BITARG_"\n", CurEntry, fTable[CurEntry-1]);
+        qtss_printf("  %10"   _U32BITARG_   " : %10"   _U32BITARG_   "\n", CurEntry, fTable[CurEntry-1]);
     }
 }

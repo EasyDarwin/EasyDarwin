@@ -67,7 +67,7 @@ int qtss_maxprintf(const char *fmt,  ...)
     if (sTotalChars > ( (UInt64) sMaxTotalCharsInK * 1024) )
     {	
     	if (sMaxFileSizeReached == 0)
-            printf ("\nReached maximum configured output limit = %"_U32BITARG_"K\n", sMaxTotalCharsInK);
+            printf ("\nReached maximum configured output limit = %"   _U32BITARG_   "K\n", sMaxTotalCharsInK);
 
     	sMaxFileSizeReached = 1; 
 

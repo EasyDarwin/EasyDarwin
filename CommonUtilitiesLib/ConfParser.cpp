@@ -59,7 +59,7 @@ static Bool16 SampleConfigSetter( const char* paramName, const char* paramValue[
     
     while ( paramValue[x] )
     {
-        qtss_printf( " value(%"_S32BITARG_"): %s ", (SInt32)x, (char *) paramValue[x] );
+        qtss_printf( " value(%" _S32BITARG_ "): %s ", (SInt32)x, (char *) paramValue[x] );
         x++;
     }
     

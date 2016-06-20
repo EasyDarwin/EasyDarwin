@@ -374,7 +374,7 @@ Bool16 QTFile::FindTOCEntry(const char * AtomPath, AtomTOCEntry **TOCEntry, Atom
         //
         // Is this a root search or a rooted search?
         if( *pCurAtomType == ':' ) {
-            DEEP_DEBUG_PRINT(("QTFile::FindTOCEntry - ..Rooting search at [%03"_U32BITARG_"].\n", LastFoundTOCEntry->TOCID));
+            DEEP_DEBUG_PRINT(("QTFile::FindTOCEntry - ..Rooting search at [%03"   _U32BITARG_   "].\n", LastFoundTOCEntry->TOCID));
 
             RootTOCID = LastFoundTOCEntry->TOCID;
             pCurAtomType++;
@@ -390,7 +390,7 @@ Bool16 QTFile::FindTOCEntry(const char * AtomPath, AtomTOCEntry **TOCEntry, Atom
             Atom = Atom->NextAtom;
 
             if( Atom != NULL ) {
-                DEEP_DEBUG_PRINT(("QTFile::FindTOCEntry - ..Starting search at [%03"_U32BITARG_"] '%c%c%c%c'.  Search path is \"%s\"\n",
+                DEEP_DEBUG_PRINT(("QTFile::FindTOCEntry - ..Starting search at [%03"   _U32BITARG_   "] '%c%c%c%c'.  Search path is \"%s\"\n",
                     Atom->TOCID,
                     (char)((Atom->AtomType & 0xff000000) >> 24),
                     (char)((Atom->AtomType & 0x00ff0000) >> 16),
@@ -408,7 +408,7 @@ Bool16 QTFile::FindTOCEntry(const char * AtomPath, AtomTOCEntry **TOCEntry, Atom
     //
     // Recurse through our table of contents until we find this path.
     while( Atom != NULL ) { // already initialized by the above
-        DEEP_DEBUG_PRINT(("QTFile::FindTOCEntry - ..Comparing against [%03"_U32BITARG_" '%c%c%c%c'\n",
+        DEEP_DEBUG_PRINT(("QTFile::FindTOCEntry - ..Comparing against [%03"   _U32BITARG_   " '%c%c%c%c'\n",
             Atom->TOCID,
             (char)((Atom->AtomType & 0xff000000) >> 24),
             (char)((Atom->AtomType & 0x00ff0000) >> 16),
@@ -746,7 +746,7 @@ Bool16 QTFile::GenerateAtomTOC(void)
 
         if (0 == BigAtomLength)
         {
-            DEEP_DEBUG_PRINT(("QTFile::GenerateAtomTOC - Bail atom is bad. type= '%c%c%c%c'; pos=%"_64BITARG_"u; length=%"_64BITARG_"u; header=%"_U32BITARG_".\n",
+            DEEP_DEBUG_PRINT(("QTFile::GenerateAtomTOC - Bail atom is bad. type= '%c%c%c%c'; pos=%" _64BITARG_ "u; length=%" _64BITARG_ "u; header=%"   _U32BITARG_   ".\n",
             (char)((AtomType & 0xff000000) >> 24),
             (char)((AtomType & 0x00ff0000) >> 16),
             (char)((AtomType & 0x0000ff00) >> 8),
@@ -757,7 +757,7 @@ Bool16 QTFile::GenerateAtomTOC(void)
         }
 
         if (hasBigAtom)
-        {    DEEP_DEBUG_PRINT(("QTFile::GenerateAtomTOC - Found 64 bit atom '%c%c%c%c'; pos=%"_64BITARG_"u; length=%"_64BITARG_"u; header=%"_U32BITARG_".\n",
+        {    DEEP_DEBUG_PRINT(("QTFile::GenerateAtomTOC - Found 64 bit atom '%c%c%c%c'; pos=%" _64BITARG_ "u; length=%" _64BITARG_ "u; header=%"   _U32BITARG_   ".\n",
             (char)((AtomType & 0xff000000) >> 24),
             (char)((AtomType & 0x00ff0000) >> 16),
             (char)((AtomType & 0x0000ff00) >> 8),
@@ -765,7 +765,7 @@ Bool16 QTFile::GenerateAtomTOC(void)
             CurPos - CurAtomHeaderSize, BigAtomLength, CurAtomHeaderSize));
         }
         else
-        {    DEEP_DEBUG_PRINT(("QTFile::GenerateAtomTOC - Found 32 bit atom '%c%c%c%c'; pos=%"_64BITARG_"u; length=%"_64BITARG_"u; header=%"_U32BITARG_".\n",
+        {    DEEP_DEBUG_PRINT(("QTFile::GenerateAtomTOC - Found 32 bit atom '%c%c%c%c'; pos=%" _64BITARG_ "u; length=%" _64BITARG_ "u; header=%"   _U32BITARG_   ".\n",
             (char)((AtomType & 0xff000000) >> 24),
             (char)((AtomType & 0x00ff0000) >> 16),
             (char)((AtomType & 0x0000ff00) >> 8),
@@ -954,7 +954,7 @@ void QTFile::DumpAtomTOC(void)
     {
     
         // Print out this atom.     
-        DEBUG_PRINT(("%s[%03"_U32BITARG_"] AtomType=%c%c%c%c; AtomDataPos=%"_64BITARG_"u; AtomDataLength=%"_64BITARG_"u\n",
+        DEBUG_PRINT(("%s[%03"   _U32BITARG_   "] AtomType=%c%c%c%c; AtomDataPos=%" _64BITARG_ "u; AtomDataLength=%" _64BITARG_ "u\n",
         Indent,
         Atom->TOCID,
         (char)((Atom->AtomType & 0xff000000) >> 24),

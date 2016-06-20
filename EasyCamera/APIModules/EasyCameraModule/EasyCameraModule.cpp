@@ -60,7 +60,7 @@ QTSS_Error EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
         case QTSS_RereadPrefs_Role:
             return RereadPrefs_EasyCameraModule();
 		case Easy_StartStream_Role:
-			return StartStream(&inParams->startStreaParams);
+			return StartStream(&inParams->startStreamParams);
 		case Easy_StopStream_Role:
 			return StopStream(&inParams->stopStreamParams);
 		case Easy_GetCameraState_Role:

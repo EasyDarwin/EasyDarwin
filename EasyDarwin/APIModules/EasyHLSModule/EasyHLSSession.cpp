@@ -110,7 +110,7 @@ EasyHLSSession::~EasyHLSSession()
 
     if (this->GetRef()->GetRefCount() == 0)
     {   
-        qtss_printf("EasyHLSSession::~EasyHLSSession() UnRegister and delete session =%p refcount=%"_U32BITARG_"\n", GetRef(), GetRef()->GetRefCount() ) ;       
+        qtss_printf("EasyHLSSession::~EasyHLSSession() UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", GetRef(), GetRef()->GetRefCount() ) ;       
         QTSServerInterface::GetServer()->GetHLSSessionMap()->UnRegister(GetRef());
     }
 }

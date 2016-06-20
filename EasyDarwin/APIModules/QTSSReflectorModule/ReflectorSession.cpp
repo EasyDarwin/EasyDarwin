@@ -293,7 +293,7 @@ void ReflectorSession::AddBroadcasterClientSession(QTSS_StandardRTSP_Params* inP
 	for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
 	{
 		if (fStreamArray[x] != NULL)
-		{   //qtss_printf("AddBroadcasterSession=%"_U32BITARG_"\n",inParams->inClientSession);
+		{   //qtss_printf("AddBroadcasterSession=%"   _U32BITARG_   "\n",inParams->inClientSession);
 			((ReflectorSocket*)fStreamArray[x]->GetSocketPair()->GetSocketA())->AddBroadcasterSession(inParams->inClientSession);
 			((ReflectorSocket*)fStreamArray[x]->GetSocketPair()->GetSocketB())->AddBroadcasterSession(inParams->inClientSession);
 		}

@@ -117,7 +117,7 @@ char* SDPSourceInfo::GetLocalSDP(UInt32* newSDPLen)
                 //the last "a=" for each m should be the control a=
                 if ((trackIndex > 0) && (!hasControlLine))
                 {
-                    qtss_sprintf(trackIndexBuffer, "a=control:trackID=%"_S32BITARG_"\r\n",trackIndex);
+                    qtss_sprintf(trackIndexBuffer, "a=control:trackID=%" _S32BITARG_ "\r\n",trackIndex);
                     localSDPFormatter.Put(trackIndexBuffer, ::strlen(trackIndexBuffer));
                 }
                 //now write the 'm' line, but strip off the port information
@@ -169,7 +169,7 @@ char* SDPSourceInfo::GetLocalSDP(UInt32* newSDPLen)
     
     if ((trackIndex > 0) && (!hasControlLine))
     {
-        qtss_sprintf(trackIndexBuffer, "a=control:trackID=%"_S32BITARG_"\r\n",trackIndex);
+        qtss_sprintf(trackIndexBuffer, "a=control:trackID=%" _S32BITARG_ "\r\n",trackIndex);
         localSDPFormatter.Put(trackIndexBuffer, ::strlen(trackIndexBuffer));
     }
     *newSDPLen = (UInt32)localSDPFormatter.GetCurrentOffset();

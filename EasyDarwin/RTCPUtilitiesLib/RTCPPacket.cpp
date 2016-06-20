@@ -48,9 +48,9 @@ Bool16 RTCPPacket::ParsePacket(UInt8* inPacketBuffer, UInt32 inPacketLen)
     
     //the length of this packet can be no less than the advertised length (which is
     //in 32-bit words, so we must multiply) plus the size of the header (4 bytes)
-    if (RTCP_PACKET_DEBUG) qtss_printf("RTCPPacket::ParsePacket len=%"_U32BITARG_" min allowed=%"_U32BITARG_"\n", inPacketLen,(UInt32)((this->GetPacketLength() * 4) + kRTCPHeaderSizeInBytes));
+    if (RTCP_PACKET_DEBUG) qtss_printf("RTCPPacket::ParsePacket len=%"   _U32BITARG_   " min allowed=%"   _U32BITARG_   "\n", inPacketLen,(UInt32)((this->GetPacketLength() * 4) + kRTCPHeaderSizeInBytes));
     if (inPacketLen < (UInt32)((this->GetPacketLength() * 4) + kRTCPHeaderSizeInBytes))
-    {   if (RTCP_PACKET_DEBUG) qtss_printf("RTCPPacket::ParsePacket invalid len=%"_U32BITARG_"\n", inPacketLen);
+    {   if (RTCP_PACKET_DEBUG) qtss_printf("RTCPPacket::ParsePacket invalid len=%"   _U32BITARG_   "\n", inPacketLen);
         return false;
     }
     
@@ -69,7 +69,7 @@ void RTCPReceiverPacket::Dump()//Override
     qtss_printf("\n");
     for (int i = 0;i<this->GetReportCount(); i++)
     {
-        qtss_printf( "              RTCP RR Report[%d] H_ssrc=%"_U32BITARG_", H_frac_lost=%d, H_tot_lost=%"_U32BITARG_", H_high_seq=%"_U32BITARG_" H_jit=%"_U32BITARG_", H_last_sr_time=%"_U32BITARG_", H_last_sr_delay=%"_U32BITARG_" \n",
+        qtss_printf( "              RTCP RR Report[%d] H_ssrc=%"   _U32BITARG_   ", H_frac_lost=%d, H_tot_lost=%"   _U32BITARG_   ", H_high_seq=%"   _U32BITARG_   " H_jit=%"   _U32BITARG_   ", H_last_sr_time=%"   _U32BITARG_   ", H_last_sr_delay=%"   _U32BITARG_   " \n",
                              i,
                              this->GetReportSourceID(i),
                              this->GetFractionLostPackets(i),
@@ -165,7 +165,7 @@ Bool16 RTCPSenderReportPacket::ParseReport(UInt8* inPacketBuffer, UInt32 inPacke
 
 void RTCPPacket::Dump()
 {  
-    qtss_printf( "H_vers=%d, H_pad=%d, H_rprt_count=%d, H_type=%d, H_length=%d, H_ssrc=%"_S32BITARG_"",
+    qtss_printf( "H_vers=%d, H_pad=%d, H_rprt_count=%d, H_type=%d, H_length=%d, H_ssrc=%" _S32BITARG_ "",
              this->GetVersion(),
              (int)this->GetHasPadding(),
              this->GetReportCount(),

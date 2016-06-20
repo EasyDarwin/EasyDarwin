@@ -43,7 +43,7 @@ UInt32  StringFormatter::sEOLLen = 2;
 void StringFormatter::Put(const SInt32 num)
 {
     char buff[32];
-    qtss_sprintf(buff, "%"_S32BITARG_"", num);
+    qtss_sprintf(buff, "%" _S32BITARG_ "", num);
     Put(buff);
 }
 

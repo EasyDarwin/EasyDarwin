@@ -128,7 +128,7 @@ QTSS_Error Filter(QTSS_Filter_Params* inParams)
     
     //write out header and total allocated memory
     char buffer[1024];
-    qtss_sprintf(buffer, "<HTML><TITLE>TimeShare Debug Page</TITLE><BODY>Total dynamic memory allocated: %"_S32BITARG_"<P>List of objects:<BR>", OSMemory::GetAllocatedMemory());
+    qtss_sprintf(buffer, "<HTML><TITLE>TimeShare Debug Page</TITLE><BODY>Total dynamic memory allocated: %" _S32BITARG_ "<P>List of objects:<BR>", OSMemory::GetAllocatedMemory());
     (void)QTSS_Write(inParams->inRTSPRequest, buffer, ::strlen(buffer), &theLen, 0);
     
     //now report the list of tags:
@@ -138,7 +138,7 @@ QTSS_Error Filter(QTSS_Filter_Params* inParams)
         Assert(elem != NULL);
         if (elem->numObjects > 0)
         {
-            qtss_sprintf(buffer, "Object allocated at: %s, %d. Number of currently allocated objects: %"_S32BITARG_", Total size: %"_S32BITARG_"<BR>", elem->fileName, elem->line, elem->numObjects, elem->totMemory);
+            qtss_sprintf(buffer, "Object allocated at: %s, %d. Number of currently allocated objects: %" _S32BITARG_ ", Total size: %" _S32BITARG_ "<BR>", elem->fileName, elem->line, elem->numObjects, elem->totMemory);
             (void)QTSS_Write(inParams->inRTSPRequest, buffer, ::strlen(buffer), &theLen, 0);
         }
     }

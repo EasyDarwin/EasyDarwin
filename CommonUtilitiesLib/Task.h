@@ -50,7 +50,7 @@
 #include "OSThread.h"
 #include "OSMutexRW.h"
 
-#define TASK_DEBUG 1
+#define TASK_DEBUG 0
 
 class  TaskThread;
 

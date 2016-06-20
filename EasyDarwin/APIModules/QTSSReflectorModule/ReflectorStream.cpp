@@ -72,7 +72,7 @@ UInt32                          ReflectorStream::sBucketDelayInMsec = 73;
 Bool16                          ReflectorStream::sUsePacketReceiveTime = false;
 UInt32                          ReflectorStream::sFirstPacketOffsetMsec = 500;
 
-UInt32                          ReflectorStream::sRelocatePacketAgeMSec = 10000;
+UInt32                          ReflectorStream::sRelocatePacketAgeMSec = 3000;
 	
 void ReflectorStream::Register()
 {
@@ -110,7 +110,6 @@ void ReflectorStream::Initialize(QTSS_ModulePrefsObject inPrefs)
     ReflectorStream::sMaxPacketAgeMSec = (UInt32) (sOverBufferInMsec * 10.0); //allow a little time before deleting.
 	if(ReflectorStream::sMaxPacketAgeMSec == 0)
 		ReflectorStream::sMaxPacketAgeMSec = 10000;
-    ReflectorStream::sRelocatePacketAgeMSec = (UInt32) (sOverBufferInMsec * 1.3); 
 }
 
 void ReflectorStream::GenerateSourceID(SourceInfo::StreamInfo* inInfo, char* ioBuffer)
@@ -305,7 +304,7 @@ SInt32 ReflectorStream::AddOutput(ReflectorOutput* inOutput, SInt32 putInThisBuc
         {
             fOutputArray[putInThisBucket][y] = inOutput;
 #if REFLECTOR_STREAM_DEBUGGING 
-            qtss_printf("Adding new output (0x%lx) to bucket %"_S32BITARG_", index %"_S32BITARG_",\nnum buckets %li bucketSize: %li \n",(SInt32)inOutput, putInThisBucket, y, (SInt32)fNumBuckets, (SInt32)sBucketSize);
+            qtss_printf("Adding new output (0x%lx) to bucket %" _S32BITARG_ ", index %" _S32BITARG_ ",\nnum buckets %li bucketSize: %li \n",(SInt32)inOutput, putInThisBucket, y, (SInt32)fNumBuckets, (SInt32)sBucketSize);
 #endif
             fNumElements++;
             return putInThisBucket;
@@ -348,7 +347,7 @@ void  ReflectorStream::RemoveOutput(ReflectorOutput* inOutput)
                 fOutputArray[x][y] = NULL;//just clear out the pointer
                 
 #if REFLECTOR_STREAM_DEBUGGING  
-                qtss_printf("Removing output %x from bucket %"_S32BITARG_", index %"_S32BITARG_"\n",inOutput,x,y);
+                qtss_printf("Removing output %x from bucket %" _S32BITARG_ ", index %" _S32BITARG_ "\n",inOutput,x,y);
 #endif
                 fNumElements--;
                 return;             
@@ -372,7 +371,7 @@ void  ReflectorStream::TearDownAllOutputs()
             if (theOutputPtr != NULL)
             {   theOutputPtr->TearDown();
 #if REFLECTOR_STREAM_DEBUGGING  
-                qtss_printf("TearDownAllOutputs Removing output from bucket %"_S32BITARG_", index %"_S32BITARG_"\n",x,y);
+                qtss_printf("TearDownAllOutputs Removing output from bucket %" _S32BITARG_ ", index %" _S32BITARG_ "\n",x,y);
 #endif
             }
         }
@@ -530,7 +529,7 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
 		ReflectorPacket* thePacket = NULL;
 		if (isRTCP)
 		{	
-			//qtss_printf("ReflectorStream::PushPacket RTCP packetlen = %"_U32BITARG_"\n",packetLen);
+			//qtss_printf("ReflectorStream::PushPacket RTCP packetlen = %"   _U32BITARG_   "\n",packetLen);
 			thePacket = ((ReflectorSocket*)fSockets->GetSocketB())->GetPacket();
 			if (thePacket == NULL)
 			{	
@@ -545,7 +544,7 @@ void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
 		}
 		else
 		{	
-			//qtss_printf("ReflectorStream::PushPacket RTP packetlen = %"_U32BITARG_"\n",packetLen);
+			//qtss_printf("ReflectorStream::PushPacket RTP packetlen = %"   _U32BITARG_   "\n",packetLen);
 			thePacket =  ((ReflectorSocket*)fSockets->GetSocketA())->GetPacket();
 			if (thePacket == NULL)
 			{	
@@ -1095,42 +1094,17 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 						packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
 						firstPacket = true;
 						theOutput->setNewFlag(false);
-
-						//if(packetElem)
-						//{
-						//	ReflectorPacket* packet = (ReflectorPacket*)packetElem->GetEnclosingObject();
-						//	printf("New Output Packet: %s \n", this->IsKeyFrameFirstPacket(packet)?"I":"P");
-						//}
-
 					}
-
-					//->geyijyn@20150427
-					//判断是否需要重新定位书签的位置
-					//<-
-					//if(NeedRelocateBookMark(packetElem))
-					//{
-					//	OSQueueElem* nextElem = packetElem->Prev();	//从下一个位置开始重新定位
-					//	Assert(nextElem != NULL);					//必然不为空
-					//	packetElem =  this->GetNewestKeyFrameFirstPacket(nextElem,0);	
-					//	if (packetElem)
-					//	{
-					//		printf("[geyijun] =======> RtpSeq [%d]=>[%d] \n",
-					//			((ReflectorPacket*)(nextElem->GetEnclosingObject()))->GetPacketRTPSeqNum(),
-					//			((ReflectorPacket*)(packetElem->GetEnclosingObject()))->GetPacketRTPSeqNum());
-					//	}
-					//	else
-					//	{
-					//		packetElem = nextElem;	
-					//	}
-					//}
 
 					SInt64  bucketDelay = ReflectorStream::sBucketDelayInMsec * (SInt64)bucketIndex;
 					packetElem = this->SendPacketsToOutput(theOutput, packetElem,currentTime, bucketDelay, firstPacket);
 					if (packetElem)
 					{
-						ReflectorPacket*   thePacket = (ReflectorPacket*)packetElem->GetEnclosingObject();
+						OSQueueElem* newElem = NeedRelocateBookMark(packetElem);
+
+						ReflectorPacket* thePacket = (ReflectorPacket*)newElem->GetEnclosingObject();
 						thePacket->fNeededByOutput = true; 				// flag to prevent removal in RemoveOldPackets
-						(void) theOutput->SetBookMarkPacket(packetElem); 	// store a reference to the packet
+						(void) theOutput->SetBookMarkPacket(newElem); 	// store a reference to the packet
 					}
 				}
             } 
@@ -1306,55 +1280,65 @@ void    ReflectorSender::RemoveOldPackets(OSQueue* inFreeQueue)
 
 }
 
-Bool16 ReflectorSender::NeedRelocateBookMark(OSQueueElem* currentElem)
+// if current packet over max packetAgeTime, we need relocate the BookMark to
+// the new fKeyFrameStartPacketElementPointer
+OSQueueElem* ReflectorSender::NeedRelocateBookMark(OSQueueElem* elem)
 {
-	//只有视频流才需要做
-	SourceInfo::StreamInfo* streamInfo = fStream->GetStreamInfo();
-	if(streamInfo->fPayloadType != qtssVideoPayloadType)
-	{
-		return false;
-	}
-	if(!streamInfo->fPayloadName.Equal("H264/90000"))
-	{
-		return false;
-	}
+	//1、判断当前Packet是否已经超过了最大缓冲周期时间(不判断音/视频、I/P帧)
+	//2、当时间超过了阀值,查找最新的fKeyFrameStartPacketElementPointer
+	//3、返回最新的fKeyFrameStartPacketElementPointer做为最新的BookMark
+	Assert( elem );
 
-	//因为设备断网的情况下，数据队列中会无数据包
-	//此时fFirstPacketInQueueForNewOutput 会为空。所以不能使用断言。
-	//Assert(currentElem);	
-	if(currentElem==NULL)
-	{
-		return false;
-	}
-	//后面必须要有元素才有重定向的可能性
-	OSQueueElem* nextElem = currentElem->Prev();
-	if((nextElem == NULL)||(nextElem->GetEnclosingObject() == NULL))
-	{
-		return false;
-	}
-	
-	//触发条件1 :  当前帧已经进入重定向超时门限
-	ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();
-	//if((currentPacket)&&IsFrameLastPacket(currentPacket))
-	if((currentPacket)&&IsFrameFirstPacket(currentPacket))
-	{	
-		SInt64 packetDelay = OS::Milliseconds() - currentPacket->fTimeArrived;
-		if ( packetDelay >= (ReflectorStream::sRelocatePacketAgeMSec) )
+    SInt64 theCurrentTime = OS::Milliseconds();
+    SInt64 packetDelay = 0;
+    SInt64 currentMaxPacketDelay = ReflectorStream::sRelocatePacketAgeMSec;
+
+    ReflectorPacket* thePacket = (ReflectorPacket*)elem->GetEnclosingObject();      
+    Assert( thePacket );
+        
+    packetDelay = theCurrentTime - thePacket->fTimeArrived;
+            
+    if (packetDelay > currentMaxPacketDelay)
+    {
+		if(fKeyFrameStartPacketElementPointer)
 		{
-			return true;
+			ReflectorPacket* keyPacket = (ReflectorPacket*)(fKeyFrameStartPacketElementPointer->GetEnclosingObject());
+			if(keyPacket->fTimeArrived > thePacket->fTimeArrived)
+				return fKeyFrameStartPacketElementPointer;
 		}
-	}
-	//触发条件2 :  已经出现帧序号不连续的情况。后面的数据包已经被老化回收了
-	{
-		ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();  
-		ReflectorPacket* nextPacket = (ReflectorPacket*)nextElem->GetEnclosingObject();  
-		if((currentPacket)&&(nextPacket)&&((currentPacket->fStreamCountID+1) != nextPacket->fStreamCountID))
-		{
-			printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
-			return true;
-		}
-	}
-	return false;
+    }
+
+	return elem;
+
+	////后面必须要有元素才有重定向的可能性
+	//OSQueueElem* nextElem = currentElem->Prev();
+	//if((nextElem == NULL)||(nextElem->GetEnclosingObject() == NULL))
+	//{
+	//	return false;
+	//}
+	//
+	////触发条件1 :  当前帧已经进入重定向超时门限
+	//ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();
+	////if((currentPacket)&&IsFrameLastPacket(currentPacket))
+	//if((currentPacket)&&IsFrameFirstPacket(currentPacket))
+	//{	
+	//	SInt64 packetDelay = OS::Milliseconds() - currentPacket->fTimeArrived;
+	//	if ( packetDelay >= (ReflectorStream::sRelocatePacketAgeMSec) )
+	//	{
+	//		return true;
+	//	}
+	//}
+	////触发条件2 :  已经出现帧序号不连续的情况。后面的数据包已经被老化回收了
+	//{
+	//	ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();  
+	//	ReflectorPacket* nextPacket = (ReflectorPacket*)nextElem->GetEnclosingObject();  
+	//	if((currentPacket)&&(nextPacket)&&((currentPacket->fStreamCountID+1) != nextPacket->fStreamCountID))
+	//	{
+	//		printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
+	//		return true;
+	//	}
+	//}
+	//return false;
 }
 
 OSQueueElem*    ReflectorSender::GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem,SInt64 offsetMsec)
@@ -1704,7 +1688,7 @@ SInt64 ReflectorSocket::Run()
     {
         SInt32 temp = (SInt32)(fSleepTime - theMilliseconds);
         char tempBuf[20];
-        qtss_sprintf(tempBuf,"%"_S32BITARG_"",temp);
+        qtss_sprintf(tempBuf,"%" _S32BITARG_ "",temp);
         WarnV(fSleepTime <= theMilliseconds, tempBuf);
     }
 #endif
@@ -1742,7 +1726,7 @@ void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket,Bool16 isRTC
         if (0 == fValidSSRC)
         {   fValidSSRC = thePacket->GetSSRC(isRTCP); // SSRC of 0 is allowed
             fLastValidSSRCTime = currentTime;
-            //qtss_printf("socket=%"_U32BITARG_" FIRST PACKET fValidSSRC=%"_U32BITARG_" \n", (UInt32) this,fValidSSRC);
+            //qtss_printf("socket=%"   _U32BITARG_   " FIRST PACKET fValidSSRC=%"   _U32BITARG_   " \n", (UInt32) this,fValidSSRC);
             break;
         }
     
@@ -1751,11 +1735,11 @@ void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket,Bool16 isRTC
         {   
             if (packetSSRC == fValidSSRC)
             {   fLastValidSSRCTime = currentTime;
-                //qtss_printf("socket=%"_U32BITARG_" good packet\n", (UInt32) this );
+                //qtss_printf("socket=%"   _U32BITARG_   " good packet\n", (UInt32) this );
                 break;
             }
             
-            //qtss_printf("socket=%"_U32BITARG_" bad packet packetSSRC= %"_U32BITARG_" fValidSSRC=%"_U32BITARG_" \n", (UInt32) this,packetSSRC,fValidSSRC);
+            //qtss_printf("socket=%"   _U32BITARG_   " bad packet packetSSRC= %"   _U32BITARG_   " fValidSSRC=%"   _U32BITARG_   " \n", (UInt32) this,packetSSRC,fValidSSRC);
             thePacket->fPacketPtr.Len = 0; // ignore this packet wrong SSRC
         }
         
@@ -1995,12 +1979,12 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds,ReflectorPack
         
         }
          
-        //printf("ReflectorSocket::GetIncomingData has packet from time=%qd src addr=%"_U32BITARG_" src port=%u packetlen=%"_U32BITARG_"\n",inMilliseconds, theRemoteAddr,theRemotePort,thePacket->fPacketPtr.Len);
+        //printf("ReflectorSocket::GetIncomingData has packet from time=%qd src addr=%"   _U32BITARG_   " src port=%u packetlen=%"   _U32BITARG_   "\n",inMilliseconds, theRemoteAddr,theRemotePort,thePacket->fPacketPtr.Len);
         if (0) //turn on / off buffer size checking --  pref can go here if we find we need to adjust this
         if (theSender->fPacketQueue.GetLength() > maxQSize) //don't grow memory too big
         { 
             char outMessage[256];
-            sprintf(outMessage,"Packet Queue for port=%d qsize = %"_S32BITARG_" hit max qSize=%"_U32BITARG_"", theRemotePort,theSender->fPacketQueue.GetLength(), maxQSize);
+            sprintf(outMessage,"Packet Queue for port=%d qsize = %" _S32BITARG_ " hit max qSize=%"   _U32BITARG_   "", theRemotePort,theSender->fPacketQueue.GetLength(), maxQSize);
             WarnV(false, outMessage); 
         }
 

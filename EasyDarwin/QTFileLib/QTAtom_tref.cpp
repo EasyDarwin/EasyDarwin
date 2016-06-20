@@ -110,5 +110,5 @@ Bool16 QTAtom_tref::Initialize(void)
 void QTAtom_tref::DumpAtom(void)
 {
     DEBUG_PRINT(("QTAtom_tref::DumpAtom - Dumping atom.\n"));
-    DEBUG_PRINT(("QTAtom_tref::DumpAtom - ..Number of track reference entries: %"_U32BITARG_"\n", (UInt32) fNumEntries));
+    DEBUG_PRINT(("QTAtom_tref::DumpAtom - ..Number of track reference entries: %"   _U32BITARG_   "\n", (UInt32) fNumEntries));
 }
