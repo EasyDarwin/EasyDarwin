@@ -654,6 +654,12 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	QTSS_Error theErr = QTSS_NoErr;
 	EasyMsgDSRegisterREQ regREQ(json);
 
+	//update info each time
+	if(!fDevice.GetDevInfo(json))
+	{
+		return  QTSS_BadArgument;
+	}
+
 	while(!fAuthenticated)
 	{
 		//1.获取TerminalType和AppType,进行逻辑验证，不符合则返回400 httpBadRequest;
@@ -700,13 +706,6 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 		if(false)
 		{
 			theErr = QTSS_NotPreemptiveSafe;
-			break;
-		}
-
-		//3.获取Name和Tag信息进行本地保存或者写入Redis;
-		if(!fDevice.GetDevInfo(json))
-		{
-			theErr = QTSS_BadArgument;
 			break;
 		}
 
@@ -1457,10 +1456,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(char* queryString)
 			for(itCam=camerasInfo->begin();itCam!=camerasInfo->end();itCam++)
 			{
 				Json::Value value;
-				value[EASY_TAG_CHANNEL]  = itCam->channel_;
-				value[EASY_TAG_NAME]	 = itCam->name_;
-				value[EASY_TAG_STATUS]	 = itCam->status_;
-				value[EASY_TAG_SNAP_URL] = itCam->snapJpgPath_;
+				value[EASY_TAG_CHANNEL]  = itCam->second.channel_;
+				value[EASY_TAG_NAME]	 = itCam->second.name_;
+				value[EASY_TAG_STATUS]	 = itCam->second.status_;
+				value[EASY_TAG_SNAP_URL] = itCam->second.snapJpgPath_;
 				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 			}
 		}
@@ -1538,10 +1537,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 			for(itCam=camerasInfo->begin();itCam!=camerasInfo->end();itCam++)
 			{
 				Json::Value value;
-				value[EASY_TAG_CHANNEL]		=	itCam->channel_;
-				value[EASY_TAG_NAME]		=	itCam->name_;
-				value[EASY_TAG_STATUS]		=	itCam->status_;
-				body[EASY_TAG_SNAP_URL]		=	itCam->snapJpgPath_;
+				value[EASY_TAG_CHANNEL]		=	itCam->second.channel_;
+				value[EASY_TAG_NAME]		=	itCam->second.name_;
+				value[EASY_TAG_STATUS]		=	itCam->second.status_;
+				body[EASY_TAG_SNAP_URL]		=	itCam->second.snapJpgPath_;
 				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 			}
 		}
