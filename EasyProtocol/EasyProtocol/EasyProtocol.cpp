@@ -66,9 +66,9 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 		for(EasyDevices::iterator it = nvr.channels_.begin(); it != nvr.channels_.end(); it++)
 		{
 			Json::Value value;
-			value[EASY_TAG_CHANNEL] = it->channel_;
-			value[EASY_TAG_NAME] = it->name_;		
-			value[EASY_TAG_STATUS] = it->status_;
+			value[EASY_TAG_CHANNEL] = it->second.channel_;
+			value[EASY_TAG_NAME] = it->second.name_;		
+			value[EASY_TAG_STATUS] = it->second.status_;
 			root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);		
 		}
 	}
@@ -93,7 +93,8 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
 		channel.channel_ = json_camera[EASY_TAG_CHANNEL].asString();
 		channel.name_ = json_camera[EASY_TAG_NAME].asString();
 		channel.status_ = json_camera[EASY_TAG_STATUS].asString();
-		nvr_.channels_.push_back(channel);
+		//nvr_.channels_.push_back(channel);
+		nvr_.channels_[channel.channel_] = channel;
 	}  
 }
 
@@ -266,9 +267,9 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(EasyDevices & devices, size_t cse
 	for (EasyDevices::iterator it = devices.begin(); it != devices.end(); it++)
 	{
 		Json::Value value;
-		value[EASY_TAG_SERIAL] = it->serial_;
-		value[EASY_TAG_NAME] = it->name_;
-		value[EASY_TAG_TAG] = it->tag_;
+		value[EASY_TAG_SERIAL] = it->second.serial_;
+		value[EASY_TAG_NAME] = it->second.name_;
+		value[EASY_TAG_TAG] = it->second.tag_;
 		//value["Status"] = it->status_;
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_DEVICES].append(value);
 	}
@@ -288,7 +289,7 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const char * msg)
 		device.serial_ = json_[EASY_TAG_SERIAL].asString();
 		device.tag_ = json_[EASY_TAG_TAG].asString();
 		//device.status_ = json_["Status"].asString();
-		devices_.push_back(device);
+		devices_[device.serial_] = device;
 	}
 }
 
@@ -304,9 +305,9 @@ EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices& cameras, const strin
 	for (EasyDevices::iterator it = cameras.begin(); it != cameras.end(); it++)
 	{
 		Json::Value value;
-		value[EASY_TAG_SERIAL] = it->serial_;
-		value[EASY_TAG_NAME] = it->name_;
-        value[EASY_TAG_STATUS] = it->status_;
+		value[EASY_TAG_SERIAL] = it->second.serial_;
+		value[EASY_TAG_NAME] = it->second.name_;
+        value[EASY_TAG_STATUS] = it->second.status_;
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 	}
 }
@@ -324,7 +325,7 @@ EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(const char * msg)
 		channel.name_ = json_[EASY_TAG_SERIAL].asString();
 		channel.serial_ = json_[EASY_TAG_NAME].asString();
         channel.status_ = json_[EASY_TAG_STATUS].asString();
-		channels_.push_back(channel);
+		channels_[channel.serial_] = channel;
 	}
 }
 
@@ -503,9 +504,10 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 
 		if(eAppType == EASY_APP_TYPE_NVR)//如果设备类型是NVR，则需要获取摄像头信息
 		{
-			channels_.clear();
+			//channels_.clear();//这一句不能要，否则多线程bug
 			Json::Value *proot=proTemp.GetRoot();
 			int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size(); //数组大小 
+
 
 			for(int i = 0; i < size; i++)  
 			{  
@@ -514,7 +516,18 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
 				camera.name_ = json_camera[EASY_TAG_NAME].asString();
 				camera.channel_ = json_camera[EASY_TAG_CHANNEL].asString();		
 				camera.status_ = json_camera[EASY_TAG_STATUS].asString();	
-				channels_.push_back(camera);
+				
+				//channels_.push_back(camera);
+				//如果已经存在，则只修改status_属性，否则插入到map中。这样对于1个线程写，多个线程读不用加锁，因为不会出现不可预知的中间值。  
+				//注意NVR包含摄像头的信息除了状态外不应该发生变化，否则多线程操作可能会出bug.
+				if( channels_.find(camera.channel_) != channels_.end())//Already exist
+				{
+					channels_[camera.channel_].status_ = camera.status_;//change status_
+				}
+				else//insert
+				{
+					channels_[camera.channel_] = camera;
+				}
 			}  
 		}
 		return true;
@@ -534,8 +547,8 @@ void strDevice::HoldSnapPath(const string& strJpgPath, const string& strChannel)
 		EasyDevicesIterator it;
 		for(it=channels_.begin();it != channels_.end();it++)
 		{
-			if(it->channel_==strChannel)
-				it->snapJpgPath_ = strJpgPath;
+			if(it->second.channel_== strChannel)
+				it->second.snapJpgPath_ = strJpgPath;
 		}
 	}
 }

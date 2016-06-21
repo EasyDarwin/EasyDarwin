@@ -179,12 +179,12 @@ void EasyProtocol::SetMsgType(int type)
 }
 
 
-int EasyProtocol::GetMsgType()
+int EasyProtocol::GetMsgType() const
 {
     return fMsgType;
 }
 
-std::string EasyProtocol::GetMsgTypeStr()
+std::string EasyProtocol::GetMsgTypeStr() const
 {
 	return GetMsgTypeString(fMsgType);
 }

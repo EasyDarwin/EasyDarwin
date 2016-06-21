@@ -116,7 +116,7 @@ string OSMapEx::GenerateSessionIdForRedis(string strIP,UInt16 uPort)
 	UInt32 uIP=inet_addr(strIP.c_str());
 
 	char chTemp[33]={0};
-	sprintf(chTemp,"%08X%04X%04X%04X%04X%04X%04X%",uIP,uPort,the1Random,the2Random,the3Random,the4Random,the5Random);//32位16进制，16字节，前六个字节用IP和端口填充
+	sprintf(chTemp,"%08X%04X%04X%04X%04X%04X%04X",uIP,uPort,the1Random,the2Random,the3Random,the4Random,the5Random);//32位16进制，16字节，前六个字节用IP和端口填充
 	return string(chTemp);
 }
 //for redis

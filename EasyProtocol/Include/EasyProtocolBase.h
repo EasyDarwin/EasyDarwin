@@ -47,8 +47,8 @@ public:
 	bool GetMsg(char *dest, int size);
     
     void SetMsgType(int type);
-    int GetMsgType();    
-    std::string GetMsgTypeStr();
+    int GetMsgType() const;    
+    std::string GetMsgTypeStr() const;
 	int GetMessageType();
 
 	int GetAppType();
