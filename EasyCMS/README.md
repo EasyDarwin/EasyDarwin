@@ -1,6 +1,6 @@
 # EasyCMS #
 
-EasyCMS做为EasyDarwin开源流媒体平台解决方案的一部分，主要进行的是EasyCamera设备的接入和管理，同时用户也可以复用做为其他类型项目设备接入与管理的框架，EasyCMS也源于EasyDarwin服务架构，具备一套完整的网络I/O框架以及Utility，开发者很容易在EasyDarwin的基础上开发跨平台服务程序，例如Windows、Linux、Mac、Solaris等系统平台，只要一次熟悉，将会受用终身；
+EasyCMS做为EasyDarwin开源流媒体平台解决方案的一部分，主要进行的是EasyCamera/EasyNVR设备的接入和管理，同时用户也可以复用做为其他类型项目设备接入与管理的框架，EasyCMS也源于EasyDarwin服务架构，具备一套完整的网络I/O框架以及Utility，开发者很容易在EasyDarwin的基础上开发跨平台服务程序，例如Windows、Linux、Mac、Solaris等系统平台，只要一次熟悉，将会受用终身；
 
 ## 编译EasyCMS ##
 Windows版本编译：可以直接用Visual Studio 2008打开源码文件中的：**/EasyDarwin-master/EasyCMS/WinNTSupport/EasyCMS.sln** 解决方案文件，编译出exe可执行文件EasyCMS.exe；
@@ -16,11 +16,19 @@ Linux版本编译：
 ## 配置easycms.xml ##
 EasyCMS主要的几个配置项：
 
-***cms_port***：EasyCMS主服务监听的端口；
+***monitor\_lan\_port***：EasyCMS主服务监听的端口；
 
 ***snap\_local\_path***：快照文件存储的本地文件系统路径；
 
 ***snap\_web\_path***：快照文件存储的目录对应的http网络路径；
+
+***redis\_ip***：连接的radis的ip地址；
+
+***redis\_port***：连接的radis的端口；
+
+***redis\_user***：redis的连接用户名；
+
+***redis\_password***：redis的连接密码；
 
 以Linux系统nginx做WEB服务器为例，比如我们将快照文件存储在*/EasyDarwin/snap/*目录，也就是
 
@@ -66,9 +74,21 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 
 
 ## 外部调用接口 ##
+
+注：{}中的参数为可选
+
 - 获取在线设备列表
 <pre>
-http://[IP]:[cms_port]/getdevicelist
+http://[IP]:[cms_port]/getdevicelist?{AppType=[AppType]&TerminalType=[TerminalType]}
+</pre>
+- 请求具体设备信息 
+<pre>
+http://[ip]:[port]/api/getdeviceinfo?device=[Serial]
+</pre>
+
+- 通过设备取流
+<pre>
+http://[ip]:[port]/api/getdevicestream?device=001002000001{&channel=0}&protocol=RTSP{&reserve=1}
 </pre>
 
 ## 获取更多信息 ##
