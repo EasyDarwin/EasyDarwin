@@ -72,7 +72,7 @@ UInt32                          ReflectorStream::sBucketDelayInMsec = 73;
 Bool16                          ReflectorStream::sUsePacketReceiveTime = false;
 UInt32                          ReflectorStream::sFirstPacketOffsetMsec = 500;
 
-UInt32                          ReflectorStream::sRelocatePacketAgeMSec = 10000;
+UInt32                          ReflectorStream::sRelocatePacketAgeMSec = 3000;
 	
 void ReflectorStream::Register()
 {
@@ -110,7 +110,6 @@ void ReflectorStream::Initialize(QTSS_ModulePrefsObject inPrefs)
     ReflectorStream::sMaxPacketAgeMSec = (UInt32) (sOverBufferInMsec * 10.0); //allow a little time before deleting.
 	if(ReflectorStream::sMaxPacketAgeMSec == 0)
 		ReflectorStream::sMaxPacketAgeMSec = 10000;
-    ReflectorStream::sRelocatePacketAgeMSec = (UInt32) (sOverBufferInMsec * 1.3); 
 }
 
 void ReflectorStream::GenerateSourceID(SourceInfo::StreamInfo* inInfo, char* ioBuffer)
@@ -1095,42 +1094,17 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 						packetElem = fFirstPacketInQueueForNewOutput; // everybody starts at the oldest packet in the buffer delay or uses a bookmark
 						firstPacket = true;
 						theOutput->setNewFlag(false);
-
-						//if(packetElem)
-						//{
-						//	ReflectorPacket* packet = (ReflectorPacket*)packetElem->GetEnclosingObject();
-						//	printf("New Output Packet: %s \n", this->IsKeyFrameFirstPacket(packet)?"I":"P");
-						//}
-
 					}
-
-					//->geyijyn@20150427
-					//判断是否需要重新定位书签的位置
-					//<-
-					//if(NeedRelocateBookMark(packetElem))
-					//{
-					//	OSQueueElem* nextElem = packetElem->Prev();	//从下一个位置开始重新定位
-					//	Assert(nextElem != NULL);					//必然不为空
-					//	packetElem =  this->GetNewestKeyFrameFirstPacket(nextElem,0);	
-					//	if (packetElem)
-					//	{
-					//		printf("[geyijun] =======> RtpSeq [%d]=>[%d] \n",
-					//			((ReflectorPacket*)(nextElem->GetEnclosingObject()))->GetPacketRTPSeqNum(),
-					//			((ReflectorPacket*)(packetElem->GetEnclosingObject()))->GetPacketRTPSeqNum());
-					//	}
-					//	else
-					//	{
-					//		packetElem = nextElem;	
-					//	}
-					//}
 
 					SInt64  bucketDelay = ReflectorStream::sBucketDelayInMsec * (SInt64)bucketIndex;
 					packetElem = this->SendPacketsToOutput(theOutput, packetElem,currentTime, bucketDelay, firstPacket);
 					if (packetElem)
 					{
-						ReflectorPacket*   thePacket = (ReflectorPacket*)packetElem->GetEnclosingObject();
+						OSQueueElem* newElem = NeedRelocateBookMark(packetElem);
+
+						ReflectorPacket* thePacket = (ReflectorPacket*)newElem->GetEnclosingObject();
 						thePacket->fNeededByOutput = true; 				// flag to prevent removal in RemoveOldPackets
-						(void) theOutput->SetBookMarkPacket(packetElem); 	// store a reference to the packet
+						(void) theOutput->SetBookMarkPacket(newElem); 	// store a reference to the packet
 					}
 				}
             } 
@@ -1306,55 +1280,65 @@ void    ReflectorSender::RemoveOldPackets(OSQueue* inFreeQueue)
 
 }
 
-Bool16 ReflectorSender::NeedRelocateBookMark(OSQueueElem* currentElem)
+// if current packet over max packetAgeTime, we need relocate the BookMark to
+// the new fKeyFrameStartPacketElementPointer
+OSQueueElem* ReflectorSender::NeedRelocateBookMark(OSQueueElem* elem)
 {
-	//只有视频流才需要做
-	SourceInfo::StreamInfo* streamInfo = fStream->GetStreamInfo();
-	if(streamInfo->fPayloadType != qtssVideoPayloadType)
-	{
-		return false;
-	}
-	if(!streamInfo->fPayloadName.Equal("H264/90000"))
-	{
-		return false;
-	}
+	//1、判断当前Packet是否已经超过了最大缓冲周期时间(不判断音/视频、I/P帧)
+	//2、当时间超过了阀值,查找最新的fKeyFrameStartPacketElementPointer
+	//3、返回最新的fKeyFrameStartPacketElementPointer做为最新的BookMark
+	Assert( elem );
 
-	//因为设备断网的情况下，数据队列中会无数据包
-	//此时fFirstPacketInQueueForNewOutput 会为空。所以不能使用断言。
-	//Assert(currentElem);	
-	if(currentElem==NULL)
-	{
-		return false;
-	}
-	//后面必须要有元素才有重定向的可能性
-	OSQueueElem* nextElem = currentElem->Prev();
-	if((nextElem == NULL)||(nextElem->GetEnclosingObject() == NULL))
-	{
-		return false;
-	}
-	
-	//触发条件1 :  当前帧已经进入重定向超时门限
-	ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();
-	//if((currentPacket)&&IsFrameLastPacket(currentPacket))
-	if((currentPacket)&&IsFrameFirstPacket(currentPacket))
-	{	
-		SInt64 packetDelay = OS::Milliseconds() - currentPacket->fTimeArrived;
-		if ( packetDelay >= (ReflectorStream::sRelocatePacketAgeMSec) )
+    SInt64 theCurrentTime = OS::Milliseconds();
+    SInt64 packetDelay = 0;
+    SInt64 currentMaxPacketDelay = ReflectorStream::sRelocatePacketAgeMSec;
+
+    ReflectorPacket* thePacket = (ReflectorPacket*)elem->GetEnclosingObject();      
+    Assert( thePacket );
+        
+    packetDelay = theCurrentTime - thePacket->fTimeArrived;
+            
+    if (packetDelay > currentMaxPacketDelay)
+    {
+		if(fKeyFrameStartPacketElementPointer)
 		{
-			return true;
+			ReflectorPacket* keyPacket = (ReflectorPacket*)(fKeyFrameStartPacketElementPointer->GetEnclosingObject());
+			if(keyPacket->fTimeArrived > thePacket->fTimeArrived)
+				return fKeyFrameStartPacketElementPointer;
 		}
-	}
-	//触发条件2 :  已经出现帧序号不连续的情况。后面的数据包已经被老化回收了
-	{
-		ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();  
-		ReflectorPacket* nextPacket = (ReflectorPacket*)nextElem->GetEnclosingObject();  
-		if((currentPacket)&&(nextPacket)&&((currentPacket->fStreamCountID+1) != nextPacket->fStreamCountID))
-		{
-			printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
-			return true;
-		}
-	}
-	return false;
+    }
+
+	return elem;
+
+	////后面必须要有元素才有重定向的可能性
+	//OSQueueElem* nextElem = currentElem->Prev();
+	//if((nextElem == NULL)||(nextElem->GetEnclosingObject() == NULL))
+	//{
+	//	return false;
+	//}
+	//
+	////触发条件1 :  当前帧已经进入重定向超时门限
+	//ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();
+	////if((currentPacket)&&IsFrameLastPacket(currentPacket))
+	//if((currentPacket)&&IsFrameFirstPacket(currentPacket))
+	//{	
+	//	SInt64 packetDelay = OS::Milliseconds() - currentPacket->fTimeArrived;
+	//	if ( packetDelay >= (ReflectorStream::sRelocatePacketAgeMSec) )
+	//	{
+	//		return true;
+	//	}
+	//}
+	////触发条件2 :  已经出现帧序号不连续的情况。后面的数据包已经被老化回收了
+	//{
+	//	ReflectorPacket* currentPacket = (ReflectorPacket*)currentElem->GetEnclosingObject();  
+	//	ReflectorPacket* nextPacket = (ReflectorPacket*)nextElem->GetEnclosingObject();  
+	//	if((currentPacket)&&(nextPacket)&&((currentPacket->fStreamCountID+1) != nextPacket->fStreamCountID))
+	//	{
+	//		printf("[geyijun] ===========>Find Not Continued Seq[%qd]==[%qd]\n",currentPacket->fStreamCountID,nextPacket->fStreamCountID);
+	//		return true;
+	//	}
+	//}
+	//return false;
 }
 
 OSQueueElem*    ReflectorSender::GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem,SInt64 offsetMsec)

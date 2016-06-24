@@ -83,7 +83,7 @@ HTTPSessionInterface::HTTPSessionInterface()
     fOutputStream.ShowMSG(QTSServerInterface::GetServer()->GetPrefs()->GetMSGDebugPrintfs());
 
 	//add
-	fInfo.cWaitingState = 0;	//初始为处理第一次请求状态
+	fInfo.bWaitingState = false;	//初始为处理第一次请求状态
 	fInfo.uWaitingTime  = 0;	//初始为不用等待回应
 }
 

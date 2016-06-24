@@ -43,63 +43,63 @@ public:
     EasyCMSSession();
     virtual ~EasyCMSSession();
 
-	static void Initialize(QTSS_ModulePrefsObject inPrefs);
+	static void			Initialize(QTSS_ModulePrefsObject inPrefs);
     
 	enum
 	{
 		kSessionOffline		= 0,	
 		kSessionOnline		= 1
 	};
-	typedef UInt32	SessionStatus;
+	typedef UInt32		SessionStatus;
 
-	SessionStatus GetSessionStatus() { return fSessionStatus; }
-	void SetSessionStatus(SessionStatus status) { fSessionStatus = status; }
+	SessionStatus		GetSessionStatus() const { return fSessionStatus; }
+	void				SetSessionStatus(SessionStatus status) { fSessionStatus = status; }
 
 private:
-    virtual SInt64 Run();
+    virtual SInt64		Run();
 
-	void stopPushStream();
+	void				stopPushStream();
 
 	// 初步判断Session Socket是否已连接
-	Bool16 isConnected() { return fSocket->GetSocket()->IsConnected(); }
+	Bool16				isConnected() const { return fSocket->GetSocket()->IsConnected(); }
 
 	// transfer error code for http status code
-	size_t getStatusNo(QTSS_Error errNo);
+	static size_t		getStatusNo(QTSS_Error errNo);
 
-	void cleanupRequest();
+	void				cleanupRequest();
 
 	// 设备注册到EasyCMS
-	QTSS_Error doDSRegister();
+	QTSS_Error			doDSRegister();
 
 	// 上传快照图片到EasyCMS
-	QTSS_Error doDSPostSnap();
+	QTSS_Error			doDSPostSnap();
 
 	// 处理HTTPRequest请求报文
-	QTSS_Error processMessage();
+	QTSS_Error			processMessage();
 
 	// 重置客户端参数
-	void resetClientSocket();
+	void				resetClientSocket();
 
 private:
 	enum
 	{
-		kIdle = 0,
-		kReadingMessage = 1,
-		kProcessingMessage = 2,
-		kSendingMessage = 3,
-		kCleaningUp = 4
+		kIdle				= 0,
+		kReadingMessage		= 1,
+		kProcessingMessage	= 2,
+		kSendingMessage		= 3,
+		kCleaningUp			= 4
 	};
-	UInt32 fState;
+	UInt32				fState;
 
-	SessionStatus	fSessionStatus;
+	SessionStatus		fSessionStatus;
 
-	TimeoutTask fTimeoutTask;
-	ClientSocket* fSocket;
+	TimeoutTask*		fTimeoutTask;
+	ClientSocket*		fSocket;
 
 	// 为CMSSession专门进行网络数据包读取的对象
-	HTTPRequestStream   fInputStream;
+	HTTPRequestStream*  fInputStream;
 	// 为CMSSession专门进行网络数据包发送的对象
-	HTTPResponseStream  fOutputStream;
+	HTTPResponseStream* fOutputStream;
 
 	// 初始化时为NULL
 	// 在每一次请求发出或者接收命令时,都有可能生成HTTPRequest对象并进行处理
@@ -119,9 +119,9 @@ private:
 	UInt32				fContentBufferOffset;
 
 	// send message count
-	unsigned int fNoneACKMsgCount;
+	unsigned int		fNoneACKMsgCount;
 
-	UInt32 fCSeq;
+	UInt32				fCSeq;
 
 };
 

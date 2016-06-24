@@ -315,7 +315,7 @@ class ReflectorSender : public UDPDemuxerTask
 
     // ->geyijyn@20150427
     // 关键帧索引及丢帧方案
-    Bool16 NeedRelocateBookMark(OSQueueElem* currentElem);
+    OSQueueElem* NeedRelocateBookMark(OSQueueElem* currentElem);
     OSQueueElem* GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem,SInt64 offsetMsec);
     Bool16 IsKeyFrameFirstPacket(ReflectorPacket* thePacket);
     Bool16 IsFrameFirstPacket(ReflectorPacket* thePacket);

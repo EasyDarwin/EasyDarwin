@@ -161,7 +161,7 @@ protected:
 	{
 		int iResponse;//设备的回应码
 		UInt32 uTimeoutNum;//循环等待次数
-		char cWaitingState;//等待状态标志
+		bool bWaitingState;//等待状态标志
 		UInt32 uWaitingTime;//等待时间>0时需要等待
 
 

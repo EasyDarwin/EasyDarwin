@@ -32,6 +32,8 @@ using namespace std;
 
 static const int sWaitDeviceRspTimeout = 10;
 static const int sHeaderSize = 2048;
+static const int sIPSize = 20;
+static const int sPortSize = 6;
 
 HTTPSession::HTTPSession()
 	: HTTPSessionInterface(),
@@ -61,6 +63,12 @@ HTTPSession::~HTTPSession()
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(-1);
 
 	qtss_printf("Release HTTPSession:%s\n", fSessionID);
+
+	if (fRequestBody)
+	{
+		delete[]fRequestBody;
+		fRequestBody = NULL;
+	}
 }
 
 SInt64 HTTPSession::Run()
@@ -297,30 +305,33 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 	//OSMutexLocker mutexLock(&fReadMutex);//Prevent data chaos 
 
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(httpOK);
-	if (contentXML->Len)
-		httpAck.AppendContentLengthHeader(contentXML->Len);
 
-	if (connectionClose)
-		httpAck.AppendConnectionCloseHeader();
-
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
-	if (contentXML->Len > 0)
-		pOutputStream->Put(contentXML->Ptr, contentXML->Len);
-
-	if (pOutputStream->GetBytesWritten() != 0)
+	if (httpAck.CreateResponseHeader(httpOK))
 	{
-		QTSS_Error theErr = pOutputStream->Flush();
+		if (contentXML->Len)
+			httpAck.AppendContentLengthHeader(contentXML->Len);
 
-		if (theErr == EAGAIN)
+		if (connectionClose)
+			httpAck.AppendConnectionCloseHeader();
+
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (contentXML->Len > 0)
+			pOutputStream->Put(contentXML->Ptr, contentXML->Len);
+
+		if (pOutputStream->GetBytesWritten() != 0)
 		{
-			fSocket.RequestEvent(EV_WR);
-			return QTSS_NoErr;
+			QTSS_Error theErr = pOutputStream->Flush();
+
+			if (theErr == EAGAIN)
+			{
+				fSocket.RequestEvent(EV_WR);
+				return QTSS_NoErr;
+			}
 		}
 	}
 
@@ -373,23 +384,26 @@ QTSS_Error HTTPSession::SetupRequest()
 			string msg = rsp.GetMsg();
 
 			HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-			httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-			if (!msg.empty())
-				httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-			httpAck.AppendConnectionCloseHeader();
+			if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+			{
+				if (!msg.empty())
+					httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-			//Push HTTP Header to OutputBuffer
-			char respHeader[sHeaderSize] = { 0 };
-			StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-			strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+				httpAck.AppendConnectionCloseHeader();
 
-			HTTPResponseStream *pOutputStream = GetOutputStream();
-			pOutputStream->Put(respHeader);
+				//Push HTTP Header to OutputBuffer
+				char respHeader[sHeaderSize] = { 0 };
+				StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+				strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-			//Push HTTP Content to OutputBuffer
-			if (!msg.empty())
-				pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+				HTTPResponseStream *pOutputStream = GetOutputStream();
+				pOutputStream->Put(respHeader);
+
+				//Push HTTP Content to OutputBuffer
+				if (!msg.empty())
+					pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+			}
 
 			return QTSS_NoErr;
 		}
@@ -476,9 +490,9 @@ QTSS_Error HTTPSession::SetupRequest()
 	fRequestBody = theRequestBody;
 	Assert(theErr == QTSS_NoErr);
 
-	//TODO:://
-	if (theBufferOffset < sHeaderSize)
-		qtss_printf("Recv message: %s\n", fRequestBody);
+	////TODO:://
+	//if (theBufferOffset < sHeaderSize)
+	//	qtss_printf("Recv message: %s\n", fRequestBody);
 
 	UInt32 offset = 0;
 	(void)QTSS_SetValue(this, EasyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
@@ -548,7 +562,9 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 		channel = "0";
 
 	if (strTime.empty())
+	{
 		strTime = EasyUtil::NowTime(EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx);
+	}
 	else//Time Filter 2015-07-20 12:55:30->20150720125530
 	{
 		EasyUtil::DelChar(strTime, '-');
@@ -584,7 +600,6 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 	qtss_sprintf(snapURL, "%s%s/%s_%s_%s.%s", QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(), channel.c_str(), strTime.c_str(), strType.c_str());
 	fDevice.HoldSnapPath(snapURL, channel);
 
-
 	EasyProtocolACK rsp(MSG_SD_POST_SNAP_ACK);
 	EasyJsonValue header, body;
 
@@ -602,19 +617,22 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 
 	//HTTP Header
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
 
 	return QTSS_NoErr;
 }
@@ -623,14 +641,16 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 {
 	//HTTP Header
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(errCode);
 
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+	if (httpAck.CreateResponseHeader(errCode))
+	{
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+	}
 
 	this->fLiveSession = false;
 
@@ -647,6 +667,12 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 	EasyMsgDSRegisterREQ regREQ(json);
+
+	//update info each time
+	if (!fDevice.GetDevInfo(json))
+	{
+		return  QTSS_BadArgument;
+	}
 
 	while (!fAuthenticated)
 	{
@@ -696,13 +722,6 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 			theErr = QTSS_NotPreemptiveSafe;
 			break;
 		}*/
-
-		//3.»ñÈ¡NameºÍTagÐÅÏ¢½øÐÐ±¾µØ±£´æ»òÕßÐ´ÈëRedis;
-		if (!fDevice.GetDevInfo(json))
-		{
-			theErr = QTSS_BadArgument;
-			break;
-		}
 
 		OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 		OS_Error regErr = DeviceMap->Register(fDevice.serial_, this);
@@ -761,20 +780,23 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTP Header)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-	//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+
+		//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
 
 	return QTSS_NoErr;
 }
@@ -797,17 +819,17 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	if (iPos == string::npos)
 		return QTSS_BadArgument;
 
-	string  strDeviceSerial = strStreamName.substr(0, iPos);
-	string  strCameraSerial = strStreamName.substr(iPos + 1, strStreamName.size() - iPos - 1);
+	string strDeviceSerial = strStreamName.substr(0, iPos);
+	string strChannel = strStreamName.substr(iPos + 1, strStreamName.size() - iPos - 1);
 
 	//string strDeviceSerial	=	req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ÐòÁÐºÅ
-	//string strCameraSerial	=	req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
+	//string strChannel	=	req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
 	string strStreamID = req.GetBodyValue(EASY_TAG_RESERVE);//StreamID
 	string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//Protocol
 
 	//Îª¿ÉÑ¡²ÎÊýÌî³äÄ¬ÈÏÖµ
-	if (strCameraSerial.empty())
-		strCameraSerial = "01";
+	if (strChannel.empty())
+		strChannel = "0";
 	if (strStreamID.empty())
 		strStreamID = "1";
 
@@ -821,9 +843,9 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 
 	OSRefReleaserEx releaser(DeviceMap, strDeviceSerial);
 	//×ßµ½ÕâËµÃ÷´æÔÚÖ¸¶¨Éè±¸£¬Ôò¸ÃÉè±¸·¢³öÍ£Ö¹ÍÆÁ÷ÇëÇó
-	HTTPSession * pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//»ñµÃµ±Ç°Éè±¸»Ø»°
+	HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//»ñµÃµ±Ç°Éè±¸»Ø»°
 
-	EasyDarwin::Protocol::EasyProtocolACK		reqreq(MSG_SD_STREAM_STOP_REQ);
+	EasyDarwin::Protocol::EasyProtocolACK reqreq(MSG_SD_STREAM_STOP_REQ);
 	EasyJsonValue headerheader, bodybody;
 
 	char chTemp[16] = { 0 };
@@ -833,7 +855,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
 
 	bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
-	bodybody[EASY_TAG_CHANNEL] = strCameraSerial;
+	bodybody[EASY_TAG_CHANNEL] = strChannel;
 	bodybody[EASY_TAG_RESERVE] = strStreamID;
 	bodybody[EASY_TAG_PROTOCOL] = strProtocol;
 
@@ -846,7 +868,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	//DeviceMap->Release(strDeviceSerial);//////////////////////////////////////////////////////////--
 
 	//Ö±½Ó¶Ô¿Í»§¶Ë£¨EasyDarWin)½øÐÐÕýÈ·»ØÓ¦
-	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_FREE_STREAM_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK rsp(MSG_SC_FREE_STREAM_ACK);
 	EasyJsonValue header, body;
 	header[EASY_TAG_CSEQ] = req.GetHeaderValue(EASY_TAG_CSEQ);
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
@@ -854,7 +876,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
 	body[EASY_TAG_SERIAL] = strDeviceSerial;
-	body[EASY_TAG_CHANNEL] = strCameraSerial;
+	body[EASY_TAG_CHANNEL] = strChannel;
 	body[EASY_TAG_RESERVE] = strStreamID;
 	body[EASY_TAG_PROTOCOL] = strProtocol;
 
@@ -864,20 +886,23 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTP Header)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
+	
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
 
-	//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
 
 	return QTSS_NoErr;
 }
@@ -957,20 +982,20 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 	string strURL;//Ö±²¥µØÖ·
 
 	string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ÐòÁÐºÅ
-	string strCameraSerial = req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
+	string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
 	string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//Ð­Òé
 	string strStreamID = req.GetBodyValue(EASY_TAG_RESERVE);//Á÷ÀàÐÍ
 
 	//¿ÉÑ¡²ÎÊýÈç¹ûÃ»ÓÐ£¬ÔòÓÃÄ¬ÈÏÖµÌî³ä
-	if (strCameraSerial.empty())//±íÊ¾ÎªEasyCameraÉè±¸
-		strCameraSerial = "0";
+	if (strChannel.empty())//±íÊ¾ÎªEasyCameraÉè±¸
+		strChannel = "0";
 	if (strStreamID.empty())//Ã»ÓÐÂëÁ÷ÐèÇóÊ±Ä¬ÈÏÎª±êÇå
 		strStreamID = "1";
 
 	if ((strDeviceSerial.size() <= 0) || (strProtocol.size() <= 0))//²ÎÊýÅÐ¶Ï
 		return QTSS_BadArgument;
 
-	if (fInfo.cWaitingState == 0)//µÚÒ»´Î´¦ÀíÇëÇó
+	if (!fInfo.bWaitingState)//µÚÒ»´Î´¦ÀíÇëÇó
 	{
 		OSRefTableEx* DeviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 		OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(strDeviceSerial);////////////////////////////////++
@@ -979,20 +1004,20 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 
 		OSRefReleaserEx releaser(DeviceMap, strDeviceSerial);
 		//×ßµ½ÕâËµÃ÷´æÔÚÖ¸¶¨Éè±¸
-		HTTPSession * pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//»ñµÃµ±Ç°Éè±¸»Ø»°
+		HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//»ñµÃµ±Ç°Éè±¸»Ø»°
 
 		string strDssIP, strDssPort;
-		char chDssIP[20] = { 0 };
-		char chDssPort[6] = { 0 };
+		char chDssIP[sIPSize] = { 0 };
+		char chDssPort[sPortSize] = { 0 };
 
 		QTSS_RoleParams theParams;
 		theParams.GetAssociatedDarwinParams.inSerial = const_cast<char*>(strDeviceSerial.c_str());
-		theParams.GetAssociatedDarwinParams.inChannel = const_cast<char*>(strCameraSerial.c_str());
+		theParams.GetAssociatedDarwinParams.inChannel = const_cast<char*>(strChannel.c_str());
 		theParams.GetAssociatedDarwinParams.outDssIP = chDssIP;
 		theParams.GetAssociatedDarwinParams.outDssPort = chDssPort;
 
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetEasyDarwinRole);
-		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+		for (UInt32 currentModule = 0; currentModule < numModules; ++currentModule)
 		{
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetEasyDarwinRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisGetEasyDarwin_Role, &theParams);
@@ -1010,7 +1035,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 			theParamsGetStream.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
 
 			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
-			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+			for (UInt32 currentModule = 0; currentModule < numModules; ++currentModule)
 			{
 				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParamsGetStream);
@@ -1024,7 +1049,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 			strSessionID = chSessionID;
 			strURL = string("rtsp://").append(strDssIP).append(":").append(strDssPort).append("/")
 				.append(strDeviceSerial).append("/")
-				.append(strCameraSerial).append(".sdp")
+				.append(strChannel).append(".sdp")
 				.append("?token=").append(strSessionID);
 
 			//ÏÂÃæÒÑ¾­ÓÃ²»µ½Éè±¸»Ø»°ÁË£¬ÊÍ·ÅÒýÓÃ
@@ -1033,11 +1058,11 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 		else
 		{//²»´æÔÚ¹ØÁªµÄEasyDarWin
 
-			char ch_dss_ip[20] = { 0 };
-			char ch_dss_port[6] = { 0 };
+			/*char ch_dss_ip[sIPSize] = { 0 };
+			char ch_dss_port[sPortSize] = { 0 };*/
 			QTSS_RoleParams theParamsRedis;
-			theParamsRedis.GetBestDarwinParams.outDssIP = ch_dss_ip;
-			theParamsRedis.GetBestDarwinParams.outDssPort = ch_dss_port;
+			theParamsRedis.GetBestDarwinParams.outDssIP = chDssIP;
+			theParamsRedis.GetBestDarwinParams.outDssPort = chDssPort;
 
 			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetBestEasyDarwinRole);
 			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
@@ -1046,16 +1071,16 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 				(void)theModule->CallDispatch(Easy_RedisGetBestEasyDarwin_Role, &theParamsRedis);
 			}
 
-			if (ch_dss_ip[0] == 0)//²»´æÔÚDarWin
+			if (chDssIP[0] == 0)//²»´æÔÚDarWin
 			{
 				//DeviceMap->Release(strDeviceSerial);/////////////////////////////////////////////--
 				return EASY_ERROR_SERVICE_NOT_FOUND;
 			}
 			//ÏòÖ¸¶¨Éè±¸·¢ËÍ¿ªÊ¼Á÷ÇëÇó
 
-			strDssIP = ch_dss_ip;
-			strDssPort = ch_dss_port;
-			EasyDarwin::Protocol::EasyProtocolACK		reqreq(MSG_SD_PUSH_STREAM_REQ);
+			strDssIP = chDssIP;
+			strDssPort = chDssPort;
+			EasyDarwin::Protocol::EasyProtocolACK reqreq(MSG_SD_PUSH_STREAM_REQ);
 			EasyJsonValue headerheader, bodybody;
 
 			char chTemp[16] = { 0 };
@@ -1088,7 +1113,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 			bodybody[EASY_TAG_SERVER_IP] = strDssIP;
 			bodybody[EASY_TAG_SERVER_PORT] = strDssPort;
 			bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
-			bodybody[EASY_TAG_CHANNEL] = strCameraSerial;
+			bodybody[EASY_TAG_CHANNEL] = strChannel;
 			bodybody[EASY_TAG_PROTOCOL] = strProtocol;
 			bodybody[EASY_TAG_RESERVE] = strStreamID;
 
@@ -1108,10 +1133,11 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 			Easy_SendMsg(pDevSession, const_cast<char*>(buffer.c_str()), buffer.size(), false, false);
 			//DeviceMap->Release(strDeviceSerial);//////////////////////////////////////////////////////////--
 
-			fInfo.cWaitingState = 1;//µÈ´ýÉè±¸»ØÓ¦
+			fInfo.bWaitingState = true;//µÈ´ýÉè±¸»ØÓ¦
 			fInfo.iResponse = 0;//±íÊ¾Éè±¸»¹Ã»ÓÐ»ØÓ¦
 			fInfo.uTimeoutNum = 0;//¿ªÊ¼¼ÆËã³¬Ê±
 			fInfo.uWaitingTime = 100;//ÒÔ100msÎªÖÜÆÚÑ­»·µÈ´ý£¬ÕâÑù²»Õ¼ÓÃCPU
+
 			return QTSS_NoErr;
 		}
 	}
@@ -1122,7 +1148,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 			fInfo.uTimeoutNum++;
 			if (fInfo.uTimeoutNum > CliStartStreamTimeout / 100)//³¬Ê±ÁË
 			{
-				fInfo.cWaitingState = 0;//»Ö¸´×´Ì¬
+				fInfo.bWaitingState = false;//»Ö¸´×´Ì¬
 				return httpRequestTimeout;
 			}
 			else//Ã»ÓÐ³¬Ê±£¬¼ÌÐøµÈ´ý
@@ -1140,7 +1166,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 		}
 		else if (fInfo.iResponse == EASY_ERROR_SUCCESS_OK)//ÕýÈ·»ØÓ¦
 		{
-			fInfo.cWaitingState = 0;//»Ö¸´×´Ì¬
+			fInfo.bWaitingState = false;//»Ö¸´×´Ì¬
 			strStreamID = fInfo.strStreamID;//Ê¹ÓÃÉè±¸µÄÁ÷ÀàÐÍºÍÍÆÁ÷Ð­Òé
 			strProtocol = fInfo.strProtocol;
 			//ºÏ³ÉÖ±²¥µØÖ·
@@ -1166,12 +1192,12 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 			strURL = string("rtsp://")
 				.append(fInfo.strDssIP).append(":").append(fInfo.strDssPort).append("/")
 				.append(strDeviceSerial).append("/")
-				.append(strCameraSerial).append(".sdp")
+				.append(strChannel).append(".sdp")
 				.append("?token=").append(strSessionID);
 		}
 		else//Éè±¸´íÎó»ØÓ¦
 		{
-			fInfo.cWaitingState = 0;//»Ö¸´×´Ì¬
+			fInfo.bWaitingState = false;//»Ö¸´×´Ì¬
 			return fInfo.iResponse;
 		}
 	}
@@ -1181,7 +1207,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 	EasyJsonValue header, body;
 	body[EASY_TAG_URL] = strURL;
 	body[EASY_TAG_SERIAL] = strDeviceSerial;
-	body[EASY_TAG_CHANNEL] = strCameraSerial;
+	body[EASY_TAG_CHANNEL] = strChannel;
 	body[EASY_TAG_PROTOCOL] = strProtocol;//Èç¹ûµ±Ç°ÒÑ¾­ÍÆÁ÷£¬Ôò·µ»ØÇëÇóµÄ£¬·ñÔò·µ»ØÊµ¼ÊÍÆÁ÷ÀàÐÍ
 	body[EASY_TAG_RESERVE] = strStreamID;//Èç¹ûµ±Ç°ÒÑ¾­ÍÆÁ÷£¬Ôò·µ»ØÇëÇóµÄ£¬·ñÔò·µ»ØÊµ¼ÊÍÆÁ÷ÀàÐÍ
 
@@ -1196,20 +1222,24 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTP Header)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-	//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+
+		//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
+
 	return QTSS_NoErr;
 }
 
@@ -1222,7 +1252,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 	EasyDarwin::Protocol::EasyProtocol req(json);
 
 	string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ÐòÁÐºÅ
-	string strCameraSerial = req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
+	string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
 	//string strProtocol		=	req.GetBodyValue("Protocol");//Ð­Òé,ÖÕ¶Ë½öÖ§³ÖRTSPÍÆËÍ
 	string strStreamID = req.GetBodyValue(EASY_TAG_RESERVE);//Á÷ÀàÐÍ
 	string strDssIP = req.GetBodyValue(EASY_TAG_SERVER_IP);//Éè±¸Êµ¼ÊÍÆÁ÷µØÖ·
@@ -1231,10 +1261,10 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 	string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//Õâ¸öÊÇ¹Ø¼ü×Ö
 	string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//×´Ì¬Âë
 
-	if (strCameraSerial.empty())
-		strCameraSerial = "0";
+	if (strChannel.empty())
+		strChannel = "0";
 	if (strStreamID.empty())
-		strCameraSerial = "1";
+		strStreamID = "1";
 
 	UInt32 uCSeq = atoi(strCSeq.c_str());
 	int iStateCode = atoi(strStateCode.c_str());
@@ -1277,17 +1307,16 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	const char* chAppType = NULL;
 	const char* chTerminalType = NULL;
 
+	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
 	if (queryString != NULL)
 	{
-		char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
 		EasyUtil::Urldecode((unsigned char*)queryString, reinterpret_cast<unsigned char*>(decQueryString));
-
-		QueryParamList parList(decQueryString);
-		chAppType = parList.DoFindCGIValueForParam(EASY_TAG_APP_TYPE);//APPType
-		chTerminalType = parList.DoFindCGIValueForParam(EASY_TAG_TERMINAL_TYPE);//TerminalType
 	}
+	QueryParamList parList(decQueryString);
+	chAppType = parList.DoFindCGIValueForParam(EASY_TAG_APP_TYPE);//APPType
+	chTerminalType = parList.DoFindCGIValueForParam(EASY_TAG_TERMINAL_TYPE);//TerminalType
 
-	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_LIST_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK rsp(MSG_SC_DEVICE_LIST_ACK);
 	EasyJsonValue header, body;
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
@@ -1297,7 +1326,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 
 
 	OSMutex *mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
-	OSHashMap  *deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+	OSHashMap *deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
 	OSRefIt itRef;
 	Json::Value *proot = rsp.GetRoot();
 
@@ -1307,7 +1336,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 
 		for (itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
 		{
-			strDevice *deviceInfo = static_cast<HTTPSession*>(itRef->second->GetObjectPtr())->GetDeviceInfo();
+			strDevice* deviceInfo = static_cast<HTTPSession*>(itRef->second->GetObjectPtr())->GetDeviceInfo();
 			if (chAppType != NULL)// AppType fileter
 			{
 				if (EasyProtocol::GetAppTypeString(deviceInfo->eAppType) != string(chAppType))
@@ -1339,26 +1368,30 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
+
 	string msg = rsp.GetMsg();
 
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTPÍ·)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	//ÏìÓ¦Íê³Éºó¶Ï¿ªÁ¬½Ó
-	httpAck.AppendConnectionCloseHeader();
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	//Push MSG to OutputBuffer
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		//ÏìÓ¦Íê³Éºó¶Ï¿ªÁ¬½Ó
+		httpAck.AppendConnectionCloseHeader();
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		//Push MSG to OutputBuffer
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		HTTPResponseStream* pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
 
 	return QTSS_NoErr;
 }
@@ -1372,7 +1405,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉ
 	EasyDarwin::Protocol::EasyProtocol		req(json);
 
 
-	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_LIST_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK rsp(MSG_SC_DEVICE_LIST_ACK);
 	EasyJsonValue header, body;
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
@@ -1413,19 +1446,22 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char *json)//¿Í»§¶Ë»ñµÃÉ
 
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTPÍ·)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	//Push MSG to OutputBuffer
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		//Push MSG to OutputBuffer
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
 
 	return QTSS_NoErr;
 }
@@ -1451,7 +1487,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(const char* queryStr
 	if (device_serial == NULL)
 		return QTSS_BadArgument;
 
-	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_INFO_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK rsp(MSG_SC_DEVICE_INFO_ACK);
 	EasyJsonValue header, body;
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
@@ -1463,7 +1499,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(const char* queryStr
 	OSRefTableEx::OSRefEx* theDevRef = DeviceMap->Resolve(device_serial);////////////////////////////////++
 	if (theDevRef == NULL)//²»´æÔÚÖ¸¶¨Éè±¸
 	{
-		header[EASY_TAG_ERROR_NUM] = 603;
+		header[EASY_TAG_ERROR_NUM] = EASY_ERROR_DEVICE_NOT_FOUND;
 		header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_DEVICE_NOT_FOUND);
 	}
 	else//´æÔÚÖ¸¶¨Éè±¸£¬Ôò»ñÈ¡Õâ¸öÉè±¸µÄÉãÏñÍ·ÐÅÏ¢
@@ -1473,24 +1509,23 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(const char* queryStr
 		header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
 		header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
-		Json::Value *proot = rsp.GetRoot();
-		strDevice *deviceInfo = static_cast<HTTPSession*>(theDevRef->GetObjectPtr())->GetDeviceInfo();
+		Json::Value* proot = rsp.GetRoot();
+		strDevice* deviceInfo = static_cast<HTTPSession*>(theDevRef->GetObjectPtr())->GetDeviceInfo();
 		if (deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
 		{
 			body[EASY_TAG_SNAP_URL] = deviceInfo->snapJpgPath_;
 		}
 		else
 		{
-			EasyDevices *camerasInfo = &(deviceInfo->channels_);
 			EasyDevicesIterator itCam;
 			body[EASY_TAG_CHANNEL_COUNT] = static_cast<HTTPSession*>(theDevRef->GetObjectPtr())->GetDeviceInfo()->channelCount_;
-			for (itCam = camerasInfo->begin(); itCam != camerasInfo->end(); ++itCam)
+			for (itCam = deviceInfo->channels_.begin(); itCam != deviceInfo->channels_.end(); ++itCam)
 			{
 				Json::Value value;
-				value[EASY_TAG_CHANNEL] = itCam->channel_;
-				value[EASY_TAG_NAME] = itCam->name_;
-				value[EASY_TAG_STATUS] = itCam->status_;
-				value[EASY_TAG_SNAP_URL] = itCam->snapJpgPath_;
+				value[EASY_TAG_CHANNEL] = itCam->second.channel_;
+				value[EASY_TAG_NAME] = itCam->second.name_;
+				value[EASY_TAG_STATUS] = itCam->second.status_;
+				value[EASY_TAG_SNAP_URL] = itCam->second.snapJpgPath_;
 				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 			}
 		}
@@ -1502,22 +1537,25 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(const char* queryStr
 
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTPÍ·)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	//ÏìÓ¦Íê³Éºó¶Ï¿ªÁ¬½Ó
-	httpAck.AppendConnectionCloseHeader();
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	//Push MSG to OutputBuffer
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		//ÏìÓ¦Íê³Éºó¶Ï¿ªÁ¬½Ó
+		httpAck.AppendConnectionCloseHeader();
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		//Push MSG to OutputBuffer
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
 
 	return QTSS_NoErr;
 }
@@ -1535,7 +1573,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 	if (strDeviceSerial.size() <= 0)
 		return QTSS_BadArgument;
 
-	EasyDarwin::Protocol::EasyProtocolACK		rsp(MSG_SC_DEVICE_INFO_ACK);
+	EasyDarwin::Protocol::EasyProtocolACK rsp(MSG_SC_DEVICE_INFO_ACK);
 	EasyJsonValue header, body;
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
@@ -1569,10 +1607,10 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 			for (itCam = camerasInfo->begin(); itCam != camerasInfo->end(); ++itCam)
 			{
 				Json::Value value;
-				value[EASY_TAG_CHANNEL] = itCam->channel_;
-				value[EASY_TAG_NAME] = itCam->name_;
-				value[EASY_TAG_STATUS] = itCam->status_;
-				body[EASY_TAG_SNAP_URL] = itCam->snapJpgPath_;
+				value[EASY_TAG_CHANNEL] = itCam->second.channel_;
+				value[EASY_TAG_NAME] = itCam->second.name_;
+				value[EASY_TAG_STATUS] = itCam->second.status_;
+				body[EASY_TAG_SNAP_URL] = itCam->second.snapJpgPath_;
 				(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].append(value);
 			}
 		}
@@ -1584,22 +1622,25 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 
 	//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTPÍ·)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-	if (!msg.empty())
-		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	//ÏìÓ¦Íê³Éºó¶Ï¿ªÁ¬½Ó
-	httpAck.AppendConnectionCloseHeader();
+	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	{
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-	//Push MSG to OutputBuffer
-	char respHeader[sHeaderSize] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		//ÏìÓ¦Íê³Éºó¶Ï¿ªÁ¬½Ó
+		httpAck.AppendConnectionCloseHeader();
 
-	HTTPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
-	if (!msg.empty())
-		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		//Push MSG to OutputBuffer
+		char respHeader[sHeaderSize] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		HTTPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (!msg.empty())
+			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	}
 
 	return QTSS_NoErr;
 }
@@ -1668,40 +1709,40 @@ QTSS_Error HTTPSession::ProcessRequest()//´¦ÀíÇëÇó
 		switch (theErr)
 		{
 		case QTSS_BadArgument:
-			header[EASY_TAG_ERROR_NUM] = 400;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(400);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_CLIENT_BAD_REQUEST;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_BAD_REQUEST);
 			break;
 		case httpUnAuthorized:
-			header[EASY_TAG_ERROR_NUM] = 401;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(401);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_CLIENT_UNAUTHORIZED;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_UNAUTHORIZED);
 			break;
 		case QTSS_AttrNameExists:
-			header[EASY_TAG_ERROR_NUM] = 409;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(409);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_CONFLICT;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_CONFLICT);
 			break;
 		case EASY_ERROR_DEVICE_NOT_FOUND:
-			header[EASY_TAG_ERROR_NUM] = 603;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(603);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_DEVICE_NOT_FOUND;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_DEVICE_NOT_FOUND);
 			break;
 		case EASY_ERROR_SERVICE_NOT_FOUND:
-			header[EASY_TAG_ERROR_NUM] = 605;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(605);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SERVICE_NOT_FOUND;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_SERVICE_NOT_FOUND);
 			break;
 		case httpRequestTimeout:
-			header[EASY_TAG_ERROR_NUM] = 408;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(408);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_REQUEST_TIMEOUT;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_REQUEST_TIMEOUT);
 			break;
 		case EASY_ERROR_SERVER_INTERNAL_ERROR:
-			header[EASY_TAG_ERROR_NUM] = 500;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(500);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SERVER_INTERNAL_ERROR;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_SERVER_INTERNAL_ERROR);
 			break;
 		case EASY_ERROR_SERVER_NOT_IMPLEMENTED:
-			header[EASY_TAG_ERROR_NUM] = 501;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(501);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SERVER_NOT_IMPLEMENTED;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_SERVER_NOT_IMPLEMENTED);
 			break;
 		default:
-			header[EASY_TAG_ERROR_NUM] = 400;
-			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(400);
+			header[EASY_TAG_ERROR_NUM] = EASY_ERROR_CLIENT_BAD_REQUEST;
+			header[EASY_TAG_ERROR_STRING] = EasyDarwin::Protocol::EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_BAD_REQUEST);
 			break;
 		}
 
@@ -1709,20 +1750,23 @@ QTSS_Error HTTPSession::ProcessRequest()//´¦ÀíÇëÇó
 		string msg = rsp.GetMsg();
 		//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTP Header)
 		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-		httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented);
-		if (!msg.empty())
-			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-		char respHeader[sHeaderSize] = { 0 };
-		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+		{
+			if (!msg.empty())
+				httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-		HTTPResponseStream *pOutputStream = GetOutputStream();
-		pOutputStream->Put(respHeader);
+			char respHeader[sHeaderSize] = { 0 };
+			StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+			strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-		//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
-		if (!msg.empty())
-			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+			HTTPResponseStream *pOutputStream = GetOutputStream();
+			pOutputStream->Put(respHeader);
+
+			//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
+			if (!msg.empty())
+				pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+		}
 	}
 	return theErr;
 }

@@ -37,7 +37,7 @@
 1. **EasyPlayer** RTSP流媒体播放客户端，目前只支持Windows桌面版本，后续将陆续支持Android、IOS版本，详细方案见[https://github.com/EasyDarwin/EasyPlayer](https://github.com/EasyDarwin/EasyPlayer)；
 
 ## 平台架构 ##
-![](http://www.easydarwin.org/skin/easydarwin/images/platform20160607.png)
+![](http://www.easydarwin.org/skin/easydarwin/images/platform20160621.png)
 
 ## 系列视频教程 ##
 
