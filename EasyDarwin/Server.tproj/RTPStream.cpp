@@ -379,7 +379,7 @@ RTPStream::~RTPStream()
         #ifdef __Win32__
            ::closesocket(fMonitorSocket);
         #else   
-           ::close(fMonitorSocket);
+           close(fMonitorSocket);
         #endif
     }
 
