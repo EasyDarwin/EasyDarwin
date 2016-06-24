@@ -29,9 +29,6 @@
                 RTPStreams. It spaces out the packet send times in order to
                 maximize the randomness of the sending pattern and smooth
                 the stream.
-                    
-    
-
 */
 
 #ifndef _REFLECTOR_STREAM_H_
