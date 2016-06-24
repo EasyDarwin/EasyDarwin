@@ -1,3 +1,9 @@
+/*
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	Github: https://github.com/EasyDarwin
+	WEChat: EasyDarwin
+	Website: http://www.easydarwin.org
+*/
 //接受客户端认证，产生32位sessionid，加入到map中。
 //然后EasyDarWin用这个32位的sessionid来进行认证，认证之后就删除。
 //同时每一个ID都有其时效性，可以开启一个定时器来将那些失效的sessionid进行删除
