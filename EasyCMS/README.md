@@ -26,8 +26,6 @@ EasyCMS主要的几个配置项：
 
 ***redis\_port***：连接的radis的端口；
 
-***redis\_user***：redis的连接用户名；
-
 ***redis\_password***：redis的连接密码；
 
 以Linux系统nginx做WEB服务器为例，比如我们将快照文件存储在*/EasyDarwin/snap/*目录，也就是
@@ -63,7 +61,7 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
     ./easycms -c ../WinNTSupport/easycms.xml  -d
 后台服务运行,
 
-    ./easycms -c ../WinNTSupport/easycms.xml  &
+    ./easycms -c /etc/streaming/EasyCMS/easycms.xml  &
 注：如果xml配置文件路径不能确定，建议最保险的方式就是用全路径，例如 “/etc/streaming/EasyCMS/easycms.xml”，这样在下一次更新服务的时候，配置文件可以保留！
 
 ## 检查EasyCMS是否部署成功 ##
