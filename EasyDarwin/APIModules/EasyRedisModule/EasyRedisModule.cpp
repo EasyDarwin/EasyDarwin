@@ -9,9 +9,9 @@
 #include "ReflectorSession.h"
 
 // STATIC VARIABLES
-static QTSS_ModulePrefsObject modulePrefs = NULL;
-static QTSS_PrefsObject     sServerPrefs    = NULL;
-static QTSS_ServerObject    sServer     = NULL;
+static QTSS_ModulePrefsObject	modulePrefs		= NULL;
+static QTSS_PrefsObject			sServerPrefs	= NULL;
+static QTSS_ServerObject		sServer			= NULL;
 
 // Redis IP
 static char*            sRedis_IP				= NULL;
