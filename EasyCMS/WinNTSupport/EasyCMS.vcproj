@@ -71,11 +71,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib FFDecoder.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyCMS.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Lib;"
+				AdditionalLibraryDirectories="../../Lib;../Lib"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/EasyCMS.pdb"
@@ -239,6 +239,10 @@
 			<Filter
 				Name="Core"
 				>
+				<File
+					RelativePath="..\Server.tproj\FFDecoderAPI.h"
+					>
+				</File>
 				<File
 					RelativePath="..\PrefsSourceLib\FilePrefsSource.cpp"
 					>

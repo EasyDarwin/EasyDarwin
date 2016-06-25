@@ -26,8 +26,21 @@
 #include "HTTPRequest.h"
 #include "TimeoutTask.h"
 #include "QTSSModule.h"
+#include "FFDecoderAPI.h"
 
 using namespace std;
+
+typedef struct __DECODE_PARAM_T
+{
+	int				codec;
+	int				width;
+	int				height;
+	int				gopTally;
+	char*			imageData;
+	unsigned int	imageSize;
+
+	FFD_HANDLE		ffdHandle;
+} DECODE_PARAM_T;
 
 class HTTPSession : public HTTPSessionInterface
 {
@@ -71,6 +84,9 @@ private:
 	// test current connections handled by this object against server pref connection limit
 	static Bool16 OverMaxConnections(UInt32 buffer);
 
+	QTSS_Error rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height);
+	int	yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
+
 	HTTPRequest*        fRequest;
 	OSMutex             fReadMutex;
 
@@ -95,6 +111,9 @@ private:
 
 	char* fDeviceSnap;
 	EasyJsonValue fStreamPushInfo;
+
+	// Channel Snap
+	DECODE_PARAM_T		decodeParam;
 };
 #endif // __HTTP_SESSION_H__
 

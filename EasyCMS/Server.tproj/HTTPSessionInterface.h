@@ -168,7 +168,7 @@ protected:
 		UInt32 uCseq;//客户端的CSeq
 		string strDssIP;//设备实际推流的地址
 		string strDssPort;
-		string strStreamID;//设备实际推流的类型
+		string strReserve;//设备实际推流的类型
 		string strProtocol;//设备实际推流协议
 		
 		string strType;//抓拍图片类型
