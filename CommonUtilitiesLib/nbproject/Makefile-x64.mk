@@ -77,14 +77,14 @@ OBJECTFILES= \
 	${OBJECTDIR}/UserAgentParser.o \
 	${OBJECTDIR}/atomic.o \
 	${OBJECTDIR}/base64.o \
+	${OBJECTDIR}/easy_gettimeofday.o \
 	${OBJECTDIR}/epollEvent.o \
 	${OBJECTDIR}/ev.o \
 	${OBJECTDIR}/getopt.o \
 	${OBJECTDIR}/keyframecache.o \
 	${OBJECTDIR}/md5.o \
 	${OBJECTDIR}/md5digest.o \
-	${OBJECTDIR}/sdpCache.o\
-	${OBJECTDIR}/easy_gettimeofday.o
+	${OBJECTDIR}/sdpCache.o
 
 
 # C Compiler Flags
@@ -323,6 +323,11 @@ ${OBJECTDIR}/base64.o: base64.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/base64.o base64.c
 
+${OBJECTDIR}/easy_gettimeofday.o: easy_gettimeofday.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/easy_gettimeofday.o easy_gettimeofday.cpp
+
 ${OBJECTDIR}/epollEvent.o: epollEvent.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -357,11 +362,6 @@ ${OBJECTDIR}/sdpCache.o: sdpCache.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sdpCache.o sdpCache.cpp
-
-${OBJECTDIR}/easy_gettimeofday.o: easy_gettimeofday.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DCOMMON_UTILITIES_LIB -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/easy_gettimeofday.o easy_gettimeofday.cpp
 
 # Subprojects
 .build-subprojects:
