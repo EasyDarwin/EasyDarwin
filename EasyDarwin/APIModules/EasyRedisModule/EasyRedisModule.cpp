@@ -9,9 +9,9 @@
 #include "ReflectorSession.h"
 
 // STATIC VARIABLES
-static QTSS_ModulePrefsObject modulePrefs = NULL;
-static QTSS_PrefsObject     sServerPrefs    = NULL;
-static QTSS_ServerObject    sServer     = NULL;
+static QTSS_ModulePrefsObject	modulePrefs		= NULL;
+static QTSS_PrefsObject			sServerPrefs	= NULL;
+static QTSS_ServerObject		sServer			= NULL;
 
 // Redis IP
 static char*            sRedis_IP				= NULL;
@@ -174,11 +174,11 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sprintf(chTemp,"auth %s",sRedisPassword);
 		sRedisClient->AppendCommand(chTemp);
 
-		//2,EasyDarWin唯一信息存储(覆盖上一次的存储)
+		//2,EasyDarwin唯一信息存储(覆盖上一次的存储)
 		sprintf(chTemp,"sadd EasyDarwinName %s:%d",sRTSPWanIP,sRTSPWanPort);
 		sRedisClient->AppendCommand(chTemp);
 
-		//3,EasyDarWin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
+		//3,EasyDarwin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
 		sprintf(chTemp,"hmset %s:%d_Info IP %s PORT %d RTP %d",sRTSPWanIP,sRTSPWanPort,sRTSPWanIP,sRTSPWanPort,QTSServerInterface::GetServer()->GetNumRTPSessions());
 		sRedisClient->AppendCommand(chTemp);
 

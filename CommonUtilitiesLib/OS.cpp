@@ -163,7 +163,11 @@ SInt64 OS::Milliseconds()
     return (curTimeMilli - sInitialMsec) + sMsecSince1970; // convert to application time
 #else
     struct timeval t;
+#if !defined(EASY_DEVICE)
     int theErr = easy_gettimeofday(&t);
+#else
+    int theErr = ::gettimeofday(&t, NULL);
+#endif
     Assert(theErr == 0);
 
     SInt64 curTime;
@@ -194,7 +198,11 @@ SInt64 OS::Microseconds()
     return curTime;
 #else
     struct timeval t;
+#if !defined(EASY_DEVICE)
     int theErr = easy_gettimeofday(&t);
+#else
+    int theErr = ::gettimeofday(&t, NULL);
+#endif
     Assert(theErr == 0);
 
     SInt64 curTime;

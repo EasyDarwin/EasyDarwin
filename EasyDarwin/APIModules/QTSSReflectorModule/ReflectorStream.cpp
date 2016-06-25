@@ -26,9 +26,6 @@
     File:       ReflectorStream.cpp
 
     Contains:   Implementation of object defined in ReflectorStream.h. 
-                    
-    
-
 */
 
 #include "ReflectorStream.h"
