@@ -315,7 +315,7 @@ void SocketUtils::Initialize(Bool16 lookupDNSName)
     ::closesocket(tempSocket);
 #elif defined(USE_SIOCGIFNUM)
     delete[] ifc.ifc_buf;
-    ::close(tempSocket);
+    close(tempSocket);
 #else
 #error
 #endif
@@ -362,7 +362,7 @@ void SocketUtils::Initialize(Bool16 lookupDNSName)
         }
 #endif
     
-    ::close(tempSocket);
+    close(tempSocket);
     tempSocket = -1;
 
     //walk through the list of IP addrs twice. Once to find out how many,

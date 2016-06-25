@@ -100,6 +100,8 @@ void EventContext::Cleanup()
         #endif           
 #ifdef __Win32__
             err = ::closesocket(fFileDesc);
+#else
+			err = close(fFileDesc);
 #endif
 
 #else
@@ -110,14 +112,14 @@ void EventContext::Cleanup()
             //
             //So, what we do is have the select thread itself call close. This is triggered
             //by calling removeevent.
-            err = ::close(fFileDesc);
+            err = close(fFileDesc);
 #endif      
         }
         else
 #ifdef __Win32__
             err = ::closesocket(fFileDesc);
 #else
-            err = ::close(fFileDesc);
+            err = close(fFileDesc);
 #endif
     }
 
