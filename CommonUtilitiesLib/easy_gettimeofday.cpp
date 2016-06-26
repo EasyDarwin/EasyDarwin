@@ -5,7 +5,7 @@
 	Website: http://www.easydarwin.org
 */
 #include "easy_gettimeofday.h"
- 
+#if !defined(EASY_DEVICE)
 # define TIME_ADD_US(a, usec)                      \
   do {                                             \
       (a)->tv_usec += usec;                        \
@@ -79,6 +79,6 @@ int easy_gettimeofday(struct timeval *tv)
 #endif
         return 0;
 }
-
+#endif
 
 
