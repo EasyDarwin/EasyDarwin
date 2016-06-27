@@ -1294,14 +1294,17 @@ OSQueueElem* ReflectorSender::NeedRelocateBookMark(OSQueueElem* elem)
     Assert( thePacket );
         
     packetDelay = theCurrentTime - thePacket->fTimeArrived;
-            
-    if (packetDelay > currentMaxPacketDelay)
+
+    if ( (packetDelay > currentMaxPacketDelay) && IsKeyFrameFirstPacket(thePacket))//or IsFrameFirstPacket
     {
 		if(fKeyFrameStartPacketElementPointer)
 		{
 			ReflectorPacket* keyPacket = (ReflectorPacket*)(fKeyFrameStartPacketElementPointer->GetEnclosingObject());
 			if(keyPacket->fTimeArrived > thePacket->fTimeArrived)
+			{
+				this->fStream->GetMyReflectorSession()->SetHasVideoKeyFrameUpdate(true);
 				return fKeyFrameStartPacketElementPointer;
+			}
 		}
     }
 
