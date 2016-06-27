@@ -1876,22 +1876,10 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 {
 	QTSS_Error	theErr = QTSS_NoErr;
 #ifndef __linux__
-
-	if (NULL != decodeParam.ffdHandle)
-	{
-		FFD_Deinit(&decodeParam.ffdHandle);
-		decodeParam.ffdHandle = NULL;
-	}
-
-	if (NULL == decodeParam.ffdHandle)
-	{
-		decodeParam.codec = codec;
-		decodeParam.width = width;
-		decodeParam.height = height;
-
-		FFD_Init(&decodeParam.ffdHandle);
-		FFD_SetVideoDecoderParam(decodeParam.ffdHandle, width, height, codec, 3);//AV_PIX_FMT_YUVJ444P,  ///< planar YUV 4:4:4, 24bpp, full scale (JPEG), deprecated in favor of PIX_FMT_YUV444P and setting color_range
-	}
+	decodeParam.codec = codec;
+	decodeParam.width = width;
+	decodeParam.height = height;
+	decoderHelper.SetVideoDecoderParam(width, height, codec, 3);
 
 	int yuvdata_size = width * height * 3;
 	char* yuvdata = new char[yuvdata_size + 1];
@@ -1900,7 +1888,7 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 	int snapHeight = height >= SNAP_IMAGE_HEIGHT ? SNAP_IMAGE_HEIGHT : height;
 	int snapWidth = height >= SNAP_IMAGE_HEIGHT ? SNAP_IMAGE_WIDTH : height * 16 / 9;
 
-	if (FFD_DecodeVideo3(decodeParam.ffdHandle, rawBuf, bufSize, yuvdata, snapWidth, snapHeight) != 0)
+	if (decoderHelper.DecodeVideo(rawBuf, bufSize, yuvdata, snapWidth, snapHeight) != 0)
 	{
 		theErr = QTSS_RequestFailed;
 	}

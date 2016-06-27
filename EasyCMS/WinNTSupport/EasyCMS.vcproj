@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/EasyAuthModule/;../APIModules/EasyRedisModule/;../../EasyRedisClient/"
+				AdditionalIncludeDirectories="../;../../Include/FFmpeg/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../redis/;../../HTTPUtilitiesLib/;../Server.tproj/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/QTSSPosixFileSysModule/;../APIModules/EasyAuthModule/;../APIModules/EasyRedisModule/;../../EasyRedisClient/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/EasyCMS.pch"
@@ -71,11 +71,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib FFDecoder.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib avcodec.lib avformat.lib avutil.lib swresample.lib swscale.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyCMS.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../Lib;../Lib"
+				AdditionalLibraryDirectories="../../Lib;../Lib;../../Lib/FFmpeg/x86"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/EasyCMS.pdb"
@@ -240,7 +240,7 @@
 				Name="Core"
 				>
 				<File
-					RelativePath="..\Server.tproj\FFDecoderAPI.h"
+					RelativePath="..\Server.tproj\DecoderHelper.cpp"
 					>
 				</File>
 				<File

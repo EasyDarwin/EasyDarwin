@@ -26,7 +26,7 @@
 #include "HTTPRequest.h"
 #include "TimeoutTask.h"
 #include "QTSSModule.h"
-#include "FFDecoderAPI.h"
+#include "DecoderHelper.h"
 
 using namespace std;
 
@@ -39,7 +39,6 @@ typedef struct __DECODE_PARAM_T
 	char*			imageData;
 	unsigned int	imageSize;
 
-	FFD_HANDLE		ffdHandle;
 } DECODE_PARAM_T;
 
 class HTTPSession : public HTTPSessionInterface
@@ -114,6 +113,9 @@ private:
 
 	// Channel Snap
 	DECODE_PARAM_T		decodeParam;
+
+	DecoderHelper		decoderHelper;
+
 };
 #endif // __HTTP_SESSION_H__
 
