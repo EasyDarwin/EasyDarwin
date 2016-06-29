@@ -153,15 +153,17 @@ QTSS_Error HTTPRequest::Parse()
     // If the method or version are not found, they are set
     // to httpIllegalMethod or httpIllegalVersion respectively, 
     // and QTSS_NoErr is returned.
-	// 解析第一行
-    QTSS_Error err = ParseRequestLine(&parser);
-    if (err != QTSS_NoErr)
-		return err;
+	QTSS_Error err = QTSS_NoErr;
+	do{
+		err = ParseRequestLine(&parser);
+		if (err != QTSS_NoErr)
+			return err;
+	}while(fHTTPType == httpIllegalType);
   
     // Parse headers and set values of headers into fFieldValues array
     err = ParseHeaders(&parser);
     if (err != QTSS_NoErr)
-            return err;
+		return err;
   
     return QTSS_NoErr;
 }
@@ -196,7 +198,14 @@ QTSS_Error HTTPRequest::ParseRequestLine(StringParser* parser)
 		}
 	}
 	else if(fMethod == httpIllegalMethod)
-		return QTSS_BadArgument;
+	{
+		if (!parser->ExpectEOL())
+		{
+			fStatusCode = httpBadRequest;
+			return QTSS_BadArgument;     // Request line is not properly formatted!
+		}
+		return QTSS_NoErr;
+	}
 
     // Consume whitespace
     parser->ConsumeWhitespace();

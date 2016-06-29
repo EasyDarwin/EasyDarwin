@@ -293,6 +293,14 @@ QTSS_Error HTTPRequestStream::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outL
     return theErr;
 }
 
+void HTTPRequestStream::ResetRequestBuffer()
+{
+	fRetreatBytes = 0; 
+    fRetreatBytesRead = 0;
+    fCurOffset = 0;
+    fEncodedBytesRemaining = 0;
+}
+
 QTSS_Error HTTPRequestStream::DecodeIncomingData(char* inSrcData, UInt32 inSrcDataLen)
 {
     Assert(fRetreatBytes == 0);

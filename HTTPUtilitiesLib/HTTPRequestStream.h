@@ -44,17 +44,19 @@ public:
     //                  QTSS_RequestFailed: if the client has disconnected
     //                  EINVAL: if we are base64 decoding and the stream is corrupt
     //                  QTSS_OutOfState: 
-    QTSS_Error      ReadRequest();
+    QTSS_Error			ReadRequest();
     
     // Read
     //
     // This function reads data off of the stream, and places it into the buffer provided
     // Returns: QTSS_NoErr, EAGAIN if it will block, or another socket error.
-    QTSS_Error      Read(void* ioBuffer, UInt32 inBufLen, UInt32* outLengthRead);
+    QTSS_Error			Read(void* ioBuffer, UInt32 inBufLen, UInt32* outLengthRead);
     
     // Use a different TCPSocket to read request data 
     // this will be used by RTSPSessionInterface::SnarfInputSocket
-    void                AttachToSocket(ClientSocket* sock) { fSocket = sock; }
+	void                AttachToSocket(ClientSocket* sock) { ResetRequestBuffer(); fSocket = sock; }
+
+	void				ResetRequestBuffer();
     
     // Tell the request stream whether or not to decode from base64.
     void                IsBase64Encoded(Bool16 isDataEncoded) { fDecode = isDataEncoded; }
@@ -63,11 +65,11 @@ public:
     //This returns a buffer containing the full client request. The length is set to
     //the exact length of the request headers. This will return NULL UNLESS this object
     //is in the proper state (has been initialized, ReadRequest has been called until it returns
-        //RequestArrived).
-    StrPtrLen*  GetRequestBuffer()  { return fRequestPtr; }
-    Bool16      IsDataPacket()      { return fIsDataPacket; }
-    void        ShowMsg(Bool16 enable) {fPrintMsg = enable; }     
-    void SnarfRetreat( HTTPRequestStream &fromRequest );
+	//RequestArrived).
+    StrPtrLen*			GetRequestBuffer()  { return fRequestPtr; }
+    Bool16				IsDataPacket()      { return fIsDataPacket; }
+    void				ShowMsg(Bool16 enable) {fPrintMsg = enable; }     
+    void				SnarfRetreat( HTTPRequestStream &fromRequest );
         
 private:      
     //CONSTANTS:

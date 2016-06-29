@@ -130,6 +130,12 @@ QTSS_Error HTTPResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 
     return QTSS_NoErr;
 }
 
+void HTTPResponseStream::ResetResponseBuffer()
+{
+	this->Reset();
+	fBytesSentInBuffer = 0;
+}
+
 QTSS_Error HTTPResponseStream::Flush()
 {
 	QTSS_Error theErr = QTSS_NoErr;

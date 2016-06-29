@@ -69,8 +69,9 @@ class HTTPResponseStream : public ResizeableStringFormatter
         void ShowMsg(Bool16 enable) {fPrintMsg = enable; }     
 
 		// Use a different TCPSocket to read request data 
-		// this will be used by RTSPSessionInterface::SnarfInputSocket
-		void                AttachToSocket(ClientSocket* sock) { fSocket = sock; }
+		void AttachToSocket(ClientSocket* sock) { ResetResponseBuffer(); fSocket = sock; }
+
+		void ResetResponseBuffer();
 
     private:
     
