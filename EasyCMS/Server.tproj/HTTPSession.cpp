@@ -170,7 +170,8 @@ SInt64 HTTPSession::Run()
 						return 0;
 					}
 					Assert(!this->IsLiveSession());
-					break
+					break;
+				}
 				fState = kHaveCompleteMessage;
 			}
 		case kHaveCompleteMessage:
