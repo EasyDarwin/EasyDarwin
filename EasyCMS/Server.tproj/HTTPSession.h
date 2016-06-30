@@ -113,8 +113,9 @@ private:
 
 	// Channel Snap
 	DECODE_PARAM_T		decodeParam;
-
+#ifndef __linux__
 	DecoderHelper		decoderHelper;
+#endif
 
 };
 #endif // __HTTP_SESSION_H__

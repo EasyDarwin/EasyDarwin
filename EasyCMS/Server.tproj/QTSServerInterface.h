@@ -130,6 +130,7 @@ class QTSServerInterface : public QTSSDictionary
         static QTSServerInterface*  GetServer()         { return sServer; }
 
 		OSRefTableEx*		GetDeviceSessionMap()				{ return &fDeviceMap; }
+		OSRefTableEx*		GetHTTPSessionMap() { return &fSessionMap; };
 
         QTSServerPrefs*     GetPrefs()                  { return fSrvrPrefs; }
         QTSSMessages*       GetMessages()               { return fSrvrMessages; }
@@ -192,6 +193,7 @@ class QTSServerInterface : public QTSSDictionary
     protected:
 
 		OSRefTableEx				fDeviceMap;//add,维护所有的注册设备
+		OSRefTableEx				fSessionMap; // all HTTPSession
 
         QTSServerPrefs*             fSrvrPrefs;
         QTSSMessages*               fSrvrMessages;
