@@ -458,7 +458,9 @@ QTSS_Error EasyCMSSession::processMessage()
 				string channel = startStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				string streamID = startStreamReq.GetBodyValue(EASY_TAG_STREAM_ID);
 				string reserve = startStreamReq.GetBodyValue(EASY_TAG_RESERVE);
-				string sessionId = startStreamReq.GetBodyValue(EASY_TAG_SESSION_ID);
+				string from = startStreamReq.GetBodyValue(EASY_TAG_FROM);
+				string to = startStreamReq.GetBodyValue(EASY_TAG_TO);
+				string via = startStreamReq.GetBodyValue(EASY_TAG_VIA);
 
 				qtss_printf("Serial = %s\n", serial.c_str());
 				qtss_printf("Server_IP = %s\n", ip.c_str());
@@ -496,7 +498,9 @@ QTSS_Error EasyCMSSession::processMessage()
 				body[EASY_TAG_SERVER_IP] = params.startStreamParams.inIP;
 				body[EASY_TAG_SERVER_PORT] = params.startStreamParams.inPort;
 				body[EASY_TAG_RESERVE] = reserve;
-				body[EASY_TAG_SESSION_ID] = sessionId;
+				body[EASY_TAG_FROM] = to;
+				body[EASY_TAG_TO] = from;
+				body[EASY_TAG_VIA] = via;
 
 				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), getStatusNo(errCode));
 
@@ -532,7 +536,9 @@ QTSS_Error EasyCMSSession::processMessage()
 				params.stopStreamParams.inProtocol = protocol.c_str();
 				string channel = stopStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
 				params.stopStreamParams.inChannel = channel.c_str();
-				string sessionId = stopStreamReq.GetBodyValue(EASY_TAG_SESSION_ID);
+				string from = stopStreamReq.GetBodyValue(EASY_TAG_FROM);
+				string to = stopStreamReq.GetBodyValue(EASY_TAG_TO);
+				string via = stopStreamReq.GetBodyValue(EASY_TAG_VIA);
 
 				QTSS_Error errCode = QTSS_NoErr;
 				UInt32 fCurrentModule = 0;
@@ -548,7 +554,9 @@ QTSS_Error EasyCMSSession::processMessage()
 				body[EASY_TAG_SERIAL] = params.stopStreamParams.inSerial;
 				body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
 				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
-				body[EASY_TAG_SESSION_ID] = sessionId;
+				body[EASY_TAG_FROM] = to;
+				body[EASY_TAG_TO] = from;
+				body[EASY_TAG_VIA] = via;
 
 				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), getStatusNo(errCode));
 				string msg = rsp.GetMsg();
