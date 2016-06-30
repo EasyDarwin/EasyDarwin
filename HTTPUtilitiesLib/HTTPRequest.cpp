@@ -210,6 +210,7 @@ QTSS_Error HTTPRequest::ParseRequestLine(StringParser* parser)
     // Consume whitespace
     parser->ConsumeWhitespace();
  
+	fHTTPType = httpRequestType;
 
     // Parse the URI - If it fails returns an error after setting 
     // the fStatusCode to the appropriate error code
