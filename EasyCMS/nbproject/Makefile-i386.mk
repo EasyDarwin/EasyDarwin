@@ -48,6 +48,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLParser.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o \
+	${OBJECTDIR}/Server.tproj/DecoderHelper.o \
 	${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o \
 	${OBJECTDIR}/Server.tproj/HTTPRequestStream.o \
 	${OBJECTDIR}/Server.tproj/HTTPResponseStream.o \
@@ -158,6 +159,11 @@ ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o: PrefsSourceLib/XMLPrefsParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
+
+${OBJECTDIR}/Server.tproj/DecoderHelper.o: Server.tproj/DecoderHelper.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Server.tproj
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/DecoderHelper.o Server.tproj/DecoderHelper.cpp
 
 ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o: Server.tproj/GenerateXMLPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj

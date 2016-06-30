@@ -1809,7 +1809,8 @@ QTSS_Error HTTPSession::ProcessRequest()//¥¶¿Ì«Î«Û
 
 int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata)
 {
-	int nBpp = 24;
+#ifndef __linux__
+    int nBpp = 24;
 	int dwW, dwH, dwWB;
 
 	dwW = width;
@@ -1868,7 +1869,7 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 	rgbOffset += dwWriteLength;
 
 	if (NULL != rgbsize)	*rgbsize = rgbOffset;
-
+#endif
 	return 0;
 }
 
