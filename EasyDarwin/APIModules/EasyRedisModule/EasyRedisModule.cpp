@@ -361,7 +361,10 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 			if(sRedisClient->GetReply((void**)&reply2) != EASY_REDIS_OK)
 			{
 				EasyFreeReplyObject(reply);
-				EasyFreeReplyObject(reply2);
+				if (reply2)
+				{
+					EasyFreeReplyObject(reply2);
+				}
 				sRedisClient->Free();
 				sIfConSucess = false;
 				return QTSS_NotConnected;
@@ -369,7 +372,10 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 			if(sRedisClient->GetReply((void**)&reply3) != EASY_REDIS_OK)
 			{
 				EasyFreeReplyObject(reply);
-				EasyFreeReplyObject(reply3);
+				if (reply3)
+				{
+					EasyFreeReplyObject(reply3);
+				}
 				sRedisClient->Free();
 				sIfConSucess = false;
 				return QTSS_NotConnected;
