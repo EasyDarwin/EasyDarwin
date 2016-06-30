@@ -267,6 +267,9 @@ OS_Error OS::MakeDir(char *inPath)
     {
         //this directory doesn't exist, so let's try to create it
 #ifdef __Win32__
+		if ((inPath[1] == ':') && (strlen(inPath) == 2) )
+			return OS_NoErr;
+
         if (::mkdir(inPath) == -1)
 #else
         if (::mkdir(inPath, S_IRWXU) == -1)
