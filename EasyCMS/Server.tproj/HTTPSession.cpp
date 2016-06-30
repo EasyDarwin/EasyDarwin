@@ -615,7 +615,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 	char jpgPath[512] = { 0 };
 
 	//local path
-	qtss_sprintf(jpgPath, "%s/%s_%s_%s.%s", jpgDir, device_serial.c_str(), channel.c_str(), strTime.c_str(), strType.c_str());
+	qtss_sprintf(jpgPath, "%s/%s_%s_%s.%s", jpgDir, device_serial.c_str(), channel.c_str(), strTime.c_str(), EasyProtocol::GetSnapTypeString(EASY_SNAP_TYPE_JPEG).c_str());
 
 	FILE* fSnap = ::fopen(jpgPath, "wb");
 	if (fSnap == NULL)
@@ -646,7 +646,8 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 
 	//web path
 	char snapURL[512] = { 0 };
-	qtss_sprintf(snapURL, "%s%s/%s_%s_%s.%s", QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(), device_serial.c_str(), channel.c_str(), strTime.c_str(), strType.c_str());
+	qtss_sprintf(snapURL, "%s%s/%s_%s_%s.%s", QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath(), device_serial.c_str(),
+		device_serial.c_str(), channel.c_str(), strTime.c_str(), EasyProtocol::GetSnapTypeString(EASY_SNAP_TYPE_JPEG).c_str());
 	fDevice.HoldSnapPath(snapURL, channel);
 
 	EasyProtocolACK rsp(MSG_SD_POST_SNAP_ACK);
