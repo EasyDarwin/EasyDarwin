@@ -46,6 +46,7 @@
 #ifndef __MacOSX__
 #include "revision.h"
 #endif
+#include "EasyUtil.h"
 
 // STATIC DATA
 
@@ -188,8 +189,8 @@ QTSServerInterface::QTSServerInterface()
     this->SetVal(qtssSvrNumThinned,         &fNumThinned,               sizeof(fNumThinned));
     this->SetVal(qtssSvrNumThreads,         &fNumThreads,               sizeof(fNumThreads));
 
-	qtss_sprintf(fDMSServiceID, "EasyCMS%s", "Config EasyCMS Uid");
-    
+ 	qtss_sprintf(fCloudServiceNodeID, "%s", EasyUtil::GetUUID().c_str());
+   
     sServer = this;
 
 }
