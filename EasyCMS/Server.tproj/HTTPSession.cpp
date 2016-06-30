@@ -824,7 +824,6 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
 	body[EASY_TAG_SERIAL] = fDevice.serial_;
-	body[EASY_TAG_SESSION_ID] = fSessionID;
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
@@ -911,7 +910,9 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	bodybody[EASY_TAG_CHANNEL] = strChannel;
 	bodybody[EASY_TAG_RESERVE] = strReserve;
 	bodybody[EASY_TAG_PROTOCOL] = strProtocol;
-	bodybody[EASY_TAG_SESSION_ID] = fSessionID;
+	bodybody[EASY_TAG_FROM] = fSessionID;
+	bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
+	bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
 	reqreq.SetHead(headerheader);
 	reqreq.SetBody(bodybody);
@@ -1170,7 +1171,9 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReq(const char* json)//¿Í»§¶Ë¿ªÊ¼Á÷
 		bodybody[EASY_TAG_CHANNEL] = strChannel;
 		bodybody[EASY_TAG_PROTOCOL] = strProtocol;
 		bodybody[EASY_TAG_RESERVE] = strReserve;
-		bodybody[EASY_TAG_SESSION_ID] = fSessionID;
+		bodybody[EASY_TAG_FROM] = fSessionID;
+		bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
+		bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
 		reqreq.SetHead(headerheader);
 		reqreq.SetBody(bodybody);
@@ -1240,7 +1243,9 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 	string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);//Á÷ÀàÐÍ
 	string strDssIP = req.GetBodyValue(EASY_TAG_SERVER_IP);//Éè±¸Êµ¼ÊÍÆÁ÷µØÖ·
 	string strDssPort = req.GetBodyValue(EASY_TAG_SERVER_PORT);//ºÍ¶Ë¿Ú
-	string strSessionId = req.GetBodyValue(EASY_TAG_SESSION_ID);
+	string strFrom = req.GetBodyValue(EASY_TAG_FROM);
+	string strTo = req.GetBodyValue(EASY_TAG_TO);
+	string strVia = req.GetBodyValue(EASY_TAG_VIA);
 
 	string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//Õâ¸öÊÇ¹Ø¼ü×Ö
 	string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//×´Ì¬Âë
@@ -1254,11 +1259,11 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 	int iStateCode = atoi(strStateCode.c_str());
 
 	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
-	OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strSessionId);
+	OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
 	if (sessionRef == NULL)
 		return EASY_ERROR_SESSION_NOT_FOUND;
 
-	OSRefReleaserEx releaser(sessionMap, strSessionId);
+	OSRefReleaserEx releaser(sessionMap, strTo);
 	HTTPSession* httpSession = static_cast<HTTPSession *>(sessionRef->GetObjectPtr());
 
 	if (httpSession->IsLiveSession())

@@ -132,6 +132,8 @@ class QTSServerInterface : public QTSSDictionary
 		OSRefTableEx*		GetDeviceSessionMap()				{ return &fDeviceMap; }
 		OSRefTableEx*		GetHTTPSessionMap() { return &fSessionMap; };
 
+		char* GetCloudServiceNodeID() { return fCloudServiceNodeID; }
+
         QTSServerPrefs*     GetPrefs()                  { return fSrvrPrefs; }
         QTSSMessages*       GetMessages()               { return fSrvrMessages; }
         
@@ -269,7 +271,6 @@ class QTSServerInterface : public QTSSDictionary
         static QTSSAttrInfoDict::AttrInfo   sAttributes[];
         static QTSSAttrInfoDict::AttrInfo   sConnectedUserAttributes[];
 
-		char* GetCloudServiceNodeID() { return fCloudServiceNodeID; }
 		
 };
 
