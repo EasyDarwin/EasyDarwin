@@ -1,6 +1,6 @@
 #ifndef _DECODER_HELPER_
 #define _DECODER_HELPER_
-
+#ifndef __linux__
 #define __STDC_CONSTANT_MACROS
 
 extern "C" 
@@ -46,5 +46,6 @@ private:
 	int					_outputFormat;
 
 };
+#endif
 
 #endif //_DECODER_HELPER_

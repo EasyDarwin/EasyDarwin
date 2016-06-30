@@ -61,6 +61,8 @@
     <logicalFolder name="Server.tproj"
                    displayName="Server.tproj"
                    projectFiles="true">
+      <itemPath>Server.tproj/DecoderHelper.cpp</itemPath>
+      <itemPath>Server.tproj/DecoderHelper.h</itemPath>
       <itemPath>Server.tproj/GenerateXMLPrefs.cpp</itemPath>
       <itemPath>Server.tproj/GenerateXMLPrefs.h</itemPath>
       <itemPath>Server.tproj/HTTPRequestStream.cpp</itemPath>
@@ -246,6 +248,10 @@
       <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/DecoderHelper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/DecoderHelper.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -467,6 +473,10 @@
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Server.tproj/DecoderHelper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/DecoderHelper.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
@@ -685,6 +695,10 @@
       <item path="PrefsSourceLib/XMLPrefsParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="PrefsSourceLib/XMLPrefsParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Server.tproj/DecoderHelper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Server.tproj/DecoderHelper.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
