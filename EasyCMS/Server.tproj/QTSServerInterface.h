@@ -220,7 +220,7 @@ class QTSServerInterface : public QTSSDictionary
         static OSQueue                  sModuleQueue;
         static QTSSErrorLogStream       sErrorLogStream;
 
-		char fDMSServiceID[QTSS_MAX_SESSION_ID_LENGTH];
+		char fCloudServiceNodeID[QTSS_MAX_SESSION_ID_LENGTH];
 
     private:
     
@@ -269,7 +269,7 @@ class QTSServerInterface : public QTSSDictionary
         static QTSSAttrInfoDict::AttrInfo   sAttributes[];
         static QTSSAttrInfoDict::AttrInfo   sConnectedUserAttributes[];
 
-		char* GetDMSServiceID() { return fDMSServiceID; }
+		char* GetCloudServiceNodeID() { return fCloudServiceNodeID; }
 		
 };
 
