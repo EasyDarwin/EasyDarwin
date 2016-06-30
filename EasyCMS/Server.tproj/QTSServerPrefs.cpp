@@ -42,6 +42,7 @@
 #include "QTSSDataConverter.h"
 #include "defaultPaths.h"
 #include "QTSSRollingLog.h"
+#include "OS.h"
  
 #ifndef __Win32__
 #include <sys/types.h>
@@ -139,6 +140,11 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
 {
     SetupAttributes();
     RereadServerPreferences(inWriteMissingPrefs);
+
+	char jpgDir[512] = { 0 };
+	qtss_sprintf(jpgDir, "%s", this->GetSnapLocalPath());
+	OS::RecursiveMakeDir(jpgDir);
+
 }
 
 void QTSServerPrefs::Initialize()
