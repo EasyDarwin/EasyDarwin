@@ -415,7 +415,7 @@ EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(const char * msg)
 {
 }
 
-EasyMsgCSPTZControlACK::EasyMsgCSPTZControlACK(EasyJsonValue & body, size_t cseq, size_t error)
+EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(EasyJsonValue & body, size_t cseq, size_t error)
     : EasyProtocol(MSG_SC_PTZ_CONTROL_ACK)
 {
     SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -428,7 +428,7 @@ EasyMsgCSPTZControlACK::EasyMsgCSPTZControlACK(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgCSPTZControlACK::EasyMsgCSPTZControlACK(const char * msg)
+EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(const char * msg)
     : EasyProtocol(msg, MSG_SC_PTZ_CONTROL_ACK)
 {
 }
@@ -449,7 +449,7 @@ EasyMsgCSPTZStopREQ::EasyMsgCSPTZStopREQ(const char * msg)
 {
 }
 
-EasyMsgCSPTZStopACK::EasyMsgCSPTZStopACK(EasyJsonValue & body, size_t cseq, size_t error)
+EasyMsgSCPTZStopACK::EasyMsgSCPTZStopACK(EasyJsonValue & body, size_t cseq, size_t error)
     : EasyProtocol(MSG_SC_PTZ_STOP_ACK)
 {
     SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -462,12 +462,12 @@ EasyMsgCSPTZStopACK::EasyMsgCSPTZStopACK(EasyJsonValue & body, size_t cseq, size
     }
 }
 
-EasyMsgCSPTZStopACK::EasyMsgCSPTZStopACK(const char * msg)
+EasyMsgSCPTZStopACK::EasyMsgSCPTZStopACK(const char * msg)
     : EasyProtocol(msg, MSG_SC_PTZ_STOP_ACK)
 {
 }
 
-EasyMsgCSControlPTZREQ::EasyMsgCSControlPTZREQ(EasyJsonValue & body, size_t cseq)
+EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(EasyJsonValue & body, size_t cseq)
     : EasyProtocol(MSG_SD_CONTROL_PTZ_REQ)
 {
     SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -478,12 +478,12 @@ EasyMsgCSControlPTZREQ::EasyMsgCSControlPTZREQ(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgCSControlPTZREQ::EasyMsgCSControlPTZREQ(const char * msg)
+EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(const char * msg)
     : EasyProtocol(msg, MSG_SD_CONTROL_PTZ_REQ)
 {
 }
 
-EasyMsgCSControlPTZACK::EasyMsgCSControlPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
+EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
     : EasyProtocol(MSG_DS_CONTROL_PTZ_ACK)
 {
     SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -496,12 +496,12 @@ EasyMsgCSControlPTZACK::EasyMsgCSControlPTZACK(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgCSControlPTZACK::EasyMsgCSControlPTZACK(const char * msg)
+EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(const char * msg)
     : EasyProtocol(msg, MSG_DS_CONTROL_PTZ_ACK)
 {
 }
 
-EasyMsgCSStopPTZREQ::EasyMsgCSStopPTZREQ(EasyJsonValue & body, size_t cseq)
+EasyMsgSDStopPTZREQ::EasyMsgSDStopPTZREQ(EasyJsonValue & body, size_t cseq)
     : EasyProtocol(MSG_SD_STOP_PTZ_REQ)
 {
     SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -512,12 +512,12 @@ EasyMsgCSStopPTZREQ::EasyMsgCSStopPTZREQ(EasyJsonValue & body, size_t cseq)
     }
 }
 
-EasyMsgCSStopPTZREQ::EasyMsgCSStopPTZREQ(const char * msg)
+EasyMsgSDStopPTZREQ::EasyMsgSDStopPTZREQ(const char * msg)
     : EasyProtocol(msg, MSG_SD_STOP_PTZ_REQ)
 {
 }
 
-EasyMsgCSStopPTZACK::EasyMsgCSStopPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
+EasyMsgDSStopPTZACK::EasyMsgDSStopPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
     : EasyProtocol(MSG_DS_STOP_PTZ_ACK)
 {
     SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -530,7 +530,7 @@ EasyMsgCSStopPTZACK::EasyMsgCSStopPTZACK(EasyJsonValue & body, size_t cseq, size
     }
 }
 
-EasyMsgCSStopPTZACK::EasyMsgCSStopPTZACK(const char * msg)
+EasyMsgDSStopPTZACK::EasyMsgDSStopPTZACK(const char * msg)
     : EasyProtocol(msg, MSG_DS_STOP_PTZ_ACK)
 {
 }
