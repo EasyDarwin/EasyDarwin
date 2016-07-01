@@ -83,6 +83,7 @@
 #define EASY_TAG_INVALID_ACCESS_TIME					"InvalidAccessTime"
 #define EASY_TAG_FROM									"From"
 #define EASY_TAG_TO										"To"
+#define EASY_TAG_VIA									"Via"
 #define EASY_TAG_STATUS									"Status"
 #define EASY_TAG_SNAPSHOT								"Snapshot"
 #define EASY_TAG_DESCRIPTION							"Description"
