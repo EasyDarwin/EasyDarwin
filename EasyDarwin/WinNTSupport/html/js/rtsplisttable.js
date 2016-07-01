@@ -1,46 +1,46 @@
-function GotoPage(num,PageCount,type,json){ //Ìø×ªÒ³
+function GotoPage(num,PageCount,type,json){ //è·³è½¬é¡µ
 	Page = num;
 	OutputHtml(PageCount,type,json);
 } 
 
-var PageSize = 50; //Ã¿Ò³¸öÊı
-var Page = 1; //µ±Ç°Ò³Âë
+var PageSize = 50; //æ¯é¡µä¸ªæ•°
+var Page = 1; //å½“å‰é¡µç 
 //++++++++++++++++++++
-//PageCount==Êı¾İÔ´×ÜÊı
-//type==±íÊ¾Ò³ÃæÀàĞÍ
-//type=1Ê±±íÊ¾hlsÖ±²¥ÁĞ±íÒ³Ãæ
+//PageCount==æ•°æ®æºæ€»æ•°
+//type==è¡¨ç¤ºé¡µé¢ç±»å‹
+//type=1æ—¶è¡¨ç¤ºhlsç›´æ’­åˆ—è¡¨é¡µé¢
 //++++++++++++++++++++
 function OutputHtml(PageCount,type,json){
-	var Pages = Math.floor((PageCount - 1) / PageSize) + 1; //»ñÈ¡·ÖÒ³×ÜÊı
-	if(Page < 1)Page = 1;  //Èç¹ûµ±Ç°Ò³ÂëĞ¡ÓÚ1
-	if(Page > Pages)Page = Pages; //Èç¹ûµ±Ç°Ò³Âë´óÓÚ×ÜÊı
+	var Pages = Math.floor((PageCount - 1) / PageSize) + 1; //è·å–åˆ†é¡µæ€»æ•°
+	if(Page < 1)Page = 1;  //å¦‚æœå½“å‰é¡µç å°äº1
+	if(Page > Pages)Page = Pages; //å¦‚æœå½“å‰é¡µç å¤§äºæ€»æ•°
 	var Temp = "";
 	
-	var BeginNO = (Page - 1) * PageSize + 1; //¿ªÊ¼±àºÅ
-	var EndNO = Page * PageSize; //½áÊø±àºÅ
+	var BeginNO = (Page - 1) * PageSize + 1; //å¼€å§‹ç¼–å·
+	var EndNO = Page * PageSize; //ç»“æŸç¼–å·
 	if(EndNO >PageCount) EndNO = PageCount;
 	if(EndNO == 0) BeginNO = 0;
 	
 	if(!(Page <= Pages)) Page = Pages;
 	$("total").innerHTML = "Total:<strong class='f90'>" + siteList.EasyDarwin.Body.SessionCount + "</strong>&nbsp;&nbsp;Show:<strong class='f90'>" + BeginNO + "-" + EndNO + "</strong>"; 
 	
-	//·ÖÒ³
+	//åˆ†é¡µ
 	if(Page > 1 && Page !== 1){Temp ="<a href='javascript:void(0)' onclick='GotoPage(1,"+PageCount+","+type+")'><< First</a> <a href='javascript:void(0)' onclick='GotoPage(" + (Page - 1) + ","+PageCount+","+type+")'>Previous</a>&nbsp;"}else{Temp = " <div class=\"pn\"><< First</div> <div class=\"pn\">Previous</div>&nbsp;"};
 	
-	//ÍêÃÀµÄ·­Ò³ÁĞ±í
-	var PageFrontSum = 3; //µ±Ò³Ç°ÏÔÊ¾¸öÊı
-	var PageBackSum = 3; //µ±Ò³ºóÏÔÊ¾¸öÊı
+	//å®Œç¾çš„ç¿»é¡µåˆ—è¡¨
+	var PageFrontSum = 3; //å½“é¡µå‰æ˜¾ç¤ºä¸ªæ•°
+	var PageBackSum = 3; //å½“é¡µåæ˜¾ç¤ºä¸ªæ•°
 	
 	var PageFront = PageFrontSum - (Page - 1);
 	var PageBack = PageBackSum - (Pages - Page);
-	if(PageFront > 0 && PageBack < 0)PageBackSum += PageFront; //Ç°ÉÙºó¶à£¬Ç°Ê£Óà¿ÕÎ»¸øºó
-	if(PageBack > 0 && PageFront < 0)PageFrontSum += PageBack; //ºóÉÙÇ°¶à£¬ºóÊ£Óà¿ÕÎ»¸øÇ°
+	if(PageFront > 0 && PageBack < 0)PageBackSum += PageFront; //å‰å°‘åå¤šï¼Œå‰å‰©ä½™ç©ºä½ç»™å
+	if(PageBack > 0 && PageFront < 0)PageFrontSum += PageBack; //åå°‘å‰å¤šï¼Œåå‰©ä½™ç©ºä½ç»™å‰
 	var PageFrontBegin = Page - PageFrontSum;
 	if(PageFrontBegin < 1)PageFrontBegin = 1;
 	var PageFrontEnd = Page + PageBackSum;
 	if(PageFrontEnd > Pages)PageFrontEnd = Pages;
 	
-	if(PageFrontBegin != 1) Temp += '<a href="javascript:void(0)" onclick="GotoPage(' + (Page - 10) + ','+PageCount+','+type+')" title="Ç°10Ò³">..</a>';
+	if(PageFrontBegin != 1) Temp += '<a href="javascript:void(0)" onclick="GotoPage(' + (Page - 10) + ','+PageCount+','+type+')" title="å‰10é¡µ">..</a>';
 	for(var i = PageFrontBegin;i < Page;i ++){
 		Temp += " <a href='javascript:void(0)' onclick='GotoPage(" + i + ","+PageCount+","+type+")'>" + i + "</a>";
 	}
@@ -48,18 +48,18 @@ function OutputHtml(PageCount,type,json){
 	for(var i = Page + 1;i <= PageFrontEnd;i ++){
 		Temp += " <a href='javascript:void(0)' onclick='GotoPage(" + i + ","+PageCount+","+type+")'>" + i + "</a>";
 	}
-	if(PageFrontEnd != Pages) Temp += " <a href='javascript:void(0)' onclick='GotoPage(" + (Page + 10) + ","+PageCount+","+type+")' title='ºó10Ò³'>..</a>";
+	if(PageFrontEnd != Pages) Temp += " <a href='javascript:void(0)' onclick='GotoPage(" + (Page + 10) + ","+PageCount+","+type+")' title='å10é¡µ'>..</a>";
 	
 	if(Page != Pages){Temp += "&nbsp;&nbsp;<a href='javascript:void(0)' onclick='GotoPage(" + (Page + 1) + ","+PageCount+","+type+");'>Next</a> <a href='javascript:void(0)' onclick='GotoPage(" + Pages + ","+PageCount+","+type+")'>Last>></a>"}else{Temp += "&nbsp;&nbsp; <div class=\"pn\">Next</div> <div class=\"pn\">Last>></div>"}
 	
 	document.getElementById("pagelist").innerHTML= Temp;
-	//Êä³öÊı¾İ
+	//è¾“å‡ºæ•°æ®
 	
 	
 	if(type==1)
 	{
 		
-		var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped\"><thead><tr class=\"warning\"><th>Index</th><th>Name</th><th>Url</th></tr></thead><tbody>";
+		var html="<div class=\"panel-body no-padding\" ><table class=\"table table-striped table-bordered table-hover\"><thead><tr><th>Index</th><th>Name</th><th>Url</th></tr></thead><tbody>";
 		for(var i = BeginNO - 1;i < EndNO;i ++)
 		{
 			html+="<tr><td>"+i+"</td><td>"+json.EasyDarwin.Body.Sessions[i].name+"</td><td>"+json.EasyDarwin.Body.Sessions[i].url+"</td></tr>"
@@ -67,10 +67,10 @@ function OutputHtml(PageCount,type,json){
 		html+="</tbody></table></div>";
 		document.getElementById("divload").innerHTML= html;
 	}
-	clickShow(); //µ÷ÓÃÊó±êµã»÷ÊÂ¼ş
+	clickShow(); //è°ƒç”¨é¼ æ ‡ç‚¹å‡»äº‹ä»¶
 }
 
-//Êó±êµã»÷ÊÂ¼ş
+//é¼ æ ‡ç‚¹å‡»äº‹ä»¶
 function clickShow(){
 	var links = $("content").getElementsByTagName("a");
 	for(var i=0; i<links.length; i++){

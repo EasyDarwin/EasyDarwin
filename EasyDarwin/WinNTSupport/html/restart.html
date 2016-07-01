@@ -1,66 +1,47 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
-  <title>EasyDarwin</title>
-	<link href="css/bootstrap.min.css" rel='stylesheet' type='text/css' />
-	<link href="css/style.css" rel='stylesheet' type='text/css' />
-	<link href="css/font-awesome.css" rel="stylesheet"> 
-	<link href="css/custom.css" rel="stylesheet">
-	<link href="css/new-css.css" rel="stylesheet">
-	<!-- Metis Menu Plugin JavaScript -->
-	 <script src="js/jquery/jquery-1.5.2.min.js"  type="text/javascript"></script>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/metisMenu.min.js"></script>
-	<script src="js/custom.js"></script>
-		<script src="language.js" type="text/javascript"></script>
-	<script src="js/navigation.js"></script>
-	<script src="js/ajaxhandle.js" ></script>
-	<script src="js/verify.js"></script>
-	 
-	<!-- Graph JavaScript -->
-	
-</head>
-<body  >
-<div id="wrapper">
-     <!-- Navigation -->
-<script type="text/javascript">document.write(navigation);</script> 
-                <!--/Navigation -->
-				
-				
-			    <!--contetn rihgt -->	
-				<div class="main-right">
-                    <script type="text/javascript">document.write(contextright);</script> 
-					
-					<!---���岿��-->
-					  <div class="m-content">
-					   <h3><script type="text/javascript">document.write(str_reboot);</script> </h3>
 
-										 <div class="tab-content">
-											<div class="tab-pane active" id="horizontal-form">
-												<form class="form-horizontal">
-													
-													 <div class="form-group">
-														<div class="row">
-														<div class="col-sm-8 col-sm-offset-2">
-														<button class="btn-success btn" onclick="restart()"><script type="text/javascript">document.write(str_reboot);</script></button>
-														</div>
-														</div>
-													</div>
-												</form>
-											</div>
-										</div>
-					  </div>
-					<!---/���岿��---->
-								
-				</div>
-				<!--/contetn rihgt -->
-            </div>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
- 
 
-    <!-- /#wrapper -->
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <title>EasyDarwin重启</title>
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.min.css?v=4.3.0" rel="stylesheet">
+
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min.css?v=3.2.0" rel="stylesheet">
+ <script type="text/javascript" src="js/ajaxhandle.js"></script>
+    <script type="text/javascript" src="js/language.js"></script>
+     <script type="text/javascript" src="js/verify.js"></script>
+</head>
+
+<body class="gray-bg">
+    <div class="row wrapper wrapper-content animated fadeInRight">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>服务器关键性操作,请慎重! </h5>
+                </div>
+                <div class="ibox-content">
+                    <p>
+                        重启服务器过程中服务器将有短暂时间不能使用!
+                    </p>
+                    <p>
+                        <button class="btn btn-warning " type="button" onclick="restart()"><i class="fa fa-warning"></i> <span class="bold">&nbsp;重新启动&nbsp;EasyDarwin</span>
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js?v=3.4.0"></script>
+
 </body>
+
 </html>
