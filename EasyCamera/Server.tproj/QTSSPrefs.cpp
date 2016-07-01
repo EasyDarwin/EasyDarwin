@@ -191,7 +191,7 @@ void QTSSPrefs::RereadObjectPreferences(ContainerRef container)
                 {   char* theName = NULL;
                     UInt32 nameLen = 0;
                     theAttrInfoPtr->GetValuePtr(qtssAttrName,0, (void **) &theName, &nameLen);
-                    qtss_printf("QTSSPrefs::RereadPreferences about to delete modulePrefInServer=%s attr=%s id=%"_U32BITARG_"\n",modulePrefInServer[a], theName,theAttrID);
+                    qtss_printf("QTSSPrefs::RereadPreferences about to delete modulePrefInServer=%s attr=%s id=%" _U32BITARG_ "\n",modulePrefInServer[a], theName,theAttrID);
                 }
             
             

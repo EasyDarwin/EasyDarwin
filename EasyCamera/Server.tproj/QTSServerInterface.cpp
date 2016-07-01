@@ -59,7 +59,7 @@ StrPtrLen               QTSServerInterface::sServerBuildStr(kBuildString);
 StrPtrLen               QTSServerInterface::sServerCommentStr(kCommentString);
 
 StrPtrLen               QTSServerInterface::sServerPlatformStr(kPlatformNameString);
-StrPtrLen               QTSServerInterface::sServerBuildDateStr(__DATE__ ", "__TIME__);
+StrPtrLen               QTSServerInterface::sServerBuildDateStr( __DATE__ ", " __TIME__);
 char                    QTSServerInterface::sServerHeader[kMaxServerHeaderLen];
 StrPtrLen               QTSServerInterface::sServerHeaderPtr(sServerHeader, kMaxServerHeaderLen);
 
