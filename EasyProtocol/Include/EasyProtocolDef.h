@@ -147,6 +147,15 @@
 #define MSG_CS_DEVICE_INFO_REQ								0x0009//EasyClient向EasyCMS请求设备信息
 #define MSG_SC_DEVICE_INFO_ACK								0xe009
 
+#define MSG_CS_PTZ_CONTROL_REQ                              0x000a
+#define MSG_SC_PTZ_CONTROL_ACK                              0xe00a
+#define MSG_CS_PTZ_STOP_REQ                                 0x000b
+#define MSG_SC_PTZ_STOP_ACK                                 0xe00b
+
+#define MSG_SD_CONTROL_PTZ_REQ                              0x000c
+#define MSG_DS_CONTROL_PTZ_ACK                              0xe00c
+#define MSG_SD_STOP_PTZ_REQ                                 0x000d
+#define MSG_DS_STOP_PTZ_AKC                                 0xe00d
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
@@ -300,6 +309,45 @@ enum EasyDarwinSnapType
 {
 	EASY_SNAP_TYPE_JPEG = 1,					///< JPEG
 	EASY_SNAP_TYPE_IDR							///< IDR
+};
+/*!
+\}
+*/
+
+/*!
+\ingroup EasyDarwin_PTZ_ACTION_Type_Define
+\{
+*/
+enum EasyDarwinPTZActionType
+{
+    EASY_PTZ_ACTION_TYPE_CONTINUOUS = 1,				///< CONTINUOUS
+    EASY_PTZ_ACTION_TYPE_SINGLE 						///< SINGLE
+};
+/*!
+\}
+*/
+
+/*!
+\ingroup EasyDarwin_PTZ_CMD_Type_Define
+\{
+*/
+enum EasyDarwinPTZCMDType
+{
+    EASY_PTZ_CMD_TYPE_STOP = 1,				    ///< CONTINUOUS
+    EASY_PTZ_CMD_TYPE_UP, 						///< UP
+    EASY_PTZ_CMD_TYPE_DOWN, 					///< DOWN
+    EASY_PTZ_CMD_TYPE_LEFT, 					///< LEFT
+    EASY_PTZ_CMD_TYPE_RIGHT, 					///< RIGHT
+    EASY_PTZ_CMD_TYPE_LEFTUP, 					///< LEFTUP
+    EASY_PTZ_CMD_TYPE_LEFTDOWN, 				///< LEFTDOWN
+    EASY_PTZ_CMD_TYPE_RIGHTUP, 					///< RIGHTUP
+    EASY_PTZ_CMD_TYPE_RIGHTDOWN, 				///< RIGHTDOWN
+    EASY_PTZ_CMD_TYPE_ZOOMIN, 					///< ZOOMIN
+    EASY_PTZ_CMD_TYPE_ZOOMOUT, 					///< ZOOMOUT
+    EASY_PTZ_CMD_TYPE_FOCUSIN, 					///< FOCUSIN
+    EASY_PTZ_CMD_TYPE_FOCUSOUT, 				///< FOCUSOUT
+    EASY_PTZ_CMD_TYPE_APERTUREIN, 				///< APERTUREIN
+    EASY_PTZ_CMD_TYPE_APERTUREOUT, 				///< APERTUREOUT
 };
 /*!
 \}

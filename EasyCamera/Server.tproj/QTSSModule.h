@@ -140,8 +140,10 @@ class QTSSModule : public QTSSDictionary, public Task
 			kStopStreamRole =			13,
 			kGetCameraStateRole =		14,
 			kGetCameraSnapRole =		15,
+            kControlPTZRole =           16,
+            kStopControlPTZRole =       17,
             
-            kNumRoles =                 16
+            kNumRoles =                 18
         };
         typedef UInt32 RoleIndex;
         

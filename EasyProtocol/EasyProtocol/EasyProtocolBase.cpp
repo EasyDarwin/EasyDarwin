@@ -124,6 +124,28 @@ EasyProtocol::MsgType EasyProtocol::SnapTypeMap[] = {
 	EASY_SNAP_TYPE_IDR,								"IDR"
 };
 
+EasyProtocol::MsgType EasyProtocol::PTZActionTypeMap[] = {
+    EASY_PTZ_ACTION_TYPE_CONTINUOUS,                "CONTINUOUS",
+    EASY_PTZ_ACTION_TYPE_SINGLE,                    "SINGLE"
+};
+
+EasyProtocol::MsgType EasyProtocol::PTZCMDTypeMap[] = {
+    EASY_PTZ_CMD_TYPE_STOP,                         "STOP",
+    EASY_PTZ_CMD_TYPE_UP,                           "UP",
+    EASY_PTZ_CMD_TYPE_DOWN,                         "DOWN",
+    EASY_PTZ_CMD_TYPE_LEFT,                         "LEFT",
+    EASY_PTZ_CMD_TYPE_RIGHT,                        "RIGHT",
+    EASY_PTZ_CMD_TYPE_LEFTUP,                       "LEFTUP",
+    EASY_PTZ_CMD_TYPE_LEFTDOWN,                     "LEFTDOWN",
+    EASY_PTZ_CMD_TYPE_RIGHTUP,                      "RIGHTUP",
+    EASY_PTZ_CMD_TYPE_RIGHTDOWN,                    "RIGHTDOWN",
+    EASY_PTZ_CMD_TYPE_ZOOMIN,                       "ZOOMIN",
+    EASY_PTZ_CMD_TYPE_ZOOMOUT,                      "ZOOMOUT",
+    EASY_PTZ_CMD_TYPE_FOCUSIN,                      "FOCUSIN",
+    EASY_PTZ_CMD_TYPE_FOCUSOUT,                     "FOCUSOUT",
+    EASY_PTZ_CMD_TYPE_APERTUREIN,                   "APERTUREIN",
+    EASY_PTZ_CMD_TYPE_APERTUREOUT,                  "APERTUREOUT"
+};
 
 EasyProtocol::EasyProtocol(int iMsgType)
 :fMsgType(iMsgType)

@@ -133,6 +133,8 @@ private:
 	static MsgType AppTypeMap[];
 	static MsgType LiveTypeMap[];
 	static MsgType SnapTypeMap[];
+    static MsgType PTZActionTypeMap[];
+    static MsgType PTZCMDTypeMap[];
 
 	Json::Reader reader;
 	Json::StyledWriter writer;//or StyledWriter FastWriter
