@@ -119,6 +119,8 @@
 #define EASY_TAG_SESSION_COUNT							"SessionCount"
 #define EASY_TAG_RECORDS								"Records"
 #define EASY_TAG_AUDIENCE_NUM							"AudienceNum"
+#define EASY_TAG_ACTION_TYPE                            "ActionType"
+#define EASY_TAG_SPEED                                  "Speed"
 /*!
 \}
 */
