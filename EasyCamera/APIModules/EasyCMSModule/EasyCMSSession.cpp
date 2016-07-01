@@ -449,136 +449,12 @@ QTSS_Error EasyCMSSession::processMessage()
 			break;
 		case MSG_SD_PUSH_STREAM_REQ:
 			{
-				EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
-
-				string serial = startStreamReq.GetBodyValue(EASY_TAG_SERIAL);
-				string ip = startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP);
-				string port = startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT);
-				string protocol = startStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
-				string channel = startStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
-				string streamID = startStreamReq.GetBodyValue(EASY_TAG_STREAM_ID);
-				string reserve = startStreamReq.GetBodyValue(EASY_TAG_RESERVE);
-				string from = startStreamReq.GetBodyValue(EASY_TAG_FROM);
-				string to = startStreamReq.GetBodyValue(EASY_TAG_TO);
-				string via = startStreamReq.GetBodyValue(EASY_TAG_VIA);
-
-				qtss_printf("Serial = %s\n", serial.c_str());
-				qtss_printf("Server_IP = %s\n", ip.c_str());
-				qtss_printf("Server_Port = %s\n", port.c_str());
-
-				//TODO::这里需要对传入的Serial/StreamID/Channel做一下容错处理
-				if (serial.empty() || ip.empty() || port.empty())
-				{
-					return QTSS_ValueNotFound;
-				}
-
-				QTSS_RoleParams params;
-
-				params.startStreamParams.inIP = ip.c_str();
-				params.startStreamParams.inPort = atoi(port.c_str());
-				params.startStreamParams.inSerial = serial.c_str();
-				params.startStreamParams.inProtocol = protocol.c_str();
-				params.startStreamParams.inChannel = channel.c_str();
-				params.startStreamParams.inStreamID = streamID.c_str();
-
-				QTSS_Error errCode = QTSS_NoErr;
-				UInt32 fCurrentModule = 0;
-				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStartStreamRole);
-				for (; fCurrentModule < numModules; ++fCurrentModule)
-				{
-					QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStartStreamRole, fCurrentModule);
-					errCode = theModule->CallDispatch(Easy_StartStream_Role, &params);
-				}
-				fCurrentModule = 0;
-
-				EasyJsonValue body;
-				body[EASY_TAG_SERIAL] = params.startStreamParams.inSerial;
-				body[EASY_TAG_CHANNEL] = params.startStreamParams.inChannel;
-				body[EASY_TAG_PROTOCOL] = params.startStreamParams.inProtocol;
-				body[EASY_TAG_SERVER_IP] = params.startStreamParams.inIP;
-				body[EASY_TAG_SERVER_PORT] = params.startStreamParams.inPort;
-				body[EASY_TAG_RESERVE] = reserve;
-				body[EASY_TAG_FROM] = to;
-				body[EASY_TAG_TO] = from;
-				body[EASY_TAG_VIA] = via;
-
-				EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), getStatusNo(errCode));
-
-				string msg = rsp.GetMsg();
-				StrPtrLen jsonContent((char*)msg.data());
-				HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-				if (httpAck.CreateResponseHeader())
-				{
-					if (jsonContent.Len)
-						httpAck.AppendContentLengthHeader(jsonContent.Len);
-
-					//Push msg to OutputBuffer
-					char respHeader[2048] = { 0 };
-					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-					strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-					fOutputStream->Put(respHeader);
-					if (jsonContent.Len > 0)
-						fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
-				}
+                theErr = processStartStreamReq();
 			}
 			break;
 		case MSG_SD_STREAM_STOP_REQ:
 			{
-				EasyMsgSDStopStreamREQ stopStreamReq(fContentBuffer);
-
-				QTSS_RoleParams params;
-
-				string serial = stopStreamReq.GetBodyValue(EASY_TAG_SERIAL);
-				params.stopStreamParams.inSerial = serial.c_str();
-				string protocol = stopStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
-				params.stopStreamParams.inProtocol = protocol.c_str();
-				string channel = stopStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
-				params.stopStreamParams.inChannel = channel.c_str();
-				string from = stopStreamReq.GetBodyValue(EASY_TAG_FROM);
-				string to = stopStreamReq.GetBodyValue(EASY_TAG_TO);
-				string via = stopStreamReq.GetBodyValue(EASY_TAG_VIA);
-
-				QTSS_Error errCode = QTSS_NoErr;
-				UInt32 fCurrentModule = 0;
-				UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
-				for (; fCurrentModule < numModules; ++fCurrentModule)
-				{
-					QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
-					errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
-				}
-				fCurrentModule = 0;
-
-				EasyJsonValue body;
-				body[EASY_TAG_SERIAL] = params.stopStreamParams.inSerial;
-				body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
-				body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
-				body[EASY_TAG_FROM] = to;
-				body[EASY_TAG_TO] = from;
-				body[EASY_TAG_VIA] = via;
-
-				EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), getStatusNo(errCode));
-				string msg = rsp.GetMsg();
-
-				//回应
-				StrPtrLen jsonContent((char*)msg.data());
-				HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-				if (httpAck.CreateResponseHeader())
-				{
-					if (jsonContent.Len)
-						httpAck.AppendContentLengthHeader(jsonContent.Len);
-
-					//Push msg to OutputBuffer
-					char respHeader[2048] = { 0 };
-					StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-					strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-					fOutputStream->Put(respHeader);
-					if (jsonContent.Len > 0)
-						fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
-				}
+                theErr = processStopStreamReq();
 			}
 			break;
 		default:
@@ -591,6 +467,144 @@ QTSS_Error EasyCMSSession::processMessage()
 	fContentBuffer = NULL;
 
 	return QTSS_NoErr;
+}
+
+const QTSS_Error& EasyCMSSession::processStartStreamReq()
+{
+    EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
+
+    string serial = startStreamReq.GetBodyValue(EASY_TAG_SERIAL);
+    string ip = startStreamReq.GetBodyValue(EASY_TAG_SERVER_IP);
+    string port = startStreamReq.GetBodyValue(EASY_TAG_SERVER_PORT);
+    string protocol = startStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
+    string channel = startStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
+    string streamID = startStreamReq.GetBodyValue(EASY_TAG_STREAM_ID);
+    string reserve = startStreamReq.GetBodyValue(EASY_TAG_RESERVE);
+    string from = startStreamReq.GetBodyValue(EASY_TAG_FROM);
+    string to = startStreamReq.GetBodyValue(EASY_TAG_TO);
+    string via = startStreamReq.GetBodyValue(EASY_TAG_VIA);
+
+    qtss_printf("Serial = %s\n", serial.c_str());
+    qtss_printf("Server_IP = %s\n", ip.c_str());
+    qtss_printf("Server_Port = %s\n", port.c_str());
+
+    //TODO::这里需要对传入的Serial/StreamID/Channel做一下容错处理
+    if (serial.empty() || ip.empty() || port.empty())
+    {
+        return QTSS_ValueNotFound;
+    }
+
+    QTSS_RoleParams params;
+
+    params.startStreamParams.inIP = ip.c_str();
+    params.startStreamParams.inPort = atoi(port.c_str());
+    params.startStreamParams.inSerial = serial.c_str();
+    params.startStreamParams.inProtocol = protocol.c_str();
+    params.startStreamParams.inChannel = channel.c_str();
+    params.startStreamParams.inStreamID = streamID.c_str();
+
+    QTSS_Error errCode = QTSS_NoErr;
+    UInt32 fCurrentModule = 0;
+    UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStartStreamRole);
+    for (; fCurrentModule < numModules; ++fCurrentModule)
+    {
+        QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStartStreamRole, fCurrentModule);
+        errCode = theModule->CallDispatch(Easy_StartStream_Role, &params);
+    }
+    fCurrentModule = 0;
+
+    EasyJsonValue body;
+    body[EASY_TAG_SERIAL] = params.startStreamParams.inSerial;
+    body[EASY_TAG_CHANNEL] = params.startStreamParams.inChannel;
+    body[EASY_TAG_PROTOCOL] = params.startStreamParams.inProtocol;
+    body[EASY_TAG_SERVER_IP] = params.startStreamParams.inIP;
+    body[EASY_TAG_SERVER_PORT] = params.startStreamParams.inPort;
+    body[EASY_TAG_RESERVE] = reserve;
+    body[EASY_TAG_FROM] = to;
+    body[EASY_TAG_TO] = from;
+    body[EASY_TAG_VIA] = via;
+
+    EasyMsgDSPushSteamACK rsp(body, startStreamReq.GetMsgCSeq(), getStatusNo(errCode));
+
+    string msg = rsp.GetMsg();
+    StrPtrLen jsonContent((char*)msg.data());
+    HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+
+    if (httpAck.CreateResponseHeader())
+    {
+        if (jsonContent.Len)
+            httpAck.AppendContentLengthHeader(jsonContent.Len);
+
+        //Push msg to OutputBuffer
+        char respHeader[2048] = { 0 };
+        StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+        strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+        fOutputStream->Put(respHeader);
+        if (jsonContent.Len > 0)
+            fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
+    }
+
+    return errCode;
+}
+
+const QTSS_Error& EasyCMSSession::processStopStreamReq()
+{
+    EasyMsgSDStopStreamREQ stopStreamReq(fContentBuffer);
+
+    QTSS_RoleParams params;
+
+    string serial = stopStreamReq.GetBodyValue(EASY_TAG_SERIAL);
+    params.stopStreamParams.inSerial = serial.c_str();
+    string protocol = stopStreamReq.GetBodyValue(EASY_TAG_PROTOCOL);
+    params.stopStreamParams.inProtocol = protocol.c_str();
+    string channel = stopStreamReq.GetBodyValue(EASY_TAG_CHANNEL);
+    params.stopStreamParams.inChannel = channel.c_str();
+    string from = stopStreamReq.GetBodyValue(EASY_TAG_FROM);
+    string to = stopStreamReq.GetBodyValue(EASY_TAG_TO);
+    string via = stopStreamReq.GetBodyValue(EASY_TAG_VIA);
+
+    QTSS_Error errCode = QTSS_NoErr;
+    UInt32 fCurrentModule = 0;
+    UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
+    for (; fCurrentModule < numModules; ++fCurrentModule)
+    {
+        QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
+        errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
+    }
+    fCurrentModule = 0;
+
+    EasyJsonValue body;
+    body[EASY_TAG_SERIAL] = params.stopStreamParams.inSerial;
+    body[EASY_TAG_CHANNEL] = params.stopStreamParams.inChannel;
+    body[EASY_TAG_PROTOCOL] = params.stopStreamParams.inProtocol;
+    body[EASY_TAG_FROM] = to;
+    body[EASY_TAG_TO] = from;
+    body[EASY_TAG_VIA] = via;
+
+    EasyMsgDSStopStreamACK rsp(body, stopStreamReq.GetMsgCSeq(), getStatusNo(errCode));
+    string msg = rsp.GetMsg();
+
+    //回应
+    StrPtrLen jsonContent((char*)msg.data());
+    HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+
+    if (httpAck.CreateResponseHeader())
+    {
+        if (jsonContent.Len)
+            httpAck.AppendContentLengthHeader(jsonContent.Len);
+
+        //Push msg to OutputBuffer
+        char respHeader[2048] = { 0 };
+        StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+        strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+        fOutputStream->Put(respHeader);
+        if (jsonContent.Len > 0)
+            fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
+    }
+
+    return errCode;
 }
 
 // transfer error code for http status code

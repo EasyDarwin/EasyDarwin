@@ -60,7 +60,7 @@ private:
 
 	void				stopPushStream();
 
-	// 初步判断Session Socket是否已连接
+    // 初步判断Session Socket是否已连接
 	Bool16				isConnected() const { return fSocket->GetSocket()->IsConnected(); }
 
 	// transfer error code for http status code
@@ -76,6 +76,10 @@ private:
 
 	// 处理HTTPRequest请求报文
 	QTSS_Error			processMessage();
+
+    const QTSS_Error& processStartStreamReq();
+
+    const QTSS_Error& processStopStreamReq();
 
 	// 重置客户端参数
 	void				resetClientSocket();

@@ -41,6 +41,8 @@ static QTSS_Error StartStream(Easy_StartStream_Params* inParams);
 static QTSS_Error StopStream(Easy_StopStream_Params* inParams);
 static QTSS_Error GetCameraState(Easy_CameraState_Params* inParams);
 static QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* inParams);
+static QTSS_Error ControlPTZ(Easy_CameraPTZ_Params* inParams);
+static QTSS_Error StopControlPTZ(Easy_CameraPTZ_Params* inParams);
 
 
 // FUNCTION IMPLEMENTATIONS
@@ -67,6 +69,10 @@ QTSS_Error EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
 			return GetCameraState(&inParams->cameraStateParams);
 		case Easy_GetCameraSnap_Role:
 			return GetCameraSnap(&inParams->cameraSnapParams);
+        case Easy_ControlPTZ_Role:
+            return ControlPTZ(&inParams->cameraPTZParams);
+        case Easy_StopControlPTZ_Role:
+            return StopControlPTZ(&inParams->cameraPTZParams);
 	}
 
     return QTSS_NoErr;
@@ -109,6 +115,8 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(Easy_StopStream_Role);
 	(void)QTSS_AddRole(Easy_GetCameraState_Role);
 	(void)QTSS_AddRole(Easy_GetCameraSnap_Role);
+    (void)QTSS_AddRole(Easy_ControlPTZ_Role);
+    (void)QTSS_AddRole(Easy_StopControlPTZ_Role);
    
     // Tell the server our name!
     static char* sModuleName = "EasyCameraModule";
@@ -186,4 +194,26 @@ QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* inParams)
 		theErr = sCameraSource->GetCameraSnap(inParams);
 	}
 	return theErr;
+}
+
+static QTSS_Error ControlPTZ(Easy_CameraPTZ_Params* inParams)
+{
+    QTSS_Error theErr = QTSS_Unimplemented;
+
+    if (sCameraSource)
+    {
+        theErr = sCameraSource->ControlPTZ(inParams);
+    }
+    return theErr;
+}
+
+static QTSS_Error StopControlPTZ(Easy_CameraPTZ_Params* inParams)
+{
+    QTSS_Error theErr = QTSS_Unimplemented;
+
+    if (sCameraSource)
+    {
+        theErr = sCameraSource->StopControlPTZ(inParams);
+    }
+    return theErr;
 }
