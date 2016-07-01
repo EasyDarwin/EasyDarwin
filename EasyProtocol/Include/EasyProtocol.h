@@ -216,6 +216,78 @@ public:
 	virtual ~EasyMsgSDPostSnapACK() {}
 };
 
+// MSG_CS_PTZ_CONTROL_REQ
+class EasyMsgCSPTZControlREQ : public EasyProtocol
+{
+public:
+    EasyMsgCSPTZControlREQ(EasyJsonValue& body, size_t cseq = 1);
+    EasyMsgCSPTZControlREQ(const char* msg);
+    virtual ~EasyMsgCSPTZControlREQ() {}
+};
+
+// MSG_SC_PTZ_CONTROL_ACK
+class EasyMsgCSPTZControlACK : public EasyProtocol
+{
+public:
+    EasyMsgCSPTZControlACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+    EasyMsgCSPTZControlACK(const char* msg);
+    virtual ~EasyMsgCSPTZControlACK() {}
+};
+
+// MSG_CS_PTZ_STOP_REQ
+class EasyMsgCSPTZStopREQ : public EasyProtocol
+{
+public:
+    EasyMsgCSPTZStopREQ(EasyJsonValue& body, size_t cseq = 1);
+    EasyMsgCSPTZStopREQ(const char* msg);
+    virtual ~EasyMsgCSPTZStopREQ() {}
+};
+
+// MSG_SC_PTZ_STOP_ACK
+class EasyMsgCSPTZStopACK : public EasyProtocol
+{
+public:
+    EasyMsgCSPTZStopACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+    EasyMsgCSPTZStopACK(const char* msg);
+    virtual ~EasyMsgCSPTZStopACK() {}
+};
+
+// MSG_SD_CONTROL_PTZ_REQ
+class EasyMsgCSControlPTZREQ : public EasyProtocol
+{
+public:
+    EasyMsgCSControlPTZREQ(EasyJsonValue& body, size_t cseq = 1);
+    EasyMsgCSControlPTZREQ(const char* msg);
+    virtual ~EasyMsgCSControlPTZREQ() {}
+};
+
+// MSG_DS_CONTROL_PTZ_ACK
+class EasyMsgCSControlPTZACK : public EasyProtocol
+{
+public:
+    EasyMsgCSControlPTZACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+    EasyMsgCSControlPTZACK(const char* msg);
+    virtual ~EasyMsgCSControlPTZACK() {}
+};
+
+// MSG_SD_STOP_PTZ_REQ
+class EasyMsgCSStopPTZREQ : public EasyProtocol
+{
+public:
+    EasyMsgCSStopPTZREQ(EasyJsonValue& body, size_t cseq = 1);
+    EasyMsgCSStopPTZREQ(const char* msg);
+    virtual ~EasyMsgCSStopPTZREQ() {}
+};
+
+// MSG_DS_STOP_PTZ_ACK
+class EasyMsgCSStopPTZACK : public EasyProtocol
+{
+public:
+    EasyMsgCSStopPTZACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+    EasyMsgCSStopPTZACK(const char* msg);
+    virtual ~EasyMsgCSStopPTZACK() {}
+};
+
 class EasyMsgExceptionACK : public EasyProtocol
 {
 public:

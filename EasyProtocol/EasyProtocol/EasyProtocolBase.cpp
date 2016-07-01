@@ -437,6 +437,57 @@ std::string EasyProtocol::GetSnapTypeString(int iSnapType)
 	return std::string();
 }
 
+int EasyProtocol::GetPTZActionType(const std::string& sPTZActionType)
+{
+    for (int i = 0; i < sizeof(PTZActionTypeMap) / sizeof(MsgType); i++)
+    {
+        if (sPTZActionType.compare(PTZActionTypeMap[i].str) == 0)
+        {
+            return PTZActionTypeMap[i].value;
+        }
+    }
+
+    return -1;
+}
+
+std::string EasyProtocol::GetPTZActionTypeString(int iPTZActionType)
+{
+    for (int i = 0; i < sizeof(PTZActionTypeMap) / sizeof(MsgType); i++)
+    {
+        if (iPTZActionType == PTZActionTypeMap[i].value)
+        {
+            return std::string(PTZActionTypeMap[i].str);
+        }
+    }
+
+    return std::string();
+}
+
+int EasyProtocol::GetPTZCMDType(const std::string& sPTZCMDType)
+{
+    for (int i = 0; i < sizeof(PTZCMDTypeMap) / sizeof(MsgType); i++)
+    {
+        if (sPTZCMDType.compare(PTZCMDTypeMap[i].str) == 0)
+        {
+            return PTZCMDTypeMap[i].value;
+        }
+    }
+
+    return -1;
+}
+
+std::string EasyProtocol::GetPTZCMDTypeString(int iPTZCMDType)
+{
+    for (int i = 0; i < sizeof(PTZCMDTypeMap) / sizeof(MsgType); i++)
+    {
+        if (iPTZCMDType == PTZCMDTypeMap[i].value)
+        {
+            return std::string(PTZCMDTypeMap[i].str);
+        }
+    }
+
+    return std::string();
+}
 
 std::string EasyProtocol::GetMsg()
 {   		

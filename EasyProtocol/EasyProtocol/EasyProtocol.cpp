@@ -399,6 +399,142 @@ EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(const char * msg)
 {
 }
 
+EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(EasyJsonValue & body, size_t cseq)
+    : EasyProtocol(MSG_CS_PTZ_CONTROL_REQ)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(const char * msg)
+    : EasyProtocol(msg, MSG_CS_PTZ_CONTROL_REQ)
+{
+}
+
+EasyMsgCSPTZControlACK::EasyMsgCSPTZControlACK(EasyJsonValue & body, size_t cseq, size_t error)
+    : EasyProtocol(MSG_SC_PTZ_CONTROL_ACK)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+    SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+    SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSPTZControlACK::EasyMsgCSPTZControlACK(const char * msg)
+    : EasyProtocol(msg, MSG_SC_PTZ_CONTROL_ACK)
+{
+}
+
+EasyMsgCSPTZStopREQ::EasyMsgCSPTZStopREQ(EasyJsonValue & body, size_t cseq)
+    : EasyProtocol(MSG_CS_PTZ_STOP_REQ)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSPTZStopREQ::EasyMsgCSPTZStopREQ(const char * msg)
+    : EasyProtocol(msg, MSG_CS_PTZ_STOP_REQ)
+{
+}
+
+EasyMsgCSPTZStopACK::EasyMsgCSPTZStopACK(EasyJsonValue & body, size_t cseq, size_t error)
+    : EasyProtocol(MSG_SC_PTZ_STOP_ACK)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+    SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+    SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSPTZStopACK::EasyMsgCSPTZStopACK(const char * msg)
+    : EasyProtocol(msg, MSG_SC_PTZ_STOP_ACK)
+{
+}
+
+EasyMsgCSControlPTZREQ::EasyMsgCSControlPTZREQ(EasyJsonValue & body, size_t cseq)
+    : EasyProtocol(MSG_SD_CONTROL_PTZ_REQ)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSControlPTZREQ::EasyMsgCSControlPTZREQ(const char * msg)
+    : EasyProtocol(msg, MSG_SD_CONTROL_PTZ_REQ)
+{
+}
+
+EasyMsgCSControlPTZACK::EasyMsgCSControlPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
+    : EasyProtocol(MSG_DS_CONTROL_PTZ_ACK)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+    SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+    SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSControlPTZACK::EasyMsgCSControlPTZACK(const char * msg)
+    : EasyProtocol(msg, MSG_DS_CONTROL_PTZ_ACK)
+{
+}
+
+EasyMsgCSStopPTZREQ::EasyMsgCSStopPTZREQ(EasyJsonValue & body, size_t cseq)
+    : EasyProtocol(MSG_SD_STOP_PTZ_REQ)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSStopPTZREQ::EasyMsgCSStopPTZREQ(const char * msg)
+    : EasyProtocol(msg, MSG_SD_STOP_PTZ_REQ)
+{
+}
+
+EasyMsgCSStopPTZACK::EasyMsgCSStopPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
+    : EasyProtocol(MSG_DS_STOP_PTZ_ACK)
+{
+    SetHeaderValue(EASY_TAG_CSEQ, cseq);
+    SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+    SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
+    {
+        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+    }
+}
+
+EasyMsgCSStopPTZACK::EasyMsgCSStopPTZACK(const char * msg)
+    : EasyProtocol(msg, MSG_DS_STOP_PTZ_ACK)
+{
+}
+
 EasyMsgExceptionACK::EasyMsgExceptionACK(size_t cseq, size_t error)
 :EasyProtocol(MSG_SC_EXCEPTION)
 {

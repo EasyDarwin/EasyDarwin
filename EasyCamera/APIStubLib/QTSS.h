@@ -25,6 +25,7 @@
 #ifndef QTSS_H
 #define QTSS_H
 #include "OSHeaders.h"
+#include <string>
 
 #ifdef __cplusplus
 extern "C" {
@@ -585,7 +586,6 @@ typedef struct
 {
     int                         inActionType;
     int                         inCommand;
-    int                         inDirection;
     int                         inSpeed;
 } Easy_CameraPTZ_Params;
 

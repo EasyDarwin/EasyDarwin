@@ -155,7 +155,7 @@
 #define MSG_SD_CONTROL_PTZ_REQ                              0x000c
 #define MSG_DS_CONTROL_PTZ_ACK                              0xe00c
 #define MSG_SD_STOP_PTZ_REQ                                 0x000d
-#define MSG_DS_STOP_PTZ_AKC                                 0xe00d
+#define MSG_DS_STOP_PTZ_ACK                                 0xe00d
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1

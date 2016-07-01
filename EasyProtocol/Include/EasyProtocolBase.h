@@ -112,6 +112,14 @@ public:
 	static int GetSnapType(const std::string& sSnapType);
 	static std::string GetSnapTypeString(int iSnapType);
 
+    //enum EasyDarwinPTZActionType
+    static int GetPTZActionType(const std::string& sPTZActionType);
+    static std::string GetPTZActionTypeString(int iPTZActionType);
+
+    //enum EasyDarwinPTZCMDType
+    static int GetPTZCMDType(const std::string& sPTZCMDType);
+    static std::string GetPTZCMDTypeString(int iPTZCMDType);
+
     //common json tag define
 protected:  
 	Json::Value root;
