@@ -56,6 +56,7 @@ private:
 
 	QTSS_Error netDevStartStream();
 	void netDevStopStream();
+    HI_U32 getCMDFromCMDType(int cmdType);
 
 private:
 	//ÉãÏñ»ú²Ù×÷¾ä±ú

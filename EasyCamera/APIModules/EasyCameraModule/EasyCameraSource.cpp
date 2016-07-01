@@ -505,12 +505,28 @@ QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
 {
     QTSS_Error result;
 
-    int actionType = params->inActionType;
-    int command = params->inCommand;
-    int direction = params->inDirection;
-    int speed = params->inSpeed;
+    if (cameraLogin())
+    {
+        HI_S32 error;
+        if (params->inActionType == EASY_PTZ_ACTION_TYPE_CONTINUOUS)
+        {
+            error = HI_NET_DEV_PTZ_Ctrl_Standard(m_u32Handle, getCMDFromCMDType(params->inCommand), params->inSpeed);
+        }
+        else if (params->inActionType == EASY_PTZ_ACTION_TYPE_SINGLE)
+        {
+            error = HI_NET_DEV_PTZ_Ctrl_StandardEx(m_u32Handle, getCMDFromCMDType(params->inCommand));
+        }
+        else
+        {
+            return QTSS_BadArgument;
+        }
 
+        if (error = HI_SUCCESS)
+        {
+            result = QTSS_NoErr;
+        }
 
+    }
 
     return result;
 }
@@ -521,7 +537,20 @@ QTSS_Error EasyCameraSource::StopControlPTZ(Easy_CameraPTZ_Params* params)
 
     if (cameraLogin())
     {
-        HI_S32 error = HI_NET_DEV_PTZ_Ctrl_Standard(m_u32Handle, HI_NET_DEV_CTRL_PTZ_STOP, 0);
+        HI_S32 error;
+        if (params->inActionType == EASY_PTZ_ACTION_TYPE_CONTINUOUS)
+        {
+            error = HI_NET_DEV_PTZ_Ctrl_Standard(m_u32Handle, HI_NET_DEV_CTRL_PTZ_STOP, params->inSpeed);
+        }
+        else if (params->inActionType == EASY_PTZ_ACTION_TYPE_SINGLE)
+        {
+            error = HI_NET_DEV_PTZ_Ctrl_StandardEx(m_u32Handle, HI_NET_DEV_CTRL_PTZ_STOP);
+        }
+        else
+        {
+            return QTSS_BadArgument;
+        }
+
         if (error = HI_SUCCESS)
         {
             result = QTSS_NoErr;
@@ -529,4 +558,43 @@ QTSS_Error EasyCameraSource::StopControlPTZ(Easy_CameraPTZ_Params* params)
     }
 
     return result;
+}
+
+HI_U32 EasyCameraSource::getCMDFromCMDType(int cmdType)
+{
+    switch (cmdType)
+    {
+    case EASY_PTZ_CMD_TYPE_STOP:
+        return HI_NET_DEV_CTRL_PTZ_STOP;
+    case EASY_PTZ_CMD_TYPE_UP:
+        return HI_NET_DEV_CTRL_PTZ_UP;
+    case EASY_PTZ_CMD_TYPE_DOWN:
+        return HI_NET_DEV_CTRL_PTZ_DOWN;
+    case EASY_PTZ_CMD_TYPE_LEFT:
+        return HI_NET_DEV_CTRL_PTZ_LEFT;
+    case EASY_PTZ_CMD_TYPE_RIGHT:
+        return HI_NET_DEV_CTRL_PTZ_RIGHT;
+    case EASY_PTZ_CMD_TYPE_LEFTUP:
+        return 0;
+    case EASY_PTZ_CMD_TYPE_LEFTDOWN:
+        return 0;
+    case EASY_PTZ_CMD_TYPE_RIGHTUP:
+        return 0;
+    case EASY_PTZ_CMD_TYPE_RIGHTDOWN:
+        return 0;
+    case EASY_PTZ_CMD_TYPE_ZOOMIN:
+        return HI_NET_DEV_CTRL_PTZ_ZOOMIN;
+    case EASY_PTZ_CMD_TYPE_ZOOMOUT:
+        return HI_NET_DEV_CTRL_PTZ_ZOOMOUT;
+    case EASY_PTZ_CMD_TYPE_FOCUSIN:
+        return HI_NET_DEV_CTRL_PTZ_FOCUSIN;
+    case EASY_PTZ_CMD_TYPE_FOCUSOUT:
+        return HI_NET_DEV_CTRL_PTZ_FOCUSOUT;
+    case EASY_PTZ_CMD_TYPE_APERTUREIN:
+        return HI_NET_DEV_CTRL_PTZ_APERTUREIN;
+    case EASY_PTZ_CMD_TYPE_APERTUREOUT:
+        return HI_NET_DEV_CTRL_PTZ_APERTUREOUT;
+    default:
+        return 0;
+    }
 }

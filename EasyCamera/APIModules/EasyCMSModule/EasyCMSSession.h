@@ -77,9 +77,11 @@ private:
 	// 处理HTTPRequest请求报文
 	QTSS_Error			processMessage();
 
-    const QTSS_Error& processStartStreamReq();
+    QTSS_Error processStartStreamReq();
+    QTSS_Error processStopStreamReq();
 
-    const QTSS_Error& processStopStreamReq();
+    QTSS_Error processControlPTZReq();
+    QTSS_Error processStopControlPTZReq();
 
 	// 重置客户端参数
 	void				resetClientSocket();

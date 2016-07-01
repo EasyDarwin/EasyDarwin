@@ -447,16 +447,18 @@ QTSS_Error EasyCMSSession::processMessage()
 				;
 			}
 			break;
-		case MSG_SD_PUSH_STREAM_REQ:
-			{
-                theErr = processStartStreamReq();
-			}
-			break;
-		case MSG_SD_STREAM_STOP_REQ:
-			{
-                theErr = processStopStreamReq();
-			}
-			break;
+        case MSG_SD_PUSH_STREAM_REQ:
+            theErr = processStartStreamReq();
+            break;
+        case MSG_SD_STREAM_STOP_REQ:
+            theErr = processStopStreamReq();
+            break;
+        case MSG_SD_CONTROL_PTZ_REQ:
+            theErr = processControlPTZReq();
+            break;
+        case MSG_SD_STOP_PTZ_REQ:
+            theErr = processStopControlPTZReq();
+            break;
 		default:
 			break;
 		}
@@ -469,7 +471,7 @@ QTSS_Error EasyCMSSession::processMessage()
 	return QTSS_NoErr;
 }
 
-const QTSS_Error& EasyCMSSession::processStartStreamReq()
+QTSS_Error EasyCMSSession::processStartStreamReq()
 {
     EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
 
@@ -548,7 +550,7 @@ const QTSS_Error& EasyCMSSession::processStartStreamReq()
     return errCode;
 }
 
-const QTSS_Error& EasyCMSSession::processStopStreamReq()
+QTSS_Error EasyCMSSession::processStopStreamReq()
 {
     EasyMsgSDStopStreamREQ stopStreamReq(fContentBuffer);
 
@@ -798,4 +800,16 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 	}
 
 	return theErr;
+}
+
+QTSS_Error EasyCMSSession::processControlPTZReq()
+{
+    QTSS_Error theErr = QTSS_NoErr;
+    return theErr;
+}
+
+QTSS_Error EasyCMSSession::processStopControlPTZReq()
+{
+    QTSS_Error theErr = QTSS_NoErr;
+    return theErr;
 }
