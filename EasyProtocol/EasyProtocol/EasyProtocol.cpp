@@ -433,40 +433,6 @@ EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(const char * msg)
 {
 }
 
-EasyMsgCSPTZStopREQ::EasyMsgCSPTZStopREQ(EasyJsonValue & body, size_t cseq)
-    : EasyProtocol(MSG_CS_PTZ_STOP_REQ)
-{
-    SetHeaderValue(EASY_TAG_CSEQ, cseq);
-
-    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
-    {
-        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
-    }
-}
-
-EasyMsgCSPTZStopREQ::EasyMsgCSPTZStopREQ(const char * msg)
-    : EasyProtocol(msg, MSG_CS_PTZ_STOP_REQ)
-{
-}
-
-EasyMsgSCPTZStopACK::EasyMsgSCPTZStopACK(EasyJsonValue & body, size_t cseq, size_t error)
-    : EasyProtocol(MSG_SC_PTZ_STOP_ACK)
-{
-    SetHeaderValue(EASY_TAG_CSEQ, cseq);
-    SetHeaderValue(EASY_TAG_ERROR_NUM, error);
-    SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
-
-    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
-    {
-        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
-    }
-}
-
-EasyMsgSCPTZStopACK::EasyMsgSCPTZStopACK(const char * msg)
-    : EasyProtocol(msg, MSG_SC_PTZ_STOP_ACK)
-{
-}
-
 EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(EasyJsonValue & body, size_t cseq)
     : EasyProtocol(MSG_SD_CONTROL_PTZ_REQ)
 {
@@ -498,40 +464,6 @@ EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(EasyJsonValue & body, size_t cseq
 
 EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(const char * msg)
     : EasyProtocol(msg, MSG_DS_CONTROL_PTZ_ACK)
-{
-}
-
-EasyMsgSDStopPTZREQ::EasyMsgSDStopPTZREQ(EasyJsonValue & body, size_t cseq)
-    : EasyProtocol(MSG_SD_STOP_PTZ_REQ)
-{
-    SetHeaderValue(EASY_TAG_CSEQ, cseq);
-
-    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
-    {
-        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
-    }
-}
-
-EasyMsgSDStopPTZREQ::EasyMsgSDStopPTZREQ(const char * msg)
-    : EasyProtocol(msg, MSG_SD_STOP_PTZ_REQ)
-{
-}
-
-EasyMsgDSStopPTZACK::EasyMsgDSStopPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
-    : EasyProtocol(MSG_DS_STOP_PTZ_ACK)
-{
-    SetHeaderValue(EASY_TAG_CSEQ, cseq);
-    SetHeaderValue(EASY_TAG_ERROR_NUM, error);
-    SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
-
-    for (EasyJsonValue::iterator it = body.begin(); it != body.end(); it++)
-    {
-        SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
-    }
-}
-
-EasyMsgDSStopPTZACK::EasyMsgDSStopPTZACK(const char * msg)
-    : EasyProtocol(msg, MSG_DS_STOP_PTZ_ACK)
 {
 }
 

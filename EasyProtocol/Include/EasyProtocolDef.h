@@ -103,6 +103,7 @@
 #define EASY_TAG_AUDIO									"Audio"
 #define EASY_TAG_VIDEO									"Video"
 #define EASY_TAG_CMD									"Command"
+#define EASY_TAG_L_CMD                                  "command"
 #define EASY_TAG_VALUE									"Value"
 #define EASY_TAG_IP										"IP"
 #define EASY_TAG_LIVE_TYPE								"LiveType"
@@ -120,7 +121,9 @@
 #define EASY_TAG_RECORDS								"Records"
 #define EASY_TAG_AUDIENCE_NUM							"AudienceNum"
 #define EASY_TAG_ACTION_TYPE                            "ActionType"
+#define EASY_TAG_L_ACTION_TYPE                          "actiontype"
 #define EASY_TAG_SPEED                                  "Speed"
+#define EASY_TAG_L_SPEED                                "speed"
 /*!
 \}
 */
@@ -151,13 +154,8 @@
 
 #define MSG_CS_PTZ_CONTROL_REQ                              0x000a
 #define MSG_SC_PTZ_CONTROL_ACK                              0xe00a
-#define MSG_CS_PTZ_STOP_REQ                                 0x000b
-#define MSG_SC_PTZ_STOP_ACK                                 0xe00b
-
-#define MSG_SD_CONTROL_PTZ_REQ                              0x000c
-#define MSG_DS_CONTROL_PTZ_ACK                              0xe00c
-#define MSG_SD_STOP_PTZ_REQ                                 0x000d
-#define MSG_DS_STOP_PTZ_ACK                                 0xe00d
+#define MSG_SD_CONTROL_PTZ_REQ                              0x000b
+#define MSG_DS_CONTROL_PTZ_ACK                              0xe00b
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1

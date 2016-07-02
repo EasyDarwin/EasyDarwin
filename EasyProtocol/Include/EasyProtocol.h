@@ -234,24 +234,6 @@ public:
     virtual ~EasyMsgSCPTZControlACK() {}
 };
 
-// MSG_CS_PTZ_STOP_REQ
-class EasyMsgCSPTZStopREQ : public EasyProtocol
-{
-public:
-    EasyMsgCSPTZStopREQ(EasyJsonValue& body, size_t cseq = 1);
-    EasyMsgCSPTZStopREQ(const char* msg);
-    virtual ~EasyMsgCSPTZStopREQ() {}
-};
-
-// MSG_SC_PTZ_STOP_ACK
-class EasyMsgSCPTZStopACK : public EasyProtocol
-{
-public:
-    EasyMsgSCPTZStopACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
-    EasyMsgSCPTZStopACK(const char* msg);
-    virtual ~EasyMsgSCPTZStopACK() {}
-};
-
 // MSG_SD_CONTROL_PTZ_REQ
 class EasyMsgSDControlPTZREQ : public EasyProtocol
 {
@@ -268,24 +250,6 @@ public:
     EasyMsgDSControlPTZACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
     EasyMsgDSControlPTZACK(const char* msg);
     virtual ~EasyMsgDSControlPTZACK() {}
-};
-
-// MSG_SD_STOP_PTZ_REQ
-class EasyMsgSDStopPTZREQ : public EasyProtocol
-{
-public:
-    EasyMsgSDStopPTZREQ(EasyJsonValue& body, size_t cseq = 1);
-    EasyMsgSDStopPTZREQ(const char* msg);
-    virtual ~EasyMsgSDStopPTZREQ() {}
-};
-
-// MSG_DS_STOP_PTZ_ACK
-class EasyMsgDSStopPTZACK : public EasyProtocol
-{
-public:
-    EasyMsgDSStopPTZACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
-    EasyMsgDSStopPTZACK(const char* msg);
-    virtual ~EasyMsgDSStopPTZACK() {}
 };
 
 class EasyMsgExceptionACK : public EasyProtocol
