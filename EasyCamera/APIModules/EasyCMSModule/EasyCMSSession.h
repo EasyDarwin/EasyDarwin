@@ -81,7 +81,6 @@ private:
     QTSS_Error processStopStreamReq();
 
     QTSS_Error processControlPTZReq();
-    QTSS_Error processStopControlPTZReq();
 
 	// 重置客户端参数
 	void				resetClientSocket();

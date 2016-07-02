@@ -503,7 +503,7 @@ QTSS_Error EasyCameraSource::GetCameraSnap(Easy_CameraSnap_Params* params)
 
 QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
 {
-    QTSS_Error result;
+    QTSS_Error result = QTSS_NoErr;
 
     if (cameraLogin())
     {
@@ -526,35 +526,6 @@ QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
             result = QTSS_NoErr;
         }
 
-    }
-
-    return result;
-}
-
-QTSS_Error EasyCameraSource::StopControlPTZ(Easy_CameraPTZ_Params* params)
-{
-    QTSS_Error result = QTSS_RequestFailed;
-
-    if (cameraLogin())
-    {
-        HI_S32 error;
-        if (params->inActionType == EASY_PTZ_ACTION_TYPE_CONTINUOUS)
-        {
-            error = HI_NET_DEV_PTZ_Ctrl_Standard(m_u32Handle, HI_NET_DEV_CTRL_PTZ_STOP, params->inSpeed);
-        }
-        else if (params->inActionType == EASY_PTZ_ACTION_TYPE_SINGLE)
-        {
-            error = HI_NET_DEV_PTZ_Ctrl_StandardEx(m_u32Handle, HI_NET_DEV_CTRL_PTZ_STOP);
-        }
-        else
-        {
-            return QTSS_BadArgument;
-        }
-
-        if (error = HI_SUCCESS)
-        {
-            result = QTSS_NoErr;
-        }
     }
 
     return result;

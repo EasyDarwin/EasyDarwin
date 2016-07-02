@@ -243,7 +243,6 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
 		case Easy_GetCameraSnap_Role:		return kGetCameraSnapRole		;
 
         case Easy_ControlPTZ_Role:          return kControlPTZRole          ;
-        case Easy_StopControlPTZ_Role:      return kStopControlPTZRole      ;
 
         default:
             return -1;
