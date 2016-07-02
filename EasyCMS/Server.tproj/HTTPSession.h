@@ -70,6 +70,8 @@ private:
 	QTSS_Error ExecNetMsgCSFreeStreamReq(const char *json);//客户端的停止直播请求
 	QTSS_Error ExecNetMsgDSStreamStopAck(const char* json);//设备的停止推流回应
 	QTSS_Error ExecNetMsgDSPostSnapReq(const char* json);//设备的快照更新请求
+    QTSS_Error ExecNetMsgCSPTZControlReq(const char* json);
+    QTSS_Error ExecNetMsgDSPTZControlAck(const char* json);
 
 	QTSS_Error ExecNetMsgCSDeviceListReq(const char* json);//客户端获得设备列表，json接口
 	QTSS_Error ExecNetMsgCSCameraListReq(const char* json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
@@ -77,6 +79,7 @@ private:
 	QTSS_Error ExecNetMsgCSGetStreamReqRESTful(const char* queryString);//客户端拉流请求，Restful接口		
 	QTSS_Error ExecNetMsgCSGetDeviceListReqRESTful(const char* queryString);//客户端获得设备列表,restful接口
 	QTSS_Error ExecNetMsgCSGetCameraListReqRESTful(const char* queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
+    QTSS_Error ExecNetMsgCSPTZControlReqRESTful(const char* queryString);
 
 	QTSS_Error DumpRequestData();//清空请求报文
 
@@ -91,15 +94,15 @@ private:
 
 	enum
 	{
-		kReadingRequest = 0,	//读取报文
-		kFilteringRequest = 1,	//过滤报文
+		kReadingRequest = 0,		//读取报文
+		kFilteringRequest = 1,		//过滤报文
 		kPreprocessingRequest = 2,	//预处理报文
-		kProcessingRequest = 3,	//处理报文
-		kSendingResponse = 4,	//发送响应报文
-		kCleaningUp = 5,	//清空本次处理的报文内容
+		kProcessingRequest = 3,		//处理报文
+		kSendingResponse = 4,		//发送响应报文
+		kCleaningUp = 5,			//清空本次处理的报文内容
 
 		kReadingFirstRequest = 6,	//第一次读取Session报文，主要用来做Session协议区分（HTTP/TCP/RTSP等等）
-		kHaveCompleteMessage = 7		// 读取到完整的报文
+		kHaveCompleteMessage = 7	// 读取到完整的报文
 	};
 
 	UInt32 fCurrentModule;
