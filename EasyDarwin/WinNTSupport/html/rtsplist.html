@@ -1,67 +1,62 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
-  <title>EasyDarwin</title>
-	<link href="css/bootstrap.min.css" rel='stylesheet' type='text/css' />
-	<link href="css/style.css" rel='stylesheet' type='text/css' />
-	<link href="css/font-awesome.css" rel="stylesheet"> 
-	<link href="css/custom.css" rel="stylesheet">
-	<link href="css/new-css.css" rel="stylesheet">
-	<!-- Metis Menu Plugin JavaScript -->
-	 <script src="js/jquery/jquery-1.5.2.min.js"  type="text/javascript"></script>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/metisMenu.min.js"></script>
-	<script src="js/custom.js"></script>
-	<script src="language.js" type="text/javascript"></script>
-	<script src="js/test.js"></script>
-	<script src="js/rtsplisttable.js"></script>
-	<script src="js/navigation.js"></script>
-	<script src="js/ajaxhandle.js" ></script>
-	<script src="js/verify.js"></script>
-	 
 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>EasyDarwin RTSP</title>
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.min.css?v=4.3.0" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min.css?v=3.2.0" rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+    <script src="js/language.js" type="text/javascript"></script>
+    <script src="js/test.js"></script>
+    <script src="js/rtsplisttable.js"></script>
+    <script src="js/ajaxhandle.js" ></script>
+    <script src="js/verify.js"></script>
 </head>
-<body  onload="fLoad();getRTSPList()">
-<div id="wrapper">
-     <!-- Navigation -->
-<script type="text/javascript">document.write(navigation);</script> 
-                <!--/Navigation -->
-				
-				
-			    <!--contetn rihgt -->
-				<div class="main-right">
-                  <script type="text/javascript">document.write(contextright);</script> 
-					
-					<!---÷˜ÃÂ≤ø∑÷-->
-					  <div class="m-content">
-					   <h3><script type="text/javascript">document.write(str_rtsp_live_list);</script></h3>
 
-										 <div class="tab-content">
-											<div class="tab-pane active" id="horizontal-form">
-												<form class="form-horizontal">
-													
-													<!--- <button class="btn-success btn"  onclick="return gotoAddHlsList()"><script type="text/javascript">document.write(str_add);</script></button>-->
-													    <div class="panel panel-warning" data-widget="{&quot;draggable&quot;: &quot;false&quot;}" data-widget-static="">
-														<div id="divload"></div>
-														 
-						                           </div>
-														<div  id="pagelist"></div>
-												</form>
-											</div>
-										</div>
-					  </div>
-					<!---/÷˜ÃÂ≤ø∑÷---->
-								
-				</div>
-				<!--/contetn rihgt -->
+<body class="gray-bg" onload="fLoad();getRTSPList()">
+<div class="wrapper wrapper-content animated fadeInRight">
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>RTSP&nbsp;Áõ¥Êí≠ÂàóË°®</h5>
             </div>
-    
- 
+            <div class="ibox-content">
+                <div class="">
+                    <!--<a href="javascript:void(0);" class="btn btn-primary ">Ê∑ªÂä†Ê∫ê</a>-->
+                </div>
+                <div id="divload"></div>
+                <div  id="pagelist"></div>
 
-    <!-- /#wrapper -->
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-	
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- ÂÖ®Â±Äjs -->
+<script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/bootstrap.min.js?v=3.4.0"></script>
+
+
+<script src="js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+
 </body>
+
 </html>

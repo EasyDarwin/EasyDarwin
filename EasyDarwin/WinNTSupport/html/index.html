@@ -1,119 +1,235 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
-  <title>EasyDarwin</title>
-	<link href="css/bootstrap.min.css" rel='stylesheet' type='text/css' />
-	<link href="css/style.css" rel='stylesheet' type='text/css' />
-	<link href="css/font-awesome.css" rel="stylesheet"> 
-	<link href="css/custom.css" rel="stylesheet">
-	<link href="css/new-css.css" rel="stylesheet">
-	<!-- Metis Menu Plugin JavaScript -->
-	 <script src="js/jquery/jquery-1.5.2.min.js"  type="text/javascript"></script>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/metisMenu.min.js"></script>
-	<script src="js/custom.js"></script>
-	<script src="language.js" type="text/javascript"></script>
-	<script src="js/navigation.js"></script>
-	<script src="js/ajaxhandle.js" ></script>
-	<script src="js/verify.js"></script>
-	 
-	<!-- Graph JavaScript -->
-	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title>EasyDarwin后台管理</title>
+
+    <!--[if lt IE 8]>
+    <script>
+        alert('EasyDarwin已不支持IE6-8，请使用谷歌、火狐等浏览器\n或360、QQ等国产浏览器的极速模式浏览本页面！');
+    </script>
+    <![endif]-->
+
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.min.css?v=4.3.0" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min.css?v=3.2.0" rel="stylesheet">
 </head>
-<body  onload="fLoad();getPort()">
+
+<body class="fixed-sidebar full-height-layout gray-bg">
 <div id="wrapper">
-     <!-- Navigation -->
-<script type="text/javascript">document.write(navigation);</script> 
-                <!--/Navigation -->
-				
-				
-			    <!--contetn rihgt -->	
-				<div class="main-right">
-                    <script type="text/javascript">document.write(contextright);</script> 
-					
-					<!---���岿��-->
-					  <div class="m-content">
-					   <h3><script type="text/javascript">document.write(str_wlan_base_set);</script></h3>
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close"><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <span><img alt="image" class="img-circle" src="img/profile_small.jpg"/></span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear">
+                               <span class="block m-t-xs"><strong class="font-bold">lyrics</strong></span>
+                                <span class="text-muted text-xs block">管理员<b class="caret"></b></span>
+                                </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a href="login.html">安全退出</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">DarW
+                    </div>
+                </li>
+                <li>
+                    <a href="index.html#">
+                        <i class="fa fa-home"></i>
+                        <span class="nav-label">系统设置</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" href="basic.html" data-index="0">基础设置</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="restart.html">重新启动</a>
+                        </li>
+                    </ul>
 
-										 <div class="tab-content">
-											<div class="tab-pane active" id="horizontal-form">
-												<form class="form-horizontal">
-													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_Mongoose_port);</script></label>
-														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txtport"  >
-														</div>
-														<div class="col-sm-2">
-															<p class="help-block"></p>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_RTSP_port);</script></label>
-														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txtrtspport"  >
-														</div>
-														<div class="col-sm-2">
-															<p class="help-block"></p>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_HTTP_port);</script></label>
-														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txthttpport"  >
-														</div>
-														<div class="col-sm-2">
-															<p class="help-block"></p>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_ReflectBuffer);</script></label>
-														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txtreflectbuffer">
-														</div>
-														<div class="col-sm-2">
-															<p class="help-block"></p>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_MoviesFolder);</script></label>
-														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txtmoviesfolder" maxlength="99">
-														</div>
-														<div class="col-sm-2">
-															<p class="help-block"></p>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_LogFolder);</script></label>
-														<div class="col-sm-4">
-															<input type="text" class="form-control1" id="txtlogfolder" maxlength="99">
-														</div>
-														<div class="col-sm-2">
-															<p class="help-block"></p>
-														</div>
-													</div>
-													 <div class="form-group">
-														<div class="row">
-														<div class="col-sm-8 col-sm-offset-2">
-														<button class="btn-success btn" onclick="setPort()"><script type="text/javascript">document.write(str_save);</script></button>
-														</div>
-														</div>
-													</div>
-												</form>
-											</div>
-										</div>
-					  </div>
-					<!---/���岿��---->
-								
-				</div>
-				<!--/contetn rihgt -->
+                </li>
+                <li>
+                    <a href="index.html#">
+                        <i class="fa fa fa-bar-chart-o"></i>
+                        <span class="nav-label">HLS直播</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" href="hlsconfig.html">HLS直播配置</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="hlslist.html">HLS直播列表</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="index.html#"><i class="fa fa-edit"></i> <span class="nav-label">RTSP直播</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a class="J_menuItem" href="rtspconfig.html">RTSP直播配置</a>
+                        </li>
+                        <li><a class="J_menuItem" href="rtsplist.html">RTSP直播列表</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
+                                              href="index.html#"><i class="fa fa-bars"></i> </a>
+                </div>
+
+            </nav>
+        </div>
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs J_menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:;" class="active J_menuTab" data-id="basic.html">基础配置</a>
+                </div>
+            </nav>
+            </button>
+        </div>
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="basic.html" frameborder="0"
+                    data-id="basic.html" seamless></iframe>
+        </div>
+        <div class="footer">
+            <div class="pull-right">&copy; 2015-2016 <a href="#" target="_blank">EasyDarwin</a>
             </div>
-    
- 
+        </div>
+    </div>
+    <!--右侧边栏开始-->
 
-    <!-- /#wrapper -->
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+</div>
+<script id="welcome-template" type="text/x-handlebars-template">
+    <div class="border-bottom white-bg page-heading clearfix">
+        <h2>更新日志：</h2>
+        <div>今天是情人节，H+终于跨到了v3.0，就算是情人节礼物吧，感谢你们的不离不弃，一路相伴！</div>
+        <div class="pull-right">——Beau-zihan / 2015.8.20</div>
+    </div>
+    <div class="m">
+        <div class="tabs-container">
+            <div class="tabs-left">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="index.html#layouts"><i class="fa fa-columns"></i> 布局
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="index.html#new"><i class="fa fa-plus-square"></i> 新增
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="index.html#update"><i class="fa fa-arrow-circle-o-up"></i> 升级
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="index.html#revise"><i class="fa fa-pencil"></i> 修正
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="index.html#optimize"><i class="fa fa-magic"></i> 优化
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" style="line-height:1.8em;">
+                    <div id="layouts" class="tab-pane active">
+                        <div class="panel-body">
+                            <ol class="no-left-padding">
+                                <li class="text-danger"><b>推荐：</b>期待已久的contentTabs效果，支持关闭、双击刷新、左右滑动等；</li>
+                                <li>固定左侧主菜单栏，并对菜单项做了新的调整；</li>
+                                <li>增加右侧面板及聊天窗口等。</li>
+                            </ol>
+
+                            <p style="margin-left:25px;">
+                            <hr>
+                            <span class="label label-danger">特别致谢</span> 感谢[子·梦]同学提供的contentTabs优化方案和代码！</p>
+                        </div>
+                    </div>
+                    <div id="new" class="tab-pane">
+                        <div class="panel-body">
+                            <ol class="no-left-padding">
+                                <li>表单：搜索自动补全插件suggest、高级表单插件（时间选择，切换按钮，图像裁剪上传，单选复选框美化，文件域美化等)等；</li>
+                                <li>图表：图表组合页面等；</li>
+                                <li>页面：团队、社交、客户管理、文章列表、文章详情、新登录页面等；</li>
+                                <li>UI元素：竖向选项卡、拖动面板、文本对比、加载动画、SweetAlert等；</li>
+                                <li>相册：layer相册、Blueimp相册等；</li>
+                                <li>表格：FooTables等。</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="update" class="tab-pane">
+                        <div class="panel-body">
+                            <ol>
+                                <li>页面弹层插件layer升级至1.9.3；</li>
+                                <li>更新jqgrid，支持树形表格；</li>
+                                <li>更新帮助文档。</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="revise" class="tab-pane">
+                        <div class="panel-body">
+                            <ol>
+                                <li>jstree、Simditor等多处错误；</li>
+                                <li>页面加载进度提示；</li>
+                                <li>Glyphicon字体图标不显示的问题；</li>
+                                <li>重新整理开发文档；</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div id="optimize" class="tab-pane">
+                        <div class="panel-body">
+                            <ol>
+                                <li>H+整体视觉效果；</li>
+                                <li>jstree默认主题显示效果；</li>
+                                <li>表单验证显示效果；</li>
+                                <li>iCheck显示效果；</li>
+                                <li>Tabs显示效果。</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning alert-dismissable m-t-sm">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            同时这也是一个示例，演示了如何从iframe中弹出一个覆盖父页面的层。
+        </div>
+    </div>
+</script>
+
+<!-- 全局js -->
+<script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/bootstrap.min.js?v=3.4.0"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="js/plugins/layer/layer.min.js"></script>
+
+<!-- 自定义js -->
+<script src="js/hplus.min.js?v=3.2.0"></script>
+<script type="text/javascript" src="js/contabs.min.js"></script>
+
 </body>
+
 </html>
