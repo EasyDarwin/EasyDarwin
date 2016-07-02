@@ -222,6 +222,10 @@
 			ReferencedProjectIdentifier="{14F332E3-1771-4908-8850-9A2581A4AED2}"
 			RelativePathToProject="..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcproj"
 		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
+			RelativePathToProject="..\..\EasyProtocol\jsoncpp\lib_json.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

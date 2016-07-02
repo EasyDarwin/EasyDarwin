@@ -166,10 +166,6 @@
 		</Configuration>
 	</Configurations>
 	<References>
-		<ProjectReference
-			ReferencedProjectIdentifier="{B84F7231-16CE-41D8-8C08-7B523FF4225B}"
-			RelativePathToProject="..\jsoncpp\makefiles\vs71\lib_json.vcproj"
-		/>
 	</References>
 	<Files>
 		<Filter
