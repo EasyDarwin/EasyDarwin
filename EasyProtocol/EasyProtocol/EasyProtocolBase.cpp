@@ -40,13 +40,8 @@ EasyProtocol::MsgType EasyProtocol::MsgTypeMap[] = {
 
     MSG_CS_PTZ_CONTROL_REQ,                         "MSG_CS_PTZ_CONTROL_REQ",
     MSG_SC_PTZ_CONTROL_ACK,                         "MSG_SC_PTZ_CONTROL_ACK",
-    MSG_CS_PTZ_STOP_REQ,                            "MSG_CS_PTZ_STOP_REQ",
-    MSG_SC_PTZ_STOP_ACK,                            "MSG_SC_PTZ_STOP_ACK",
-
     MSG_SD_CONTROL_PTZ_REQ,                         "MSG_SD_CONTROL_PTZ_REQ",
     MSG_DS_CONTROL_PTZ_ACK,                         "MSG_DS_CONTROL_PTZ_ACK",
-    MSG_SD_STOP_PTZ_REQ,                            "MSG_SD_STOP_PTZ_REQ",
-    MSG_DS_STOP_PTZ_ACK,                            "MSG_DS_STOP_PTZ_ACK",
 
 	//保留
 	MSG_SC_START_HLS_ACK,							"MSG_SC_START_HLS_ACK",
