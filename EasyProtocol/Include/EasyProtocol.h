@@ -13,7 +13,6 @@
 #include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
 #include <list>
-#include <set>
 using namespace std;
 
 namespace EasyDarwin { namespace Protocol
@@ -262,8 +261,10 @@ public:
 class EasyDarwinHLSession
 {
 public:
-	EasyDarwinHLSession(){}
-	~EasyDarwinHLSession(){}
+	EasyDarwinHLSession(): index(0), bitrate(0)
+	{}
+
+    ~EasyDarwinHLSession(){}
 
 public:
 	int index;
@@ -276,8 +277,10 @@ public:
 class EasyDarwinRTSPSession
 {
 public:
-	EasyDarwinRTSPSession(){}
-	~EasyDarwinRTSPSession(){}
+	EasyDarwinRTSPSession(): index(0), numOutputs(0)
+	{}
+
+    ~EasyDarwinRTSPSession(){}
 
 public:
 	int index;
