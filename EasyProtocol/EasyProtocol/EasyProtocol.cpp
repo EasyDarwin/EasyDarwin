@@ -72,7 +72,7 @@ EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, 
 }
 
 // MSG_DS_REGISTER_REQ消息报文解析
-EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const char* msg)
+EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(const string& msg)
     : EasyProtocol(msg, MSG_DS_REGISTER_REQ)
 {
     nvr_.serial_ = GetBodyValue(EASY_TAG_SERIAL);
@@ -110,7 +110,7 @@ EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(EasyJsonValue &body, size_t cseq, siz
 }
 
 // MSG_SD_REGISTER_ACK消息解析
-EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(const char* msg)
+EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(const string& msg)
     : EasyProtocol(msg, MSG_SD_REGISTER_ACK)
 {
 }
@@ -128,7 +128,7 @@ EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(EasyJsonValue &body, size_t cseq)
 }
 
 // MSG_SD_PUSH_STREAM_REQ消息解析
-EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(const char *msg)
+EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(const string& msg)
     : EasyProtocol(msg, MSG_SD_PUSH_STREAM_REQ)
 {
 }
@@ -160,19 +160,19 @@ EasyMsgCSFreeStreamREQ::EasyMsgCSFreeStreamREQ(EasyJsonValue &body, size_t cseq)
 }
 
 // MSG_CS_FREE_STREAM_REQ消息解析
-EasyMsgCSFreeStreamREQ::EasyMsgCSFreeStreamREQ(const char *msg)
+EasyMsgCSFreeStreamREQ::EasyMsgCSFreeStreamREQ(const string& msg)
     : EasyProtocol(msg, MSG_CS_FREE_STREAM_REQ)
 {
 }
 
 // MSG_DS_PUSH_STREAM_ACK消息解析
-EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(const char *msg)
+EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(const string& msg)
     : EasyProtocol(msg, MSG_DS_PUSH_STREAM_ACK)
 {
 }
 
 // MSG_SD_STREAM_STOP_REQ消息构造
-EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(EasyJsonValue &body, size_t cseq)
+EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(EasyJsonValue& body, size_t cseq)
     : EasyProtocol(MSG_SD_STREAM_STOP_REQ)
 {
     SetHeaderValue(EASY_TAG_CSEQ, cseq);
@@ -184,7 +184,7 @@ EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(EasyJsonValue &body, size_t cseq)
 }
 
 // MSG_SD_STREAM_STOP_REQ消息解析
-EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(const char *msg)
+EasyMsgSDStopStreamREQ::EasyMsgSDStopStreamREQ(const string& msg)
     : EasyProtocol(msg, MSG_SD_STREAM_STOP_REQ)
 {
 }
@@ -204,7 +204,7 @@ EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq,
 }
 
 // MSG_SD_STREAM_STOP_REQ消息解析
-EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(const char *msg)
+EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(const string& msg)
     : EasyProtocol(msg, MSG_SD_STREAM_STOP_REQ)
 {
 }
@@ -214,17 +214,17 @@ EasyMsgSCStartHLSACK::EasyMsgSCStartHLSACK()
 {
 }
 
-EasyMsgSCStartHLSACK::EasyMsgSCStartHLSACK(const char *msg)
+EasyMsgSCStartHLSACK::EasyMsgSCStartHLSACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_START_HLS_ACK)
 {
 }
 
-void EasyMsgSCStartHLSACK::SetStreamName(const char* sName)
+void EasyMsgSCStartHLSACK::SetStreamName(const string& sName)
 {
     SetBodyValue(EASY_TAG_L_NAME, sName);
 }
 
-void EasyMsgSCStartHLSACK::SetStreamURL(const char* sURL)
+void EasyMsgSCStartHLSACK::SetStreamURL(const string& sURL)
 {
     SetBodyValue(EASY_TAG_L_URL, sURL);
 }
@@ -234,7 +234,7 @@ EasyMsgSCHLSessionListACK::EasyMsgSCHLSessionListACK()
 {
 }
 
-EasyMsgSCHLSessionListACK::EasyMsgSCHLSessionListACK(const char* msg)
+EasyMsgSCHLSessionListACK::EasyMsgSCHLSessionListACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_HLS_SESSION_LIST_ACK)
 {
 }
@@ -272,7 +272,7 @@ EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(EasyDevices & devices, size_t cse
     }
 }
 
-EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const char * msg)
+EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_DEVICE_LIST_ACK)
 {
     devices_.clear();
@@ -309,7 +309,7 @@ EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(EasyDevices& cameras, const strin
     }
 }
 
-EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(const char * msg)
+EasyMsgSCDeviceInfoACK::EasyMsgSCDeviceInfoACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_CAMERA_LIST_ACK)
 {
     channels_.clear();
@@ -339,7 +339,7 @@ EasyMsgSCGetStreamACK::EasyMsgSCGetStreamACK(EasyJsonValue &body, size_t cseq, s
     }
 }
 
-EasyMsgSCGetStreamACK::EasyMsgSCGetStreamACK(const char *msg)
+EasyMsgSCGetStreamACK::EasyMsgSCGetStreamACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_GET_STREAM_ACK)
 {
 }
@@ -357,7 +357,7 @@ EasyMsgSCFreeStreamACK::EasyMsgSCFreeStreamACK(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgSCFreeStreamACK::EasyMsgSCFreeStreamACK(const char * msg)
+EasyMsgSCFreeStreamACK::EasyMsgSCFreeStreamACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_FREE_STREAM_ACK)
 {
 }
@@ -373,7 +373,7 @@ EasyMsgDSPostSnapREQ::EasyMsgDSPostSnapREQ(EasyJsonValue & body, size_t cseq)
     }
 }
 
-EasyMsgDSPostSnapREQ::EasyMsgDSPostSnapREQ(const char * msg)
+EasyMsgDSPostSnapREQ::EasyMsgDSPostSnapREQ(const string& msg)
     : EasyProtocol(msg, MSG_DS_POST_SNAP_REQ)
 {
 }
@@ -391,7 +391,7 @@ EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(EasyJsonValue & body, size_t cseq, si
     }
 }
 
-EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(const char * msg)
+EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(const string& msg)
     : EasyProtocol(msg, MSG_SD_POST_SNAP_ACK)
 {
 }
@@ -407,7 +407,7 @@ EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(const char * msg)
+EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(const string& msg)
     : EasyProtocol(msg, MSG_CS_PTZ_CONTROL_REQ)
 {
 }
@@ -425,7 +425,7 @@ EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(const char * msg)
+EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_PTZ_CONTROL_ACK)
 {
 }
@@ -441,7 +441,7 @@ EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(const char * msg)
+EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(const string& msg)
     : EasyProtocol(msg, MSG_SD_CONTROL_PTZ_REQ)
 {
 }
@@ -459,7 +459,7 @@ EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(EasyJsonValue & body, size_t cseq
     }
 }
 
-EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(const char * msg)
+EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(const string& msg)
     : EasyProtocol(msg, MSG_DS_CONTROL_PTZ_ACK)
 {
 }
@@ -477,7 +477,7 @@ EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK()
 {
 }
 
-EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK(const char* msg)
+EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_RTSP_PUSH_SESSION_LIST_ACK)
 {
 }
@@ -497,7 +497,7 @@ EasyMsgSCListRecordACK::EasyMsgSCListRecordACK()
 {
 }
 
-EasyMsgSCListRecordACK::EasyMsgSCListRecordACK(const char *msg)
+EasyMsgSCListRecordACK::EasyMsgSCListRecordACK(const string& msg)
     : EasyProtocol(msg, MSG_SC_LIST_RECORD_ACK)
 {
 }
@@ -543,7 +543,7 @@ strDevice::strDevice() : eDeviceType(), eAppType()
     snapJpgPath_.clear();
 }
 
-bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
+bool strDevice::GetDevInfo(const string& json)//由JSON文本得到设备信息
 {
     EasyProtocol proTemp(json);
     do
@@ -596,7 +596,7 @@ bool strDevice::GetDevInfo(const char* json)//由JSON文本得到设备信息
             }
         }
         return true;
-    } while (0);
+    } while (false);
     //执行到这说明得到的设备信息是错误的
     return false;
 }

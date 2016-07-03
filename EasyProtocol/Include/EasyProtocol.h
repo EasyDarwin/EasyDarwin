@@ -87,7 +87,7 @@ class Easy_API EasyMsgDSRegisterREQ : public EasyProtocol	//封装NVR的注册请求
 {
 public:
 	EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, EasyDarwinAppType appType, EasyNVR &nvr, size_t cseq = 1);
-	EasyMsgDSRegisterREQ(const char* msg);
+	EasyMsgDSRegisterREQ(const string& msg);
 	virtual ~EasyMsgDSRegisterREQ() {}
 
 public:
@@ -102,7 +102,7 @@ class Easy_API EasyMsgSDRegisterACK : public EasyProtocol	//封装NVR的注册回应
 {
 public:
 	EasyMsgSDRegisterACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyMsgSDRegisterACK(const char* msg);
+	EasyMsgSDRegisterACK(const string& msg);
 	virtual ~EasyMsgSDRegisterACK() {}
 };
 
@@ -111,7 +111,7 @@ class EasyMsgSDPushStreamREQ : public EasyProtocol
 {
 public:
 	EasyMsgSDPushStreamREQ(EasyJsonValue &body, size_t cseq);
-	EasyMsgSDPushStreamREQ(const char* msg);
+	EasyMsgSDPushStreamREQ(const string& msg);
 	virtual ~EasyMsgSDPushStreamREQ() {}
 };
 
@@ -120,7 +120,7 @@ class EasyMsgDSPushSteamACK : public EasyProtocol
 {
 public:
 	EasyMsgDSPushSteamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyMsgDSPushSteamACK(const char* msg);
+	EasyMsgDSPushSteamACK(const string& msg);
 	virtual ~EasyMsgDSPushSteamACK() {}
 };
 
@@ -129,7 +129,7 @@ class EasyMsgSDStopStreamREQ : public EasyProtocol
 {
 public:
 	EasyMsgSDStopStreamREQ(EasyJsonValue &body, size_t cseq = 1);
-	EasyMsgSDStopStreamREQ(const char* msg);
+	EasyMsgSDStopStreamREQ(const string& msg);
 	virtual ~EasyMsgSDStopStreamREQ() {}
 };
 
@@ -138,7 +138,7 @@ class EasyMsgDSStopStreamACK : public EasyProtocol
 {
 public:
 	EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyMsgDSStopStreamACK(const char* msg);
+	EasyMsgDSStopStreamACK(const string& msg);
 	virtual ~EasyMsgDSStopStreamACK() {}
 };
 
@@ -147,7 +147,7 @@ class EasyMsgSCDeviceListACK : public EasyProtocol
 {
 public:
 	EasyMsgSCDeviceListACK(EasyDevices &devices, size_t cseq = 1, size_t error = 200);
-	EasyMsgSCDeviceListACK(const char* msg);
+	EasyMsgSCDeviceListACK(const string& msg);
 	virtual ~EasyMsgSCDeviceListACK() {}
 
 	EasyDevices& GetDevices() { return devices_; }
@@ -161,7 +161,7 @@ class EasyMsgSCDeviceInfoACK : public EasyProtocol
 {
 public:
 	EasyMsgSCDeviceInfoACK(EasyDevices &cameras, const string& devcei_serial, size_t cseq = 1, size_t error = 200);
-	EasyMsgSCDeviceInfoACK(const char* msg);
+	EasyMsgSCDeviceInfoACK(const string& msg);
 	~EasyMsgSCDeviceInfoACK() {}
 
 	EasyDevices& GetCameras() { return channels_; }
@@ -175,7 +175,7 @@ class EasyMsgSCGetStreamACK : public EasyProtocol
 {
 public:
 	EasyMsgSCGetStreamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyMsgSCGetStreamACK(const char* msg);
+	EasyMsgSCGetStreamACK(const string& msg);
 	virtual ~EasyMsgSCGetStreamACK() {}
 };
 
@@ -184,7 +184,7 @@ class EasyMsgCSFreeStreamREQ : public EasyProtocol
 {
 public:
 	EasyMsgCSFreeStreamREQ(EasyJsonValue &body, size_t cseq);
-	EasyMsgCSFreeStreamREQ(const char* msg);
+	EasyMsgCSFreeStreamREQ(const string& msg);
 	virtual ~EasyMsgCSFreeStreamREQ() {}
 };
 
@@ -193,7 +193,7 @@ class EasyMsgSCFreeStreamACK : public EasyProtocol
 {
 public:
 	EasyMsgSCFreeStreamACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyMsgSCFreeStreamACK(const char* msg);
+	EasyMsgSCFreeStreamACK(const string& msg);
 	virtual ~EasyMsgSCFreeStreamACK() {}
 };
 
@@ -202,7 +202,7 @@ class EasyMsgDSPostSnapREQ : public EasyProtocol
 {
 public:
 	EasyMsgDSPostSnapREQ(EasyJsonValue &body, size_t cseq = 1);
-	EasyMsgDSPostSnapREQ(const char* msg);
+	EasyMsgDSPostSnapREQ(const string& msg);
 	virtual ~EasyMsgDSPostSnapREQ() {}
 };
 
@@ -211,7 +211,7 @@ class EasyMsgSDPostSnapACK : public EasyProtocol
 {
 public:
 	EasyMsgSDPostSnapACK(EasyJsonValue &body, size_t cseq = 1, size_t error = 200);
-	EasyMsgSDPostSnapACK(const char* msg);
+	EasyMsgSDPostSnapACK(const string& msg);
 	virtual ~EasyMsgSDPostSnapACK() {}
 };
 
@@ -220,7 +220,7 @@ class EasyMsgCSPTZControlREQ : public EasyProtocol
 {
 public:
     EasyMsgCSPTZControlREQ(EasyJsonValue& body, size_t cseq = 1);
-    EasyMsgCSPTZControlREQ(const char* msg);
+    EasyMsgCSPTZControlREQ(const string& msg);
     virtual ~EasyMsgCSPTZControlREQ() {}
 };
 
@@ -229,7 +229,7 @@ class EasyMsgSCPTZControlACK : public EasyProtocol
 {
 public:
     EasyMsgSCPTZControlACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
-    EasyMsgSCPTZControlACK(const char* msg);
+    EasyMsgSCPTZControlACK(const string& msg);
     virtual ~EasyMsgSCPTZControlACK() {}
 };
 
@@ -238,7 +238,7 @@ class EasyMsgSDControlPTZREQ : public EasyProtocol
 {
 public:
     EasyMsgSDControlPTZREQ(EasyJsonValue& body, size_t cseq = 1);
-    EasyMsgSDControlPTZREQ(const char* msg);
+    EasyMsgSDControlPTZREQ(const string& msg);
     virtual ~EasyMsgSDControlPTZREQ() {}
 };
 
@@ -247,7 +247,7 @@ class EasyMsgDSControlPTZACK : public EasyProtocol
 {
 public:
     EasyMsgDSControlPTZACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
-    EasyMsgDSControlPTZACK(const char* msg);
+    EasyMsgDSControlPTZACK(const string& msg);
     virtual ~EasyMsgDSControlPTZACK() {}
 };
 
@@ -294,11 +294,11 @@ class Easy_API EasyMsgSCStartHLSACK : public EasyProtocol
 {
 public:
 	EasyMsgSCStartHLSACK();
-	EasyMsgSCStartHLSACK(const char *msg);
+	EasyMsgSCStartHLSACK(const string& msg);
 	virtual ~EasyMsgSCStartHLSACK() {}
 
-	void SetStreamName(const char* sName);
-	void SetStreamURL(const char* sURL);
+	void SetStreamName(const string& sName);
+	void SetStreamURL(const string& sURL);
 };
 
 // MSG_SC_HLS_SESSION_LIST_ACK
@@ -306,7 +306,7 @@ class Easy_API EasyMsgSCHLSessionListACK : public EasyProtocol
 {
 public:
 	EasyMsgSCHLSessionListACK();
-	EasyMsgSCHLSessionListACK(const char* msg);
+	EasyMsgSCHLSessionListACK(const string& msg);
 	virtual ~EasyMsgSCHLSessionListACK() {}
 
 public:
@@ -323,11 +323,11 @@ class Easy_API EasyMsgSCRTSPPushSessionListACK : public EasyProtocol
 {
 public:
 	EasyMsgSCRTSPPushSessionListACK();
-	EasyMsgSCRTSPPushSessionListACK(const char* msg);
+	EasyMsgSCRTSPPushSessionListACK(const string& msg);
 	virtual ~EasyMsgSCRTSPPushSessionListACK() {}
 
 public:
-	bool AddSession(EasyDarwinRTSPSession &session);
+	bool AddSession(EasyDarwinRTSPSession& session);
 	//int StartGetDevice();
 	//bool GetNextDevice(EasyDarwinDevice &device);
 
@@ -340,7 +340,7 @@ class Easy_API EasyMsgSCListRecordACK : public EasyProtocol
 {
 public:
 	EasyMsgSCListRecordACK();
-	EasyMsgSCListRecordACK(const char* msg);
+	EasyMsgSCListRecordACK(const string& msg);
 	virtual ~EasyMsgSCListRecordACK() {}
 
 public:
@@ -378,7 +378,7 @@ class strDevice//设备类型对应的信息
 {
 public:
 	strDevice();
-	bool GetDevInfo(const char *msg);//由JSON文本得到设备信息
+	bool GetDevInfo(const string& msg);//由JSON文本得到设备信息
 	void HoldSnapPath(const string& strJpgPath, const string& strChannel);//保留快照的路径
 public:
 	string serial_;//设备序列号
