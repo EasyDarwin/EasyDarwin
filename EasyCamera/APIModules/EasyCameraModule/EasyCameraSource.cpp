@@ -7,6 +7,7 @@
 #include "EasyCameraSource.h"
 #include "QTSServerInterface.h"
 #include "EasyProtocolDef.h"
+#include "hi_net_dev_sdk.h"
 
 #include <map>
 
@@ -510,18 +511,18 @@ QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
         HI_S32 error;
         if (params->inActionType == EASY_PTZ_ACTION_TYPE_CONTINUOUS)
         {
-            error = HI_NET_DEV_PTZ_Ctrl_Standard(m_u32Handle, getCMDFromCMDType(params->inCommand), params->inSpeed);
+            error = HI_NET_DEV_PTZ_Ctrl_Standard(m_u32Handle, getPTZCMDFromCMDType(params->inCommand), params->inSpeed);
         }
         else if (params->inActionType == EASY_PTZ_ACTION_TYPE_SINGLE)
         {
-            error = HI_NET_DEV_PTZ_Ctrl_StandardEx(m_u32Handle, getCMDFromCMDType(params->inCommand));
+            error = HI_NET_DEV_PTZ_Ctrl_StandardEx(m_u32Handle, getPTZCMDFromCMDType(params->inCommand));
         }
         else
         {
             return QTSS_BadArgument;
         }
 
-        if (error = HI_SUCCESS)
+        if (error == HI_SUCCESS)
         {
             result = QTSS_NoErr;
         }
@@ -531,7 +532,24 @@ QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
     return result;
 }
 
-HI_U32 EasyCameraSource::getCMDFromCMDType(int cmdType)
+QTSS_Error EasyCameraSource::ControlPreset(Easy_CameraPreset_Params* params)
+{
+	QTSS_Error result = QTSS_NoErr;
+
+	if (cameraLogin())
+	{
+		HI_S32 error = HI_NET_DEV_PTZ_Ctrl_Preset(m_u32Handle, getPresetCMDFromCMDType(params->inCommand), params->inPreset);
+
+		if (error == HI_SUCCESS)
+		{
+			result = QTSS_NoErr;
+		}
+	}
+
+	return result;
+}
+
+HI_U32 EasyCameraSource::getPTZCMDFromCMDType(int cmdType)
 {
     switch (cmdType)
     {
@@ -568,4 +586,19 @@ HI_U32 EasyCameraSource::getCMDFromCMDType(int cmdType)
     default:
         return 0;
     }
+}
+
+HI_U32 EasyCameraSource::getPresetCMDFromCMDType(int cmdType)
+{
+	switch (cmdType)
+	{
+	case EASY_PRESET_CMD_TYPE_GOTO:
+		return HI_NET_DEV_CTRL_PTZ_GOTO_PRESET;
+	case EASY_PRESET_CMD_TYPE_SET:
+		return HI_NET_DEV_CTRL_PTZ_SET_PRESET;
+	case EASY_PRESET_CMD_TYPE_REMOVE:
+		return HI_NET_DEV_CTRL_PTZ_CLE_PRESET;
+	default:
+		return 0;
+	}
 }

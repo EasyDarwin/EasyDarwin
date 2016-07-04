@@ -42,6 +42,7 @@ static QTSS_Error StopStream(Easy_StopStream_Params* inParams);
 static QTSS_Error GetCameraState(Easy_CameraState_Params* inParams);
 static QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* inParams);
 static QTSS_Error ControlPTZ(Easy_CameraPTZ_Params* inParams);
+static QTSS_Error ControlPreset(Easy_CameraPreset_Params* inParams);
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyCameraModule_Main(void* inPrivateArgs)
@@ -200,4 +201,15 @@ static QTSS_Error ControlPTZ(Easy_CameraPTZ_Params* inParams)
         theErr = sCameraSource->ControlPTZ(inParams);
     }
     return theErr;
+}
+
+static QTSS_Error ControlPreset(Easy_CameraPreset_Params* inParams)
+{
+	QTSS_Error theErr = QTSS_Unimplemented;
+
+	if (sCameraSource)
+	{
+		theErr = sCameraSource->ControlPreset(inParams);
+	}
+	return theErr;
 }

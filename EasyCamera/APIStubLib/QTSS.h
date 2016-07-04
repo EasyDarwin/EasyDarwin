@@ -454,6 +454,7 @@ enum
 	Easy_GetCameraState_Role =		FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),	//cams
 	Easy_GetCameraSnap_Role =		FOUR_CHARS_TO_INT('g', 'c', 'a', 'm'),	//gcam
     Easy_ControlPTZ_Role =          FOUR_CHARS_TO_INT('c', 'p', 't', 'z'),  //cptz
+	Easy_Preset_Role =				FOUR_CHARS_TO_INT('c', 'p', 's', 't'),	//cpst
     
 };
 typedef UInt32 QTSS_Role;
@@ -588,6 +589,12 @@ typedef struct
     int                         inSpeed;
 } Easy_CameraPTZ_Params;
 
+typedef struct
+{
+	int							inCommand;
+	int							inPreset;
+} Easy_CameraPreset_Params;
+
 typedef union
 {
     QTSS_Register_Params				regParams;
@@ -608,6 +615,8 @@ typedef union
 	Easy_CameraState_Params				cameraStateParams;
 	Easy_CameraSnap_Params				cameraSnapParams;
     Easy_CameraPTZ_Params               cameraPTZParams;
+	Easy_CameraPreset_Params			cameraPresetParams;
+
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 /********************************************************************/

@@ -333,7 +333,7 @@ enum EasyDarwinPTZActionType
 */
 enum EasyDarwinPTZCMDType
 {
-    EASY_PTZ_CMD_TYPE_STOP = 1,				    ///< CONTINUOUS
+    EASY_PTZ_CMD_TYPE_STOP = 1,				    ///< STOP
     EASY_PTZ_CMD_TYPE_UP, 						///< UP
     EASY_PTZ_CMD_TYPE_DOWN, 					///< DOWN
     EASY_PTZ_CMD_TYPE_LEFT, 					///< LEFT
@@ -348,6 +348,21 @@ enum EasyDarwinPTZCMDType
     EASY_PTZ_CMD_TYPE_FOCUSOUT, 				///< FOCUSOUT
     EASY_PTZ_CMD_TYPE_APERTUREIN, 				///< APERTUREIN
     EASY_PTZ_CMD_TYPE_APERTUREOUT, 				///< APERTUREOUT
+};
+/*!
+\}
+*/
+
+/*!
+\ingroup EasyDarwin_Preset_CMD_Type_Define
+\{
+*/
+enum EasyDarwinPresetCMDType
+{
+	EASY_PRESET_CMD_TYPE_GOTO = 1,				    ///< GOTO
+	EASY_PRESET_CMD_TYPE_SET, 						///< SET
+	EASY_PRESET_CMD_TYPE_REMOVE, 					///< REMOVE
+
 };
 /*!
 \}

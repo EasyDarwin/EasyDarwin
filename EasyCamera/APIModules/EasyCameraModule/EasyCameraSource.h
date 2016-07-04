@@ -9,8 +9,6 @@
 
 #include "Task.h"
 #include "hi_type.h"
-#include "hi_net_dev_sdk.h"
-#include "hi_net_dev_errors.h"
 #include "QTSS.h"
 #include "EasyPusherAPI.h"
 #include "TimeoutTask.h"
@@ -30,13 +28,16 @@ public:
 	QTSS_Error GetCameraState(Easy_CameraState_Params* params);
 	QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* params);
     QTSS_Error ControlPTZ(Easy_CameraPTZ_Params* params);
+	QTSS_Error ControlPreset(Easy_CameraPreset_Params* params);
 
 	QTSS_Error PushFrame(unsigned char* frame, int len);
 
-	bool GetForceIFrameFlag() { return m_bForceIFrame; }
+	bool GetForceIFrameFlag() const
+	{ return m_bForceIFrame; }
 	void SetForceIFrameFlag(bool flag) { m_bForceIFrame = flag; }
 
-	bool GetCameraLoginFlag() { return fCameraLogin; }
+	bool GetCameraLoginFlag() const
+	{ return fCameraLogin; }
 	void SetCameraLoginFlag(bool flag) { fCameraLogin = flag; }
 
 	OSMutex* GetMutex() { return &fMutex; }
@@ -55,7 +56,8 @@ private:
 
 	QTSS_Error netDevStartStream();
 	void netDevStopStream();
-    HI_U32 getCMDFromCMDType(int cmdType);
+	static HI_U32 getPTZCMDFromCMDType(int cmdType);
+	static HI_U32 getPresetCMDFromCMDType(int cmdType);
 
 private:
 	//ÉãÏñ»ú²Ù×÷¾ä±ú

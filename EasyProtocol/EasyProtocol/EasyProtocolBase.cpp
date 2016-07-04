@@ -152,6 +152,12 @@ EasyProtocol::MsgType EasyProtocol::PTZCMDTypeMap[] = {
     EASY_PTZ_CMD_TYPE_APERTUREOUT,                  "APERTUREOUT"
 };
 
+EasyProtocol::MsgType EasyProtocol::PresetCMDTypeMap[] = {
+	EASY_PRESET_CMD_TYPE_GOTO,						"GOTO",
+	EASY_PRESET_CMD_TYPE_SET,						"SET",
+	EASY_PRESET_CMD_TYPE_REMOVE,					"REMOVE"
+};
+
 EasyProtocol::EasyProtocol(int iMsgType)
 :fMsgType(iMsgType)
 {	
@@ -492,6 +498,32 @@ std::string EasyProtocol::GetPTZCMDTypeString(int iPTZCMDType)
     }
 
     return std::string();
+}
+
+int EasyProtocol::GetPresetCMDType(const std::string& sPresetCMDType)
+{
+	for (int i = 0; i < sizeof(PresetCMDTypeMap) / sizeof(MsgType); i++)
+	{
+		if (sPresetCMDType.compare(PresetCMDTypeMap[i].str) == 0)
+		{
+			return PresetCMDTypeMap[i].value;
+		}
+	}
+
+	return -1;
+}
+
+std::string EasyProtocol::GetPresetCMDTypeString(int iPresetCMDType)
+{
+	for (int i = 0; i < sizeof(PresetCMDTypeMap) / sizeof(MsgType); i++)
+	{
+		if (iPresetCMDType == PresetCMDTypeMap[i].value)
+		{
+			return std::string(PresetCMDTypeMap[i].str);
+		}
+	}
+
+	return std::string();
 }
 
 std::string EasyProtocol::GetMsg()
