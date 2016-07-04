@@ -283,7 +283,7 @@ SInt64 EasyCMSSession::Run()
 
 				Assert(theErr == QTSS_RequestArrived);
 
-				QTSS_Error theErr = processMessage();
+				QTSS_Error err = processMessage();
 
 				// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
 				if (fOutputStream->GetBytesWritten() > 0)
@@ -352,22 +352,19 @@ SInt64 EasyCMSSession::Run()
 
 		}
 	}
-	return 0;
 }
 
-void EasyCMSSession::stopPushStream()
+void EasyCMSSession::stopPushStream() const
 {
 	QTSS_RoleParams params;
 
-	QTSS_Error errCode = QTSS_NoErr;
 	UInt32 fCurrentModule = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kStopStreamRole);
 	for (; fCurrentModule < numModules; ++fCurrentModule)
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kStopStreamRole, fCurrentModule);
-		errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
+		QTSS_Error errCode = theModule->CallDispatch(Easy_StopStream_Role, &params);
 	}
-	fCurrentModule = 0;
 }
 
 QTSS_Error EasyCMSSession::processMessage()
@@ -465,10 +462,10 @@ QTSS_Error EasyCMSSession::processMessage()
 	fContentBufferOffset = 0;
 	fContentBuffer = NULL;
 
-	return QTSS_NoErr;
+	return theErr;
 }
 
-QTSS_Error EasyCMSSession::processStartStreamReq()
+QTSS_Error EasyCMSSession::processStartStreamReq() const
 {
     EasyMsgSDPushStreamREQ	startStreamReq(fContentBuffer);
 
@@ -546,7 +543,7 @@ QTSS_Error EasyCMSSession::processStartStreamReq()
     return errCode;
 }
 
-QTSS_Error EasyCMSSession::processStopStreamReq()
+QTSS_Error EasyCMSSession::processStopStreamReq() const
 {
     EasyMsgSDStopStreamREQ stopStreamReq(fContentBuffer);
 
@@ -769,13 +766,13 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 
 		body[EASY_TAG_TYPE] = type.c_str();
 		body[EASY_TAG_TIME] = szTime;
-		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode((const char*)params.cameraSnapParams.outSnapPtr, params.cameraSnapParams.outSnapLen);
+		body[EASY_TAG_IMAGE] = EasyUtil::Base64Encode(reinterpret_cast<const char*>(params.cameraSnapParams.outSnapPtr), params.cameraSnapParams.outSnapLen);
 
 		EasyMsgDSPostSnapREQ req(body, fCSeq++);
 		string msg = req.GetMsg();
 
 		//请求上传快照
-		StrPtrLen jsonContent((char*)msg.data());
+		StrPtrLen jsonContent(const_cast<char*>(msg.data()));
 		HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
 
 		if (httpReq.CreateRequestHeader())
@@ -797,7 +794,7 @@ QTSS_Error EasyCMSSession::doDSPostSnap()
 	return theErr;
 }
 
-QTSS_Error EasyCMSSession::processControlPTZReq()
+QTSS_Error EasyCMSSession::processControlPTZReq() const
 {
     EasyMsgSDControlPTZREQ ctrlPTZReq(fContentBuffer);
 
@@ -843,7 +840,7 @@ QTSS_Error EasyCMSSession::processControlPTZReq()
     EasyMsgDSControlPTZACK rsp(body, ctrlPTZReq.GetMsgCSeq(), getStatusNo(errCode));
 
     string msg = rsp.GetMsg();
-    StrPtrLen jsonContent((char*)msg.data());
+    StrPtrLen jsonContent(const_cast<char*>(msg.data()));
     HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 
     if (httpAck.CreateResponseHeader())
@@ -862,4 +859,69 @@ QTSS_Error EasyCMSSession::processControlPTZReq()
     }
 
     return errCode;
+}
+
+QTSS_Error EasyCMSSession::processControlPresetReq() const
+{
+	EasyMsgSDControlPresetREQ ctrlPresetReq(fContentBuffer);
+
+	string serial = ctrlPresetReq.GetBodyValue(EASY_TAG_SERIAL);
+	string protocol = ctrlPresetReq.GetBodyValue(EASY_TAG_PROTOCOL);
+	string channel = ctrlPresetReq.GetBodyValue(EASY_TAG_CHANNEL);
+	string reserve = ctrlPresetReq.GetBodyValue(EASY_TAG_RESERVE);
+	string command = ctrlPresetReq.GetBodyValue(EASY_TAG_CMD);
+	string preset = ctrlPresetReq.GetBodyValue(EASY_TAG_PRESET);
+	string from = ctrlPresetReq.GetBodyValue(EASY_TAG_FROM);
+	string to = ctrlPresetReq.GetBodyValue(EASY_TAG_TO);
+	string via = ctrlPresetReq.GetBodyValue(EASY_TAG_VIA);
+
+	if (serial.empty() || channel.empty() || command.empty())
+	{
+		return QTSS_ValueNotFound;
+	}
+
+	QTSS_RoleParams params;
+	params.cameraPresetParams.inCommand = EasyProtocol::GetPTZCMDType(command);
+	params.cameraPresetParams.inPreset = EasyUtil::String2Int(preset);
+
+	QTSS_Error errCode = QTSS_NoErr;
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kControlPresetRole);
+	for (; fCurrentModule < numModules; ++fCurrentModule)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kControlPresetRole, fCurrentModule);
+		errCode = theModule->CallDispatch(Easy_ControlPreset_Role, &params);
+	}
+
+	EasyJsonValue body;
+	body[EASY_TAG_SERIAL] = serial;
+	body[EASY_TAG_CHANNEL] = channel;
+	body[EASY_TAG_RESERVE] = reserve;
+	body[EASY_TAG_PROTOCOL] = protocol;
+	body[EASY_TAG_FROM] = to;
+	body[EASY_TAG_TO] = from;
+	body[EASY_TAG_VIA] = via;
+
+	EasyMsgDSControlPresetACK rsp(body, ctrlPresetReq.GetMsgCSeq(), getStatusNo(errCode));
+
+	string msg = rsp.GetMsg();
+	StrPtrLen jsonContent(const_cast<char*>(msg.data()));
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+
+	if (httpAck.CreateResponseHeader())
+	{
+		if (jsonContent.Len)
+			httpAck.AppendContentLengthHeader(jsonContent.Len);
+
+		//Push msg to OutputBuffer
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		fOutputStream->Put(respHeader);
+		if (jsonContent.Len > 0)
+			fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
+	}
+
+	return errCode;
 }

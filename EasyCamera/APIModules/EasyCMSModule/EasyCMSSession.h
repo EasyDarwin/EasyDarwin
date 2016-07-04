@@ -58,7 +58,7 @@ public:
 private:
     virtual SInt64		Run();
 
-	void				stopPushStream();
+	void				stopPushStream() const;
 
     // 初步判断Session Socket是否已连接
 	Bool16				isConnected() const { return fSocket->GetSocket()->IsConnected(); }
@@ -77,10 +77,11 @@ private:
 	// 处理HTTPRequest请求报文
 	QTSS_Error			processMessage();
 
-    QTSS_Error processStartStreamReq();
-    QTSS_Error processStopStreamReq();
+    QTSS_Error processStartStreamReq() const;
+    QTSS_Error processStopStreamReq() const;
 
-    QTSS_Error processControlPTZReq();
+    QTSS_Error processControlPTZReq() const;
+	QTSS_Error processControlPresetReq() const;
 
 	// 重置客户端参数
 	void				resetClientSocket();

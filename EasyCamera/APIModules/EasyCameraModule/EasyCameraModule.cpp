@@ -70,6 +70,8 @@ QTSS_Error EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams
 			return GetCameraSnap(&inParams->cameraSnapParams);
         case Easy_ControlPTZ_Role:
             return ControlPTZ(&inParams->cameraPTZParams);
+		case Easy_ControlPreset_Role:
+			return ControlPreset(&inParams->cameraPresetParams);
 	}
 
     return QTSS_NoErr;
@@ -112,7 +114,8 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(Easy_StopStream_Role);
 	(void)QTSS_AddRole(Easy_GetCameraState_Role);
 	(void)QTSS_AddRole(Easy_GetCameraSnap_Role);
-    (void)QTSS_AddRole(Easy_ControlPTZ_Role);
+	(void)QTSS_AddRole(Easy_ControlPTZ_Role);
+	(void)QTSS_AddRole(Easy_ControlPreset_Role);
    
     // Tell the server our name!
     static char* sModuleName = "EasyCameraModule";

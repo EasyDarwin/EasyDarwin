@@ -124,6 +124,9 @@
 #define EASY_TAG_L_ACTION_TYPE                          "actiontype"
 #define EASY_TAG_SPEED                                  "Speed"
 #define EASY_TAG_L_SPEED                                "speed"
+#define EASY_TAG_PRESET									"Preset"
+#define EASY_TAG_L_PRESET								"preset"
+
 /*!
 \}
 */
