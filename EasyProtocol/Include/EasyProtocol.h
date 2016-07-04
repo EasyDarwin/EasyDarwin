@@ -251,6 +251,42 @@ public:
     virtual ~EasyMsgDSControlPTZACK() {}
 };
 
+// MSG_CS_PRESET_CONTROL_REQ
+class EasyMsgCSPresetControlREQ : public EasyProtocol
+{
+public:
+	EasyMsgCSPresetControlREQ(EasyJsonValue& body, size_t cseq = 1);
+	EasyMsgCSPresetControlREQ(const string& msg);
+	virtual ~EasyMsgCSPresetControlREQ() {}
+};
+
+// MSG_SC_PRESET_CONTROL_ACK
+class EasyMsgSCPresetControlACK : public EasyProtocol
+{
+public:
+	EasyMsgSCPresetControlACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+	EasyMsgSCPresetControlACK(const string& msg);
+	virtual ~EasyMsgSCPresetControlACK() {}
+};
+
+// MSG_SD_CONTROL_PRESET_REQ
+class EasyMsgSDControlPresetREQ : public EasyProtocol
+{
+public:
+	EasyMsgSDControlPresetREQ(EasyJsonValue& body, size_t cseq = 1);
+	EasyMsgSDControlPresetREQ(const string& msg);
+	virtual ~EasyMsgSDControlPresetREQ() {}
+};
+
+// MSG_DS_CONTROL_PRESET_ACK
+class EasyMsgDSControlPresetACK : public EasyProtocol
+{
+public:
+	EasyMsgDSControlPresetACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+	EasyMsgDSControlPresetACK(const string& msg);
+	virtual ~EasyMsgDSControlPresetACK() {}
+};
+
 class EasyMsgExceptionACK : public EasyProtocol
 {
 public:

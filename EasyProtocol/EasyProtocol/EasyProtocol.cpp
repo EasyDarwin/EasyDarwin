@@ -464,6 +464,74 @@ EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(const string& msg)
 {
 }
 
+EasyMsgCSPresetControlREQ::EasyMsgCSPresetControlREQ(EasyJsonValue & body, size_t cseq)
+	: EasyProtocol(MSG_CS_PRESET_CONTROL_REQ)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgCSPresetControlREQ::EasyMsgCSPresetControlREQ(const string& msg)
+	: EasyProtocol(msg, MSG_CS_PRESET_CONTROL_REQ)
+{
+}
+
+EasyMsgSCPresetControlACK::EasyMsgSCPresetControlACK(EasyJsonValue & body, size_t cseq, size_t error)
+	: EasyProtocol(MSG_SC_PRESET_CONTROL_ACK)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgSCPresetControlACK::EasyMsgSCPresetControlACK(const string& msg)
+	: EasyProtocol(msg, MSG_SC_PRESET_CONTROL_ACK)
+{
+}
+
+EasyMsgSDControlPresetREQ::EasyMsgSDControlPresetREQ(EasyJsonValue & body, size_t cseq)
+	: EasyProtocol(MSG_SD_CONTROL_PRESET_REQ)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgSDControlPresetREQ::EasyMsgSDControlPresetREQ(const string& msg)
+	: EasyProtocol(msg, MSG_SD_CONTROL_PRESET_REQ)
+{
+}
+
+EasyMsgDSControlPresetACK::EasyMsgDSControlPresetACK(EasyJsonValue & body, size_t cseq, size_t error)
+	: EasyProtocol(MSG_DS_CONTROL_PRESET_ACK)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgDSControlPresetACK::EasyMsgDSControlPresetACK(const string& msg)
+	: EasyProtocol(msg, MSG_DS_CONTROL_PRESET_ACK)
+{
+}
+
 EasyMsgExceptionACK::EasyMsgExceptionACK(size_t cseq, size_t error)
     : EasyProtocol(MSG_SC_EXCEPTION)
 {

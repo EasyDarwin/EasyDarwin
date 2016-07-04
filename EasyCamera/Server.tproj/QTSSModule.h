@@ -141,7 +141,7 @@ class QTSSModule : public QTSSDictionary, public Task
 			kGetCameraStateRole =		14,
 			kGetCameraSnapRole =		15,
             kControlPTZRole =           16,
-            kStopControlPTZRole =       17,
+            kControlPresetRole =		17,
             
             kNumRoles =                 18
         };

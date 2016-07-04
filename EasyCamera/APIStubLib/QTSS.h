@@ -454,7 +454,7 @@ enum
 	Easy_GetCameraState_Role =		FOUR_CHARS_TO_INT('c', 'a', 'm', 's'),	//cams
 	Easy_GetCameraSnap_Role =		FOUR_CHARS_TO_INT('g', 'c', 'a', 'm'),	//gcam
     Easy_ControlPTZ_Role =          FOUR_CHARS_TO_INT('c', 'p', 't', 'z'),  //cptz
-	Easy_Preset_Role =				FOUR_CHARS_TO_INT('c', 'p', 's', 't'),	//cpst
+	Easy_ControlPreset_Role =		FOUR_CHARS_TO_INT('c', 'p', 's', 't'),	//cpst
     
 };
 typedef UInt32 QTSS_Role;

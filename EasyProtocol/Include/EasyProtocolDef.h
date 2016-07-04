@@ -157,6 +157,11 @@
 #define MSG_SD_CONTROL_PTZ_REQ                              0x000b
 #define MSG_DS_CONTROL_PTZ_ACK                              0xe00b
 
+#define MSG_CS_PRESET_CONTROL_REQ                           0x000c
+#define MSG_SC_PRESET_CONTROL_ACK                           0xe00c
+#define MSG_SD_CONTROL_PRESET_REQ                           0x000d
+#define MSG_DS_CONTROL_PRESET_ACK                           0xe00d
+
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
 #define MSG_SC_RTSP_PUSH_SESSION_LIST_ACK					0xeee2
