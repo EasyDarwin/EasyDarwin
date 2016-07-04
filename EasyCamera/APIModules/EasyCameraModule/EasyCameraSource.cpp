@@ -526,7 +526,10 @@ QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
         {
             result = QTSS_NoErr;
         }
-
+		else
+		{
+			result = QTSS_RequestFailed;
+		}
     }
 
     return result;
@@ -543,6 +546,10 @@ QTSS_Error EasyCameraSource::ControlPreset(Easy_CameraPreset_Params* params)
 		if (error == HI_SUCCESS)
 		{
 			result = QTSS_NoErr;
+		}
+		else
+		{
+			result = QTSS_RequestFailed;
 		}
 	}
 

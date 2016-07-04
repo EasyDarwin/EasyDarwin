@@ -72,6 +72,8 @@ private:
 	QTSS_Error ExecNetMsgDSPostSnapReq(const char* json);//设备的快照更新请求
     QTSS_Error ExecNetMsgCSPTZControlReq(const char* json);
     QTSS_Error ExecNetMsgDSPTZControlAck(const char* json);
+	QTSS_Error ExecNetMsgCSPresetControlReq(const char* json);
+	QTSS_Error ExecNetMsgDSPresetControlAck(const char* json);
 
 	QTSS_Error ExecNetMsgCSDeviceListReq(const char* json);//客户端获得设备列表，json接口
 	QTSS_Error ExecNetMsgCSCameraListReq(const char* json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
@@ -80,6 +82,7 @@ private:
 	QTSS_Error ExecNetMsgCSGetDeviceListReqRESTful(const char* queryString);//客户端获得设备列表,restful接口
 	QTSS_Error ExecNetMsgCSGetCameraListReqRESTful(const char* queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
     QTSS_Error ExecNetMsgCSPTZControlReqRESTful(const char* queryString);
+	QTSS_Error ExecNetMsgCSPresetControlReqRESTful(const char* queryString);
 
 	QTSS_Error DumpRequestData();//清空请求报文
 

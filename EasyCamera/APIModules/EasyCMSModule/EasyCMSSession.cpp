@@ -453,6 +453,9 @@ QTSS_Error EasyCMSSession::processMessage()
         case MSG_SD_CONTROL_PTZ_REQ:
             theErr = processControlPTZReq();
             break;
+		case MSG_SD_CONTROL_PRESET_REQ:
+			theErr = processControlPresetReq();
+			break;
 		default:
 			break;
 		}
@@ -881,7 +884,7 @@ QTSS_Error EasyCMSSession::processControlPresetReq() const
 	}
 
 	QTSS_RoleParams params;
-	params.cameraPresetParams.inCommand = EasyProtocol::GetPTZCMDType(command);
+	params.cameraPresetParams.inCommand = EasyProtocol::GetPresetCMDType(command);
 	params.cameraPresetParams.inPreset = EasyUtil::String2Int(preset);
 
 	QTSS_Error errCode = QTSS_NoErr;
