@@ -20,8 +20,6 @@
 #include "EasyProtocolDef.h"
 #include "EasyProtocol.h"
 
-#include "EasyHLSSession.h"
-
 using namespace EasyDarwin::Protocol;
 using namespace std;
 

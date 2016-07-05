@@ -62,8 +62,6 @@
 #include "QTSSAccessLogModule.h"
 #include "QTSSFlowControlModule.h"
 #include "QTSSReflectorModule.h"
-#include "EasyRelayModule.h"
-#include "EasyHLSModule.h"
 #include "EasyCMSModule.h"
 #include "EasyRedisModule.h"
 #ifdef PROXYSERVER
@@ -757,14 +755,6 @@ void    QTSServer::LoadCompiledInModules()
     QTSSModule* theReflectorModule = new QTSSModule("QTSSReflectorModule");
     (void)theReflectorModule->SetupModule(&sCallbacks, &QTSSReflectorModule_Main);
     (void)AddModule(theReflectorModule);
-
-	QTSSModule* theOnDemandRelayModule = new QTSSModule("EasyRelayModule");
-    (void)theOnDemandRelayModule->SetupModule(&sCallbacks, &EasyRelayModule_Main);
-    (void)AddModule(theOnDemandRelayModule);
-
-	QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
-    (void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
-    (void)AddModule(theHLSModule);
 
 	//we not used QTSSRelayModule
 	/*

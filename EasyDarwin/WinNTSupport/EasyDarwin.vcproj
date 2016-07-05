@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib libEasyAACEncoder.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\WinNTSupport\Debug\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -164,7 +164,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib libEasyRTSPClient.lib libEasyHLS.lib libEasyPusher.lib libEasyAACEncoder.lib"
+				AdditionalDependencies="ws2_32.lib wsock32.lib winmm.lib"
 				OutputFile="..\WinNTSupport\Release\EasyDarwin.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -947,62 +947,6 @@
 								ForcedIncludeFiles=""
 							/>
 						</FileConfiguration>
-					</File>
-				</Filter>
-				<Filter
-					Name="EasyHLSModule"
-					>
-					<File
-						RelativePath="..\Include\EasyAACEncoderAPI.h"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\EasyHLSAPI.h"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyHLSModule\EasyHLSModule.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyHLSModule\EasyHLSModule.h"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyHLSModule\EasyHLSSession.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyHLSModule\EasyHLSSession.h"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\EasyRTSPClientAPI.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="EasyRelayModule"
-					>
-					<File
-						RelativePath="..\Include\EasyPusherAPI.h"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyRelayModule\EasyRelayModule.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyRelayModule\EasyRelayModule.h"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyRelayModule\EasyRelaySession.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\APIModules\EasyRelayModule\EasyRelaySession.h"
-						>
 					</File>
 				</Filter>
 				<Filter
