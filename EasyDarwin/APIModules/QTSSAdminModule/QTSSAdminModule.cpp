@@ -457,9 +457,13 @@ static int serve_request(struct mg_connection *conn)
 	if(strcmp(conn->uri, "/api/getHLSList") == 0)
 	{
 		char* sessionsJSON = EasyAdmin_GetHLSessions();
-		mg_printf_data(conn,sessionsJSON);
-		delete sessionsJSON;
-		return MG_TRUE;
+		if (sessionsJSON)
+		{
+			mg_printf_data(conn,sessionsJSON);
+			delete sessionsJSON;
+			return MG_TRUE;
+		}
+		return MG_FALSE;
 	}
 	if(strcmp(conn->uri, "/api/getRTSPList") == 0)
 	{

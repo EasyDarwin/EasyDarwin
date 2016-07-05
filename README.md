@@ -11,17 +11,11 @@
 
 - EasyDarwin开源吗？
 
-	开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧推送等优化，这些都是完全开源免费的；
+	EasyDarwin开源流媒体服务器完全开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧推送等优化，这些都是完全开源免费的；
 
-	EasyDarwin有两个私有自定义的Module：拉模式转发模块**EasyRelayModule**和HLS直播模块**EasyHLSModule**，这里用到的**[libEasyRTSPClient](https://github.com/EasyDarwin/EasyRTSPClient "EasyRTSPClient")**、**[libEasyPusher](https://github.com/EasyDarwin/EasyPusher "EasyPusher")**、**[libEasyHLS](https://github.com/EasyDarwin/EasyHLS "EasyHLS")**三个库文件都是没有开源的，他们都是EasyDarwin团队开发的SDK库，但这些都是完全免费使用的，如果您觉得这几个Module对您没有作用，可以在代码中删除或者在调用入口QTSServer::LoadCompiledInModules()中注释掉：
-
-		//QTSSModule* theOnDemandRelayModule = new QTSSModule("EasyRelayModule");
-		//(void)theOnDemandRelayModule->SetupModule(&sCallbacks, &EasyRelayModule_Main);
-		//(void)AddModule(theOnDemandRelayModule);
-
-		//QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
-		//(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
-		//(void)AddModule(theHLSModule);
+	> EasyDarwin流媒体服务器原来带有非开源SDK的EasyRelayModule和EasyHLSModule已经移除，新版本的拉模式转发和HLS直播模块功能将全部采用开源live555/ffmpeg等开源项目结合实现，敬请期待！
+	> 
+	> Tip：原有版本可以在：https://github.com/babosa/EasyDarwin 获取源码功能；
 
 
 ## 云平台结构 ##

@@ -49,7 +49,6 @@
 #include "EasyProtocolDef.h"
 #include "EasyProtocol.h"
 
-#include "EasyHLSSession.h"
 #include "ReflectorSession.h"
 
 using namespace EasyDarwin::Protocol;
@@ -1001,41 +1000,7 @@ QTSS_Error QTSSCallbacks::Easy_StopHLSession(const char* inSessionName)
 
 void* QTSSCallbacks::Easy_GetHLSessions()
 {
-	OSRefTable* hlsMap = QTSServerInterface::GetServer()->GetHLSSessionMap();
-
-	EasyMsgSCHLSessionListACK ack;
-	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
-	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");	
-	char count[16] = { 0 };
-	sprintf(count,"%d", hlsMap->GetNumRefsInTable());
-	ack.SetBodyValue(EASY_TAG_SESSION_COUNT, count );
-
-	OSRef* theSesRef = NULL;
-
-	UInt32 uIndex= 0;
-	OSMutexLocker locker(hlsMap->GetMutex());
-	for (OSRefHashTableIter theIter(hlsMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
-	{
-		OSRef* theRef = theIter.GetCurrent();
-		EasyHLSSession* theSession = (EasyHLSSession*)theRef->GetObject();
-
-		EasyDarwinHLSession session;
-		session.index = uIndex;
-		session.SessionName = string(theSession->GetSessionID()->Ptr);
-		session.HlsUrl = string(theSession->GetHLSURL());
-		session.sourceUrl = string(theSession->GetSourceURL());
-		session.bitrate = theSession->GetLastStatBitrate();
-		ack.AddSession(session);
-		uIndex++;
-	}   
-
-	string msg = ack.GetMsg();
-
-	UInt32 theMsgLen = strlen(msg.c_str());
-	char* retMsg = new char[theMsgLen+1];
-	retMsg[theMsgLen] = '\0';
-	strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
-	return (void*)retMsg;
+	return NULL;
 }
 
 void* QTSSCallbacks::Easy_GetRTSPPushSessions()
