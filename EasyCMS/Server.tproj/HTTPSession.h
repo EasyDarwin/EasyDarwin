@@ -27,8 +27,41 @@
 #include "TimeoutTask.h"
 #include "QTSSModule.h"
 #include "DecoderHelper.h"
+#include "OSQueue.h"
 
 using namespace std;
+
+class SendMsgEvent
+{
+public:
+	SendMsgEvent(const string& msg, HTTPType type) : fQueueElem(), fMessage(msg), fHTTPType(type)
+	{
+		fQueueElem.SetEnclosingObject(this);
+	}
+
+	inline void SetEventInfo(const string& msg, HTTPType type)
+	{
+		fMessage = msg;
+		fHTTPType = type;
+	}
+
+	string GetHTTPMessage() const
+	{
+		return fMessage;
+	}
+
+	HTTPType GetHTTPType()
+	{
+		return fHTTPType;
+	}
+
+public:
+	OSQueueElem	fQueueElem;
+
+private:
+	string fMessage;
+	HTTPType fHTTPType;
+};
 
 typedef struct __DECODE_PARAM_T
 {
@@ -54,6 +87,8 @@ public:
 
 	void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
 	EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }
+
+	void ProcessEvent(const string& msg, HTTPType type);
 
 private:
 	SInt64 Run();
@@ -116,6 +151,9 @@ private:
 
 	char* fDeviceSnap;
 	EasyJsonValue fStreamPushInfo;
+
+	OSQueue				fEventQueue;
+	OSMutex				fQueueMutex;
 
 	// Channel Snap
 	DECODE_PARAM_T		decodeParam;
