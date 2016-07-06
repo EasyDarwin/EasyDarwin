@@ -30,10 +30,6 @@
         <logicalFolder name="EasyHLSModule"
                        displayName="EasyHLSModule"
                        projectFiles="true">
-          <itemPath>APIModules/EasyHLSModule/EasyHLSModule.cpp</itemPath>
-          <itemPath>APIModules/EasyHLSModule/EasyHLSModule.h</itemPath>
-          <itemPath>APIModules/EasyHLSModule/EasyHLSSession.cpp</itemPath>
-          <itemPath>APIModules/EasyHLSModule/EasyHLSSession.h</itemPath>
         </logicalFolder>
         <logicalFolder name="EasyRedisModule"
                        displayName="EasyRedisModule"
@@ -44,10 +40,6 @@
         <logicalFolder name="EasyRelayModule"
                        displayName="EasyRelayModule"
                        projectFiles="true">
-          <itemPath>APIModules/EasyRelayModule/EasyRelayModule.cpp</itemPath>
-          <itemPath>APIModules/EasyRelayModule/EasyRelayModule.h</itemPath>
-          <itemPath>APIModules/EasyRelayModule/EasyRelaySession.cpp</itemPath>
-          <itemPath>APIModules/EasyRelayModule/EasyRelaySession.h</itemPath>
         </logicalFolder>
         <logicalFolder name="QTSSAccessLogModule"
                        displayName="QTSSAccessLogModule"
@@ -435,7 +427,7 @@
             <pElem>Lib/x64</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp -lEasyAACEncoder -leasyredisclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -522,52 +514,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1269,7 +1221,7 @@
             <pElem>Lib/${CND_CONF}</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp -lEasyAACEncoder -leasyredisclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -1356,52 +1308,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2102,7 +2014,7 @@
             <pElem>Lib/x64</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp -lEasyAACEncoder -leasyredisclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -2189,52 +2101,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2936,7 +2808,7 @@
             <pElem>Lib/x64</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -leasyhls -leasypusher -leasyrtspclient -lEasyProtocol -ljsoncpp -lEasyAACEncoder -leasyredisclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
@@ -3023,52 +2895,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/EasyRelayModule/EasyRelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
