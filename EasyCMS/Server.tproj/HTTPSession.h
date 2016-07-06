@@ -88,8 +88,6 @@ public:
 	void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
 	EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }
 
-	void ProcessEvent(const string& msg, HTTPType type);
-
 private:
 	SInt64 Run();
 

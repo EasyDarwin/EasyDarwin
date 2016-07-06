@@ -106,38 +106,38 @@ SInt64 HTTPSession::Run()
 	if (events & kKillEvent)
 		fLiveSession = false;
 
-	if (events & kUpdateEvent)
-	{
-		OSMutexLocker locker(&fQueueMutex);
+	//if (events & kUpdateEvent)
+	//{
+	//	OSMutexLocker locker(&fQueueMutex);
 
-		if (fEventQueue.GetLength() > 0)
-		{
-			SendMsgEvent* theEvent = static_cast<SendMsgEvent*>(fEventQueue.DeQueue()->GetEnclosingObject());
-			string msg = theEvent->GetHTTPMessage();
-			HTTPType httpType = theEvent->GetHTTPType();
-			//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-			HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpType);
+	//	if (fEventQueue.GetLength() > 0)
+	//	{
+	//		SendMsgEvent* theEvent = static_cast<SendMsgEvent*>(fEventQueue.DeQueue()->GetEnclosingObject());
+	//		string msg = theEvent->GetHTTPMessage();
+	//		HTTPType httpType = theEvent->GetHTTPType();
+	//		//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
+	//		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpType);
 
-			if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-			{
-				if (!msg.empty())
-					httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
+	//		if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
+	//		{
+	//			if (!msg.empty())
+	//				httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
 
-				char respHeader[sHeaderSize] = { 0 };
-				StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-				strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+	//			char respHeader[sHeaderSize] = { 0 };
+	//			StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+	//			strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-				HTTPResponseStream* pOutputStream = GetOutputStream();
-				pOutputStream->Put(respHeader);
+	//			HTTPResponseStream* pOutputStream = GetOutputStream();
+	//			pOutputStream->Put(respHeader);
 
-				//Ω´œ‡”¶±®ŒƒÃÌº”µΩHTTP ‰≥ˆª∫≥Â«¯÷–
-				if (!msg.empty())
-					pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-			}
-			delete theEvent;
-		}
-		fState = kSendingResponse;
-	}
+	//			//Ω´œ‡”¶±®ŒƒÃÌº”µΩHTTP ‰≥ˆª∫≥Â«¯÷–
+	//			if (!msg.empty())
+	//				pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
+	//		}
+	//		delete theEvent;
+	//	}
+	//	fState = kSendingResponse;
+	//}
 
 	if (events & kTimeoutEvent)
 	{
@@ -357,8 +357,6 @@ SInt64 HTTPSession::Run()
 
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
-	//OSMutexLocker mutexLock(&fReadMutex);//Prevent data chaos 
-
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 
 	if (httpAck.CreateResponseHeader(httpOK))
@@ -369,32 +367,33 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 		if (connectionClose)
 			httpAck.AppendConnectionCloseHeader();
 
-		char respHeader[sHeaderSize] = { 0 };
 		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+		string sendString(ackPtr->Ptr, ackPtr->Len);
+		sendString.append(contentXML->Ptr, contentXML->Len);
 
-		HTTPResponseStream *pOutputStream = GetOutputStream();
-		pOutputStream->Put(respHeader);
-		if (contentXML->Len > 0)
-			pOutputStream->Put(contentXML->Ptr, contentXML->Len);
-
-		if (pOutputStream->GetBytesWritten() != 0)
+		UInt32 theLengthSent = 0;
+		UInt32 amtInBuffer = sendString.size();
+		do
 		{
-			QTSS_Error theErr = pOutputStream->Flush();
+			QTSS_Error theErr = fOutputSocketP->Send(sendString.c_str(), amtInBuffer, &theLengthSent);
 
-			if (theErr == EAGAIN)
+			if (theErr != QTSS_NoErr && theErr != EAGAIN)
 			{
-				fSocket.RequestEvent(EV_WR);
+				return theErr;
+			}
+
+			if (theLengthSent == amtInBuffer)
+			{
+				// We were able to send all the data in the buffer. Great. Flush it.
 				return QTSS_NoErr;
 			}
-		}
+			// Not all the data was sent, so report an EAGAIN
+			sendString.erase(0, theLengthSent);
+			amtInBuffer = sendString.size();
+			theLengthSent = 0;
+
+		} while (amtInBuffer > 0);
 	}
-
-	if (fObjectHolders && decrement)
-		DecrementObjectHolderCount();
-
-	if (connectionClose)
-		this->Signal(Task::kKillEvent);
 
 	return QTSS_NoErr;
 }
@@ -404,12 +403,6 @@ QTSS_Error HTTPSession::SetupRequest()
 	QTSS_Error theErr = fRequest->Parse();
 	if (theErr != QTSS_NoErr)
 		return QTSS_BadArgument;
-
-	StrPtrLen* a = fRequest->GetRequestLine();
-	StrPtrLen* b = fRequest->GetRequestAbsoluteURI();
-	StrPtrLen* c = fRequest->GetSchemefromAbsoluteURI();
-	StrPtrLen* d = fRequest->GetHostfromAbsoluteURI();
-	StrPtrLen* e = fRequest->GetRequestRelativeURI();
 
 	if (fRequest->GetRequestPath() != NULL)
 	{
@@ -451,28 +444,8 @@ QTSS_Error HTTPSession::SetupRequest()
 
 			EasyMsgExceptionACK rsp;
 			string msg = rsp.GetMsg();
-
-			HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-			if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-			{
-				if (!msg.empty())
-					httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-				httpAck.AppendConnectionCloseHeader();
-
-				//Push HTTP Header to OutputBuffer
-				char respHeader[sHeaderSize] = { 0 };
-				StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-				strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-				HTTPResponseStream* pOutputStream = GetOutputStream();
-				pOutputStream->Put(respHeader);
-
-				//Push HTTP Content to OutputBuffer
-				if (!msg.empty())
-					pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-			}
+			StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+			this->SendHTTPPacket(&theValue, false, false);
 
 			return QTSS_NoErr;
 		}
@@ -705,24 +678,8 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
 
-	//HTTP Header
-	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	{
-		if (!msg.empty())
-			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-		char respHeader[sHeaderSize] = { 0 };
-		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-		HTTPResponseStream* pOutputStream = GetOutputStream();
-		pOutputStream->Put(respHeader);
-
-		if (!msg.empty())
-			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	}
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
 }
@@ -867,25 +824,8 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
 
-	//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	{
-		if (!msg.empty())
-			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-		char respHeader[sHeaderSize] = { 0 };
-		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-		HTTPResponseStream* pOutputStream = GetOutputStream();
-		pOutputStream->Put(respHeader);
-
-		//Ω´œ‡”¶±®ŒƒÃÌº”µΩHTTP ‰≥ˆª∫≥Â«¯÷–
-		if (!msg.empty())
-			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	}
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
 }
@@ -955,9 +895,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷
 
 	string buffer = reqreq.GetMsg();
 
-	pDevSession->ProcessEvent(buffer, httpResponseType);
-	fTimeoutTask.SetTimeout(3 * 1000);
-	fTimeoutTask.RefreshTimeout();
+	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+	pDevSession->SendHTTPPacket(&theValue, false, false);
 
 	//÷±Ω”∂‘øÕªß∂À£®EasyDarWin)Ω¯––’˝»∑ªÿ”¶
 	EasyProtocolACK rsp(MSG_SC_FREE_STREAM_ACK);
@@ -976,25 +915,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
 
-	//ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-	if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	{
-		if (!msg.empty())
-			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-		char respHeader[sHeaderSize] = { 0 };
-		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-		HTTPResponseStream* pOutputStream = GetOutputStream();
-		pOutputStream->Put(respHeader);
-
-		//Ω´œ‡”¶±®ŒƒÃÌº”µΩHTTP ‰≥ˆª∫≥Â«¯÷–
-		if (!msg.empty())
-			pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	}
+	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValueAck, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1159,8 +1081,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(const char* queryString)
 		reqreq.SetBody(bodybody);
 
 		string buffer = reqreq.GetMsg();
-
-		pDevSession->ProcessEvent(buffer, httpResponseType);
+		StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+		pDevSession->SendHTTPPacket(&theValue, false, false);
 		fTimeoutTask.SetTimeout(3 * 1000);
 		fTimeoutTask.RefreshTimeout();
 
@@ -1185,7 +1107,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(const char* queryString)
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
 
-	this->ProcessEvent(msg, httpResponseType);
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1270,7 +1193,8 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡
 		rsp.SetBody(body);
 		string msg = rsp.GetMsg();
 
-		httpSession->ProcessEvent(msg, httpResponseType);
+		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+		httpSession->SendHTTPPacket(&theValue, true, false);
 	}
 
 	return QTSS_NoErr;
@@ -1345,29 +1269,9 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	rsp.SetBody(body);
 
 	string msg = rsp.GetMsg();
-	this->ProcessEvent(msg, httpResponseType);
-	////ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	//HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-	//if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	//{
-	//	if (!msg.empty())
-	//		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-	//	//œÏ”¶ÕÍ≥…∫Û∂œø™¡¨Ω”
-	//	httpAck.AppendConnectionCloseHeader();
-
-	//	//Push MSG to OutputBuffer
-	//	char respHeader[sHeaderSize] = { 0 };
-	//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	//	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-	//	HTTPResponseStream* pOutputStream = GetOutputStream();
-	//	pOutputStream->Put(respHeader);
-	//	if (!msg.empty())
-	//		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	//}
-
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+	
 	return QTSS_NoErr;
 }
 
@@ -1417,25 +1321,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char* json)//øÕªß∂ÀªÒµ√…
 	rsp.SetHead(header);
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
-	this->ProcessEvent(msg, httpResponseType);
-	////ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	//HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-	//if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	//{
-	//	if (!msg.empty())
-	//		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-	//	//Push MSG to OutputBuffer
-	//	char respHeader[sHeaderSize] = { 0 };
-	//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	//	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-	//	HTTPResponseStream* pOutputStream = GetOutputStream();
-	//	pOutputStream->Put(respHeader);
-	//	if (!msg.empty())
-	//		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	//}
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1507,28 +1394,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(const char* queryStr
 	rsp.SetHead(header);
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
-	this->ProcessEvent(msg, httpResponseType);
-	////ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	//HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-	//if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	//{
-	//	if (!msg.empty())
-	//		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-	//	//œÏ”¶ÕÍ≥…∫Û∂œø™¡¨Ω”
-	//	httpAck.AppendConnectionCloseHeader();
-
-	//	//Push MSG to OutputBuffer
-	//	char respHeader[sHeaderSize] = { 0 };
-	//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	//	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-	//	HTTPResponseStream* pOutputStream = GetOutputStream();
-	//	pOutputStream->Put(respHeader);
-	//	if (!msg.empty())
-	//		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	//}
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1588,28 +1455,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 	rsp.SetHead(header);
 	rsp.SetBody(body);
 	string msg = rsp.GetMsg();
-	this->ProcessEvent(msg, httpResponseType);
-	////ππ‘ÏœÏ”¶±®Œƒ(HTTPÕ∑)
-	//HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-	//if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	//{
-	//	if (!msg.empty())
-	//		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-	//	//œÏ”¶ÕÍ≥…∫Û∂œø™¡¨Ω”
-	//	httpAck.AppendConnectionCloseHeader();
-
-	//	//Push MSG to OutputBuffer
-	//	char respHeader[sHeaderSize] = { 0 };
-	//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	//	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-	//	HTTPResponseStream *pOutputStream = GetOutputStream();
-	//	pOutputStream->Put(respHeader);
-	//	if (!msg.empty())
-	//		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	//}
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1720,27 +1567,8 @@ QTSS_Error HTTPSession::ProcessRequest()//¥¶¿Ì«Î«Û
 
 		rsp.SetHead(header);
 		string msg = rsp.GetMsg();
-		this->ProcessEvent(msg, httpResponseType);
-
-		////ππ‘ÏœÏ”¶±®Œƒ(HTTP Header)
-		//HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-
-		//if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-		//{
-		//	if (!msg.empty())
-		//		httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-		//	char respHeader[sHeaderSize] = { 0 };
-		//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		//	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-		//	HTTPResponseStream *pOutputStream = GetOutputStream();
-		//	pOutputStream->Put(respHeader);
-
-		//	//Ω´œ‡”¶±®ŒƒÃÌº”µΩHTTP ‰≥ˆª∫≥Â«¯÷–
-		//	if (!msg.empty())
-		//		pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-		//}
+		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+		this->SendHTTPPacket(&theValue, false, false);
 	}
 	return theErr;
 }
@@ -1920,66 +1748,82 @@ QTSS_Error HTTPSession::ExecNetMsgCSPTZControlReqRESTful(const char* queryString
 	reqreq.SetBody(bodybody);
 
 	string buffer = reqreq.GetMsg();
-	pDevSession->ProcessEvent(buffer, httpResponseType);
+	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+	pDevSession->SendHTTPPacket(&theValue, false, false);
 
-	fTimeoutTask.SetTimeout(3 * 1000);
-	fTimeoutTask.RefreshTimeout();
+	EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
+	EasyJsonValue header, body;
+	body[EASY_TAG_SERIAL] = chSerial;
+	body[EASY_TAG_CHANNEL] = chChannel;
+	body[EASY_TAG_PROTOCOL] = strProtocol;
+	body[EASY_TAG_RESERVE] = chReserve;
 
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = string(chTemp);;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+	string msg = rsp.GetMsg();
+	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValueAck, false, false);
+	
     return QTSS_NoErr;
 }
 
 QTSS_Error HTTPSession::ExecNetMsgDSPTZControlAck(const char* json)
 {
-    if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
-        return httpUnAuthorized;
+  //  if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
+  //      return httpUnAuthorized;
 
-    //∂‘”⁄…Ë±∏µƒÕ∆¡˜ªÿ”¶ «≤ª–Ë“™‘⁄Ω¯––ªÿ”¶µƒ£¨÷±Ω”Ω‚Œˆ’“µΩ∂‘”¶µƒøÕªß∂ÀSession£¨∏≥÷µº¥ø…	
-    EasyProtocol req(json);
+  //  //∂‘”⁄…Ë±∏µƒÕ∆¡˜ªÿ”¶ «≤ª–Ë“™‘⁄Ω¯––ªÿ”¶µƒ£¨÷±Ω”Ω‚Œˆ’“µΩ∂‘”¶µƒøÕªß∂ÀSession£¨∏≥÷µº¥ø…	
+  //  EasyProtocol req(json);
 
-    string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//…Ë±∏–Ú¡–∫≈
-    string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//…„œÒÕ∑–Ú¡–∫≈
-    string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//–≠“È,÷’∂ÀΩˆ÷ß≥÷RTSPÕ∆ÀÕ
-    string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);//¡˜¿‡–Õ
-    string strFrom = req.GetBodyValue(EASY_TAG_FROM);
-    string strTo = req.GetBodyValue(EASY_TAG_TO);
-    string strVia = req.GetBodyValue(EASY_TAG_VIA);
+  //  string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//…Ë±∏–Ú¡–∫≈
+  //  string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//…„œÒÕ∑–Ú¡–∫≈
+  //  string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//–≠“È,÷’∂ÀΩˆ÷ß≥÷RTSPÕ∆ÀÕ
+  //  string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);//¡˜¿‡–Õ
+  //  string strFrom = req.GetBodyValue(EASY_TAG_FROM);
+  //  string strTo = req.GetBodyValue(EASY_TAG_TO);
+  //  string strVia = req.GetBodyValue(EASY_TAG_VIA);
 
-    string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//’‚∏ˆ «πÿº¸◊÷
-    string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//◊¥Ã¨¬Î
+  //  string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//’‚∏ˆ «πÿº¸◊÷
+  //  string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//◊¥Ã¨¬Î
 
-    if (strChannel.empty())
-        strChannel = "0";
-    if (strReserve.empty())
-        strReserve = "1";
+  //  if (strChannel.empty())
+  //      strChannel = "0";
+  //  if (strReserve.empty())
+  //      strReserve = "1";
 
-    OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
-    OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
-    if (sessionRef == NULL)
-        return EASY_ERROR_SESSION_NOT_FOUND;
+  //  OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
+  //  OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
+  //  if (sessionRef == NULL)
+  //      return EASY_ERROR_SESSION_NOT_FOUND;
 
-    OSRefReleaserEx releaser(sessionMap, strTo);
-    HTTPSession* httpSession = static_cast<HTTPSession *>(sessionRef->GetObjectPtr());
+  //  OSRefReleaserEx releaser(sessionMap, strTo);
+  //  HTTPSession* httpSession = static_cast<HTTPSession *>(sessionRef->GetObjectPtr());
 
-    if (httpSession->IsLiveSession())
-    {
-        //◊ﬂµΩ’‚Àµ√˜∂‘øÕªß∂Àµƒ’˝»∑ªÿ”¶,“ÚŒ™¥ÌŒÛªÿ”¶÷±Ω”∑µªÿ°£
-        EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
-        EasyJsonValue header, body;
-        body[EASY_TAG_SERIAL] = strDeviceSerial;
-        body[EASY_TAG_CHANNEL] = strChannel;
-        body[EASY_TAG_PROTOCOL] = strProtocol;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
-        body[EASY_TAG_RESERVE] = strReserve;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
+  //  if (httpSession->IsLiveSession())
+  //  {
+  //      //◊ﬂµΩ’‚Àµ√˜∂‘øÕªß∂Àµƒ’˝»∑ªÿ”¶,“ÚŒ™¥ÌŒÛªÿ”¶÷±Ω”∑µªÿ°£
+  //      EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
+  //      EasyJsonValue header, body;
+  //      body[EASY_TAG_SERIAL] = strDeviceSerial;
+  //      body[EASY_TAG_CHANNEL] = strChannel;
+  //      body[EASY_TAG_PROTOCOL] = strProtocol;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
+  //      body[EASY_TAG_RESERVE] = strReserve;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
 
-        header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
-        header[EASY_TAG_CSEQ] = strCSeq;
-        header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
-        header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+  //      header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+  //      header[EASY_TAG_CSEQ] = strCSeq;
+  //      header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+  //      header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
-        rsp.SetHead(header);
-        rsp.SetBody(body);
-        string msg = rsp.GetMsg();
-		httpSession->ProcessEvent(msg, httpResponseType);
-    }
+  //      rsp.SetHead(header);
+  //      rsp.SetBody(body);
+  //      string msg = rsp.GetMsg();
+		//httpSession->ProcessEvent(msg, httpResponseType);
+  //  }
 
     return QTSS_NoErr;
 }
@@ -2048,7 +1892,8 @@ QTSS_Error HTTPSession::ExecNetMsgCSPresetControlReqRESTful(const char* queryStr
 	reqreq.SetBody(bodybody);
 
 	string buffer = reqreq.GetMsg();
-	pDevSession->ProcessEvent(buffer, httpResponseType);
+	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+	pDevSession->SendHTTPPacket(&theValue, false, false);
 	fTimeoutTask.SetTimeout(3 * 1000);
 	fTimeoutTask.RefreshTimeout();
 
@@ -2105,21 +1950,9 @@ QTSS_Error HTTPSession::ExecNetMsgDSPresetControlAck(const char* json)
 		rsp.SetHead(header);
 		rsp.SetBody(body);
 		string msg = rsp.GetMsg();
-		httpSession->ProcessEvent(msg, httpResponseType);
+		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+		httpSession->SendHTTPPacket(&theValue, false, false);
 	}
 
 	return QTSS_NoErr;
-}
-
-void HTTPSession::ProcessEvent(const string& msg, HTTPType type)
-{
-	{
-		OSMutexLocker locker(&fQueueMutex);
-		SendMsgEvent* msgEvent = new SendMsgEvent(msg, type);
-		fEventQueue.EnQueue(&msgEvent->fQueueElem);
-	}
-
-	this->Signal(kUpdateEvent);
-
-	printf("fEventQueue.Length: %d \n", fEventQueue.GetLength());
 }
