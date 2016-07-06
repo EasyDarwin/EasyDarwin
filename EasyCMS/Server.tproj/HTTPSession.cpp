@@ -45,7 +45,8 @@ HTTPSession::HTTPSession()
 	: HTTPSessionInterface(),
 	fRequest(NULL),
 	fReadMutex(),
-	fCurrentModule(0),
+	fSendMutex(),
+	//fCurrentModule(0),
 	fState(kReadingFirstRequest)
 {
 	this->SetTaskName("HTTPSession");
@@ -53,10 +54,10 @@ HTTPSession::HTTPSession()
 	//All EasyCameraSession/EasyNVRSession/EasyHTTPSession
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(1);
 
-	fModuleState.curModule = NULL;
+	/*fModuleState.curModule = NULL;
 	fModuleState.curTask = this;
 	fModuleState.curRole = 0;
-	fModuleState.globalLockRequested = false;
+	fModuleState.globalLockRequested = false;*/
 
 	memset(&decodeParam, 0x00, sizeof(DECODE_PARAM_T));
 
@@ -101,43 +102,10 @@ SInt64 HTTPSession::Run()
 	EventFlags events = this->GetEvents();
 	QTSS_Error err = QTSS_NoErr;
 
-	OSThreadDataSetter theSetter(&fModuleState, NULL);
+	//OSThreadDataSetter theSetter(&fModuleState, NULL);
 
 	if (events & kKillEvent)
 		fLiveSession = false;
-
-	//if (events & kUpdateEvent)
-	//{
-	//	OSMutexLocker locker(&fQueueMutex);
-
-	//	if (fEventQueue.GetLength() > 0)
-	//	{
-	//		SendMsgEvent* theEvent = static_cast<SendMsgEvent*>(fEventQueue.DeQueue()->GetEnclosingObject());
-	//		string msg = theEvent->GetHTTPMessage();
-	//		HTTPType httpType = theEvent->GetHTTPType();
-	//		//¹¹ÔìÏìÓ¦±¨ÎÄ(HTTP Header)
-	//		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpType);
-
-	//		if (httpAck.CreateResponseHeader(!msg.empty() ? httpOK : httpNotImplemented))
-	//		{
-	//			if (!msg.empty())
-	//				httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.length()));
-
-	//			char respHeader[sHeaderSize] = { 0 };
-	//			StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	//			strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-	//			HTTPResponseStream* pOutputStream = GetOutputStream();
-	//			pOutputStream->Put(respHeader);
-
-	//			//½«ÏàÓ¦±¨ÎÄÌí¼Óµ½HTTPÊä³ö»º³åÇøÖÐ
-	//			if (!msg.empty())
-	//				pOutputStream->Put(const_cast<char*>(msg.data()), msg.length());
-	//		}
-	//		delete theEvent;
-	//	}
-	//	fState = kSendingResponse;
-	//}
 
 	if (events & kTimeoutEvent)
 	{
@@ -334,14 +302,6 @@ SInt64 HTTPSession::Run()
 
 				this->CleanupRequest();
 
-				{
-					OSMutexLocker locker(&fQueueMutex);
-					if (fEventQueue.GetLength() > 0)
-					{
-						return 0;
-					}
-				}
-
 				fState = kReadingRequest;
 			}
 		}
@@ -369,13 +329,18 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 
 		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 		string sendString(ackPtr->Ptr, ackPtr->Len);
-		sendString.append(contentXML->Ptr, contentXML->Len);
+		if (contentXML->Len > 0)
+			sendString.append(contentXML->Ptr, contentXML->Len);
 
 		UInt32 theLengthSent = 0;
 		UInt32 amtInBuffer = sendString.size();
 		do
 		{
-			QTSS_Error theErr = fOutputSocketP->Send(sendString.c_str(), amtInBuffer, &theLengthSent);
+			QTSS_Error theErr = QTSS_NoErr;
+			{
+				OSMutexLocker lock(&fSendMutex);
+				theErr = fOutputSocketP->Send(sendString.c_str(), amtInBuffer, &theLengthSent);
+			}
 
 			if (theErr != QTSS_NoErr && theErr != EAGAIN)
 			{
@@ -460,7 +425,7 @@ QTSS_Error HTTPSession::SetupRequest()
 	theContentLenParser.ConsumeWhitespace();
 	UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
 
-	qtss_printf("HTTPSession read content-length:%d \n", content_length);
+	//qtss_printf("HTTPSession read content-length:%d \n", content_length);
 
 	if (content_length <= 0)
 	{
@@ -516,7 +481,7 @@ QTSS_Error HTTPSession::SetupRequest()
 	}
 	*/
 
-	qtss_printf("HTTPSession read content-length:%d (%d/%d) \n", theLen, theBufferOffset + theLen, content_length);
+	//qtss_printf("HTTPSession read content-length:%d (%d/%d) \n", theLen, theBufferOffset + theLen, content_length);
 	if ((theErr == QTSS_WouldBlock) || (theLen < (content_length - theBufferOffset)))
 	{
 		//
@@ -691,12 +656,13 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 
 	if (httpAck.CreateResponseHeader(errCode))
 	{
-		char respHeader[sHeaderSize] = { 0 };
 		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-		HTTPResponseStream* pOutputStream = GetOutputStream();
-		pOutputStream->Put(respHeader);
+		UInt32 theLengthSent = 0;
+		QTSS_Error theErr = fOutputSocketP->Send(ackPtr->Ptr, ackPtr->Len, &theLengthSent);
+		if (theErr != QTSS_NoErr && theErr != EAGAIN)
+		{
+			return theErr;
+		}
 	}
 
 	this->fLiveSession = false;
@@ -1194,7 +1160,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 		string msg = rsp.GetMsg();
 
 		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-		httpSession->SendHTTPPacket(&theValue, true, false);
+		httpSession->SendHTTPPacket(&theValue, false, false);
 	}
 
 	return QTSS_NoErr;

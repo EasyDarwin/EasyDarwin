@@ -31,38 +31,6 @@
 
 using namespace std;
 
-class SendMsgEvent
-{
-public:
-	SendMsgEvent(const string& msg, HTTPType type) : fQueueElem(), fMessage(msg), fHTTPType(type)
-	{
-		fQueueElem.SetEnclosingObject(this);
-	}
-
-	inline void SetEventInfo(const string& msg, HTTPType type)
-	{
-		fMessage = msg;
-		fHTTPType = type;
-	}
-
-	string GetHTTPMessage() const
-	{
-		return fMessage;
-	}
-
-	HTTPType GetHTTPType()
-	{
-		return fHTTPType;
-	}
-
-public:
-	OSQueueElem	fQueueElem;
-
-private:
-	string fMessage;
-	HTTPType fHTTPType;
-};
-
 typedef struct __DECODE_PARAM_T
 {
 	int				codec;
@@ -82,11 +50,11 @@ public:
 
 	QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
 
-	char* GetDeviceSnap() { return fDeviceSnap; };
-	char* GetDeviceSerial() { return (char*)fDevSerial.c_str(); };
+	//char* GetDeviceSnap() { return fDeviceSnap; };
+	char* GetDeviceSerial() { return (char*)fDevice.serial_.c_str(); };
 
-	void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
-	EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }
+	/*void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
+	EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }*/
 
 private:
 	SInt64 Run();
@@ -124,6 +92,7 @@ private:
 
 	HTTPRequest*        fRequest;
 	OSMutex             fReadMutex;
+	OSMutex				fSendMutex;
 
 	enum
 	{
@@ -138,17 +107,14 @@ private:
 		kHaveCompleteMessage = 7	// 读取到完整的报文
 	};
 
-	UInt32 fCurrentModule;
+	//UInt32 fCurrentModule;
 	UInt32 fState;
 
-	QTSS_RoleParams     fRoleParams;//module param blocks for roles.
-	QTSS_ModuleState    fModuleState;
+	//QTSS_RoleParams     fRoleParams;//module param blocks for roles.
+	//QTSS_ModuleState    fModuleState;
 
-	char* fDeviceSnap;
-	EasyJsonValue fStreamPushInfo;
-
-	OSQueue				fEventQueue;
-	OSMutex				fQueueMutex;
+	//char* fDeviceSnap;
+	//EasyJsonValue fStreamPushInfo;
 
 	// Channel Snap
 	DECODE_PARAM_T		decodeParam;

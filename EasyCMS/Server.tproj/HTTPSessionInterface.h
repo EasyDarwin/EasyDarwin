@@ -107,10 +107,10 @@ protected:
 
 	//char				fSerial[EASY_MAX_SERIAL_LENGTH];
 	//StrPtrLen			fDevSerialPtr;
-	string				fDevSerial;
-	boost::mutex		fNVROperatorMutex;
-	boost::mutex		fStreamReqCountMutex;
-	boost::condition_variable fCond;
+	//string				fDevSerial;
+	//boost::mutex		fNVROperatorMutex;
+	//boost::mutex		fStreamReqCountMutex;
+	//boost::condition_variable fCond;
 	EasyNVRMessageQueue fNVRMessageQueue;
 	//OSRef				fDevRef;
 
