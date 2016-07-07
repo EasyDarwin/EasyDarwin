@@ -82,6 +82,7 @@ private:
 
     QTSS_Error processControlPTZReq() const;
 	QTSS_Error processControlPresetReq() const;
+	QTSS_Error processControlTalkbackReq() const;
 
 	// 重置客户端参数
 	void				resetClientSocket();

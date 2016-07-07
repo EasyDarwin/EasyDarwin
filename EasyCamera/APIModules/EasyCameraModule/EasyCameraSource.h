@@ -29,6 +29,7 @@ public:
 	QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* params);
     QTSS_Error ControlPTZ(Easy_CameraPTZ_Params* params);
 	QTSS_Error ControlPreset(Easy_CameraPreset_Params* params);
+	QTSS_Error ControlTalkback(Easy_CameraTalkback_Params* params);
 
 	QTSS_Error PushFrame(unsigned char* frame, int len);
 

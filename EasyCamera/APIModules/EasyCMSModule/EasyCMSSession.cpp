@@ -302,7 +302,7 @@ SInt64 EasyCMSSession::Run()
 
 				if (theErr == EAGAIN || theErr == EINPROGRESS)
 				{
-					qtss_printf("EasyCMSSession::Run fOutputStream.Flush() theErr:%d \n", theErr);
+					//qtss_printf("EasyCMSSession::Run fOutputStream.Flush() theErr:%d \n", theErr);
 					fSocket->GetSocket()->SetTask(this);
 					fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask());
 					this->ForceSameThread();
@@ -383,7 +383,7 @@ QTSS_Error EasyCMSSession::processMessage()
 
 	if (content_length)
 	{
-		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%lu \n", content_length);
+		//qtss_printf("EasyCMSSession::ProcessMessage read content-length:%lu \n", content_length);
 		// 检查content的fContentBuffer和fContentBufferOffset是否有值存在,如果存在，说明我们已经开始
 		// 进行content请求处理,如果不存在,我们需要创建并初始化fContentBuffer和fContentBufferOffset
 		if (fContentBuffer == NULL)
@@ -407,7 +407,7 @@ QTSS_Error EasyCMSSession::processMessage()
 			return QTSS_RequestFailed;
 		}
 
-		qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%lu \n", theLen);
+		//qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%lu \n", theLen);
 		if ((theErr == QTSS_WouldBlock) || (theLen < (content_length - fContentBufferOffset)))
 		{
 			//
@@ -423,7 +423,7 @@ QTSS_Error EasyCMSSession::processMessage()
 		// 处理完成报文后会自动进行Delete处理
 		OSCharArrayDeleter charArrayPathDeleter(fContentBuffer);
 
-		qtss_printf("EasyCMSSession::ProcessMessage() Get Complete Msg:\n%s", fContentBuffer);
+		//qtss_printf("EasyCMSSession::ProcessMessage() Get Complete Msg:\n%s", fContentBuffer);
 
 		fNoneACKMsgCount = 0;
 
@@ -455,6 +455,9 @@ QTSS_Error EasyCMSSession::processMessage()
             break;
 		case MSG_SD_CONTROL_PRESET_REQ:
 			theErr = processControlPresetReq();
+			break;
+		case MSG_SD_CONTROL_TALKBACK_REQ:
+			theErr = processControlTalkbackReq();
 			break;
 		default:
 			break;
@@ -906,6 +909,84 @@ QTSS_Error EasyCMSSession::processControlPresetReq() const
 	body[EASY_TAG_VIA] = via;
 
 	EasyMsgDSControlPresetACK rsp(body, ctrlPresetReq.GetMsgCSeq(), getStatusNo(errCode));
+
+	string msg = rsp.GetMsg();
+	StrPtrLen jsonContent(const_cast<char*>(msg.data()));
+	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+
+	if (httpAck.CreateResponseHeader())
+	{
+		if (jsonContent.Len)
+			httpAck.AppendContentLengthHeader(jsonContent.Len);
+
+		//Push msg to OutputBuffer
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		fOutputStream->Put(respHeader);
+		if (jsonContent.Len > 0)
+			fOutputStream->Put(jsonContent.Ptr, jsonContent.Len);
+	}
+
+	return errCode;
+}
+
+QTSS_Error EasyCMSSession::processControlTalkbackReq() const
+{
+	EasyMsgSDControlTalkbackREQ ctrlTalkbackReq(fContentBuffer);
+
+	string serial = ctrlTalkbackReq.GetBodyValue(EASY_TAG_SERIAL);
+	string protocol = ctrlTalkbackReq.GetBodyValue(EASY_TAG_PROTOCOL);
+	string channel = ctrlTalkbackReq.GetBodyValue(EASY_TAG_CHANNEL);
+	string reserve = ctrlTalkbackReq.GetBodyValue(EASY_TAG_RESERVE);
+	string command = ctrlTalkbackReq.GetBodyValue(EASY_TAG_CMD);
+	string audio = ctrlTalkbackReq.GetBodyValue(EASY_TAG_AUDIO_DATA);
+	string pts = ctrlTalkbackReq.GetBodyValue(EASY_TAG_PTS);
+	string from = ctrlTalkbackReq.GetBodyValue(EASY_TAG_FROM);
+	string to = ctrlTalkbackReq.GetBodyValue(EASY_TAG_TO);
+	string via = ctrlTalkbackReq.GetBodyValue(EASY_TAG_VIA);
+
+	if (serial.empty() || channel.empty() || command.empty())
+	{
+		return QTSS_ValueNotFound;
+	}
+
+	QTSS_RoleParams params;
+	params.cameraTalkbackParams.inCommand = EasyProtocol::GetTalkbackCMDType(command);
+	if (audio.empty())
+	{
+		params.cameraTalkbackParams.inBuff = NULL;
+		params.cameraTalkbackParams.inBuffLen = 0;
+		params.cameraTalkbackParams.inPts = 0;
+	}
+	else
+	{
+		string audioData = EasyUtil::Base64Decode(audio);
+		params.cameraTalkbackParams.inBuff = const_cast<char *>(audioData.data());
+		params.cameraTalkbackParams.inBuffLen = audioData.size();
+		params.cameraTalkbackParams.inPts = EasyUtil::String2Int(pts);
+	}
+
+	QTSS_Error errCode = QTSS_NoErr;
+	UInt32 fCurrentModule = 0;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kControlTalkbackRole);
+	for (; fCurrentModule < numModules; ++fCurrentModule)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kControlTalkbackRole, fCurrentModule);
+		errCode = theModule->CallDispatch(Easy_ControlTalkback_Role, &params);
+	}
+
+	EasyJsonValue body;
+	body[EASY_TAG_SERIAL] = serial;
+	body[EASY_TAG_CHANNEL] = channel;
+	body[EASY_TAG_RESERVE] = reserve;
+	body[EASY_TAG_PROTOCOL] = protocol;
+	body[EASY_TAG_FROM] = to;
+	body[EASY_TAG_TO] = from;
+	body[EASY_TAG_VIA] = via;
+
+	EasyMsgDSControlTalkbackACK rsp(body, ctrlTalkbackReq.GetMsgCSeq(), getStatusNo(errCode));
 
 	string msg = rsp.GetMsg();
 	StrPtrLen jsonContent(const_cast<char*>(msg.data()));

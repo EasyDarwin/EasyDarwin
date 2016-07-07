@@ -504,7 +504,7 @@ QTSS_Error EasyCameraSource::GetCameraSnap(Easy_CameraSnap_Params* params)
 
 QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
 {
-    QTSS_Error result = QTSS_NoErr;
+    QTSS_Error result = QTSS_RequestFailed;
 
     if (cameraLogin())
     {
@@ -537,7 +537,7 @@ QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
 
 QTSS_Error EasyCameraSource::ControlPreset(Easy_CameraPreset_Params* params)
 {
-	QTSS_Error result = QTSS_NoErr;
+	QTSS_Error result = QTSS_RequestFailed;
 
 	if (cameraLogin())
 	{
@@ -608,4 +608,40 @@ HI_U32 EasyCameraSource::getPresetCMDFromCMDType(int cmdType)
 	default:
 		return 0;
 	}
+}
+
+QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
+{
+	QTSS_Error result = QTSS_RequestFailed;
+
+	if (cameraLogin())
+	{
+		HI_S32 error = HI_SUCCESS;
+		switch (params->inCommand)
+		{
+		case EASY_TALKBACK_CMD_TYPE_START:
+			error = HI_NET_DEV_StartVoice(m_u32Handle, 1);
+			break;
+		case EASY_TALKBACK_CMD_TYPE_SENDDATA:
+			error = HI_NET_DEV_StopVoice(m_u32Handle);
+			break;
+		case EASY_TALKBACK_CMD_TYPE_STOP:
+			error = HI_NET_DEV_SendVoiceData(m_u32Handle, params->inBuff, params->inBuffLen, params->inPts);
+			break;
+		default:
+			result = QTSS_RequestFailed;
+			break;
+		}
+
+		if (error == HI_SUCCESS)
+		{
+			result = QTSS_NoErr;
+		}
+		else
+		{
+			result = QTSS_RequestFailed;
+		}
+	}
+
+	return result;
 }

@@ -244,6 +244,7 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
 
         case Easy_ControlPTZ_Role:          return kControlPTZRole          ;
 		case Easy_ControlPreset_Role:		return kControlPresetRole		;
+		case Easy_ControlTalkback_Role:		return kControlTalkbackRole		;
 
         default:
             return -1;
