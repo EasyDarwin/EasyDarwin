@@ -124,6 +124,10 @@ public:
 	static int GetPresetCMDType(const std::string& sPresetCMDType);
 	static std::string GetPresetCMDTypeString(int iPresetCMDType);
 
+	//enum EasyDarwinTalkbackCMDType
+	static int GetTalkbackCMDType(const std::string& sTalkbackCMDType);
+	static std::string GetTalkbackCMDTypeString(int iTalkbackCMDType);
+
 	//common json tag define
 protected:
 	Json::Value root;
@@ -148,6 +152,7 @@ private:
 	static MsgType PTZActionTypeMap[];
 	static MsgType PTZCMDTypeMap[];
 	static MsgType PresetCMDTypeMap[];
+	static MsgType TalkbackCMDTypeMap[];
 
 	Json::Reader reader;
 	Json::StyledWriter writer;//or StyledWriter FastWriter

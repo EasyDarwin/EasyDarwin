@@ -287,6 +287,42 @@ public:
 	virtual ~EasyMsgDSControlPresetACK() {}
 };
 
+// MSG_CS_TALKBACK_CONTROL_REQ
+class EasyMsgCSTalkbackControlREQ : public EasyProtocol
+{
+public:
+	EasyMsgCSTalkbackControlREQ(EasyJsonValue& body, size_t cseq = 1);
+	EasyMsgCSTalkbackControlREQ(const string& msg);
+	virtual ~EasyMsgCSTalkbackControlREQ() {}
+};
+
+// MSG_SC_TALKBACK_CONTROL_ACK
+class EasyMsgSCTalkbackControlACK : public EasyProtocol
+{
+public:
+	EasyMsgSCTalkbackControlACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+	EasyMsgSCTalkbackControlACK(const string& msg);
+	virtual ~EasyMsgSCTalkbackControlACK() {}
+};
+
+// MSG_SD_CONTROL_TALKBACK_REQ
+class EasyMsgSDControlTalkbackREQ : public EasyProtocol
+{
+public:
+	EasyMsgSDControlTalkbackREQ(EasyJsonValue& body, size_t cseq = 1);
+	EasyMsgSDControlTalkbackREQ(const string& msg);
+	virtual ~EasyMsgSDControlTalkbackREQ() {}
+};
+
+// MSG_DS_CONTROL_TALKBACK_ACK
+class EasyMsgDSControlTalkbackACK : public EasyProtocol
+{
+public:
+	EasyMsgDSControlTalkbackACK(EasyJsonValue& body, size_t cseq = 1, size_t error = 200);
+	EasyMsgDSControlTalkbackACK(const string& msg);
+	virtual ~EasyMsgDSControlTalkbackACK() {}
+};
+
 class EasyMsgExceptionACK : public EasyProtocol
 {
 public:

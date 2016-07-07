@@ -532,6 +532,74 @@ EasyMsgDSControlPresetACK::EasyMsgDSControlPresetACK(const string& msg)
 {
 }
 
+EasyMsgCSTalkbackControlREQ::EasyMsgCSTalkbackControlREQ(EasyJsonValue & body, size_t cseq)
+	: EasyProtocol(MSG_CS_TALKBACK_CONTROL_REQ)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgCSTalkbackControlREQ::EasyMsgCSTalkbackControlREQ(const string& msg)
+	: EasyProtocol(msg, MSG_CS_TALKBACK_CONTROL_REQ)
+{
+}
+
+EasyMsgSCTalkbackControlACK::EasyMsgSCTalkbackControlACK(EasyJsonValue & body, size_t cseq, size_t error)
+	: EasyProtocol(MSG_SC_TALKBACK_CONTROL_ACK)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgSCTalkbackControlACK::EasyMsgSCTalkbackControlACK(const string& msg)
+	: EasyProtocol(msg, MSG_SC_TALKBACK_CONTROL_ACK)
+{
+}
+
+EasyMsgSDControlTalkbackREQ::EasyMsgSDControlTalkbackREQ(EasyJsonValue & body, size_t cseq)
+	: EasyProtocol(MSG_SD_CONTROL_TALKBACK_REQ)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgSDControlTalkbackREQ::EasyMsgSDControlTalkbackREQ(const string& msg)
+	: EasyProtocol(msg, MSG_SD_CONTROL_TALKBACK_REQ)
+{
+}
+
+EasyMsgDSControlTalkbackACK::EasyMsgDSControlTalkbackACK(EasyJsonValue & body, size_t cseq, size_t error)
+	: EasyProtocol(MSG_DS_CONTROL_TALKBACK_ACK)
+{
+	SetHeaderValue(EASY_TAG_CSEQ, cseq);
+	SetHeaderValue(EASY_TAG_ERROR_NUM, error);
+	SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
+
+	for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+	{
+		SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
+	}
+}
+
+EasyMsgDSControlTalkbackACK::EasyMsgDSControlTalkbackACK(const string& msg)
+	: EasyProtocol(msg, MSG_DS_CONTROL_TALKBACK_ACK)
+{
+}
+
 EasyMsgExceptionACK::EasyMsgExceptionACK(size_t cseq, size_t error)
     : EasyProtocol(MSG_SC_EXCEPTION)
 {

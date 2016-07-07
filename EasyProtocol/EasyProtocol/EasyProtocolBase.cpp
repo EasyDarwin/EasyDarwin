@@ -13,7 +13,6 @@ Website: http://www.easydarwin.org
 
 #include <EasyProtocolBase.h>
 #include <string.h>
-#include <stdio.h>
 
 namespace EasyDarwin { namespace Protocol
 {
@@ -161,6 +160,12 @@ EasyProtocol::MsgType EasyProtocol::PresetCMDTypeMap[] = {
 	EASY_PRESET_CMD_TYPE_GOTO,						"GOTO",
 	EASY_PRESET_CMD_TYPE_SET,						"SET",
 	EASY_PRESET_CMD_TYPE_REMOVE,					"REMOVE"
+};
+
+EasyProtocol::MsgType EasyProtocol::TalkbackCMDTypeMap[] = {
+	EASY_TALKBACK_CMD_TYPE_START,					"START",
+	EASY_TALKBACK_CMD_TYPE_SENDDATA,				"SENDDATA",
+	EASY_TALKBACK_CMD_TYPE_STOP,					"STOP"
 };
 
 EasyProtocol::EasyProtocol(int iMsgType)
@@ -525,6 +530,32 @@ std::string EasyProtocol::GetPresetCMDTypeString(int iPresetCMDType)
 		if (iPresetCMDType == PresetCMDTypeMap[i].value)
 		{
 			return std::string(PresetCMDTypeMap[i].str);
+		}
+	}
+
+	return std::string();
+}
+
+int EasyProtocol::GetTalkbackCMDType(const std::string& sTalkbackCMDType)
+{
+	for (int i = 0; i < sizeof(TalkbackCMDTypeMap) / sizeof(MsgType); i++)
+	{
+		if (sTalkbackCMDType.compare(TalkbackCMDTypeMap[i].str) == 0)
+		{
+			return TalkbackCMDTypeMap[i].value;
+		}
+	}
+
+	return -1;
+}
+
+std::string EasyProtocol::GetTalkbackCMDTypeString(int iTalkbackCMDType)
+{
+	for (int i = 0; i < sizeof(TalkbackCMDTypeMap) / sizeof(MsgType); i++)
+	{
+		if (iTalkbackCMDType == TalkbackCMDTypeMap[i].value)
+		{
+			return std::string(TalkbackCMDTypeMap[i].str);
 		}
 	}
 

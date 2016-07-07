@@ -126,6 +126,8 @@
 #define EASY_TAG_L_SPEED                                "speed"
 #define EASY_TAG_PRESET									"Preset"
 #define EASY_TAG_L_PRESET								"preset"
+#define EASY_TAG_AUDIO_DATA								"AudioData"
+#define EASY_TAG_PTS									"Pts"
 
 /*!
 \}
@@ -164,6 +166,11 @@
 #define MSG_SC_PRESET_CONTROL_ACK                           0xe00c
 #define MSG_SD_CONTROL_PRESET_REQ                           0x000d
 #define MSG_DS_CONTROL_PRESET_ACK                           0xe00d
+
+#define MSG_CS_TALKBACK_CONTROL_REQ							0x000e
+#define MSG_SC_TALKBACK_CONTROL_ACK							0xe00e
+#define MSG_SD_CONTROL_TALKBACK_REQ							0x000f
+#define MSG_DS_CONTROL_TALKBACK_ACK							0xe00f
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
@@ -370,6 +377,21 @@ enum EasyDarwinPresetCMDType
 	EASY_PRESET_CMD_TYPE_GOTO = 1,				    ///< GOTO
 	EASY_PRESET_CMD_TYPE_SET, 						///< SET
 	EASY_PRESET_CMD_TYPE_REMOVE, 					///< REMOVE
+
+};
+/*!
+\}
+*/
+
+/*!
+\ingroup EasyDarwin_Talkback_CMD_Type_Define
+\{
+*/
+enum EasyDarwinTalkbackCMDType
+{
+	EASY_TALKBACK_CMD_TYPE_START = 1,				///< START
+	EASY_TALKBACK_CMD_TYPE_SENDDATA, 				///< SENDDATA
+	EASY_TALKBACK_CMD_TYPE_STOP, 					///< STOP
 
 };
 /*!
