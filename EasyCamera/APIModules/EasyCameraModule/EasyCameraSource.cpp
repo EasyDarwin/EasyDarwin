@@ -9,6 +9,8 @@
 #include "EasyProtocolDef.h"
 #include "hi_net_dev_sdk.h"
 
+#include "EasyUtil.h"
+
 #include <map>
 
 static unsigned int sLastVPTS = 0;
@@ -29,6 +31,17 @@ static char*            sDefaultCameraPassword = "admin";
 // Camera stream subtype
 static UInt32			sStreamType = 1;
 static UInt32			sDefaultStreamType = 1;
+
+int AddHead(char* dst, char* src, int length)
+{
+	dst[0] = 0x00;
+	dst[1] = 0x01;
+	dst[2] = 0x14;
+	dst[3] = 0x00;
+	memcpy(&dst[4], src, length);
+
+	return 0;
+}
 
 void EasyCameraSource::Initialize(QTSS_ModulePrefsObject modulePrefs)
 {
@@ -620,13 +633,66 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 		switch (params->inCommand)
 		{
 		case EASY_TALKBACK_CMD_TYPE_START:
-			error = HI_NET_DEV_StartVoice(m_u32Handle, 1);
+			{
+				int type = 1;
+				if (params->inType == EASY_TALKBACK_AUDIO_TYPE_G711A)
+					type = 1;
+				else if (params->inType == EASY_TALKBACK_AUDIO_TYPE_G726)
+					type = 4;
+				error = HI_NET_DEV_StartVoice(m_u32Handle, type);
+			}
 			break;
 		case EASY_TALKBACK_CMD_TYPE_SENDDATA:
-			error = HI_NET_DEV_StopVoice(m_u32Handle);
+			{
+				//char* infilename = "hs.g711";
+				//char* outAacname = "g711.g711";
+
+				//FILE* fpIn = fopen(infilename, "rb");
+				//if (NULL == fpIn)
+				//{
+				//	printf("%s:[%d] open %s file failed\n", __FUNCTION__, __LINE__, infilename);
+				//	return -1;
+				//}
+
+				//FILE* fpOut = fopen(outAacname, "wb");
+				//if (NULL == fpOut)
+				//{
+				//	printf("%s:[%d] open %s file failed\n", __FUNCTION__, __LINE__, outAacname);
+				//	return -1;
+				//}
+
+				//int gBytesRead = 0;
+				//int bG711ABufferSize = 164;
+				//int pts = 0;
+				//unsigned char *pbG711ABuffer = (unsigned char *)malloc(bG711ABufferSize * sizeof(unsigned char));
+				//char* pTemp = (char*)malloc(164 * sizeof(char));
+
+				//while ((gBytesRead = fread(pbG711ABuffer, 1, bG711ABufferSize, fpIn)) > 0)
+				//{
+				//	//AddHead(pTemp, (char*)pbG711ABuffer, bG711ABufferSize);
+				//	error = HI_NET_DEV_SendVoiceData(m_u32Handle, (char*)pbG711ABuffer, bG711ABufferSize, pts);
+				//	pts += 20;
+				//	//::Sleep(20);
+				//	printf("--------------------------- %d\n", error);
+				//	//break;
+				//}
+
+
+				////fwrite(au.data(), 1, au.size(), fpOut);
+				//
+				//free(pTemp);
+				//free(pbG711ABuffer);
+				//fclose(fpIn);
+				//fclose(fpOut);
+
+				int buffSize = 164;
+				char* pTemp = (char*)malloc(buffSize * sizeof(char));
+				AddHead(pTemp, (char*)params->inBuff, params->inBuffLen);
+				error = HI_NET_DEV_SendVoiceData(m_u32Handle, pTemp, buffSize, params->inPts);
+			}
 			break;
 		case EASY_TALKBACK_CMD_TYPE_STOP:
-			error = HI_NET_DEV_SendVoiceData(m_u32Handle, params->inBuff, params->inBuffLen, params->inPts);
+			error = HI_NET_DEV_StopVoice(m_u32Handle);
 			break;
 		default:
 			result = QTSS_RequestFailed;
@@ -645,3 +711,4 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 
 	return result;
 }
+

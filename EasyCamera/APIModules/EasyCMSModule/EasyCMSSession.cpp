@@ -236,7 +236,7 @@ SInt64 EasyCMSSession::Run()
 					fSocket->GetSocket()->SetTask(this);
 					fSocket->GetSocket()->RequestEvent(EV_RE);
 
-					fState = kIdle;
+					//fState = kIdle;
 					return 0;
 				}
 
@@ -941,6 +941,7 @@ QTSS_Error EasyCMSSession::processControlTalkbackReq() const
 	string channel = ctrlTalkbackReq.GetBodyValue(EASY_TAG_CHANNEL);
 	string reserve = ctrlTalkbackReq.GetBodyValue(EASY_TAG_RESERVE);
 	string command = ctrlTalkbackReq.GetBodyValue(EASY_TAG_CMD);
+	string audioType = ctrlTalkbackReq.GetBodyValue(EASY_TAG_AUDIO_TYPE);
 	string audio = ctrlTalkbackReq.GetBodyValue(EASY_TAG_AUDIO_DATA);
 	string pts = ctrlTalkbackReq.GetBodyValue(EASY_TAG_PTS);
 	string from = ctrlTalkbackReq.GetBodyValue(EASY_TAG_FROM);
@@ -952,8 +953,11 @@ QTSS_Error EasyCMSSession::processControlTalkbackReq() const
 		return QTSS_ValueNotFound;
 	}
 
+	string audioData;
 	QTSS_RoleParams params;
 	params.cameraTalkbackParams.inCommand = EasyProtocol::GetTalkbackCMDType(command);
+	params.cameraTalkbackParams.inType = EasyProtocol::GetTalkbackAudioType(audioType);
+
 	if (audio.empty())
 	{
 		params.cameraTalkbackParams.inBuff = NULL;
@@ -963,7 +967,7 @@ QTSS_Error EasyCMSSession::processControlTalkbackReq() const
 	else
 	{
 		string audioData = EasyUtil::Base64Decode(audio);
-		params.cameraTalkbackParams.inBuff = const_cast<char *>(audioData.data());
+		params.cameraTalkbackParams.inBuff = const_cast<char*>(audioData.data());
 		params.cameraTalkbackParams.inBuffLen = audioData.size();
 		params.cameraTalkbackParams.inPts = EasyUtil::String2Int(pts);
 	}

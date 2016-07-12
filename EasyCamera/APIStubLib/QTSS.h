@@ -598,6 +598,7 @@ typedef struct
 
 typedef struct
 {
+	int							inType;
 	int							inCommand;
 	char*						inBuff;
 	int							inBuffLen;
