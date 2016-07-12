@@ -54,10 +54,10 @@ HTTPSession::HTTPSession()
 	//All EasyCameraSession/EasyNVRSession/EasyHTTPSession
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(1);
 
-	/*fModuleState.curModule = NULL;
+	fModuleState.curModule = NULL;
 	fModuleState.curTask = this;
 	fModuleState.curRole = 0;
-	fModuleState.globalLockRequested = false;*/
+	fModuleState.globalLockRequested = false;
 
 	memset(&decodeParam, 0x00, sizeof(DECODE_PARAM_T));
 
@@ -102,7 +102,8 @@ SInt64 HTTPSession::Run()
 	EventFlags events = this->GetEvents();
 	QTSS_Error err = QTSS_NoErr;
 
-	//OSThreadDataSetter theSetter(&fModuleState, NULL);
+	// Some callbacks look for this struct in the thread object
+	OSThreadDataSetter theSetter(&fModuleState, NULL);
 
 	if (events & kKillEvent)
 		fLiveSession = false;
@@ -317,6 +318,8 @@ SInt64 HTTPSession::Run()
 
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
 {
+	OSMutexLocker lock(&fSendMutex);
+
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 
 	if (httpAck.CreateResponseHeader(httpOK))
@@ -338,7 +341,6 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 		{
 			QTSS_Error theErr = QTSS_NoErr;
 			{
-				OSMutexLocker lock(&fSendMutex);
 				theErr = fOutputSocketP->Send(sendString.c_str(), amtInBuffer, &theLengthSent);
 			}
 
@@ -1477,6 +1479,14 @@ QTSS_Error HTTPSession::ProcessRequest()//处理请求
 		theErr = ExecNetMsgDSPresetControlAck(fRequestBody);
 		nRspMsg = MSG_DS_CONTROL_PRESET_ACK;
 		break;
+	case MSG_CS_TALKBACK_CONTROL_REQ:
+		theErr = ExecNetMsgCSTalkbackControlReq(fRequestBody);
+		nRspMsg = MSG_SC_TALKBACK_CONTROL_ACK;
+		break;
+	case MSG_DS_CONTROL_TALKBACK_ACK:
+		theErr = ExecNetMSGDSTalkbackControlAck(fRequestBody);
+		nRspMsg = MSG_DS_CONTROL_TALKBACK_ACK;
+		break;
 	default:
 		theErr = ExecNetMsgErrorReqHandler(httpNotImplemented);
 		break;
@@ -1920,5 +1930,128 @@ QTSS_Error HTTPSession::ExecNetMsgDSPresetControlAck(const char* json)
 		httpSession->SendHTTPPacket(&theValue, false, false);
 	}
 
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::ExecNetMsgCSTalkbackControlReq(const char* json)
+{
+	//if (!fAuthenticated)//没有进行认证请求
+	//	return httpUnAuthorized;
+
+	EasyProtocol req(json);
+
+	string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);
+	string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);
+	string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);
+	string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);
+	string strCmd = req.GetBodyValue(EASY_TAG_CMD);
+	string strAudioType = req.GetBodyValue(EASY_TAG_AUDIO_TYPE);
+	string strAudioData = req.GetBodyValue(EASY_TAG_AUDIO_DATA);
+	string strPts = req.GetBodyValue(EASY_TAG_PTS);
+
+	string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//这个是关键字
+
+	if (strChannel.empty())
+		strChannel = "0";
+	if (strReserve.empty())
+		strReserve = "1";
+
+	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
+	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);
+	if (theDevRef == NULL)//找不到指定设备
+		return EASY_ERROR_DEVICE_NOT_FOUND;
+
+	OSRefReleaserEx releaser(deviceMap, strDeviceSerial);
+	//走到这说明存在指定设备
+	HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//获得当前设备回话
+
+	if (strCmd == "SENDDATA")
+	{
+		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
+		EasyJsonValue headerheader, bodybody;
+
+		char chTemp[16] = { 0 };
+		UInt32 uDevCseq = pDevSession->GetCSeq();
+		sprintf(chTemp, "%d", uDevCseq);
+		headerheader[EASY_TAG_CSEQ] = string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+		headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+
+		bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
+		bodybody[EASY_TAG_CHANNEL] = strChannel;
+		bodybody[EASY_TAG_PROTOCOL] = strProtocol;
+		bodybody[EASY_TAG_RESERVE] = strReserve;
+		bodybody[EASY_TAG_CMD] = strCmd;
+		bodybody[EASY_TAG_AUDIO_TYPE] = strAudioType;
+		bodybody[EASY_TAG_AUDIO_DATA] = strAudioData;
+		bodybody[EASY_TAG_PTS] = strPts;
+		bodybody[EASY_TAG_FROM] = fSessionID;
+		bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
+		bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+
+		reqreq.SetHead(headerheader);
+		reqreq.SetBody(bodybody);
+
+		string buffer = reqreq.GetMsg();
+		StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+		pDevSession->SendHTTPPacket(&theValue, false, false);
+	}
+	else
+	{
+		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
+		EasyJsonValue headerheader, bodybody;
+
+		char chTemp[16] = { 0 };
+		UInt32 uDevCseq = pDevSession->GetCSeq();
+		sprintf(chTemp, "%d", uDevCseq);
+		headerheader[EASY_TAG_CSEQ] = string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+		headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+
+		bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
+		bodybody[EASY_TAG_CHANNEL] = strChannel;
+		bodybody[EASY_TAG_PROTOCOL] = strProtocol;
+		bodybody[EASY_TAG_RESERVE] = strReserve;
+		bodybody[EASY_TAG_CMD] = strCmd;
+		bodybody[EASY_TAG_AUDIO_TYPE] = strAudioType;
+		bodybody[EASY_TAG_AUDIO_DATA] = strAudioData;
+		bodybody[EASY_TAG_PTS] = strPts;
+		bodybody[EASY_TAG_FROM] = fSessionID;
+		bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
+		bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+
+		reqreq.SetHead(headerheader);
+		reqreq.SetBody(bodybody);
+
+		string buffer = reqreq.GetMsg();
+		StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+		pDevSession->SendHTTPPacket(&theValue, false, false);
+	}
+
+	char chTemp[16] = { 0 };
+	UInt32 uDevCseq = pDevSession->GetCSeq();
+	sprintf(chTemp, "%d", uDevCseq);
+
+	EasyProtocolACK rsp(MSG_SC_TALKBACK_CONTROL_ACK);
+	EasyJsonValue header, body;
+	body[EASY_TAG_SERIAL] = strDeviceSerial;
+	body[EASY_TAG_CHANNEL] = strChannel;
+	body[EASY_TAG_PROTOCOL] = strProtocol;
+	body[EASY_TAG_RESERVE] = strReserve;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = string(chTemp);;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+	string msg = rsp.GetMsg();
+	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValueAck, false, false);
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::ExecNetMSGDSTalkbackControlAck(const char* json)
+{
 	return QTSS_NoErr;
 }

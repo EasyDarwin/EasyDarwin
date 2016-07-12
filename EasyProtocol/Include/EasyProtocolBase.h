@@ -124,6 +124,10 @@ public:
 	static int GetPresetCMDType(const std::string& sPresetCMDType);
 	static std::string GetPresetCMDTypeString(int iPresetCMDType);
 
+	//enum EasyDarwinTalkbackAudioType
+	static int GetTalkbackAudioType(const std::string& sTalkbackAudioType);
+	static std::string GetTalkbackAudioTypeString(int iTalkbackAudioType);
+
 	//enum EasyDarwinTalkbackCMDType
 	static int GetTalkbackCMDType(const std::string& sTalkbackCMDType);
 	static std::string GetTalkbackCMDTypeString(int iTalkbackCMDType);
@@ -152,6 +156,7 @@ private:
 	static MsgType PTZActionTypeMap[];
 	static MsgType PTZCMDTypeMap[];
 	static MsgType PresetCMDTypeMap[];
+	static MsgType TalkbackAudioTypeMap[];
 	static MsgType TalkbackCMDTypeMap[];
 
 	Json::Reader reader;

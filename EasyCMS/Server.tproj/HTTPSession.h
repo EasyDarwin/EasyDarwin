@@ -73,6 +73,9 @@ private:
     QTSS_Error ExecNetMsgDSPTZControlAck(const char* json);
 	QTSS_Error ExecNetMsgDSPresetControlAck(const char* json);
 
+	QTSS_Error ExecNetMsgCSTalkbackControlReq(const char* json);
+	QTSS_Error ExecNetMSGDSTalkbackControlAck(const char* json);
+
 	QTSS_Error ExecNetMsgCSDeviceListReq(const char* json);//客户端获得设备列表，json接口
 	QTSS_Error ExecNetMsgCSCameraListReq(const char* json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
 
@@ -111,7 +114,7 @@ private:
 	UInt32 fState;
 
 	//QTSS_RoleParams     fRoleParams;//module param blocks for roles.
-	//QTSS_ModuleState    fModuleState;
+	QTSS_ModuleState    fModuleState;
 
 	//char* fDeviceSnap;
 	//EasyJsonValue fStreamPushInfo;

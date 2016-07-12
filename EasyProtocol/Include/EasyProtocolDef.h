@@ -126,6 +126,7 @@
 #define EASY_TAG_L_SPEED                                "speed"
 #define EASY_TAG_PRESET									"Preset"
 #define EASY_TAG_L_PRESET								"preset"
+#define EASY_TAG_AUDIO_TYPE								"AudioType"
 #define EASY_TAG_AUDIO_DATA								"AudioData"
 #define EASY_TAG_PTS									"Pts"
 
@@ -377,6 +378,21 @@ enum EasyDarwinPresetCMDType
 	EASY_PRESET_CMD_TYPE_GOTO = 1,				    ///< GOTO
 	EASY_PRESET_CMD_TYPE_SET, 						///< SET
 	EASY_PRESET_CMD_TYPE_REMOVE, 					///< REMOVE
+
+};
+/*!
+\}
+*/
+
+/*!
+\ingroup EasyDarwin_Talkback_Audio_Type_Define
+\{
+*/
+enum EasyDarwinTalkbackAudioType
+{
+	EASY_TALKBACK_AUDIO_TYPE_G711A = 1,				///< G711A
+	EASY_TALKBACK_AUDIO_TYPE_G711U, 				///< G711U
+	EASY_TALKBACK_AUDIO_TYPE_G726, 					///< G726
 
 };
 /*!

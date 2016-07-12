@@ -46,6 +46,10 @@ EasyProtocol::MsgType EasyProtocol::MsgTypeMap[] = {
 	MSG_SC_PRESET_CONTROL_ACK,                      "MSG_SC_PRESET_CONTROL_ACK",
 	MSG_SD_CONTROL_PRESET_REQ,                      "MSG_SD_CONTROL_PRESET_REQ",
 	MSG_DS_CONTROL_PRESET_ACK,                      "MSG_DS_CONTROL_PRESET_ACK",
+	MSG_CS_TALKBACK_CONTROL_REQ,					"MSG_CS_TALKBACK_CONTROL_REQ",
+	MSG_SC_TALKBACK_CONTROL_ACK,					"MSG_SC_TALKBACK_CONTROL_ACK",
+	MSG_SD_CONTROL_TALKBACK_REQ,					"MSG_SD_CONTROL_TALKBACK_REQ",
+	MSG_DS_CONTROL_TALKBACK_ACK,					"MSG_DS_CONTROL_TALKBACK_ACK",
 
 	//保留
 	MSG_SC_START_HLS_ACK,							"MSG_SC_START_HLS_ACK",
@@ -160,6 +164,12 @@ EasyProtocol::MsgType EasyProtocol::PresetCMDTypeMap[] = {
 	EASY_PRESET_CMD_TYPE_GOTO,						"GOTO",
 	EASY_PRESET_CMD_TYPE_SET,						"SET",
 	EASY_PRESET_CMD_TYPE_REMOVE,					"REMOVE"
+};
+
+EasyProtocol::MsgType EasyProtocol::TalkbackAudioTypeMap[] = {
+	EASY_TALKBACK_AUDIO_TYPE_G711A,					"G711A",
+	EASY_TALKBACK_AUDIO_TYPE_G711U,					"G711U",
+	EASY_TALKBACK_AUDIO_TYPE_G726,					"G726"
 };
 
 EasyProtocol::MsgType EasyProtocol::TalkbackCMDTypeMap[] = {
@@ -530,6 +540,32 @@ std::string EasyProtocol::GetPresetCMDTypeString(int iPresetCMDType)
 		if (iPresetCMDType == PresetCMDTypeMap[i].value)
 		{
 			return std::string(PresetCMDTypeMap[i].str);
+		}
+	}
+
+	return std::string();
+}
+
+int EasyProtocol::GetTalkbackAudioType(const std::string& sTalkbackAudioType)
+{
+	for (int i = 0; i < sizeof(TalkbackAudioTypeMap) / sizeof(MsgType); i++)
+	{
+		if (sTalkbackAudioType.compare(TalkbackAudioTypeMap[i].str) == 0)
+		{
+			return TalkbackAudioTypeMap[i].value;
+		}
+	}
+
+	return -1;
+}
+
+std::string EasyProtocol::GetTalkbackAudioTypeString(int iTalkbackAudioType)
+{
+	for (int i = 0; i < sizeof(TalkbackAudioTypeMap) / sizeof(MsgType); i++)
+	{
+		if (iTalkbackAudioType == TalkbackAudioTypeMap[i].value)
+		{
+			return std::string(TalkbackAudioTypeMap[i].str);
 		}
 	}
 
