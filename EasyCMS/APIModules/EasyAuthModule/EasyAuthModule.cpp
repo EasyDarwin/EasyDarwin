@@ -3,23 +3,11 @@
 #include "EasyAuthModule.h"
 #include "OSHeaders.h"
 #include "QTSSModuleUtils.h"
-#include "MyAssert.h"
 
 // babosa add
-#include "OSArrayObjectDeleter.h"
-#include "QTSS_Private.h"
-#include "QTSSMemoryDeleter.h"
-#include "OSMemory.h"
-#include "OSRef.h"
-#include "IdleTask.h"
 #include "Task.h"
 #include "OS.h"
-#include "Socket.h"
-#include "SocketUtils.h"
-#include "ResizeableStringFormatter.h"
-#include "StringParser.h"
 #include "QTSServerInterface.h"
-#include "QueryParamList.h"
 //add
 #define __PLACEMENT_NEW_INLINE
 #include"OSMapEx.h"
@@ -28,8 +16,8 @@ static OSMapEx sSessionIdMap;
 
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject sPrefs = NULL;
-static QTSS_PrefsObject     sServerPrefs    = NULL;
-static QTSS_ServerObject    sServer     = NULL;
+static QTSS_PrefsObject     sServerPrefs = NULL;
+static QTSS_ServerObject    sServer = NULL;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error   EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
@@ -43,18 +31,18 @@ static QTSS_Error   MakeAuth(QTSS_Nonce_Params* inParams);//认证随机数
 class SessionIDCheckTask : public Task
 {
 public:
-	SessionIDCheckTask() : Task() {this->SetTaskName("SessionIDCheckTask"); this->Signal(Task::kStartEvent); }
+	SessionIDCheckTask() : Task() { this->SetTaskName("SessionIDCheckTask"); this->Signal(Task::kStartEvent); }
 	virtual ~SessionIDCheckTask() {}
 
 private:
 	virtual SInt64 Run();
 };
-static SessionIDCheckTask *pSessionIdTask=NULL;
+static SessionIDCheckTask *pSessionIdTask = NULL;
 //add 
 SInt64 SessionIDCheckTask::Run()
 {
 	sSessionIdMap.CheckTimeoutAndDelete();//检查超时的SessionID并进行删除
-	return 60*1000;//一分钟一检查
+	return 60 * 1000;//一分钟一检查
 }
 QTSS_Error EasyAuthModule_Main(void* inPrivateArgs)
 {
@@ -87,9 +75,9 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(Easy_Nonce_Role);
 	(void)QTSS_AddRole(Easy_Auth_Role);
 
-    // Tell the server our name!
-    static char* sModuleName = "EasyAuthModule";
-    ::strcpy(inParams->outModuleName, sModuleName);
+	// Tell the server our name!
+	static char* sModuleName = "EasyAuthModule";
+	::strcpy(inParams->outModuleName, sModuleName);
 
 	return QTSS_NoErr;
 }
@@ -114,13 +102,13 @@ QTSS_Error RereadPrefs()
 }
 QTSS_Error MakeNonce(QTSS_Nonce_Params* inParams)//生成随机数
 {
-	string strTemp=sSessionIdMap.GererateAndInsert();
-	strcpy(inParams->pNonce,strTemp.c_str());
+	string strTemp = sSessionIdMap.GererateAndInsert();
+	strcpy(inParams->pNonce, strTemp.c_str());
 	return QTSS_NoErr;
 }
 QTSS_Error MakeAuth(QTSS_Nonce_Params* inParams)//生成随机数
 {
 	string strSessionID(inParams->pNonce);
-	*(inParams->pResult)=(char)sSessionIdMap.FindAndDelete(strSessionID);
+	*(inParams->pResult) = (char)sSessionIdMap.FindAndDelete(strSessionID);
 	return QTSS_NoErr;
 }
