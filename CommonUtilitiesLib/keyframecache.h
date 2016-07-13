@@ -1,5 +1,6 @@
 #ifndef _KEYFRAMECACHE_H__
 #define _KEYFRAMECACHE_H__
+
 #include "OSHeaders.h"
 #include <stdlib.h>
 #include <string.h>
@@ -9,45 +10,46 @@
 
 #define BUF_STX 0x28
 #define BUF_ETX 0x29
+
 typedef struct FrameBuffer_tag
 {
-	char STX; 
+	char STX;
 	unsigned short bufLen;
-	char *buf;
+	char* buf;
 	char ETX;
 
-	int Encode(unsigned char *output,int &outlen)//outlen is output buffer len first
+	int Encode(unsigned char* output, int& outlen)//outlen is output buffer len first
 	{
 		int dataLen = 0;
-		if(output == NULL || outlen == 0)
+		if (output == NULL || outlen == 0)
 		{
 			return -1;
 		}
 
 		unsigned short netLen = htons(bufLen);
 
-		output[dataLen ++] = STX;
-		memcpy(output + dataLen,&netLen,2);
+		output[dataLen++] = STX;
+		memcpy(output + dataLen, &netLen, 2);
 		dataLen += 2;
 
-		memcpy(output + dataLen,buf,bufLen);
+		memcpy(output + dataLen, buf, bufLen);
 		dataLen += bufLen;
 
-		output[dataLen ++] = ETX;
+		output[dataLen++] = ETX;
 		outlen = dataLen;
 		return outlen;
 	}
 
-}FrameBuffer;
+} FrameBuffer;
 
 class CKeyFrameCache
 {
 public:
-	char *_memory;
+	char* _memory;
 	int curdatalen;
 	int mem_size;
 public:
-	CKeyFrameCache(int len):mem_size(len)
+	CKeyFrameCache(int len) :mem_size(len)
 	{
 		_memory = (char *)malloc(mem_size);
 		curdatalen = 0;
@@ -61,14 +63,12 @@ public:
 		curdatalen = 0;
 	}
 
-	bool PutOnePacket(char *buf,int len,int nalutype,int start);
+	bool PutOnePacket(char* buf, int len, int nalutype, int start);
 
-	bool GetOnePacket(char *outbuf,int &outLen,int curOffset);
+	bool GetOnePacket(char* outbuf, int& outLen, int curOffset);
 
-	bool SetBuf(char *frameBuf,int len);
+	bool SetBuf(char* frameBuf, int len);
 
 };
-
-
 
 #endif
