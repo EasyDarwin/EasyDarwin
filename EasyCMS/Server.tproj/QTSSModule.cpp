@@ -127,7 +127,7 @@ QTSS_Error  QTSSModule::SetupModule(QTSS_CallbacksPtr inCallbacks, QTSS_MainEntr
     // Load fragment from disk if necessary
     
     if ((fFragment != NULL) && (inEntrypoint == NULL))
-        theErr = this->LoadFromDisk(&inEntrypoint);
+        theErr = this->loadFromDisk(&inEntrypoint);
     if (theErr != QTSS_NoErr)
         return theErr;
         
@@ -164,7 +164,7 @@ QTSS_Error  QTSSModule::SetupModule(QTSS_CallbacksPtr inCallbacks, QTSS_MainEntr
      return QTSS_NoErr;
 }
 
-QTSS_Error QTSSModule::LoadFromDisk(QTSS_MainEntryPointPtr* outEntrypoint)
+QTSS_Error QTSSModule::loadFromDisk(QTSS_MainEntryPointPtr* outEntrypoint)
 {
     static StrPtrLen sMainEntrypointName("_Main");
     
