@@ -1,5 +1,6 @@
 #ifndef _DECODER_HELPER_
 #define _DECODER_HELPER_
+
 #ifndef __linux__
 #define __STDC_CONSTANT_MACROS
 
@@ -21,7 +22,7 @@ public:
 	~DecoderHelper();
 
 	int		SetVideoDecoderParam(int width, int height, int codec, int format);
-	int		DecodeVideo(char *inBuff, int inBuffSize, void *yuvBuff, int width, int height);
+	int		DecodeVideo(char* inBuff, int inBuffSize, void* yuvBuff, int width, int height);
 
 private:
 	void	releaseVideoDecoder();

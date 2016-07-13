@@ -1,14 +1,15 @@
 #include "DecoderHelper.h"
+
 #ifndef __linux__
 DecoderHelper::DecoderHelper()
 	: _formatContext(NULL),
 	_videoCodecContext(NULL),
 	_videoFrame420(NULL),
+	_swsContext(NULL),
 	_buffYUV420(NULL),
 	_buffYUV(NULL),
 	_avframeYUV(NULL),
 	_avframeSWS(NULL),
-	_swsContext(NULL),
 	_codec(0),
 	_width(0),
 	_height(0),
@@ -37,7 +38,7 @@ int DecoderHelper::SetVideoDecoderParam(int width, int height, int codec, int fo
 		return -1;
 	}
 
-	AVCodec	*avcodec = avcodec_find_decoder((AVCodecID)codec);
+	AVCodec* avcodec = avcodec_find_decoder((AVCodecID)codec);
 	if (NULL == avcodec)
 	{
 		return -1;
@@ -78,7 +79,7 @@ $fail:
 
 }
 
-int DecoderHelper::DecodeVideo(char *inBuff, int inBuffSize, void *yuvBuff, int width, int height)
+int DecoderHelper::DecodeVideo(char* inBuff, int inBuffSize, void* yuvBuff, int width, int height)
 {
 	if (NULL == inBuff)			return -1;
 	if (1 > inBuffSize)			return -1;
