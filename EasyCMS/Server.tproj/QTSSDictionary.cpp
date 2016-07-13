@@ -46,12 +46,6 @@
 #include "OSMemory.h"
 #include "QTSSDataConverter.h"
 
-#include "HTTPProtocol.h"
-
-#include <errno.h>
-
-
-
 QTSSDictionary::QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex) 
 :   fAttributes(NULL), fInstanceAttrs(NULL), fInstanceArraySize(0),
     fMap(inMap), fInstanceMap(NULL), fMutexP(inMutex), fMyMutex(false), fLocked(false)
@@ -68,10 +62,10 @@ QTSSDictionary::QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex)
 QTSSDictionary::~QTSSDictionary()
 {
     if (fMap != NULL)
-        this->DeleteAttributeData(fAttributes, fMap->GetNumAttrs(), fMap);
+        this->deleteAttributeData(fAttributes, fMap->GetNumAttrs(), fMap);
     if (fAttributes != NULL)
         delete [] fAttributes;
-    this->DeleteAttributeData(fInstanceAttrs, fInstanceArraySize, fInstanceMap);
+    this->deleteAttributeData(fInstanceAttrs, fInstanceArraySize, fInstanceMap);
     delete [] fInstanceAttrs;
     delete fInstanceMap;
 	if (fMyMutex)
@@ -806,7 +800,7 @@ QTSS_Error QTSSDictionary::GetAttrInfoByName(const char* inAttrName, QTSSAttrInf
     return theErr;
 }
 
-void QTSSDictionary::DeleteAttributeData(DictValueElement* inDictValues,
+void QTSSDictionary::deleteAttributeData(DictValueElement* inDictValues,
                                          UInt32 inNumValues,
                                          QTSSDictionaryMap* theMap)
 {
