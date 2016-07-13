@@ -350,12 +350,11 @@ void FilePrefsSource::DeleteValue(const char* inKey)
 
 void FilePrefsSource::WriteToConfigFile(const char* configFilePath)
 {
-    int err = 0;
     FILE* fileDesc = ::fopen( configFilePath,   "w");
 
         if (fileDesc != NULL)
         {
-            err = ::fseek(fileDesc, 0, SEEK_END);
+            int err = ::fseek(fileDesc, 0, SEEK_END);
             Assert(err == 0);
 
             KeyValuePair* keyValue = fKeyValueList;
