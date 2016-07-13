@@ -238,10 +238,10 @@
 */
 enum EasyDarwinTimeFormat
 {
-    EASY_TIME_FORMAT_YYYYMMDDHHMMSS = 1,    ///< Format like 2014-08-31 08:15:30
+	EASY_TIME_FORMAT_YYYYMMDDHHMMSS = 1,    ///< Format like 2014-08-31 08:15:30
 	EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx,		///<Format like 20140831081530
-    EASY_TIME_FORMAT_YYYYMMDD,              ///< Format like 2014-08-31
-    EASY_TIME_FORMAT_HHMMSS                 ///< Format like 08:15:30    
+	EASY_TIME_FORMAT_YYYYMMDD,              ///< Format like 2014-08-31
+	EASY_TIME_FORMAT_HHMMSS                 ///< Format like 08:15:30    
 };
 /*!
 \}
@@ -292,12 +292,12 @@ enum EasyDarwinMediaEncodeType
 */
 enum EasyDarwinTerminalType
 {
-	EASY_TERMINAL_TYPE_ARM		= 1,				///< ARM	
-	EASY_TERMINAL_TYPE_Android	= 2,				///< ANDROID
-	EASY_TERMINAL_TYPE_IOS		= 3,				///< IOS
-	EASY_TERMINAL_TYPE_WEB		= 4,				///< WEB
-	EASY_TERMINAL_TYPE_WINDOWS  = 5,				///< WINDOWS
-	EASY_TERMINAL_TYPE_LINUX	= 6					///< LINUX
+	EASY_TERMINAL_TYPE_ARM = 1,				///< ARM	
+	EASY_TERMINAL_TYPE_Android = 2,				///< ANDROID
+	EASY_TERMINAL_TYPE_IOS = 3,				///< IOS
+	EASY_TERMINAL_TYPE_WEB = 4,				///< WEB
+	EASY_TERMINAL_TYPE_WINDOWS = 5,				///< WINDOWS
+	EASY_TERMINAL_TYPE_LINUX = 6					///< LINUX
 };
 /*!
 \}
@@ -309,9 +309,9 @@ enum EasyDarwinTerminalType
 */
 enum EasyDarwinAppType
 {
-	EASY_APP_TYPE_CAMERA		= 1,					///< EasyCamera
-	EASY_APP_TYPE_NVR			= 2,					///< EasyNVR
-	EASY_APP_TYPE_EASYDARWIN	= 3						///< EasyDarwin
+	EASY_APP_TYPE_CAMERA = 1,					///< EasyCamera
+	EASY_APP_TYPE_NVR = 2,					///< EasyNVR
+	EASY_APP_TYPE_EASYDARWIN = 3						///< EasyDarwin
 };
 /*!
 \}
@@ -336,8 +336,8 @@ enum EasyDarwinSnapType
 */
 enum EasyDarwinPTZActionType
 {
-    EASY_PTZ_ACTION_TYPE_CONTINUOUS = 1,				///< CONTINUOUS
-    EASY_PTZ_ACTION_TYPE_SINGLE 						///< SINGLE
+	EASY_PTZ_ACTION_TYPE_CONTINUOUS = 1,				///< CONTINUOUS
+	EASY_PTZ_ACTION_TYPE_SINGLE 						///< SINGLE
 };
 /*!
 \}
@@ -349,21 +349,21 @@ enum EasyDarwinPTZActionType
 */
 enum EasyDarwinPTZCMDType
 {
-    EASY_PTZ_CMD_TYPE_STOP = 1,				    ///< STOP
-    EASY_PTZ_CMD_TYPE_UP, 						///< UP
-    EASY_PTZ_CMD_TYPE_DOWN, 					///< DOWN
-    EASY_PTZ_CMD_TYPE_LEFT, 					///< LEFT
-    EASY_PTZ_CMD_TYPE_RIGHT, 					///< RIGHT
-    EASY_PTZ_CMD_TYPE_LEFTUP, 					///< LEFTUP
-    EASY_PTZ_CMD_TYPE_LEFTDOWN, 				///< LEFTDOWN
-    EASY_PTZ_CMD_TYPE_RIGHTUP, 					///< RIGHTUP
-    EASY_PTZ_CMD_TYPE_RIGHTDOWN, 				///< RIGHTDOWN
-    EASY_PTZ_CMD_TYPE_ZOOMIN, 					///< ZOOMIN
-    EASY_PTZ_CMD_TYPE_ZOOMOUT, 					///< ZOOMOUT
-    EASY_PTZ_CMD_TYPE_FOCUSIN, 					///< FOCUSIN
-    EASY_PTZ_CMD_TYPE_FOCUSOUT, 				///< FOCUSOUT
-    EASY_PTZ_CMD_TYPE_APERTUREIN, 				///< APERTUREIN
-    EASY_PTZ_CMD_TYPE_APERTUREOUT, 				///< APERTUREOUT
+	EASY_PTZ_CMD_TYPE_STOP = 1,				    ///< STOP
+	EASY_PTZ_CMD_TYPE_UP, 						///< UP
+	EASY_PTZ_CMD_TYPE_DOWN, 					///< DOWN
+	EASY_PTZ_CMD_TYPE_LEFT, 					///< LEFT
+	EASY_PTZ_CMD_TYPE_RIGHT, 					///< RIGHT
+	EASY_PTZ_CMD_TYPE_LEFTUP, 					///< LEFTUP
+	EASY_PTZ_CMD_TYPE_LEFTDOWN, 				///< LEFTDOWN
+	EASY_PTZ_CMD_TYPE_RIGHTUP, 					///< RIGHTUP
+	EASY_PTZ_CMD_TYPE_RIGHTDOWN, 				///< RIGHTDOWN
+	EASY_PTZ_CMD_TYPE_ZOOMIN, 					///< ZOOMIN
+	EASY_PTZ_CMD_TYPE_ZOOMOUT, 					///< ZOOMOUT
+	EASY_PTZ_CMD_TYPE_FOCUSIN, 					///< FOCUSIN
+	EASY_PTZ_CMD_TYPE_FOCUSOUT, 				///< FOCUSOUT
+	EASY_PTZ_CMD_TYPE_APERTUREIN, 				///< APERTUREIN
+	EASY_PTZ_CMD_TYPE_APERTUREOUT, 				///< APERTUREOUT
 };
 /*!
 \}
@@ -413,5 +413,5 @@ enum EasyDarwinTalkbackCMDType
 /*!
 \}
 */
-    
+
 #endif	/* EASY_PROTOCOL_DEF_H */
