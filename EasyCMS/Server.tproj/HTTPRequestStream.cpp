@@ -15,7 +15,6 @@
 #include "StringParser.h"
 #include "OSMemory.h"
 #include "base64.h"
-#include "OSArrayObjectDeleter.h"
 #include "OS.h"
 
 #include <errno.h>
@@ -31,6 +30,7 @@ HTTPRequestStream::HTTPRequestStream(TCPSocket* sock)
     fRequest(fRequestBuffer, 0),
     fRequestPtr(NULL),
     fDecode(false),
+    fIsDataPacket(false),
     fPrintMSG(false)
 {}
 
@@ -123,7 +123,7 @@ QTSS_Error HTTPRequestStream::ReadRequest()
             {
                 // If we need to decode this data, do it now.
                 Assert(fCurOffset >= fEncodedBytesRemaining);
-                QTSS_Error decodeErr = this->DecodeIncomingData(&fRequestBuffer[fCurOffset - fEncodedBytesRemaining],
+                QTSS_Error decodeErr = this->decodeIncomingData(&fRequestBuffer[fCurOffset - fEncodedBytesRemaining],
                                                                     newOffset + fEncodedBytesRemaining);
                 // If the above function returns an error, it is because we've
                 // encountered some non-base64 data in the stream. We can process
@@ -300,7 +300,7 @@ QTSS_Error HTTPRequestStream::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outL
     return theErr;
 }
 
-QTSS_Error HTTPRequestStream::DecodeIncomingData(char* inSrcData, UInt32 inSrcDataLen)
+QTSS_Error HTTPRequestStream::decodeIncomingData(char* inSrcData, UInt32 inSrcDataLen)
 {
     Assert(fRetreatBytes == 0);
     
