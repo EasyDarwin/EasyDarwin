@@ -13,36 +13,36 @@ using namespace std;
 class OSRefTableEx
 {
 public:
-    class OSRefEx
-    {
+	class OSRefEx
+	{
 
-    public:
-        OSRefEx() : mp_Object(NULL), m_Count(0) {}
-        OSRefEx(void* pobject) : mp_Object(pobject), m_Count(0) {}
-        void* GetObjectPtr() const { return mp_Object; }
-        int GetRefNum() const { return m_Count; }
-        OSCond* GetCondPtr() { return &m_Cond; }
-        void AddRef(int num) { m_Count += num; }
+	public:
+		OSRefEx() : mp_Object(NULL), m_Count(0) {}
+		OSRefEx(void* pobject) : mp_Object(pobject), m_Count(0) {}
+		void* GetObjectPtr() const { return mp_Object; }
+		int GetRefNum() const { return m_Count; }
+		OSCond* GetCondPtr() { return &m_Cond; }
+		void AddRef(int num) { m_Count += num; }
 
-    private:
-        void* mp_Object;//引用的对象或其余数据
-        int m_Count;//当前引用对象计数，只有为0时才允许对象销毁
-        OSCond  m_Cond;//to block threads waiting for this ref.
-    };
+	private:
+		void* mp_Object;//引用的对象或其余数据
+		int m_Count;//当前引用对象计数，只有为0时才允许对象销毁
+		OSCond  m_Cond;//to block threads waiting for this ref.
+	};
 
-    OSRefEx*     Resolve(const string& key);//引用对象
-    OS_Error     Release(const string& key);//释放引用
-    OS_Error     Register(const string& key, void* pObject);//加入到map中
-    OS_Error     UnRegister(const string& key);//从map中移除
+	OSRefEx*     Resolve(const string& key);//引用对象
+	OS_Error     Release(const string& key);//释放引用
+	OS_Error     Register(const string& key, void* pObject);//加入到map中
+	OS_Error     UnRegister(const string& key);//从map中移除
 
-    OS_Error TryUnRegister(const string& key);//尝试移除，如果引用为0,则移除并返回true，否则返回false
-    int GetEleNumInMap() const { return m_Map.size(); }//获得map中的元素个数
-    OSMutex *GetMutex() { return &m_Mutex; }//给外面提供互斥接口
-    map<string, OSRefEx*> *GetMap() { return &m_Map; }
+	OS_Error TryUnRegister(const string& key);//尝试移除，如果引用为0,则移除并返回true，否则返回false
+	int GetEleNumInMap() const { return m_Map.size(); }//获得map中的元素个数
+	OSMutex *GetMutex() { return &m_Mutex; }//给外面提供互斥接口
+	map<string, OSRefEx*> *GetMap() { return &m_Map; }
 
 private:
-    map<string, OSRefEx*> m_Map;//以string为key，以OSRefEx为value
-    OSMutex         m_Mutex;//提供对map的互斥操作
+	map<string, OSRefEx*> m_Map;//以string为key，以OSRefEx为value
+	OSMutex         m_Mutex;//提供对map的互斥操作
 };
 typedef map<string, OSRefTableEx::OSRefEx*> OSHashMap;
 typedef map<string, OSRefTableEx::OSRefEx*>::iterator OSRefIt;
@@ -50,14 +50,14 @@ typedef map<string, OSRefTableEx::OSRefEx*>::iterator OSRefIt;
 class OSRefReleaserEx
 {
 public:
-    OSRefReleaserEx(OSRefTableEx* pTable, const string& key) : fOSRefTable(pTable), fOSRefKey(key) {}
-    ~OSRefReleaserEx() { fOSRefTable->Release(fOSRefKey); }
+	OSRefReleaserEx(OSRefTableEx* pTable, const string& key) : fOSRefTable(pTable), fOSRefKey(key) {}
+	~OSRefReleaserEx() { fOSRefTable->Release(fOSRefKey); }
 
-    string GetRefKey() const { return fOSRefKey; }
+	string GetRefKey() const { return fOSRefKey; }
 
 private:
-    OSRefTableEx*	fOSRefTable;
-    string			fOSRefKey;
+	OSRefTableEx*	fOSRefTable;
+	string			fOSRefKey;
 };
 
 #endif _OSREFTABLEEX_H_
