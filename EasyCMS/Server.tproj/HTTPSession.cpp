@@ -81,7 +81,7 @@ HTTPSession::~HTTPSession()
 	}
 
 	fLiveSession = false;
-	this->CleanupRequest();
+	this->cleanupRequest();
 
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(-1);
 
@@ -190,7 +190,7 @@ SInt64 HTTPSession::Run()
 
 				if ((err == E2BIG) || (err == QTSS_BadArgument))
 				{
-					ExecNetMsgErrorReqHandler(httpBadRequest);
+					execNetMsgErrorReqHandler(httpBadRequest);
 					fState = kSendingResponse;
 					break;
 				}
@@ -203,7 +203,7 @@ SInt64 HTTPSession::Run()
 			{
 				fTimeoutTask.RefreshTimeout();
 
-				QTSS_Error theErr = SetupRequest();
+				QTSS_Error theErr = setupRequest();
 
 				if (theErr == QTSS_WouldBlock)
 				{
@@ -216,7 +216,7 @@ SInt64 HTTPSession::Run()
 
 				if (theErr != QTSS_NoErr)
 				{
-					ExecNetMsgErrorReqHandler(httpBadRequest);
+					execNetMsgErrorReqHandler(httpBadRequest);
 				}
 
 				if (fOutputStream.GetBytesWritten() > 0)
@@ -231,7 +231,7 @@ SInt64 HTTPSession::Run()
 
 		case kPreprocessingRequest:
 			{
-				ProcessRequest();
+				processRequest();
 
 				if (fOutputStream.GetBytesWritten() > 0)
 				{
@@ -251,7 +251,7 @@ SInt64 HTTPSession::Run()
 			{
 				if (fOutputStream.GetBytesWritten() == 0)
 				{
-					ExecNetMsgErrorReqHandler(httpInternalServerError);
+					execNetMsgErrorReqHandler(httpInternalServerError);
 					fState = kSendingResponse;
 					break;
 				}
@@ -290,7 +290,7 @@ SInt64 HTTPSession::Run()
 				// data off of the socket
 				if (this->GetRemainingReqBodyLen() > 0)
 				{
-					err = this->DumpRequestData();
+					err = this->dumpRequestData();
 
 					if (err == EAGAIN)
 					{
@@ -301,14 +301,14 @@ SInt64 HTTPSession::Run()
 					}
 				}
 
-				this->CleanupRequest();
+				this->cleanupRequest();
 
 				fState = kReadingRequest;
 			}
 		}
 	}
 
-	this->CleanupRequest();
+	this->cleanupRequest();
 
 	if (fObjectHolders == 0)
 		return -1;
@@ -365,7 +365,7 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionC
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::SetupRequest()
+QTSS_Error HTTPSession::setupRequest()
 {
 	QTSS_Error theErr = fRequest->Parse();
 	if (theErr != QTSS_NoErr)
@@ -389,23 +389,23 @@ QTSS_Error HTTPSession::SetupRequest()
 			{
 				if (path[0] == "api" && path[1] == "getdevicelist")
 				{
-					return ExecNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());
+					return execNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());
 				}
 				if (path[0] == "api" && path[1] == "getdeviceinfo")
 				{
-					return ExecNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());
+					return execNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());
 				}
 				if (path[0] == "api" && path[1] == "getdevicestream")
 				{
-					return ExecNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());
+					return execNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());
 				}
                 if (path[0] == "api" && path[1] == "ptzcontrol")
                 {
-                    return ExecNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
+                    return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
                 }
 				if (path[0] == "api" && path[1] == "presetcontrol")
 				{
-					return ExecNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
+					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
 				}
 			}
 
@@ -512,7 +512,7 @@ QTSS_Error HTTPSession::SetupRequest()
 	return theErr;
 }
 
-void HTTPSession::CleanupRequest()
+void HTTPSession::cleanupRequest()
 {
 	if (fRequest != NULL)
 	{
@@ -528,7 +528,7 @@ void HTTPSession::CleanupRequest()
 	this->SetRequestBodyLength(-1);
 }
 
-Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
+Bool16 HTTPSession::overMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
 	SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
@@ -545,7 +545,7 @@ Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
 	return overLimit;
 }
 
-QTSS_Error HTTPSession::DumpRequestData()
+QTSS_Error HTTPSession::dumpRequestData()
 {
 	char theDumpBuffer[EASY_REQUEST_BUFFER_SIZE_LEN];
 
@@ -556,7 +556,7 @@ QTSS_Error HTTPSession::DumpRequestData()
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
+QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 {
 	if (!fAuthenticated) return httpUnAuthorized;
 
@@ -651,7 +651,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPostSnapReq(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
+QTSS_Error HTTPSession::execNetMsgErrorReqHandler(HTTPStatusCode errCode)
 {
 	//HTTP Header
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
@@ -678,7 +678,7 @@ QTSS_Error HTTPSession::ExecNetMsgErrorReqHandler(HTTPStatusCode errCode)
 	3.ªÒ»°Name∫ÕTag–≈œ¢Ω¯––±æµÿ±£¥ÊªÚ’ﬂ–¥»ÎRedis;
 	4.»Áπ˚ «APPTypeŒ™EasyNVR,ªÒ»°ChannelsÕ®µ¿–≈œ¢±æµÿ±£¥ÊªÚ’ﬂ–¥»ÎRedis
 */
-QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
+QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 	EasyMsgDSRegisterREQ regREQ(json);
@@ -798,7 +798,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSRegisterReq(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷π÷±≤•«Î«Û
+QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷π÷±≤•«Î«Û
 {
 	//À„∑®√Ë ˆ£∫≤È’“÷∏∂®…Ë±∏£¨»Ù…Ë±∏¥Ê‘⁄£¨‘ÚœÚ…Ë±∏∑¢≥ˆÕ£÷π¡˜«Î«Û
 	/*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
@@ -889,7 +889,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgDSStreamStopAck(const char* json)//…Ë±∏µƒÕ£÷πÕ∆¡˜ªÿ”¶
+QTSS_Error HTTPSession::execNetMsgDSStreamStopAck(const char* json)//…Ë±∏µƒÕ£÷πÕ∆¡˜ªÿ”¶
 {
 	if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
 		return httpUnAuthorized;
@@ -897,7 +897,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSStreamStopAck(const char* json)//…Ë±∏µƒÕ£÷πÕ
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(const char* queryString)//∑≈µΩProcessRequestÀ˘‘⁄µƒ◊¥Ã¨»•¥¶¿Ì£¨∑Ω±„∂‡¥Œ—≠ª∑µ˜”√
+QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)//∑≈µΩProcessRequestÀ˘‘⁄µƒ◊¥Ã¨»•¥¶¿Ì£¨∑Ω±„∂‡¥Œ—≠ª∑µ˜”√
 {
 	/*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1081,7 +1081,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetStreamReqRESTful(const char* queryString)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡˜ªÿ”¶
+QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡˜ªÿ”¶
 {
 	if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
 		return httpUnAuthorized;
@@ -1168,7 +1168,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(const char* queryString)//øÕªß∂ÀªÒµ√…Ë±∏¡–±Ì
+QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryString)//øÕªß∂ÀªÒµ√…Ë±∏¡–±Ì
 {
 	/*
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1243,7 +1243,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char* json)//øÕªß∂ÀªÒµ√…Ë±∏¡–±Ì
+QTSS_Error HTTPSession::execNetMsgCSDeviceListReq(const char* json)//øÕªß∂ÀªÒµ√…Ë±∏¡–±Ì
 {
 	/*
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1295,7 +1295,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSDeviceListReq(const char* json)//øÕªß∂ÀªÒµ√…
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(const char* queryString)
+QTSS_Error HTTPSession::execNetMsgCSGetCameraListReqRESTful(const char* queryString)
 {
 	/*
 		if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1368,7 +1368,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSGetCameraListReqRESTful(const char* queryStr
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
+QTSS_Error HTTPSession::execNetMsgCSCameraListReq(const char* json)
 {
 	/*
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1429,7 +1429,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSCameraListReq(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ProcessRequest()//¥¶¿Ì«Î«Û
+QTSS_Error HTTPSession::processRequest()//¥¶¿Ì«Î«Û
 {
 	//OSCharArrayDeleter charArrayPathDeleter(theRequestBody);//≤ª“™‘⁄’‚…æ≥˝£¨“ÚŒ™ø…ƒ‹÷¥––∂‡¥Œ£¨Ωˆµ±∂‘«Î«Ûµƒ¥¶¿ÌÕÍ±œ∫Û‘ŸΩ¯––…æ≥˝
 
@@ -1444,51 +1444,51 @@ QTSS_Error HTTPSession::ProcessRequest()//¥¶¿Ì«Î«Û
 	switch (nNetMsg)
 	{
 	case MSG_DS_REGISTER_REQ://¥¶¿Ì…Ë±∏…œœﬂœ˚œ¢,…Ë±∏¿‡–Õ∞¸¿®NVR°¢…„œÒÕ∑∫Õ÷«ƒ‹÷˜ª˙
-		theErr = ExecNetMsgDSRegisterReq(fRequestBody);
+		theErr = execNetMsgDSRegisterReq(fRequestBody);
 		nRspMsg = MSG_SD_REGISTER_ACK;
 		break;
 	case MSG_DS_PUSH_STREAM_ACK://…Ë±∏µƒø™ º¡˜ªÿ”¶
-		theErr = ExecNetMsgDSPushStreamAck(fRequestBody);
+		theErr = execNetMsgDSPushStreamAck(fRequestBody);
 		nRspMsg = MSG_DS_PUSH_STREAM_ACK;//◊¢“‚£¨’‚¿Ô µº …œ «≤ª”¶∏√‘Ÿªÿ”¶µƒ
 		break;
 	case MSG_CS_FREE_STREAM_REQ://øÕªß∂ÀµƒÕ£÷π÷±≤•«Î«Û
-		theErr = ExecNetMsgCSFreeStreamReq(fRequestBody);
+		theErr = execNetMsgCSFreeStreamReq(fRequestBody);
 		nRspMsg = MSG_SC_FREE_STREAM_ACK;
 		break;
 	case MSG_DS_STREAM_STOP_ACK://…Ë±∏∂‘EasyCMSµƒÕ£÷πÕ∆¡˜ªÿ”¶
-		theErr = ExecNetMsgDSStreamStopAck(fRequestBody);
+		theErr = execNetMsgDSStreamStopAck(fRequestBody);
 		nRspMsg = MSG_DS_STREAM_STOP_ACK;//◊¢“‚£¨’‚¿Ô µº …œ «≤ª–Ë“™‘⁄Ω¯––ªÿ”¶µƒ
 		break;
 	case MSG_CS_DEVICE_LIST_REQ://…Ë±∏¡–±Ì«Î«Û
-		theErr = ExecNetMsgCSDeviceListReq(fRequestBody);//add
+		theErr = execNetMsgCSDeviceListReq(fRequestBody);//add
 		nRspMsg = MSG_SC_DEVICE_LIST_ACK;
 		break;
 	case MSG_CS_DEVICE_INFO_REQ://…„œÒÕ∑¡–±Ì«Î«Û,…Ë±∏µƒæﬂÃÂ–≈œ¢
-		theErr = ExecNetMsgCSCameraListReq(fRequestBody);//add
+		theErr = execNetMsgCSCameraListReq(fRequestBody);//add
 		nRspMsg = MSG_SC_DEVICE_INFO_ACK;
 		break;
 	case MSG_DS_POST_SNAP_REQ://…Ë±∏øÏ’’…œ¥´
-		theErr = ExecNetMsgDSPostSnapReq(fRequestBody);
+		theErr = execNetMsgDSPostSnapReq(fRequestBody);
 		nRspMsg = MSG_SD_POST_SNAP_ACK;
 		break;
     case MSG_DS_CONTROL_PTZ_ACK:
-        theErr = ExecNetMsgDSPTZControlAck(fRequestBody);
+        theErr = execNetMsgDSPTZControlAck(fRequestBody);
         nRspMsg = MSG_DS_CONTROL_PTZ_ACK;
         break;
 	case MSG_DS_CONTROL_PRESET_ACK:
-		theErr = ExecNetMsgDSPresetControlAck(fRequestBody);
+		theErr = execNetMsgDSPresetControlAck(fRequestBody);
 		nRspMsg = MSG_DS_CONTROL_PRESET_ACK;
 		break;
 	case MSG_CS_TALKBACK_CONTROL_REQ:
-		theErr = ExecNetMsgCSTalkbackControlReq(fRequestBody);
+		theErr = execNetMsgCSTalkbackControlReq(fRequestBody);
 		nRspMsg = MSG_SC_TALKBACK_CONTROL_ACK;
 		break;
 	case MSG_DS_CONTROL_TALKBACK_ACK:
-		theErr = ExecNetMSGDSTalkbackControlAck(fRequestBody);
+		theErr = execNetMSGDSTalkbackControlAck(fRequestBody);
 		nRspMsg = MSG_DS_CONTROL_TALKBACK_ACK;
 		break;
 	default:
-		theErr = ExecNetMsgErrorReqHandler(httpNotImplemented);
+		theErr = execNetMsgErrorReqHandler(httpNotImplemented);
 		break;
 	}
 
@@ -1651,7 +1651,7 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSPTZControlReqRESTful(const char* queryString)
+QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString)
 {
     /*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
     if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1748,7 +1748,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSPTZControlReqRESTful(const char* queryString
     return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgDSPTZControlAck(const char* json)
+QTSS_Error HTTPSession::execNetMsgDSPTZControlAck(const char* json)
 {
   //  if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
   //      return httpUnAuthorized;
@@ -1804,7 +1804,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPTZControlAck(const char* json)
     return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSPresetControlReqRESTful(const char* queryString)
+QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryString)
 {
 	/*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
 	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
@@ -1876,7 +1876,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSPresetControlReqRESTful(const char* queryStr
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgDSPresetControlAck(const char* json)
+QTSS_Error HTTPSession::execNetMsgDSPresetControlAck(const char* json)
 {
 	if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
 		return httpUnAuthorized;
@@ -1933,7 +1933,7 @@ QTSS_Error HTTPSession::ExecNetMsgDSPresetControlAck(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSTalkbackControlReq(const char* json)
+QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 {
 	//if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
 	//	return httpUnAuthorized;
@@ -2051,7 +2051,7 @@ QTSS_Error HTTPSession::ExecNetMsgCSTalkbackControlReq(const char* json)
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMSGDSTalkbackControlAck(const char* json)
+QTSS_Error HTTPSession::execNetMSGDSTalkbackControlAck(const char* json)
 {
 	return QTSS_NoErr;
 }

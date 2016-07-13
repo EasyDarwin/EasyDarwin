@@ -60,35 +60,35 @@ private:
 	SInt64 Run();
 
 	// Does request prep & request cleanup, respectively
-	QTSS_Error SetupRequest();
-	void CleanupRequest();
+	QTSS_Error setupRequest();
+	void cleanupRequest();
 
-	QTSS_Error ProcessRequest();//处理请求，单独放到一个状态中去处理，这样方便重复执行
-	QTSS_Error ExecNetMsgErrorReqHandler(HTTPStatusCode errCode);//消息默认处理函数
-	QTSS_Error ExecNetMsgDSRegisterReq(const char* json);//设备注册请求
-	QTSS_Error ExecNetMsgDSPushStreamAck(const char* json);//设备的开始流回应
-	QTSS_Error ExecNetMsgCSFreeStreamReq(const char *json);//客户端的停止直播请求
-	QTSS_Error ExecNetMsgDSStreamStopAck(const char* json);//设备的停止推流回应
-	QTSS_Error ExecNetMsgDSPostSnapReq(const char* json);//设备的快照更新请求
-    QTSS_Error ExecNetMsgDSPTZControlAck(const char* json);
-	QTSS_Error ExecNetMsgDSPresetControlAck(const char* json);
+	QTSS_Error processRequest();//处理请求，单独放到一个状态中去处理，这样方便重复执行
+	QTSS_Error execNetMsgErrorReqHandler(HTTPStatusCode errCode);//消息默认处理函数
+	QTSS_Error execNetMsgDSRegisterReq(const char* json);//设备注册请求
+	QTSS_Error execNetMsgDSPushStreamAck(const char* json);//设备的开始流回应
+	QTSS_Error execNetMsgCSFreeStreamReq(const char *json);//客户端的停止直播请求
+	QTSS_Error execNetMsgDSStreamStopAck(const char* json);//设备的停止推流回应
+	QTSS_Error execNetMsgDSPostSnapReq(const char* json);//设备的快照更新请求
+    QTSS_Error execNetMsgDSPTZControlAck(const char* json);
+	QTSS_Error execNetMsgDSPresetControlAck(const char* json);
 
-	QTSS_Error ExecNetMsgCSTalkbackControlReq(const char* json);
-	QTSS_Error ExecNetMSGDSTalkbackControlAck(const char* json);
+	QTSS_Error execNetMsgCSTalkbackControlReq(const char* json);
+	QTSS_Error execNetMSGDSTalkbackControlAck(const char* json);
 
-	QTSS_Error ExecNetMsgCSDeviceListReq(const char* json);//客户端获得设备列表，json接口
-	QTSS_Error ExecNetMsgCSCameraListReq(const char* json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
+	QTSS_Error execNetMsgCSDeviceListReq(const char* json);//客户端获得设备列表，json接口
+	QTSS_Error execNetMsgCSCameraListReq(const char* json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
 
-	QTSS_Error ExecNetMsgCSGetStreamReqRESTful(const char* queryString);//客户端拉流请求，Restful接口		
-	QTSS_Error ExecNetMsgCSGetDeviceListReqRESTful(const char* queryString);//客户端获得设备列表,restful接口
-	QTSS_Error ExecNetMsgCSGetCameraListReqRESTful(const char* queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
-    QTSS_Error ExecNetMsgCSPTZControlReqRESTful(const char* queryString);
-	QTSS_Error ExecNetMsgCSPresetControlReqRESTful(const char* queryString);
+	QTSS_Error execNetMsgCSGetStreamReqRESTful(const char* queryString);//客户端拉流请求，Restful接口		
+	QTSS_Error execNetMsgCSGetDeviceListReqRESTful(const char* queryString);//客户端获得设备列表,restful接口
+	QTSS_Error execNetMsgCSGetCameraListReqRESTful(const char* queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
+    QTSS_Error execNetMsgCSPTZControlReqRESTful(const char* queryString);
+	QTSS_Error execNetMsgCSPresetControlReqRESTful(const char* queryString);
 
-	QTSS_Error DumpRequestData();//清空请求报文
+	QTSS_Error dumpRequestData();//清空请求报文
 
 	// test current connections handled by this object against server pref connection limit
-	static Bool16 OverMaxConnections(UInt32 buffer);
+	static Bool16 overMaxConnections(UInt32 buffer);
 
 	QTSS_Error rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height);
 	int	yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
