@@ -17,627 +17,627 @@ Website: http://www.easydarwin.org
 namespace EasyDarwin { namespace Protocol
 {
 
-EasyProtocol::MsgType EasyProtocol::MsgTypeMap[] = {
-	MSG_DS_REGISTER_REQ,							"MSG_DS_REGISTER_REQ",
-	MSG_SD_REGISTER_ACK,							"MSG_SD_REGISTER_ACK",
-	MSG_SD_PUSH_STREAM_REQ,							"MSG_SD_PUSH_STREAM_REQ",
-	MSG_DS_PUSH_STREAM_ACK,							"MSG_DS_PUSH_STREAM_ACK",
-	MSG_SD_STREAM_STOP_REQ,							"MSG_SD_STREAM_STOP_REQ",
-	MSG_DS_STREAM_STOP_ACK,							"MSG_DS_STREAM_STOP_ACK",
-	MSG_CS_DEVICE_LIST_REQ,							"MSG_CS_DEVICE_LIST_REQ",
-	MSG_SC_DEVICE_LIST_ACK,							"MSG_SC_DEVICE_LIST_ACK",
-	MSG_CS_CAMERA_LIST_REQ,							"MSG_CS_CAMERA_LIST_REQ",
-	MSG_SC_CAMERA_LIST_ACK,							"MSG_SC_CAMERA_LIST_ACK",
-	MSG_CS_GET_STREAM_REQ,							"MSG_CS_GET_STREAM_REQ",
-	MSG_SC_GET_STREAM_ACK,							"MSG_SC_GET_STREAM_ACK",
-	MSG_CS_FREE_STREAM_REQ,							"MSG_CS_FREE_STREAM_REQ",
-	MSG_SC_FREE_STREAM_ACK,							"MSG_SC_FREE_STREAM_ACK",
-	MSG_DS_POST_SNAP_REQ,							"MSG_DS_POST_SNAP_REQ",
-	MSG_SD_POST_SNAP_ACK,							"MSG_SD_POST_SNAP_ACK",
-	MSG_CS_DEVICE_INFO_REQ,							"MSG_CS_DEVICE_INFO_REQ",
-	MSG_SC_DEVICE_INFO_ACK,							"MSG_SC_DEVICE_INFO_ACK",
+	EasyProtocol::MsgType EasyProtocol::MsgTypeMap[] = {
+		MSG_DS_REGISTER_REQ,							"MSG_DS_REGISTER_REQ",
+		MSG_SD_REGISTER_ACK,							"MSG_SD_REGISTER_ACK",
+		MSG_SD_PUSH_STREAM_REQ,							"MSG_SD_PUSH_STREAM_REQ",
+		MSG_DS_PUSH_STREAM_ACK,							"MSG_DS_PUSH_STREAM_ACK",
+		MSG_SD_STREAM_STOP_REQ,							"MSG_SD_STREAM_STOP_REQ",
+		MSG_DS_STREAM_STOP_ACK,							"MSG_DS_STREAM_STOP_ACK",
+		MSG_CS_DEVICE_LIST_REQ,							"MSG_CS_DEVICE_LIST_REQ",
+		MSG_SC_DEVICE_LIST_ACK,							"MSG_SC_DEVICE_LIST_ACK",
+		MSG_CS_CAMERA_LIST_REQ,							"MSG_CS_CAMERA_LIST_REQ",
+		MSG_SC_CAMERA_LIST_ACK,							"MSG_SC_CAMERA_LIST_ACK",
+		MSG_CS_GET_STREAM_REQ,							"MSG_CS_GET_STREAM_REQ",
+		MSG_SC_GET_STREAM_ACK,							"MSG_SC_GET_STREAM_ACK",
+		MSG_CS_FREE_STREAM_REQ,							"MSG_CS_FREE_STREAM_REQ",
+		MSG_SC_FREE_STREAM_ACK,							"MSG_SC_FREE_STREAM_ACK",
+		MSG_DS_POST_SNAP_REQ,							"MSG_DS_POST_SNAP_REQ",
+		MSG_SD_POST_SNAP_ACK,							"MSG_SD_POST_SNAP_ACK",
+		MSG_CS_DEVICE_INFO_REQ,							"MSG_CS_DEVICE_INFO_REQ",
+		MSG_SC_DEVICE_INFO_ACK,							"MSG_SC_DEVICE_INFO_ACK",
 
-    MSG_CS_PTZ_CONTROL_REQ,                         "MSG_CS_PTZ_CONTROL_REQ",
-    MSG_SC_PTZ_CONTROL_ACK,                         "MSG_SC_PTZ_CONTROL_ACK",
-    MSG_SD_CONTROL_PTZ_REQ,                         "MSG_SD_CONTROL_PTZ_REQ",
-    MSG_DS_CONTROL_PTZ_ACK,                         "MSG_DS_CONTROL_PTZ_ACK",
+		MSG_CS_PTZ_CONTROL_REQ,                         "MSG_CS_PTZ_CONTROL_REQ",
+		MSG_SC_PTZ_CONTROL_ACK,                         "MSG_SC_PTZ_CONTROL_ACK",
+		MSG_SD_CONTROL_PTZ_REQ,                         "MSG_SD_CONTROL_PTZ_REQ",
+		MSG_DS_CONTROL_PTZ_ACK,                         "MSG_DS_CONTROL_PTZ_ACK",
 
-	MSG_CS_PRESET_CONTROL_REQ,                      "MSG_CS_PRESET_CONTROL_REQ",
-	MSG_SC_PRESET_CONTROL_ACK,                      "MSG_SC_PRESET_CONTROL_ACK",
-	MSG_SD_CONTROL_PRESET_REQ,                      "MSG_SD_CONTROL_PRESET_REQ",
-	MSG_DS_CONTROL_PRESET_ACK,                      "MSG_DS_CONTROL_PRESET_ACK",
-	MSG_CS_TALKBACK_CONTROL_REQ,					"MSG_CS_TALKBACK_CONTROL_REQ",
-	MSG_SC_TALKBACK_CONTROL_ACK,					"MSG_SC_TALKBACK_CONTROL_ACK",
-	MSG_SD_CONTROL_TALKBACK_REQ,					"MSG_SD_CONTROL_TALKBACK_REQ",
-	MSG_DS_CONTROL_TALKBACK_ACK,					"MSG_DS_CONTROL_TALKBACK_ACK",
+		MSG_CS_PRESET_CONTROL_REQ,                      "MSG_CS_PRESET_CONTROL_REQ",
+		MSG_SC_PRESET_CONTROL_ACK,                      "MSG_SC_PRESET_CONTROL_ACK",
+		MSG_SD_CONTROL_PRESET_REQ,                      "MSG_SD_CONTROL_PRESET_REQ",
+		MSG_DS_CONTROL_PRESET_ACK,                      "MSG_DS_CONTROL_PRESET_ACK",
+		MSG_CS_TALKBACK_CONTROL_REQ,					"MSG_CS_TALKBACK_CONTROL_REQ",
+		MSG_SC_TALKBACK_CONTROL_ACK,					"MSG_SC_TALKBACK_CONTROL_ACK",
+		MSG_SD_CONTROL_TALKBACK_REQ,					"MSG_SD_CONTROL_TALKBACK_REQ",
+		MSG_DS_CONTROL_TALKBACK_ACK,					"MSG_DS_CONTROL_TALKBACK_ACK",
 
-	//保留
-	MSG_SC_START_HLS_ACK,							"MSG_SC_START_HLS_ACK",
-	MSG_SC_HLS_SESSION_LIST_ACK,					"MSG_SC_HLS_SESSION_LIST_ACK",
-	MSG_SC_RTSP_PUSH_SESSION_LIST_ACK,				"MSG_SC_RTSP_PUSH_SESSION_LIST_ACK",
-	MSG_SC_LIST_RECORD_ACK,							"MSG_SC_LIST_RECORD_ACK",
-	MSG_SC_EXCEPTION,								"MSG_SC_EXCEPTION",
+		//保留
+		MSG_SC_START_HLS_ACK,							"MSG_SC_START_HLS_ACK",
+		MSG_SC_HLS_SESSION_LIST_ACK,					"MSG_SC_HLS_SESSION_LIST_ACK",
+		MSG_SC_RTSP_PUSH_SESSION_LIST_ACK,				"MSG_SC_RTSP_PUSH_SESSION_LIST_ACK",
+		MSG_SC_LIST_RECORD_ACK,							"MSG_SC_LIST_RECORD_ACK",
+		MSG_SC_EXCEPTION,								"MSG_SC_EXCEPTION",
 
-};
+	};
 
-EasyProtocol::MsgType EasyProtocol::ErrorMap[] = {
-	EASY_ERROR_SUCCESS_OK,							"Success OK",
-	EASY_ERROR_SUCCESS_CREATED,						"Success Created",
-	EASY_ERROR_SUCCESS_ACCEPTED,					"Success Accepted",
-	EASY_ERROR_SUCCESS_NO_CONTENT,					"Success No Content",
-	EASY_ERROR_SUCCESS_PARTIAL_CONTENT,				"Success Partial Content",
-	EASY_ERROR_REDIRECT_PERMANENT_MOVED,			"Redirect Permanent Moved",
-	EASY_ERROR_REDIRECT_TEMP_MOVED,					"Redirect Temp Moved",
-	EASY_ERROR_REDIRECT_SEE_OTHER,					"Redirect See Other",
-	EASY_ERROR_USE_PROXY,							"Use Proxy",
-	EASY_ERROR_CLIENT_BAD_REQUEST,					"Client Bad Request",
-	EASY_ERROR_CLIENT_UNAUTHORIZED,					"Client Unauthorized",
-	EASY_ERROR_PAYMENT_REQUIRED,					"Payment Required",
-	EASY_ERROR_CLIENT_FORBIDDEN,					"Client Forbidden",
-	EASY_ERROR_NOT_FOUND,							"Not Found",
-	EASY_ERROR_METHOD_NOT_ALLOWED,					"Method Not Allowed",
-	EASY_ERROR_PROXY_AUTHENTICATION_REQUIRED,		"Proxy Authentication Required",
-	EASY_ERROR_REQUEST_TIMEOUT,						"Request Timeout",
-	EASY_ERROR_CONFLICT,							"Conflict",
-	EASY_ERROR_PRECONDITION_FAILED,					"Precondition Failed",
-	EASY_ERROR_UNSUPPORTED_MEDIA_TYPE,				"Unsupported Media Type",
-	EASY_ERROR_SERVER_INTERNAL_ERROR,				"Server Internal Error",
-	EASY_ERROR_SERVER_NOT_IMPLEMENTED,				"Server Not Implemented",
-	EASY_ERROR_SERVER_BAD_GATEWAY,					"Server Bad Gateway",
-	EASY_ERROR_SERVER_UNAVAILABLE,					"Server Unavailable",
-	EASY_ERROR_VERSION_NOT_SUPPORTED,				"Version Not Supported",
-	EASY_ERROR_DEVICE_VERSION_TOO_OLD,				"Device Version Too Old",
-	EASY_ERROR_DEVICE_FAILURE,						"Device Failure",
-	EASY_ERROR_MEMCACHE_NOT_FOUND,					"Memcache Not Found",
-	EASY_ERROR_DATABASE_NOT_FOUND,					"Database Not Found",
-	EASY_ERROR_USER_NOT_FOUND,						"User Not Found",
-	EASY_ERROR_DEVICE_NOT_FOUND,					"Device Not Found",
-	EASY_ERROR_SESSION_NOT_FOUND,					"Session Not Found",
-	EASY_ERROR_SERVICE_NOT_FOUND,					"Service Not Found",
-	EASY_ERROR_PASSWORD_ERROR,						"Password Error",
-	EASY_ERROR_XML_PARSE_ERROR,						"XML Parse Error",
-	EASY_ERROR_PERMISSION_ERROR,					"Permission Error",
-	EASY_ERROR_LOCAL_SYSTEM_ERROR,					"Local System Error",
-	EASY_ERROR_PARAM_ERROR,							"Param Error"
-};
+	EasyProtocol::MsgType EasyProtocol::ErrorMap[] = {
+		EASY_ERROR_SUCCESS_OK,							"Success OK",
+		EASY_ERROR_SUCCESS_CREATED,						"Success Created",
+		EASY_ERROR_SUCCESS_ACCEPTED,					"Success Accepted",
+		EASY_ERROR_SUCCESS_NO_CONTENT,					"Success No Content",
+		EASY_ERROR_SUCCESS_PARTIAL_CONTENT,				"Success Partial Content",
+		EASY_ERROR_REDIRECT_PERMANENT_MOVED,			"Redirect Permanent Moved",
+		EASY_ERROR_REDIRECT_TEMP_MOVED,					"Redirect Temp Moved",
+		EASY_ERROR_REDIRECT_SEE_OTHER,					"Redirect See Other",
+		EASY_ERROR_USE_PROXY,							"Use Proxy",
+		EASY_ERROR_CLIENT_BAD_REQUEST,					"Client Bad Request",
+		EASY_ERROR_CLIENT_UNAUTHORIZED,					"Client Unauthorized",
+		EASY_ERROR_PAYMENT_REQUIRED,					"Payment Required",
+		EASY_ERROR_CLIENT_FORBIDDEN,					"Client Forbidden",
+		EASY_ERROR_NOT_FOUND,							"Not Found",
+		EASY_ERROR_METHOD_NOT_ALLOWED,					"Method Not Allowed",
+		EASY_ERROR_PROXY_AUTHENTICATION_REQUIRED,		"Proxy Authentication Required",
+		EASY_ERROR_REQUEST_TIMEOUT,						"Request Timeout",
+		EASY_ERROR_CONFLICT,							"Conflict",
+		EASY_ERROR_PRECONDITION_FAILED,					"Precondition Failed",
+		EASY_ERROR_UNSUPPORTED_MEDIA_TYPE,				"Unsupported Media Type",
+		EASY_ERROR_SERVER_INTERNAL_ERROR,				"Server Internal Error",
+		EASY_ERROR_SERVER_NOT_IMPLEMENTED,				"Server Not Implemented",
+		EASY_ERROR_SERVER_BAD_GATEWAY,					"Server Bad Gateway",
+		EASY_ERROR_SERVER_UNAVAILABLE,					"Server Unavailable",
+		EASY_ERROR_VERSION_NOT_SUPPORTED,				"Version Not Supported",
+		EASY_ERROR_DEVICE_VERSION_TOO_OLD,				"Device Version Too Old",
+		EASY_ERROR_DEVICE_FAILURE,						"Device Failure",
+		EASY_ERROR_MEMCACHE_NOT_FOUND,					"Memcache Not Found",
+		EASY_ERROR_DATABASE_NOT_FOUND,					"Database Not Found",
+		EASY_ERROR_USER_NOT_FOUND,						"User Not Found",
+		EASY_ERROR_DEVICE_NOT_FOUND,					"Device Not Found",
+		EASY_ERROR_SESSION_NOT_FOUND,					"Session Not Found",
+		EASY_ERROR_SERVICE_NOT_FOUND,					"Service Not Found",
+		EASY_ERROR_PASSWORD_ERROR,						"Password Error",
+		EASY_ERROR_XML_PARSE_ERROR,						"XML Parse Error",
+		EASY_ERROR_PERMISSION_ERROR,					"Permission Error",
+		EASY_ERROR_LOCAL_SYSTEM_ERROR,					"Local System Error",
+		EASY_ERROR_PARAM_ERROR,							"Param Error"
+	};
 
-EasyProtocol::MsgType EasyProtocol::StatusMap[] = {
-    EASY_DEVICE_STATUS_OFFLINE,						"DEVICE_STATUS_OFFLINE",
-    EASY_DEVICE_STATUS_ONLINE,						"DEVICE_STATUS_ONLINE"
-};
+	EasyProtocol::MsgType EasyProtocol::StatusMap[] = {
+		EASY_DEVICE_STATUS_OFFLINE,						"DEVICE_STATUS_OFFLINE",
+		EASY_DEVICE_STATUS_ONLINE,						"DEVICE_STATUS_ONLINE"
+	};
 
-EasyProtocol::MsgType EasyProtocol::ProtocolTypeMap[] = {
-	EASY_PROTOCOL_TYPE_RTSP,						"RTSP",
-	EASY_PROTOCOL_TYPE_HLS,							"HLS"
-};
+	EasyProtocol::MsgType EasyProtocol::ProtocolTypeMap[] = {
+		EASY_PROTOCOL_TYPE_RTSP,						"RTSP",
+		EASY_PROTOCOL_TYPE_HLS,							"HLS"
+	};
 
-EasyProtocol::MsgType EasyProtocol::MediaEncodeTypeMap[] = {
-	EASY_MEDIA_ENCODE_AUDIO_AAC,					"AAC",
-	EASY_MEDIA_ENCODE_VIDEO_H264,					"H264"
-};
+	EasyProtocol::MsgType EasyProtocol::MediaEncodeTypeMap[] = {
+		EASY_MEDIA_ENCODE_AUDIO_AAC,					"AAC",
+		EASY_MEDIA_ENCODE_VIDEO_H264,					"H264"
+	};
 
-EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
-	EASY_TERMINAL_TYPE_ARM,							"ARM_Linux",	
-	EASY_TERMINAL_TYPE_Android,						"Android",
-	EASY_TERMINAL_TYPE_IOS,							"IOS",
-	EASY_TERMINAL_TYPE_WEB,							"WEB",
-	EASY_TERMINAL_TYPE_WINDOWS,						"Windows",
-	EASY_TERMINAL_TYPE_LINUX,						"Linux"
+	EasyProtocol::MsgType EasyProtocol::TerminalTypeMap[] = {
+		EASY_TERMINAL_TYPE_ARM,							"ARM_Linux",
+		EASY_TERMINAL_TYPE_Android,						"Android",
+		EASY_TERMINAL_TYPE_IOS,							"IOS",
+		EASY_TERMINAL_TYPE_WEB,							"WEB",
+		EASY_TERMINAL_TYPE_WINDOWS,						"Windows",
+		EASY_TERMINAL_TYPE_LINUX,						"Linux"
 
-};
+	};
 
-EasyProtocol::MsgType EasyProtocol::AppTypeMap[] = {
-	EASY_APP_TYPE_CAMERA,							"EasyCamera",
-	EASY_APP_TYPE_NVR,								"EasyNVR",
-	EASY_APP_TYPE_EASYDARWIN,						"EasyDarwin"
-};
+	EasyProtocol::MsgType EasyProtocol::AppTypeMap[] = {
+		EASY_APP_TYPE_CAMERA,							"EasyCamera",
+		EASY_APP_TYPE_NVR,								"EasyNVR",
+		EASY_APP_TYPE_EASYDARWIN,						"EasyDarwin"
+	};
 
-EasyProtocol::MsgType EasyProtocol::SnapTypeMap[] = {
-	EASY_SNAP_TYPE_JPEG,							"JPEG",
-	EASY_SNAP_TYPE_IDR,								"IDR"
-};
+	EasyProtocol::MsgType EasyProtocol::SnapTypeMap[] = {
+		EASY_SNAP_TYPE_JPEG,							"JPEG",
+		EASY_SNAP_TYPE_IDR,								"IDR"
+	};
 
-EasyProtocol::MsgType EasyProtocol::PTZActionTypeMap[] = {
-    EASY_PTZ_ACTION_TYPE_CONTINUOUS,                "CONTINUOUS",
-    EASY_PTZ_ACTION_TYPE_SINGLE,                    "SINGLE"
-};
+	EasyProtocol::MsgType EasyProtocol::PTZActionTypeMap[] = {
+		EASY_PTZ_ACTION_TYPE_CONTINUOUS,                "CONTINUOUS",
+		EASY_PTZ_ACTION_TYPE_SINGLE,                    "SINGLE"
+	};
 
-EasyProtocol::MsgType EasyProtocol::PTZCMDTypeMap[] = {
-    EASY_PTZ_CMD_TYPE_STOP,                         "STOP",
-    EASY_PTZ_CMD_TYPE_UP,                           "UP",
-    EASY_PTZ_CMD_TYPE_DOWN,                         "DOWN",
-    EASY_PTZ_CMD_TYPE_LEFT,                         "LEFT",
-    EASY_PTZ_CMD_TYPE_RIGHT,                        "RIGHT",
-    EASY_PTZ_CMD_TYPE_LEFTUP,                       "LEFTUP",
-    EASY_PTZ_CMD_TYPE_LEFTDOWN,                     "LEFTDOWN",
-    EASY_PTZ_CMD_TYPE_RIGHTUP,                      "RIGHTUP",
-    EASY_PTZ_CMD_TYPE_RIGHTDOWN,                    "RIGHTDOWN",
-    EASY_PTZ_CMD_TYPE_ZOOMIN,                       "ZOOMIN",
-    EASY_PTZ_CMD_TYPE_ZOOMOUT,                      "ZOOMOUT",
-    EASY_PTZ_CMD_TYPE_FOCUSIN,                      "FOCUSIN",
-    EASY_PTZ_CMD_TYPE_FOCUSOUT,                     "FOCUSOUT",
-    EASY_PTZ_CMD_TYPE_APERTUREIN,                   "APERTUREIN",
-    EASY_PTZ_CMD_TYPE_APERTUREOUT,                  "APERTUREOUT"
-};
+	EasyProtocol::MsgType EasyProtocol::PTZCMDTypeMap[] = {
+		EASY_PTZ_CMD_TYPE_STOP,                         "STOP",
+		EASY_PTZ_CMD_TYPE_UP,                           "UP",
+		EASY_PTZ_CMD_TYPE_DOWN,                         "DOWN",
+		EASY_PTZ_CMD_TYPE_LEFT,                         "LEFT",
+		EASY_PTZ_CMD_TYPE_RIGHT,                        "RIGHT",
+		EASY_PTZ_CMD_TYPE_LEFTUP,                       "LEFTUP",
+		EASY_PTZ_CMD_TYPE_LEFTDOWN,                     "LEFTDOWN",
+		EASY_PTZ_CMD_TYPE_RIGHTUP,                      "RIGHTUP",
+		EASY_PTZ_CMD_TYPE_RIGHTDOWN,                    "RIGHTDOWN",
+		EASY_PTZ_CMD_TYPE_ZOOMIN,                       "ZOOMIN",
+		EASY_PTZ_CMD_TYPE_ZOOMOUT,                      "ZOOMOUT",
+		EASY_PTZ_CMD_TYPE_FOCUSIN,                      "FOCUSIN",
+		EASY_PTZ_CMD_TYPE_FOCUSOUT,                     "FOCUSOUT",
+		EASY_PTZ_CMD_TYPE_APERTUREIN,                   "APERTUREIN",
+		EASY_PTZ_CMD_TYPE_APERTUREOUT,                  "APERTUREOUT"
+	};
 
-EasyProtocol::MsgType EasyProtocol::PresetCMDTypeMap[] = {
-	EASY_PRESET_CMD_TYPE_GOTO,						"GOTO",
-	EASY_PRESET_CMD_TYPE_SET,						"SET",
-	EASY_PRESET_CMD_TYPE_REMOVE,					"REMOVE"
-};
+	EasyProtocol::MsgType EasyProtocol::PresetCMDTypeMap[] = {
+		EASY_PRESET_CMD_TYPE_GOTO,						"GOTO",
+		EASY_PRESET_CMD_TYPE_SET,						"SET",
+		EASY_PRESET_CMD_TYPE_REMOVE,					"REMOVE"
+	};
 
-EasyProtocol::MsgType EasyProtocol::TalkbackAudioTypeMap[] = {
-	EASY_TALKBACK_AUDIO_TYPE_G711A,					"G711A",
-	EASY_TALKBACK_AUDIO_TYPE_G711U,					"G711U",
-	EASY_TALKBACK_AUDIO_TYPE_G726,					"G726"
-};
+	EasyProtocol::MsgType EasyProtocol::TalkbackAudioTypeMap[] = {
+		EASY_TALKBACK_AUDIO_TYPE_G711A,					"G711A",
+		EASY_TALKBACK_AUDIO_TYPE_G711U,					"G711U",
+		EASY_TALKBACK_AUDIO_TYPE_G726,					"G726"
+	};
 
-EasyProtocol::MsgType EasyProtocol::TalkbackCMDTypeMap[] = {
-	EASY_TALKBACK_CMD_TYPE_START,					"START",
-	EASY_TALKBACK_CMD_TYPE_SENDDATA,				"SENDDATA",
-	EASY_TALKBACK_CMD_TYPE_STOP,					"STOP"
-};
+	EasyProtocol::MsgType EasyProtocol::TalkbackCMDTypeMap[] = {
+		EASY_TALKBACK_CMD_TYPE_START,					"START",
+		EASY_TALKBACK_CMD_TYPE_SENDDATA,				"SENDDATA",
+		EASY_TALKBACK_CMD_TYPE_STOP,					"STOP"
+	};
 
-EasyProtocol::EasyProtocol(int iMsgType)
-:fMsgType(iMsgType)
-{	
-	SetHeaderValue(EASY_TAG_VERSION, EASY_PROTOCOL_VERSION);
-	root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);	
-}
-
-EasyProtocol::EasyProtocol(const std::string& msg, int iMsgType)
-{	
-	reader.parse(msg, root);
-	//json = msg;
-	
-	if(iMsgType != -1)
-    {
-        fMsgType = iMsgType;
-    }
-    else
-    {
-        fMsgType = GetMessageType();
-    }
-}
-
-
-EasyProtocol::~EasyProtocol()
-{
-}
-
-void EasyProtocol::Read(const std::string& msg, int iMsgType)
-{
-	reader.parse(msg, root);
-
-	if(iMsgType != -1)
+	EasyProtocol::EasyProtocol(int iMsgType)
+		:fMsgType(iMsgType)
 	{
-		fMsgType = iMsgType;
+		SetHeaderValue(EASY_TAG_VERSION, EASY_PROTOCOL_VERSION);
+		root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_MESSAGE_TYPE] = GetMsgTypeString(fMsgType);
 	}
-	else
+
+	EasyProtocol::EasyProtocol(const std::string& msg, int iMsgType)
 	{
-		fMsgType = GetMessageType();
-	}
-}
+		reader.parse(msg, root);
+		//json = msg;
 
-void EasyProtocol::Reset()
-{
-	root.clear();	
-    fMsgType = -1;
-}
-
-
-void EasyProtocol::SetMsgType(int type)
-{
-    fMsgType = type;
-}
-
-
-int EasyProtocol::GetMsgType() const
-{
-    return fMsgType;
-}
-
-std::string EasyProtocol::GetMsgTypeStr() const
-{
-	return GetMsgTypeString(fMsgType);
-}
-
-std::string EasyProtocol::GetMsgTypeString(int type)
-{
-	for (int i = 0; i < sizeof(MsgTypeMap) / sizeof(MsgType); i++)
-	{
-		if (type == MsgTypeMap[i].value)
+		if (iMsgType != -1)
 		{
-			return std::string(MsgTypeMap[i].str);
+			fMsgType = iMsgType;
+		}
+		else
+		{
+			fMsgType = GetMessageType();
 		}
 	}
 
-	return std::string();
-}
 
-int EasyProtocol::GetMessageType()
-{
-	std::string sMessageType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_MESSAGE_TYPE].asString();	
-
-	return GetMsgType(sMessageType);
-}
-
-int EasyProtocol::GetAppType()
-{
-	std::string sAppType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_APP_TYPE].asString();	
-
-	return GetAppType(sAppType);
-}
-
-int EasyProtocol::GetTerminalType()
-{
-	std::string sTerminalType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_TERMINAL_TYPE].asString();	
-
-	return GetTerminalType(sTerminalType);
-}
-
-int EasyProtocol::GetMsgCSeq()
-{
-	std::string cseq = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_CSEQ].asString();
-	return atoi(cseq.c_str());
-}
-
-std::string EasyProtocol::GetErrorString(int error)
-{
-	for (int i = 0; i < sizeof(ErrorMap) / sizeof(MsgType); i++)
+	EasyProtocol::~EasyProtocol()
 	{
-		if (error == ErrorMap[i].value)
+	}
+
+	void EasyProtocol::Read(const std::string& msg, int iMsgType)
+	{
+		reader.parse(msg, root);
+
+		if (iMsgType != -1)
 		{
-			return std::string(ErrorMap[i].str);
+			fMsgType = iMsgType;
+		}
+		else
+		{
+			fMsgType = GetMessageType();
 		}
 	}
 
-	return std::string();
-}
-
-int EasyProtocol::GetMsgType(const std::string& sMessageType)
-{
-    for (int i = 0; i < sizeof(MsgTypeMap) / sizeof(MsgType); i++)
+	void EasyProtocol::Reset()
 	{
-		if (sMessageType.compare(MsgTypeMap[i].str) == 0)
+		root.clear();
+		fMsgType = -1;
+	}
+
+
+	void EasyProtocol::SetMsgType(int type)
+	{
+		fMsgType = type;
+	}
+
+
+	int EasyProtocol::GetMsgType() const
+	{
+		return fMsgType;
+	}
+
+	std::string EasyProtocol::GetMsgTypeStr() const
+	{
+		return GetMsgTypeString(fMsgType);
+	}
+
+	std::string EasyProtocol::GetMsgTypeString(int type)
+	{
+		for (int i = 0; i < sizeof(MsgTypeMap) / sizeof(MsgType); i++)
 		{
-			return MsgTypeMap[i].value;
+			if (type == MsgTypeMap[i].value)
+			{
+				return std::string(MsgTypeMap[i].str);
+			}
 		}
-	}
-    
-    return -1;
-}
 
-std::string EasyProtocol::GetDeviceStatusString(int status)
-{
-    for (int i = 0; i < sizeof(StatusMap) / sizeof(MsgType); i++)
+		return std::string();
+	}
+
+	int EasyProtocol::GetMessageType()
 	{
-		if (status == StatusMap[i].value)
+		std::string sMessageType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_MESSAGE_TYPE].asString();
+
+		return GetMsgType(sMessageType);
+	}
+
+	int EasyProtocol::GetAppType()
+	{
+		std::string sAppType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_APP_TYPE].asString();
+
+		return GetAppType(sAppType);
+	}
+
+	int EasyProtocol::GetTerminalType()
+	{
+		std::string sTerminalType = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_TERMINAL_TYPE].asString();
+
+		return GetTerminalType(sTerminalType);
+	}
+
+	int EasyProtocol::GetMsgCSeq()
+	{
+		std::string cseq = root[EASY_TAG_ROOT][EASY_TAG_HEADER][EASY_TAG_CSEQ].asString();
+		return atoi(cseq.c_str());
+	}
+
+	std::string EasyProtocol::GetErrorString(int error)
+	{
+		for (int i = 0; i < sizeof(ErrorMap) / sizeof(MsgType); i++)
 		{
-			return std::string(StatusMap[i].str);
+			if (error == ErrorMap[i].value)
+			{
+				return std::string(ErrorMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
-
-int EasyProtocol::GetDeviceStatus(const std::string& sStatus)
-{
-    for (int i = 0; i < sizeof(StatusMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetMsgType(const std::string& sMessageType)
 	{
-		if (sStatus.compare(StatusMap[i].str) == 0)
+		for (int i = 0; i < sizeof(MsgTypeMap) / sizeof(MsgType); i++)
 		{
-			return StatusMap[i].value;
+			if (sMessageType.compare(MsgTypeMap[i].str) == 0)
+			{
+				return MsgTypeMap[i].value;
+			}
 		}
-	}
-    
-    return -1;
-}
 
-int EasyProtocol::GetProtocolType(const std::string& sProtocolType)
-{
-	for (int i = 0; i < sizeof(ProtocolTypeMap) / sizeof(MsgType); i++)
+		return -1;
+	}
+
+	std::string EasyProtocol::GetDeviceStatusString(int status)
 	{
-		if (sProtocolType.compare(ProtocolTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(StatusMap) / sizeof(MsgType); i++)
 		{
-			return ProtocolTypeMap[i].value;
+			if (status == StatusMap[i].value)
+			{
+				return std::string(StatusMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return -1;
-}
-
-std::string EasyProtocol::GetProtocolString(int iProtocolType)
-{
-	for (int i = 0; i < sizeof(ProtocolTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetDeviceStatus(const std::string& sStatus)
 	{
-		if (iProtocolType == ProtocolTypeMap[i].value)
+		for (int i = 0; i < sizeof(StatusMap) / sizeof(MsgType); i++)
 		{
-			return std::string(ProtocolTypeMap[i].str);
+			if (sStatus.compare(StatusMap[i].str) == 0)
+			{
+				return StatusMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return std::string();
-}
-
-int EasyProtocol::GetMediaEncodeType(const std::string& sMediaEncode)
-{
-	for (int i = 0; i < sizeof(MediaEncodeTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetProtocolType(const std::string& sProtocolType)
 	{
-		if (sMediaEncode.compare(MediaEncodeTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(ProtocolTypeMap) / sizeof(MsgType); i++)
 		{
-			return MediaEncodeTypeMap[i].value;
+			if (sProtocolType.compare(ProtocolTypeMap[i].str) == 0)
+			{
+				return ProtocolTypeMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return -1;
-}
-
-std::string EasyProtocol::GetMediaEncodeTypeString(int iMediaEncodeType)
-{
-	for (int i = 0; i < sizeof(MediaEncodeTypeMap) / sizeof(MsgType); i++)
+	std::string EasyProtocol::GetProtocolString(int iProtocolType)
 	{
-		if (iMediaEncodeType == MediaEncodeTypeMap[i].value)
+		for (int i = 0; i < sizeof(ProtocolTypeMap) / sizeof(MsgType); i++)
 		{
-			return std::string(MediaEncodeTypeMap[i].str);
+			if (iProtocolType == ProtocolTypeMap[i].value)
+			{
+				return std::string(ProtocolTypeMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
-
-int EasyProtocol::GetTerminalType(const std::string& sTerminalType)
-{
-	for (int i = 0; i < sizeof(TerminalTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetMediaEncodeType(const std::string& sMediaEncode)
 	{
-		if (sTerminalType.compare(TerminalTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(MediaEncodeTypeMap) / sizeof(MsgType); i++)
 		{
-			return TerminalTypeMap[i].value;
+			if (sMediaEncode.compare(MediaEncodeTypeMap[i].str) == 0)
+			{
+				return MediaEncodeTypeMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return -1;
-}
-
-std::string EasyProtocol::GetTerminalTypeString(int iTerminalType)
-{
-	for (int i = 0; i < sizeof(TerminalTypeMap) / sizeof(MsgType); i++)
+	std::string EasyProtocol::GetMediaEncodeTypeString(int iMediaEncodeType)
 	{
-		if (iTerminalType == TerminalTypeMap[i].value)
+		for (int i = 0; i < sizeof(MediaEncodeTypeMap) / sizeof(MsgType); i++)
 		{
-			return std::string(TerminalTypeMap[i].str);
+			if (iMediaEncodeType == MediaEncodeTypeMap[i].value)
+			{
+				return std::string(MediaEncodeTypeMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
-
-
-int EasyProtocol::GetAppType(const std::string& sAppType)
-{
-	for (int i = 0; i < sizeof(AppTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetTerminalType(const std::string& sTerminalType)
 	{
-		if (sAppType.compare(AppTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(TerminalTypeMap) / sizeof(MsgType); i++)
 		{
-			return AppTypeMap[i].value;
+			if (sTerminalType.compare(TerminalTypeMap[i].str) == 0)
+			{
+				return TerminalTypeMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return -1;
-}
-
-
-std::string EasyProtocol::GetAppTypeString(int iAppType)
-{
-	for (int i = 0; i < sizeof(AppTypeMap) / sizeof(MsgType); i++)
+	std::string EasyProtocol::GetTerminalTypeString(int iTerminalType)
 	{
-		if (iAppType == AppTypeMap[i].value)
+		for (int i = 0; i < sizeof(TerminalTypeMap) / sizeof(MsgType); i++)
 		{
-			return std::string(AppTypeMap[i].str);
+			if (iTerminalType == TerminalTypeMap[i].value)
+			{
+				return std::string(TerminalTypeMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
 
-
-int EasyProtocol::GetSnapType(const std::string& sSnapType)
-{
-	for (int i = 0; i < sizeof(SnapTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetAppType(const std::string& sAppType)
 	{
-		if (sSnapType.compare(SnapTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(AppTypeMap) / sizeof(MsgType); i++)
 		{
-			return SnapTypeMap[i].value;
+			if (sAppType.compare(AppTypeMap[i].str) == 0)
+			{
+				return AppTypeMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return -1;
-}
 
-
-std::string EasyProtocol::GetSnapTypeString(int iSnapType)
-{
-	for (int i = 0; i < sizeof(SnapTypeMap) / sizeof(MsgType); i++)
+	std::string EasyProtocol::GetAppTypeString(int iAppType)
 	{
-		if (iSnapType == SnapTypeMap[i].value)
+		for (int i = 0; i < sizeof(AppTypeMap) / sizeof(MsgType); i++)
 		{
-			return std::string(SnapTypeMap[i].str);
+			if (iAppType == AppTypeMap[i].value)
+			{
+				return std::string(AppTypeMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
 
-int EasyProtocol::GetPTZActionType(const std::string& sPTZActionType)
-{
-    for (int i = 0; i < sizeof(PTZActionTypeMap) / sizeof(MsgType); i++)
-    {
-        if (sPTZActionType.compare(PTZActionTypeMap[i].str) == 0)
-        {
-            return PTZActionTypeMap[i].value;
-        }
-    }
-
-    return -1;
-}
-
-std::string EasyProtocol::GetPTZActionTypeString(int iPTZActionType)
-{
-    for (int i = 0; i < sizeof(PTZActionTypeMap) / sizeof(MsgType); i++)
-    {
-        if (iPTZActionType == PTZActionTypeMap[i].value)
-        {
-            return std::string(PTZActionTypeMap[i].str);
-        }
-    }
-
-    return std::string();
-}
-
-int EasyProtocol::GetPTZCMDType(const std::string& sPTZCMDType)
-{
-    for (int i = 0; i < sizeof(PTZCMDTypeMap) / sizeof(MsgType); i++)
-    {
-        if (sPTZCMDType.compare(PTZCMDTypeMap[i].str) == 0)
-        {
-            return PTZCMDTypeMap[i].value;
-        }
-    }
-
-    return -1;
-}
-
-std::string EasyProtocol::GetPTZCMDTypeString(int iPTZCMDType)
-{
-    for (int i = 0; i < sizeof(PTZCMDTypeMap) / sizeof(MsgType); i++)
-    {
-        if (iPTZCMDType == PTZCMDTypeMap[i].value)
-        {
-            return std::string(PTZCMDTypeMap[i].str);
-        }
-    }
-
-    return std::string();
-}
-
-int EasyProtocol::GetPresetCMDType(const std::string& sPresetCMDType)
-{
-	for (int i = 0; i < sizeof(PresetCMDTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetSnapType(const std::string& sSnapType)
 	{
-		if (sPresetCMDType.compare(PresetCMDTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(SnapTypeMap) / sizeof(MsgType); i++)
 		{
-			return PresetCMDTypeMap[i].value;
+			if (sSnapType.compare(SnapTypeMap[i].str) == 0)
+			{
+				return SnapTypeMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return -1;
-}
 
-std::string EasyProtocol::GetPresetCMDTypeString(int iPresetCMDType)
-{
-	for (int i = 0; i < sizeof(PresetCMDTypeMap) / sizeof(MsgType); i++)
+	std::string EasyProtocol::GetSnapTypeString(int iSnapType)
 	{
-		if (iPresetCMDType == PresetCMDTypeMap[i].value)
+		for (int i = 0; i < sizeof(SnapTypeMap) / sizeof(MsgType); i++)
 		{
-			return std::string(PresetCMDTypeMap[i].str);
+			if (iSnapType == SnapTypeMap[i].value)
+			{
+				return std::string(SnapTypeMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
-
-int EasyProtocol::GetTalkbackAudioType(const std::string& sTalkbackAudioType)
-{
-	for (int i = 0; i < sizeof(TalkbackAudioTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetPTZActionType(const std::string& sPTZActionType)
 	{
-		if (sTalkbackAudioType.compare(TalkbackAudioTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(PTZActionTypeMap) / sizeof(MsgType); i++)
 		{
-			return TalkbackAudioTypeMap[i].value;
+			if (sPTZActionType.compare(PTZActionTypeMap[i].str) == 0)
+			{
+				return PTZActionTypeMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return -1;
-}
-
-std::string EasyProtocol::GetTalkbackAudioTypeString(int iTalkbackAudioType)
-{
-	for (int i = 0; i < sizeof(TalkbackAudioTypeMap) / sizeof(MsgType); i++)
+	std::string EasyProtocol::GetPTZActionTypeString(int iPTZActionType)
 	{
-		if (iTalkbackAudioType == TalkbackAudioTypeMap[i].value)
+		for (int i = 0; i < sizeof(PTZActionTypeMap) / sizeof(MsgType); i++)
 		{
-			return std::string(TalkbackAudioTypeMap[i].str);
+			if (iPTZActionType == PTZActionTypeMap[i].value)
+			{
+				return std::string(PTZActionTypeMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
-
-int EasyProtocol::GetTalkbackCMDType(const std::string& sTalkbackCMDType)
-{
-	for (int i = 0; i < sizeof(TalkbackCMDTypeMap) / sizeof(MsgType); i++)
+	int EasyProtocol::GetPTZCMDType(const std::string& sPTZCMDType)
 	{
-		if (sTalkbackCMDType.compare(TalkbackCMDTypeMap[i].str) == 0)
+		for (int i = 0; i < sizeof(PTZCMDTypeMap) / sizeof(MsgType); i++)
 		{
-			return TalkbackCMDTypeMap[i].value;
+			if (sPTZCMDType.compare(PTZCMDTypeMap[i].str) == 0)
+			{
+				return PTZCMDTypeMap[i].value;
+			}
 		}
+
+		return -1;
 	}
 
-	return -1;
-}
-
-std::string EasyProtocol::GetTalkbackCMDTypeString(int iTalkbackCMDType)
-{
-	for (int i = 0; i < sizeof(TalkbackCMDTypeMap) / sizeof(MsgType); i++)
+	std::string EasyProtocol::GetPTZCMDTypeString(int iPTZCMDType)
 	{
-		if (iTalkbackCMDType == TalkbackCMDTypeMap[i].value)
+		for (int i = 0; i < sizeof(PTZCMDTypeMap) / sizeof(MsgType); i++)
 		{
-			return std::string(TalkbackCMDTypeMap[i].str);
+			if (iPTZCMDType == PTZCMDTypeMap[i].value)
+			{
+				return std::string(PTZCMDTypeMap[i].str);
+			}
 		}
+
+		return std::string();
 	}
 
-	return std::string();
-}
-
-std::string EasyProtocol::GetMsg()
-{   		
-    return writer.write(root);
-}
-
-bool EasyProtocol::GetMsg(char *dest, int size)
-{
-	std::string msg = GetMsg();
-	if (msg.empty() || msg.size() > size)
+	int EasyProtocol::GetPresetCMDType(const std::string& sPresetCMDType)
 	{
-		return false;
+		for (int i = 0; i < sizeof(PresetCMDTypeMap) / sizeof(MsgType); i++)
+		{
+			if (sPresetCMDType.compare(PresetCMDTypeMap[i].str) == 0)
+			{
+				return PresetCMDTypeMap[i].value;
+			}
+		}
+
+		return -1;
 	}
-	strncpy(dest, msg.c_str(), size);
-	
-	return true;
-}
 
-/*
-bool EasyProtocol::SetHeaderValue(const char* tag, const char* value){
-	
-	root[EASY_TAG_ROOT][EASY_TAG_HEADER][tag] = value;
-	return true;
-}
+	std::string EasyProtocol::GetPresetCMDTypeString(int iPresetCMDType)
+	{
+		for (int i = 0; i < sizeof(PresetCMDTypeMap) / sizeof(MsgType); i++)
+		{
+			if (iPresetCMDType == PresetCMDTypeMap[i].value)
+			{
+				return std::string(PresetCMDTypeMap[i].str);
+			}
+		}
+
+		return std::string();
+	}
+
+	int EasyProtocol::GetTalkbackAudioType(const std::string& sTalkbackAudioType)
+	{
+		for (int i = 0; i < sizeof(TalkbackAudioTypeMap) / sizeof(MsgType); i++)
+		{
+			if (sTalkbackAudioType.compare(TalkbackAudioTypeMap[i].str) == 0)
+			{
+				return TalkbackAudioTypeMap[i].value;
+			}
+		}
+
+		return -1;
+	}
+
+	std::string EasyProtocol::GetTalkbackAudioTypeString(int iTalkbackAudioType)
+	{
+		for (int i = 0; i < sizeof(TalkbackAudioTypeMap) / sizeof(MsgType); i++)
+		{
+			if (iTalkbackAudioType == TalkbackAudioTypeMap[i].value)
+			{
+				return std::string(TalkbackAudioTypeMap[i].str);
+			}
+		}
+
+		return std::string();
+	}
+
+	int EasyProtocol::GetTalkbackCMDType(const std::string& sTalkbackCMDType)
+	{
+		for (int i = 0; i < sizeof(TalkbackCMDTypeMap) / sizeof(MsgType); i++)
+		{
+			if (sTalkbackCMDType.compare(TalkbackCMDTypeMap[i].str) == 0)
+			{
+				return TalkbackCMDTypeMap[i].value;
+			}
+		}
+
+		return -1;
+	}
+
+	std::string EasyProtocol::GetTalkbackCMDTypeString(int iTalkbackCMDType)
+	{
+		for (int i = 0; i < sizeof(TalkbackCMDTypeMap) / sizeof(MsgType); i++)
+		{
+			if (iTalkbackCMDType == TalkbackCMDTypeMap[i].value)
+			{
+				return std::string(TalkbackCMDTypeMap[i].str);
+			}
+		}
+
+		return std::string();
+	}
+
+	std::string EasyProtocol::GetMsg()
+	{
+		return writer.write(root);
+	}
+
+	bool EasyProtocol::GetMsg(char *dest, int size)
+	{
+		std::string msg = GetMsg();
+		if (msg.empty() || msg.size() > size)
+		{
+			return false;
+		}
+		strncpy(dest, msg.c_str(), size);
+
+		return true;
+	}
+
+	/*
+	bool EasyProtocol::SetHeaderValue(const char* tag, const char* value){
+
+		root[EASY_TAG_ROOT][EASY_TAG_HEADER][tag] = value;
+		return true;
+	}
 
 
-bool EasyProtocol::SetBodyValue(const char* tag, const char* value){
-	
-	root[EASY_TAG_ROOT][EASY_TAG_BODY][tag] = value;
-	return true;
-}*/
+	bool EasyProtocol::SetBodyValue(const char* tag, const char* value){
 
-std::string EasyProtocol::GetHeaderValue(const char* tag)
-{
-	return root[EASY_TAG_ROOT][EASY_TAG_HEADER][tag].asString();
-}
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][tag] = value;
+		return true;
+	}*/
 
-std::string EasyProtocol::GetBodyValue(const char* tag)
-{
-	return root[EASY_TAG_ROOT][EASY_TAG_BODY][tag].asString();	
-}
+	std::string EasyProtocol::GetHeaderValue(const char* tag)
+	{
+		return root[EASY_TAG_ROOT][EASY_TAG_HEADER][tag].asString();
+	}
+
+	std::string EasyProtocol::GetBodyValue(const char* tag)
+	{
+		return root[EASY_TAG_ROOT][EASY_TAG_BODY][tag].asString();
+	}
 
 }}//namespace
 
