@@ -227,13 +227,13 @@ void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
                                             sPrefInfo[x].fDefaultValue);
             }
             
-            this->SetPrefValue(x, 0, sPrefInfo[x].fDefaultValue, sAttributes[x].fAttrDataType);
+            this->setPrefValue(x, 0, sPrefInfo[x].fDefaultValue, sAttributes[x].fAttrDataType);
             if (sPrefInfo[x].fAdditionalDefVals != NULL)
             {
                 //
                 // Add additional default values if they exist
                 for (UInt32 y = 0; sPrefInfo[x].fAdditionalDefVals[y] != NULL; y++)
-                    this->SetPrefValue(x, y+1, sPrefInfo[x].fAdditionalDefVals[y], sAttributes[x].fAttrDataType);
+                    this->setPrefValue(x, y+1, sPrefInfo[x].fAdditionalDefVals[y], sAttributes[x].fAttrDataType);
             }
             
             if (inWriteMissingPrefs)
@@ -272,13 +272,13 @@ void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
                                             sPrefInfo[x].fDefaultValue);
             }
             
-            this->SetPrefValue(x, 0, sPrefInfo[x].fDefaultValue, sAttributes[x].fAttrDataType);
+            this->setPrefValue(x, 0, sPrefInfo[x].fDefaultValue, sAttributes[x].fAttrDataType);
             if (sPrefInfo[x].fAdditionalDefVals != NULL)
             {
                 //
                 // Add additional default values if they exist
                 for (UInt32 z = 0; sPrefInfo[x].fAdditionalDefVals[z] != NULL; z++)
-                    this->SetPrefValue(x, z+1, sPrefInfo[x].fAdditionalDefVals[z], sAttributes[x].fAttrDataType);
+                    this->setPrefValue(x, z+1, sPrefInfo[x].fAdditionalDefVals[z], sAttributes[x].fAttrDataType);
             }
 
             if (inWriteMissingPrefs)
@@ -301,7 +301,7 @@ void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
         if ((x < qtssPrefsNumParams) && (!sPrefInfo[x].fAllowMultipleValues))
             theNumValues = 1;
             
-        this->SetPrefValuesFromFileWithRef(pref, x, theNumValues);
+        this->setPrefValuesFromFileWithRef(pref, x, theNumValues);
     }
 
     QTSSRollingLog::SetCloseOnWrite(fCloseLogsOnWrite);
