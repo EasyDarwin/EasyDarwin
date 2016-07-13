@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,19 +18,19 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
  /*
-    File:       QueryParamList.cpp
+	File:       QueryParamList.cpp
 
-    Contains:   Implementation of QueryParamList class 
-    
-    The QueryParamList class is used to parse and build a searchable list
-    of name/value pairs from a RFC1808 QueryString that has been encoded
-    using the html 'form encoding' rules.
-                    
+	Contains:   Implementation of QueryParamList class
+
+	The QueryParamList class is used to parse and build a searchable list
+	of name/value pairs from a RFC1808 QueryString that has been encoded
+	using the html 'form encoding' rules.
+
 */
 
 #ifndef __query_param_list__
@@ -45,51 +45,51 @@
 
 class QueryParamListElement {
 
-    public:
-        QueryParamListElement( char* name, char* value )
-        {
-            mName   = name;
-            mValue  = value;
-                        
-        }       
-        
-        virtual ~QueryParamListElement() 
-        { 
-            delete [] mName;
-            delete [] mValue;
-        }
-        
-        char    *mName;
-        char    *mValue;
+public:
+	QueryParamListElement(char* name, char* value)
+	{
+		mName = name;
+		mValue = value;
+
+	}
+
+	virtual ~QueryParamListElement()
+	{
+		delete[] mName;
+		delete[] mValue;
+	}
+
+	char    *mName;
+	char    *mValue;
 
 };
 
 
 class QueryParamList
 {
-    public:
-        QueryParamList( char* queryString );
-        QueryParamList( StrPtrLen* querySPL );
-        ~QueryParamList() { delete fNameValueQueryParamlist; }
-        
-        void AddNameValuePairToList( char* name, char* value );
-        const char *DoFindCGIValueForParam( char *name );
-        void PrintAll( char *idString );
-        
-    protected:
-        void            BulidList( StrPtrLen* querySPL );
-        void            DecodeArg( char *ioCodedPtr );
-        enum { 
-            // escaping states
-              kLastWasText
-            , kPctEscape
-            , kRcvHexDigitOne
-        };
-        
-        Bool16          IsHex( char c );
-            
-        PLDoubleLinkedList<QueryParamListElement>   *fNameValueQueryParamlist;
-    
+public:
+	QueryParamList(char* queryString);
+	QueryParamList(StrPtrLen* querySPL);
+	~QueryParamList() { delete fNameValueQueryParamlist; }
+
+	void AddNameValuePairToList(char* name, char* value);
+	const char *DoFindCGIValueForParam(char* name);
+	void PrintAll(char* idString);
+
+protected:
+	void            BulidList(StrPtrLen* querySPL);
+	void            DecodeArg(char* ioCodedPtr);
+	enum {
+		// escaping states
+		kLastWasText
+		, kPctEscape
+		, kRcvHexDigitOne
+	};
+
+	Bool16          IsHex(char c);
+
+	PLDoubleLinkedList<QueryParamListElement>* fNameValueQueryParamlist;
+
 
 };
 
