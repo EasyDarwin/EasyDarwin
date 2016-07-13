@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,7 +18,7 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
@@ -32,10 +32,10 @@
 #ifdef __cplusplus
 class AssertLogger
 {
-    public:
-        // An interface so the MyAssert function can write a message
-        virtual void LogAssert(char* inMessage) = 0;
-		virtual ~AssertLogger(){};
+public:
+	// An interface so the MyAssert function can write a message
+	virtual void LogAssert(char* inMessage) = 0;
+	virtual ~AssertLogger() {};
 };
 
 // If a logger is provided, asserts will be logged. Otherwise, asserts will cause a bus error
@@ -43,11 +43,11 @@ void SetAssertLogger(AssertLogger* theLogger);
 #endif
 
 #if ASSERT  
-    void MyAssert(char *s);
+void MyAssert(char* s);
 
-    #define kAssertBuffSize 256
-    
-    #define Assert(condition)    {                              \
+#define kAssertBuffSize 256
+
+#define Assert(condition)    {                              \
                                                                 \
         if (!(condition))                                       \
         {                                                       \
@@ -57,7 +57,7 @@ void SetAssertLogger(AssertLogger* theLogger);
             MyAssert(s);                                        \
         }   }
 
-    #define AssertE(condition,msg)    {                              \
+#define AssertE(condition,msg)    {                              \
                                                             \
     if (!(condition))                                       \
     {                                                       \
@@ -68,7 +68,7 @@ void SetAssertLogger(AssertLogger* theLogger);
     }   }
 
 
-    #define AssertV(condition,errNo)    {                                   \
+#define AssertV(condition,errNo)    {                                   \
         if (!(condition))                                                   \
         {                                                                   \
             char s[kAssertBuffSize];                                        \
@@ -76,17 +76,17 @@ void SetAssertLogger(AssertLogger* theLogger);
             qtss_snprintf( s,kAssertBuffSize -1, "_AssertV: %s, %d (%d)",__FILE__, __LINE__, errNo );    \
             MyAssert(s);                                                    \
         }   }
-                                     
-                                         
-    #define Warn(condition) {                                       \
+
+
+#define Warn(condition) {                                       \
             if (!(condition))                                       \
                 qtss_printf( "_Warn: %s, %d\n",__FILE__, __LINE__ );     }                                                           
-                                         
-    #define WarnV(condition,msg)        {                               \
+
+#define WarnV(condition,msg)        {                               \
         if (!(condition))                                               \
             qtss_printf ("_WarnV: %s, %d (%s)\n",__FILE__, __LINE__, msg );  }                                                   
-                                         
-    #define WarnVE(condition,msg,err)  {                           		\
+
+#define WarnVE(condition,msg,err)  {                           		\
         if (!(condition))                                               \
         {   char buffer[kAssertBuffSize];								\
             buffer[kAssertBuffSize -1] = 0;                              \
@@ -94,11 +94,11 @@ void SetAssertLogger(AssertLogger* theLogger);
         }	}
 
 #else
-            
-    #define Assert(condition) ((void) 0)
-    #define AssertV(condition,errNo) ((void) 0)
-    #define Warn(condition) ((void) 0)
-    #define WarnV(condition,msg) ((void) 0)
+
+#define Assert(condition) ((void) 0)
+#define AssertV(condition,errNo) ((void) 0)
+#define Warn(condition) ((void) 0)
+#define WarnV(condition,msg) ((void) 0)
 
 #endif
 #endif //_MY_ASSERT_H_
