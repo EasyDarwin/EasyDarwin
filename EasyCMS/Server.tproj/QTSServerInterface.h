@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,25 +18,25 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-	Github: https://github.com/EasyDarwin
-	WEChat: EasyDarwin
-	Website: http://www.EasyDarwin.org
-*/
-/*
-    File:       QTSServerInterface.h
+ /*
+     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+     Github: https://github.com/EasyDarwin
+     WEChat: EasyDarwin
+     Website: http://www.EasyDarwin.org
+ */
+ /*
+     File:       QTSServerInterface.h
 
-    Contains:   This object defines an interface for getting and setting server-wide
-                attributes, and storing global server resources.
-                
-                There can be only one of these objects per process, so there
-                is a static accessor.
-*/
+     Contains:   This object defines an interface for getting and setting server-wide
+                 attributes, and storing global server resources.
+
+                 There can be only one of these objects per process, so there
+                 is a static accessor.
+ */
 
 
 #ifndef __QTSSERVERINTERFACE_H__
@@ -59,8 +59,6 @@
 #include"OSRefTableEx.h"//引用表
 using namespace EasyDarwin::Protocol;
 
-
-
 // OSRefTable;
 class QTSServerPrefs;
 class QTSSMessages;
@@ -68,210 +66,218 @@ class QTSSMessages;
 // This object also functions as our assert logger
 class QTSSErrorLogStream : public QTSSStream, public AssertLogger
 {
-    public:
-    
-        // This QTSSStream is used by modules to write to the error log
-    
-        QTSSErrorLogStream() {}
-        virtual ~QTSSErrorLogStream() {}
-        
-        virtual QTSS_Error  Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten, UInt32 inFlags);
-        virtual void        LogAssert(char* inMessage);
+public:
+
+    // This QTSSStream is used by modules to write to the error log
+
+    QTSSErrorLogStream() {}
+    virtual ~QTSSErrorLogStream() {}
+
+    virtual QTSS_Error  Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten, UInt32 inFlags);
+    virtual void        LogAssert(char* inMessage);
 };
 
 class QTSServerInterface : public QTSSDictionary
 {
-    public:
-    
-        //Initialize must be called right off the bat to initialize dictionary resources
-        static void     Initialize();
+public:
 
-        //
-        // CONSTRUCTOR / DESTRUCTOR
-        
-        QTSServerInterface();
-        virtual ~QTSServerInterface() {}
-        
-        //
-        //
-        // STATISTICS MANIPULATION
-        // These functions are how the server keeps its statistics current
-        
-        void                AlterCurrentHTTPSessionCount(SInt32 inDifference)
-            { OSMutexLocker locker(&fMutex); fNumHTTPSessions += inDifference; }
-           
-        void            IncrementNumThinned(SInt32 inDifference)
-           { OSMutexLocker locker(&fMutex); fNumThinned += inDifference; }
+    //Initialize must be called right off the bat to initialize dictionary resources
+    static void     Initialize();
 
-		void 			InitNumThreads(UInt32 numThreads) {  fNumThreads = numThreads; }
-        //
-        // ACCESSORS
-        
-        QTSS_ServerState    GetServerState()        { return fServerState; }
-        UInt32              GetNumServiceSessions()    { return fNumHTTPSessions; }
-        
-        Float32             GetCPUPercent()         { return fCPUPercent; }
-        Bool16              SigIntSet()             { return fSigInt; }
-        Bool16				SigTermSet()			{ return fSigTerm; }
-		
-        UInt32              GetDebugLevel()                     { return fDebugLevel; }
-        UInt32              GetDebugOptions()                   { return fDebugOptions; }
-        void                SetDebugLevel(UInt32 debugLevel)    { fDebugLevel = debugLevel; }
-        void                SetDebugOptions(UInt32 debugOptions){ fDebugOptions = debugOptions; }
+    //
+    // CONSTRUCTOR / DESTRUCTOR
 
-        SInt32          GetNumThinned()             { return fNumThinned; };
-        UInt32          GetNumThreads()             { return fNumThreads; };
+    QTSServerInterface();
+    virtual ~QTSServerInterface() {}
 
-        //
-        //
-        // GLOBAL OBJECTS REPOSITORY
-        // This object is in fact global, so there is an accessor for it as well.
-        
-        static QTSServerInterface*  GetServer()         { return sServer; }
+    //
+    //
+    // STATISTICS MANIPULATION
+    // These functions are how the server keeps its statistics current
 
-		OSRefTableEx*		GetDeviceSessionMap()				{ return &fDeviceMap; }
-		OSRefTableEx*		GetHTTPSessionMap() { return &fSessionMap; };
+    void                AlterCurrentHTTPSessionCount(SInt32 inDifference)
+    {
+        OSMutexLocker locker(&fMutex); fNumHTTPSessions += inDifference;
+    }
 
-		char* GetCloudServiceNodeID() { return fCloudServiceNodeID; }
+    void            IncrementNumThinned(SInt32 inDifference)
+    {
+        OSMutexLocker locker(&fMutex); fNumThinned += inDifference;
+    }
 
-        QTSServerPrefs*     GetPrefs()                  { return fSrvrPrefs; }
-        QTSSMessages*       GetMessages()               { return fSrvrMessages; }
-        
-        // SERVER NAME & VERSION
-        
-        static StrPtrLen&   GetServerName()             { return sServerNameStr; }
-        static StrPtrLen&   GetServerVersion()          { return sServerVersionStr; }
-        static StrPtrLen&   GetServerPlatform()         { return sServerPlatformStr; }
-        static StrPtrLen&   GetServerBuildDate()        { return sServerBuildDateStr; }
-        static StrPtrLen&   GetServerHeader()           { return sServerHeaderPtr; }
-        static StrPtrLen&   GetServerBuild()            { return sServerBuildStr; }
-        static StrPtrLen&   GetServerComment()          { return sServerCommentStr; }
-        
-        // SIGINT - to interrupt the server, set this flag and the server will shut down
-        void                SetSigInt()                 { fSigInt = true; }
+    void 			InitNumThreads(UInt32 numThreads) { fNumThreads = numThreads; }
+    //
+    // ACCESSORS
 
-       // SIGTERM - to kill the server, set this flag and the server will shut down
-        void                SetSigTerm()                 { fSigTerm = true; }
-        
-        // MODULE STORAGE
-        
-        // All module objects are stored here, and are accessable through
-        // these routines.
-        
-        // Returns the number of modules that act in a given role
-        static UInt32       GetNumModulesInRole(QTSSModule::RoleIndex inRole)
-                { Assert(inRole < QTSSModule::kNumRoles); return sNumModulesInRole[inRole]; }
-        
-        // Allows the caller to iterate over all modules that act in a given role           
-        static QTSSModule*  GetModule(QTSSModule::RoleIndex inRole, UInt32 inIndex)
-				{   Assert(inRole < QTSSModule::kNumRoles);
-					Assert(inIndex < sNumModulesInRole[inRole]);
-					if (inRole >= QTSSModule::kNumRoles) //index out of bounds, shouldn't happen
-					{    return NULL;
-					}
-					if (inIndex >= sNumModulesInRole[inRole]) //index out of bounds, shouldn't happen
-					{   return NULL;
-					}
-					return sModuleArray[inRole][inIndex];
-				}
+    QTSS_ServerState    GetServerState() { return fServerState; }
+    UInt32              GetNumServiceSessions() { return fNumHTTPSessions; }
 
-        //
-        // We need to override this. This is how we implement the QTSS_StateChange_Role
-        virtual void    SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap* inMap,
-									UInt32 inValueIndex, void* inNewValue, UInt32 inNewValueLen);
-        
-        //
-        // ERROR LOGGING
-        
-        // Invokes the error logging modules with some data
-        static void     LogError(QTSS_ErrorVerbosity inVerbosity, char* inBuffer);
-        
-        // Returns the error log stream
-        static QTSSErrorLogStream* GetErrorLogStream() { return &sErrorLogStream; }
+    Float32             GetCPUPercent() { return fCPUPercent; }
+    Bool16              SigIntSet() { return fSigInt; }
+    Bool16				SigTermSet() { return fSigTerm; }
 
-        // LOCKING DOWN THE SERVER OBJECT
-        OSMutex*        GetServerObjectMutex() { return &fMutex; }
+    UInt32              GetDebugLevel() { return fDebugLevel; }
+    UInt32              GetDebugOptions() { return fDebugOptions; }
+    void                SetDebugLevel(UInt32 debugLevel) { fDebugLevel = debugLevel; }
+    void                SetDebugOptions(UInt32 debugOptions) { fDebugOptions = debugOptions; }
 
-    protected:
+    SInt32          GetNumThinned() { return fNumThinned; };
+    UInt32          GetNumThreads() { return fNumThreads; };
 
-		OSRefTableEx				fDeviceMap;//add,维护所有的注册设备
-		OSRefTableEx				fSessionMap; // all HTTPSession
+    //
+    //
+    // GLOBAL OBJECTS REPOSITORY
+    // This object is in fact global, so there is an accessor for it as well.
 
-        QTSServerPrefs*             fSrvrPrefs;
-        QTSSMessages*               fSrvrMessages;
+    static QTSServerInterface*  GetServer() { return sServer; }
 
-        QTSServerPrefs*				fStubSrvrPrefs;
-        QTSSMessages*				fStubSrvrMessages;
+    OSRefTableEx*		GetDeviceSessionMap() { return &fDeviceMap; }
+    OSRefTableEx*		GetHTTPSessionMap() { return &fSessionMap; };
 
-        QTSS_ServerState            fServerState;
-        UInt32                      fDefaultIPAddr;
-        
-        // Array of pointers to TCPListenerSockets.
-        TCPListenerSocket**         fListeners;
-        UInt32                      fNumListeners; // Number of elements in the array
-        
-        // startup time
-        SInt64              fStartupTime_UnixMilli;
-        SInt32              fGMTOffset;
+    char* GetCloudServiceNodeID() { return fCloudServiceNodeID; }
 
-        //
-        // MODULE DATA
-        
-        static QTSSModule**             sModuleArray[QTSSModule::kNumRoles];
-        static UInt32                   sNumModulesInRole[QTSSModule::kNumRoles];
-        static OSQueue                  sModuleQueue;
-        static QTSSErrorLogStream       sErrorLogStream;
+    QTSServerPrefs*     GetPrefs() { return fSrvrPrefs; }
+    QTSSMessages*       GetMessages() { return fSrvrMessages; }
 
-		char fCloudServiceNodeID[QTSS_MAX_SESSION_ID_LENGTH];
+    // SERVER NAME & VERSION
 
-    private:
-    
-        enum
+    static StrPtrLen&   GetServerName() { return sServerNameStr; }
+    static StrPtrLen&   GetServerVersion() { return sServerVersionStr; }
+    static StrPtrLen&   GetServerPlatform() { return sServerPlatformStr; }
+    static StrPtrLen&   GetServerBuildDate() { return sServerBuildDateStr; }
+    static StrPtrLen&   GetServerHeader() { return sServerHeaderPtr; }
+    static StrPtrLen&   GetServerBuild() { return sServerBuildStr; }
+    static StrPtrLen&   GetServerComment() { return sServerCommentStr; }
+
+    // SIGINT - to interrupt the server, set this flag and the server will shut down
+    void                SetSigInt() { fSigInt = true; }
+
+    // SIGTERM - to kill the server, set this flag and the server will shut down
+    void                SetSigTerm() { fSigTerm = true; }
+
+    // MODULE STORAGE
+
+    // All module objects are stored here, and are accessable through
+    // these routines.
+
+    // Returns the number of modules that act in a given role
+    static UInt32       GetNumModulesInRole(QTSSModule::RoleIndex inRole)
+    {
+        Assert(inRole < QTSSModule::kNumRoles); return sNumModulesInRole[inRole];
+    }
+
+    // Allows the caller to iterate over all modules that act in a given role           
+    static QTSSModule*  GetModule(QTSSModule::RoleIndex inRole, UInt32 inIndex)
+    {
+        Assert(inRole < QTSSModule::kNumRoles);
+        Assert(inIndex < sNumModulesInRole[inRole]);
+        if (inRole >= QTSSModule::kNumRoles) //index out of bounds, shouldn't happen
         {
-            kMaxServerHeaderLen = 1000
-        };
+            return NULL;
+        }
+        if (inIndex >= sNumModulesInRole[inRole]) //index out of bounds, shouldn't happen
+        {
+            return NULL;
+        }
+        return sModuleArray[inRole][inIndex];
+    }
 
-        static UInt32       sServerAPIVersion;
-        static StrPtrLen    sServerNameStr;
-        static StrPtrLen    sServerVersionStr;
-        static StrPtrLen    sServerBuildStr;
-        static StrPtrLen    sServerCommentStr;
-        static StrPtrLen    sServerPlatformStr;
-        static StrPtrLen    sServerBuildDateStr;
-        static char         sServerHeader[kMaxServerHeaderLen];
-        static StrPtrLen    sServerHeaderPtr;
+    //
+    // We need to override this. This is how we implement the QTSS_StateChange_Role
+    virtual void    SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap* inMap,
+        UInt32 inValueIndex, void* inNewValue, UInt32 inNewValueLen);
 
-        OSMutex             fMutex;
+    //
+    // ERROR LOGGING
 
-        UInt32              fNumHTTPSessions;
-        
-        Float32             fCPUPercent;
-        Float32             fCPUTimeUsedInSec;              
-        
-        // are we out of descriptors?
-        Bool16              fIsOutOfDescriptors;
-        
-        // Storage for current time attribute
-        SInt64              fCurrentTime_UnixMilli;
-       
-        Bool16              fSigInt;
-        Bool16              fSigTerm;
+    // Invokes the error logging modules with some data
+    static void     LogError(QTSS_ErrorVerbosity inVerbosity, char* inBuffer);
 
-        UInt32              fDebugLevel;
-        UInt32              fDebugOptions;
-        
-        SInt32          fNumThinned;
-        UInt32          fNumThreads;
- 
-        // Param retrieval functions
-        static void* CurrentUnixTimeMilli(QTSSDictionary* inServer, UInt32* outLen);
-        static void* IsOutOfDescriptors(QTSSDictionary* inServer, UInt32* outLen);
-        
-        static QTSServerInterface*  sServer;
-        static QTSSAttrInfoDict::AttrInfo   sAttributes[];
-        static QTSSAttrInfoDict::AttrInfo   sConnectedUserAttributes[];
+    // Returns the error log stream
+    static QTSSErrorLogStream* GetErrorLogStream() { return &sErrorLogStream; }
 
-		
+    // LOCKING DOWN THE SERVER OBJECT
+    OSMutex*        GetServerObjectMutex() { return &fMutex; }
+
+protected:
+
+    OSRefTableEx				fDeviceMap;//add,维护所有的注册设备
+    OSRefTableEx				fSessionMap; // all HTTPSession
+
+    QTSServerPrefs*             fSrvrPrefs;
+    QTSSMessages*               fSrvrMessages;
+
+    QTSServerPrefs*				fStubSrvrPrefs;
+    QTSSMessages*				fStubSrvrMessages;
+
+    QTSS_ServerState            fServerState;
+    UInt32                      fDefaultIPAddr;
+
+    // Array of pointers to TCPListenerSockets.
+    TCPListenerSocket**         fListeners;
+    UInt32                      fNumListeners; // Number of elements in the array
+
+    // startup time
+    SInt64              fStartupTime_UnixMilli;
+    SInt32              fGMTOffset;
+
+    //
+    // MODULE DATA
+
+    static QTSSModule**             sModuleArray[QTSSModule::kNumRoles];
+    static UInt32                   sNumModulesInRole[QTSSModule::kNumRoles];
+    static OSQueue                  sModuleQueue;
+    static QTSSErrorLogStream       sErrorLogStream;
+
+    char fCloudServiceNodeID[QTSS_MAX_SESSION_ID_LENGTH];
+
+private:
+    // Param retrieval functions
+    static void* currentUnixTimeMilli(QTSSDictionary* inServer, UInt32* outLen);
+    static void* isOutOfDescriptors(QTSSDictionary* inServer, UInt32* outLen);
+
+    enum
+    {
+        kMaxServerHeaderLen = 1000
+    };
+
+    static UInt32       sServerAPIVersion;
+    static StrPtrLen    sServerNameStr;
+    static StrPtrLen    sServerVersionStr;
+    static StrPtrLen    sServerBuildStr;
+    static StrPtrLen    sServerCommentStr;
+    static StrPtrLen    sServerPlatformStr;
+    static StrPtrLen    sServerBuildDateStr;
+    static char         sServerHeader[kMaxServerHeaderLen];
+    static StrPtrLen    sServerHeaderPtr;
+
+    OSMutex             fMutex;
+
+    UInt32              fNumHTTPSessions;
+
+    Float32             fCPUPercent;
+    Float32             fCPUTimeUsedInSec;
+
+    // are we out of descriptors?
+    Bool16              fIsOutOfDescriptors;
+
+    // Storage for current time attribute
+    SInt64              fCurrentTime_UnixMilli;
+
+    Bool16              fSigInt;
+    Bool16              fSigTerm;
+
+    UInt32              fDebugLevel;
+    UInt32              fDebugOptions;
+
+    SInt32          fNumThinned;
+    UInt32          fNumThreads;
+
+    static QTSServerInterface*  sServer;
+    static QTSSAttrInfoDict::AttrInfo   sAttributes[];
+    static QTSSAttrInfoDict::AttrInfo   sConnectedUserAttributes[];
+
+
 };
 
 #endif // __QTSSERVERINTERFACE_H__
