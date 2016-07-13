@@ -4,7 +4,7 @@
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-/* 
+/*
  * File:   EasyUtil.h
  * Author: wellsen
  *
@@ -21,17 +21,17 @@ using namespace std;
 class Easy_API EasyUtil
 {
 public:
-    static std::string TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time);
-    
-    //if whatFormat == EASY_TIME_FORMAT_YYYYMMDD, the time will be set to now,
-    //if whatFormat == EASY_TIME_FORMAT_HHMMSS, the date will be set to today   
-    static unsigned long String2TimeT(EasyDarwinTimeFormat whatFormat, const std::string &timeString);
-    
-    static unsigned long String2TimeT(const std::string &dateYYMMDD/*2014-11-23*/, const std::string &timeHHMMSS/*08:30:00*/);
-    
-    static std::string NowTime(EasyDarwinTimeFormat whatFormat);
-    
-    static unsigned long NowTime();
+	static std::string TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time);
+
+	//if whatFormat == EASY_TIME_FORMAT_YYYYMMDD, the time will be set to now,
+	//if whatFormat == EASY_TIME_FORMAT_HHMMSS, the date will be set to today   
+	static unsigned long String2TimeT(EasyDarwinTimeFormat whatFormat, const std::string &timeString);
+
+	static unsigned long String2TimeT(const std::string &dateYYMMDD/*2014-11-23*/, const std::string &timeHHMMSS/*08:30:00*/);
+
+	static std::string NowTime(EasyDarwinTimeFormat whatFormat);
+
+	static unsigned long NowTime();
 
 	static std::string GetUUID();
 

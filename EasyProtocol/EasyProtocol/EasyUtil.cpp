@@ -4,10 +4,10 @@
 	WEChat: EasyDarwin
 	Website: http://www.easydarwin.org
 */
-/* 
+/*
  * File:   EasyUtil.cpp
  * Author: wellsen
- * 
+ *
  * Created on 2014年11月22日, 上午10:16
 */
 
@@ -33,93 +33,93 @@
 
 std::string EasyUtil::TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time)
 {
-    struct tm local;
-    time_t t = time;
-    
+	struct tm local;
+	time_t t = time;
+
 #ifdef _WIN32
-    localtime_s(&local, &t);
+	localtime_s(&local, &t);
 #else
-    localtime_r(&t, &local);
+	localtime_r(&t, &local);
 #endif
-    
-    char timeStr[64];
-    memset(timeStr, 0, 64);
-    switch (whatFormat)
-    {
-    case EASY_TIME_FORMAT_YYYYMMDDHHMMSS:
-        sprintf(timeStr, "%04d-%02d-%02d %02d:%02d:%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday,\
-												local.tm_hour, local.tm_min, local.tm_sec);
-        break;
+
+	char timeStr[64];
+	memset(timeStr, 0, 64);
+	switch (whatFormat)
+	{
+	case EASY_TIME_FORMAT_YYYYMMDDHHMMSS:
+		sprintf(timeStr, "%04d-%02d-%02d %02d:%02d:%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday, \
+			local.tm_hour, local.tm_min, local.tm_sec);
+		break;
 	case EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx:
-	    sprintf(timeStr, "%04d%02d%02d%02d%02d%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday,\
-												local.tm_hour, local.tm_min, local.tm_sec);
-        break;
-    case EASY_TIME_FORMAT_YYYYMMDD:
-        sprintf(timeStr, "%04d-%02d-%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday);
-        break;
-        
-    case EASY_TIME_FORMAT_HHMMSS:
-        sprintf(timeStr, "%02d:%02d:%02d", local.tm_hour, local.tm_min, local.tm_sec);
-        break;
-        
-    default:
-        break;
-    }
-    return std::string(timeStr);
+		sprintf(timeStr, "%04d%02d%02d%02d%02d%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday, \
+			local.tm_hour, local.tm_min, local.tm_sec);
+		break;
+	case EASY_TIME_FORMAT_YYYYMMDD:
+		sprintf(timeStr, "%04d-%02d-%02d", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday);
+		break;
+
+	case EASY_TIME_FORMAT_HHMMSS:
+		sprintf(timeStr, "%02d:%02d:%02d", local.tm_hour, local.tm_min, local.tm_sec);
+		break;
+
+	default:
+		break;
+	}
+	return std::string(timeStr);
 }
 
 unsigned long EasyUtil::String2TimeT(EasyDarwinTimeFormat whatFormat, const std::string &timeString)
 {
-    struct tm local;
-       
-    time_t now = time(NULL);
+	struct tm local;
+
+	time_t now = time(NULL);
 #ifdef _WIN32
-    localtime_s(&local, &now);
+	localtime_s(&local, &now);
 #else
-    localtime_r(&now, &local);
+	localtime_r(&now, &local);
 #endif
-    
-    switch (whatFormat)
-    {
-    case EASY_TIME_FORMAT_YYYYMMDDHHMMSS:
-        sscanf(timeString.c_str(), "%04d-%02d-%02d %02d:%02d:%02d", &local.tm_year, &local.tm_mon, &local.tm_mday,\
-												&local.tm_hour, &local.tm_min, &local.tm_sec);
-        local.tm_year -= 1900;
-        local.tm_mon -= 1;
-        break;
-        
-    case EASY_TIME_FORMAT_YYYYMMDD:
-        sscanf(timeString.c_str(), "%04d-%02d-%02d", &local.tm_year, &local.tm_mon, &local.tm_mday);
-        local.tm_year -= 1900;
-        local.tm_mon -= 1;
-        break;
-        
-    case EASY_TIME_FORMAT_HHMMSS:
-        sscanf(timeString.c_str(), "%02d:%02d:%02d", &local.tm_hour, &local.tm_min, &local.tm_sec);
-        break;
-        
-    default:
-        break;
-    }
-    
-    return mktime(&local);
+
+	switch (whatFormat)
+	{
+	case EASY_TIME_FORMAT_YYYYMMDDHHMMSS:
+		sscanf(timeString.c_str(), "%04d-%02d-%02d %02d:%02d:%02d", &local.tm_year, &local.tm_mon, &local.tm_mday, \
+			&local.tm_hour, &local.tm_min, &local.tm_sec);
+		local.tm_year -= 1900;
+		local.tm_mon -= 1;
+		break;
+
+	case EASY_TIME_FORMAT_YYYYMMDD:
+		sscanf(timeString.c_str(), "%04d-%02d-%02d", &local.tm_year, &local.tm_mon, &local.tm_mday);
+		local.tm_year -= 1900;
+		local.tm_mon -= 1;
+		break;
+
+	case EASY_TIME_FORMAT_HHMMSS:
+		sscanf(timeString.c_str(), "%02d:%02d:%02d", &local.tm_hour, &local.tm_min, &local.tm_sec);
+		break;
+
+	default:
+		break;
+	}
+
+	return mktime(&local);
 }
 
 unsigned long EasyUtil::String2TimeT(const std::string &dateYYMMDD/*2014-11-23*/, const std::string &timeHHMMSS/*08:30:00*/)
 {
-    std::string strTime = dateYYMMDD + " " + timeHHMMSS;
-    return String2TimeT(EASY_TIME_FORMAT_YYYYMMDDHHMMSS, strTime);
+	std::string strTime = dateYYMMDD + " " + timeHHMMSS;
+	return String2TimeT(EASY_TIME_FORMAT_YYYYMMDDHHMMSS, strTime);
 }
 
 std::string EasyUtil::NowTime(EasyDarwinTimeFormat whatFormat)
 {
-    return TimeT2String(whatFormat, NowTime());
+	return TimeT2String(whatFormat, NowTime());
 }
 
 unsigned long EasyUtil::NowTime()
 {
-    time_t now = time(NULL);
-    return (unsigned long)now;
+	time_t now = time(NULL);
+	return (unsigned long)now;
 }
 
 std::string EasyUtil::GetUUID()
@@ -136,7 +136,7 @@ std::string EasyUtil::GetUUID()
 	{
 		printf("SysUtil::GetUUID error: %s\n", e.what());
 		return std::string();
-	}	
+	}
 }
 
 int EasyUtil::String2Int(const std::string& value)
@@ -149,7 +149,7 @@ int EasyUtil::String2Int(const std::string& value)
 	{
 		printf("EasyUtil::String2Int error: %s\n", e.what());
 		return -1;
-	}	
+	}
 }
 
 std::string EasyUtil::Int2String(int value)
@@ -160,7 +160,7 @@ std::string EasyUtil::Int2String(int value)
 	}
 	catch (std::exception &e)
 	{
-		printf("EasyUtil::String2Int error: %s\n", e.what());		
+		printf("EasyUtil::String2Int error: %s\n", e.what());
 	}
 	return std::string();
 }
@@ -258,12 +258,12 @@ string EasyUtil::Base64Decode(const string &sInput)
 void EasyUtil::DelChar(std::string & sInput, char ch)
 {
 	int begin = 0;
-	begin = sInput.find(ch,begin);//查找ch在sInput的第一个位置
+	begin = sInput.find(ch, begin);//查找ch在sInput的第一个位置
 
-	while(begin != std::string::npos)  //表示字符串中存在ch
+	while (begin != std::string::npos)  //表示字符串中存在ch
 	{
 		sInput.replace(begin, 1, "");  // 用空串替换sInput中从begin开始的1个字符
-		begin = sInput.find(ch,begin);  //查找ch在替换后的sInput中第一次出现的位置
+		begin = sInput.find(ch, begin);  //查找ch在替换后的sInput中第一次出现的位置
 	}
 }
 
