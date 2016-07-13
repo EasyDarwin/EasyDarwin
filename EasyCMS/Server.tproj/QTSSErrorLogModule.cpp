@@ -110,13 +110,13 @@ public:
     QTSSErrorLog() : QTSSRollingLog() { this->SetTaskName("QTSSErrorLog"); }
     virtual ~QTSSErrorLog() {}
 
-    virtual char* GetLogName() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogName(); }
+    virtual char* getLogName() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogName(); }
 
-    virtual char* GetLogDir() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogDir(); }
+    virtual char* getLogDir() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogDir(); }
 
-    virtual UInt32 GetRollIntervalInDays() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorRollIntervalInDays(); }
-
-    virtual UInt32 GetMaxLogBytes() { return QTSServerInterface::GetServer()->GetPrefs()->GetMaxErrorLogBytes(); }
+    virtual UInt32 getRollIntervalInDays() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorRollIntervalInDays(); }
+	
+    virtual UInt32 getMaxLogBytes() { return QTSServerInterface::GetServer()->GetPrefs()->GetMaxErrorLogBytes(); }
 
 };
 
