@@ -138,7 +138,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMiss
 	fMonitorLANPort(0),
 	fMonitorWANPort(0)
 {
-    SetupAttributes();
+    setupAttributes();
     RereadServerPreferences(inWriteMissingPrefs);
 
 	char jpgDir[512] = { 0 };
@@ -156,7 +156,7 @@ void QTSServerPrefs::Initialize()
 }
 
 
-void QTSServerPrefs::SetupAttributes()
+void QTSServerPrefs::setupAttributes()
 {
     this->SetVal(qtssPrefsSessionTimeout,	&fSessionTimeoutInSecs,    sizeof(fSessionTimeoutInSecs));
 
@@ -331,7 +331,7 @@ void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
 //    return inBuffer;
 //}
 
-char* QTSServerPrefs::GetStringPref(QTSS_AttributeID inAttrID)
+char* QTSServerPrefs::getStringPref(QTSS_AttributeID inAttrID)
 {
     StrPtrLen theBuffer;
     (void)this->GetValue(inAttrID, 0, NULL, &theBuffer.Len);

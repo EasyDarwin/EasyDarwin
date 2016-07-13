@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,16 +18,16 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-	Github: https://github.com/EasyDarwin
-	WEChat: EasyDarwin
-	Website: http://www.EasyDarwin.org
-*/
+ /*
+     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+     Github: https://github.com/EasyDarwin
+     WEChat: EasyDarwin
+     Website: http://www.EasyDarwin.org
+ */
  /*
     Contains:   Object store for HTTP server preferences.
 */
@@ -41,135 +41,147 @@
 
 class QTSServerPrefs : public QTSSPrefs
 {
-    public:
+public:
 
-        // INITIALIZE
-        //
-        // This function sets up the dictionary map. Must be called before instantiating   
-        static void Initialize();
+    // INITIALIZE
+    //
+    // This function sets up the dictionary map. Must be called before instantiating   
+    static void Initialize();
 
-        QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs);
-        virtual ~QTSServerPrefs() {}
-        
-        //This is callable at any time, and is thread safe wrt to the accessors.
-        //Pass in true if you want this function to update the prefs file if
-        //any defaults need to be used. False otherwise
-        void RereadServerPreferences(Bool16 inWriteMissingPrefs);
-        
-        //Individual accessor methods for preferences.
+    QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs);
+    virtual ~QTSServerPrefs() {}
 
-        //This is the real timeout
-        UInt32  GetSessionTimeoutInSecs(){ return fSessionTimeoutInSecs; }
-        
-        //-1 means unlimited
-        SInt32  GetMaxConnections()         { return fMaximumConnections; }
-                
-        //for debugging, mainly
-        Bool16      ShouldServerBreakOnAssert()         { return fBreakOnAssert; }
-        Bool16      IsAutoRestartEnabled()              { return fAutoRestart; }
-        
-        // For the compiled-in error logging module
-        
-        Bool16  IsErrorLogEnabled()             { return fErrorLogEnabled; }
-        Bool16  IsScreenLoggingEnabled()        { return fScreenLoggingEnabled; }
+    //This is callable at any time, and is thread safe wrt to the accessors.
+    //Pass in true if you want this function to update the prefs file if
+    //any defaults need to be used. False otherwise
+    void RereadServerPreferences(Bool16 inWriteMissingPrefs);
 
-        UInt32  GetMaxErrorLogBytes()           { return fErrorLogBytes; }
-        UInt32  GetErrorRollIntervalInDays()    { return fErrorRollIntervalInDays; }
-        UInt32  GetErrorLogVerbosity()          { return fErrorLogVerbosity; }
-        void    SetErrorLogVerbosity(UInt32 verbosity)        { fErrorLogVerbosity = verbosity; }
+    //Individual accessor methods for preferences.
 
-        Bool16  GetMSGDebugPrintfs()           { return fEnableMSGDebugPrintfs; }        
+    //This is the real timeout
+    UInt32  GetSessionTimeoutInSecs() { return fSessionTimeoutInSecs; }
 
-		// force logs to close after each write (true or false)
-        Bool16  GetCloseLogsOnWrite()           { return fCloseLogsOnWrite; }
-        void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
-                
-        // String preferences. Note that the pointers returned here is allocated
-        // memory that you must delete!
-        
-        char*   GetErrorLogDir()
-            { return this->GetStringPref(qtssPrefsErrorLogDir); }
-        char*   GetErrorLogName()
-            { return this->GetStringPref(qtssPrefsErrorLogName); }
+    //-1 means unlimited
+    SInt32  GetMaxConnections() { return fMaximumConnections; }
 
-		char*	GetServiceID()
-			{ return this->GetStringPref(qtssPrefsServiceID); }
+    //for debugging, mainly
+    Bool16      ShouldServerBreakOnAssert() { return fBreakOnAssert; }
+    Bool16      IsAutoRestartEnabled() { return fAutoRestart; }
 
-        char*   GetModuleDirectory()
-            { return this->GetStringPref(qtssPrefsModuleFolder); }
+    // For the compiled-in error logging module
 
-        char*   GetPidFilePath()
-            { return this->GetStringPref(qtssPrefsPidFile); }
+    Bool16  IsErrorLogEnabled() { return fErrorLogEnabled; }
+    Bool16  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
 
-        char*   GetStatsMonitorFileName()
-            { return this->GetStringPref(qtssPrefsMonitorStatsFileName); }
+    UInt32  GetMaxErrorLogBytes() { return fErrorLogBytes; }
+    UInt32  GetErrorRollIntervalInDays() { return fErrorRollIntervalInDays; }
+    UInt32  GetErrorLogVerbosity() { return fErrorLogVerbosity; }
+    void    SetErrorLogVerbosity(UInt32 verbosity) { fErrorLogVerbosity = verbosity; }
 
-        Bool16 ServerStatFileEnabled()      { return fEnableMonitorStatsFile; }
-        UInt32 GetStatFileIntervalSec()     { return fStatsFileIntervalSeconds; }
-                 
-        UInt32  GetNumThreads()                   { return fNumThreads; }
-        UInt32  GetNumBlockingThreads()           { return fNumMsgThreads; } 
+    Bool16  GetMSGDebugPrintfs() { return fEnableMSGDebugPrintfs; }
 
-        UInt16  GetMonitorLANPort()			{ return fMonitorLANPort; }       
-        UInt16  GetMonitorWANPort()         { return fMonitorWANPort; }  
-            
-        char* GetMonitorLANIP()    { return this->GetStringPref(qtssPrefsMonitorLANIPAddr); }
-        char* GetMonitorWANIP()     { return this->GetStringPref(qtssPrefsMonitorWANIPAddr); }
+    // force logs to close after each write (true or false)
+    Bool16  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
+    void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
 
-		char* GetSnapLocalPath()	{ return this->GetStringPref(qtssPrefsSnapLocalPath); }
-		char* GetSnapWebPath()		{ return this->GetStringPref(qtssPrefsSnapWebPath); }
-    private:
-        UInt32      fSessionTimeoutInSecs;
-        
-        SInt32  fMaximumConnections;
-        
-        Bool16  fBreakOnAssert;
-        Bool16  fAutoRestart;
-        
-        UInt32  fErrorRollIntervalInDays;
-        UInt32  fErrorLogBytes;
-        UInt32  fErrorLogVerbosity;
-        Bool16  fScreenLoggingEnabled;
-        Bool16  fErrorLogEnabled;
+    // String preferences. Note that the pointers returned here is allocated
+    // memory that you must delete!
 
-        Bool16  fAutoStart;
-        Bool16  fEnableMSGDebugPrintfs;
+    char*   GetErrorLogDir()
+    {
+        return this->getStringPref(qtssPrefsErrorLogDir);
+    }
+    char*   GetErrorLogName()
+    {
+        return this->getStringPref(qtssPrefsErrorLogName);
+    }
 
-        UInt32  fNumThreads;
-        UInt32  fNumMsgThreads;
-        
-        Bool16  fEnableMonitorStatsFile;
-        UInt32  fStatsFileIntervalSeconds;
-        
-        Bool16  fCloseLogsOnWrite;
+    char*	GetServiceID()
+    {
+        return this->getStringPref(qtssPrefsServiceID);
+    }
 
-        UInt16 fMonitorLANPort;    
-        UInt16 fMonitorWANPort;
+    char*   GetModuleDirectory()
+    {
+        return this->getStringPref(qtssPrefsModuleFolder);
+    }
 
-        char   fMonitorWANAddr[20];
-        char   fMonitorLANAddr[20];
-		char   fServiceID[64];
-        
-        enum
-        {
-            kAllowMultipleValues = 1,
-            kDontAllowMultipleValues = 0
-        };
-        
-        struct PrefInfo
-        {
-            UInt32  fAllowMultipleValues;
-            char*   fDefaultValue;
-            char**  fAdditionalDefVals; // For prefs with multiple default values
-        };
-            
-        void SetupAttributes();
+    char*   GetPidFilePath()
+    {
+        return this->getStringPref(qtssPrefsPidFile);
+    }
 
-        // Returns the string preference with the specified ID. If there
-        // was any problem, this will return an empty string.
-        char* GetStringPref(QTSS_AttributeID inAttrID);
-        
-        static QTSSAttrInfoDict::AttrInfo   sAttributes[];
-        static PrefInfo sPrefInfo[];
+    char*   GetStatsMonitorFileName()
+    {
+        return this->getStringPref(qtssPrefsMonitorStatsFileName);
+    }
+
+    Bool16 ServerStatFileEnabled() { return fEnableMonitorStatsFile; }
+    UInt32 GetStatFileIntervalSec() { return fStatsFileIntervalSeconds; }
+
+    UInt32  GetNumThreads() { return fNumThreads; }
+    UInt32  GetNumBlockingThreads() { return fNumMsgThreads; }
+
+    UInt16  GetMonitorLANPort() { return fMonitorLANPort; }
+    UInt16  GetMonitorWANPort() { return fMonitorWANPort; }
+
+    char* GetMonitorLANIP() { return this->getStringPref(qtssPrefsMonitorLANIPAddr); }
+    char* GetMonitorWANIP() { return this->getStringPref(qtssPrefsMonitorWANIPAddr); }
+
+    char* GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
+    char* GetSnapWebPath() { return this->getStringPref(qtssPrefsSnapWebPath); }
+private:
+    void setupAttributes();
+
+    // Returns the string preference with the specified ID. If there
+    // was any problem, this will return an empty string.
+    char* getStringPref(QTSS_AttributeID inAttrID);
+
+    UInt32      fSessionTimeoutInSecs;
+
+    SInt32  fMaximumConnections;
+
+    Bool16  fBreakOnAssert;
+    Bool16  fAutoRestart;
+
+    UInt32  fErrorRollIntervalInDays;
+    UInt32  fErrorLogBytes;
+    UInt32  fErrorLogVerbosity;
+    Bool16  fScreenLoggingEnabled;
+    Bool16  fErrorLogEnabled;
+
+    Bool16  fAutoStart;
+    Bool16  fEnableMSGDebugPrintfs;
+
+    UInt32  fNumThreads;
+    UInt32  fNumMsgThreads;
+
+    Bool16  fEnableMonitorStatsFile;
+    UInt32  fStatsFileIntervalSeconds;
+
+    Bool16  fCloseLogsOnWrite;
+
+    UInt16 fMonitorLANPort;
+    UInt16 fMonitorWANPort;
+
+    char   fMonitorWANAddr[20];
+    char   fMonitorLANAddr[20];
+    char   fServiceID[64];
+
+    enum
+    {
+        kAllowMultipleValues = 1,
+        kDontAllowMultipleValues = 0
+    };
+
+    struct PrefInfo
+    {
+        UInt32  fAllowMultipleValues;
+        char*   fDefaultValue;
+        char**  fAdditionalDefVals; // For prefs with multiple default values
+    };
+
+    static QTSSAttrInfoDict::AttrInfo   sAttributes[];
+    static PrefInfo sPrefInfo[];
 };
 #endif //__QTSSPREFS_H__
