@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,18 +18,18 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       OSBufferPool.cpp
+ /*
+	 File:       OSBufferPool.cpp
 
-    Contains:   Fast access to fixed size buffers.
-    
-    Written By: Denis Serenyi
-    
-*/
+	 Contains:   Fast access to fixed size buffers.
+
+	 Written By: Denis Serenyi
+
+ */
 
 #include "OSBufferPool.h"
 #include "OSMemory.h"
@@ -39,25 +39,25 @@
 
 void*   OSBufferPool::Get()
 {
-    OSMutexLocker locker(&fMutex);
-    if (fQueue.GetLength() == 0)
-    {
-        fTotNumBuffers++;
-        char* theNewBuf = NEW char[fBufSize + sizeof(OSQueueElem)];
-        
-        //
-        // We need to construct a Queue Element, but we don't actually need
-        // to use it in this function, so to avoid a compiler warning just
-        // don't assign the result to anything.
-        (void)new (theNewBuf) OSQueueElem(theNewBuf + sizeof(OSQueueElem));
+	OSMutexLocker locker(&fMutex);
+	if (fQueue.GetLength() == 0)
+	{
+		fTotNumBuffers++;
+		char* theNewBuf = NEW char[fBufSize + sizeof(OSQueueElem)];
 
-        return theNewBuf + sizeof(OSQueueElem);
-    }
-    return fQueue.DeQueue()->GetEnclosingObject();
+		//
+		// We need to construct a Queue Element, but we don't actually need
+		// to use it in this function, so to avoid a compiler warning just
+		// don't assign the result to anything.
+		(void)new (theNewBuf) OSQueueElem(theNewBuf + sizeof(OSQueueElem));
+
+		return theNewBuf + sizeof(OSQueueElem);
+	}
+	return fQueue.DeQueue()->GetEnclosingObject();
 }
 
 void OSBufferPool::Put(void* inBuffer)
 {
-    OSMutexLocker locker(&fMutex);
-    fQueue.EnQueue((OSQueueElem*)((char*)inBuffer - sizeof(OSQueueElem)));
+	OSMutexLocker locker(&fMutex);
+	fQueue.EnQueue((OSQueueElem*)((char*)inBuffer - sizeof(OSQueueElem)));
 }
