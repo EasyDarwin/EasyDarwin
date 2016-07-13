@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,33 +18,31 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-	Github: https://github.com/EasyDarwin
-	WEChat: EasyDarwin
-	Website: http://www.EasyDarwin.org
-*/
-/*
-    File:       QTSSExpirationDate.cpp
+ /*
+     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+     Github: https://github.com/EasyDarwin
+     WEChat: EasyDarwin
+     Website: http://www.EasyDarwin.org
+ */
+ /*
+     File:       QTSSExpirationDate.cpp
 
-    Contains:   Implementation of class defined in QTSSExpirationDate.h
-*/
+     Contains:   Implementation of class defined in QTSSExpirationDate.h
+ */
 
 #include "QTSSExpirationDate.h"
-
 #include "MyAssert.h"
 #include "OSHeaders.h"
 #include "SafeStdLib.h"
 #include <time.h>
 
-
 Bool16  QTSSExpirationDate::sIsExpirationEnabled = false;
 //must be in "5/12/1998" format, "m/d/4digityear"
-char*   QTSSExpirationDate::sExpirationDate = "12/31/2016";
+char* QTSSExpirationDate::sExpirationDate = "12/31/2016";
 
 void QTSSExpirationDate::PrintExpirationDate()
 {
@@ -63,38 +61,38 @@ Bool16 QTSSExpirationDate::IsSoftwareExpired()
 {
     if (!sIsExpirationEnabled)
         return false;
-        
+
     SInt32 expMonth, expDay, expYear;
-    if (EOF == ::sscanf(sExpirationDate, "%"  _U32BITARG_  "/%"  _U32BITARG_  "/%"  _U32BITARG_  "", &expMonth, &expDay, &expYear))
+    if (EOF == ::sscanf(sExpirationDate, "%" _U32BITARG_ "/%" _U32BITARG_ "/%" _U32BITARG_ "", &expMonth, &expDay, &expYear))
     {
         Assert(false);
         return true;
     }
-    
+
     //sanity checks
     Assert((expMonth > 0) && (expMonth <= 12));
     if ((expMonth <= 0) || (expMonth > 12))
         return true;
-    
+
     Assert((expDay > 0) && (expDay <= 31));
     if ((expDay <= 0) || (expDay > 31))
         return true;
-        
+
     Assert(expYear >= 1998);
     if (expYear < 1998)
         return true;
-    
+
     time_t theCurrentTime = ::time(NULL);
     Assert(theCurrentTime != -1);
     if (theCurrentTime == -1)
         return true;
-        
+
     struct tm  timeResult;
     struct tm* theLocalTime = qtss_localtime(&theCurrentTime, &timeResult);
     Assert(theLocalTime != NULL);
     if (theLocalTime == NULL)
         return true;
-        
+
     if (expYear > (theLocalTime->tm_year + 1900))
         return false;//ok
     if (expYear < (theLocalTime->tm_year + 1900))
