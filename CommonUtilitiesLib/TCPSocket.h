@@ -88,7 +88,7 @@ public:
 
 protected:
 
-	void        set(int inSocket, struct sockaddr_in* remoteaddr);
+	void        Set(int inSocket, struct sockaddr_in* remoteaddr);
 
 	enum
 	{

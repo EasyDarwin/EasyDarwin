@@ -52,21 +52,21 @@ void TCPSocket::SnarfSocket(TCPSocket& fromSocket)
 	// take the connection away from the other socket
 	// and use it as our own.
 	Assert(fFileDesc == EventContext::kInvalidFileDesc);
-	this->set(fromSocket.fFileDesc, &fromSocket.fRemoteAddr);
+	this->Set(fromSocket.fFileDesc, &fromSocket.fRemoteAddr);
 
 	// clear the old socket so he doesn't close and the like
 	struct  sockaddr_in  remoteaddr;
 
 	::memset(&remoteaddr, 0, sizeof(remoteaddr));
 
-	fromSocket.set(EventContext::kInvalidFileDesc, &remoteaddr);
+	fromSocket.Set(EventContext::kInvalidFileDesc, &remoteaddr);
 
 	// get the event context too
 	this->SnarfEventContext(fromSocket);
 
 }
 
-void TCPSocket::set(int inSocket, struct sockaddr_in* remoteaddr)
+void TCPSocket::Set(int inSocket, struct sockaddr_in* remoteaddr)
 {
 	fRemoteAddr = *remoteaddr;
 	fFileDesc = inSocket;
