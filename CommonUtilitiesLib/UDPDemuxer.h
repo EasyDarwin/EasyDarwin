@@ -111,7 +111,7 @@ private:
 private:
 
 	//PRIVATE ACCESSORS:    
-	UInt32      getHashKey() { return fHashValue; }
+	UInt32      GetHashKey() { return fHashValue; }
 
 	//these functions are only used by the hash table itself. This constructor
 	//will break the "Set" functions.
