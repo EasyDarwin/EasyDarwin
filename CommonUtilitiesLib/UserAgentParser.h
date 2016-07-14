@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,21 +18,21 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       UserAgentParser.h
+ /*
+	 File:       UserAgentParser.h
 
-    Contains:   API interface for parsing the user agent field received from RTSP clients.
-                
-    Change History (most recent first):
+	 Contains:   API interface for parsing the user agent field received from RTSP clients.
 
-    
-    
-    
-*/
+	 Change History (most recent first):
+
+
+
+
+ */
 #ifndef _USERAGENTPARSER_H_
 #define _USERAGENTPARSER_H_
 
@@ -40,50 +40,51 @@
 #include "StringFormatter.h"
 #include "StrPtrLen.h"
 
-class UserAgentParser 
+class UserAgentParser
 {
-    public:
-        enum{   eMaxAttributeSize   =  60 };
-        struct UserAgentFields
-        {
-            char                    fFieldName[eMaxAttributeSize + 1];
-            UInt32                  fLen;
-            UInt32                  fID;
-        };
+public:
+	enum { eMaxAttributeSize = 60 };
+	struct UserAgentFields
+	{
+		char                    fFieldName[eMaxAttributeSize + 1];
+		UInt32                  fLen;
+		UInt32                  fID;
+	};
 
-        struct UserAgentData
-        {           
-            StrPtrLen               fData;
-            bool                    fFound;
-        };
+	struct UserAgentData
+	{
+		StrPtrLen               fData;
+		bool                    fFound;
+	};
 
-        enum 
-        {   eQtid   = 0,
-            eQtver  = 1,
-            eLang   = 2,
-            eOs     = 3,
-            eOsver  = 4,
-            eCpu    = 5,
-            eNumAttributes = 6 
-        };
+	enum
+	{
+		eQtid = 0,
+		eQtver = 1,
+		eLang = 2,
+		eOs = 3,
+		eOsver = 4,
+		eCpu = 5,
+		eNumAttributes = 6
+	};
 
-        static UserAgentFields sFieldIDs[];
-        static UInt8 sEOLWhitespaceEqualMask[];
-        static UInt8 sEOLSemicolonCloseParenMask[];
-        static UInt8 sWhitespaceMask[];
+	static UserAgentFields sFieldIDs[];
+	static UInt8 sEOLWhitespaceEqualMask[];
+	static UInt8 sEOLSemicolonCloseParenMask[];
+	static UInt8 sWhitespaceMask[];
 
-        UserAgentData fFieldData[eNumAttributes];
-            
-        void Parse(StrPtrLen *inStream);
+	UserAgentData fFieldData[eNumAttributes];
 
-        StrPtrLen* GetUserID()          { return    &(fFieldData[eQtid].fData);     };
-        StrPtrLen* GetUserVersion()     { return    &(fFieldData[eQtver].fData);    };
-        StrPtrLen* GetUserLanguage()    { return    &(fFieldData[eLang].fData);     };
-        StrPtrLen* GetrUserOS()         { return    &(fFieldData[eOs].fData);       };
-        StrPtrLen* GetUserOSVersion()   { return    &(fFieldData[eOsver].fData);    };
-        StrPtrLen* GetUserCPU()         { return    &(fFieldData[eCpu].fData);      };
-        
-        UserAgentParser (StrPtrLen *inStream)  { if (inStream != NULL) Parse(inStream); }
+	void Parse(StrPtrLen *inStream);
+
+	StrPtrLen* GetUserID() { return    &(fFieldData[eQtid].fData); };
+	StrPtrLen* GetUserVersion() { return    &(fFieldData[eQtver].fData); };
+	StrPtrLen* GetUserLanguage() { return    &(fFieldData[eLang].fData); };
+	StrPtrLen* GetrUserOS() { return    &(fFieldData[eOs].fData); };
+	StrPtrLen* GetUserOSVersion() { return    &(fFieldData[eOsver].fData); };
+	StrPtrLen* GetUserCPU() { return    &(fFieldData[eCpu].fData); };
+
+	UserAgentParser(StrPtrLen *inStream) { if (inStream != NULL) Parse(inStream); }
 
 
 };
