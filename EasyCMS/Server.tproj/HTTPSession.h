@@ -121,10 +121,8 @@ private:
 
 	// Channel Snap
 	DECODE_PARAM_T		decodeParam;
-#if 1
+	
 	DecoderHelper		decoderHelper;
-#endif
-
 };
 #endif // __HTTP_SESSION_H__
 
