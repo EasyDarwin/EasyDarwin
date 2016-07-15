@@ -37,6 +37,7 @@
 #include "QTSSDataConverter.h"
 #include "defaultPaths.h"
 #include "QTSSRollingLog.h"
+#include <QTSSModuleUtils.h>
 
 #ifndef __Win32__
 #include <sys/types.h>
