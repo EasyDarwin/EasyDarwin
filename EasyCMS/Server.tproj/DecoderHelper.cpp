@@ -1,5 +1,5 @@
 #include "DecoderHelper.h"
-#if  1
+
 DecoderHelper::DecoderHelper()
 	: _formatContext(NULL),
 	_videoCodecContext(NULL),
@@ -180,4 +180,4 @@ void DecoderHelper::releaseVideoDecoder()
 		_videoCodecContext = NULL;
 	}
 }
-#endif
+

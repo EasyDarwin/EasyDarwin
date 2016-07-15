@@ -156,7 +156,7 @@
             <pElem>APIModules/EasyAuthModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
-            <pElem>../Include/FFmpeg</pElem>
+            <pElem>../Include/FFmpeg/linux</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -375,7 +375,7 @@
             <pElem>APIModules/EasyAuthModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
-            <pElem>../Include/FFmpeg</pElem>
+            <pElem>../Include/FFmpeg/linux</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -601,7 +601,7 @@
             <pElem>APIModules/EasyAuthModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
-            <pElem>../Include/FFmpeg</pElem>
+            <pElem>../Include/FFmpeg/linux</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
