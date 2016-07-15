@@ -106,7 +106,7 @@ QTAtom_dref::QTAtom_dref(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 
 {
 }
 
-QTAtom_dref::~QTAtom_dref(void)
+QTAtom_dref::~QTAtom_dref()
 {
 	//+ 6.16.1999 rt fix memory leak
 	for (UInt32 curRef = 0; curRef < fNumRefs; curRef++)
@@ -126,7 +126,7 @@ QTAtom_dref::~QTAtom_dref(void)
 // -------------------------------------
 // Initialization functions
 //
-Bool16 QTAtom_dref::Initialize(void)
+Bool16 QTAtom_dref::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;
@@ -314,7 +314,7 @@ Bool16 QTAtom_dref::Read(UInt32 RefID, UInt64 Offset, char * const Buffer, UInt3
 // -------------------------------------
 // Debugging functions
 //
-void QTAtom_dref::DumpAtom(void)
+void QTAtom_dref::DumpAtom()
 {
 	DEBUG_PRINT(("QTAtom_dref::DumpAtom - Dumping atom.\n"));
 	for (UInt32 CurRef = 1; CurRef <= fNumRefs; CurRef++)
