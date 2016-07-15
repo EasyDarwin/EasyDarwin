@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,17 +18,17 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       SafeStdLib.h
+ /*
+	 File:       SafeStdLib.h
 
-    Contains:   Thread safe std lib calls
-    
+	 Contains:   Thread safe std lib calls
 
-*/
+
+ */
 
 #ifndef _INTERNAL_STDLIB_H_
 #define _INTERNAL_STDLIB_H_
@@ -38,9 +38,9 @@
 
 #define kTimeStrSize 32
 #define kErrorStrSize 256
-	extern int qtss_maxprintf(const char *fmt, ...);
-    extern void qtss_setmaxprintfcharsinK(UInt32 newMaxCharsInK);
-    extern UInt32 qtss_getmaxprintfcharsinK();
+extern int qtss_maxprintf(const char *fmt, ...);
+extern void qtss_setmaxprintfcharsinK(UInt32 newMaxCharsInK);
+extern UInt32 qtss_getmaxprintfcharsinK();
 
 #ifndef USE_DEFAULT_STD_LIB
 
@@ -56,24 +56,24 @@ extern "C" {
 
 
 #ifdef __USE_MAX_PRINTF__
-	#define qtss_printf qtss_maxprintf
+#define qtss_printf qtss_maxprintf
 #else
-    extern int qtss_printf(const char *fmt, ...);
-    
+	extern int qtss_printf(const char *fmt, ...);
+
 #endif
 
-extern int qtss_sprintf(char *buffer, const char *fmt,...);
-extern int qtss_fprintf(FILE *file, const char *fmt, ...);
-extern int qtss_snprintf(char *str, size_t size, const char *format, ...);
-extern size_t qtss_strftime(char *buf, size_t maxsize, const char *format, const struct tm *timeptr);
+	extern int qtss_sprintf(char *buffer, const char *fmt, ...);
+	extern int qtss_fprintf(FILE *file, const char *fmt, ...);
+	extern int qtss_snprintf(char *str, size_t size, const char *format, ...);
+	extern size_t qtss_strftime(char *buf, size_t maxsize, const char *format, const struct tm *timeptr);
 
-// These calls return the pointer passed into the call as the result.
+	// These calls return the pointer passed into the call as the result.
 
-extern char *qtss_strerror(int errnum, char* buffer, int buffLen);
-extern char *qtss_ctime(const time_t *timep, char* buffer, int buffLen);
-extern char *qtss_asctime(const struct tm *timeptr, char* buffer, int buffLen);
-extern struct tm *qtss_gmtime (const time_t *, struct tm *result);
-extern struct tm *qtss_localtime (const time_t *, struct tm *result);
+	extern char *qtss_strerror(int errnum, char* buffer, int buffLen);
+	extern char *qtss_ctime(const time_t *timep, char* buffer, int buffLen);
+	extern char *qtss_asctime(const struct tm *timeptr, char* buffer, int buffLen);
+	extern struct tm *qtss_gmtime(const time_t *, struct tm *result);
+	extern struct tm *qtss_localtime(const time_t *, struct tm *result);
 
 #ifdef __cplusplus
 }
@@ -87,16 +87,16 @@ extern struct tm *qtss_localtime (const time_t *, struct tm *result);
 #define qtss_fprintf fprintf
 
 #ifdef __USE_MAX_PRINTF__
-	#define qtss_printf qtss_maxprintf
+#define qtss_printf qtss_maxprintf
 #else
-	#define qtss_printf printf
+#define qtss_printf printf
 #endif
 
 #if __Win32__
-	#define qtss_snprintf _snprintf
+#define qtss_snprintf _snprintf
 #else
 
-	#define qtss_snprintf snprintf
+#define qtss_snprintf snprintf
 
 #endif
 
@@ -107,11 +107,11 @@ extern struct tm *qtss_localtime (const time_t *, struct tm *result);
 // Use our calls for the following.
 // These calls return the pointer passed into the call as the result.
 
-    extern char *qtss_strerror(int errnum, char* buffer, int buffLen);
-    extern char *qtss_ctime(const time_t *timep, char* buffer, int buffLen);
-    extern char *qtss_asctime(const struct tm *timeptr, char* buffer, int buffLen);
-    extern struct tm *qtss_gmtime (const time_t *, struct tm *result);
-    extern struct tm *qtss_localtime (const time_t *, struct tm *result);
+extern char* qtss_strerror(int errnum, char* buffer, int buffLen);
+extern char* qtss_ctime(const time_t* timep, char* buffer, int buffLen);
+extern char* qtss_asctime(const struct tm* timeptr, char* buffer, int buffLen);
+extern struct tm* qtss_gmtime(const time_t*, struct tm* result);
+extern struct tm* qtss_localtime(const time_t*, struct tm* result);
 
 #endif  //USE_DEFAULT_STD_LIB
 #endif //_INTERNAL_STDLIB_H_
