@@ -1618,7 +1618,7 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height)
 {
 	QTSS_Error	theErr = QTSS_NoErr;
-#ifndef __linux__
+#if 1
 	decodeParam.codec = codec;
 	decodeParam.width = width;
 	decodeParam.height = height;

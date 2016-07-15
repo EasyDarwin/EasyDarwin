@@ -121,7 +121,7 @@ private:
 
 	// Channel Snap
 	DECODE_PARAM_T		decodeParam;
-#ifndef __linux__
+#if 1
 	DecoderHelper		decoderHelper;
 #endif
 

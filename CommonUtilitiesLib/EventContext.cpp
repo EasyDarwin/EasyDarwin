@@ -36,6 +36,7 @@
 
 #ifndef __Win32__
 #include <unistd.h>
+#include <fcntl.h>
 #endif
 
 #if MACOSXEVENTQUEUE

@@ -1,12 +1,13 @@
 #ifndef _DECODER_HELPER_
 #define _DECODER_HELPER_
-
-#ifndef __linux__
+#if 1
 #define __STDC_CONSTANT_MACROS
 
 extern "C" 
 {
+#ifndef __linux__
 #include <inttypes.h>
+#endif
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 #include "libavutil/avutil.h"

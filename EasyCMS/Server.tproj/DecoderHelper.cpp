@@ -1,6 +1,5 @@
 #include "DecoderHelper.h"
-
-#ifndef __linux__
+#if  1
 DecoderHelper::DecoderHelper()
 	: _formatContext(NULL),
 	_videoCodecContext(NULL),
@@ -49,13 +48,15 @@ int DecoderHelper::SetVideoDecoderParam(int width, int height, int codec, int fo
 	_videoCodecContext->width   = width;
 	_videoCodecContext->height  = height;
 
+	int numBytes = 0;
 	int ret = avcodec_open2(_videoCodecContext, avcodec, NULL);
+	
 	if (ret < 0)
 	{
 		goto $fail;
 	}
 
-	int numBytes = avpicture_get_size(AV_PIX_FMT_YUV420P, width, height);
+	numBytes = avpicture_get_size(AV_PIX_FMT_YUV420P, width, height);
 	_buffYUV420 = (uint8_t *)av_malloc(numBytes * sizeof(uint8_t));
 	_videoFrame420 = av_frame_alloc();
 	if (avpicture_fill((AVPicture *)_videoFrame420, _buffYUV420, AV_PIX_FMT_YUV420P,
