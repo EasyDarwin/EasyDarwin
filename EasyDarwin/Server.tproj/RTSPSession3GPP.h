@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,18 +18,18 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       RTSPSession3GPP.h
+ /*
+	 File:       RTSPSession3GPP.h
 
-    Contains:   This parses 3gpp headers from a request
-                    
-    
+	 Contains:   This parses 3gpp headers from a request
 
-*/
+
+
+ */
 
 #ifndef __RTSPSESSION3GPP_H__
 #define __RTSPSESSION3GPP_H__
@@ -38,28 +38,28 @@
 #include "QTSSDictionary.h"
 
 
-//RTSPSession 3GPP utility class definition
+ //RTSPSession 3GPP utility class definition
 class RTSPSession3GPP : public QTSSDictionary
 {
-    public:
-        //Initialize
-        //Call initialize before instantiating this class: see QTSServer.cpp.
-        static void         Initialize();
+public:
+	//Initialize
+	//Call initialize before instantiating this class: see QTSServer.cpp.
+	static void         Initialize();
 
-        //CONSTRUCTOR / DESTRUCTOR
-        //these do very little. Just initialize / delete some member data.
-        //
-        //Arguments:        enable the object
-        RTSPSession3GPP(Bool16 enabled);
-        ~RTSPSession3GPP() {}
-        
-    
+	//CONSTRUCTOR / DESTRUCTOR
+	//these do very little. Just initialize / delete some member data.
+	//
+	//Arguments:        enable the object
+	RTSPSession3GPP(Bool16 enabled);
+	~RTSPSession3GPP() {}
 
-    private:
-        Bool16 fEnabled;
-    
-    //Dictionary support
-    static QTSSAttrInfoDict::AttrInfo   sAttributes[];
+
+
+private:
+	Bool16 fEnabled;
+
+	//Dictionary support
+	static QTSSAttrInfoDict::AttrInfo   sAttributes[];
 
 };
 #endif // __RTSPSESSION3GPP_H__
