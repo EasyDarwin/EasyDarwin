@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,18 +18,18 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       QTSSAccessLogModule.h
+ /*
+	 File:       QTSSAccessLogModule.h
 
-    Contains:   A QTSS API module that runs as an RTSP Post Processor and an RTP
-                timeout processor. It generates access log files compatible with
-                the Lariat Logging tool.
+	 Contains:   A QTSS API module that runs as an RTSP Post Processor and an RTP
+				 timeout processor. It generates access log files compatible with
+				 the Lariat Logging tool.
 
-*/
+ */
 
 #ifndef _QTSSACCESSLOGMODULE_H_
 #define _QTSSACCESSLOGMODULE_H_
@@ -38,7 +38,7 @@
 
 extern "C"
 {
-    EXPORT QTSS_Error QTSSAccessLogModule_Main(void* inPrivateArgs);
+	EXPORT QTSS_Error QTSSAccessLogModule_Main(void* inPrivateArgs);
 }
 
 #endif //_QTSSACCESSLOGMODULE_H_
