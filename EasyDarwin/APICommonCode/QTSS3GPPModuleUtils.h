@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,22 +18,21 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       QTSS3GPPModuleUtils.h
+ /*
+	 File:       QTSS3GPPModuleUtils.h
 
-    Contains:   Utility routines for 3GPP modules to use.
-                    
-*/
+	 Contains:   Utility routines for 3GPP modules to use.
+
+ */
 
 
 #ifndef _QTSS_3GPP_MODULE_UTILS_H_
 #define _QTSS_3GPP_MODULE_UTILS_H_
 
-#include <stdlib.h>
 #include "SafeStdLib.h"
 #include "QTSS.h"
 #include "StrPtrLen.h"
@@ -41,33 +40,33 @@
 
 class QTSS3GPPModuleUtils
 {
-    public:
+public:
 
-      
-    static void     Initialize(QTSS_Initialize_Params* initParams);
-    static void     ReadPrefs();
-    
-    
-    static SDPContainer*    Get3GPPSDPFeatureListCopy(ResizeableStringFormatter &buffer);
-    
-    private:
-    
-        static void ValidatePrefs();
-    
-        //
-        // Used in the implementation of the above functions
-   
-        static QTSS_TextMessagesObject  sMessages;
-        static QTSS_ServerObject        sServer;
-        static QTSS_PrefsObject         sServerPrefs;
-        static QTSS_StreamRef           sErrorLog;
-		static StrPtrLen				s3gppBitRateAdaptationSDPStr;
-        static Bool16                   s3gppEnabled;
-        static Bool16                   s3gppRateAdaptationEnabled;
-        static UInt16                   s3gppRateAdaptationReportFrequency;
-        
-        
-     
+
+	static void     Initialize(QTSS_Initialize_Params* initParams);
+	static void     ReadPrefs();
+
+
+	static SDPContainer*    Get3GPPSDPFeatureListCopy(ResizeableStringFormatter &buffer);
+
+private:
+
+	static void ValidatePrefs();
+
+	//
+	// Used in the implementation of the above functions
+
+	static QTSS_TextMessagesObject  sMessages;
+	static QTSS_ServerObject        sServer;
+	static QTSS_PrefsObject         sServerPrefs;
+	static QTSS_StreamRef           sErrorLog;
+	static StrPtrLen				s3gppBitRateAdaptationSDPStr;
+	static Bool16                   s3gppEnabled;
+	static Bool16                   s3gppRateAdaptationEnabled;
+	static UInt16                   s3gppRateAdaptationReportFrequency;
+
+
+
 };
 
 
