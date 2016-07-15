@@ -5,8 +5,8 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyCMSModule.h
-    Contains:   EasyDarwin CMS Module
+	File:       EasyCMSModule.h
+	Contains:   EasyDarwin CMS Module
 */
 
 #ifndef _EASYCMSMODULE_H_
@@ -16,7 +16,7 @@
 
 extern "C"
 {
-    EXPORT QTSS_Error EasyCMSModule_Main(void* inPrivateArgs);
+	EXPORT QTSS_Error EasyCMSModule_Main(void* inPrivateArgs);
 }
 
 #endif //_EASYCMSMODULE_H_
