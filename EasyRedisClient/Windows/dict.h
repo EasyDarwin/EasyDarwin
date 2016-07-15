@@ -39,37 +39,37 @@
 #define DICT_OK 0
 #define DICT_ERR 1
 
-/* Unused arguments generate annoying warnings... */
+ /* Unused arguments generate annoying warnings... */
 #define DICT_NOTUSED(V) ((void) V)
 
 typedef struct dictEntry {
-    void *key;
-    void *val;
-    struct dictEntry *next;
+	void *key;
+	void *val;
+	struct dictEntry *next;
 } dictEntry;
 
 typedef struct dictType {
-    unsigned int (*hashFunction)(const void *key);
-    void *(*keyDup)(void *privdata, const void *key);
-    void *(*valDup)(void *privdata, const void *obj);
-    int (*keyCompare)(void *privdata, const void *key1, const void *key2);
-    void (*keyDestructor)(void *privdata, void *key);
-    void (*valDestructor)(void *privdata, void *obj);
+	unsigned int(*hashFunction)(const void *key);
+	void *(*keyDup)(void *privdata, const void *key);
+	void *(*valDup)(void *privdata, const void *obj);
+	int(*keyCompare)(void *privdata, const void *key1, const void *key2);
+	void(*keyDestructor)(void *privdata, void *key);
+	void(*valDestructor)(void *privdata, void *obj);
 } dictType;
 
 typedef struct dict {
-    dictEntry **table;
-    dictType *type;
-    unsigned long size;
-    unsigned long sizemask;
-    unsigned long used;
-    void *privdata;
+	dictEntry **table;
+	dictType *type;
+	unsigned long size;
+	unsigned long sizemask;
+	unsigned long used;
+	void *privdata;
 } dict;
 
 typedef struct dictIterator {
-    dict *ht;
-    int index;
-    dictEntry *entry, *nextEntry;
+	dict *ht;
+	int index;
+	dictEntry *entry, *nextEntry;
 } dictIterator;
 
 /* This is the initial size of every hash table */
