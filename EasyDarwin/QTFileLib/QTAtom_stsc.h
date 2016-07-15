@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,14 +18,14 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-// $Id: QTAtom_stsc.h,v 1.1 2006/01/05 13:20:36 murata Exp $
-//
-// QTAtom_stsc:
-//   The 'stsc' QTAtom class.
+ // $Id: QTAtom_stsc.h,v 1.1 2006/01/05 13:20:36 murata Exp $
+ //
+ // QTAtom_stsc:
+ //   The 'stsc' QTAtom class.
 
 #ifndef QTAtom_stsc_H
 #define QTAtom_stsc_H
@@ -42,56 +42,56 @@
 class QTAtom_stsc_SampleTableControlBlock {
 
 public:
-    //
-    // Constructor and destructor.
-                        QTAtom_stsc_SampleTableControlBlock(void);
-    virtual             ~QTAtom_stsc_SampleTableControlBlock(void);
-    
-    //
-    // Reset function
-            void        Reset(void);
+	//
+	// Constructor and destructor.
+	QTAtom_stsc_SampleTableControlBlock();
+	virtual             ~QTAtom_stsc_SampleTableControlBlock();
 
-    //
-    // Sample table cache
-    UInt32              fCurEntry;
-    UInt32              fCurSample;
-    UInt32              fLastFirstChunk, fLastSamplesPerChunk, fLastSampleDescription;
-    
+	//
+	// Reset function
+	void        Reset();
 
-    UInt32  fLastFirstChunk_GetChunkFirstLastSample; 
-    UInt32  fLastSamplesPerChunk_GetChunkFirstLastSample; 
-    UInt32  fLastTotalSamples_GetChunkFirstLastSample;
-    
-    UInt32 fCurEntry_GetChunkFirstLastSample;
-    UInt32 chunkNumber_GetChunkFirstLastSample;
-    UInt32 firstSample_GetChunkFirstLastSample;
-    UInt32 lastSample_GetChunkFirstLastSample;
+	//
+	// Sample table cache
+	UInt32              fCurEntry;
+	UInt32              fCurSample;
+	UInt32              fLastFirstChunk, fLastSamplesPerChunk, fLastSampleDescription;
 
 
-    UInt32 fFirstSampleNumber_SampleToChunkInfo;
-    UInt32 fFirstSamplesPerChunk_SampleToChunkInfo;
-    UInt32 fFirstChunkNumber_SampleToChunkInfo;
-    UInt32 fFirstSampleDescriptionIndex_SampleToChunkInfo;
-    UInt32 fFirstSampleOffsetInChunk_SampleToChunkInfo;
-    
-    UInt32  fCurEntry_SampleToChunkInfo;
-    UInt32  fCurSample_SampleToChunkInfo;
-    UInt32  fLastFirstChunk_SampleToChunkInfo; 
-    UInt32  fLastSamplesPerChunk_SampleToChunkInfo; 
-    UInt32  fLastSampleDescription_SampleToChunkInfo;
-    
-    UInt32  fGetSampleInfo_SampleNumber;
-    UInt32  fGetSampleInfo_Length;
-    UInt32  fGetSampleInfo_SampleDescriptionIndex;
-    UInt64  fGetSampleInfo_Offset;
-    UInt32  fGetSampleInfo_LastChunk;
-    UInt32  fGetSampleInfo_LastChunkOffset;
-    
-    UInt32 fGetSizeOfSamplesInChunk_chunkNumber;
-    UInt32 fGetSizeOfSamplesInChunk_firstSample;
-    UInt32 fGetSizeOfSamplesInChunk_lastSample;
-    UInt32 fGetSizeOfSamplesInChunk_size;
-    
+	UInt32  fLastFirstChunk_GetChunkFirstLastSample;
+	UInt32  fLastSamplesPerChunk_GetChunkFirstLastSample;
+	UInt32  fLastTotalSamples_GetChunkFirstLastSample;
+
+	UInt32 fCurEntry_GetChunkFirstLastSample;
+	UInt32 chunkNumber_GetChunkFirstLastSample;
+	UInt32 firstSample_GetChunkFirstLastSample;
+	UInt32 lastSample_GetChunkFirstLastSample;
+
+
+	UInt32 fFirstSampleNumber_SampleToChunkInfo;
+	UInt32 fFirstSamplesPerChunk_SampleToChunkInfo;
+	UInt32 fFirstChunkNumber_SampleToChunkInfo;
+	UInt32 fFirstSampleDescriptionIndex_SampleToChunkInfo;
+	UInt32 fFirstSampleOffsetInChunk_SampleToChunkInfo;
+
+	UInt32  fCurEntry_SampleToChunkInfo;
+	UInt32  fCurSample_SampleToChunkInfo;
+	UInt32  fLastFirstChunk_SampleToChunkInfo;
+	UInt32  fLastSamplesPerChunk_SampleToChunkInfo;
+	UInt32  fLastSampleDescription_SampleToChunkInfo;
+
+	UInt32  fGetSampleInfo_SampleNumber;
+	UInt32  fGetSampleInfo_Length;
+	UInt32  fGetSampleInfo_SampleDescriptionIndex;
+	UInt64  fGetSampleInfo_Offset;
+	UInt32  fGetSampleInfo_LastChunk;
+	UInt32  fGetSampleInfo_LastChunkOffset;
+
+	UInt32 fGetSizeOfSamplesInChunk_chunkNumber;
+	UInt32 fGetSizeOfSamplesInChunk_firstSample;
+	UInt32 fGetSizeOfSamplesInChunk_lastSample;
+	UInt32 fGetSizeOfSamplesInChunk_size;
+
 
 };
 
@@ -101,50 +101,52 @@ public:
 class QTAtom_stsc : public QTAtom {
 
 public:
-    //
-    // Constructors and destructor.
-                        QTAtom_stsc(QTFile * File, QTFile::AtomTOCEntry * Atom,
-                               Bool16 Debug = false, Bool16 DeepDebug = false);
-    virtual             ~QTAtom_stsc(void);
+	//
+	// Constructors and destructor.
+	QTAtom_stsc(QTFile * File, QTFile::AtomTOCEntry * Atom,
+		Bool16 Debug = false, Bool16 DeepDebug = false);
+	virtual             ~QTAtom_stsc();
 
 
-    //
-    // Initialization functions.
-    virtual Bool16      Initialize(void);
-    
-    //
-    // Accessors.
-    
-     Bool16             GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSample, UInt32 *lastSample,  QTAtom_stsc_SampleTableControlBlock *STCB);
+	//
+	// Initialization functions.
+	virtual Bool16      Initialize();
 
-     Bool16             SampleToChunkInfo(UInt32 SampleNumber,
-                                                  UInt32 *samplesPerChunk = NULL,
-                                                  UInt32 *ChunkNumber = NULL,
-                                                  UInt32 *SampleDescriptionIndex = NULL,
-                                                  UInt32 *SampleOffsetInChunk = NULL,
-                                                  QTAtom_stsc_SampleTableControlBlock * STCB = NULL);
+	//
+	// Accessors.
+
+	Bool16             GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSample, UInt32 *lastSample, QTAtom_stsc_SampleTableControlBlock *STCB);
+
+	Bool16             SampleToChunkInfo(UInt32 SampleNumber,
+		UInt32 *samplesPerChunk = NULL,
+		UInt32 *ChunkNumber = NULL,
+		UInt32 *SampleDescriptionIndex = NULL,
+		UInt32 *SampleOffsetInChunk = NULL,
+		QTAtom_stsc_SampleTableControlBlock * STCB = NULL);
 
 
-    inline  Bool16      SampleNumberToChunkNumber(UInt32 SampleNumber, UInt32 *ChunkNumber = NULL, UInt32 *SampleDescriptionIndex = NULL, UInt32 *SampleOffsetInChunk = NULL,
-                                                  QTAtom_stsc_SampleTableControlBlock * STCB = NULL)
-                                                 { return SampleToChunkInfo(SampleNumber,NULL /*samplesPerChunk*/, ChunkNumber, SampleDescriptionIndex, SampleOffsetInChunk, STCB); }
+	inline  Bool16      SampleNumberToChunkNumber(UInt32 SampleNumber, UInt32 *ChunkNumber = NULL, UInt32 *SampleDescriptionIndex = NULL, UInt32 *SampleOffsetInChunk = NULL,
+		QTAtom_stsc_SampleTableControlBlock * STCB = NULL)
+	{
+		return SampleToChunkInfo(SampleNumber, NULL /*samplesPerChunk*/, ChunkNumber, SampleDescriptionIndex, SampleOffsetInChunk, STCB);
+	}
 
-    UInt32  GetChunkFirstSample(UInt32 chunkNumber);
-    //
-    // Debugging functions.
-    virtual void        DumpAtom(void);
-    virtual void        DumpTable(void);
+	UInt32  GetChunkFirstSample(UInt32 chunkNumber);
+	//
+	// Debugging functions.
+	virtual void        DumpAtom();
+	virtual void        DumpTable();
 
 
 protected:
-    //
-    // Protected member variables.
-    UInt8       fVersion;
-    UInt32      fFlags; // 24 bits in the low 3 bytes
+	//
+	// Protected member variables.
+	UInt8       fVersion;
+	UInt32      fFlags; // 24 bits in the low 3 bytes
 
-    UInt32      fNumEntries;
-    char        *fSampleToChunkTable;
-    UInt32      fTableSize;
+	UInt32      fNumEntries;
+	char        *fSampleToChunkTable;
+	UInt32      fTableSize;
 };
 
 #endif // QTAtom_stsc_H
