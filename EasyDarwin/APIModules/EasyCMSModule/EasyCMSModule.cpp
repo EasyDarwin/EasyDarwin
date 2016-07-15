@@ -11,9 +11,7 @@
 
 #include "EasyCMSModule.h"
 #include "QTSSModuleUtils.h"
-#include "QueryParamList.h"
 #include "OSRef.h"
-#include "StringParser.h"
 #include "QTSServerInterface.h"
 #include "EasyCMSSession.h"
 #include "ReflectorSession.h"
