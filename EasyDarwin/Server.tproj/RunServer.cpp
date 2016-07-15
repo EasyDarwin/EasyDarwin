@@ -53,6 +53,7 @@
 #include "QTSServer.h"
 
 #include <stdlib.h>
+#include <QTSSModuleUtils.h>
 
 QTSServer* sServer = NULL;
 int sStatusUpdateInterval = 0;
