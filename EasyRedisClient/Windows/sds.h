@@ -31,9 +31,6 @@
 #ifndef __SDS_H
 #define __SDS_H
 
-#include <sys/types.h>
-#include <stdarg.h>
-
 typedef char *sds;
 
 #ifdef _WIN32
@@ -43,19 +40,19 @@ typedef char *sds;
 
 
 struct sdshdr {
-    int len;
-    int free;
-    char buf[];
+	int len;
+	int free;
+	char buf[];
 };
 
 static inline size_t sdslen(const sds s) {
-    struct sdshdr *sh = (struct sdshdr*)(s-(sizeof(struct sdshdr)));
-    return sh->len;
+	struct sdshdr *sh = (struct sdshdr*)(s - (sizeof(struct sdshdr)));
+	return sh->len;
 }
 
 static inline size_t sdsavail(const sds s) {
-    struct sdshdr *sh = (struct sdshdr*)(s-(sizeof(struct sdshdr)));
-    return sh->free;
+	struct sdshdr *sh = (struct sdshdr*)(s - (sizeof(struct sdshdr)));
+	return sh->free;
 }
 
 sds sdsnewlen(const void *init, size_t initlen);
@@ -74,7 +71,7 @@ sds sdscpy(sds s, char *t);
 sds sdscatvprintf(sds s, const char *fmt, va_list ap);
 #ifdef __GNUC__
 sds sdscatprintf(sds s, const char *fmt, ...)
-    __attribute__((format(printf, 2, 3)));
+__attribute__((format(printf, 2, 3)));
 #else
 sds sdscatprintf(sds s, const char *fmt, ...);
 #endif

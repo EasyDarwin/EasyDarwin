@@ -42,7 +42,6 @@
 
 
 OSCond::OSCond()
-	: fWaitCount(0)
 {
 #ifdef __Win32__
 	fCondition = ::CreateEvent(NULL, FALSE, FALSE, NULL);
