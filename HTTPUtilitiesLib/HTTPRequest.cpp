@@ -29,6 +29,7 @@
 #include "StringTranslator.h"
 #include "ResizeableStringFormatter.h"
 #include "DateTranslator.h"
+#include <OSThread.h>
 
 StrPtrLen HTTPRequest::sColonSpace(": ", 2);
 static Bool16 sFalse = false;
