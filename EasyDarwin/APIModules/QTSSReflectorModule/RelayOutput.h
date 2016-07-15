@@ -42,6 +42,7 @@
 #include "OSQueue.h"
 #include "OSMutex.h"
 
+class RTSPOutputInfo;
 class RelayAnnouncer;
 
 class RelayOutput : public ReflectorOutput
@@ -131,7 +132,7 @@ private:
 	UInt64      fLastBytes;
 
 	TCPClientSocket* fClientSocket;
-	RTSPClient* fClient;
+	EasyDarwin::RTSPClient* fClient;
 	Bool16      fDoingAnnounce;
 	Bool16      fValid;
 	char*       fOutgoingSDP;
