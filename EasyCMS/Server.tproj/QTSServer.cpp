@@ -660,7 +660,7 @@ void QTSServer::loadModules(QTSServerPrefs* inPrefs)
         if (theFile == NULL)
             break;
 
-        this->CreateModule(theModDirName.GetObject(), theFile->d_name);
+        this->createModule(theModDirName.GetObject(), theFile->d_name);
     }
 
     (void)::closedir(theDir);

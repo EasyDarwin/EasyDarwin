@@ -51,11 +51,13 @@
 #ifndef __Win32__
 #include <sys/types.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #endif
 #include "QTSServerInterface.h"
 #include "QTSServer.h"
 
 #include <stdlib.h>
+#include <OSArrayObjectDeleter.h>
 
 QTSServer* sServer = NULL;
 int sStatusUpdateInterval = 0;
