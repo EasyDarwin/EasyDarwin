@@ -31,9 +31,7 @@
 #ifndef __RTPSTREAM3GPP_H__
 #define __RTPSTREAM3GPP_H__
 
-#include "QTSS.h"
 #include "QTSSDictionary.h"
-#include "QTSS_Private.h"
 #include "RTCPAPPNADUPacket.h"
 #include "RTSPRequest3GPP.h"
 #include "SVector.h"
