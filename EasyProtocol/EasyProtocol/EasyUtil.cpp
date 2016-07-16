@@ -27,9 +27,8 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/archive/iterators/base64_from_binary.hpp>  
-#include <boost/archive/iterators/binary_from_base64.hpp>  
-#include <boost/archive/iterators/transform_width.hpp>   
+
+#include "modp_b64.h"
 
 std::string EasyUtil::TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time)
 {
@@ -167,34 +166,35 @@ std::string EasyUtil::Int2String(int value)
 
 bool EasyUtil::Base64Decode(const std::string &sInput, string &sOutput)
 {
-	typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<string::const_iterator>, 8, 6> Base64DecodeIterator;
-	stringstream result;
-	try
-	{
-		copy(Base64DecodeIterator(sInput.begin()), Base64DecodeIterator(sInput.end()), ostream_iterator<char>(result));
-	}
-	catch (...)
-	{
-		return false;
-	}
-	sOutput = result.str();
+	std::string temp;
+	temp.resize(modp_b64_decode_len(sInput.size()));
 
-	return !sOutput.empty();
+	// does not null terminate result since result is binary data!
+	int input_size = static_cast<int>(sInput.size());
+	int output_size = modp_b64_decode(&(temp[0]), sInput.data(), input_size);
+	if (output_size < 0)
+		return false;
+
+	temp.resize(output_size);
+	sOutput.swap(temp);
+
+	return true;
 }
 
 bool EasyUtil::Base64Encode(const std::string &sInput, string &sOutput)
 {
-	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<string::const_iterator, 6, 8> > Base64EncodeIterator;
-	stringstream result;
-	copy(Base64EncodeIterator(sInput.begin()), Base64EncodeIterator(sInput.end()), ostream_iterator<char>(result));
-	size_t equal_count = (3 - sInput.length() % 3) % 3;
-	for (size_t i = 0; i < equal_count; i++)
-	{
-		result.put('=');
-	}
-	sOutput = result.str();
+	std::string temp;
+	temp.resize(modp_b64_encode_len(sInput.size()));  // makes room for null byte
 
-	return !sOutput.empty();
+													 // null terminates result since result is base64 text!
+	int input_size = static_cast<int>(sInput.size());
+	int output_size = modp_b64_encode(&(temp[0]), sInput.data(), input_size);
+	if (output_size < 0)
+		return false;
+
+	temp.resize(output_size);  // strips off null byte
+	sOutput.swap(temp);
+	return true;
 }
 
 string EasyUtil::Base64Encode(const char* src, size_t len)
@@ -227,32 +227,34 @@ string EasyUtil::Base64Decode(const char* src, size_t len)
 
 string EasyUtil::Base64Encode(const string &sInput)
 {
-	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<string::const_iterator, 6, 8> > Base64EncodeIterator;
-	stringstream result;
-	copy(Base64EncodeIterator(sInput.begin()), Base64EncodeIterator(sInput.end()), ostream_iterator<char>(result));
-	size_t equal_count = (3 - sInput.length() % 3) % 3;
-	for (size_t i = 0; i < equal_count; i++)
-	{
-		result.put('=');
-	}
+	std::string temp;
+	temp.resize(modp_b64_encode_len(sInput.size()));  // makes room for null byte
 
-	return result.str();
+													 // null terminates result since result is base64 text!
+	int input_size = static_cast<int>(sInput.size());
+	int output_size = modp_b64_encode(&(temp[0]), sInput.data(), input_size);
+	if (output_size < 0)
+		return false;
+
+	temp.resize(output_size);  // strips off null byte;
+
+	return temp;
 }
 
 string EasyUtil::Base64Decode(const string &sInput)
 {
-	typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<string::const_iterator>, 8, 6> Base64DecodeIterator;
-	stringstream result;
-	try
-	{
-		copy(Base64DecodeIterator(sInput.begin()), Base64DecodeIterator(sInput.end()), ostream_iterator<char>(result));
-	}
-	catch (...)
-	{
-		return string();
-	}
+	std::string temp;
+	temp.resize(modp_b64_decode_len(sInput.size()));
 
-	return result.str();
+	// does not null terminate result since result is binary data!
+	int input_size = static_cast<int>(sInput.size());
+	int output_size = modp_b64_decode(&(temp[0]), sInput.data(), input_size);
+	if (output_size < 0)
+		return false;
+
+	temp.resize(output_size);
+
+	return temp;
 }
 
 void EasyUtil::DelChar(std::string & sInput, char ch)
