@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,17 +18,17 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       RTCPAPPPacket.cpp
+ /*
+	 File:       RTCPAPPPacket.cpp
 
-    Contains:   RTCPAPPPacket de-packetizing classes
+	 Contains:   RTCPAPPPacket de-packetizing classes
 
-    
-*/
+
+ */
 
 
 #include "RTCPAPPPacket.h"
@@ -38,48 +38,48 @@
 #include "ResizeableStringFormatter.h"
 
 
-RTCPAPPPacket::RTCPAPPPacket(Bool16 debug) : 
-    fRTCPAPPDataBuffer(NULL),
-    fAPPDataBufferSize(0),
-    mDumpArray(NULL), 
-    mDumpArrayStrDeleter(NULL),
-    fDumpReport(),
-    fDebug(debug)
+RTCPAPPPacket::RTCPAPPPacket(Bool16 debug) :
+	fRTCPAPPDataBuffer(NULL),
+	fAPPDataBufferSize(0),
+	mDumpArray(NULL),
+	mDumpArrayStrDeleter(NULL),
+	fDumpReport(),
+	fDebug(debug)
 {
-    if (fDebug)
-    {
-       mDumpArray = NEW char[kmDumpArraySize];
-       mDumpArray[0] = '\0';
-       mDumpArrayStrDeleter.Set(mDumpArray);
-    }
+	if (fDebug)
+	{
+		mDumpArray = NEW char[kmDumpArraySize];
+		mDumpArray[0] = '\0';
+		mDumpArrayStrDeleter.Set(mDumpArray);
+	}
 
 }
 
 void RTCPAPPPacket::Dump()//Override
 {
 
-    
-    RTCPPacket::Dump();
-    fDumpReport.PutTerminator();
-    qtss_printf("%s\n", fDumpReport.GetBufPtr());
-    fDumpReport.Reset();
+
+	RTCPPacket::Dump();
+	fDumpReport.PutTerminator();
+	qtss_printf("%s\n", fDumpReport.GetBufPtr());
+	fDumpReport.Reset();
 }
 
 
 Bool16 RTCPAPPPacket::ParseAPPPacketHeader(UInt8* inPacketBuffer, UInt32 inPacketLength)
-{   
-    if (inPacketLength < kRTCPPacketSizeInBytes + kRTCPAPPHeaderSizeInBytes)
-        return false;
-        
-   return true;    
+{
+	if (inPacketLength < kRTCPPacketSizeInBytes + kRTCPAPPHeaderSizeInBytes)
+		return false;
+
+	return true;
 }
 
 Bool16 RTCPAPPPacket::ParseAPPPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
-    if (false == this->ParsePacket(inPacketBuffer, inPacketLength) ) // base class
-        return false;
-                      
-    return this->ParseAPPPacketHeader(inPacketBuffer, inPacketLength);
+	if (false == this->ParsePacket(inPacketBuffer, inPacketLength)) // base class
+		return false;
+
+	return this->ParseAPPPacketHeader(inPacketBuffer, inPacketLength);
 
 }
 
