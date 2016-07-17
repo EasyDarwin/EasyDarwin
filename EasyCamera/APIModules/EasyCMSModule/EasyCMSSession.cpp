@@ -167,8 +167,10 @@ SInt64 EasyCMSSession::Run()
 				}
 				else
 				{
+					printf("EasyCamera EasyCMSSession ackcount -- %d \n", fNoneACKMsgCount);
 					if (fNoneACKMsgCount > 3)
 					{
+						printf("ackmsgcount > 3 \n");
 						this->resetClientSocket();
 
 						return 0;
@@ -251,6 +253,7 @@ SInt64 EasyCMSSession::Run()
 					// clean up immediately so as to not have an open socket
 					// needlessly lingering around, taking up space.
 					Assert(!fSocket->GetSocket()->IsConnected());
+					printf("reading message \n");
 					this->resetClientSocket();
 
 					return 0;
@@ -319,6 +322,7 @@ SInt64 EasyCMSSession::Run()
 				else if (theErr != QTSS_NoErr)
 				{
 					// Any other error means that the client has disconnected, right?
+					printf("sending message != noerr \n");
 					Assert(!this->isConnected());
 					resetClientSocket();
 					return 0;
