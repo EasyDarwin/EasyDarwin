@@ -88,6 +88,7 @@ private:
 	StartStreamInfo fStartStreamInfo;
 
 	unsigned char* fCameraSnapPtr;
+	char* fTalkbackBuff;
 
 };
 

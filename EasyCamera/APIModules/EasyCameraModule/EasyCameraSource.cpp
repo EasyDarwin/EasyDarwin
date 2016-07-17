@@ -9,8 +9,6 @@
 #include "EasyProtocolDef.h"
 #include "hi_net_dev_sdk.h"
 
-#include "EasyUtil.h"
-
 #include <map>
 
 static unsigned int sLastVPTS = 0;
@@ -32,11 +30,15 @@ static char*            sDefaultCameraPassword = "admin";
 static UInt32			sStreamType = 1;
 static UInt32			sDefaultStreamType = 1;
 
+static int HSBUFFLEN = 164;
+static int BUFFLEN = 160;
+static int PTSPER = 20;
+
 int AddHead(char* dst, char* src, int length)
 {
 	dst[0] = 0x00;
 	dst[1] = 0x01;
-	dst[2] = 0x14;
+	dst[2] = 0x50;
 	dst[3] = 0x00;
 	memcpy(&dst[4], src, length);
 
@@ -79,13 +81,11 @@ HI_S32 NETSDK_APICALL OnStreamCallback(HI_U32 u32Handle,		/* 句柄 */
     HI_VOID* pUserData		/* 用户数据*/
 )
 {
-    HI_S_AVFrame* pstruAV = HI_NULL;
-    HI_S_SysHeader* pstruSys = HI_NULL;
     EasyCameraSource* pThis = (EasyCameraSource*)pUserData;
 
     if (u32DataType == HI_NET_DEV_AV_DATA)
     {
-        pstruAV = (HI_S_AVFrame*)pu8Buffer;
+		HI_S_AVFrame* pstruAV = (HI_S_AVFrame*)pu8Buffer;
 
         if (pstruAV->u32AVFrameFlag == HI_NET_DEV_VIDEO_FRAME_FLAG)
         {
@@ -98,7 +98,7 @@ HI_S32 NETSDK_APICALL OnStreamCallback(HI_U32 u32Handle,		/* 句柄 */
                     return HI_SUCCESS;
             }
 
-            unsigned int vInter = pstruAV->u32AVFramePTS - sLastVPTS;
+            //unsigned int vInter = pstruAV->u32AVFramePTS - sLastVPTS;
 
             sLastVPTS = pstruAV->u32AVFramePTS;
             pThis->PushFrame((unsigned char*)pu8Buffer, u32Length);
@@ -149,7 +149,8 @@ EasyCameraSource::EasyCameraSource()
     fCameraLogin(false),
     m_bStreamFlag(false),
     m_bForceIFrame(true),
-    fPusherHandle(NULL)
+    fPusherHandle(NULL),
+	fTalkbackBuff(NULL)
 {
     this->SetTaskName("EasyCameraSource");
 
@@ -164,10 +165,14 @@ EasyCameraSource::EasyCameraSource()
     fTimeoutTask = new TimeoutTask(this, 30 * 1000);
 
     fTimeoutTask->RefreshTimeout();
+
+	fTalkbackBuff = (char*)malloc(164 * sizeof(char));
 }
 
 EasyCameraSource::~EasyCameraSource()
 {
+	free(fTalkbackBuff);
+
     delete[] fCameraSnapPtr;
 
     if (fTimeoutTask)
@@ -191,8 +196,7 @@ bool EasyCameraSource::cameraLogin()
     //如果已登录，返回true
     if (fCameraLogin) return true;
     //登录到摄像机
-    HI_S32 s32Ret = HI_SUCCESS;
-    s32Ret = HI_NET_DEV_Login(&m_u32Handle, sCameraUser, sCameraPassword, sCamera_IP, sCameraPort);
+	HI_S32 s32Ret = HI_NET_DEV_Login(&m_u32Handle, sCameraUser, sCameraPassword, sCamera_IP, sCameraPort);
 
     if (s32Ret != HI_SUCCESS)
     {
@@ -219,19 +223,17 @@ QTSS_Error EasyCameraSource::netDevStartStream()
 
     OSMutexLocker locker(this->GetMutex());
 
-    QTSS_Error theErr = QTSS_NoErr;
-    HI_S32 s32Ret = HI_SUCCESS;
-    HI_S_STREAM_INFO struStreamInfo;
 
     HI_NET_DEV_SetEventCallBack(m_u32Handle, (HI_ON_EVENT_CALLBACK)OnEventCallback, this);
     HI_NET_DEV_SetStreamCallBack(m_u32Handle, (HI_ON_STREAM_CALLBACK)OnStreamCallback, this);
     HI_NET_DEV_SetDataCallBack(m_u32Handle, (HI_ON_DATA_CALLBACK)OnDataCallback, this);
 
+	HI_S_STREAM_INFO struStreamInfo;
     struStreamInfo.u32Channel = HI_NET_DEV_CHANNEL_1;
     struStreamInfo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
     struStreamInfo.u32Mode = HI_NET_DEV_STREAM_MODE_TCP;
     struStreamInfo.u8Type = HI_NET_DEV_STREAM_ALL;
-    s32Ret = HI_NET_DEV_StartStream(m_u32Handle, &struStreamInfo);
+	HI_S32 s32Ret = HI_NET_DEV_StartStream(m_u32Handle, &struStreamInfo);
     if (s32Ret != HI_SUCCESS)
     {
         qtss_printf("HI_NET_DEV_StartStream Fail\n");
@@ -284,7 +286,6 @@ bool EasyCameraSource::getSnapData(unsigned char* pBuf, UInt32 uBufLen, int* uSn
 
 SInt64 EasyCameraSource::Run()
 {
-    QTSS_Error theErr = QTSS_NoErr;
     EventFlags events = this->GetEvents();
 
     if (events & Task::kTimeoutEvent)
@@ -320,12 +321,11 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
                 memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
                 mediainfo.u32VideoCodec = EASY_SDK_VIDEO_CODEC_H264;
 
-                HI_S32 s32Ret = HI_FAILURE;
                 HI_S_Video sVideo;
                 sVideo.u32Channel = HI_NET_DEV_CHANNEL_1;
                 sVideo.blFlag = sStreamType ? HI_TRUE : HI_FALSE;
 
-                s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
+				HI_S32 s32Ret = HI_NET_DEV_GetConfig(m_u32Handle, HI_NET_DEV_CMD_VIDEO_PARAM, &sVideo, sizeof(HI_S_Video));
                 if (s32Ret == HI_SUCCESS)
                 {
                     mediainfo.u32VideoFps = sVideo.u32Frame;
@@ -445,24 +445,21 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
 
     HI_S_AVFrame* pstruAV = (HI_S_AVFrame*)frame;
 
-    EASY_AV_Frame  avFrame;
-    memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-
     if (pstruAV->u32AVFrameFlag == HI_NET_DEV_VIDEO_FRAME_FLAG)
     {
         if (pstruAV->u32AVFrameLen > 0)
         {
             unsigned char* pbuf = (unsigned char*)frame + sizeof(HI_S_AVFrame);
 
-            EASY_AV_Frame  avFrame;
-            memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-            avFrame.u32AVFrameLen = pstruAV->u32AVFrameLen;
-            avFrame.pBuffer = (unsigned char*)pbuf;
-            avFrame.u32VFrameType = (pstruAV->u32VFrameType == HI_NET_DEV_VIDEO_FRAME_I) ? EASY_SDK_VIDEO_FRAME_I : EASY_SDK_VIDEO_FRAME_P;
-            avFrame.u32AVFrameFlag = EASY_SDK_VIDEO_FRAME_FLAG;
-            avFrame.u32TimestampSec = pstruAV->u32AVFramePTS / 1000;
-            avFrame.u32TimestampUsec = (pstruAV->u32AVFramePTS % 1000) * 1000;
-            EasyPusher_PushFrame(fPusherHandle, &avFrame);
+            EASY_AV_Frame avFrameVideo;
+            memset(&avFrameVideo, 0x00, sizeof(EASY_AV_Frame));
+			avFrameVideo.u32AVFrameLen = pstruAV->u32AVFrameLen;
+			avFrameVideo.pBuffer = (unsigned char*)pbuf;
+			avFrameVideo.u32VFrameType = (pstruAV->u32VFrameType == HI_NET_DEV_VIDEO_FRAME_I) ? EASY_SDK_VIDEO_FRAME_I : EASY_SDK_VIDEO_FRAME_P;
+			avFrameVideo.u32AVFrameFlag = EASY_SDK_VIDEO_FRAME_FLAG;
+			avFrameVideo.u32TimestampSec = pstruAV->u32AVFramePTS / 1000;
+			avFrameVideo.u32TimestampUsec = (pstruAV->u32AVFramePTS % 1000) * 1000;
+            EasyPusher_PushFrame(fPusherHandle, &avFrameVideo);
         }
     }
     else if (pstruAV->u32AVFrameFlag == HI_NET_DEV_AUDIO_FRAME_FLAG)
@@ -471,14 +468,14 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len)
         {
             unsigned char* pbuf = (unsigned char*)frame + sizeof(HI_S_AVFrame);
 
-            EASY_AV_Frame  avFrame;
-            memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-            avFrame.u32AVFrameLen = pstruAV->u32AVFrameLen - 4;//去掉厂家自定义的4字节头
-            avFrame.pBuffer = (unsigned char*)pbuf + 4;
-            avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
-            avFrame.u32TimestampSec = pstruAV->u32AVFramePTS / 1000;
-            avFrame.u32TimestampUsec = (pstruAV->u32AVFramePTS % 1000) * 1000;
-            EasyPusher_PushFrame(fPusherHandle, &avFrame);
+            EASY_AV_Frame avFrameAudio;
+            memset(&avFrameAudio, 0x00, sizeof(EASY_AV_Frame));
+			avFrameAudio.u32AVFrameLen = pstruAV->u32AVFrameLen - 4;//去掉厂家自定义的4字节头
+			avFrameAudio.pBuffer = (unsigned char*)pbuf + 4;
+			avFrameAudio.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
+			avFrameAudio.u32TimestampSec = pstruAV->u32AVFramePTS / 1000;
+			avFrameAudio.u32TimestampUsec = (pstruAV->u32AVFramePTS % 1000) * 1000;
+            EasyPusher_PushFrame(fPusherHandle, &avFrameAudio);
         }
     }
     return Easy_NoErr;
@@ -644,51 +641,22 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 			break;
 		case EASY_TALKBACK_CMD_TYPE_SENDDATA:
 			{
-				//char* infilename = "hs.g711";
-				//char* outAacname = "g711.g711";
-
-				//FILE* fpIn = fopen(infilename, "rb");
-				//if (NULL == fpIn)
-				//{
-				//	printf("%s:[%d] open %s file failed\n", __FUNCTION__, __LINE__, infilename);
-				//	return -1;
-				//}
-
-				//FILE* fpOut = fopen(outAacname, "wb");
-				//if (NULL == fpOut)
-				//{
-				//	printf("%s:[%d] open %s file failed\n", __FUNCTION__, __LINE__, outAacname);
-				//	return -1;
-				//}
-
-				//int gBytesRead = 0;
-				//int bG711ABufferSize = 164;
-				//int pts = 0;
-				//unsigned char *pbG711ABuffer = (unsigned char *)malloc(bG711ABufferSize * sizeof(unsigned char));
-				//char* pTemp = (char*)malloc(164 * sizeof(char));
-
-				//while ((gBytesRead = fread(pbG711ABuffer, 1, bG711ABufferSize, fpIn)) > 0)
-				//{
-				//	//AddHead(pTemp, (char*)pbG711ABuffer, bG711ABufferSize);
-				//	error = HI_NET_DEV_SendVoiceData(m_u32Handle, (char*)pbG711ABuffer, bG711ABufferSize, pts);
-				//	pts += 20;
-				//	//::Sleep(20);
-				//	printf("--------------------------- %d\n", error);
-				//	//break;
-				//}
-
-
-				////fwrite(au.data(), 1, au.size(), fpOut);
-				//
-				//free(pTemp);
-				//free(pbG711ABuffer);
-				//fclose(fpIn);
-				//fclose(fpOut);
-
-				int buffSize = 164;
-				char* pTemp = (char*)malloc(buffSize * sizeof(char));
-				AddHead(pTemp, (char*)params->inBuff, params->inBuffLen);
-				error = HI_NET_DEV_SendVoiceData(m_u32Handle, pTemp, buffSize, params->inPts);
+				if (params->inBuff == NULL || params->inBuffLen == 0)
+				{
+					result = QTSS_BadArgument;
+					break;
+				}
+				int len = params->inBuffLen;
+				int offset = 0;
+				int pts = params->inPts;
+				while (len >= BUFFLEN)
+				{
+					AddHead(fTalkbackBuff, (char*)params->inBuff + offset, BUFFLEN);					
+					error = HI_NET_DEV_SendVoiceData(m_u32Handle, fTalkbackBuff, HSBUFFLEN, pts);
+					offset += BUFFLEN;
+					len -= BUFFLEN;
+					pts += PTSPER;
+				}
 			}
 			break;
 		case EASY_TALKBACK_CMD_TYPE_STOP:

@@ -285,6 +285,14 @@ SInt64 EasyCMSSession::Run()
 
 				QTSS_Error err = processMessage();
 
+				if (err == QTSS_WouldBlock)
+				{
+					fSocket->GetSocket()->SetTask(this);
+					fSocket->GetSocket()->RequestEvent(EV_RE);
+
+					return 0;
+				}
+
 				// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
 				if (fOutputStream->GetBytesWritten() > 0)
 				{
@@ -381,6 +389,8 @@ QTSS_Error EasyCMSSession::processMessage()
 	theContentLenParser.ConsumeWhitespace();
 	UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
 
+	//printf("EasyCMSSession::ProcessMessage Parse ContentLength:%d \n", content_length);
+
 	if (content_length)
 	{
 		//qtss_printf("EasyCMSSession::ProcessMessage read content-length:%lu \n", content_length);
@@ -398,6 +408,8 @@ QTSS_Error EasyCMSSession::processMessage()
 		theErr = fInputStream->Read(fContentBuffer + fContentBufferOffset, content_length - fContentBufferOffset, &theLen);
 		Assert(theErr != QTSS_BadArgument);
 
+		//printf("EasyCMSSession::ProcessMessage Read Length:%d (%d/%d) \n", theLen, fContentBufferOffset+theLen, content_length);
+
 		if (theErr == QTSS_RequestFailed)
 		{
 			OSCharArrayDeleter charArrayPathDeleter(fContentBuffer);
@@ -406,8 +418,9 @@ QTSS_Error EasyCMSSession::processMessage()
 
 			return QTSS_RequestFailed;
 		}
+		
+		//printf("EasyCMSSession::ProcessMessage() Add Len:%lu \n", theLen);
 
-		//qtss_printf("EasyCMSSession::ProcessMessage() Add Len:%lu \n", theLen);
 		if ((theErr == QTSS_WouldBlock) || (theLen < (content_length - fContentBufferOffset)))
 		{
 			//
@@ -423,7 +436,7 @@ QTSS_Error EasyCMSSession::processMessage()
 		// 处理完成报文后会自动进行Delete处理
 		OSCharArrayDeleter charArrayPathDeleter(fContentBuffer);
 
-		//qtss_printf("EasyCMSSession::ProcessMessage() Get Complete Msg:\n%s", fContentBuffer);
+		//printf("EasyCMSSession::ProcessMessage Get Complete Msg:\n%s", fContentBuffer);
 
 		fNoneACKMsgCount = 0;
 
@@ -953,11 +966,12 @@ QTSS_Error EasyCMSSession::processControlTalkbackReq() const
 		return QTSS_ValueNotFound;
 	}
 
-	string audioData;
 	QTSS_RoleParams params;
 	params.cameraTalkbackParams.inCommand = EasyProtocol::GetTalkbackCMDType(command);
 	params.cameraTalkbackParams.inType = EasyProtocol::GetTalkbackAudioType(audioType);
 
+	string audioData;
+	audioData.reserve(1600);
 	if (audio.empty())
 	{
 		params.cameraTalkbackParams.inBuff = NULL;
@@ -966,7 +980,8 @@ QTSS_Error EasyCMSSession::processControlTalkbackReq() const
 	}
 	else
 	{
-		string audioData = EasyUtil::Base64Decode(audio);
+		audioData.clear();
+		audioData = EasyUtil::Base64Decode(audio);
 		params.cameraTalkbackParams.inBuff = const_cast<char*>(audioData.data());
 		params.cameraTalkbackParams.inBuffLen = audioData.size();
 		params.cameraTalkbackParams.inPts = EasyUtil::String2Int(pts);
