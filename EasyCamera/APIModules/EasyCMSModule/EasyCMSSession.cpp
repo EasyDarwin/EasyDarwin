@@ -253,7 +253,7 @@ SInt64 EasyCMSSession::Run()
 					// clean up immediately so as to not have an open socket
 					// needlessly lingering around, taking up space.
 					Assert(!fSocket->GetSocket()->IsConnected());
-					printf("reading message \n");
+					printf("reading message theErr == %d \n", theErr);
 					this->resetClientSocket();
 
 					return 0;
@@ -322,7 +322,7 @@ SInt64 EasyCMSSession::Run()
 				else if (theErr != QTSS_NoErr)
 				{
 					// Any other error means that the client has disconnected, right?
-					printf("sending message != noerr \n");
+					printf("sending message != noerr errno %d \n", theErr);
 					Assert(!this->isConnected());
 					resetClientSocket();
 					return 0;
