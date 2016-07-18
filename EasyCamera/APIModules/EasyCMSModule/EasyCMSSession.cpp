@@ -244,7 +244,7 @@ SInt64 EasyCMSSession::Run()
 					fSocket->GetSocket()->SetTask(this);
 					fSocket->GetSocket()->RequestEvent(EV_RE);
 
-					//fState = kIdle;
+					fState = kIdle;
 					return 0;
 				}
 
