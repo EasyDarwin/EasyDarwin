@@ -206,13 +206,13 @@ void    QTSServer::LoadCompiledInModules()
 
 #endif //DSS_DYNAMIC_MODULES_ONLY
 
-	QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");
-    (void)theCMSModule->SetupModule(&sCallbacks, &EasyCMSModule_Main);
-    (void)AddModule(theCMSModule);
-
 	QTSSModule* theCameraModule = new QTSSModule("EasyCameraModule");
     (void)theCameraModule->SetupModule(&sCallbacks, &EasyCameraModule_Main);
     (void)AddModule(theCameraModule);
+
+	QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");
+    (void)theCMSModule->SetupModule(&sCallbacks, &EasyCMSModule_Main);
+    (void)AddModule(theCMSModule);
 
 }
 
