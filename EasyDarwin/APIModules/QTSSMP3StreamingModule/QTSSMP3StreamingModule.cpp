@@ -34,6 +34,7 @@
  */
 
 #ifndef kVersionString
+#include "revision.h"
 #endif
 
 #include "QTSSMP3StreamingModule.h"
