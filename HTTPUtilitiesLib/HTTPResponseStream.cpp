@@ -151,6 +151,7 @@ QTSS_Error HTTPResponseStream::Flush()
 
 		if (amtInBuffer > 0)
 		{
+			fPrintMsg = false;
 			if (fPrintMsg)
 			{
 				DateBuffer theDate;

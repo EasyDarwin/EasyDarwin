@@ -200,9 +200,15 @@ SInt64 EasyCMSSession::Run()
 					{
 						// 已连接，保活时间到需要发送保活报文
 						if(fCSeq%3 == 1)
+						{
+							printf("post snap \n");
 							doDSPostSnap();
+						}
 						else
+						{
+							printf("register camera \n");
 							doDSRegister();
+						}
 
 						fTimeoutTask->RefreshTimeout();
 					}
