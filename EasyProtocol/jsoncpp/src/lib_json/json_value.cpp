@@ -13,6 +13,7 @@
 #include <utility>
 #include <cstring>
 #include <cassert>
+#include <algorithm>
 #ifdef JSON_USE_CPPTL
 #include <cpptl/conststring.h>
 #endif
