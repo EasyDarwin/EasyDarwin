@@ -32,7 +32,9 @@ static char*			sDefaultEasy_Tag = "CAMTag001";
 // EasyCMS Keep-Alive Interval
 static UInt32			sKeepAliveInterval = 30;
 static UInt32			sDefKeepAliveInterval = 30;
-
+// EasyCMS Upload snap Interval
+static UInt32			sUploadSnapInterval = 180;
+static UInt32			sDefaultUploadSnapInterval = 180;
 
 // 初始化读取配置文件中各项配置
 void EasyCMSSession::Initialize(QTSS_ModulePrefsObject cmsModulePrefs)
@@ -55,6 +57,9 @@ void EasyCMSSession::Initialize(QTSS_ModulePrefsObject cmsModulePrefs)
 	sEasy_Tag = QTSSModuleUtils::GetStringAttribute(cmsModulePrefs, "device_tag", sDefaultEasy_Tag);
 
 	QTSSModuleUtils::GetAttribute(cmsModulePrefs, "keep_alive_interval", qtssAttrDataTypeUInt32, &sKeepAliveInterval, &sDefKeepAliveInterval, sizeof(sKeepAliveInterval));
+
+	QTSSModuleUtils::GetAttribute(cmsModulePrefs, "upload_snap_interval", qtssAttrDataTypeUInt32, &sUploadSnapInterval, &sDefaultUploadSnapInterval, sizeof(sUploadSnapInterval));
+
 }
 
 EasyCMSSession::EasyCMSSession()
@@ -160,7 +165,7 @@ SInt64 EasyCMSSession::Run()
 				if (!isConnected())
 				{
 					// TCPSocket未连接的情况,首先进行登录连接
-					if (doDSRegister() == QTSS_NoErr)
+					if (doDSRegister() == QTSS_NoErr && sUploadSnapInterval >= sKeepAliveInterval)
 					{
 						doDSPostSnap();
 					}
@@ -182,7 +187,7 @@ SInt64 EasyCMSSession::Run()
 						// 已连接，但状态为离线,重新进行上线动作
 						if (kSessionOffline == fSessionStatus)
 						{
-							if (doDSRegister() == QTSS_NoErr)
+							if (doDSRegister() == QTSS_NoErr && sUploadSnapInterval >= sKeepAliveInterval)
 							{
 								doDSPostSnap();
 							}
@@ -199,7 +204,7 @@ SInt64 EasyCMSSession::Run()
 					if (events & Task::kTimeoutEvent)
 					{
 						// 已连接，保活时间到需要发送保活报文
-						if(fCSeq%6 == 1)
+						if(sUploadSnapInterval >= sKeepAliveInterval && fCSeq%(sUploadSnapInterval/sKeepAliveInterval) == 1)
 						{
 							printf("post snap \n");
 							doDSPostSnap();
@@ -213,7 +218,7 @@ SInt64 EasyCMSSession::Run()
 						fTimeoutTask->RefreshTimeout();
 					}
 
-					if (events & Task::kUpdateEvent)
+					if (events & Task::kUpdateEvent && sUploadSnapInterval >= sKeepAliveInterval)
 					{
 						//已连接，发送快照更新
 						doDSPostSnap();

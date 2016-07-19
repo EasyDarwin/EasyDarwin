@@ -15,13 +15,14 @@
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="EasyCMSModule" >
-		<PREF NAME="easycms_ip" >127.0.0.1</PREF>
-		<PREF NAME="easycms_port" TYPE="UInt16" >10001</PREF>
+		<PREF NAME="easycms_ip" >121.40.50.44</PREF>
+		<PREF NAME="easycms_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="device_serial" >001001000099</PREF>
 		<PREF NAME="device_name" >Anonymous</PREF>
 		<PREF NAME="device_key" >123456</PREF>
 		<PREF NAME="device_tag" >dev</PREF>
 		<PREF NAME="keep_alive_interval" TYPE="UInt32" >30</PREF>
+		<PREF NAME="upload_snap_interval" TYPE="UInt32" >180</PREF>
 	</MODULE>
 	<MODULE NAME="EasyCameraModule" >
 		<PREF NAME="camera_ip" >192.168.66.222</PREF>
