@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,18 +18,18 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
  /*
-    Contains:   This object represents a single QTSS API compliant module.
-                A module may either be compiled directly into the server,
-                or loaded from a code fragment residing on the disk.
-                
-                Object does the loading and initialization of a module, and
-                stores all per-module data.
-                    
+	Contains:   This object represents a single QTSS API compliant module.
+				A module may either be compiled directly into the server,
+				or loaded from a code fragment residing on the disk.
+
+				Object does the loading and initialization of a module, and
+				stores all per-module data.
+
 
 */
 
@@ -50,133 +50,135 @@
 
 class QTSSModule : public QTSSDictionary, public Task
 {
-    public:
-    
-        //
-        // INITIALIZE
-        static void     Initialize();
-    
-        // CONSTRUCTOR / SETUP / DESTRUCTOR
-        
-        // Specify the path to the code fragment if this module
-        // is to be loaded from disk. If it is loaded from disk, the
-        // name of the module will be its file name. Otherwise, the
-        // inName parameter will set it.
+public:
 
-        QTSSModule(char* inName, char* inPath = NULL);
+	//
+	// INITIALIZE
+	static void     Initialize();
 
-        // This function does all the module setup. If the module is being
-        // loaded from disk, you need not pass in a main entrypoint (as
-        // it will be grabbed from the fragment). Otherwise, you must pass
-        // in a main entrypoint.
-        //
-        // Note that this function does not invoke any public module roles.
-        QTSS_Error  SetupModule(QTSS_CallbacksPtr inCallbacks, QTSS_MainEntryPointPtr inEntrypoint = NULL);
+	// CONSTRUCTOR / SETUP / DESTRUCTOR
 
-        // Doesn't free up internally allocated stuff
-        virtual ~QTSSModule(){}
-        
-        //
-        // MODIFIERS
-        void            SetPrefsDict(QTSSPrefs* inPrefs) { fPrefs = inPrefs; }
-        void            SetAttributesDict(QTSSDictionary* inAttributes) { fAttributes = inAttributes; }
-        //
-        // ACCESSORS
-        
-        OSQueueElem*    GetQueueElem()  { return &fQueueElem; }
-        Bool16          IsInitialized() { return fDispatchFunc != NULL; }
-        QTSSPrefs*      GetPrefsDict()  { return fPrefs; }
-        QTSSDictionary* GetAttributesDict() { return fAttributes; }
-        OSMutex*        GetAttributesMutex() { return &fAttributesMutex; }
+	// Specify the path to the code fragment if this module
+	// is to be loaded from disk. If it is loaded from disk, the
+	// name of the module will be its file name. Otherwise, the
+	// inName parameter will set it.
 
-        //convert QTSS.h 4 char id roles to private role index
-        SInt32 GetPrivateRoleIndex(QTSS_Role apiRole);
+	QTSSModule(char* inName, char* inPath = NULL);
 
-        
-        // This calls into the module.
-        QTSS_Error  CallDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
-        {  
-            SInt32 theRoleIndex  = -1;
-            
-            if (MODULE_DEBUG)
-            {    this->GetValue(qtssModName)->PrintStr("QTSSModule::CallDispatch ENTER module=", " role=");
-                 theRoleIndex = GetPrivateRoleIndex(inRole);
-                 if (theRoleIndex != -1)
-                    qtss_printf(" %s ENTR\n", sRoleNames[theRoleIndex]);
-                
-            }  
-            QTSS_Error theError = (fDispatchFunc)(inRole, inParams);  
+	// This function does all the module setup. If the module is being
+	// loaded from disk, you need not pass in a main entrypoint (as
+	// it will be grabbed from the fragment). Otherwise, you must pass
+	// in a main entrypoint.
+	//
+	// Note that this function does not invoke any public module roles.
+	QTSS_Error  SetupModule(QTSS_CallbacksPtr inCallbacks, QTSS_MainEntryPointPtr inEntrypoint = NULL);
 
-            if (MODULE_DEBUG)
-            {   this->GetValue(qtssModName)->PrintStr("QTSSModule::CallDispatch EXIT  module=", " role=");
-                if (theRoleIndex != -1)
-                    qtss_printf(" %s EXIT\n", sRoleNames[theRoleIndex]);
-            }
-            
-            return theError;
-        }
-        
+	// Doesn't free up internally allocated stuff
+	virtual ~QTSSModule() {}
 
-        // These enums allow roles to be stored in a more optimized way
-        // add new RoleNames to sRoleNames in QTSSModule.cpp for debugging       
-        enum
-        {
-            kInitializeRole =           0,
-            kShutdownRole =             1,
+	//
+	// MODIFIERS
+	void            SetPrefsDict(QTSSPrefs* inPrefs) { fPrefs = inPrefs; }
+	void            SetAttributesDict(QTSSDictionary* inAttributes) { fAttributes = inAttributes; }
+	//
+	// ACCESSORS
 
-            kErrorLogRole =             2,
-            kRereadPrefsRole =          3,
-            kOpenFileRole =             4,
-            kOpenFilePreProcessRole =   5,
-            kAdviseFileRole =           6,
-            kReadFileRole =             7,
-            kCloseFileRole =            8,
-            kRequestEventFileRole =     9,
-            kStateChangeRole =          10,
-            kTimedIntervalRole =        11,
+	OSQueueElem*    GetQueueElem() { return &fQueueElem; }
+	Bool16          IsInitialized() { return fDispatchFunc != NULL; }
+	QTSSPrefs*      GetPrefsDict() { return fPrefs; }
+	QTSSDictionary* GetAttributesDict() { return fAttributes; }
+	OSMutex*        GetAttributesMutex() { return &fAttributesMutex; }
 
-			//EasyCamera Roles
-			kStartStreamRole =			12,
-			kStopStreamRole =			13,
-			kGetCameraStateRole =		14,
-			kGetCameraSnapRole =		15,
-            kControlPTZRole =           16,
-            kControlPresetRole =		17,
-			kControlTalkbackRole =		18,
-            
-            kNumRoles =                 19
-        };
-        typedef UInt32 RoleIndex;
-        
-        // Call this to activate this module in the specified role.
-        QTSS_Error  AddRole(QTSS_Role inRole);
-        
-        // This returns true if this module is supposed to run in the specified role.
-        Bool16  RunsInRole(RoleIndex inIndex) { Assert(inIndex < kNumRoles); return fRoleArray[inIndex]; }
-        
-        SInt64 Run();
-        
-        QTSS_ModuleState* GetModuleState() { return &fModuleState;}
-        
-    private:
-    
-        QTSS_Error LoadFromDisk(QTSS_MainEntryPointPtr* outEntrypoint);
+	//convert QTSS.h 4 char id roles to private role index
+	SInt32 GetPrivateRoleIndex(QTSS_Role apiRole);
 
-        OSQueueElem                 fQueueElem;
-        char*                       fPath;
-        OSCodeFragment*             fFragment;
-        QTSS_DispatchFuncPtr        fDispatchFunc;
-        Bool16                      fRoleArray[kNumRoles];
-        QTSSPrefs*                  fPrefs;
-        QTSSDictionary*             fAttributes;
-        OSMutex                     fAttributesMutex;   
 
-        static Bool16       sHasOpenFileModule;
-    
-        static QTSSAttrInfoDict::AttrInfo   sAttributes[];
-        static char* sRoleNames[];
-        
-        QTSS_ModuleState    fModuleState;
+	// This calls into the module.
+	QTSS_Error  CallDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
+	{
+		SInt32 theRoleIndex = -1;
+
+		if (MODULE_DEBUG)
+		{
+			this->GetValue(qtssModName)->PrintStr("QTSSModule::CallDispatch ENTER module=", " role=");
+			theRoleIndex = GetPrivateRoleIndex(inRole);
+			if (theRoleIndex != -1)
+				qtss_printf(" %s ENTR\n", sRoleNames[theRoleIndex]);
+
+		}
+		QTSS_Error theError = (fDispatchFunc)(inRole, inParams);
+
+		if (MODULE_DEBUG)
+		{
+			this->GetValue(qtssModName)->PrintStr("QTSSModule::CallDispatch EXIT  module=", " role=");
+			if (theRoleIndex != -1)
+				qtss_printf(" %s EXIT\n", sRoleNames[theRoleIndex]);
+		}
+
+		return theError;
+	}
+
+
+	// These enums allow roles to be stored in a more optimized way
+	// add new RoleNames to sRoleNames in QTSSModule.cpp for debugging       
+	enum
+	{
+		kInitializeRole = 0,
+		kShutdownRole = 1,
+
+		kErrorLogRole = 2,
+		kRereadPrefsRole = 3,
+		kOpenFileRole = 4,
+		kOpenFilePreProcessRole = 5,
+		kAdviseFileRole = 6,
+		kReadFileRole = 7,
+		kCloseFileRole = 8,
+		kRequestEventFileRole = 9,
+		kStateChangeRole = 10,
+		kTimedIntervalRole = 11,
+
+		//EasyCamera Roles
+		kStartStreamRole = 12,
+		kStopStreamRole = 13,
+		kGetCameraStateRole = 14,
+		kGetCameraSnapRole = 15,
+		kControlPTZRole = 16,
+		kControlPresetRole = 17,
+		kControlTalkbackRole = 18,
+
+		kNumRoles = 19
+	};
+	typedef UInt32 RoleIndex;
+
+	// Call this to activate this module in the specified role.
+	QTSS_Error  AddRole(QTSS_Role inRole);
+
+	// This returns true if this module is supposed to run in the specified role.
+	Bool16  RunsInRole(RoleIndex inIndex) { Assert(inIndex < kNumRoles); return fRoleArray[inIndex]; }
+
+	SInt64 Run();
+
+	QTSS_ModuleState* GetModuleState() { return &fModuleState; }
+
+private:
+
+	QTSS_Error LoadFromDisk(QTSS_MainEntryPointPtr* outEntrypoint);
+
+	OSQueueElem                 fQueueElem;
+	char*                       fPath;
+	OSCodeFragment*             fFragment;
+	QTSS_DispatchFuncPtr        fDispatchFunc;
+	Bool16                      fRoleArray[kNumRoles];
+	QTSSPrefs*                  fPrefs;
+	QTSSDictionary*             fAttributes;
+	OSMutex                     fAttributesMutex;
+
+	static Bool16       sHasOpenFileModule;
+
+	static QTSSAttrInfoDict::AttrInfo   sAttributes[];
+	static char* sRoleNames[];
+
+	QTSS_ModuleState    fModuleState;
 
 };
 
