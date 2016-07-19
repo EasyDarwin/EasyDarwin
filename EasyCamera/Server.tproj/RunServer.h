@@ -10,7 +10,7 @@
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -18,17 +18,17 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  *
  */
-/*
-    File:       RunServer.h
+ /*
+	 File:       RunServer.h
 
-    Contains:   Routines to run the Streaming Server
+	 Contains:   Routines to run the Streaming Server
 
 
-*/
+ */
 
 
 #include "OSHeaders.h"
@@ -37,15 +37,16 @@
 #include "QTSS.h"
 #include "QTSServer.h"
 
-enum { 
-        kRunServerDebug_Off = 0,
-        kRunServerDebugDisplay_On = 1 << 0, 
-        kRunServerDebugLogging_On = 1 << 1 // not implemented
-     };
-     
-inline Bool16 DebugOn(QTSServer* server) { return ( server->GetDebugOptions() != kRunServerDebug_Off )  ? true : false ; }
-inline Bool16 DebugDisplayOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugDisplay_On)  ? true : false ; }
-inline Bool16 DebugLogOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugLogging_On)  ? true : false ; }
+enum
+{
+	kRunServerDebug_Off = 0,
+	kRunServerDebugDisplay_On = 1 << 0,
+	kRunServerDebugLogging_On = 1 << 1 // not implemented
+};
+
+inline Bool16 DebugOn(QTSServer* server) { return (server->GetDebugOptions() != kRunServerDebug_Off) ? true : false; }
+inline Bool16 DebugDisplayOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugDisplay_On) ? true : false; }
+inline Bool16 DebugLogOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugLogging_On) ? true : false; }
 
 //
 // This function starts the Streaming Server. Pass in a source
@@ -55,13 +56,13 @@ inline Bool16 DebugLogOn(QTSServer* server) { return (server->GetDebugOptions() 
 // Returns the server state upon completion of startup. If this
 // is qtssFatalErrorState, something went horribly wrong and caller
 // should just die.
-QTSS_ServerState StartServer(   XMLPrefsParser* inPrefsSource,
-                                PrefsSource* inMessagesSource,
-                                int statsUpdateInterval,
-                                QTSS_ServerState inInitialState,
-								Bool16 inDontFork,
-								UInt32 debugLevel, 
-								UInt32 debugOptions );
+QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource,
+	PrefsSource* inMessagesSource,
+	int statsUpdateInterval,
+	QTSS_ServerState inInitialState,
+	Bool16 inDontFork,
+	UInt32 debugLevel,
+	UInt32 debugOptions);
 
 //
 // Call this after StartServer if it doesn't return qtssFatalError.
