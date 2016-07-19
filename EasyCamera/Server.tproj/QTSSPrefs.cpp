@@ -36,6 +36,7 @@
 #include "OSMemory.h"
 #include "QTSSDataConverter.h"
 #include "OSArrayObjectDeleter.h"
+#include <APICommonCode/QTSSModuleUtils.h>
 
 
 QTSSPrefs::QTSSPrefs(XMLPrefsParser* inPrefsSource, StrPtrLen* inModuleName, QTSSDictionaryMap* inMap,
@@ -226,13 +227,11 @@ void QTSSPrefs::SetPrefValuesFromFileWithRef(ContainerRef pref, QTSS_AttributeID
 		numPrefValues = fPrefsSource->GetNumPrefValues(pref);
 
 	char* thePrefName = NULL;
-	char* thePrefValue = NULL;
 	char* thePrefTypeStr = NULL;
-	QTSS_AttrDataType thePrefType = qtssAttrDataTypeUnknown;
 
 	// find the type.  If this is a QTSSObject, then we need to call a different routine
-	thePrefValue = fPrefsSource->GetPrefValueByRef(pref, 0, &thePrefName, &thePrefTypeStr);
-	thePrefType = QTSSDataConverter::TypeStringToType(thePrefTypeStr);
+	char* thePrefValue = fPrefsSource->GetPrefValueByRef(pref, 0, &thePrefName, &thePrefTypeStr);
+	QTSS_AttrDataType thePrefType = QTSSDataConverter::TypeStringToType(thePrefTypeStr);
 	if (thePrefType == qtssAttrDataTypeQTSS_Object)
 	{
 		SetObjectValuesFromFile(pref, inAttrID, numPrefValues, thePrefName);
