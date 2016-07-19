@@ -1964,38 +1964,83 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 	//走到这说明存在指定设备
 	HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//获得当前设备回话
 
+	string errNo, errString;
 	if (strCmd == "SENDDATA")
 	{
-		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
-		EasyJsonValue headerheader, bodybody;
+		if (!pDevSession->GetTalkbackSession().empty() && pDevSession->GetTalkbackSession() == fSessionID)
+		{
+			EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
+			EasyJsonValue headerheader, bodybody;
 
-		char chTemp[16] = { 0 };
-		UInt32 uDevCseq = pDevSession->GetCSeq();
-		sprintf(chTemp, "%d", uDevCseq);
-		headerheader[EASY_TAG_CSEQ] = string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
-		headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+			char chTemp[16] = { 0 };
+			UInt32 uDevCseq = pDevSession->GetCSeq();
+			sprintf(chTemp, "%d", uDevCseq);
+			headerheader[EASY_TAG_CSEQ] = string(chTemp);//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+			headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
 
-		bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
-		bodybody[EASY_TAG_CHANNEL] = strChannel;
-		bodybody[EASY_TAG_PROTOCOL] = strProtocol;
-		bodybody[EASY_TAG_RESERVE] = strReserve;
-		bodybody[EASY_TAG_CMD] = strCmd;
-		bodybody[EASY_TAG_AUDIO_TYPE] = strAudioType;
-		bodybody[EASY_TAG_AUDIO_DATA] = strAudioData;
-		bodybody[EASY_TAG_PTS] = strPts;
-		bodybody[EASY_TAG_FROM] = fSessionID;
-		bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
-		bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+			bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
+			bodybody[EASY_TAG_CHANNEL] = strChannel;
+			bodybody[EASY_TAG_PROTOCOL] = strProtocol;
+			bodybody[EASY_TAG_RESERVE] = strReserve;
+			bodybody[EASY_TAG_CMD] = strCmd;
+			bodybody[EASY_TAG_AUDIO_TYPE] = strAudioType;
+			bodybody[EASY_TAG_AUDIO_DATA] = strAudioData;
+			bodybody[EASY_TAG_PTS] = strPts;
+			bodybody[EASY_TAG_FROM] = fSessionID;
+			bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
+			bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
-		reqreq.SetHead(headerheader);
-		reqreq.SetBody(bodybody);
+			reqreq.SetHead(headerheader);
+			reqreq.SetBody(bodybody);
 
-		string buffer = reqreq.GetMsg();
-		StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-		pDevSession->SendHTTPPacket(&theValue, false, false);
+			string buffer = reqreq.GetMsg();
+			StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+			pDevSession->SendHTTPPacket(&theValue, false, false);
+
+			errNo = EASY_ERROR_SUCCESS_OK;
+			errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+		}
+		else
+		{
+			errNo = EASY_ERROR_CLIENT_BAD_REQUEST;
+			errString = EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_BAD_REQUEST);
+			goto ACK;
+		}
 	}
 	else
 	{
+		if (strCmd == "START")
+		{
+			if (pDevSession->GetTalkbackSession().empty())
+			{
+				pDevSession->SetTalkbackSession(fSessionID);
+				errNo = EASY_ERROR_SUCCESS_OK;
+				errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+			}
+			else
+			{
+				errNo = EASY_ERROR_CLIENT_BAD_REQUEST;
+				errString = EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_BAD_REQUEST);
+				goto ACK;
+			}
+		}
+		else if (strCmd == "STOP")
+		{
+			if (pDevSession->GetTalkbackSession().empty() || pDevSession->GetTalkbackSession() != fSessionID)
+			{
+				errNo = EASY_ERROR_CLIENT_BAD_REQUEST;
+				errString = EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_BAD_REQUEST);
+				goto ACK;
+			}
+			else
+			{
+				pDevSession->SetTalkbackSession("");
+				errNo = EASY_ERROR_SUCCESS_OK;
+				errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+			}
+		}
+
+			
 		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
 		EasyJsonValue headerheader, bodybody;
 
@@ -2025,6 +2070,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 		pDevSession->SendHTTPPacket(&theValue, false, false);
 	}
 
+ACK:
 	char chTemp[16] = { 0 };
 	UInt32 uDevCseq = pDevSession->GetCSeq();
 	sprintf(chTemp, "%d", uDevCseq);
@@ -2038,8 +2084,8 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
 	header[EASY_TAG_CSEQ] = string(chTemp);;
-	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
-	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+	header[EASY_TAG_ERROR_NUM] = errNo;
+	header[EASY_TAG_ERROR_STRING] = errString;
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);

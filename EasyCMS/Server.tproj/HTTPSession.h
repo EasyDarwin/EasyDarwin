@@ -53,6 +53,10 @@ public:
 	//char* GetDeviceSnap() { return fDeviceSnap; };
 	char* GetDeviceSerial() { return (char*)fDevice.serial_.c_str(); };
 
+	string GetTalkbackSession() const { return talkbackSession; }
+	void SetTalkbackSession(const string& session) { talkbackSession = session; }
+
+
 	/*void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
 	EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }*/
 
@@ -123,6 +127,8 @@ private:
 	DECODE_PARAM_T		decodeParam;
 	
 	DecoderHelper		decoderHelper;
+
+	string				talkbackSession;
 };
 #endif // __HTTP_SESSION_H__
 
