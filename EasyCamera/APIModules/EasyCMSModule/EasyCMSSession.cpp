@@ -13,6 +13,7 @@
 #include <OSMemory.h>
 #include <SocketUtils.h>
 #include <OSArrayObjectDeleter.h>
+#include <QTSSModuleUtils.h>
 
 // EasyCMS IP
 static char*            sEasyCMS_IP = NULL;
