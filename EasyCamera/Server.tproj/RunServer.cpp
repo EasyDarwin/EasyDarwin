@@ -44,7 +44,7 @@
 #ifndef __Win32__
 #include <sys/types.h>
 #include <unistd.h>
-#include <OSCharArrayDeleter.h>
+#include <OSArrayObjectDeleter.h>
 #endif
 
 #include "QTSServerInterface.h"
