@@ -5,26 +5,16 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyCMSSession.h
-    Contains:   CMS Session
+	File:       EasyCMSSession.h
+	Contains:   CMS Session
 */
 
 #include "Task.h"
 #include "TimeoutTask.h"
 
-#include "QTSSModuleUtils.h"
-#include "OSArrayObjectDeleter.h"
-#include "OSMemory.h"
-#include "QTSSMemoryDeleter.h"
-#include "OSRef.h"
-#include "StringParser.h"
-#include "MyAssert.h"
-
 #include "QTSServerInterface.h"
-#include "HTTPProtocol.h"
 #include "OSHeaders.h"
 #include "QTSS.h"
-#include "SocketUtils.h"
 #include "EasyProtocol.h"
 
 #include "HTTPRequestStream.h"
@@ -40,15 +30,15 @@ using namespace std;
 class EasyCMSSession : public Task
 {
 public:
-    EasyCMSSession();
-    virtual ~EasyCMSSession();
+	EasyCMSSession();
+	virtual ~EasyCMSSession();
 
 	static void			Initialize(QTSS_ModulePrefsObject inPrefs);
-    
+
 	enum
 	{
-		kSessionOffline		= 0,	
-		kSessionOnline		= 1
+		kSessionOffline = 0,
+		kSessionOnline = 1
 	};
 	typedef UInt32		SessionStatus;
 
@@ -56,11 +46,11 @@ public:
 	void				SetSessionStatus(SessionStatus status) { fSessionStatus = status; }
 
 private:
-    virtual SInt64		Run();
+	virtual SInt64		Run();
 
 	void				stopPushStream() const;
 
-    // 初步判断Session Socket是否已连接
+	// 初步判断Session Socket是否已连接
 	Bool16				isConnected() const { return fSocket->GetSocket()->IsConnected(); }
 
 	// transfer error code for http status code
@@ -77,10 +67,10 @@ private:
 	// 处理HTTPRequest请求报文
 	QTSS_Error			processMessage();
 
-    QTSS_Error processStartStreamReq() const;
-    QTSS_Error processStopStreamReq() const;
+	QTSS_Error processStartStreamReq() const;
+	QTSS_Error processStopStreamReq() const;
 
-    QTSS_Error processControlPTZReq() const;
+	QTSS_Error processControlPTZReq() const;
 	QTSS_Error processControlPresetReq() const;
 	QTSS_Error processControlTalkbackReq() const;
 
@@ -90,11 +80,11 @@ private:
 private:
 	enum
 	{
-		kIdle				= 0,
-		kReadingMessage		= 1,
-		kProcessingMessage	= 2,
-		kSendingMessage		= 3,
-		kCleaningUp			= 4
+		kIdle = 0,
+		kReadingMessage = 1,
+		kProcessingMessage = 2,
+		kSendingMessage = 3,
+		kCleaningUp = 4
 	};
 	UInt32				fState;
 
