@@ -5,14 +5,12 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyCMSModule.cpp
-    Contains:   Implementation of EasyCMSModule class. 
+	File:       EasyCMSModule.cpp
+	Contains:   Implementation of EasyCMSModule class.
 */
 
 #include "EasyCameraModule.h"
 #include "QTSSModuleUtils.h"
-#include "OSRef.h"
-#include "StringParser.h"
 #include "QTSServerInterface.h"
 
 #include "EasyCameraSource.h"
@@ -25,11 +23,11 @@
 #endif
 
 // STATIC DATA
-static QTSS_PrefsObject				sServerPrefs			= NULL;	//服务器主配置
-static QTSS_ServerObject			sServer					= NULL;	//服务器对象
-static QTSS_ModulePrefsObject		sEasyCameraModulePrefs	= NULL;	//当前模块配置
+static QTSS_PrefsObject				sServerPrefs = NULL;	//服务器主配置
+static QTSS_ServerObject			sServer = NULL;	//服务器对象
+static QTSS_ModulePrefsObject		sEasyCameraModulePrefs = NULL;	//当前模块配置
 
-static EasyCameraSource*			sCameraSource			= NULL; //唯一EasyCameraSource对象
+static EasyCameraSource*			sCameraSource = NULL; //唯一EasyCameraSource对象
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -48,36 +46,36 @@ static QTSS_Error ControlTalkback(Easy_CameraTalkback_Params* inParams);
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyCameraModule_Main(void* inPrivateArgs)
 {
-    return _stublibrary_main(inPrivateArgs, EasyCameraModuleDispatch);
+	return _stublibrary_main(inPrivateArgs, EasyCameraModuleDispatch);
 }
 
 QTSS_Error EasyCameraModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
-    switch (inRole)
-    {
-        case QTSS_Register_Role:
-            return Register_EasyCameraModule(&inParams->regParams);
-        case QTSS_Initialize_Role:
-            return Initialize_EasyCameraModule(&inParams->initParams);
-        case QTSS_RereadPrefs_Role:
-            return RereadPrefs_EasyCameraModule();
-		case Easy_StartStream_Role:
-			return StartStream(&inParams->startStreamParams);
-		case Easy_StopStream_Role:
-			return StopStream(&inParams->stopStreamParams);
-		case Easy_GetCameraState_Role:
-			return GetCameraState(&inParams->cameraStateParams);
-		case Easy_GetCameraSnap_Role:
-			return GetCameraSnap(&inParams->cameraSnapParams);
-        case Easy_ControlPTZ_Role:
-            return ControlPTZ(&inParams->cameraPTZParams);
-		case Easy_ControlPreset_Role:
-			return ControlPreset(&inParams->cameraPresetParams);
-		case Easy_ControlTalkback_Role:
-			return ControlTalkback(&inParams->cameraTalkbackParams);
+	switch (inRole)
+	{
+	case QTSS_Register_Role:
+		return Register_EasyCameraModule(&inParams->regParams);
+	case QTSS_Initialize_Role:
+		return Initialize_EasyCameraModule(&inParams->initParams);
+	case QTSS_RereadPrefs_Role:
+		return RereadPrefs_EasyCameraModule();
+	case Easy_StartStream_Role:
+		return StartStream(&inParams->startStreamParams);
+	case Easy_StopStream_Role:
+		return StopStream(&inParams->stopStreamParams);
+	case Easy_GetCameraState_Role:
+		return GetCameraState(&inParams->cameraStateParams);
+	case Easy_GetCameraSnap_Role:
+		return GetCameraSnap(&inParams->cameraSnapParams);
+	case Easy_ControlPTZ_Role:
+		return ControlPTZ(&inParams->cameraPTZParams);
+	case Easy_ControlPreset_Role:
+		return ControlPreset(&inParams->cameraPresetParams);
+	case Easy_ControlTalkback_Role:
+		return ControlTalkback(&inParams->cameraTalkbackParams);
 	}
 
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
@@ -109,9 +107,9 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
 	if (EASY_ACTIVATE_SUCCESS != isEasyPusherActivated)
 		return QTSS_RequestFailed;
 
-    // Do role & attribute setup
-    (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
+	// Do role & attribute setup
+	(void)QTSS_AddRole(QTSS_Initialize_Role);
+	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 
 	(void)QTSS_AddRole(Easy_StartStream_Role);
 	(void)QTSS_AddRole(Easy_StopStream_Role);
@@ -120,23 +118,23 @@ QTSS_Error Register_EasyCameraModule(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(Easy_ControlPTZ_Role);
 	(void)QTSS_AddRole(Easy_ControlPreset_Role);
 	(void)QTSS_AddRole(Easy_ControlTalkback_Role);
-   
-    // Tell the server our name!
-    static char* sModuleName = "EasyCameraModule";
-    ::strcpy(inParams->outModuleName, sModuleName);
 
-    return QTSS_NoErr;
+	// Tell the server our name!
+	static char* sModuleName = "EasyCameraModule";
+	::strcpy(inParams->outModuleName, sModuleName);
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error Initialize_EasyCameraModule(QTSS_Initialize_Params* inParams)
 {
-    // Setup module utils
-    QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
+	// Setup module utils
+	QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
 
-    // Setup global data structures
-    sServerPrefs = inParams->inPrefs;
-    sServer = inParams->inServer;
-    sEasyCameraModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
+	// Setup global data structures
+	sServerPrefs = inParams->inPrefs;
+	sServer = inParams->inServer;
+	sEasyCameraModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
 	//读取EasyCMSModule配置
 	RereadPrefs_EasyCameraModule();
@@ -147,7 +145,7 @@ QTSS_Error Initialize_EasyCameraModule(QTSS_Initialize_Params* inParams)
 	sCameraSource = new EasyCameraSource();
 	sCameraSource->Signal(Task::kStartEvent);
 
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 QTSS_Error RereadPrefs_EasyCameraModule()
@@ -201,13 +199,13 @@ QTSS_Error GetCameraSnap(Easy_CameraSnap_Params* inParams)
 
 static QTSS_Error ControlPTZ(Easy_CameraPTZ_Params* inParams)
 {
-    QTSS_Error theErr = QTSS_Unimplemented;
+	QTSS_Error theErr = QTSS_Unimplemented;
 
-    if (sCameraSource)
-    {
-        theErr = sCameraSource->ControlPTZ(inParams);
-    }
-    return theErr;
+	if (sCameraSource)
+	{
+		theErr = sCameraSource->ControlPTZ(inParams);
+	}
+	return theErr;
 }
 
 static QTSS_Error ControlPreset(Easy_CameraPreset_Params* inParams)

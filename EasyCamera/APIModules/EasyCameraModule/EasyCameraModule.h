@@ -5,8 +5,8 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyCameraModule.h
-    Contains:   EasyCameraModule Module
+	File:       EasyCameraModule.h
+	Contains:   EasyCameraModule Module
 */
 
 #ifndef _EASYCAMERAMODULE_H_
@@ -16,7 +16,7 @@
 
 extern "C"
 {
-    EXPORT QTSS_Error EasyCameraModule_Main(void* inPrivateArgs);
+	EXPORT QTSS_Error EasyCameraModule_Main(void* inPrivateArgs);
 }
 
 #endif //_EASYCMSMODULE_H_
