@@ -10,6 +10,7 @@
 #include "hi_net_dev_sdk.h"
 
 #include <map>
+#include <APICommonCode/QTSSModuleUtils.h>
 
 static unsigned int sLastVPTS = 0;
 static unsigned int sLastAPTS = 0;
