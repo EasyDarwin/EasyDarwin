@@ -642,6 +642,7 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 			}
 			break;
 		case EASY_TALKBACK_CMD_TYPE_SENDDATA:
+			break;
 			{
 				if (params->inBuff == NULL || params->inBuffLen == 0)
 				{
