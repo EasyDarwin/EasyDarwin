@@ -664,6 +664,7 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 					while((gBytesRead = fread(pbG711ABuffer, 1, bG711ABufferSize, fpIn)) >0)
 					{    
 						string temp = EasyUtil::Base64Encode(pbG711ABuffer, bG711ABufferSize);
+						printf("%s\n", temp.data());
 						string temp2 = EasyUtil::Base64Decode(temp);
 						error = HI_NET_DEV_SendVoiceData(m_u32Handle, (char*)temp2.data(), temp2.size(), pts);
 						pts += 20;
