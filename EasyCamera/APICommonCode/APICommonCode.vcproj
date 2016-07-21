@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..;../CommonUtilitiesLib/;../APIStubLib/;../RTPMetaInfoLib/"
+				AdditionalIncludeDirectories="..;../../CommonUtilitiesLib/;../APIStubLib/"
 				PreprocessorDefinitions="WIN32;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -129,7 +129,7 @@
 				ProgramDataBaseFileName=".\Release/"
 				BrowseInformation="1"
 				SuppressStartupBanner="true"
-				ForcedIncludeFiles="../WinNTSupport/Win32header.h"
+				ForcedIncludeFiles="../../Include/Win32header.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
