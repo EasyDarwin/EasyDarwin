@@ -27,8 +27,9 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-
-#include "modp_b64.h"
+#include <boost/archive/iterators/base64_from_binary.hpp>  
+#include <boost/archive/iterators/binary_from_base64.hpp>  
+#include <boost/archive/iterators/transform_width.hpp>
 
 std::string EasyUtil::TimeT2String(EasyDarwinTimeFormat whatFormat, unsigned long time)
 {
@@ -166,35 +167,34 @@ std::string EasyUtil::Int2String(int value)
 
 bool EasyUtil::Base64Decode(const std::string &sInput, string &sOutput)
 {
-	std::string temp;
-	temp.resize(modp_b64_decode_len(sInput.size()));
-
-	// does not null terminate result since result is binary data!
-	int input_size = static_cast<int>(sInput.size());
-	int output_size = modp_b64_decode(&(temp[0]), sInput.data(), input_size);
-	if (output_size < 0)
+	typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<string::const_iterator>, 8, 6> Base64DecodeIterator;
+	stringstream result;
+	try
+	{
+		copy(Base64DecodeIterator(sInput.begin()), Base64DecodeIterator(sInput.end()), ostream_iterator<char>(result));
+	}
+	catch (...)
+	{
 		return false;
+	}
+	sOutput = result.str();
 
-	temp.resize(output_size);
-	sOutput.swap(temp);
-
-	return true;
+	return !sOutput.empty();
 }
 
 bool EasyUtil::Base64Encode(const std::string &sInput, string &sOutput)
 {
-	std::string temp;
-	temp.resize(modp_b64_encode_len(sInput.size()));  // makes room for null byte
+	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<string::const_iterator, 6, 8> > Base64EncodeIterator;
+	stringstream result;
+	copy(Base64EncodeIterator(sInput.begin()), Base64EncodeIterator(sInput.end()), ostream_iterator<char>(result));
+	size_t equal_count = (3 - sInput.length() % 3) % 3;
+	for (size_t i = 0; i < equal_count; i++)
+	{
+		result.put('=');
+	}
+	sOutput = result.str();
 
-													 // null terminates result since result is base64 text!
-	int input_size = static_cast<int>(sInput.size());
-	int output_size = modp_b64_encode(&(temp[0]), sInput.data(), input_size);
-	if (output_size < 0)
-		return false;
-
-	temp.resize(output_size);  // strips off null byte
-	sOutput.swap(temp);
-	return true;
+	return !sOutput.empty();
 }
 
 string EasyUtil::Base64Encode(const char* src, size_t len)
@@ -227,34 +227,45 @@ string EasyUtil::Base64Decode(const char* src, size_t len)
 
 string EasyUtil::Base64Encode(const string &sInput)
 {
-	std::string temp;
-	temp.resize(modp_b64_encode_len(sInput.size()));  // makes room for null byte
+	typedef boost::archive::iterators::base64_from_binary<boost::archive::iterators::transform_width<string::const_iterator, 6, 8> > Base64EncodeIterator;
+	stringstream result;
+	copy(Base64EncodeIterator(sInput.begin()), Base64EncodeIterator(sInput.end()), ostream_iterator<char>(result));
+	size_t equal_count = (3 - sInput.length() % 3) % 3;
+	for (size_t i = 0; i < equal_count; i++)
+	{
+		result.put('=');
+	}
 
-													 // null terminates result since result is base64 text!
-	int input_size = static_cast<int>(sInput.size());
-	int output_size = modp_b64_encode(&(temp[0]), sInput.data(), input_size);
-	if (output_size < 0)
-		return false;
-
-	temp.resize(output_size);  // strips off null byte;
-
-	return temp;
+	return result.str();
 }
 
 string EasyUtil::Base64Decode(const string &sInput)
 {
-	std::string temp;
-	temp.resize(modp_b64_decode_len(sInput.size()));
+	typedef boost::archive::iterators::transform_width<boost::archive::iterators::binary_from_base64<string::const_iterator>, 8, 6> Base64DecodeIterator;
+	stringstream result;
+	try
+	{
+		string temp = sInput;
+		int endIndex = temp.size() - 1;
+		if (temp[endIndex] == '=')
+		{
+			temp.erase(endIndex);
+		}
 
-	// does not null terminate result since result is binary data!
-	int input_size = static_cast<int>(sInput.size());
-	int output_size = modp_b64_decode(&(temp[0]), sInput.data(), input_size);
-	if (output_size < 0)
-		return false;
+		endIndex = temp.size() - 1;
+		if (temp[endIndex] == '=')
+		{
+			temp.erase(endIndex);
+		}
 
-	temp.resize(output_size);
+		copy(Base64DecodeIterator(temp.begin()), Base64DecodeIterator(temp.end()), ostream_iterator<char>(result));
+	}
+	catch (...)
+	{
+		return string();
+	}
 
-	return temp;
+	return result.str();
 }
 
 void EasyUtil::DelChar(std::string & sInput, char ch)
