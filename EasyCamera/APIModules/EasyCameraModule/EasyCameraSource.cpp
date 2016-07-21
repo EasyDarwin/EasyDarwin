@@ -642,9 +642,35 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 			}
 			break;
 		case EASY_TALKBACK_CMD_TYPE_SENDDATA:
-			break;
 			{
-				if (params->inBuff == NULL || params->inBuffLen == 0)
+				static bool send = false;
+
+				if (!send)
+				{
+					char* infilename = "hs.g711";
+					FILE* fpIn = fopen(infilename, "rb");
+					if(NULL == fpIn)
+					{
+						printf("%s:[%d] open %s file failed\n",__FUNCTION__,__LINE__,infilename);
+						return -1;
+					}
+
+					int gBytesRead = 0;
+					int bG711ABufferSize = 164;
+					char *pbG711ABuffer = (char *)malloc(bG711ABufferSize *sizeof(char));
+					int pts = 0;
+					while((gBytesRead = fread(pbG711ABuffer, 1, bG711ABufferSize, fpIn)) >0)
+					{    
+						error = HI_NET_DEV_SendVoiceData(m_u32Handle, pbG711ABuffer, bG711ABufferSize, pts);
+						pts += 20;
+					}
+
+
+					free(pbG711ABuffer);
+					fclose(fpIn);
+					send = true;
+				}
+				/*if (params->inBuff == NULL || params->inBuffLen == 0)
 				{
 					result = QTSS_BadArgument;
 					break;
@@ -659,7 +685,7 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 					offset += BUFFLEN;
 					len -= BUFFLEN;
 					pts += PTSPER;
-				}
+				}*/
 			}
 			break;
 		case EASY_TALKBACK_CMD_TYPE_STOP:
