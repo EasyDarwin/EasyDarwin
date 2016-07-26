@@ -174,7 +174,7 @@ QTSS_Error HTTPResponseStream::Flush()
 			if (theErr == OS_NoErr)
 			{
 				fBytesSentInBuffer += amtInBuffer;
-				Assert(fBytesSentInBuffer < this->GetCurrentOffset());
+				Assert(fBytesSentInBuffer <= this->GetCurrentOffset());
 			}
 			else
 				return theErr;

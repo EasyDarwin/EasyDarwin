@@ -147,8 +147,16 @@ SInt64 EasyCMSSession::Run()
 					// clean up immediately so as to not have an open socket
 					// needlessly lingering around, taking up space.
 					Assert(!fSocket->GetSocket()->IsConnected());
-					//this->ResetClientSocket();
-					//return 0;
+
+					if (fSocket)
+					{
+						fSocket->GetSocket()->Cleanup();
+						delete fSocket;
+						fSocket = NULL;
+					}
+
+					this->CleanupRequest();
+					return 0;
 					//读取数据失败，直接进入析构
 				}
 				// 网络请求超过了缓冲区，返回Bad Request
