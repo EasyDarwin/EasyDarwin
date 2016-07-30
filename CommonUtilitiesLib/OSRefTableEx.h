@@ -60,4 +60,4 @@ private:
 	string			fOSRefKey;
 };
 
-#endif _OSREFTABLEEX_H_
+#endif //_OSREFTABLEEX_H_
