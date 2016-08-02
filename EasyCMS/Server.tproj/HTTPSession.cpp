@@ -13,6 +13,7 @@
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
 #include "EasyUtil.h"
+#include <set>
 
 #include "OSArrayObjectDeleter.h"
 #include <boost/algorithm/string.hpp>
@@ -1191,6 +1192,17 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
+	set<string> terminalSet;
+	if (chTerminalType != NULL)
+	{
+		string terminalTemp(chTerminalType);
+
+		if (boost::ends_with(terminalTemp, "|"))
+		{
+			boost::erase_tail(terminalTemp, 1);
+		}
+		boost::split(terminalSet, terminalTemp, boost::is_any_of("|"), boost::token_compress_on);
+	}
 
 	OSMutex* mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
 	OSHashMap* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
@@ -1211,7 +1223,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 			}
 			if (chTerminalType != NULL)// TerminateType fileter
 			{
-				if (EasyProtocol::GetTerminalTypeString(deviceInfo->eDeviceType) != string(chTerminalType))
+				if (terminalSet.find(EasyProtocol::GetTerminalTypeString(deviceInfo->eDeviceType)) == terminalSet.end())
 					continue;
 			}
 
