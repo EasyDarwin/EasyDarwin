@@ -68,13 +68,6 @@ SInt64 ReflectorSessionCheckTask::Run()
 	return 30 * 1000;//30s
 }
 
-
-
-
-
-
-
-
 //œÚEasyCMS∑¢ÀÕMSG_CS_FREE_STREAM_REQ
 static QTSS_Error FreeStream_EasyCMSModule(Easy_FreeStream_Params* inParams);
 
