@@ -1,0 +1,1 @@
+WinEasyRTSPClientTest.exe rtsp://192.168.10.252:554/easypusher_file.sdp 100
