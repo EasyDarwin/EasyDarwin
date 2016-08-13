@@ -13,6 +13,7 @@
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
 #include "EasyUtil.h"
+#include <string>
 #include <set>
 
 #include "OSArrayObjectDeleter.h"
@@ -611,10 +612,9 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 	}
 	else if (fSessionType == EasyNVRSession)
 	{
-		char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
-		EasyUtil::Urldecode((unsigned char*)reserve.c_str(), reinterpret_cast<unsigned char*>(decQueryString));
+		string decQueryString = EasyUtil::Urldecode(reserve);
 
-		QueryParamList parList(decQueryString);
+		QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
 		int width = EasyUtil::String2Int(parList.DoFindCGIValueForParam("width"));
 		int height = EasyUtil::String2Int(parList.DoFindCGIValueForParam("height"));
 		int codec = EasyUtil::String2Int(parList.DoFindCGIValueForParam("codec"));
@@ -910,10 +910,9 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 		return QTSS_BadArgument;
 	}
 
-	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
-	EasyUtil::Urldecode((unsigned char*)queryString, reinterpret_cast<unsigned char*>(decQueryString));
+	string decQueryString = EasyUtil::Urldecode(queryString);
 
-	QueryParamList parList(decQueryString);
+	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
 	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//ªÒ»°…Ë±∏–Ú¡–∫≈
 	const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//ªÒ»°Õ®µ¿
 	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//ªÒ»°Õ®µ¿
@@ -1171,16 +1170,16 @@ QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡
 
 QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryString)//øÕªß∂ÀªÒµ√…Ë±∏¡–±Ì
 {
-	/*
-	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
-	return httpUnAuthorized;
-	*/
-	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
+
+	//if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
+	//	return httpUnAuthorized;
+
+	std::string queryTemp;
 	if (queryString != NULL)
 	{
-		EasyUtil::Urldecode((unsigned char*)queryString, reinterpret_cast<unsigned char*>(decQueryString));
+		queryTemp = EasyUtil::Urldecode(queryString);
 	}
-	QueryParamList parList(decQueryString);
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
 	const char* chAppType = parList.DoFindCGIValueForParam(EASY_TAG_APP_TYPE);//APPType
 	const char* chTerminalType = parList.DoFindCGIValueForParam(EASY_TAG_TERMINAL_TYPE);//TerminalType
 
@@ -1318,10 +1317,10 @@ QTSS_Error HTTPSession::execNetMsgCSGetCameraListReqRESTful(const char* queryStr
 		return QTSS_BadArgument;
 	}
 
-	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
-	EasyUtil::Urldecode((unsigned char*)queryString, reinterpret_cast<unsigned char*>(decQueryString));
+	string decQueryString = EasyUtil::Urldecode(queryString);
 
-	QueryParamList parList(decQueryString);
+	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
+
 	const char* device_serial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//ªÒ»°…Ë±∏–Ú¡–∫≈
 
 	if (device_serial == NULL)
@@ -1674,10 +1673,10 @@ QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString
         return QTSS_BadArgument;
     }
 
-    char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
-    EasyUtil::Urldecode((unsigned char*)queryString, reinterpret_cast<unsigned char*>(decQueryString));
+	string decQueryString = EasyUtil::Urldecode(queryString);
 
-    QueryParamList parList(decQueryString);
+	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
+
     const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//ªÒ»°…Ë±∏–Ú¡–∫≈
     const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//ªÒ»°Õ®µ¿
     const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//ªÒ»°Õ®µ¿
@@ -1827,10 +1826,10 @@ QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryStr
 		return QTSS_BadArgument;
 	}
 
-	char decQueryString[EASY_MAX_URL_LENGTH] = { 0 };
-	EasyUtil::Urldecode((unsigned char*)queryString, reinterpret_cast<unsigned char*>(decQueryString));
+	string decQueryString = EasyUtil::Urldecode(queryString);
 
-	QueryParamList parList(decQueryString);
+	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
+
 	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//ªÒ»°…Ë±∏–Ú¡–∫≈
 	const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//ªÒ»°Õ®µ¿
 	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//ªÒ»°Õ®µ¿
