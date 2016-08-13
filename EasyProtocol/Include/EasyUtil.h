@@ -51,6 +51,8 @@ public:
 	static void DelChar(std::string &sInput, char ch);//删除字符串中的某个特定字符 
 
 	static unsigned char* Urldecode(unsigned char* encd, unsigned char* decd);
+	static std::string Urldecode(const std::string& encd);
+
 };
 
 #endif	/* EASY_UTIL_H */

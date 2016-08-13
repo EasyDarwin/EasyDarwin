@@ -21,6 +21,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <string>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -309,4 +310,39 @@ unsigned char* EasyUtil::Urldecode(unsigned char* encd, unsigned char* decd)
 	decd[j] = '\0';
 
 	return decd;
+}
+
+inline char toHex(const char& x)
+{
+	return x > 9 ? x - 10 + 'A' : x + '0';
+}
+
+inline char fromHex(const char& x)
+{
+	return isdigit(x) ? x - '0' : x - 'A' + 10;
+}
+
+std::string EasyUtil::Urldecode(const std::string& urlIn)
+{
+	string result;
+	for (size_t ix = 0; ix < urlIn.size(); ix++)
+	{
+		char ch = 0;
+		if (urlIn[ix] == '%')
+		{
+			ch = (fromHex(urlIn[ix + 1]) << 4);
+			ch |= fromHex(urlIn[ix + 2]);
+			ix += 2;
+		}
+		else if (urlIn[ix] == '+')
+		{
+			ch = ' ';
+		}
+		else
+		{
+			ch = urlIn[ix];
+		}
+		result += (char)ch;
+	}
+	return result;
 }
