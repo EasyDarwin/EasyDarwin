@@ -39,6 +39,20 @@ public:
 
 	static std::string Int2String(int value);
 
+	template<typename T>
+	static std::string ToString(T value)
+	{
+		try
+		{
+			return boost::lexical_cast<std::string>(value);
+		}
+		catch (std::exception &e)
+		{
+			printf("EasyUtil::ToString error: %s\n", e.what());
+		}
+		return std::string();
+	}
+
 	static string Base64Encode(const char* src, size_t len);
 	static string Base64Decode(const char* src, size_t len);
 
