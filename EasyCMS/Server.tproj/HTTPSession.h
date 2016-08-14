@@ -66,6 +66,7 @@ private:
 	// Does request prep & request cleanup, respectively
 	QTSS_Error setupRequest();
 	void cleanupRequest();
+	bool isRightChannel(const char* channel);
 
 	QTSS_Error processRequest();//处理请求，单独放到一个状态中去处理，这样方便重复执行
 	QTSS_Error execNetMsgErrorReqHandler(HTTPStatusCode errCode);//消息默认处理函数
