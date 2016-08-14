@@ -5,6 +5,7 @@
 #include "EasyRedisClient.h"
 #include "QTSServerInterface.h"
 #include "HTTPSessionInterface.h"
+#include "Format.h"
 
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject	modulePrefs		= NULL;
@@ -311,9 +312,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
-	char chPushName[128] = { 0 };
-	sprintf(chPushName, "%s/%s", inParams->inSerial, inParams->inChannel);
-	char chTemp[128] = { 0 };
+	string strPushName = Format("%s/%s", string(inParams->inSerial), string(inParams->inChannel));
 
 	//1. get the list of EasyDarwin
 	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarwinName");
@@ -333,11 +332,11 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 			childReply = reply->element[i];
 			string strChileReply(childReply->str);
 
-			sprintf(chTemp, "exists %s", (strChileReply + "_Live").c_str());
-			sRedisClient->AppendCommand(chTemp);
+			string strTemp = Format("exists %s", strChileReply + "_Live");
+			sRedisClient->AppendCommand(strTemp.c_str());
 
-			sprintf(chTemp, "sismember %s %s", (strChileReply + "_PushName").c_str(), chPushName);
-			sRedisClient->AppendCommand(chTemp);
+			strTemp = Format("sismember %s %s", strChileReply + "_PushName", strPushName);
+			sRedisClient->AppendCommand(strTemp.c_str());
 		}
 
 		easyRedisReply *reply2 = NULL, *reply3 = NULL;
