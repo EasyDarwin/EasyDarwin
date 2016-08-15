@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../;../Include/"
+				AdditionalIncludeDirectories="../;../Include/;../EasyProtocol/Include/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/CommonUtilitiesLib.pch"
@@ -297,6 +297,10 @@
 						ForcedIncludeFiles=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Format.cpp"
+				>
 			</File>
 			<File
 				RelativePath="getopt.c"
@@ -1163,6 +1167,10 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\Format.h"
+			>
+		</File>
 		<File
 			RelativePath=".\OSMapEx.h"
 			>
