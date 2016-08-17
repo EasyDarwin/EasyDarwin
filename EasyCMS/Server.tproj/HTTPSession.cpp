@@ -78,6 +78,26 @@ HTTPSession::HTTPSession()
 
 HTTPSession::~HTTPSession()
 {
+	if (GetSessionType() == EasyHTTPSession)
+	{
+		OSMutex* mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
+		OSHashMap* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+		OSRefIt itRef;
+		{
+			OSMutexLocker lock(mutexMap);
+			int iDevNum = 0;
+
+			for (itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
+			{
+				HTTPSession* session = static_cast<HTTPSession*>(itRef->second->GetObjectPtr());
+				if (session->GetTalkbackSession() == fSessionID)
+				{
+					session->SetTalkbackSession("");
+				}
+			}
+		}
+	}
+
 	if (decodeParam.imageData)
 	{
 		delete[]decodeParam.imageData;
@@ -114,9 +134,8 @@ SInt64 HTTPSession::Run()
 
 	if (events & kTimeoutEvent)
 	{
-		char msgStr[512];
-		qtss_snprintf(msgStr, sizeof(msgStr), "Timeout HTTPSession，Device_serial[%s]\n", fDevice.serial_.c_str());
-		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+		string msgStr = Format("Timeout HTTPSession，Device_serial[%s]\n", fDevice.serial_);
+		QTSServerInterface::LogError(qtssMessageVerbosity, const_cast<char *>(msgStr.c_str()));
 		fLiveSession = false;
 		this->Signal(kKillEvent);
 	}
@@ -741,9 +760,8 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 		if (regErr == OS_NoErr)
 		{
 			//在redis上增加设备
-			char msgStr[512];
-			qtss_snprintf(msgStr, sizeof(msgStr), "Device register，Device_serial[%s]\n", fDevice.serial_.c_str());
-			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+			string msgStr = Format("Device register，Device_serial[%s]\n", fDevice.serial_);
+			QTSServerInterface::LogError(qtssMessageVerbosity, const_cast<char *>(msgStr.c_str()));
 
 			QTSS_RoleParams theParams;
 			theParams.StreamNameParams.inStreamName = const_cast<char *>(fDevice.serial_.c_str());
@@ -1619,7 +1637,7 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 
 QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height)
 {
-	QTSS_Error	theErr = QTSS_NoErr;
+	QTSS_Error theErr = QTSS_NoErr;
 
 	decodeParam.codec = codec;
 	decodeParam.width = width;
@@ -2010,6 +2028,10 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 				pDevSession->SetTalkbackSession(fSessionID);
 				errNo = EASY_ERROR_SUCCESS_OK;
 				errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+			}
+			else if (pDevSession->GetTalkbackSession() == fSessionID)
+			{
+
 			}
 			else
 			{

@@ -100,6 +100,8 @@ public:
 
     void PushNVRMessage(EasyNVRMessage &msg) { fNVRMessageQueue.push_back(msg); }
 
+	Easy_SessionType GetSessionType() { return fSessionType; }
+
 protected:
     void        snarfInputSocket(HTTPSessionInterface* fromRTSPSession);
     // Dictionary support Param retrieval function
