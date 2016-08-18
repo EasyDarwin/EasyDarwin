@@ -27,7 +27,6 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/archive/iterators/base64_from_binary.hpp>  
 #include <boost/archive/iterators/binary_from_base64.hpp>  
 #include <boost/archive/iterators/transform_width.hpp>

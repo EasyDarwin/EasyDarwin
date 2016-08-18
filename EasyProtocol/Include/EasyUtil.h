@@ -16,6 +16,8 @@
 
 #include <EasyProtocolDef.h>
 #include <string>
+#include <boost/lexical_cast.hpp>
+
 using namespace std;
 
 class Easy_API EasyUtil
