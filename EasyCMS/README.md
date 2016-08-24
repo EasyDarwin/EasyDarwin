@@ -22,9 +22,9 @@ EasyCMS主要的几个配置项：
 
 ***snap\_web\_path***：快照文件存储的目录对应的http网络路径；
 
-***redis\_ip***：连接的radis的ip地址；
+***redis\_ip***：连接的redis的ip地址；
 
-***redis\_port***：连接的radis的端口；
+***redis\_port***：连接的redis的端口；
 
 ***redis\_password***：redis的连接密码；
 
