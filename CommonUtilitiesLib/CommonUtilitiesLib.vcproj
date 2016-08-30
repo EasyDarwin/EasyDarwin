@@ -927,6 +927,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SyncDeque.h"
+				>
+			</File>
+			<File
 				RelativePath="Task.cpp"
 				>
 				<FileConfiguration
