@@ -11,24 +11,38 @@ public:
 	//LIFO
 	void PushFront(const T& val)
 	{
-		OSMutexLocker lock(mtx_);
+		OSMutexLocker lock(&mtx_);
 		deque_.push_front(val);
+		cond_.Signal();
 	}
 
 	T PopFront()
 	{
-		mtx_.Lock();
+		OSMutexLocker lock(&mtx_);
 
-		if (deque_.empty()) 
+		if (deque_.empty())
 		{
-			mtx_.Unlock();
 			return NULL;
 		}
 
 		T val = deque_.front();
 		deque_.pop_front();
 
-		mtx_.Unlock();
+		return val;
+	}
+
+	T PopFrontBlocking(signed long inTimeoutInMilSecs)
+	{
+		OSMutexLocker lock(&mtx_);
+
+		if (deque_.empty())
+		{
+			cond_.Wait(&mtx_, inTimeoutInMilSecs);
+			return NULL;
+		}
+
+		T val = deque_.front();
+		deque_.pop_front();
 
 		return val;
 	}
@@ -41,8 +55,30 @@ public:
 			return NULL;
 		}
 
-		if (deque_.empty()) 
+		if (deque_.empty())
 		{
+			mtx_.Unlock();
+			return NULL;
+		}
+
+		T val = deque_.back();
+		deque_.pop_back();
+
+		mtx_.Unlock();
+
+		return val;
+	}
+
+	T PopBackBlocking(signed long inTimeoutInMilSecs)
+	{
+		if (!mtx_.TryLock())
+		{
+			return NULL;
+		}
+
+		if (deque_.empty())
+		{
+			cond_.Wait(&mtx_, inTimeoutInMilSecs);
 			mtx_.Unlock();
 			return NULL;
 		}
@@ -60,9 +96,15 @@ public:
 		return deque_.empty();
 	}
 
+	OSCond* GetCond()
+	{
+		return &cond_;
+	}
+
 private:
 	std::deque<T> deque_;
 	OSMutex mtx_;
+	OSCond cond_;
 
 };
 
