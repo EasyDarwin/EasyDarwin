@@ -21,6 +21,7 @@
       <itemPath>DateTranslator.h</itemPath>
       <itemPath>EventContext.cpp</itemPath>
       <itemPath>EventContext.h</itemPath>
+      <itemPath>Format.cpp</itemPath>
       <itemPath>GetWord.c</itemPath>
       <itemPath>GetWord.h</itemPath>
       <itemPath>IdleTask.cpp</itemPath>
@@ -152,6 +153,7 @@
             <pElem>../EasyDarwin/APICommonCode</pElem>
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -187,6 +189,8 @@
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Format.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -393,6 +397,7 @@
             <pElem>../EasyDarwin/APICommonCode</pElem>
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -434,6 +439,8 @@
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Format.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -612,7 +619,7 @@
     </conf>
     <conf name="gm8126" type="3">
       <toolsSet>
-        <compilerSet>GM8126|GNU</compilerSet>
+        <compilerSet>hisiv100|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -640,6 +647,7 @@
             <pElem>../EasyDarwin/APICommonCode</pElem>
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -682,6 +690,8 @@
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Format.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="9">
       </item>
@@ -888,6 +898,7 @@
             <pElem>../EasyDarwin/APICommonCode</pElem>
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -929,6 +940,8 @@
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Format.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="9">
       </item>
@@ -1135,6 +1148,7 @@
             <pElem>../EasyDarwin/APICommonCode</pElem>
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -1177,6 +1191,8 @@
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Format.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="9">
       </item>
@@ -1383,6 +1399,7 @@
             <pElem>../EasyDarwin/APICommonCode</pElem>
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
+            <pElem>../EasyProtocol/Include</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -1424,6 +1441,8 @@
       <item path="EventContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="EventContext.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Format.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GetWord.c" ex="false" tool="0" flavor2="0">
       </item>
