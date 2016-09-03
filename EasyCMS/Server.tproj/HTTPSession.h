@@ -84,7 +84,8 @@ private:
 	QTSS_Error execNetMsgCSDeviceListReq(const char* json);//客户端获得设备列表，json接口
 	QTSS_Error execNetMsgCSCameraListReq(const char* json);//客户端获得摄像头列表，json接口,仅对设备类型为NVR时有效
 
-	QTSS_Error execNetMsgCSGetStreamReqRESTful(const char* queryString);//客户端拉流请求，Restful接口		
+	QTSS_Error execNetMsgCSGetStreamReqRESTful(const char* queryString);//客户端拉流请求，Restful接口
+    QTSS_Error execNetMsgCSFreeStreamReqRESTful(const char* queryString);//客户端停止直播请求，RESTful接口
 	QTSS_Error execNetMsgCSGetDeviceListReqRESTful(const char* queryString);//客户端获得设备列表,restful接口
 	QTSS_Error execNetMsgCSGetCameraListReqRESTful(const char* queryString);//客户端获得摄像头列表，restful接口，仅对设备类型为NVR时有效
     QTSS_Error execNetMsgCSPTZControlReqRESTful(const char* queryString);

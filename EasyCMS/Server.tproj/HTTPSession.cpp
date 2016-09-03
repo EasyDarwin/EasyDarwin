@@ -422,6 +422,10 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());
 				}
+				if (path[0] == "api" && path[1] == "freedevicestream")
+				{
+					return execNetMsgCSFreeStreamReqRESTful(fRequest->GetQueryString());
+				}
                 if (path[0] == "api" && path[1] == "ptzcontrol")
                 {
                     return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
@@ -1089,6 +1093,93 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 
 	return QTSS_NoErr;
 }
+
+
+QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString)//放到ProcessRequest所在的状态去处理，方便多次循环调用
+{
+	/*//暂时注释掉，实际上是需要认证的
+	if(!fAuthenticated)//没有进行认证请求
+	return httpUnAuthorized;
+	*/
+
+	if (queryString == NULL)
+	{
+		return QTSS_BadArgument;
+	}
+
+	string decQueryString = EasyUtil::Urldecode(queryString);
+
+	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
+	const char* strDeviceSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
+	const char* strChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
+	const char* strProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//
+	const char* strReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);//
+
+	//为可选参数填充默认值
+	if (!isRightChannel(strChannel))
+		strChannel = "0";
+	if (strReserve == NULL)
+		strReserve = "1";
+
+	if (strDeviceSerial == NULL || strProtocol == NULL)
+		return QTSS_BadArgument;
+
+    string strCSeq = EasyUtil::ToString(GetCSeq());
+
+	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
+	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);////////////////////////////////++
+	if (theDevRef == NULL)//找不到指定设备
+		return EASY_ERROR_DEVICE_NOT_FOUND;
+
+	OSRefReleaserEx releaser(deviceMap, strDeviceSerial);
+	//走到这说明存在指定设备，则该设备发出停止推流请求
+	HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//获得当前设备回话
+
+	EasyProtocolACK reqreq(MSG_SD_STREAM_STOP_REQ);
+	EasyJsonValue headerheader, bodybody;
+
+	headerheader[EASY_TAG_CSEQ] = EasyUtil::ToString(pDevSession->GetCSeq());//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+	headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+
+	bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
+	bodybody[EASY_TAG_CHANNEL] = strChannel;
+	bodybody[EASY_TAG_RESERVE] = strReserve;
+	bodybody[EASY_TAG_PROTOCOL] = strProtocol;
+	bodybody[EASY_TAG_FROM] = fSessionID;
+	bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
+	bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+
+	reqreq.SetHead(headerheader);
+	reqreq.SetBody(bodybody);
+
+	string buffer = reqreq.GetMsg();
+
+	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+	pDevSession->SendHTTPPacket(&theValue, false, false);
+
+	//直接对客户端（EasyDarWin)进行正确回应
+	EasyProtocolACK rsp(MSG_SC_FREE_STREAM_ACK);
+	EasyJsonValue header, body;
+	header[EASY_TAG_CSEQ] = strCSeq;
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	body[EASY_TAG_SERIAL] = strDeviceSerial;
+	body[EASY_TAG_CHANNEL] = strChannel;
+	body[EASY_TAG_RESERVE] = strReserve;
+	body[EASY_TAG_PROTOCOL] = strProtocol;
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+	string msg = rsp.GetMsg();
+
+	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValueAck, false, false);
+
+	return QTSS_NoErr;
+}
+
 
 QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json)//设备的开始流回应
 {
