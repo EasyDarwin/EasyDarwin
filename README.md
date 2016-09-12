@@ -33,9 +33,16 @@
 ## 平台架构 ##
 ![](http://www.easydarwin.org/skin/easydarwin/images/platform20160621.png)
 
+## 平台协议 ##
+
+[![EasyDarwin Protocol](http://www.easydarwin.org/github/images/EProtocol.jpg)](https://github.com/EasyDarwin/EasyDarwin/tree/master/Doc "EasyDarwin Protocol")
+
+
 ## 系列视频教程 ##
 
-CSDN课堂：[http://edu.csdn.net/agency/index/213](http://edu.csdn.net/agency/index/213 "EasyDarwin")
+EasyDarwin云平台编译、配置、部署教程：[http://edu.csdn.net/course/detail/2955](http://edu.csdn.net/course/detail/2955 "EasyDarwin")
+
+EasyDarwin CSDN流媒体课堂：[http://edu.csdn.net/agency/index/213](http://edu.csdn.net/agency/index/213 "EasyDarwin")
 
 ## 商务合作 ##
 #### 我们欢迎的合作模式： ####
