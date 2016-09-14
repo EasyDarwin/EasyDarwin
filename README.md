@@ -37,6 +37,18 @@
 
 [![EasyDarwin Protocol](http://www.easydarwin.org/github/images/EProtocol.jpg)](https://github.com/EasyDarwin/EasyDarwin/tree/master/Doc "EasyDarwin Protocol")
 
+## 平台在线演示客户端 ##
+
+- Windows版本：[https://github.com/EasyDarwin/EasyClient/releases](https://github.com/EasyDarwin/EasyClient/releases "EasyClient Windows")
+
+- Android版本：[http://fir.im/EasyClient](http://fir.im/EasyClient "EasyClient Android")
+
+![EasyClient Android](http://www.easydarwin.org/github/images/firimeasyclientandroid.png)
+
+- iOS版本：[https://itunes.apple.com/us/app/easyclient/id1141850816](https://itunes.apple.com/us/app/easyclient/id1141850816 "EasyClient iOS")
+
+![EasyClient iOS](http://www.easydarwin.org/github/images/firimeasyclientios.png)
+
 
 ## 系列视频教程 ##
 
