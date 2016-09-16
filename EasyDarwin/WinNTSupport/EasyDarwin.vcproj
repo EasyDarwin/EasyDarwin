@@ -619,6 +619,14 @@
 					Name="QTSSReflectorModule"
 					>
 					<File
+						RelativePath="..\APIModules\QTSSReflectorModule\MuxSessionOutput.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\APIModules\QTSSReflectorModule\MuxSessionOutput.h"
+						>
+					</File>
+					<File
 						RelativePath="..\APIModules\QTSSReflectorModule\QTSSReflectorModule.cpp"
 						>
 						<FileConfiguration
