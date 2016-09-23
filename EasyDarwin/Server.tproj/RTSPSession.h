@@ -52,7 +52,7 @@ public:
 		fTimeArrived = 0;
 		fPacketPtr.Set(fPacketData, 0);
 		fIsData = true;
-		fStreamCountID = 0;
+		fMsgCountID = 0;
 	}
 
 	~RTSPMsg() {}
@@ -62,7 +62,10 @@ public:
 		Assert(kMaxRTSPMsgLen > len);
 
 		if (len > kMaxRTSPMsgLen)
+        {
+            printf("len > kMaxRTSPMsgLen\n");
 			len = kMaxRTSPMsgLen;
+        }
 
 		if (len > 0)
 			memcpy(this->fPacketPtr.Ptr, data, len);
@@ -84,7 +87,7 @@ private:
 	char        fPacketData[kMaxRTSPMsgLen];
 	StrPtrLen   fPacketPtr;
 	Bool16      fIsData;
-	UInt64      fStreamCountID;
+	UInt64      fMsgCountID;
 
 	friend class RTSPSession;
 	friend class RTSPSessionHandler;
@@ -219,6 +222,8 @@ private:
 	UInt32 fCurrentModule;
 	UInt32 fState;
 
+
+
 	QTSS_RoleParams     fRoleParams;//module param blocks for roles.
 	QTSS_ModuleState    fModuleState;
 
@@ -227,6 +232,10 @@ private:
 
 	void SaveRequestAuthorizationParams(RTSPRequest *theRTSPRequest);
 	QTSS_Error DumpRequestData();
+
+    UInt64 fMsgCount;
+
+    friend RTSPSessionHandler;
 
 };
 
@@ -238,13 +247,15 @@ public:
 
 private:
 	virtual SInt64 Run();
+    
+    void Release();
     RTSPSession* fRTSPSession;
 
     //Number of packets to allocate when the socket is first created
 	enum
 	{
 		kNumPreallocatedMsgs = 20,   //UInt32
-        sMsgHandleInterval = 10
+        sMsgHandleInterval = 1
 	};
 
 	OSQueue fFreeMsgQueue;
@@ -252,10 +263,14 @@ private:
     OSMutex fQueueMutex;
     OSMutex fFreeQueueMutex;
 
+    Bool16  fLiveHandler;
+
 public:
     RTSPMsg* GetMsg();
 	Bool16  ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg);
+    void HandleDataPacket(RTSPMsg* msg);
 
+    friend RTSPSession;
 };
 
 #endif // __RTSPSESSION_H__

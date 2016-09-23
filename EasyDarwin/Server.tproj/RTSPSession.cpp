@@ -149,7 +149,8 @@ RTSPSession::RTSPSession(Bool16 doReportHTTPConnectionAddress)
 	fFoundValidAccept(false),
 	fDoReportHTTPConnectionAddress(doReportHTTPConnectionAddress),
 	fCurrentModule(0),
-	fState(kReadingFirstRequest)
+	fState(kReadingFirstRequest),
+    fMsgCount(0)
 {
 	this->SetTaskName("RTSPSession");
 
@@ -461,14 +462,15 @@ SInt64 RTSPSession::Run()
 				// 判断当前数据是否是一个数据包，而不是一个RTSP请求
 				if (fInputStream.IsDataPacket()) // can this interfere with MP3?
 				{
-					//this->HandleIncomingDataPacket();
+					this->HandleIncomingDataPacket();
 
-                    RTSPMsg* msg = fRTSPSessionHandler->GetMsg();
-                    if(msg)
-                    {
-                        msg->SetMsgData(fInputStream.GetRequestBuffer()->Ptr, fInputStream.GetRequestBuffer()->Len);
-                        fRTSPSessionHandler->ProcessMsg(OS::Milliseconds(), msg);
-                    }
+                    //RTSPMsg* msg = fRTSPSessionHandler->GetMsg();
+                    //if(msg)
+                    //{
+                    //    msg->fMsgCountID = this->fMsgCount++;
+                    //    msg->SetMsgData(fInputStream.GetRequestBuffer()->Ptr, fInputStream.GetRequestBuffer()->Len);
+                    //    fRTSPSessionHandler->ProcessMsg(OS::Milliseconds(), msg);
+                    //}
 
 					fState = kCleaningUp;
 					break;
@@ -1156,7 +1158,7 @@ SInt64 RTSPSession::Run()
 	}
 
     // Release所有RTSPSessionHandler对RTSPSession的引用
-    
+    fRTSPSessionHandler->Release();
 
 	//fObjectHolders--  
 	if (!IsLiveSession() && fObjectHolders > 0) {
@@ -2323,7 +2325,8 @@ void RTSPSession::HandleIncomingDataPacket()
 
 RTSPSessionHandler::RTSPSessionHandler(RTSPSession* session)
 	: Task(),
-    fRTSPSession(NULL)
+    fRTSPSession(NULL),
+    fLiveHandler(true)
 {
 	this->SetTaskName("RTSPSessionHandler");
 
@@ -2334,6 +2337,8 @@ RTSPSessionHandler::RTSPSessionHandler(RTSPSession* session)
 		RTSPMsg* msg = NEW RTSPMsg();
 		fFreeMsgQueue.EnQueue(&msg->fQueueElem);
 	}
+
+    this->Signal(Task::kStartEvent);
 }
 
 RTSPSessionHandler::~RTSPSessionHandler()
@@ -2359,28 +2364,43 @@ RTSPSessionHandler::~RTSPSessionHandler()
 
 SInt64 RTSPSessionHandler::Run()
 {
-    if(1)
+	EventFlags events = this->GetEvents();
+	QTSS_Error theErr = QTSS_NoErr;
+
+	if ((events & Task::kTimeoutEvent) || (events & Task::kKillEvent))
+		fLiveHandler = false;
+
+
+    while(fLiveHandler)
     {
         OSMutexLocker locker(&fQueueMutex);
         if (fMsgQueue.GetLength())
         {
 	        RTSPMsg* theMsg = (RTSPMsg*)fMsgQueue.DeQueue()->GetEnclosingObject();
 
+            printf("- Msg:%ld fMsgQueue.Length: %d \n",theMsg->fMsgCountID, fMsgQueue.GetLength());
 	        //theMsg处理
-            // ...
+            HandleDataPacket(theMsg);
 
             // 处理完成 
             theMsg->Reset();
             OSMutexLocker locker(&fFreeQueueMutex);
             fFreeMsgQueue.EnQueue(&theMsg->fQueueElem); 
+        } 
+        
+        if (fMsgQueue.GetLength() == 0)
+        {
+            return sMsgHandleInterval;
         }
     }
 
-    if (fMsgQueue.GetLength() > 0)
-    {
-        return sMsgHandleInterval;
-    }
-    return 0;
+    return -1;
+
+}
+
+void RTSPSessionHandler::Release()
+{
+    fLiveHandler = false;
 }
 
 RTSPMsg* RTSPSessionHandler::GetMsg()
@@ -2402,6 +2422,58 @@ Bool16 RTSPSessionHandler::ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* the
 
 	//this->Signal(Task::kUpdateEvent);
 
-	printf("fMsgQueue.Length: %d \n", fMsgQueue.GetLength());
+    //printf("+ Msg:%ld fMsgQueue.Length:%d \n",theMsg->fMsgCountID, fMsgQueue.GetLength());
 	return true;
+}
+
+void RTSPSessionHandler::HandleDataPacket(RTSPMsg* theMsg)
+{
+	// Attempt to find the RTP session for this request.
+    UInt8   packetChannel = (UInt8)theMsg->fPacketPtr.Ptr[1];
+    StrPtrLen* theSessionID = this->fRTSPSession->GetSessionIDForChannelNum(packetChannel);
+
+	if (theSessionID == NULL)
+	{
+		Assert(0);
+		return;
+        theSessionID = &(fRTSPSession->fLastRTPSessionIDPtr);
+	}
+
+	// RTP会话表中功能查找SessionID对应的引用
+	OSRefTable* theMap = QTSServerInterface::GetServer()->GetRTPSessionMap();
+	OSRef* theRef = theMap->Resolve(theSessionID);
+
+	if (theRef != NULL)
+        fRTSPSession->fRTPSession = (RTPSession*)theRef->GetObject();
+
+	if (fRTSPSession->fRTPSession == NULL)
+		return;
+
+    StrPtrLen packetWithoutHeaders(theMsg->fPacketPtr.Ptr + 4, theMsg->fPacketPtr.Len - 4);
+
+	OSMutexLocker locker(fRTSPSession->fRTPSession->GetMutex());
+	fRTSPSession->fRTPSession->RefreshTimeout();
+	// 通过packetChannel找到对应的RTP流数据
+	RTPStream* theStream = fRTSPSession->fRTPSession->FindRTPStreamForChannelNum(packetChannel);
+	//解析RTP流数据
+    theStream->ProcessIncomingInterleavedData(packetChannel, fRTSPSession, &packetWithoutHeaders);
+
+	//
+	// We currently don't support async notifications from within this role
+	QTSS_RoleParams packetParams;
+    packetParams.rtspIncomingDataParams.inRTSPSession = fRTSPSession;
+
+	packetParams.rtspIncomingDataParams.inClientSession = fRTSPSession->fRTPSession;
+    packetParams.rtspIncomingDataParams.inPacketData = theMsg->fPacketPtr.Ptr;
+    packetParams.rtspIncomingDataParams.inPacketLen = theMsg->fPacketPtr.Len;
+
+	//调用所有注册了kRTSPIncomingDataRole角色的模块
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPIncomingDataRole);
+	for (UInt32 fCurrentModule = 0; fCurrentModule < numModules; fCurrentModule++)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRTSPIncomingDataRole, fCurrentModule);
+		(void)theModule->CallDispatch(QTSS_RTSPIncomingData_Role, &packetParams);
+	}
+
+	//fCurrentModule = 0;
 }
