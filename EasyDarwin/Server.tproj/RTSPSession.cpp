@@ -81,10 +81,8 @@
 #endif
 
 #if  __RTSP_HTTP_DEBUG__ || __RTSP_HTTP_VERBOSE__
-
 static void PrintfStrPtrLen(StrPtrLen *splRequest)
 {
-
 	char    buff[1024];
 
 	memcpy(buff, splRequest->Ptr, splRequest->Len);
@@ -93,7 +91,6 @@ static void PrintfStrPtrLen(StrPtrLen *splRequest)
 
 	HTTP_TRACE_ONE("%s\n", buff)
 		//qtss_printf( "%s\n", buff );
-
 }
 #endif
 
@@ -1147,6 +1144,9 @@ SInt64 RTSPSession::Run()
 			}
 		}
 	}
+
+    // Release所有RTSPSessionHandler对RTSPSession的引用
+    
 
 	//fObjectHolders--  
 	if (!IsLiveSession() && fObjectHolders > 0) {
@@ -2308,4 +2308,75 @@ void RTSPSession::HandleIncomingDataPacket()
 	}
 	//将当前模块数置0
 	fCurrentModule = 0;
+}
+
+
+RTSPSessionHandler::RTSPSessionHandler(RTSPSession* session)
+	: Task(),
+    fRTSPSession(NULL)
+{
+	this->SetTaskName("RTSPSessionHandler");
+
+    fRTSPSession = session;
+
+	for (UInt32 numPackets = 0; numPackets < kNumPreallocatedMsgs; numPackets++)
+	{
+		RTSPMsg* msg = NEW RTSPMsg();
+		fFreeMsgQueue.EnQueue(&msg->fQueueElem);
+	}
+}
+
+RTSPSessionHandler::~RTSPSessionHandler()
+{
+    fRTSPSession = NULL;
+
+	{
+		OSMutexLocker locker(&fQueueMutex);
+		while (fMsgQueue.GetLength() > 0)
+		{
+			RTSPMsg* theMsg = (RTSPMsg*)fMsgQueue.DeQueue()->GetEnclosingObject();
+			delete theMsg;
+		}
+	}
+
+	while (fFreeMsgQueue.GetLength() > 0)
+	{
+		RTSPMsg* theMsg = (RTSPMsg*)fFreeMsgQueue.DeQueue()->GetEnclosingObject();
+		delete theMsg;
+	}
+
+}
+
+SInt64 RTSPSessionHandler::Run()
+{
+    if(1)
+    {
+        OSMutexLocker locker(&fQueueMutex);
+        if (fMsgQueue.GetLength())
+        {
+	        RTSPMsg* theMsg = (RTSPMsg*)fMsgQueue.DeQueue()->GetEnclosingObject();
+
+	        //theMsg处理
+            // ...
+
+            // 处理完成 
+            OSMutexLocker locker(&fFreeQueueMutex);
+            fFreeMsgQueue.EnQueue(&theMsg->fQueueElem); 
+        }
+    }
+
+    if (fMsgQueue.GetLength() > 0)
+    {
+        return sMsgHandleInterval;
+    }
+    return 0;
+}
+
+RTSPMsg* RTSPSessionHandler::GetMsg()
+{
+    OSMutexLocker locker(&fFreeQueueMutex);
+	if (fFreeMsgQueue.GetLength() == 0)
+		return NEW RTSPMsg();
+	else
+		return (RTSPMsg*)fFreeMsgQueue.DeQueue()->GetEnclosingObject();
 }
