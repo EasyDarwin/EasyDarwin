@@ -57,7 +57,7 @@ public:
 
 	~RTSPMsg() {}
 
-	void    SetPacketData(char *data, UInt32 len)
+	void    SetMsgData(char *data, UInt32 len)
 	{
 		Assert(kMaxRTSPMsgLen > len);
 
@@ -142,6 +142,8 @@ private:
 
 	RTSPRequest*        fRequest;
 	RTPSession*         fRTPSession;
+
+    RTSPSessionHandler* fRTSPSessionHandler;
 
 
 	/* -- begin adds for HTTP ProxyTunnel -- */
@@ -252,6 +254,8 @@ private:
 
 public:
     RTSPMsg* GetMsg();
+	Bool16  ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg);
+
 };
 
 #endif // __RTSPSESSION_H__

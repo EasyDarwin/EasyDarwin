@@ -142,6 +142,7 @@ RTSPSession::RTSPSession(Bool16 doReportHTTPConnectionAddress)
 	: RTSPSessionInterface(),
 	fRequest(NULL),
 	fRTPSession(NULL),
+    fRTSPSessionHandler(NULL),
 	fReadMutex(),
 	fHTTPMethod(kHTTPMethodInit),
 	fWasHTTPRequest(false),
@@ -176,6 +177,7 @@ RTSPSession::RTSPSession(Bool16 doReportHTTPConnectionAddress)
 
 	(void)QTSS_IDForAttr(qtssClientSessionObjectType, sBroadcasterSessionName, &sClientBroadcastSessionAttr);
 
+    fRTSPSessionHandler = NEW RTSPSessionHandler(this);
 }
 
 RTSPSession::~RTSPSession()
@@ -459,7 +461,15 @@ SInt64 RTSPSession::Run()
 				// 判断当前数据是否是一个数据包，而不是一个RTSP请求
 				if (fInputStream.IsDataPacket()) // can this interfere with MP3?
 				{
-					this->HandleIncomingDataPacket();
+					//this->HandleIncomingDataPacket();
+
+                    RTSPMsg* msg = fRTSPSessionHandler->GetMsg();
+                    if(msg)
+                    {
+                        msg->SetMsgData(fInputStream.GetRequestBuffer()->Ptr, fInputStream.GetRequestBuffer()->Len);
+                        fRTSPSessionHandler->ProcessMsg(OS::Milliseconds(), msg);
+                    }
+
 					fState = kCleaningUp;
 					break;
 				}
@@ -2360,6 +2370,7 @@ SInt64 RTSPSessionHandler::Run()
             // ...
 
             // 处理完成 
+            theMsg->Reset();
             OSMutexLocker locker(&fFreeQueueMutex);
             fFreeMsgQueue.EnQueue(&theMsg->fQueueElem); 
         }
@@ -2379,4 +2390,18 @@ RTSPMsg* RTSPSessionHandler::GetMsg()
 		return NEW RTSPMsg();
 	else
 		return (RTSPMsg*)fFreeMsgQueue.DeQueue()->GetEnclosingObject();
+}
+
+Bool16 RTSPSessionHandler::ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg)
+{
+	theMsg->fTimeArrived = inMilliseconds;
+	{
+		OSMutexLocker locker(&fQueueMutex);
+		fMsgQueue.EnQueue(&theMsg->fQueueElem);
+	}
+
+	//this->Signal(Task::kUpdateEvent);
+
+	printf("fMsgQueue.Length: %d \n", fMsgQueue.GetLength());
+	return true;
 }
