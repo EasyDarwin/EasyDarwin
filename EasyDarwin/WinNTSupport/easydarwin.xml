@@ -82,9 +82,9 @@
 		<PREF NAME="reliable_udp_dirs" >\</PREF>
 		<PREF NAME="reliable_udp_printfs" TYPE="Bool16" >false</PREF>
 		<PREF NAME="RTSP_error_message" TYPE="Bool16" >false</PREF>
-		<PREF NAME="run_num_threads" TYPE="UInt32" >10</PREF>
+		<PREF NAME="run_num_threads" TYPE="UInt32" >12</PREF>
 		<PREF NAME="overbuffer_rate" TYPE="Float32" >2.0</PREF>
-		<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >true</PREF>
+		<PREF NAME="RTSP_debug_printfs" TYPE="Bool16" >false</PREF>
 		<PREF NAME="enable_monitor_stats_file" TYPE="Bool16" >true</PREF>
 		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="monitor_stats_file_name" >server_status</PREF>
@@ -120,7 +120,7 @@
 		<PREF NAME="udp_monitor_dest_ip" >127.0.0.1</PREF>
 		<PREF NAME="udp_monitor_src_ip" >0.0.0.0</PREF>
 		<PREF NAME="enable_allow_guest_default" TYPE="Bool16" >true</PREF>
-		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >3</PREF>
+		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >4</PREF>
 		<PREF NAME="player_requires_disable_3gpp_rate_adapt" ></PREF>
 		<PREF NAME="player_requires_3gpp_target_time" ></PREF>
 		<PREF NAME="3gpp_target_time_milliseconds" TYPE="UInt32" >3000</PREF>
