@@ -1,0 +1,34 @@
+<CONFIGURATION>
+	<SERVER>
+		<PREF NAME="connection_timeout" TYPE="UInt32" >0</PREF>
+		<PREF NAME="error_logfile_name" >easycamera</PREF>
+		<PREF NAME="error_logfile_dir" >./Logs/</PREF>
+		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
+		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
+		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >2</PREF>
+		<PREF NAME="screen_logging" TYPE="Bool16" >true</PREF>
+		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
+		<PREF NAME="run_num_threads" TYPE="UInt32" >1</PREF>
+		<PREF NAME="pid_file" >easycamera.pid</PREF>
+		<PREF NAME="force_logs_close_on_write" TYPE="Bool16" >false</PREF>
+		<PREF NAME="run_num_blocking_threads" TYPE="UInt32" >1</PREF>
+	</SERVER>
+	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
+	<MODULE NAME="EasyCMSModule" >
+		<PREF NAME="easycms_ip" >121.40.50.44</PREF>
+		<PREF NAME="easycms_port" TYPE="UInt16" >10000</PREF>
+		<PREF NAME="device_serial" >21AB0212030000DF</PREF>
+		<PREF NAME="device_name" >HK</PREF>
+		<PREF NAME="device_key" >123456</PREF>
+		<PREF NAME="device_tag" >dev</PREF>
+		<PREF NAME="keep_alive_interval" TYPE="UInt32" >30</PREF>
+		<PREF NAME="upload_snap_interval" TYPE="UInt32" >150</PREF>
+	</MODULE>
+	<MODULE NAME="EasyCameraModule" >
+		<PREF NAME="camera_ip" >192.168.1.5</PREF>
+		<PREF NAME="camera_port" TYPE="UInt16" >8000</PREF>
+		<PREF NAME="camera_user" >admin</PREF>
+		<PREF NAME="camera_password" >admin12345</PREF>
+		<PREF NAME="camera_stream_type" TYPE="UInt32" >0</PREF>
+	</MODULE>
+</CONFIGURATION>
