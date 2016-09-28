@@ -25,7 +25,7 @@
 		<PREF NAME="upload_snap_interval" TYPE="UInt32" >150</PREF>
 	</MODULE>
 	<MODULE NAME="EasyCameraModule" >
-		<PREF NAME="camera_ip" >192.168.1.5</PREF>
+		<PREF NAME="camera_ip" >14b8460c26.imwork.net</PREF>
 		<PREF NAME="camera_port" TYPE="UInt16" >8000</PREF>
 		<PREF NAME="camera_user" >admin</PREF>
 		<PREF NAME="camera_password" >admin12345</PREF>
