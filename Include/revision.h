@@ -29,8 +29,8 @@
 // Use no http/rtsp tspecial chars in kVersionString and kBuildString defines
 // tspecials =  ()<>@,;:\/"[]?=
 
-#define kVersionString "7.0.5"
-#define kBuildString "16.0518"
+#define kVersionString "7.1"
+#define kBuildString "16.1010"
 
 // Use kCommentString for seed or other release info 
 // Do not use '(' or ')' in the kCommentString
