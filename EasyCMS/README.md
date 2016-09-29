@@ -77,7 +77,7 @@ Linux版本运行（具体配置文件路径根据实际情况设置）：
 
 - 获取在线设备列表
 <pre>
-http://[IP]:[cms_port]/getdevicelist?{AppType=[AppType]&TerminalType=[TerminalType]}
+http://[IP]:[cms_port]/api/getdevicelist?{AppType=[AppType]&TerminalType=[TerminalType]}
 </pre>
 - 请求具体设备信息 
 <pre>
