@@ -235,7 +235,7 @@ private:
 
     UInt64 fMsgCount;
 
-    friend RTSPSessionHandler;
+    friend class RTSPSessionHandler;
 
 };
 
@@ -270,7 +270,7 @@ public:
 	Bool16  ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg);
     void HandleDataPacket(RTSPMsg* msg);
 
-    friend RTSPSession;
+    friend class RTSPSession;
 };
 
 #endif // __RTSPSESSION_H__
