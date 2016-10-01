@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A0EFC09D-B539-40ED-B7A2-06177CBA669D}</ProjectGuid>
+    <RootNamespace>StreamingServer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Debug/StreamingServer.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/EasyCMSModule/;../APIModules/EasyCameraModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/EasyDarwin.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ForcedIncludeFiles>../../Include/Win32header.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;NetLib.lib;libEasyPusher.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\WinNTSupport\Debug\EasyCamera.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../Lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/EasyDarwin.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/StreamingServer.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Release/StreamingServer.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../APIModules/EasyCMSModule/;../APIModules/EasyCameraModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/EasyDarwin.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <ForcedIncludeFiles>../../Include/Win32header.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;NetLib.lib;libEasyPusher.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\WinNTSupport\Release\EasyCamera.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../Lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\Release/DarwinStreamingServer.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/StreamingServer.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcxproj">
+      <Project>{4e4f758c-7cb5-471c-bd61-fb70bf69d48b}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EasyProtocol\EasyProtocol\EasyProtocol.vcxproj">
+      <Project>{14f332e3-1771-4908-8850-9a2581a4aed2}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EasyProtocol\jsoncpp\lib_json.vcxproj">
+      <Project>{b84f7231-16ce-41d8-8c08-7b523ff4225b}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SafeStdLib\SafeInternalStdLib.vcxproj">
+      <Project>{230d5525-aea7-4037-95fe-3b45bef98e55}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\APICommonCode\APICommonCode.vcxproj">
+      <Project>{eeeb3a6e-b4af-4c09-ab57-7f2576cfe38d}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\APIStubLib\APIStubLib.vcxproj">
+      <Project>{21898038-6830-4b4d-be2c-e32641f253bc}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp" />
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp" />
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp" />
+    <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
+    <ClCompile Include="..\..\SafeStdLib\InternalStdLib.cpp" />
+    <ClCompile Include="..\APIModules\EasyCameraModule\EasyCameraModule.cpp" />
+    <ClCompile Include="..\APIModules\EasyCameraModule\EasyCameraSource.cpp" />
+    <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSModule.cpp" />
+    <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSSession.cpp" />
+    <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp" />
+    <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp" />
+    <ClCompile Include="..\PrefsSourceLib\XMLPrefsParser.cpp" />
+    <ClCompile Include="..\Server.tproj\GenerateXMLPrefs.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSCallbacks.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSDataConverter.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSDictionary.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSErrorLogModule.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSServer.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSServerInterface.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSServerPrefs.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSExpirationDate.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSFile.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSMessages.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSModule.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSPrefs.cpp" />
+    <ClCompile Include="..\Server.tproj\QTSSSocket.cpp" />
+    <ClCompile Include="..\Server.tproj\RunServer.cpp" />
+    <ClCompile Include="..\Server.tproj\win32main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPProtocol.h" />
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequest.h" />
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.h" />
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.h" />
+    <ClInclude Include="..\APIModules\EasyCameraModule\EasyCameraModule.h" />
+    <ClInclude Include="..\APIModules\EasyCameraModule\EasyCameraSource.h" />
+    <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h" />
+    <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSSession.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
