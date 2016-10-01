@@ -88,10 +88,6 @@ T sinpx(T z)
    {
       z = -z;
    }
-   else
-   {
-      sign = -sign;
-   }
    T fl = floor(z);
    T dist;
    if(is_odd(fl))
@@ -166,7 +162,7 @@ T gamma_imp(T z, const Policy& pol, const Lanczos& l)
    {
       if (z < 1 / tools::max_value<T>())
          result = policies::raise_overflow_error<T>(function, 0, pol);
-	   result *= 1 / z - constants::euler<T>();
+      result *= 1 / z - constants::euler<T>();
    }
    else
    {
@@ -242,13 +238,13 @@ T lgamma_imp(T z, const Policy& pol, const Lanczos& l, int* sign = 0)
    }
    else if (z < tools::root_epsilon<T>())
    {
-	   if (0 == z)
-		   return policies::raise_pole_error<T>(function, "Evaluation of lgamma at %1%.", z, pol);
+     if (0 == z)
+	      return policies::raise_pole_error<T>(function, "Evaluation of lgamma at %1%.", z, pol);
       if (fabs(z) < 1 / tools::max_value<T>())
          result = -log(fabs(z));
       else
-	      result = log(fabs(1 / z - constants::euler<T>()));
-	   if (z < 0)
+         result = log(fabs(1 / z - constants::euler<T>()));
+      if (z < 0)
 		sresult = -1;
    }
    else if(z < 15)
@@ -530,9 +526,9 @@ T lgamma_imp(T z, const Policy& pol, const lanczos::undefined_lanczos&, int* sig
 
    if (zz < min_arg_for_recursion)
    {
-	   // Here we simply take the logarithm of tgamma(). This is somewhat
-	   // inefficient, but simple. The rationale is that the argument here
-	   // is relatively small and overflow is not expected to be likely.
+      // Here we simply take the logarithm of tgamma(). This is somewhat
+      // inefficient, but simple. The rationale is that the argument here
+      // is relatively small and overflow is not expected to be likely.
       if (z > -tools::root_epsilon<T>())
       {
          // Reflection formula may fail if z is very close to zero, let the series
@@ -544,7 +540,7 @@ T lgamma_imp(T z, const Policy& pol, const lanczos::undefined_lanczos&, int* sig
          }
          return log_gamma_value;
       }
-	   else
+      else
       {
          // No issue with spurious overflow in reflection formula, 
          // just fall through to regular code:
@@ -1063,8 +1059,31 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
       {
          result = gamma_incomplete_imp(a, x, true, invert, pol, p_derivative);
          if(result == 0)
-            return policies::raise_evaluation_error<T>(function, "Obtained %1% for the incomplete gamma function, but in truth we don't really know what the answer is...", result, pol);
-         result = log(result) + boost::math::lgamma(a, pol);
+         {
+            if(invert)
+            {
+               // Try http://functions.wolfram.com/06.06.06.0039.01
+               result = 1 + 1 / (12 * a) + 1 / (288 * a * a);
+               result = log(result) - a + (a - 0.5f) * log(a) + log(boost::math::constants::root_two_pi<T>());
+               if(p_derivative)
+                  *p_derivative = exp(a * log(x) - x);
+            }
+            else
+            {
+               // This is method 2 below, done in logs, we're really outside the
+               // range of this method, but since the result is almost certainly
+               // infinite, we should probably be OK:
+               result = a * log(x) - x;
+               if(p_derivative)
+                  *p_derivative = exp(result);
+               T init_value = 0;
+               result += log(detail::lower_gamma_series(a, x, pol, init_value) / a);
+            }
+         }
+         else
+         {
+            result = log(result) + boost::math::lgamma(a, pol);
+         }
       }
       if(result > tools::log_max_value<T>())
          return policies::raise_overflow_error<T>(function, 0, pol);
@@ -1375,7 +1394,7 @@ T tgamma_delta_ratio_imp_lanczos(T z, T delta, const Policy& pol, const Lanczos&
          return 1 / (z * boost::math::tgamma(z + delta, pol));
       }
    }
-   T zgh = z + Lanczos::g() - constants::half<T>();
+   T zgh = static_cast<T>(z + Lanczos::g() - constants::half<T>());
    T result;
    if(fabs(delta) < 10)
    {
@@ -1560,6 +1579,7 @@ T tgamma_ratio_imp(T x, T y, const Policy& pol)
 template <class T, class Policy>
 T gamma_p_derivative_imp(T a, T x, const Policy& pol)
 {
+   BOOST_MATH_STD_USING
    //
    // Usual error checks first:
    //
@@ -1585,8 +1605,14 @@ T gamma_p_derivative_imp(T a, T x, const Policy& pol)
       // overflow:
       return policies::raise_overflow_error<T>("boost::math::gamma_p_derivative<%1%>(%1%, %1%)", 0, pol);
    }
-
-   f1 /= x;
+   if(f1 == 0)
+   {
+      // Underflow in calculation, use logs instead:
+      f1 = a * log(x) - x - lgamma(a, pol) - log(x);
+      f1 = exp(f1);
+   }
+   else
+      f1 /= x;
 
    return f1;
 }

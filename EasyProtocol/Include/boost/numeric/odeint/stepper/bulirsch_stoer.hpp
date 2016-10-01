@@ -90,9 +90,11 @@ public:
 
     bulirsch_stoer(
         value_type eps_abs = 1E-6 , value_type eps_rel = 1E-6 ,
-        value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 )
+        value_type factor_x = 1.0 , value_type factor_dxdt = 1.0 ,
+        time_type max_dt = static_cast<time_type>(0))
         : m_error_checker( eps_abs , eps_rel , factor_x, factor_dxdt ) , m_midpoint() ,
           m_last_step_rejected( false ) , m_first( true ) ,
+          m_max_dt(max_dt) ,
           m_interval_sequence( m_k_max+1 ) ,
           m_coeff( m_k_max+1 ) ,
           m_cost( m_k_max+1 ) ,
@@ -189,12 +191,19 @@ public:
     template< class System , class StateIn , class DerivIn , class StateOut >
     controlled_step_result try_step( System system , const StateIn &in , const DerivIn &dxdt , time_type &t , StateOut &out , time_type &dt )
     {
+        if( m_max_dt != static_cast<time_type>(0) && detail::less_with_sign(m_max_dt, dt, dt) )
+        {
+            // given step size is bigger then max_dt
+            // set limit and return fail
+            dt = m_max_dt;
+            return fail;
+        }
+
         BOOST_USING_STD_MIN();
         BOOST_USING_STD_MAX();
 
         static const value_type val1( 1.0 );
 
-        typename odeint::unwrap_reference< System >::type &sys = system;
         if( m_resizer.adjust_size( in , detail::bind( &controlled_error_bs_type::template resize_impl< StateIn > , detail::ref( *this ) , detail::_1 ) ) )
         {
             reset(); // system resized -> reset
@@ -219,12 +228,12 @@ public:
             m_midpoint.set_steps( m_interval_sequence[k] );
             if( k == 0 )
             {
-                m_midpoint.do_step( sys , in , dxdt , t , out , dt );
+                m_midpoint.do_step( system , in , dxdt , t , out , dt );
                 /* the first step, nothing more to do */
             }
             else
             {
-                m_midpoint.do_step( sys , in , dxdt , t , m_table[k-1].m_v , dt );
+                m_midpoint.do_step( system , in , dxdt , t , m_table[k-1].m_v , dt );
                 extrapolate( k , m_table , m_coeff , out );
                 // get error estimate
                 m_algebra.for_each3( m_err.m_v , out , m_table[0].m_v ,
@@ -312,6 +321,11 @@ public:
 
         if( !m_last_step_rejected || boost::numeric::odeint::detail::less_with_sign(new_h, dt, dt) )
         {
+            // limit step size
+            if( m_max_dt != static_cast<time_type>(0) )
+            {
+                new_h = detail::min_abs(m_max_dt, new_h);
+            }
             m_dt_last = new_h;
             dt = new_h;
         }
@@ -341,7 +355,7 @@ public:
         resize_m_dxdt( x );
         resize_m_xnew( x );
         resize_impl( x );
-        m_midpoint.adjust_size();
+        m_midpoint.adjust_size( x );
     }
 
 
@@ -475,6 +489,7 @@ private:
 
     time_type m_dt_last;
     time_type m_t_last;
+    time_type m_max_dt;
 
     size_t m_current_k_opt;
 
@@ -494,7 +509,7 @@ private:
 
     state_table_type m_table; // sequence of states for extrapolation
 
-    const value_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
+    value_type STEPFAC1 , STEPFAC2 , STEPFAC3 , STEPFAC4 , KFAC1 , KFAC2;
 };
 
 

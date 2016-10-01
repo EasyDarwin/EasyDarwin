@@ -1,5 +1,6 @@
 /*
 Copyright (c) Microsoft Corporation 2014
+Copyright Rene Rivera 2015
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
 http://www.boost.org/LICENSE_1_0.txt)
@@ -30,13 +31,13 @@ http://www.boost.org/LICENSE_1_0.txt)
 #endif
  
 #if BOOST_PLAT_WINDOWS_PHONE
-#   define BOOST_PLAT_WINDOWS_PHONE_AVALIABLE
+#   define BOOST_PLAT_WINDOWS_PHONE_AVAILABLE
 #   include <boost/predef/detail/platform_detected.h>
 #endif
 
 #define BOOST_PLAT_WINDOWS_PHONE_NAME "Windows Phone"
 
+#endif
+
 #include <boost/predef/detail/test.h>
 BOOST_PREDEF_DECLARE_TEST(BOOST_PLAT_WINDOWS_PHONE,BOOST_PLAT_WINDOWS_PHONE_NAME)
-
-#endif

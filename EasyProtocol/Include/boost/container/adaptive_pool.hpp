@@ -11,7 +11,11 @@
 #ifndef BOOST_CONTAINER_ADAPTIVE_POOL_HPP
 #define BOOST_CONTAINER_ADAPTIVE_POOL_HPP
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
@@ -23,17 +27,13 @@
 #include <boost/container/detail/adaptive_node_pool.hpp>
 #include <boost/container/detail/multiallocation_chain.hpp>
 #include <boost/container/detail/mpl.hpp>
-#include <boost/container/detail/alloc_lib_auto_link.hpp>
+#include <boost/container/detail/dlmalloc.hpp>
 #include <boost/container/detail/singleton.hpp>
-
 #include <boost/container/detail/placement_new.hpp>
 
 #include <boost/assert.hpp>
-#include <boost/utility/addressof.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/move/utility_core.hpp>
-#include <memory>
-#include <algorithm>
 #include <cstddef>
 
 
@@ -57,7 +57,7 @@ template < class T
          , std::size_t NodesPerBlock   BOOST_CONTAINER_DOCONLY(= ADP_nodes_per_block)
          , std::size_t MaxFreeBlocks   BOOST_CONTAINER_DOCONLY(= ADP_max_free_blocks)
          , std::size_t OverheadPercent BOOST_CONTAINER_DOCONLY(= ADP_overhead_percent)
-         BOOST_CONTAINER_DOCIGN(BOOST_CONTAINER_I unsigned Version)
+         BOOST_CONTAINER_DOCIGN(BOOST_MOVE_I unsigned Version)
          >
 class adaptive_pool
 {
@@ -67,7 +67,7 @@ class adaptive_pool
    typedef unsigned int allocation_type;
    typedef adaptive_pool
       <T, NodesPerBlock, MaxFreeBlocks, OverheadPercent
-         BOOST_CONTAINER_DOCIGN(BOOST_CONTAINER_I Version)
+         BOOST_CONTAINER_DOCIGN(BOOST_MOVE_I Version)
          >   self_t;
 
    static const std::size_t nodes_per_block        = NodesPerBlock;
@@ -83,9 +83,9 @@ class adaptive_pool
    typedef T *                                  pointer;
    typedef const T *                            const_pointer;
    typedef typename ::boost::container::
-      container_detail::unvoid<T>::type &       reference;
-   typedef const typename ::boost::container::
-      container_detail::unvoid<T>::type &       const_reference;
+      container_detail::unvoid_ref<T>::type     reference;
+   typedef typename ::boost::container::
+      container_detail::unvoid_ref<const T>::type     const_reference;
    typedef std::size_t                          size_type;
    typedef std::ptrdiff_t                       difference_type;
 
@@ -110,7 +110,7 @@ class adaptive_pool
          , NodesPerBlock
          , MaxFreeBlocks
          , OverheadPercent
-         BOOST_CONTAINER_DOCIGN(BOOST_CONTAINER_I Version)
+         BOOST_CONTAINER_DOCIGN(BOOST_MOVE_I Version)
          >       other;
    };
 
@@ -127,34 +127,34 @@ class adaptive_pool
 
    public:
    //!Default constructor
-   adaptive_pool() BOOST_CONTAINER_NOEXCEPT
+   adaptive_pool() BOOST_NOEXCEPT_OR_NOTHROW
    {}
 
    //!Copy constructor from other adaptive_pool.
-   adaptive_pool(const adaptive_pool &) BOOST_CONTAINER_NOEXCEPT
+   adaptive_pool(const adaptive_pool &) BOOST_NOEXCEPT_OR_NOTHROW
    {}
 
    //!Copy constructor from related adaptive_pool.
    template<class T2>
    adaptive_pool
       (const adaptive_pool<T2, NodesPerBlock, MaxFreeBlocks, OverheadPercent
-            BOOST_CONTAINER_DOCIGN(BOOST_CONTAINER_I Version)> &) BOOST_CONTAINER_NOEXCEPT
+            BOOST_CONTAINER_DOCIGN(BOOST_MOVE_I Version)> &) BOOST_NOEXCEPT_OR_NOTHROW
    {}
 
    //!Destructor
-   ~adaptive_pool() BOOST_CONTAINER_NOEXCEPT
+   ~adaptive_pool() BOOST_NOEXCEPT_OR_NOTHROW
    {}
 
    //!Returns the number of elements that could be allocated.
    //!Never throws
-   size_type max_size() const BOOST_CONTAINER_NOEXCEPT
+   size_type max_size() const BOOST_NOEXCEPT_OR_NOTHROW
    {  return size_type(-1)/sizeof(T);   }
 
    //!Allocate memory for an array of count elements.
    //!Throws std::bad_alloc if there is no enough memory
    pointer allocate(size_type count, const void * = 0)
    {
-      if(count > this->max_size())
+      if(BOOST_UNLIKELY(count > this->max_size()))
          boost::container::throw_bad_alloc();
 
       if(Version == 1 && count == 1){
@@ -164,13 +164,13 @@ class adaptive_pool
          return pointer(static_cast<T*>(singleton_t::instance().allocate_node()));
       }
       else{
-         return static_cast<pointer>(boost_cont_malloc(count*sizeof(T)));
+         return static_cast<pointer>(dlmalloc_malloc(count*sizeof(T)));
       }
    }
 
    //!Deallocate allocated memory.
    //!Never throws
-   void deallocate(const pointer &ptr, size_type count) BOOST_CONTAINER_NOEXCEPT
+   void deallocate(const pointer &ptr, size_type count) BOOST_NOEXCEPT_OR_NOTHROW
    {
       (void)count;
       if(Version == 1 && count == 1){
@@ -180,27 +180,25 @@ class adaptive_pool
          singleton_t::instance().deallocate_node(ptr);
       }
       else{
-         boost_cont_free(ptr);
+         dlmalloc_free(ptr);
       }
    }
 
-   std::pair<pointer, bool>
-      allocation_command(allocation_type command,
+   pointer allocation_command(allocation_type command,
                          size_type limit_size,
-                         size_type preferred_size,
-                         size_type &received_size, pointer reuse = pointer())
+                         size_type &prefer_in_recvd_out_size,
+                         pointer &reuse)
    {
-      std::pair<pointer, bool> ret =
-         this->priv_allocation_command(command, limit_size, preferred_size, received_size, reuse);
-      if(!ret.first && !(command & BOOST_CONTAINER_NOTHROW_ALLOCATION))
+      pointer ret = this->priv_allocation_command(command, limit_size, prefer_in_recvd_out_size, reuse);
+      if(BOOST_UNLIKELY(!ret && !(command & BOOST_CONTAINER_NOTHROW_ALLOCATION)))
          boost::container::throw_bad_alloc();
       return ret;
    }
 
    //!Returns maximum the number of objects the previously allocated memory
    //!pointed by p can hold.
-   size_type size(pointer p) const BOOST_CONTAINER_NOEXCEPT
-   {  return boost_cont_size(p);  }
+   size_type size(pointer p) const BOOST_NOEXCEPT_OR_NOTHROW
+   {  return dlmalloc_size(p);  }
 
    //!Allocates just one object. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
@@ -230,7 +228,7 @@ class adaptive_pool
    //!Deallocates memory previously allocated with allocate_one().
    //!You should never use deallocate_one to deallocate memory allocated
    //!with other functions different from allocate_one(). Never throws
-   void deallocate_one(pointer p) BOOST_CONTAINER_NOEXCEPT
+   void deallocate_one(pointer p) BOOST_NOEXCEPT_OR_NOTHROW
    {
       typedef container_detail::shared_adaptive_node_pool
          <sizeof(T), NodesPerBlock, MaxFreeBlocks, OverheadPercent> shared_pool_t;
@@ -238,7 +236,7 @@ class adaptive_pool
       singleton_t::instance().deallocate_node(p);
    }
 
-   void deallocate_individual(multiallocation_chain &chain) BOOST_CONTAINER_NOEXCEPT
+   void deallocate_individual(multiallocation_chain &chain) BOOST_NOEXCEPT_OR_NOTHROW
    {
       typedef container_detail::shared_adaptive_node_pool
          <sizeof(T), NodesPerBlock, MaxFreeBlocks, OverheadPercent> shared_pool_t;
@@ -253,16 +251,17 @@ class adaptive_pool
    void allocate_many(size_type elem_size, std::size_t n_elements, multiallocation_chain &chain)
    {
       BOOST_STATIC_ASSERT(( Version > 1 ));/*
-      boost_cont_memchain ch;
+      dlmalloc_memchain ch;
       BOOST_CONTAINER_MEMCHAIN_INIT(&ch);
-      if(!boost_cont_multialloc_nodes(n_elements, elem_size*sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, &ch)){
+      if(BOOST_UNLIKELY(!dlmalloc_multialloc_nodes(n_elements, elem_size*sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, &ch))){
          boost::container::throw_bad_alloc();
       }
       chain.incorporate_after(chain.before_begin()
                              ,(T*)BOOST_CONTAINER_MEMCHAIN_FIRSTMEM(&ch)
                              ,(T*)BOOST_CONTAINER_MEMCHAIN_LASTMEM(&ch)
                              ,BOOST_CONTAINER_MEMCHAIN_SIZE(&ch) );*/
-      if(!boost_cont_multialloc_nodes(n_elements, elem_size*sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, reinterpret_cast<boost_cont_memchain *>(&chain))){
+      if(BOOST_UNLIKELY(!dlmalloc_multialloc_nodes
+            (n_elements, elem_size*sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, reinterpret_cast<dlmalloc_memchain *>(&chain)))){
          boost::container::throw_bad_alloc();
       }
    }
@@ -272,32 +271,33 @@ class adaptive_pool
    void allocate_many(const size_type *elem_sizes, size_type n_elements, multiallocation_chain &chain)
    {
       BOOST_STATIC_ASSERT(( Version > 1 ));/*
-      boost_cont_memchain ch;
+      dlmalloc_memchain ch;
       BOOST_CONTAINER_MEMCHAIN_INIT(&ch);
-      if(!boost_cont_multialloc_arrays(n_elements, elem_sizes, sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, &ch)){
+      if(BOOST_UNLIKELY(!dlmalloc_multialloc_arrays(n_elements, elem_sizes, sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, &ch))){
          boost::container::throw_bad_alloc();
       }
       chain.incorporate_after(chain.before_begin()
                              ,(T*)BOOST_CONTAINER_MEMCHAIN_FIRSTMEM(&ch)
                              ,(T*)BOOST_CONTAINER_MEMCHAIN_LASTMEM(&ch)
                              ,BOOST_CONTAINER_MEMCHAIN_SIZE(&ch) );*/
-      if(!boost_cont_multialloc_arrays(n_elements, elem_sizes, sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, reinterpret_cast<boost_cont_memchain *>(&chain))){
+      if(BOOST_UNLIKELY(!dlmalloc_multialloc_arrays
+         (n_elements, elem_sizes, sizeof(T), DL_MULTIALLOC_DEFAULT_CONTIGUOUS, reinterpret_cast<dlmalloc_memchain *>(&chain)))){
          boost::container::throw_bad_alloc();
       }
    }
 
-   void deallocate_many(multiallocation_chain &chain) BOOST_CONTAINER_NOEXCEPT
+   void deallocate_many(multiallocation_chain &chain) BOOST_NOEXCEPT_OR_NOTHROW
    {/*
-      boost_cont_memchain ch;
+      dlmalloc_memchain ch;
       void *beg(&*chain.begin()), *last(&*chain.last());
       size_t size(chain.size());
       BOOST_CONTAINER_MEMCHAIN_INIT_FROM(&ch, beg, last, size);
-      boost_cont_multidealloc(&ch);*/
-      boost_cont_multidealloc(reinterpret_cast<boost_cont_memchain *>(&chain));
+      dlmalloc_multidealloc(&ch);*/
+      dlmalloc_multidealloc(reinterpret_cast<dlmalloc_memchain *>(&chain));
    }
 
    //!Deallocates all free blocks of the pool
-   static void deallocate_free_blocks() BOOST_CONTAINER_NOEXCEPT
+   static void deallocate_free_blocks() BOOST_NOEXCEPT_OR_NOTHROW
    {
       typedef container_detail::shared_adaptive_node_pool
          <sizeof(T), NodesPerBlock, MaxFreeBlocks, OverheadPercent> shared_pool_t;
@@ -307,37 +307,39 @@ class adaptive_pool
 
    //!Swaps allocators. Does not throw. If each allocator is placed in a
    //!different memory segment, the result is undefined.
-   friend void swap(adaptive_pool &, adaptive_pool &) BOOST_CONTAINER_NOEXCEPT
+   friend void swap(adaptive_pool &, adaptive_pool &) BOOST_NOEXCEPT_OR_NOTHROW
    {}
 
    //!An allocator always compares to true, as memory allocated with one
    //!instance can be deallocated by another instance
-   friend bool operator==(const adaptive_pool &, const adaptive_pool &) BOOST_CONTAINER_NOEXCEPT
+   friend bool operator==(const adaptive_pool &, const adaptive_pool &) BOOST_NOEXCEPT_OR_NOTHROW
    {  return true;   }
 
    //!An allocator always compares to false, as memory allocated with one
    //!instance can be deallocated by another instance
-   friend bool operator!=(const adaptive_pool &, const adaptive_pool &) BOOST_CONTAINER_NOEXCEPT
+   friend bool operator!=(const adaptive_pool &, const adaptive_pool &) BOOST_NOEXCEPT_OR_NOTHROW
    {  return false;   }
 
    private:
-   std::pair<pointer, bool> priv_allocation_command
+   pointer priv_allocation_command
       (allocation_type command,   std::size_t limit_size
-      ,std::size_t preferred_size,std::size_t &received_size, void *reuse_ptr)
+      ,size_type &prefer_in_recvd_out_size, pointer &reuse_ptr)
    {
-      boost_cont_command_ret_t ret = {0 , 0};
-      if(limit_size > this->max_size() || preferred_size > this->max_size()){
-//         ret.first = 0;
-         return std::pair<pointer, bool>(pointer(), false);
+      std::size_t const preferred_size = prefer_in_recvd_out_size;
+      dlmalloc_command_ret_t ret = {0 , 0};
+      if(BOOST_UNLIKELY(limit_size > this->max_size() || preferred_size > this->max_size())){
+         return pointer();
       }
       std::size_t l_size = limit_size*sizeof(T);
       std::size_t p_size = preferred_size*sizeof(T);
       std::size_t r_size;
       {
-         ret = boost_cont_allocation_command(command, sizeof(T), l_size, p_size, &r_size, reuse_ptr);
+         void* reuse_ptr_void = reuse_ptr;
+         ret = dlmalloc_allocation_command(command, sizeof(T), l_size, p_size, &r_size, reuse_ptr_void);
+         reuse_ptr = ret.second ? static_cast<T*>(reuse_ptr_void) : 0;
       }
-      received_size = r_size/sizeof(T);
-      return std::pair<pointer, bool>(static_cast<pointer>(ret.first), !!ret.second);
+      prefer_in_recvd_out_size = r_size/sizeof(T);
+      return (pointer)ret.first;
    }
 };
 

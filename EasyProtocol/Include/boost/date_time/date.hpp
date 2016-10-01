@@ -159,7 +159,7 @@ namespace date_time {
       {
         return date_type(date_rep_type(days_) - dd.get_rep());
       }
-      return date_type(date_rep_type(days_) - dd.days());
+      return date_type(date_rep_type(days_) - static_cast<date_int_type>(dd.days()));
     }
     date_type operator-=(const duration_type& dd)
     {
@@ -177,7 +177,7 @@ namespace date_time {
       {
         return date_type(date_rep_type(days_) + dd.get_rep());
       }
-      return date_type(date_rep_type(days_) + dd.days());
+      return date_type(date_rep_type(days_) + static_cast<date_int_type>(dd.days()));
     }
     date_type operator+=(const duration_type& dd)
     {

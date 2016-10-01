@@ -31,6 +31,10 @@ template <class T>
 class eps_tolerance
 {
 public:
+   eps_tolerance()
+   {
+      eps = 4 * tools::epsilon<T>();
+   }
    eps_tolerance(unsigned bits)
    {
       BOOST_MATH_STD_USING
@@ -108,7 +112,7 @@ void bracket(F f, T& a, T& b, T c, T& fa, T& fb, T& d, T& fd)
    }
    else if(c >= b - fabs(b) * tol)
    {
-      c = b - fabs(a) * tol;
+      c = b - fabs(b) * tol;
    }
    //
    // OK, lets invoke f(c):

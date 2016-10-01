@@ -21,7 +21,7 @@ namespace posix_time {
   {
   public:
     explicit hours(long h) :
-      time_duration(h,0,0)
+      time_duration(static_cast<hour_type>(h),0,0)
     {}
   };
 
@@ -32,7 +32,7 @@ namespace posix_time {
   {
   public:
     explicit minutes(long m) :
-      time_duration(0,m,0)
+      time_duration(0,static_cast<min_type>(m),0)
     {}
   };
 
@@ -43,7 +43,7 @@ namespace posix_time {
   {
   public:
     explicit seconds(long s) :
-      time_duration(0,0,s)
+      time_duration(0,0,static_cast<sec_type>(s))
     {}
   };
 

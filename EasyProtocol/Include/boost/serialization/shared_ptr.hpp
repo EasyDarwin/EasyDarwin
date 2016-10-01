@@ -48,11 +48,7 @@
             #else
             typedef mpl::int_<1> type;
             #endif
-            #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x570))
-            BOOST_STATIC_CONSTANT(int, value = 1);
-            #else
             BOOST_STATIC_CONSTANT(int, value = type::value);
-            #endif
         };
         // don't track shared pointers
         template<class T>
@@ -63,11 +59,7 @@
             #else
             typedef mpl::int_< ::boost::serialization::track_never> type;
             #endif
-            #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x570))
-            BOOST_STATIC_CONSTANT(int, value = ::boost::serialization::track_never);
-            #else
             BOOST_STATIC_CONSTANT(int, value = type::value);
-            #endif
         };
     }}
     #define BOOST_SERIALIZATION_SHARED_PTR(T)

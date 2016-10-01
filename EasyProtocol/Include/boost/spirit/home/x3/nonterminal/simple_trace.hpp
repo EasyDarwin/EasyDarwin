@@ -8,17 +8,13 @@
 #if !defined(BOOST_SPIRIT_X3_SIMPLE_TRACE_DECEMBER_06_2008_1102AM)
 #define BOOST_SPIRIT_X3_SIMPLE_TRACE_DECEMBER_06_2008_1102AM
 
-#if defined(_MSC_VER)
-#pragma once
-#endif
-
 #include <boost/spirit/home/x3/support/unused.hpp>
 #include <boost/spirit/home/x3/support/traits/print_token.hpp>
 #include <boost/spirit/home/x3/support/traits/print_attribute.hpp>
 #include <boost/spirit/home/x3/nonterminal/debug_handler_state.hpp>
 #include <boost/fusion/include/out.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <ostream>
+#include <iostream>
 
 //  The stream to use for debug output
 #if !defined(BOOST_SPIRIT_X3_DEBUG_OUT)

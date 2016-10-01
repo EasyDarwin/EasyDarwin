@@ -1259,20 +1259,20 @@ namespace detail {
     void matrix_swap (M &m, matrix_expression<E> &e, dense_proxy_tag, row_major_tag) {
         typedef F<typename M::iterator2::reference, typename E::reference> functor_type;
         // R unnecessary, make_conformant not required
-        typedef typename M::size_type size_type;
+        //typedef typename M::size_type size_type; // gcc is complaining that this is not used, although this is not right
         typedef typename M::difference_type difference_type;
         typename M::iterator1 it1 (m.begin1 ());
         typename E::iterator1 it1e (e ().begin1 ());
-        difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), size_type (e ().end1 () - it1e)));
+        difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), typename M::size_type (e ().end1 () - it1e)));
         while (-- size1 >= 0) {
 #ifndef BOOST_UBLAS_NO_NESTED_CLASS_RELATION
             typename M::iterator2 it2 (it1.begin ());
             typename E::iterator2 it2e (it1e.begin ());
-            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), size_type (it1e.end () - it2e)));
+            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), typename M::size_type (it1e.end () - it2e)));
 #else
             typename M::iterator2 it2 (begin (it1, iterator1_tag ()));
             typename E::iterator2 it2e (begin (it1e, iterator1_tag ()));
-            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), size_type (end (it1e, iterator1_tag ()) - it2e)));
+            difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), typename M::size_type (end (it1e, iterator1_tag ()) - it2e)));
 #endif
             while (-- size2 >= 0)
                 functor_type::apply (*it2, *it2e), ++ it2, ++ it2e;
@@ -1285,20 +1285,20 @@ namespace detail {
     void matrix_swap (M &m, matrix_expression<E> &e, dense_proxy_tag, column_major_tag) {
         typedef F<typename M::iterator1::reference, typename E::reference> functor_type;
         // R unnecessary, make_conformant not required
-        typedef typename M::size_type size_type;
+        // typedef typename M::size_type size_type; // gcc is complaining that this is not used, although this is not right
         typedef typename M::difference_type difference_type;
         typename M::iterator2 it2 (m.begin2 ());
         typename E::iterator2 it2e (e ().begin2 ());
-        difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), size_type (e ().end2 () - it2e)));
+        difference_type size2 (BOOST_UBLAS_SAME (m.size2 (), typename M::size_type (e ().end2 () - it2e)));
         while (-- size2 >= 0) {
 #ifndef BOOST_UBLAS_NO_NESTED_CLASS_RELATION
             typename M::iterator1 it1 (it2.begin ());
             typename E::iterator1 it1e (it2e.begin ());
-            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), size_type (it2e.end () - it1e)));
+            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), typename M::size_type (it2e.end () - it1e)));
 #else
             typename M::iterator1 it1 (begin (it2, iterator2_tag ()));
             typename E::iterator1 it1e (begin (it2e, iterator2_tag ()));
-            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), size_type (end (it2e, iterator2_tag ()) - it1e)));
+            difference_type size1 (BOOST_UBLAS_SAME (m.size1 (), typename M::size_type (end (it2e, iterator2_tag ()) - it1e)));
 #endif
             while (-- size1 >= 0)
                 functor_type::apply (*it1, *it1e), ++ it1, ++ it1e;

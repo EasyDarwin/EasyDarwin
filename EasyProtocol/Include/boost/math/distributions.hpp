@@ -12,6 +12,7 @@
 #ifndef BOOST_MATH_DISTRIBUTIONS_HPP
 #define BOOST_MATH_DISTRIBUTIONS_HPP
 
+#include <boost/math/distributions/arcsine.hpp>
 #include <boost/math/distributions/bernoulli.hpp>
 #include <boost/math/distributions/beta.hpp>
 #include <boost/math/distributions/binomial.hpp>

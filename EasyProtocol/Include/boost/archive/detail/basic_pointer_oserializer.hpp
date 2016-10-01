@@ -36,22 +36,18 @@ namespace serialization {
 namespace archive {
 namespace detail {
 
-class BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY()) basic_oarchive;
-class BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY()) basic_oserializer;
+class basic_oarchive;
+class basic_oserializer;
 
-class BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY()) basic_pointer_oserializer : 
+class BOOST_SYMBOL_VISIBLE basic_pointer_oserializer : 
     public basic_serializer
 {
 protected:
-    explicit basic_pointer_oserializer(
+    explicit BOOST_ARCHIVE_DECL basic_pointer_oserializer(
         const boost::serialization::extended_type_info & type_
     );
 public:
-    // account for bogus gcc warning
-    #if defined(__GNUC__)
-    virtual
-    #endif
-    ~basic_pointer_oserializer();
+    virtual BOOST_ARCHIVE_DECL ~basic_pointer_oserializer();
     virtual const basic_oserializer & get_basic_serializer() const = 0;
     virtual void save_object_ptr(
         basic_oarchive & ar,

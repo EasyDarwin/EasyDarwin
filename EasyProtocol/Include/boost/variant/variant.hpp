@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright (c) 2002-2003 Eric Friedman, Itay Maman
-// Copyright (c) 2012-2013 Antony Polukhin
+// Copyright (c) 2012-2014 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -48,6 +48,7 @@
 #include "boost/type_traits/add_const.hpp"
 #include "boost/type_traits/has_nothrow_constructor.hpp"
 #include "boost/type_traits/has_nothrow_copy.hpp"
+#include "boost/type_traits/is_nothrow_move_assignable.hpp"
 #include "boost/type_traits/is_nothrow_move_constructible.hpp"
 #include "boost/type_traits/is_const.hpp"
 #include "boost/type_traits/is_same.hpp"
@@ -681,8 +682,46 @@ private: // helpers, for visitor interface (below)
 
     template <typename LhsT>
     void backup_assign_impl(
+          backup_holder<LhsT>& lhs_content
+        , mpl::false_ // is_nothrow_move_constructible
+        , long
+        )
+    {
+        // Move lhs content to backup...
+        backup_holder<LhsT> backup_lhs_content(0);
+        backup_lhs_content.swap(lhs_content); // nothrow
+
+        // ...destroy lhs content...
+        lhs_content.~backup_holder<LhsT>(); // nothrow
+
+        BOOST_TRY
+        {
+            // ...and attempt to copy rhs content into lhs storage:
+            copy_rhs_content_(lhs_.storage_.address(), rhs_content_);
+        }
+        BOOST_CATCH (...)
+        {
+            // In case of failure, copy backup pointer to lhs storage...
+            new(lhs_.storage_.address())
+                    backup_holder<LhsT>( 0 ); // nothrow
+
+            static_cast<backup_holder<LhsT>* >(lhs_.storage_.address())
+                    ->swap(backup_lhs_content); // nothrow
+
+            // ...and rethrow:
+            BOOST_RETHROW;
+        }
+        BOOST_CATCH_END
+
+        // In case of success, indicate new content type:
+        lhs_.indicate_which(rhs_which_); // nothrow
+    }
+
+    template <typename LhsT>
+    void backup_assign_impl(
           LhsT& lhs_content
         , mpl::true_ // is_nothrow_move_constructible
+        , int
         )
     {
         // Move lhs content to backup...
@@ -719,6 +758,7 @@ private: // helpers, for visitor interface (below)
     void backup_assign_impl(
           LhsT& lhs_content
         , mpl::false_ // is_nothrow_move_constructible
+        , int
         )
     {
         // Backup lhs content...
@@ -762,7 +802,7 @@ public: // visitor interface
         typedef typename is_nothrow_move_constructible<LhsT>::type
             nothrow_move;
 
-        backup_assign_impl( lhs_content, nothrow_move() );
+        backup_assign_impl( lhs_content, nothrow_move(), 1L);
 
         BOOST_VARIANT_AUX_RETURN_VOID;
     }
@@ -1312,7 +1352,10 @@ public: // structors
         destroy_content();
     }
 
-    variant() BOOST_NOEXCEPT_IF(boost::has_nothrow_constructor<internal_T0>::value)
+    variant() 
+#if !(defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x5130))
+              BOOST_NOEXCEPT_IF(boost::has_nothrow_constructor<internal_T0>::value)
+#endif
     {
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -2165,6 +2208,30 @@ public: // prevent comparison with foreign types
         BOOST_STATIC_ASSERT( false && sizeof(U) );
     }
 
+    template <typename U>
+    void operator!=(const U&) const
+    {
+        BOOST_STATIC_ASSERT( false && sizeof(U) );
+    }
+
+    template <typename U>
+    void operator>(const U&) const
+    {
+        BOOST_STATIC_ASSERT( false && sizeof(U) );
+    }
+
+    template <typename U>
+    void operator<=(const U&) const
+    {
+        BOOST_STATIC_ASSERT( false && sizeof(U) );
+    }
+
+    template <typename U>
+    void operator>=(const U&) const
+    {
+        BOOST_STATIC_ASSERT( false && sizeof(U) );
+    }
+
 public: // comparison operators
 
     // [MSVC6 requires these operators appear after template operators]
@@ -2193,6 +2260,28 @@ public: // comparison operators
               variant, detail::variant::less_comp
             > visitor(*this);
         return rhs.apply_visitor(visitor);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // comparison operators != > <= >=
+    inline bool operator!=(const variant& rhs) const
+    {
+        return !(*this == rhs);
+    }
+
+    inline bool operator>(const variant& rhs) const
+    {
+        return rhs < *this;
+    }
+
+    inline bool operator<=(const variant& rhs) const
+    {
+        return !(*this > rhs);
+    }
+
+    inline bool operator>=(const variant& rhs) const
+    {
+        return !(*this < rhs);
     }
 
 // helpers, for visitation support (below) -- private when possible
@@ -2302,6 +2391,7 @@ public: // metafunction result
         > type;
 
 };
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // function template swap

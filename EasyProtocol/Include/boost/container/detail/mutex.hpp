@@ -19,7 +19,11 @@
 #ifndef BOOST_CONTAINER_MUTEX_HPP
 #define BOOST_CONTAINER_MUTEX_HPP
 
-#if defined(_MSC_VER)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
@@ -103,7 +107,7 @@
 
    #elif (defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__)))
       /* Custom spin locks for older gcc on x86 */
-      static FORCEINLINE int boost_container_x86_cas_lock(int *sl) {
+      static inline int boost_container_x86_cas_lock(int *sl) {
          int ret;
          int val = 1;
          int cmp = 0;
@@ -114,7 +118,7 @@
          return ret;
       }
 
-      static FORCEINLINE void boost_container_x86_clear_lock(int* sl) {
+      static inline void boost_container_x86_clear_lock(int* sl) {
          assert(*sl != 0);
          int prev = 0;
          int ret;
@@ -162,7 +166,7 @@
    #define BOOST_CONTAINER_TRY_LOCK(sl)          !BOOST_CONTAINER_CAS_LOCK(sl)
    #define BOOST_CONTAINER_RELEASE_LOCK(sl)      BOOST_CONTAINER_CLEAR_LOCK(sl)
    #define BOOST_CONTAINER_ACQUIRE_LOCK(sl)      (BOOST_CONTAINER_CAS_LOCK(sl)? boost_interprocess_spin_acquire_lock(sl) : 0)
-   #define BOOST_CONTAINER_INITIAL_LOCK(sl)      (*sl = 0)
+   #define BOOST_MOVE_INITIAL_LOCK(sl)      (*sl = 0)
    #define BOOST_CONTAINER_DESTROY_LOCK(sl)      (0)
 #elif BOOST_MUTEX_HELPER == BOOST_MUTEX_HELPER_WIN32
    //
@@ -199,7 +203,7 @@ namespace container_detail {
       void operator=(const spin_mutex &);
 
    public:
-      spin_mutex() { BOOST_CONTAINER_INITIAL_LOCK(&sl); }
+      spin_mutex() { BOOST_MOVE_INITIAL_LOCK(&sl); }
 
       void lock() { BOOST_CONTAINER_ACQUIRE_LOCK(&sl); }
       void unlock() { BOOST_CONTAINER_RELEASE_LOCK(&sl); }

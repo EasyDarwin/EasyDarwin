@@ -18,17 +18,15 @@
 
 #include <boost/assert.hpp>
 #include <cstddef> // size_t
-#include <cstdlib> // for wctomb()
+#include <cwchar> //  mbstate_t
 
 #include <boost/config.hpp>
 #if defined(BOOST_NO_STDC_NAMESPACE)
 namespace std{ 
-    using ::size_t; 
-    using ::wctomb;
+    using ::mbstate_t;
 } // namespace std
 #endif
-
-#include <boost/serialization/pfto.hpp>
+#include <boost/archive/detail/utf8_codecvt_facet.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 
 namespace boost { 
@@ -67,10 +65,10 @@ class mb_from_wchar
         }
         return m_buffer[m_bnext];
     }
+
     char dereference() const {
         return (const_cast<this_t *>(this))->dereference_impl();
     }
-
     // test for iterator equality
     bool equal(const mb_from_wchar<Base> & rhs) const {
         // once the value is filled, the base_reference has been incremented
@@ -84,16 +82,16 @@ class mb_from_wchar
 
     void fill(){
         wchar_t value = * this->base_reference();
-        #if (defined(__MINGW32__) && ((__MINGW32_MAJOR_VERSION > 3) \
-        || ((__MINGW32_MAJOR_VERSION == 3) && (__MINGW32_MINOR_VERSION >= 8))))
-        m_bend = std::wcrtomb(m_buffer, value, 0);
-        #else
-        m_bend = std::wctomb(m_buffer, value);
-        #endif
-        BOOST_ASSERT(-1 != m_bend);
-        BOOST_ASSERT((std::size_t)m_bend <= sizeof(m_buffer));
-        BOOST_ASSERT(m_bend > 0);
+        const wchar_t *wend;
+        char *bend;
+        std::codecvt_base::result r = m_codecvt_facet.out(
+            m_mbs,
+            & value, & value + 1, wend,
+            m_buffer, m_buffer + sizeof(m_buffer), bend
+        );
+        BOOST_ASSERT(std::codecvt_base::ok == r);
         m_bnext = 0;
+        m_bend = bend - m_buffer;
     }
 
     void increment(){
@@ -105,17 +103,20 @@ class mb_from_wchar
         m_full = false;
     }
 
+    boost::archive::detail::utf8_codecvt_facet m_codecvt_facet;
+    std::mbstate_t m_mbs;
     // buffer to handle pending characters
-    int m_bend;
-    int m_bnext;
-    char m_buffer[9];
+    char m_buffer[9 /* MB_CUR_MAX */];
+    std::size_t m_bend;
+    std::size_t m_bnext;
     bool m_full;
 
 public:
     // make composible buy using templated constructor
     template<class T>
-    mb_from_wchar(BOOST_PFTO_WRAPPER(T) start) :
-        super_t(Base(BOOST_MAKE_PFTO_WRAPPER(static_cast< T >(start)))),
+    mb_from_wchar(T start) :
+        super_t(Base(static_cast< T >(start))),
+        m_mbs(std::mbstate_t()),
         m_bend(0),
         m_bnext(0),
         m_full(false)
