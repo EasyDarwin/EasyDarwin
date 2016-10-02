@@ -137,9 +137,9 @@ extern "C" {
 		QTSSModule* curModule;  // this structure is setup in each thread
 		QTSS_Role   curRole;    // before invoking a module in a role. Sometimes
 		Task*       curTask;    // this info. helps callback implementation
-		Bool16      eventRequested;
-		Bool16      globalLockRequested;    // request event with global lock.
-		Bool16      isGlobalLocked;
+		bool      eventRequested;
+		bool      globalLockRequested;    // request event with global lock.
+		bool      isGlobalLocked;
 		SInt64      idleTime;   // If a module has requested idle time.
 
 	} QTSS_ModuleState, *QTSS_ModuleStatePtr;

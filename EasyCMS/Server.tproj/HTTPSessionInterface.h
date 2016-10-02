@@ -44,7 +44,7 @@ public:
 
     //Is this session alive? If this returns false, clean up and begone as
     //fast as possible
-    Bool16 IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
+    bool IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
 
     // Allows clients to refresh the timeout
     void RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
@@ -139,7 +139,7 @@ protected:
     Easy_SessionType    fSessionType;	//普通socket,NVR,智能主机，摄像机
     //UInt32				fTerminalType;	//终端类型ARM、PC、Android、IOS
 
-    Bool16              fLiveSession;
+    bool              fLiveSession;
     unsigned int        fObjectHolders;
 
     UInt32              fSessionIndex;
@@ -150,7 +150,7 @@ protected:
     UInt16              fLocalPort;
     UInt16              fRemotePort;
 
-    Bool16				fAuthenticated;
+    bool				fAuthenticated;
 
     static unsigned int		sSessionIndexCounter;
 

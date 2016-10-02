@@ -117,7 +117,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 28 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
-QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs)
+QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs)
 :   QTSSPrefs(inPrefsSource, NULL, QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex), false),
     fSessionTimeoutInSecs(0),
     fMaximumConnections(0),
@@ -191,7 +191,7 @@ void QTSServerPrefs::setupAttributes()
 
 
 
-void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
+void QTSServerPrefs::RereadServerPreferences(bool inWriteMissingPrefs)
 {
     OSMutexLocker locker(&fPrefsMutex);
     QTSSDictionaryMap* theMap = QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex);
@@ -347,7 +347,7 @@ char* QTSServerPrefs::getStringPref(QTSS_AttributeID inAttrID)
     return theBuffer.Ptr;
 }
 
-void QTSServerPrefs::SetCloseLogsOnWrite(Bool16 closeLogsOnWrite) 
+void QTSServerPrefs::SetCloseLogsOnWrite(bool closeLogsOnWrite) 
 {
     QTSSRollingLog::SetCloseOnWrite(closeLogsOnWrite);
     fCloseLogsOnWrite = closeLogsOnWrite; 

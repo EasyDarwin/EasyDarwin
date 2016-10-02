@@ -136,12 +136,12 @@ public:
 
 
     static QTSS_Error   QTSS_RequestLockedCallback();
-    static Bool16       QTSS_IsGlobalLocked();
+    static bool       QTSS_IsGlobalLocked();
     static QTSS_Error   QTSS_UnlockGlobalLock();
 
     static void			QTSS_LockStdLib();
     static void			QTSS_UnlockStdLib();
-    static QTSS_Error	Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
+    static QTSS_Error	Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, bool connectionClose = false, bool decrement = true);
 };
 
 #endif //__QTSSCALLBACKS_H__

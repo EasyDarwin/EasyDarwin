@@ -339,7 +339,7 @@ SInt64 HTTPSession::Run()
 	return 0;
 }
 
-QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
+QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement)
 {
 	OSMutexLocker lock(&fSendMutex);
 
@@ -555,11 +555,11 @@ void HTTPSession::cleanupRequest()
 	this->SetRequestBodyLength(-1);
 }
 
-Bool16 HTTPSession::overMaxConnections(UInt32 buffer)
+bool HTTPSession::overMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
 	SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
-	Bool16 overLimit = false;
+	bool overLimit = false;
 
 	if (maxConns > -1) // limit connections
 	{

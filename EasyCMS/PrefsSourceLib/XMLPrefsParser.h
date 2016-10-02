@@ -64,7 +64,7 @@ public:
 	//
 	// ACCESSORS
 
-	ContainerRef    GetRefForModule(char* inModuleName, Bool16 create = true);
+	ContainerRef    GetRefForModule(char* inModuleName, bool create = true);
 
 	ContainerRef    GetRefForServer();
 

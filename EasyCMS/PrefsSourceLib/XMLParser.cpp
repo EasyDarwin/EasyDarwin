@@ -55,7 +55,7 @@ XMLParser::~XMLParser()
 	delete[] fFilePath;
 }
 
-Bool16 XMLParser::ParseFile(char* errorBuffer, int errorBufferSize)
+bool XMLParser::ParseFile(char* errorBuffer, int errorBufferSize)
 {
 	if (fRootTag != NULL)
 	{
@@ -81,7 +81,7 @@ Bool16 XMLParser::ParseFile(char* errorBuffer, int errorBufferSize)
 	StringParser theParser(&theDataPtr);
 
 	fRootTag = NEW XMLTag();
-	Bool16 result = fRootTag->ParseTag(&theParser, fVerifier, errorBuffer, errorBufferSize);
+	bool result = fRootTag->ParseTag(&theParser, fVerifier, errorBuffer, errorBufferSize);
 	if (!result)
 	{
 		// got error parsing file
@@ -96,9 +96,9 @@ Bool16 XMLParser::ParseFile(char* errorBuffer, int errorBufferSize)
 	return result;
 }
 
-Bool16  XMLParser::DoesFileExist()
+bool  XMLParser::DoesFileExist()
 {
-	Bool16 itExists = false;
+	bool itExists = false;
 	fFile.Set(fFilePath);
 	if ((fFile.GetLength() > 0) && (!fFile.IsDir()))
 		itExists = true;
@@ -107,9 +107,9 @@ Bool16  XMLParser::DoesFileExist()
 	return itExists;
 }
 
-Bool16  XMLParser::DoesFileExistAsDirectory()
+bool  XMLParser::DoesFileExistAsDirectory()
 {
-	Bool16 itExists = false;
+	bool itExists = false;
 	fFile.Set(fFilePath);
 	if (fFile.IsDir())
 		itExists = true;
@@ -118,7 +118,7 @@ Bool16  XMLParser::DoesFileExistAsDirectory()
 	return itExists;
 }
 
-Bool16  XMLParser::CanWriteFile()
+bool  XMLParser::CanWriteFile()
 {
 	//
 	// First check if it exists for reading

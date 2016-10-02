@@ -79,7 +79,7 @@ QTSSDictionary* QTSSDictionary::CreateNewDictionary(QTSSDictionaryMap* inMap, OS
 
 QTSS_Error QTSSDictionary::GetValuePtr(QTSS_AttributeID inAttrID, UInt32 inIndex,
                                             void** outValueBuffer, UInt32* outValueLen,
-                                            Bool16 isInternal)
+                                            bool isInternal)
 {
     // Check first to see if this is a static attribute or an instance attribute
     QTSSDictionaryMap* theMap = fMap;
@@ -113,7 +113,7 @@ QTSS_Error QTSSDictionary::GetValuePtr(QTSS_AttributeID inAttrID, UInt32 inIndex
     char* theBuffer = theAttrs[theMapIndex].fAttributeData.Ptr;
     *outValueLen = theAttrs[theMapIndex].fAttributeData.Len;
     
-	Bool16 cacheable = theMap->IsCacheable(theMapIndex);
+	bool cacheable = theMap->IsCacheable(theMapIndex);
 	if ( (theMap->GetAttrFunction(theMapIndex) != NULL) && ((cacheable && (*outValueLen == 0)) || !cacheable) )
     {
         // If function is cacheable: 
@@ -1014,7 +1014,7 @@ QTSS_Error  QTSSDictionaryMap::UnRemoveAttribute(QTSS_AttributeID inAttrID)
 }
 
 QTSS_Error  QTSSDictionaryMap::GetAttrInfoByName(const char* inAttrName, QTSSAttrInfoDict** outAttrInfoObject,
-                                                    Bool16 returnRemovedAttr)
+                                                    bool returnRemovedAttr)
 {
     if (outAttrInfoObject == NULL)
         return QTSS_BadArgument;

@@ -61,8 +61,8 @@ public:
     // This function *must* be called before the server creates any threads,
     // because one of its actions is to change the server to the right UID / GID.
     // Threads will only inherit these if they are created afterwards.
-    Bool16 Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource,
-        UInt16 inPortOverride, Bool16 createListeners);
+    bool Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource,
+        UInt16 inPortOverride, bool createListeners);
 
     //
     // InitModules
@@ -97,15 +97,15 @@ public:
     // This function may be called multiple times & at any time.
     // It updates the server's listeners to reflect what the preferences say.
     // Returns false if server couldn't listen on one or more of the ports, true otherwise
-    Bool16                  CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride);
+    bool                  CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride);
 
     //
     // SetDefaultIPAddr
     //
     // Sets the IP address related attributes of the server.
-    Bool16                  SetDefaultIPAddr();
+    bool                  SetDefaultIPAddr();
 
-    Bool16                  SwitchPersonality();
+    bool                  SwitchPersonality();
 
 private:
     // Sets up QTSS API callback routines
@@ -119,7 +119,7 @@ private:
     void                    createModule(char* inModuleFolderPath, char* inModuleName);
 
     // Adds a module to the module array
-    Bool16                  addModule(QTSSModule* inModule);
+    bool                  addModule(QTSSModule* inModule);
 
     // Call module init roles
     void                    doInitRole();
