@@ -68,7 +68,7 @@ public:
 	// this returns QTSS_NoErr, otherwise, it returns EWOULDBLOCK
 	QTSS_Error Flush();
 
-	void ShowMsg(Bool16 enable) { fPrintMsg = enable; }
+	void ShowMsg(bool enable) { fPrintMsg = enable; }
 
 	// Use a different TCPSocket to read request data 
 	void AttachToSocket(ClientSocket* sock) { ResetResponseBuffer(); fSocket = sock; }
@@ -90,7 +90,7 @@ private:
 	ClientSocket*			fSocket;
 	UInt32                  fBytesSentInBuffer;
 	TimeoutTask*            fTimeoutTask;
-	Bool16                  fPrintMsg;     // debugging printfs
+	bool                  fPrintMsg;     // debugging printfs
 
 	friend class HTTPRequest;
 };

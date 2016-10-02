@@ -160,7 +160,7 @@ public:
 	//Assumes that parent has grabbed the mutex!
 	UDPDemuxerTask* GetTask(UInt32 inRemoteAddr, UInt16 inRemotePort);
 
-	Bool16  AddrInMap(UInt32 inRemoteAddr, UInt16 inRemotePort)
+	bool  AddrInMap(UInt32 inRemoteAddr, UInt16 inRemotePort)
 	{
 		return (this->GetTask(inRemoteAddr, inRemotePort) != NULL);
 	}

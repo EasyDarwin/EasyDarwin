@@ -54,7 +54,7 @@ static QTSS_AttributeID         sCantJoinMulticastGroupErr = qtssIllegalAttrID;
 // PREFS
 static UInt32                   sDefaultOverBufferInSec = 1;
 static UInt32                   sDefaultBucketDelayInMsec = 73;
-static Bool16                   sDefaultUsePacketReceiveTime = false;
+static bool                   sDefaultUsePacketReceiveTime = false;
 static UInt32                   sDefaultMaxFuturePacketTimeSec = 60;
 static UInt32                   sDefaultFirstPacketOffsetMsec = 500;
 
@@ -66,7 +66,7 @@ UInt32                          ReflectorStream::sMaxPacketAgeMSec = 20000;
 UInt32                          ReflectorStream::sMaxFuturePacketSec = 60; // max packet future time
 UInt32                          ReflectorStream::sOverBufferInSec = 10;
 UInt32                          ReflectorStream::sBucketDelayInMsec = 73;
-Bool16                          ReflectorStream::sUsePacketReceiveTime = false;
+bool                          ReflectorStream::sUsePacketReceiveTime = false;
 UInt32                          ReflectorStream::sFirstPacketOffsetMsec = 500;
 
 UInt32                          ReflectorStream::sRelocatePacketAgeMSec = 3000;
@@ -378,7 +378,7 @@ void  ReflectorStream::TearDownAllOutputs()
 }
 
 
-QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt32 inReflectorSessionFlags, Bool16 filterState, UInt32 timeout)
+QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt32 inReflectorSessionFlags, bool filterState, UInt32 timeout)
 {
 	// If the incoming data is RTSP interleaved, we don't need to do anything here
 	if (inReflectorSessionFlags & ReflectorSession::kIsPushSession)
@@ -404,7 +404,7 @@ QTSS_Error ReflectorStream::BindSockets(QTSS_StandardRTSP_Params* inParams, UInt
 	// changing INADDR_ANY to fStreamInfo.fDestIPAddr to deal with NATs (need to track this change though)
 	// change submitted by denis@berlin.ccc.de
 
-	Bool16 isMulticastDest = (SocketUtils::IsMulticastIPAddr(fStreamInfo.fDestIPAddr));
+	bool isMulticastDest = (SocketUtils::IsMulticastIPAddr(fStreamInfo.fDestIPAddr));
 
 	// Babosa修改:当RTSP TCP推送的时候,直接创建SocketPair,不经过UDPSocketPool
 	if (qtssRTPTransportTypeTCP == fTransportType)
@@ -519,7 +519,7 @@ void ReflectorStream::SendReceiverReport()
 	(void)fSockets->GetSocketB()->SendTo(fDestRTCPAddr, fDestRTCPPort, fReceiverReportBuffer, fReceiverReportSize);
 }
 
-void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP)
+void ReflectorStream::PushPacket(char *packet, UInt32 packetLen, bool isRTCP)
 {
 	FU_Head *head = (FU_Head*)&packet[13];
 
@@ -593,7 +593,7 @@ ReflectorSender::~ReflectorSender()
 }
 
 
-Bool16 ReflectorSender::ShouldReflectNow(const SInt64& inCurrentTime, SInt64* ioWakeupTime)
+bool ReflectorSender::ShouldReflectNow(const SInt64& inCurrentTime, SInt64* ioWakeupTime)
 {
 	Assert(ioWakeupTime != NULL);
 	//check to make sure there actually is work to do for this stream.
@@ -610,7 +610,7 @@ Bool16 ReflectorSender::ShouldReflectNow(const SInt64& inCurrentTime, SInt64* io
 	return true;
 }
 
-UInt32 ReflectorSender::GetOldestPacketRTPTime(Bool16 *foundPtr)
+UInt32 ReflectorSender::GetOldestPacketRTPTime(bool *foundPtr)
 {
 	if (foundPtr != NULL)
 		*foundPtr = false;
@@ -629,7 +629,7 @@ UInt32 ReflectorSender::GetOldestPacketRTPTime(Bool16 *foundPtr)
 	return thePacket->GetPacketRTPTime();
 }
 
-UInt16 ReflectorSender::GetFirstPacketRTPSeqNum(Bool16 *foundPtr)
+UInt16 ReflectorSender::GetFirstPacketRTPSeqNum(bool *foundPtr)
 {
 	if (foundPtr != NULL)
 		*foundPtr = false;
@@ -686,7 +686,7 @@ OSQueueElem*    ReflectorSender::GetClientBufferNextPacketTime(UInt32 inRTPTime)
 	return requestedPacket;
 }
 
-Bool16 ReflectorSender::GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr)
+bool ReflectorSender::GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr)
 {
 	OSMutexLocker locker(&fStream->fBucketMutex);
 	OSQueueElem* packetElem = this->GetClientBufferStartPacketOffset(ReflectorStream::sFirstPacketOffsetMsec);
@@ -718,7 +718,7 @@ Bool16 ReflectorSender::GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outR
 	return true;
 }
 
-Bool16 ReflectorSender::GetFirstPacketInfo(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr)
+bool ReflectorSender::GetFirstPacketInfo(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr)
 {
 	OSMutexLocker locker(&fStream->fBucketMutex);
 	OSQueueElem* packetElem = this->GetClientBufferStartPacketOffset(ReflectorStream::sFirstPacketOffsetMsec);
@@ -771,7 +771,7 @@ void ReflectorSender::ReflectRelayPackets(SInt64* ioWakeupTime, OSQueue* inFreeQ
 	Assert(ioWakeupTime != NULL);
 #endif
 #if REFLECTOR_STREAM_DEBUGGING > 2
-	Bool16	printQueueLenOnExit = false;
+	bool	printQueueLenOnExit = false;
 #endif	
 
 	SInt64 currentTime = OS::Milliseconds();
@@ -884,7 +884,7 @@ void ReflectorSender::ReflectRelayPackets(SInt64* ioWakeupTime, OSQueue* inFreeQ
 
 				OSQueueIter qIter(&fPacketQueue, packetElem);  // starts from beginning if packetElem == NULL, else from packetElem
 
-				Bool16			dodBookmarkPacket = false;
+				bool			dodBookmarkPacket = false;
 
 				while (!qIter.IsDone())
 				{
@@ -1076,7 +1076,7 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 
 #endif
 
-	Bool16 firstPacket = false;
+	bool firstPacket = false;
 
 	for (UInt32 bucketIndex = 0; bucketIndex < fStream->fNumBuckets; bucketIndex++)
 	{
@@ -1128,7 +1128,7 @@ void ReflectorSender::ReflectPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue)
 
 }
 
-OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput, OSQueueElem* currentPacket, SInt64 currentTime, SInt64  bucketDelay, Bool16 firstPacket)
+OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput, OSQueueElem* currentPacket, SInt64 currentTime, SInt64  bucketDelay, bool firstPacket)
 {
 	OSQueueElem* lastPacket = currentPacket;
 	OSQueueIter qIter(&fPacketQueue, currentPacket);  // starts from beginning if currentPacket == NULL, else from currentPacket                
@@ -1191,7 +1191,7 @@ OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput,
 }
 
 
-OSQueueElem* ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetMsec, Bool16 needKeyFrameFirstPacket)
+OSQueueElem* ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetMsec, bool needKeyFrameFirstPacket)
 {
 	OSQueueIter qIter(&fPacketQueue);// start at oldest packet in q
 	SInt64 theCurrentTime = OS::Milliseconds();
@@ -1393,7 +1393,7 @@ OSQueueElem*    ReflectorSender::GetNewestKeyFrameFirstPacket(OSQueueElem* curre
 	判断当前RTP包是否为H.264 I关键帧的第一个RTP包
 	下面的写法可能不太严谨(仅针对H264 的情况，未考虑其他格式)
 */
-Bool16 ReflectorSender::IsKeyFrameFirstPacket(ReflectorPacket* thePacket)
+bool ReflectorSender::IsKeyFrameFirstPacket(ReflectorPacket* thePacket)
 {
 #if 0
 	char const* nal_unit_type_description_h264[32] = {
@@ -1505,7 +1505,7 @@ Bool16 ReflectorSender::IsKeyFrameFirstPacket(ReflectorPacket* thePacket)
 	return false;
 }
 
-Bool16 ReflectorSender::IsFrameFirstPacket(ReflectorPacket* thePacket)
+bool ReflectorSender::IsFrameFirstPacket(ReflectorPacket* thePacket)
 {
 	//printf("[geyijun] IsKeyFrameFirstPacket--->RtpSeq[%d]\n",thePacket->GetPacketRTPSeqNum());	
 	Assert(thePacket);
@@ -1549,7 +1549,7 @@ Bool16 ReflectorSender::IsFrameFirstPacket(ReflectorPacket* thePacket)
 	return false;
 }
 
-Bool16 ReflectorSender::IsFrameLastPacket(ReflectorPacket* thePacket)
+bool ReflectorSender::IsFrameLastPacket(ReflectorPacket* thePacket)
 {
 	//printf("[geyijun] IsFrameLastPacket--->RtpSeq[%d]\n",thePacket->GetPacketRTPSeqNum());	
 	Assert(thePacket);
@@ -1722,7 +1722,7 @@ SInt64 ReflectorSocket::Run()
 }
 
 
-void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket, Bool16 isRTCP)
+void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket, bool isRTCP)
 {   // assume the first SSRC we see is valid and all others are to be ignored.
 	if (thePacket->fPacketPtr.Len > 0) do
 	{
@@ -1759,9 +1759,9 @@ void ReflectorSocket::FilterInvalidSSRCs(ReflectorPacket* thePacket, Bool16 isRT
 	} while (false);
 }
 
-Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds, ReflectorPacket* thePacket, UInt32 theRemoteAddr, UInt16 theRemotePort)
+bool ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds, ReflectorPacket* thePacket, UInt32 theRemoteAddr, UInt16 theRemotePort)
 {
-	Bool16 done = false; // stop when result is true
+	bool done = false; // stop when result is true
 	if (thePacket != NULL) do
 	{
 		if (GetLocalPort() & 1)

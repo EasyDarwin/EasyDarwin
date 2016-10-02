@@ -131,7 +131,7 @@ void OSRefTable::UnRegister(OSRef* ref, UInt32 refCount)
 	fTable.Remove(ref);
 }
 
-Bool16 OSRefTable::TryUnRegister(OSRef* ref, UInt32 refCount)
+bool OSRefTable::TryUnRegister(OSRef* ref, UInt32 refCount)
 {
 	OSMutexLocker locker(&fMutex);
 	if (ref->fRefCount > refCount)

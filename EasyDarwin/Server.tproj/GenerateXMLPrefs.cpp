@@ -140,7 +140,7 @@ int GenerateAllXMLPrefs(FilePrefsSource* inPrefsSource, XMLPrefsParser* inXMLPre
 		static char* kFalse = "false";
 
 		//
-		// If the pref is a Bool16, the new pref format uses "true" & "false",
+		// If the pref is a bool, the new pref format uses "true" & "false",
 		// the old one uses "enabled" and "disabled", so we have to explicitly convert.
 		if (kPrefs[y].fPrefType == qtssAttrDataTypeBool16)
 		{
@@ -171,7 +171,7 @@ int GenerateStandardXMLPrefs(PrefsSource* inPrefsSource, XMLPrefsParser* inXMLPr
 				break;
 
 			//
-			// If the pref is a Bool16, the new pref format uses "true" & "false",
+			// If the pref is a bool, the new pref format uses "true" & "false",
 			// the old one uses "enabled" and "disabled", so we have to explicitly convert.
 			if (kPrefs[x].fPrefType == qtssAttrDataTypeBool16)
 			{

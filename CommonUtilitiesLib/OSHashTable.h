@@ -154,7 +154,7 @@ public:
             }
         }
     }
-    Bool16 IsDone()
+    bool IsDone()
     {
         return( fCurrent == NULL );
     }

@@ -741,7 +741,7 @@ QTSS_Error  QTSSCallbacks::QTSS_RequestLockedCallback()
 	return QTSS_NoErr;
 }
 
-Bool16      QTSSCallbacks::QTSS_IsGlobalLocked()
+bool      QTSSCallbacks::QTSS_IsGlobalLocked()
 {
 	QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
 	if (OSThread::GetCurrent() != NULL)
@@ -821,10 +821,10 @@ QTSS_Error  QTSSCallbacks::QTSS_Authenticate(const char* inAuthUserName, const c
 	UInt32 x = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPAthnRole);
 	QTSSModule* theModulePtr = NULL;
-	Bool16 allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
-	Bool16 allowed = allowedDefault; //server pref?
-	Bool16 hasUser = false;
-	Bool16 handled = false;
+	bool allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
+	bool allowed = allowedDefault; //server pref?
+	bool hasUser = false;
+	bool handled = false;
 
 
 	// Call all the modules that are registered for the RTSP Authorize Role 
@@ -868,7 +868,7 @@ QTSS_Error  QTSSCallbacks::QTSS_Authenticate(const char* inAuthUserName, const c
 	return theErr;
 }
 
-QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
+QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, bool* outAuthUserAllowed)
 {
 	RTSPRequestInterface* request = (RTSPRequestInterface *)inAuthRequestObject;
 	if (request == NULL)
@@ -893,11 +893,11 @@ QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObj
 	UInt32 x = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPAuthRole);
 	QTSSModule* theModulePtr = NULL;
-	Bool16 		allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
+	bool 		allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
 	*outAuthUserAllowed = allowedDefault;
-	Bool16      allowed = allowedDefault; //server pref?
-	Bool16      hasUser = false;
-	Bool16      handled = false;
+	bool      allowed = allowedDefault; //server pref?
+	bool      hasUser = false;
+	bool      handled = false;
 
 
 	// Call all the modules that are registered for the RTSP Authorize Role 

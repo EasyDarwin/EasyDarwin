@@ -28,7 +28,7 @@ public:
 	HTTPSessionInterface();
 	virtual ~HTTPSessionInterface();
 
-	Bool16 IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
+	bool IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
 
 	void RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
 
@@ -55,7 +55,7 @@ public:
 	virtual QTSS_Error Read(void* ioBuffer, UInt32 inLength, UInt32* outLenRead);
 	virtual QTSS_Error RequestEvent(QTSS_EventType inEventMask);
 
-	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
+	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement);
 
 	enum
 	{
@@ -91,7 +91,7 @@ protected:
 
 	void        SnarfInputSocket(HTTPSessionInterface* fromHTTPSession);
 
-	Bool16              fLiveSession;
+	bool              fLiveSession;
 	unsigned int        fObjectHolders;
 
 	UInt32              fSessionIndex;
@@ -102,7 +102,7 @@ protected:
 	UInt16              fLocalPort;
 	UInt16              fRemotePort;
 
-	Bool16				fAuthenticated;
+	bool				fAuthenticated;
 
 	static unsigned int	sSessionIndexCounter;
 

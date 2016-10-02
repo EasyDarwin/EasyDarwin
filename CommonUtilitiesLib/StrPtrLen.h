@@ -59,16 +59,16 @@ public:
 	virtual ~StrPtrLen() {}
 
 	//OPERATORS:
-	Bool16 Equal(const StrPtrLen &compare) const;
-	Bool16 EqualIgnoreCase(const char* compare, const UInt32 len) const;
-	Bool16 EqualIgnoreCase(const StrPtrLen &compare) const { return EqualIgnoreCase(compare.Ptr, compare.Len); }
-	Bool16 Equal(const char* compare) const;
-	Bool16 NumEqualIgnoreCase(const char* compare, const UInt32 len) const;
+	bool Equal(const StrPtrLen &compare) const;
+	bool EqualIgnoreCase(const char* compare, const UInt32 len) const;
+	bool EqualIgnoreCase(const StrPtrLen &compare) const { return EqualIgnoreCase(compare.Ptr, compare.Len); }
+	bool Equal(const char* compare) const;
+	bool NumEqualIgnoreCase(const char* compare, const UInt32 len) const;
 
 	void Delete() { delete[] Ptr; Ptr = NULL; Len = 0; }
 	char* ToUpper() { for (UInt32 x = 0; x < Len; x++) Ptr[x] = toupper(Ptr[x]); return Ptr; }
 
-	char* FindStringCase(char* queryCharStr, StrPtrLen* resultStr, Bool16 caseSensitive) const;
+	char* FindStringCase(char* queryCharStr, StrPtrLen* resultStr, bool caseSensitive) const;
 
 	char* FindString(StrPtrLen* queryStr, StrPtrLen* outResultStr) {
 		Assert(queryStr != NULL);   Assert(queryStr->Ptr != NULL); Assert(0 == queryStr->Ptr[queryStr->Len]);
@@ -130,7 +130,7 @@ public:
 	void  TrimWhitespace() { TrimLeadingWhitespace(); TrimTrailingWhitespace(); }
 
 #if STRPTRLENTESTING
-	static Bool16   Test();
+	static bool   Test();
 #endif
 
 private:

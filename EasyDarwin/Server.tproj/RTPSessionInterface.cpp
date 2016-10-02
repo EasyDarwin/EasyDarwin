@@ -201,8 +201,8 @@ RTPSessionInterface::RTPSessionInterface()
 
 	this->SetVal(qtssCliSesTimeoutMsec, &fTimeout, sizeof(fTimeout));
 
-	this->SetVal(qtssCliSesOverBufferEnabled, this->GetOverbufferWindow()->OverbufferingEnabledPtr(), sizeof(Bool16));
-	this->SetVal(qtssCliSesStartedThinning, &fStartedThinning, sizeof(Bool16));
+	this->SetVal(qtssCliSesOverBufferEnabled, this->GetOverbufferWindow()->OverbufferingEnabledPtr(), sizeof(bool));
+	this->SetVal(qtssCliSesStartedThinning, &fStartedThinning, sizeof(bool));
 	this->SetVal(qtssCliSes3GPPObject, &fRTPSession3GPPPtr, sizeof(fRTPSession3GPPPtr));
 
 	this->SetVal(qtssCliSessLastRTSPBandwidth, &fLastRTSPBandwidthHeaderBits, sizeof(fLastRTSPBandwidthHeaderBits));
@@ -386,7 +386,7 @@ void RTPSessionInterface::CreateDigestAuthenticationNonce() {
 
 }
 
-void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop, Bool16 newNonce, Bool16 createOpaque)
+void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop, bool newNonce, bool createOpaque)
 {
 	// Set challenge params 
 	// Set authentication scheme
@@ -431,7 +431,7 @@ void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop,
 	}
 }
 
-void RTPSessionInterface::UpdateDigestAuthChallengeParams(Bool16 newNonce, Bool16 createOpaque, UInt32 qop) {
+void RTPSessionInterface::UpdateDigestAuthChallengeParams(bool newNonce, bool createOpaque, UInt32 qop) {
 	if (newNonce || (fAuthNonce.Ptr == NULL))
 		this->CreateDigestAuthenticationNonce();
 

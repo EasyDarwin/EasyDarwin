@@ -62,8 +62,8 @@
 static StrPtrLen    sSDPSuffix(".sdp");
 static OSMutex*     sUserMutex = NULL;
 
-static Bool16         sDefaultAuthenticationEnabled = true;
-static Bool16         sAuthenticationEnabled = true;
+static bool         sDefaultAuthenticationEnabled = true;
+static bool         sAuthenticationEnabled = true;
 
 static char* sDefaultUsersFilePath = DEFAULTPATHS_ETC_DIR "qtusers";
 static char* sUsersFilePath = NULL;
@@ -88,8 +88,8 @@ static AccessChecker**          sAccessCheckers;
 static UInt32                   sNumAccessCheckers = 0;
 static UInt32                   sAccessCheckerArraySize = 0;
 
-static Bool16                   sAllowGuestDefaultEnabled = true;
-static Bool16                   sDefaultGuestEnabled = true;
+static bool                   sAllowGuestDefaultEnabled = true;
+static bool                   sDefaultGuestEnabled = true;
 
 // FUNCTION PROTOTYPES
 
@@ -316,7 +316,7 @@ QTSS_Error AuthenticateRTSPRequest(QTSS_RTSPAuth_Params* inParams)
 	if (theErr != QTSS_NoErr)
 		return theErr;
 
-	Bool16 defaultPaths = true;
+	bool defaultPaths = true;
 	// Check for a users and groups file in the access file
 	// For this, first get local file path and root movie directory
 	//get the local file path
@@ -513,11 +513,11 @@ QTSS_Error AuthenticateRTSPRequest(QTSS_RTSPAuth_Params* inParams)
 
 QTSS_Error AccessAuthorizeRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 {
-	Bool16 allowNoAccessFiles = sAllowGuestDefaultEnabled; //no access files allowed means allowing guest access (unknown users)
+	bool allowNoAccessFiles = sAllowGuestDefaultEnabled; //no access files allowed means allowing guest access (unknown users)
 	QTSS_ActionFlags noAction = ~qtssActionFlagsRead; // allow any action
 	QTSS_ActionFlags authorizeAction = QTSSModuleUtils::GetRequestActions(inParams->inRTSPRequest);
-	Bool16 authorized = false;
-	Bool16 allowAnyUser = false;
+	bool authorized = false;
+	bool allowAnyUser = false;
 	QTAccessFile accessFile;
 	return  accessFile.AuthorizeRequest(inParams, allowNoAccessFiles, noAction, authorizeAction, &authorized, &allowAnyUser);
 }

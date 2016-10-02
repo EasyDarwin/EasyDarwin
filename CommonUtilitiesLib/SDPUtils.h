@@ -85,11 +85,11 @@ public:
 	SDPLine*    GetLine(SInt32 lineIndex);
 	void        SetLine(SInt32 index);
 	void        Parse();
-	Bool16      SetSDPBuffer(char *sdpBuffer);
-	Bool16      SetSDPBuffer(StrPtrLen *sdpBufferPtr);
-	Bool16      IsSDPBufferValid() { return fValid; }
-	Bool16      HasReqLines() { return (Bool16)(fReqLines == kAllReq); }
-	Bool16      HasLineType(char lineType) { return (Bool16)(lineType == fFieldStr[(UInt8)lineType]); }
+	bool      SetSDPBuffer(char *sdpBuffer);
+	bool      SetSDPBuffer(StrPtrLen *sdpBufferPtr);
+	bool      IsSDPBufferValid() { return fValid; }
+	bool      HasReqLines() { return (bool)(fReqLines == kAllReq); }
+	bool      HasLineType(char lineType) { return (bool)(lineType == fFieldStr[(UInt8)lineType]); }
 	char*       GetReqLinesArray;
 	void        PrintLine(SInt32 lineIndex);
 	void        PrintAllLines();
@@ -99,7 +99,7 @@ public:
 	SInt32      fNumSDPLines;
 	SInt32      fNumUsedLines;
 	SDPLine*    fSDPLineArray;
-	Bool16      fValid;
+	bool      fValid;
 	StrPtrLen   fSDPBuffer;
 	UInt16      fReqLines;
 
@@ -118,7 +118,7 @@ public:
 	StrPtrLen* GetSessionHeaders() { return &fSessionHeaders; }
 	StrPtrLen* GetMediaHeaders() { return &fMediaHeaders; }
 	char* GetSortedSDPCopy();
-	Bool16 ValidateSessionHeader(StrPtrLen *theHeaderLinePtr);
+	bool ValidateSessionHeader(StrPtrLen *theHeaderLinePtr);
 
 
 	StrPtrLen fullSDPBuffSPL;

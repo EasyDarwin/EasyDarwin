@@ -205,7 +205,7 @@ void  RTSPRequest3GPP::Initialize()
 }
 
 
-RTSPRequest3GPP::RTSPRequest3GPP(Bool16 enabled)
+RTSPRequest3GPP::RTSPRequest3GPP(bool enabled)
 	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::k3GPPRequestDictIndex)),
 	fEnabled(enabled), fIs3GPP(false), fHasRateAdaptation(false), fHasLinkChar(false)
 {

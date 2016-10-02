@@ -83,7 +83,7 @@ public:
 	void        PutTerminator() { PutChar('\0'); }
 
 	//Writes a printf style formatted string
-	Bool16		PutFmtStr(const char *fmt, ...);
+	bool		PutFmtStr(const char *fmt, ...);
 
 
 	//the number of characters in the buffer
@@ -115,7 +115,7 @@ protected:
 	//reset the buffer, and then returns true.
 	//Use the ResizeableStringFormatter if you want a buffer that will dynamically grow.
 	//Returns true if the buffer has been resized.
-	virtual Bool16    BufferIsFull(char* /*inBuffer*/, UInt32 /*inBufferLen*/) { return false; }
+	virtual bool    BufferIsFull(char* /*inBuffer*/, UInt32 /*inBufferLen*/) { return false; }
 
 	char*       fCurrentPut;
 	char*       fStartPut;

@@ -127,7 +127,7 @@ void OSMutex::RecursiveUnlock()
 	}
 }
 
-Bool16 OSMutex::RecursiveTryLock()
+bool OSMutex::RecursiveTryLock()
 {
 	// We already have this mutex. Just refcount and return
 	if (OSThread::GetCurrentThreadID() == fHolder)
@@ -137,7 +137,7 @@ Bool16 OSMutex::RecursiveTryLock()
 	}
 
 #ifdef __Win32__
-	Bool16 theErr = (Bool16)::TryEnterCriticalSection(&fMutex); // Return values of this function match our API
+	bool theErr = (bool)::TryEnterCriticalSection(&fMutex); // Return values of this function match our API
 	if (!theErr)
 		return theErr;
 #else

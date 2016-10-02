@@ -66,7 +66,7 @@ public:
 
 #if _OSHEAP_TESTING_
 	//returns true if it passed the test, false otherwise
-	static Bool16       Test();
+	static bool       Test();
 #endif
 
 private:
@@ -99,7 +99,7 @@ public:
 	SInt64  GetValue() { return fValue; }
 	void*   GetEnclosingObject() { return fEnclosingObject; }
 	void	SetEnclosingObject(void* obj) { fEnclosingObject = obj; }
-	Bool16  IsMemberOfAnyHeap() { return fCurrentHeap != NULL; }
+	bool  IsMemberOfAnyHeap() { return fCurrentHeap != NULL; }
 
 private:
 

@@ -112,7 +112,7 @@ void RelayOutput::Register()
 
 }
 
-RelayOutput::RelayOutput(SourceInfo* inInfo, UInt32 inWhichOutput, RelaySession* inRelaySession, Bool16 isRTSPSourceInfo)
+RelayOutput::RelayOutput(SourceInfo* inInfo, UInt32 inWhichOutput, RelaySession* inRelaySession, bool isRTSPSourceInfo)
 	: fRelaySession(inRelaySession),
 	fOutputSocket(NULL, Socket::kNonBlockingSocketType),
 	fNumStreams(inRelaySession->GetSourceInfo()->GetNumStreams()),  // use the reflector session's source info
@@ -320,7 +320,7 @@ OS_Error RelayOutput::BindSocket()
 	return fOutputSocket.SetTtl(fOutputInfo.fTimeToLive);
 }
 
-Bool16  RelayOutput::Equal(SourceInfo* inInfo)
+bool  RelayOutput::Equal(SourceInfo* inInfo)
 {
 	// First check if the Source Info matches this RelaySession
 	if (!fRelaySession->Equal(inInfo))
@@ -356,7 +356,7 @@ Bool16  RelayOutput::Equal(SourceInfo* inInfo)
 	return false;
 }
 
-QTSS_Error  RelayOutput::WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 /*packetLatenessInMSec*/, SInt64* /*timeToSendThisPacketAgain*/, UInt64* packetIDPtr, SInt64* /*arrivalTimeMSec*/, Bool16 /*firstPacket */)
+QTSS_Error  RelayOutput::WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 /*packetLatenessInMSec*/, SInt64* /*timeToSendThisPacketAgain*/, UInt64* packetIDPtr, SInt64* /*arrivalTimeMSec*/, bool /*firstPacket */)
 {
 
 	if (!fValid || fDoingAnnounce)

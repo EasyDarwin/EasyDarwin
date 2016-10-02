@@ -50,7 +50,7 @@ void  RTSPSession3GPP::Initialize()
 }
 
 
-RTSPSession3GPP::RTSPSession3GPP(Bool16 enabled)
+RTSPSession3GPP::RTSPSession3GPP(bool enabled)
 	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::k3GPPRTSPSessionDictIndex)),
 	fEnabled(enabled)
 {

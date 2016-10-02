@@ -32,8 +32,8 @@
 #include <OSThread.h>
 
 StrPtrLen HTTPRequest::sColonSpace(": ", 2);
-static Bool16 sFalse = false;
-static Bool16 sTrue = true;
+static bool sFalse = false;
+static bool sTrue = true;
 static StrPtrLen sCloseString("close", 5);
 static StrPtrLen sAllString("*", 1);
 static StrPtrLen sKeepAliveString("keep-alive", 10);
@@ -320,7 +320,7 @@ QTSS_Error HTTPRequest::parseURI(StringParser* parser)
 QTSS_Error HTTPRequest::parseHeaders(StringParser* parser)
 {
 	StrPtrLen theKeyWord;
-	Bool16 isStreamOK;
+	bool isStreamOK;
 
 	//Repeat until we get a \r\n\r\n, which signals the end of the headers
 	while ((parser->PeekFast() != '\r') && (parser->PeekFast() != '\n'))
@@ -411,7 +411,7 @@ StrPtrLen* HTTPRequest::GetHeaderValue(HTTPHeader inHeader)
 	return NULL;
 }
 
-Bool16 HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion version)
+bool HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion version)
 {
 	if (fHTTPType != httpResponseType) return false;
 
@@ -443,7 +443,7 @@ Bool16 HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion 
 	return true;
 }
 
-Bool16 HTTPRequest::CreateRequestHeader(HTTPMethod method, HTTPVersion version)
+bool HTTPRequest::CreateRequestHeader(HTTPMethod method, HTTPVersion version)
 {
 	if (fHTTPType != httpRequestType) return false;
 

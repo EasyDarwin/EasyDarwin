@@ -290,7 +290,7 @@ QTSS_Error RTSPRequest::ParseURI(StringParser &parser)
 QTSS_Error RTSPRequest::ParseHeaders(StringParser& parser)
 {
 	StrPtrLen theKeyWord;
-	Bool16 isStreamOK;
+	bool isStreamOK;
 
 	//Repeat until we get a \r\n\r\n, which signals the end of the headers
 
@@ -393,11 +393,11 @@ void RTSPRequest::ParseSessionHeader()
 	fHeaderDictionary.SetVal(qtssSessionHeader, &theSessionID);
 }
 
-Bool16 RTSPRequest::ParseNetworkModeSubHeader(StrPtrLen* inSubHeader)
+bool RTSPRequest::ParseNetworkModeSubHeader(StrPtrLen* inSubHeader)
 {
 	static StrPtrLen sUnicast("unicast");
 	static StrPtrLen sMulticast("multiicast");
-	Bool16 result = false; // true means header was found
+	bool result = false; // true means header was found
 
 	if (!result && inSubHeader->EqualIgnoreCase(sUnicast))
 	{
@@ -531,7 +531,7 @@ void  RTSPRequest::ParseRetransmitHeader()
 {
 	StringParser theRetransmitParser(fHeaderDictionary.GetValue(qtssXRetransmitHeader));
 	StrPtrLen theProtName;
-	Bool16 foundRetransmitProt = false;
+	bool foundRetransmitProt = false;
 
 	do
 	{

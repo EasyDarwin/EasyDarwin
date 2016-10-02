@@ -47,13 +47,13 @@ public:
 
 	static void Initialize();
 
-	QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs);
+	QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs);
 	virtual ~QTSServerPrefs() {}
 
 	//This is callable at any time, and is thread safe wrt to the accessors.
 	//Pass in true if you want this function to update the prefs file if
 	//any defaults need to be used. False otherwise
-	void RereadServerPreferences(Bool16 inWriteMissingPrefs);
+	void RereadServerPreferences(bool inWriteMissingPrefs);
 
 	//Individual accessor methods for preferences.
 
@@ -88,11 +88,11 @@ public:
 	Float32 GetTCPSecondsToBuffer() { return fTCPSecondsToBuffer; }
 
 	//for joining HTTP sessions from behind a round-robin DNS
-	Bool16  GetDoReportHTTPConnectionAddress() { return fDoReportHTTPConnectionAddress; }
+	bool  GetDoReportHTTPConnectionAddress() { return fDoReportHTTPConnectionAddress; }
 
 	//for debugging, mainly
-	Bool16      ShouldServerBreakOnAssert() { return fBreakOnAssert; }
-	Bool16      IsAutoRestartEnabled() { return fAutoRestart; }
+	bool      ShouldServerBreakOnAssert() { return fBreakOnAssert; }
+	bool      IsAutoRestartEnabled() { return fAutoRestart; }
 
 	UInt32      GetTotalBytesUpdateTimeInSecs() { return fTBUpdateTimeInSecs; }
 	UInt32      GetAvgBandwidthUpdateTimeInSecs() { return fABUpdateTimeInSecs; }
@@ -100,28 +100,28 @@ public:
 
 	// For the compiled-in error logging module
 
-	Bool16  IsErrorLogEnabled() { return fErrorLogEnabled; }
-	Bool16  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
+	bool  IsErrorLogEnabled() { return fErrorLogEnabled; }
+	bool  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
 
 	UInt32  GetMaxErrorLogBytes() { return fErrorLogBytes; }
 	UInt32  GetErrorRollIntervalInDays() { return fErrorRollIntervalInDays; }
 	UInt32  GetErrorLogVerbosity() { return fErrorLogVerbosity; }
 	void    SetErrorLogVerbosity(UInt32 verbosity) { fErrorLogVerbosity = verbosity; }
-	Bool16  GetAppendSrcAddrInTransport() { return fAppendSrcAddrInTransport; }
+	bool  GetAppendSrcAddrInTransport() { return fAppendSrcAddrInTransport; }
 
 	//
 	// For UDP retransmits
 	UInt32  IsReliableUDPEnabled() { return fReliableUDP; }
 	UInt32  GetMaxRetransmitDelayInMsec() { return fMaxRetransDelayInMsec; }
-	Bool16  IsAckLoggingEnabled() { return fIsAckLoggingEnabled; }
+	bool  IsAckLoggingEnabled() { return fIsAckLoggingEnabled; }
 	UInt32  GetRTCPPollIntervalInMsec() { return fRTCPPollIntervalInMsec; }
 	UInt32  GetRTCPSocketRcvBufSizeinK() { return fRTCPSocketRcvBufSizeInK; }
 	UInt32  GetSendIntervalInMsec() { return fSendIntervalInMsec; }
 	UInt32  GetMaxSendAheadTimeInSecs() { return fMaxSendAheadTimeInSecs; }
-	Bool16  IsSlowStartEnabled() { return fIsSlowStartEnabled; }
-	Bool16  GetReliableUDPPrintfsEnabled() { return fReliableUDPPrintfs; }
-	Bool16  GetRTSPDebugPrintfs() { return fEnableRTSPDebugPrintfs; }
-	Bool16  GetRTSPServerInfoEnabled() { return fEnableRTSPServerInfo; }
+	bool  IsSlowStartEnabled() { return fIsSlowStartEnabled; }
+	bool  GetReliableUDPPrintfsEnabled() { return fReliableUDPPrintfs; }
+	bool  GetRTSPDebugPrintfs() { return fEnableRTSPDebugPrintfs; }
+	bool  GetRTSPServerInfoEnabled() { return fEnableRTSPServerInfo; }
 
 	Float32    GetOverbufferRate() { return fOverbufferRate; }
 
@@ -134,12 +134,12 @@ public:
 
 	//
 	// force logs to close after each write (true or false)
-	Bool16  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
-	void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
+	bool  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
+	void    SetCloseLogsOnWrite(bool closeLogsOnWrite);
 
 	//
 	// Optionally require that reliable UDP content be in certain folders
-	Bool16 IsPathInsideReliableUDPDir(StrPtrLen* inPath);
+	bool IsPathInsideReliableUDPDir(StrPtrLen* inPath);
 
 	// Movie folder pref. If the path fits inside the buffer provided,
 	// the path is copied into that buffer. Otherwise, a new buffer is allocated
@@ -191,31 +191,31 @@ public:
 		return this->GetStringPref(qtssPrefsMonitorStatsFileName);
 	}
 
-	Bool16 ServerStatFileEnabled() { return fEnableMonitorStatsFile; }
+	bool ServerStatFileEnabled() { return fEnableMonitorStatsFile; }
 	UInt32 GetStatFileIntervalSec() { return fStatsFileIntervalSeconds; }
-	Bool16 CloudPlatformEnabled() { return fCloudPlatformEnabled; }
+	bool CloudPlatformEnabled() { return fCloudPlatformEnabled; }
 	QTSS_AuthScheme GetAuthScheme() { return fAuthScheme; }
 
-	Bool16 PacketHeaderPrintfsEnabled() { return fEnablePacketHeaderPrintfs; }
-	Bool16 PrintRTPHeaders() { return (Bool16)(fPacketHeaderPrintfOptions & kRTPALL); }
-	Bool16 PrintSRHeaders() { return (Bool16)(fPacketHeaderPrintfOptions & kRTCPSR); }
-	Bool16 PrintRRHeaders() { return (Bool16)(fPacketHeaderPrintfOptions & kRTCPRR); }
-	Bool16 PrintAPPHeaders() { return (Bool16)(fPacketHeaderPrintfOptions & kRTCPAPP); }
-	Bool16 PrintACKHeaders() { return (Bool16)(fPacketHeaderPrintfOptions & kRTCPACK); }
+	bool PacketHeaderPrintfsEnabled() { return fEnablePacketHeaderPrintfs; }
+	bool PrintRTPHeaders() { return (bool)(fPacketHeaderPrintfOptions & kRTPALL); }
+	bool PrintSRHeaders() { return (bool)(fPacketHeaderPrintfOptions & kRTCPSR); }
+	bool PrintRRHeaders() { return (bool)(fPacketHeaderPrintfOptions & kRTCPRR); }
+	bool PrintAPPHeaders() { return (bool)(fPacketHeaderPrintfOptions & kRTCPAPP); }
+	bool PrintACKHeaders() { return (bool)(fPacketHeaderPrintfOptions & kRTCPACK); }
 
 	UInt32 DeleteSDPFilesInterval() { return fsdp_file_delete_interval_seconds; }
 
 	UInt32  GetNumThreads() { return fNumThreads; } //short tasks threads
 	UInt32  GetNumBlockingThreads() { return fNumRTSPThreads; } //return the number of threads that long tasks will be scheduled on -- RTSP processing for example.
 
-	Bool16  GetDisableThinning() { return fDisableThinning; }
+	bool  GetDisableThinning() { return fDisableThinning; }
 
-	Bool16  Get3GPPEnabled() { return f3gppProtocolEnabled; }
-	Bool16  Get3GPPRateAdaptationEnabled() { return f3gppProtocolRateAdaptationEnabled; }
+	bool  Get3GPPEnabled() { return f3gppProtocolEnabled; }
+	bool  Get3GPPRateAdaptationEnabled() { return f3gppProtocolRateAdaptationEnabled; }
 	UInt16  Get3GPPRateAdaptReportFrequency() { return f3gppProtocolRateAdaptationReportFrequency; }
 	UInt16  GetDefaultStreamQuality() { return fDefaultStreamQuality; }
-	Bool16  Get3GPPDebugPrintfs() { return f3gppDebugPrintfsEnabled; }
-	Bool16  GetUDPMonitorEnabled() { return fUDPMonitorEnabled; }
+	bool  Get3GPPDebugPrintfs() { return f3gppDebugPrintfsEnabled; }
+	bool  GetUDPMonitorEnabled() { return fUDPMonitorEnabled; }
 	UInt16  GetUDPMonitorVideoPort() { return fUDPMonitorVideoPort; }
 	UInt16  GetUDPMonitorAudioPort() { return fUDPMonitorAudioPort; }
 
@@ -223,7 +223,7 @@ public:
 
 	char* GetMonitorSrcIP() { return this->GetStringPref(qtssPrefsUDPMonitorSourceIPAddr); }
 
-	Bool16 GetAllowGuestDefault() { return fAllowGuestAuthorizeDefault; }
+	bool GetAllowGuestDefault() { return fAllowGuestAuthorizeDefault; }
 
 	UInt32 Get3GPPForcedTargetTime() { return f3GPPRateAdaptTargetTime; }
 
@@ -239,8 +239,8 @@ private:
 	SInt32  fMaximumConnections;
 	SInt32  fMaxBandwidthInKBits;
 
-	Bool16  fBreakOnAssert;
-	Bool16  fAutoRestart;
+	bool  fBreakOnAssert;
+	bool  fAutoRestart;
 	UInt32  fTBUpdateTimeInSecs;
 	UInt32  fABUpdateTimeInSecs;
 	UInt32  fSafePlayDurationInSecs;
@@ -248,8 +248,8 @@ private:
 	UInt32  fErrorRollIntervalInDays;
 	UInt32  fErrorLogBytes;
 	UInt32  fErrorLogVerbosity;
-	Bool16  fScreenLoggingEnabled;
-	Bool16  fErrorLogEnabled;
+	bool  fScreenLoggingEnabled;
+	bool  fErrorLogEnabled;
 
 	SInt32  fDropAllPacketsTimeInMsec;
 	SInt32  fDropAllVideoPacketsTimeInMsec;
@@ -264,8 +264,8 @@ private:
 	UInt32  fMaxTCPBufferSizeInBytes;
 	Float32 fTCPSecondsToBuffer;
 
-	Bool16  fDoReportHTTPConnectionAddress;
-	Bool16  fAppendSrcAddrInTransport;
+	bool  fDoReportHTTPConnectionAddress;
+	bool  fAppendSrcAddrInTransport;
 
 	UInt32  fSmallWindowSizeInK;
 	UInt32  fMediumWindowSizeInK;
@@ -274,51 +274,51 @@ private:
 	UInt32  fWindowSizeMaxThreshold;
 
 	UInt32  fMaxRetransDelayInMsec;
-	Bool16  fIsAckLoggingEnabled;
+	bool  fIsAckLoggingEnabled;
 	UInt32  fRTCPPollIntervalInMsec;
 	UInt32  fRTCPSocketRcvBufSizeInK;
-	Bool16  fIsSlowStartEnabled;
+	bool  fIsSlowStartEnabled;
 	UInt32  fSendIntervalInMsec;
 	UInt32  fMaxSendAheadTimeInSecs;
 
-	Bool16  fCloudPlatformEnabled;
+	bool  fCloudPlatformEnabled;
 
 	QTSS_AuthScheme fAuthScheme;
 	UInt32  fsdp_file_delete_interval_seconds;
-	Bool16  fAutoStart;
-	Bool16  fReliableUDP;
-	Bool16  fReliableUDPPrintfs;
-	Bool16  fEnableRTSPErrMsg;
-	Bool16  fEnableRTSPDebugPrintfs;
-	Bool16  fEnableRTSPServerInfo;
+	bool  fAutoStart;
+	bool  fReliableUDP;
+	bool  fReliableUDPPrintfs;
+	bool  fEnableRTSPErrMsg;
+	bool  fEnableRTSPDebugPrintfs;
+	bool  fEnableRTSPServerInfo;
 	UInt32  fNumThreads;
 	UInt32  fNumRTSPThreads;
 	UInt32 f3GPPRateAdaptTargetTime;
 
 	UInt16	fHTTPServicePort;
 
-	Bool16  fEnableMonitorStatsFile;
+	bool  fEnableMonitorStatsFile;
 	UInt32  fStatsFileIntervalSeconds;
 
 	Float32    fOverbufferRate;
 
-	Bool16  fEnablePacketHeaderPrintfs;
+	bool  fEnablePacketHeaderPrintfs;
 	UInt32  fPacketHeaderPrintfOptions;
-	Bool16  fCloseLogsOnWrite;
+	bool  fCloseLogsOnWrite;
 
-	Bool16 fDisableThinning;
+	bool fDisableThinning;
 
-	Bool16 f3gppProtocolEnabled;
-	Bool16 f3gppProtocolRateAdaptationEnabled;
+	bool f3gppProtocolEnabled;
+	bool f3gppProtocolRateAdaptationEnabled;
 	UInt16 f3gppProtocolRateAdaptationReportFrequency;
 	UInt16 fDefaultStreamQuality;
-	Bool16 f3gppDebugPrintfsEnabled;
-	Bool16 fUDPMonitorEnabled;
+	bool f3gppDebugPrintfsEnabled;
+	bool fUDPMonitorEnabled;
 	UInt16 fUDPMonitorVideoPort;
 	UInt16 fUDPMonitorAudioPort;
 	char   fUDPMonitorDestAddr[20];
 	char   fUDPMonitorSrcAddr[20];
-	Bool16 fAllowGuestAuthorizeDefault;
+	bool fAllowGuestAuthorizeDefault;
 
 	enum //fPacketHeaderPrintfOptions
 	{

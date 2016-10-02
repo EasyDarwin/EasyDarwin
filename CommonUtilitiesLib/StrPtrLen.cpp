@@ -102,7 +102,7 @@ char* StrPtrLen::GetAsCString() const
 }
 
 
-Bool16 StrPtrLen::Equal(const StrPtrLen& compare) const
+bool StrPtrLen::Equal(const StrPtrLen& compare) const
 {
 	if (NULL == compare.Ptr && NULL == Ptr)
 		return true;
@@ -116,7 +116,7 @@ Bool16 StrPtrLen::Equal(const StrPtrLen& compare) const
 		return false;
 }
 
-Bool16 StrPtrLen::Equal(const char* compare) const
+bool StrPtrLen::Equal(const char* compare) const
 {
 	if (NULL == compare && NULL == Ptr)
 		return true;
@@ -132,7 +132,7 @@ Bool16 StrPtrLen::Equal(const char* compare) const
 
 
 
-Bool16 StrPtrLen::NumEqualIgnoreCase(const char* compare, const UInt32 len) const
+bool StrPtrLen::NumEqualIgnoreCase(const char* compare, const UInt32 len) const
 {
 	// compare thru the first "len: bytes
 	Assert(compare != NULL);
@@ -147,7 +147,7 @@ Bool16 StrPtrLen::NumEqualIgnoreCase(const char* compare, const UInt32 len) cons
 	return false;
 }
 
-Bool16 StrPtrLen::EqualIgnoreCase(const char* compare, const UInt32 len) const
+bool StrPtrLen::EqualIgnoreCase(const char* compare, const UInt32 len) const
 {
 	Assert(compare != NULL);
 	if (len == Len)
@@ -160,7 +160,7 @@ Bool16 StrPtrLen::EqualIgnoreCase(const char* compare, const UInt32 len) const
 	return false;
 }
 
-char* StrPtrLen::FindStringCase(char* queryCharStr, StrPtrLen* resultStr, Bool16 caseSensitive) const
+char* StrPtrLen::FindStringCase(char* queryCharStr, StrPtrLen* resultStr, bool caseSensitive) const
 {
 	// Be careful about exiting this method from the middle. This routine deletes allocated memory at the end.
 	// 
@@ -426,7 +426,7 @@ void StrPtrLen::PrintStrEOL(char* stopStr, char* appendStr)
 
 
 #if STRPTRLENTESTING
-Bool16  StrPtrLen::Test()
+bool  StrPtrLen::Test()
 {
 	static char* test1 = "2347.;.][';[;]abcdefghijklmnopqrstuvwxyz#%#$$#";
 	static char* test2 = "2347.;.][';[;]ABCDEFGHIJKLMNOPQRSTUVWXYZ#%#$$#";

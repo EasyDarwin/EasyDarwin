@@ -87,11 +87,11 @@ private:
 	inline void removeActiveReader() { adjustState(-1); };
 
 
-	inline Bool16 waitingWriters() { return (Bool16)(fWriteWaiters > 0); }
-	inline Bool16 waitingReaders() { return (Bool16)(fReadWaiters > 0); }
-	inline Bool16 active() { return (Bool16)(fState != 0); }
-	inline Bool16 activeReaders() { return (Bool16)(fState > 0); }
-	inline Bool16 activeWriter() { return (Bool16)(fState < 0); } // only one
+	inline bool waitingWriters() { return (bool)(fWriteWaiters > 0); }
+	inline bool waitingReaders() { return (bool)(fReadWaiters > 0); }
+	inline bool active() { return (bool)(fState != 0); }
+	inline bool activeReaders() { return (bool)(fState > 0); }
+	inline bool activeWriter() { return (bool)(fState < 0); } // only one
 
 #if DEBUGMUTEXRW
 	static int fCount, fMaxCount;

@@ -52,22 +52,22 @@ public:
 	// Call Register in the Relay Module's Register Role
 	static void Register();
 
-	RelayOutput(SourceInfo* inInfo, UInt32 inWhichOutput, RelaySession* inSession, Bool16 isRTSPSourceInfo);
+	RelayOutput(SourceInfo* inInfo, UInt32 inWhichOutput, RelaySession* inSession, bool isRTSPSourceInfo);
 	virtual ~RelayOutput();
 
 	// Returns true if this output matches one of the Outputs in the SourceInfo.
 	// Also marks the proper SourceInfo::OutputInfo "fAlreadySetup" flag as true 
-	Bool16  Equal(SourceInfo* inInfo);
+	bool  Equal(SourceInfo* inInfo);
 
 	// Call this to setup this object's output socket
 	OS_Error BindSocket();
 
 	// Writes the packet directly to a UDP socket
-	virtual QTSS_Error  WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTime, Bool16 firstPacket);
+	virtual QTSS_Error  WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTime, bool firstPacket);
 
-	virtual Bool16              IsUDP() { return true; }
+	virtual bool              IsUDP() { return true; }
 
-	virtual Bool16              IsPlaying() { if (!fValid || fDoingAnnounce) return false; return true; }
+	virtual bool              IsPlaying() { if (!fValid || fDoingAnnounce) return false; return true; }
 
 	// ACCESSORS
 
@@ -78,7 +78,7 @@ public:
 	UInt32              GetCurBitsPerSecond() { return fBitsPerSecond; }
 	UInt64&             GetTotalPacketsSent() { return fTotalPacketsSent; }
 	UInt64&             GetTotalBytesSent() { return fTotalBytesSent; }
-	Bool16              IsValid() { return fValid; }
+	bool              IsValid() { return fValid; }
 
 	// Use these functions to iterate over all RelayOutputs
 	static OSMutex* GetQueueMutex() { return &sQueueMutex; }
@@ -133,8 +133,8 @@ private:
 
 	TCPClientSocket* fClientSocket;
 	EasyDarwin::RTSPClient* fClient;
-	Bool16      fDoingAnnounce;
-	Bool16      fValid;
+	bool      fDoingAnnounce;
+	bool      fValid;
 	char*       fOutgoingSDP;
 	RelayAnnouncer* fAnnounceTask;
 

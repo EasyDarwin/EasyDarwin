@@ -182,7 +182,7 @@ OS_Error    Socket::SetSocketRcvBufSize(UInt32 inNewSize)
 }
 
 
-OS_Error Socket::Bind(UInt32 addr, UInt16 port, UInt16 test)
+OS_Error Socket::Bind(UInt32 addr, UInt16 port, bool test)
 {
 	socklen_t len = sizeof(fLocalAddr);
 	::memset(&fLocalAddr, 0, sizeof(fLocalAddr));

@@ -44,7 +44,7 @@
 #include "OSMutex.h"
 #include "Task.h"
 
-const Bool16 kAllowLogToRoll = true;
+const bool kAllowLogToRoll = true;
 
 class QTSSRollingLog : public Task
 {
@@ -60,40 +60,40 @@ class QTSSRollingLog : public Task
         
         //
         // Write a log message
-        void    WriteToLog(char* inLogData, Bool16 allowLogToRoll);
+        void    WriteToLog(char* inLogData, bool allowLogToRoll);
         
         //log rolls automatically based on the configuration criteria,
         //but you may roll the log manually by calling this function.
         //Returns true if no error, false otherwise
-        Bool16  RollLog();
+        bool  RollLog();
 
         //
         // Call this to open the log file and begin logging     
-        void EnableLog( Bool16 appendDotLog = true);
+        void EnableLog( bool appendDotLog = true);
         
                 //
         // Call this to close the log
         // (pass leaveEnabled as true when we are temporarily closing.)
-        void CloseLog( Bool16 leaveEnabled = false);
+        void CloseLog( bool leaveEnabled = false);
 
         //
         //mainly to check and see if errors occurred
-        Bool16  IsLogEnabled();
+        bool  IsLogEnabled();
         
         //master switch
-        Bool16  IsLogging() { return fLogging; }
-        void  SetLoggingEnabled( Bool16 logState ) { fLogging = logState; }
+        bool  IsLogging() { return fLogging; }
+        void  SetLoggingEnabled( bool logState ) { fLogging = logState; }
         
         //General purpose utility function
         //returns false if some error has occurred
-        static Bool16   FormatDate(char *ioDateBuffer, Bool16 logTimeInGMT);
+        static bool   FormatDate(char *ioDateBuffer, bool logTimeInGMT);
         
         // Check the log to see if it needs to roll
         // (rolls the log if necessary)
-        Bool16          CheckRollLog();
+        bool          CheckRollLog();
         
         // Set this to true to get the log to close the file between writes.
-        static void		SetCloseOnWrite(Bool16 closeOnWrite);
+        static void		SetCloseOnWrite(bool closeOnWrite);
 
         enum
         {
@@ -126,10 +126,10 @@ class QTSSRollingLog : public Task
         FILE*           fLog;
         time_t          fLogCreateTime;
         char*           fLogFullPath;
-        Bool16          fAppendDotLog;
-        Bool16          fLogging;
-        Bool16          RenameLogFile(const char* inFileName);
-        Bool16          DoesFileExist(const char *inPath);
+        bool          fAppendDotLog;
+        bool          fLogging;
+        bool          RenameLogFile(const char* inFileName);
+        bool          DoesFileExist(const char *inPath);
         static void     ResetToMidnight(time_t* inTimePtr, time_t* outTimePtr);
         char*           GetLogPath(char *extension);
         

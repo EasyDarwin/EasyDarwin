@@ -63,14 +63,14 @@ public:
 
 	static char* CopyString(const char* srcStr);
 	void Copy(const RTSPOutputInfo& copy); // copies dynamically allocated data too
-	Bool16 Equal(const RTSPOutputInfo* inInfo)
+	bool Equal(const RTSPOutputInfo* inInfo)
 	{
 		return ((inInfo != NULL) && (fIsAnnounced == inInfo->fIsAnnounced) && (fAnnouncePort == inInfo->fAnnouncePort)
 			&& (strcmp(fDestURl, inInfo->fDestURl) == 0));
 	}
 
 
-	Bool16      fIsAnnounced;
+	bool      fIsAnnounced;
 	UInt16      fAnnouncePort;
 	char*       fDestURl;
 	char*       fUserName;
@@ -82,7 +82,7 @@ class RTSPSourceInfo : public RCFSourceInfo
 public:
 
 	// Specify whether the client should be blocking or non-blocking
-	RTSPSourceInfo(Bool16 inAnnounce) : fSourceURL(NULL),
+	RTSPSourceInfo(bool inAnnounce) : fSourceURL(NULL),
 		fHostAddr(0),
 		fHostPort(0),
 		fLocalAddr(0),
@@ -117,7 +117,7 @@ public:
 	// Call this immediately after the constructor. This object will parse
 	// the config file and extract the necessary information to connect to an rtsp server.
 	// Specify the config file line index where the "rtsp_source" line resides
-	QTSS_Error  ParsePrefs(XMLTag* relayTag, Bool16 inAnnounce);
+	QTSS_Error  ParsePrefs(XMLTag* relayTag, bool inAnnounce);
 
 	// Connects, sends a DESCRIBE, and parses the incoming SDP data. After this
 	// function completes sucessfully, GetLocalSDP returns the data, and the
@@ -151,15 +151,15 @@ public:
 	RTSPClient* GetRTSPClient() { return fClient; }
 	TCPClientSocket* GetClientSocket() { return fClientSocket; }
 
-	Bool16      IsDescribeComplete() { return fDescribeComplete; }
+	bool      IsDescribeComplete() { return fDescribeComplete; }
 
 	RTSPOutputInfo* GetRTSPOutputInfo(UInt32 index) { return &fRTSPInfoArray[index]; }
 	char* GetSourceURL() { return fSourceURL; }
 
-	virtual Bool16 IsRTSPSourceInfo() { return true; }
-	virtual Bool16 Equal(SourceInfo* inInfo);
+	virtual bool IsRTSPSourceInfo() { return true; }
+	virtual bool Equal(SourceInfo* inInfo);
 
-	Bool16 IsAnnounce() { return fAnnounce; }
+	bool IsAnnounce() { return fAnnounce; }
 
 	char* GetAnnounceURL() { return fAnnounceURL; }
 	UInt32 GetAnnounceIP() { return fAnnounceIP; }
@@ -219,10 +219,10 @@ private:
 	TCPClientSocket*        fClientSocket;
 	RTSPClient*             fClient;
 	UInt32                  fNumSetupsComplete;
-	Bool16                  fDescribeComplete;
+	bool                  fDescribeComplete;
 	StrPtrLen               fLocalSDP;
 
-	Bool16                  fAnnounce;
+	bool                  fAnnounce;
 	char*                   fAnnounceURL;
 	UInt32                  fAnnounceIP;
 	UInt32                  fAnnounceActualIP;

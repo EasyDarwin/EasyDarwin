@@ -340,7 +340,7 @@ SInt64 HTTPSession::Run()
 	发送HTTP+json报文，决定是否关闭当前Session
 	HTTP部分构造，json部分由函数传递
 */
-QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
+QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement)
 {
 	//构造响应报文(HTTP头)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
@@ -521,11 +521,11 @@ void HTTPSession::CleanupRequest()
 	this->SetRequestBodyLength(-1);
 }
 
-Bool16 HTTPSession::OverMaxConnections(UInt32 buffer)
+bool HTTPSession::OverMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
 	SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
-	Bool16 overLimit = false;
+	bool overLimit = false;
 
 	if (maxConns > -1) // limit connections
 	{

@@ -390,7 +390,7 @@ Float32 StringParser::ConsumeNPT()
 }
 
 
-Bool16 StringParser::Expect(char stopChar)
+bool StringParser::Expect(char stopChar)
 {
 	if (this->ParserIsEmpty(NULL))
 		return false;
@@ -407,14 +407,14 @@ Bool16 StringParser::Expect(char stopChar)
 		return true;
 	}
 }
-Bool16 StringParser::ExpectEOL()
+bool StringParser::ExpectEOL()
 {
 	if (this->ParserIsEmpty(NULL))
 		return false;
 
 	//This function processes all legal forms of HTTP / RTSP eols.
 	//They are: \r (alone), \n (alone), \r\n
-	Bool16 retVal = false;
+	bool retVal = false;
 	if ((fStartGet < fEndGet) && ((*fStartGet == '\r') || (*fStartGet == '\n')))
 	{
 		retVal = true;
@@ -486,7 +486,7 @@ void StringParser::advanceMark()
 }
 
 #if STRINGPARSERTESTING
-Bool16 StringParser::Test()
+bool StringParser::Test()
 {
 	static char* string1 = "RTSP 200 OK\r\nContent-Type: MeowMix\r\n\t   \n3450";
 

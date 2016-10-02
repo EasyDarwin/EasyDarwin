@@ -47,7 +47,7 @@
 
 
 unsigned int            RTSPSessionInterface::sSessionIDCounter = kFirstRTSPSessionID;
-Bool16                  RTSPSessionInterface::sDoBase64Decoding = true;
+bool                  RTSPSessionInterface::sDoBase64Decoding = true;
 UInt32					RTSPSessionInterface::sOptionsRequestBody[kMaxRandomDataSize / sizeof(UInt32)];
 
 QTSSAttrInfoDict::AttrInfo  RTSPSessionInterface::sAttributes[] =

@@ -439,7 +439,7 @@ void RTPPacketResender::AckPacket(UInt16 inSeqNum, SInt64& inCurTimeInMsec)
 	}
 }
 
-void RTPPacketResender::RemovePacket(UInt32 packetIndex, Bool16 reuseIndex)
+void RTPPacketResender::RemovePacket(UInt32 packetIndex, bool reuseIndex)
 {
 	//OSMutexLocker packetQLocker(&fPacketQMutex);
 

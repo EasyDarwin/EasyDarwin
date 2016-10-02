@@ -73,7 +73,7 @@
 // -------------------------------------
 // Constructors and destructors
 //
-QTFile::QTFile(Bool16 Debug, Bool16 DeepDebug)
+QTFile::QTFile(bool Debug, bool DeepDebug)
 	: fDebug(Debug), fDeepDebug(DeepDebug),
 	fNextTOCID(1),
 #if DSS_USE_API_CALLBACKS
@@ -346,7 +346,7 @@ void QTFile::AllocateBuffers(UInt32 inUnitSizeInK, UInt32 inBufferInc, UInt32 in
 
 //
 // Table of Contents functions.
-Bool16 QTFile::FindTOCEntry(const char * AtomPath, AtomTOCEntry **TOCEntry, AtomTOCEntry *LastFoundTOCEntry)
+bool QTFile::FindTOCEntry(const char * AtomPath, AtomTOCEntry **TOCEntry, AtomTOCEntry *LastFoundTOCEntry)
 {
 	// General vars
 	AtomTOCEntry    *Atom, *CurParent;
@@ -487,7 +487,7 @@ Bool16 QTFile::FindTOCEntry(const char * AtomPath, AtomTOCEntry **TOCEntry, Atom
 
 //
 // Track List functions.
-Bool16 QTFile::NextTrack(QTTrack **Track, QTTrack *LastFoundTrack)
+bool QTFile::NextTrack(QTTrack **Track, QTTrack *LastFoundTrack)
 {
 	// General vars
 	TrackListEntry      *ListEntry;
@@ -528,7 +528,7 @@ Bool16 QTFile::NextTrack(QTTrack **Track, QTTrack *LastFoundTrack)
 	return false;
 }
 
-Bool16 QTFile::FindTrack(UInt32 TrackID, QTTrack **Track)
+bool QTFile::FindTrack(UInt32 TrackID, QTTrack **Track)
 {
 	// General vars
 	TrackListEntry      *ListEntry;
@@ -550,7 +550,7 @@ Bool16 QTFile::FindTrack(UInt32 TrackID, QTTrack **Track)
 	return false;
 }
 
-Bool16 QTFile::IsHintTrack(QTTrack *Track)
+bool QTFile::IsHintTrack(QTTrack *Track)
 {
 	// General vars
 	TrackListEntry      *ListEntry;
@@ -605,11 +605,11 @@ SInt64 QTFile::GetModDate()
 
 //
 // Read functions.
-Bool16 QTFile::Read(UInt64 Offset, char * const Buffer, UInt32 Length, QTFile_FileControlBlock * FCB)
+bool QTFile::Read(UInt64 Offset, char * const Buffer, UInt32 Length, QTFile_FileControlBlock * FCB)
 {
 	// General vars
 	OSMutexLocker   ReadMutex(fReadMutex);
-	Bool16 rv = false;
+	bool rv = false;
 	UInt32 gotlen = 0;
 
 	if (FCB)
@@ -637,7 +637,7 @@ Bool16 QTFile::Read(UInt64 Offset, char * const Buffer, UInt32 Length, QTFile_Fi
 // -------------------------------------
 // Protected functions
 //
-Bool16 QTFile::GenerateAtomTOC()
+bool QTFile::GenerateAtomTOC()
 {
 	// General vars
 	OSType          AtomType;
@@ -649,8 +649,8 @@ Bool16 QTFile::GenerateAtomTOC()
 
 	AtomTOCEntry    *NewTOCEntry = NULL,
 		*CurParent = NULL, *LastTOCEntry = NULL;
-	Bool16 hasMoovAtom = false;
-	Bool16 hasBigAtom = false;
+	bool hasMoovAtom = false;
+	bool hasBigAtom = false;
 
 
 	//

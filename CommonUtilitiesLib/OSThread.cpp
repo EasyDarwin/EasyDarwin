@@ -83,7 +83,7 @@ char OSThread::sUser[128] = "";
 char OSThread::sGroup[128] = "";
 
 #if __linux__ ||  __MacOSX__
-Bool16  OSThread::sWrapSleep = true;
+bool  OSThread::sWrapSleep = true;
 #endif
 
 void OSThread::Initialize()
@@ -260,7 +260,7 @@ void* OSThread::_Entry(void *inThread)  //static
 	return NULL;
 }
 
-Bool16  OSThread::SwitchPersonality()
+bool  OSThread::SwitchPersonality()
 {
 #if __linux__
 	if (::strlen(sGroup) > 0)

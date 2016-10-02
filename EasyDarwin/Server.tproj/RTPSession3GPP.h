@@ -52,7 +52,7 @@ public:
 	//Call initialize before instantiating this class: see QTSServer.cpp.
 	static void         Initialize();
 
-	RTPSession3GPP(Bool16 enabled);
+	RTPSession3GPP(bool enabled);
 	virtual ~RTPSession3GPP();
 
 	void SetLinkCharData(LinkCharDataFields* linkCharDataPtr);
@@ -64,7 +64,7 @@ public:
 
 private:
 
-	Bool16      fEnabled;
+	bool      fEnabled;
 	char        fURL[128]; //will be resized as needed
 	UInt32      fLinkCharGuarntdKBitsPerSec;
 	UInt32      fLinkCharMaxKBitsPerSec;

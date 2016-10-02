@@ -320,7 +320,7 @@ OS_Error OS::RecursiveMakeDir(char* inPath)
 	return MakeDir(inPath);
 }
 
-Bool16 OS::ThreadSafe()
+bool OS::ThreadSafe()
 {
 
 #if (__MacOSX__) // check for version 7 or greater for thread safe stdlib

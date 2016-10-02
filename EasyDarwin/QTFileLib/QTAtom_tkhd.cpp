@@ -95,7 +95,7 @@ const int       tkhdPosV1_TrackHeight = 80 + 12;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_tkhd::QTAtom_tkhd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
+QTAtom_tkhd::QTAtom_tkhd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug)
 {
 }
@@ -109,7 +109,7 @@ QTAtom_tkhd::~QTAtom_tkhd()
 // -------------------------------------
 // Initialization functions
 //
-Bool16 QTAtom_tkhd::Initialize()
+bool QTAtom_tkhd::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;

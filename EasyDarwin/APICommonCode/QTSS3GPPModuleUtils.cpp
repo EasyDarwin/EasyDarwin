@@ -47,8 +47,8 @@ QTSS_StreamRef              QTSS3GPPModuleUtils::sErrorLog = NULL;
 StrPtrLen					QTSS3GPPModuleUtils::s3gppBitRateAdaptationSDPStr("a=3GPP-Adaptation-Support:");
 const char*                 k3gppRateAdaptationReportFreqPrefName = "3gpp_protocol_rate_adaptation_report_frequency";
 
-Bool16                      QTSS3GPPModuleUtils::s3gppEnabled = false;
-Bool16                      QTSS3GPPModuleUtils::s3gppRateAdaptationEnabled = false;
+bool                      QTSS3GPPModuleUtils::s3gppEnabled = false;
+bool                      QTSS3GPPModuleUtils::s3gppRateAdaptationEnabled = false;
 UInt16                      QTSS3GPPModuleUtils::s3gppRateAdaptationReportFrequency = 1;
 
 void    QTSS3GPPModuleUtils::Initialize(QTSS_Initialize_Params* initParams)
@@ -84,7 +84,7 @@ void    QTSS3GPPModuleUtils::ValidatePrefs()
 void    QTSS3GPPModuleUtils::ReadPrefs()
 {
 
-	const Bool16 kDefaultEnable = true;
+	const bool kDefaultEnable = true;
 	const UInt16 kDefaultReportFreq = 1;
 	QTSSModuleUtils::GetAttribute(sServerPrefs, "enable_3gpp_protocol", qtssAttrDataTypeBool16,
 		&s3gppEnabled, (void *)&kDefaultEnable, sizeof(s3gppEnabled));

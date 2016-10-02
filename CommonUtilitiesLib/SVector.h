@@ -160,7 +160,7 @@ class SVector
 			}
 		}
 
-		Bool16 empty() const 							{ return fSize == 0; }
+		bool empty() const 							{ return fSize == 0; }
 		UInt32 capacity() const 						{ return fCapacity; }
 		UInt32 size() const 							{ return fSize; }
 		

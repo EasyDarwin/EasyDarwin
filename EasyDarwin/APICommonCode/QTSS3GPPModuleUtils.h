@@ -61,8 +61,8 @@ private:
 	static QTSS_PrefsObject         sServerPrefs;
 	static QTSS_StreamRef           sErrorLog;
 	static StrPtrLen				s3gppBitRateAdaptationSDPStr;
-	static Bool16                   s3gppEnabled;
-	static Bool16                   s3gppRateAdaptationEnabled;
+	static bool                   s3gppEnabled;
+	static bool                   s3gppRateAdaptationEnabled;
 	static UInt16                   s3gppRateAdaptationReportFrequency;
 
 

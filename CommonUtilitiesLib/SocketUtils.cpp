@@ -86,7 +86,7 @@ OSMutex SocketUtils::sMutex;
 
 //Complete rewrite for FreeBSD. 
 //The non-FreeBSD version really needs to be rewritten - it's a bit of a mess...
-void SocketUtils::Initialize(Bool16 lookupDNSName)
+void SocketUtils::Initialize(bool lookupDNSName)
 {
 	struct ifaddrs* ifap;
 	struct ifaddrs* currentifap;
@@ -163,7 +163,7 @@ void SocketUtils::Initialize(Bool16 lookupDNSName)
 
 //Version for all non-FreeBSD platforms.
 
-void SocketUtils::Initialize(Bool16 lookupDNSName)
+void SocketUtils::Initialize(bool lookupDNSName)
 {
 #if defined(__Win32__) || defined(USE_SIOCGIFNUM)
 
@@ -542,7 +542,7 @@ void SocketUtils::Initialize(Bool16 lookupDNSName)
 
 
 #ifndef __Win32__
-Bool16 SocketUtils::IncrementIfReqIter(char** inIfReqIter, ifreq* ifr)
+bool SocketUtils::IncrementIfReqIter(char** inIfReqIter, ifreq* ifr)
 {
 	//returns true if successful, false otherwise
 
@@ -572,12 +572,12 @@ Bool16 SocketUtils::IncrementIfReqIter(char** inIfReqIter, ifreq* ifr)
 }
 #endif
 
-Bool16 SocketUtils::IsMulticastIPAddr(UInt32 inAddress)
+bool SocketUtils::IsMulticastIPAddr(UInt32 inAddress)
 {
 	return ((inAddress >> 8) & 0x00f00000) == 0x00e00000; //  multicast addresses == "class D" == 0xExxxxxxx == 1,1,1,0,<28 bits>
 }
 
-Bool16 SocketUtils::IsLocalIPAddr(UInt32 inAddress)
+bool SocketUtils::IsLocalIPAddr(UInt32 inAddress)
 {
 	for (UInt32 x = 0; x < sNumIPAddrs; x++)
 		if (sIPAddrInfoArray[x].fIPAddr == inAddress)

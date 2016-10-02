@@ -107,7 +107,7 @@ public:
 	FileMap() :fFileMapArray(NULL), fDataBufferSize(0), fMapArraySize(0), fNumBuffSizeUnits(0) {}
 	~FileMap() { fFileMapArray = NULL; }
 	void    AllocateBufferMap(UInt32 inUnitSizeInK, UInt32 inNumBuffSizeUnits, UInt32 inBufferIncCount, UInt32 inMaxBitRateBuffSizeInBlocks, UInt64 fileLen, UInt32 inBitRate);
-	char*   GetBuffer(SInt64 bufIndex, Bool16* outIsEmptyBuff);
+	char*   GetBuffer(SInt64 bufIndex, bool* outIsEmptyBuff);
 	void    TestBuffer(SInt32 bufIndex) { Assert(bufIndex >= 0); fFileMapArray[bufIndex]->TestBuffer(); };
 	void    SetIndexBuffFillSize(SInt32 bufIndex, UInt32 fillSize) { Assert(bufIndex >= 0); fFileMapArray[bufIndex]->SetFillSize(fillSize); }
 	UInt32  GetMaxBufSize() { return fDataBufferSize; }
@@ -115,7 +115,7 @@ public:
 	UInt32  GetIncBuffers() { return fBlockPool.GetIncBuffers(); }
 	void    IncMaxBuffers() { fBlockPool.IncMaxBuffers(); }
 	void    DecMaxBuffers() { fBlockPool.DecMaxBuffers(); }
-	Bool16  Initialized() { return fFileMapArray == NULL ? false : true; }
+	bool  Initialized() { return fFileMapArray == NULL ? false : true; }
 	void    Clean();
 	void    DeleteMap();
 	void    DeleteOldBuffs();
@@ -182,8 +182,8 @@ public:
 	OS_Error    ReadFromDisk(void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL);
 	OS_Error    ReadFromCache(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL);
 	OS_Error    ReadFromPos(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL);
-	void        EnableFileCache(Bool16 enabled) { OSMutexLocker locker(&fMutex); fCacheEnabled = enabled; }
-	Bool16      GetCacheEnabled() { return fCacheEnabled; }
+	void        EnableFileCache(bool enabled) { OSMutexLocker locker(&fMutex); fCacheEnabled = enabled; }
+	bool      GetCacheEnabled() { return fCacheEnabled; }
 	void        AllocateFileCache(UInt32 inUnitSizeInK = 32, UInt32 bufferSizeUnits = 0, UInt32 incBuffers = 1, UInt32 inMaxBitRateBuffSizeInBlocks = 8, UInt32 inBitRate = 32768)
 	{
 		fFileMap.AllocateBufferMap(inUnitSizeInK, bufferSizeUnits, incBuffers, inMaxBitRateBuffSizeInBlocks, fLength, inBitRate);
@@ -198,8 +198,8 @@ public:
 	UInt64          GetLength() { return fLength; }
 	UInt64          GetCurOffset() { return fPosition; }
 	void            Seek(SInt64 newPosition) { fPosition = newPosition; }
-	Bool16 IsValid() { return fFile != -1; }
-	Bool16 IsDir() { return fIsDir; }
+	bool IsValid() { return fFile != -1; }
+	bool IsDir() { return fIsDir; }
 
 	// For async I/O purposes
 	int             GetFD() { return fFile; }
@@ -215,14 +215,14 @@ private:
 	UInt64  fLength;
 	UInt64  fPosition;
 	UInt64  fReadPos;
-	Bool16  fShouldClose;
-	Bool16  fIsDir;
+	bool  fShouldClose;
+	bool  fIsDir;
 	time_t  fModDate;
 
 
 	OSMutex fMutex;
 	FileMap fFileMap;
-	Bool16  fCacheEnabled;
+	bool  fCacheEnabled;
 #if READ_LOG
 	FILE*               fFileLog;
 	char                fFilePath[1024];

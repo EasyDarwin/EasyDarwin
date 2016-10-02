@@ -61,7 +61,7 @@ class QTAtom_dref : public QTAtom {
 		char            *Data;
 
 		// Tracking information
-		Bool16          IsEntryInitialized, IsFileOpen;
+		bool          IsEntryInitialized, IsFileOpen;
 		QTFile_FileControlBlock *FCB;
 	};
 
@@ -70,17 +70,17 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_dref(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		Bool16 Debug = false, Bool16 DeepDebug = false);
+		bool Debug = false, bool DeepDebug = false);
 	virtual             ~QTAtom_dref(void);
 
 
 	//
 	// Initialization functions.
-	virtual Bool16      Initialize(void);
+	virtual bool      Initialize(void);
 
 	//
 	// Accessors.
-	Bool16      IsRefInThisFile(UInt32 RefID) {
+	bool      IsRefInThisFile(UInt32 RefID) {
 		if (RefID && (RefID <= fNumRefs)) \
 			return  ((fRefs[RefID - 1].Flags & flagSelfRef) != 0); \
 			return false;
@@ -88,7 +88,7 @@ public:
 
 	//
 	// Read functions.
-	Bool16      Read(UInt32 RefID, UInt64 Offset, char * const Buffer, UInt32 Length,
+	bool      Read(UInt32 RefID, UInt64 Offset, char * const Buffer, UInt32 Length,
 		QTFile_FileControlBlock * FCB = NULL);
 
 

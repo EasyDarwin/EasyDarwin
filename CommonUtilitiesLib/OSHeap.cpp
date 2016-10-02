@@ -200,7 +200,7 @@ void OSHeap::sanityCheck(UInt32 root)
 }
 
 
-Bool16 OSHeap::Test()
+bool OSHeap::Test()
 {
 	OSHeap victim(2);
 	OSHeapElem elem1;

@@ -149,7 +149,7 @@ void MuxSessionOutput::Register()
 
 }
 
-Bool16 MuxSessionOutput::IsPlaying()
+bool MuxSessionOutput::IsPlaying()
 {
 	QTSS_RTPSessionState*   theState = NULL;
 	UInt32                  theLen = 0;
@@ -181,7 +181,7 @@ void MuxSessionOutput::InitializeStreams()
 
 
 
-Bool16 MuxSessionOutput::IsUDP()
+bool MuxSessionOutput::IsUDP()
 {
 	if (fTransportInitialized)
 		return fIsUDP;
@@ -217,7 +217,7 @@ Bool16 MuxSessionOutput::IsUDP()
 }
 
 
-Bool16  MuxSessionOutput::FilterPacket(QTSS_RTPStreamObject *theStreamPtr, StrPtrLen* inPacket)
+bool  MuxSessionOutput::FilterPacket(QTSS_RTPStreamObject *theStreamPtr, StrPtrLen* inPacket)
 {
 
 	UInt32* packetCountPtr = NULL;
@@ -251,14 +251,14 @@ Bool16  MuxSessionOutput::FilterPacket(QTSS_RTPStreamObject *theStreamPtr, StrPt
 }
 
 
-Bool16  MuxSessionOutput::PacketAlreadySent(QTSS_RTPStreamObject *theStreamPtr, UInt32 inFlags, UInt64* packetIDPtr)
+bool  MuxSessionOutput::PacketAlreadySent(QTSS_RTPStreamObject *theStreamPtr, UInt32 inFlags, UInt64* packetIDPtr)
 {
 	Assert(theStreamPtr);
 	Assert(packetIDPtr);
 
 	UInt32 theLen = 0;
 	UInt64 *lastPacketIDPtr = NULL;
-	Bool16 packetSent = false;
+	bool packetSent = false;
 
 	if (inFlags & qtssWriteFlagsIsRTP)
 	{
@@ -285,12 +285,12 @@ Bool16  MuxSessionOutput::PacketAlreadySent(QTSS_RTPStreamObject *theStreamPtr, 
 	return packetSent;
 }
 
-Bool16  MuxSessionOutput::PacketReadyToSend(QTSS_RTPStreamObject *theStreamPtr, SInt64 *currentTimePtr, UInt32 inFlags, UInt64* packetIDPtr, SInt64* timeToSendThisPacketAgainPtr)
+bool  MuxSessionOutput::PacketReadyToSend(QTSS_RTPStreamObject *theStreamPtr, SInt64 *currentTimePtr, UInt32 inFlags, UInt64* packetIDPtr, SInt64* timeToSendThisPacketAgainPtr)
 {
 	return true;
 }
 
-QTSS_Error  MuxSessionOutput::WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTimeMSecPtr, Bool16 firstPacket)
+QTSS_Error  MuxSessionOutput::WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTimeMSecPtr, bool firstPacket)
 {
 	QTSS_RTPSessionState*   theState = NULL;
 	UInt32                  theLen = 0;

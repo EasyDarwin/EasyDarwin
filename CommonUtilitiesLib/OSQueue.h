@@ -49,8 +49,8 @@ public:
 		fEnclosingObject(enclosingObject) {}
 	virtual ~OSQueueElem() { Assert(fQueue == NULL); }
 
-	Bool16 IsMember(const OSQueue& queue) { return (&queue == fQueue); }
-	Bool16 IsMemberOfAnyQueue() { return fQueue != NULL; }
+	bool IsMember(const OSQueue& queue) { return (&queue == fQueue); }
+	bool IsMemberOfAnyQueue() { return fQueue != NULL; }
 	void* GetEnclosingObject() { return fEnclosingObject; }
 	void SetEnclosingObject(void* obj) { fEnclosingObject = obj; }
 
@@ -84,7 +84,7 @@ public:
 	void            Remove(OSQueueElem* object);
 
 #if OSQUEUETESTING
-	static Bool16       Test();
+	static bool       Test();
 #endif
 
 protected:
@@ -116,7 +116,7 @@ public:
 	OSQueueElem*    GetCurrent() { return fCurrentElemP; }
 	void            Next();
 
-	Bool16          IsDone() { return fCurrentElemP == NULL; }
+	bool          IsDone() { return fCurrentElemP == NULL; }
 
 private:
 

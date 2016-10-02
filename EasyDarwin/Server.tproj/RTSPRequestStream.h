@@ -75,7 +75,7 @@ public:
 	void                AttachToSocket(TCPSocket* sock) { fSocket = sock; }
 
 	// Tell the request stream whether or not to decode from base64.
-	void                IsBase64Encoded(Bool16 isDataEncoded) { fDecode = isDataEncoded; }
+	void                IsBase64Encoded(bool isDataEncoded) { fDecode = isDataEncoded; }
 
 	//GetRequestBuffer
 	//This returns a buffer containing the full client request. The length is set to
@@ -83,8 +83,8 @@ public:
 	//is in the proper state (has been initialized, ReadRequest has been called until it returns
 		//RequestArrived).
 	StrPtrLen*  GetRequestBuffer() { return fRequestPtr; }
-	Bool16      IsDataPacket() { return fIsDataPacket; }
-	void        ShowRTSP(Bool16 enable) { fPrintRTSP = enable; }
+	bool      IsDataPacket() { return fIsDataPacket; }
+	void        ShowRTSP(bool enable) { fPrintRTSP = enable; }
 	void SnarfRetreat(RTSPRequestStream &fromRequest);
 
 private:
@@ -110,9 +110,9 @@ private:
 
 	StrPtrLen               fRequest;
 	StrPtrLen*              fRequestPtr;    // pointer to a request header
-	Bool16                  fDecode;        // should we base 64 decode?
-	Bool16                  fIsDataPacket;  // is this a data packet? Like for a record?
-	Bool16                  fPrintRTSP;     // debugging printfs
+	bool                  fDecode;        // should we base 64 decode?
+	bool                  fIsDataPacket;  // is this a data packet? Like for a record?
+	bool                  fPrintRTSP;     // debugging printfs
 
 };
 

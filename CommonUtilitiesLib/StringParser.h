@@ -72,8 +72,8 @@ public:
 	//In all other situations, true is returned.
 	//NOTE: if these functions return an error, the object goes into a state where
 	//it cannot be guarenteed to function correctly.
-	Bool16          Expect(char stopChar);
-	Bool16          ExpectEOL();
+	bool          Expect(char stopChar);
+	bool          ExpectEOL();
 
 	//Returns the next word
 	void            ConsumeWord(StrPtrLen* outString = NULL)
@@ -120,9 +120,9 @@ public:
 	//GetThru:
 	//Works very similar to ConsumeUntil except that it moves past the stop token,
 	//and if it can't find the stop token it returns false
-	inline Bool16       GetThru(StrPtrLen* spl, char stop);
-	inline Bool16       GetThruEOL(StrPtrLen* spl);
-	inline Bool16       ParserIsEmpty(StrPtrLen* outString);
+	inline bool       GetThru(StrPtrLen* spl, char stop);
+	inline bool       GetThruEOL(StrPtrLen* spl);
+	inline bool       ParserIsEmpty(StrPtrLen* outString);
 	//Returns the current character, doesn't move past it.
 	inline char     PeekFast() { if (fStartGet) return *fStartGet; else return '\0'; }
 	char operator[](int i) { Assert((fStartGet + i) < fEndGet); return fStartGet[i]; }
@@ -152,7 +152,7 @@ public:
 
 
 #if STRINGPARSERTESTING
-	static Bool16       Test();
+	static bool       Test();
 #endif
 
 private:
@@ -170,19 +170,19 @@ private:
 };
 
 
-Bool16 StringParser::GetThru(StrPtrLen* outString, char inStopChar)
+bool StringParser::GetThru(StrPtrLen* outString, char inStopChar)
 {
 	ConsumeUntil(outString, inStopChar);
 	return Expect(inStopChar);
 }
 
-Bool16 StringParser::GetThruEOL(StrPtrLen* outString)
+bool StringParser::GetThruEOL(StrPtrLen* outString)
 {
 	ConsumeUntil(outString, sEOLMask);
 	return ExpectEOL();
 }
 
-Bool16 StringParser::ParserIsEmpty(StrPtrLen* outString)
+bool StringParser::ParserIsEmpty(StrPtrLen* outString)
 {
 	if (NULL == fStartGet || NULL == fEndGet)
 	{

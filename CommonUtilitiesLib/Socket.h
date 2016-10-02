@@ -63,7 +63,7 @@ public:
 
 	//Binds the socket to the following address.
 	//Returns: QTSS_FileNotOpen, QTSS_NoErr, or POSIX errorcode.
-	OS_Error    Bind(UInt32 addr, UInt16 port, Bool16 test = false);
+	OS_Error    Bind(UInt32 addr, UInt16 port, bool test = false);
 	//The same. but in reverse
 	void            Unbind();
 
@@ -90,8 +90,8 @@ public:
 	OS_Error        WriteV(const struct iovec* iov, const UInt32 numIOvecs, UInt32* outLengthSent);
 
 	//You can query for the socket's state
-	Bool16  IsConnected() { return (Bool16)(fState & kConnected); }
-	Bool16  IsBound() { return (Bool16)(fState & kBound); }
+	bool  IsConnected() { return (bool)(fState & kConnected); }
+	bool  IsBound() { return (bool)(fState & kBound); }
 
 	//If the socket is bound, you may find out to which addr it is bound
 	UInt32  GetLocalAddr() { return ntohl(fLocalAddr.sin_addr.s_addr); }

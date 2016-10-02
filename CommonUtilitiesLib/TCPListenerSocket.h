@@ -59,7 +59,7 @@ public:
 
 	//You can query the listener to see if it is failing to accept
 	//connections because the OS is out of descriptors.
-	Bool16      IsOutOfDescriptors() { return fOutOfDescriptors; }
+	bool      IsOutOfDescriptors() { return fOutOfDescriptors; }
 
 	void        SlowDown() { fSleepBetweenAccepts = true; }
 	void        RunNormal() { fSleepBetweenAccepts = false; }
@@ -82,8 +82,8 @@ private:
 	UInt32          fAddr;
 	UInt16          fPort;
 
-	Bool16          fOutOfDescriptors;
-	Bool16          fSleepBetweenAccepts;
+	bool          fOutOfDescriptors;
+	bool          fSleepBetweenAccepts;
 };
 #endif // __TCPLISTENERSOCKET_H__
 

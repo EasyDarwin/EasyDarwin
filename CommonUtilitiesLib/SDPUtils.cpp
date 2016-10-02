@@ -112,13 +112,13 @@ void SDPContainer::Parse()
 	char*	    validChars = "vosiuepcbtrzkam";
 	char        nameValueSeparator = '=';
 
-	Bool16      valid = true;
+	bool      valid = true;
 
 	StringParser	sdpParser(&fSDPBuffer);
 	StrPtrLen		line;
 	StrPtrLen 		fieldName;
 	StrPtrLen		space;
-	Bool16          foundLine = false;
+	bool          foundLine = false;
 
 	while (sdpParser.GetDataRemaining() != 0)
 	{
@@ -196,7 +196,7 @@ void SDPContainer::Initialize()
 	::memset(fFieldStr, sizeof(fFieldStr), 0);
 }
 
-Bool16 SDPContainer::SetSDPBuffer(char *sdpBuffer)
+bool SDPContainer::SetSDPBuffer(char *sdpBuffer)
 {
 
 	Initialize();
@@ -209,7 +209,7 @@ Bool16 SDPContainer::SetSDPBuffer(char *sdpBuffer)
 	return IsSDPBufferValid();
 }
 
-Bool16 SDPContainer::SetSDPBuffer(StrPtrLen *sdpBufferPtr)
+bool SDPContainer::SetSDPBuffer(StrPtrLen *sdpBufferPtr)
 {
 	Initialize();
 	if (sdpBufferPtr != NULL)
@@ -244,7 +244,7 @@ void  SDPContainer::PrintAllLines()
 		qtss_printf("SDPContainer::PrintAllLines no lines\n");
 }
 
-Bool16 SDPLineSorter::ValidateSessionHeader(StrPtrLen *theHeaderLinePtr)
+bool SDPLineSorter::ValidateSessionHeader(StrPtrLen *theHeaderLinePtr)
 {
 	if (NULL == theHeaderLinePtr || 0 == theHeaderLinePtr->Len || NULL == theHeaderLinePtr->Ptr)
 		return false;
@@ -282,8 +282,8 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
 		fMediaHeaders.Set(mediaStartPtr, mediaLen);
 		StringParser sdpParser(&fMediaHeaders);
 		SDPLine sdpLine;
-		Bool16 foundLine = false;
-		Bool16 newMediaSection = true;
+		bool foundLine = false;
+		bool newMediaSection = true;
 		SDPLine* insertLine = NULL;
 
 		while (sdpParser.GetDataRemaining() > 0)
@@ -338,7 +338,7 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
 	//qtss_printf("\nSession raw Lines:\n"); fSessionSDPContainer.PrintAllLines();
 
 	SInt16 numHeaderTypes = sizeof(SDPLineSorter::sSessionOrderedLines) - 1;
-	Bool16 addLine = true;
+	bool addLine = true;
 	for (SInt16 fieldTypeIndex = 0; fieldTypeIndex < numHeaderTypes; fieldTypeIndex++)
 	{
 		SInt32 lineIndex = fSessionSDPContainer.FindHeaderLineType(SDPLineSorter::sSessionOrderedLines[fieldTypeIndex], 0);

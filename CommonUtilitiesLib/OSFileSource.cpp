@@ -58,7 +58,7 @@ static SInt64 startTime = 0;
 static SInt64 durationTime = 0;
 static SInt32 sReadCount = 0;
 static SInt32 sByteCount = 0;
-static Bool16 sMovie = false;
+static bool sMovie = false;
 
 #endif
 
@@ -263,7 +263,7 @@ void FileMap::DeleteOldBuffs()
 	}
 }
 
-char* FileMap::GetBuffer(SInt64 buffIndex, Bool16* outFillBuff)
+char* FileMap::GetBuffer(SInt64 buffIndex, bool* outFillBuff)
 {
 	Assert(outFillBuff != NULL);
 	*outFillBuff = true; // we are re-using or just created a buff
@@ -426,7 +426,7 @@ OS_Error OSFileSource::ReadFromCache(UInt64 inPosition, void* inBuffer, UInt32 i
 	SInt64 buffCopyLen = inLength;
 	SInt64 bytesToCopy = inLength;
 	char* buffOut = (char*)inBuffer;
-	Bool16 fillBuff = true;
+	bool fillBuff = true;
 	char* buffOffset = NULL;
 
 #if FILE_SOURCE_BUFFTEST

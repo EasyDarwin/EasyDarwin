@@ -48,16 +48,16 @@ public:
 	//
 	// CONSTRUCTOR / DESTRUCTOR
 
-	RTPStream3GPP(RTPStream &owner, Bool16 enabled);
+	RTPStream3GPP(RTPStream &owner, bool enabled);
 	virtual ~RTPStream3GPP() {}
 
 	//
 	//ACCESS FUNCTIONS
 	void		AddNadu(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 highestSeqNum);
 	void		AddSeqNumTimeMapping(UInt16 theSeqNum, SInt64 timeStamp);		//Add a sequence number, timestamp pair; needed for figuring out the buffering delay
-	Bool16      Enabled() { return fEnabled; }
-	Bool16      HasRateAdaptation() { return fHasRateAdaptData; }
-	Bool16		RateAdaptationEnabled() { return Enabled() && HasRateAdaptation(); }
+	bool      Enabled() { return fEnabled; }
+	bool      HasRateAdaptation() { return fHasRateAdaptData; }
+	bool		RateAdaptationEnabled() { return Enabled() && HasRateAdaptation(); }
 
 	void       SetBufferBytes(UInt32 inBytes) { fBufferSize = inBytes; }
 	void       SetBufferTime(UInt32 inMilliSecs) { fTargetBufferingDelay = inMilliSecs; }
@@ -76,7 +76,7 @@ public:
 	void		SetPacketLoss(Float32 percentage) { if (percentage > .10) fNumRTCPWithoutPacketLoss = 0; }
 	void		SetRTT(UInt32 minRTT, UInt32 curRTT);
 
-	Bool16       GetDebugPrintfs() { return fDebugPrintfs; }
+	bool       GetDebugPrintfs() { return fDebugPrintfs; }
 	//public members
 	NaduList    fNaduList;
 
@@ -84,12 +84,12 @@ private:
 	static UInt32 ExtendSeqNum(UInt16 seqNum, UInt32 refSeqNum);
 
 	RTPStream&	fRTPStream;				//The RTPStream object that contains this RTPStream3GPP object
-	Bool16      fEnabled;
-	Bool16      fHasRateAdaptData;
+	bool      fEnabled;
+	bool      fHasRateAdaptData;
 	UInt32      fBufferSize;			//Buffer size as declared in 3GPP-Adaptation
 	UInt32      fTargetBufferingDelay;  //Target buffering delay as declared in 3GPP-Adaptation
 	UInt32      fMovieBitRate; //in bits per second;
-	Bool16		fStartDoingAdaptation;
+	bool		fStartDoingAdaptation;
 
 	SInt32		fNumRTCPWithoutPacketLoss;  //Number of consecutive RTCP's without any reported packet loss
 	SInt32		fNumLargeRTT;				//Number of consecutive RTCP's with a large RTT
@@ -128,6 +128,6 @@ private:
 	};
 	SVector<SeqNumTimePair> fSeqNumTimeMapping;
 	UInt32		fLastSeqNum;
-	Bool16      fDebugPrintfs;
+	bool      fDebugPrintfs;
 };
 #endif // __RTPSTREAM3GPP_H__

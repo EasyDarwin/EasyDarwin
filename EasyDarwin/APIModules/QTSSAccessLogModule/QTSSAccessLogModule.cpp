@@ -53,7 +53,7 @@ class LogCheckTask;
 // STATIC DATA
 
 // Default values for preferences
-static Bool16   sDefaultLogEnabled = true;
+static bool   sDefaultLogEnabled = true;
 static char*    sDefaultLogName = "StreamingServer";
 static char*    sDefaultLogDir = NULL;
 static QTSS_PrefsObject     sServerPrefs = NULL;
@@ -61,16 +61,16 @@ static QTSS_PrefsObject     sServerPrefs = NULL;
 static UInt32   sDefaultMaxLogBytes = 10240000;
 static UInt32   sDefaultRollInterval = 7;
 static char*    sVoidField = "-";
-static Bool16   sStartedUp = false;
-static Bool16   sDefaultLogTimeInGMT = true;
+static bool   sStartedUp = false;
+static bool   sDefaultLogTimeInGMT = true;
 
 static QTSS_AttributeID sLoggedAuthorizationAttrID = qtssIllegalAttrID;
 
 // Current values for preferences
-static Bool16   sLogEnabled = true;
+static bool   sLogEnabled = true;
 static UInt32   sMaxLogBytes = 51200000;
 static UInt32   sRollInterval = 7;
-static Bool16   sLogTimeInGMT = true;
+static bool   sLogTimeInGMT = true;
 
 static OSMutex*             sLogMutex = NULL;//Log module isn't reentrant
 static QTSSAccessLog*       sAccessLog = NULL;
@@ -133,7 +133,7 @@ static QTSS_Error   PostProcess(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error   ClientSessionClosing(QTSS_ClientSessionClosing_Params* inParams);
 static QTSS_Error   LogRequest(QTSS_ClientSessionObject inClientSession,
 	QTSS_RTSPSessionObject inRTSPSession, QTSS_CliSesClosingReason *inCloseReasonPtr);
-static void             CheckAccessLogState(Bool16 forceEnabled);
+static void             CheckAccessLogState(bool forceEnabled);
 static QTSS_Error   RollAccessLog(QTSS_ServiceFunctionArgsPtr inArgs);
 static void         ReplaceSpaces(StrPtrLen *sourcePtr, StrPtrLen *destPtr, char *replaceStr);
 
@@ -405,7 +405,7 @@ QTSS_Error LogRequest(QTSS_ClientSessionObject inClientSession,
 
 	//if logging is on, then log the request... first construct a timestamp
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, sLogTimeInGMT);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, sLogTimeInGMT);
 
 
 	//for now, just ignore the error.
@@ -549,7 +549,7 @@ QTSS_Error LogRequest(QTSS_ClientSessionObject inClientSession,
 	UInt32 qualityLevel = 0;
 	UInt32 clientBufferTime = 0;
 	UInt32 theStreamIndex = 0;
-	Bool16* isTCPPtr = NULL;
+	bool* isTCPPtr = NULL;
 	QTSS_RTPStreamObject theRTPStreamObject = NULL;
 
 	for (UInt32 theStreamObjectLen = sizeof(theRTPStreamObject);
@@ -837,7 +837,7 @@ QTSS_Error LogRequest(QTSS_ClientSessionObject inClientSession,
 }
 
 
-void CheckAccessLogState(Bool16 forceEnabled)
+void CheckAccessLogState(bool forceEnabled)
 {
 	//this function makes sure the logging state is in synch with the preferences.
 	//extern variable declared in QTSSPreferences.h
@@ -859,7 +859,7 @@ void CheckAccessLogState(Bool16 forceEnabled)
 
 QTSS_Error RollAccessLog(QTSS_ServiceFunctionArgsPtr /*inArgs*/)
 {
-	const Bool16 kForceEnable = true;
+	const bool kForceEnable = true;
 
 	OSMutexLocker locker(sLogMutex);
 	//calling CheckLogState is a kludge to allow logs
@@ -877,7 +877,7 @@ QTSS_Error RollAccessLog(QTSS_ServiceFunctionArgsPtr /*inArgs*/)
 // This task runs once an hour to check and see if the log needs to roll.
 SInt64 LogCheckTask::Run()
 {
-	static Bool16 firstTime = true;
+	static bool firstTime = true;
 
 	// don't check the log for rolling the first time we run.
 	if (firstTime)
@@ -886,7 +886,7 @@ SInt64 LogCheckTask::Run()
 	}
 	else
 	{
-		Bool16 success = false;
+		bool success = false;
 
 		if (sAccessLog != NULL && sAccessLog->IsLogEnabled())
 			success = sAccessLog->CheckRollLog();
@@ -902,7 +902,7 @@ time_t QTSSAccessLog::WriteLogHeader(FILE *inFile)
 
 	//format a date for the startup time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes] = { 0 };
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	char tempBuffer[1024] = { 0 };
 	if (result)
@@ -928,7 +928,7 @@ void    WriteStartupMessage()
 
 	//format a date for the startup time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	char tempBuffer[1024];
 	if (result)
@@ -949,7 +949,7 @@ void    WriteShutdownMessage()
 	//log shutdown message
 	//format a date for the shutdown time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	char tempBuffer[1024];
 	if (result)

@@ -89,7 +89,7 @@ void OSQueue::Remove(OSQueueElem* elem)
 }
 
 #if OSQUEUETESTING
-Bool16 OSQueue::Test()
+bool OSQueue::Test()
 {
 	OSQueue theVictim;
 	void *x = (void*)1;

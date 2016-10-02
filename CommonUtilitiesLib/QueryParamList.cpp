@@ -253,7 +253,7 @@ void QueryParamList::DecodeArg(char* ioCodedPtr)
 	*destPtr = *curChar;
 }
 
-Bool16 QueryParamList::IsHex(char c)
+bool QueryParamList::IsHex(char c)
 {
 	// return true if char c is a valid hexidecimal digit
 	// false otherwise.

@@ -295,7 +295,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 };
 
 
-QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs)
+QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs)
 	: QTSSPrefs(inPrefsSource, NULL, QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex), false),
 	fRTSPTimeoutInSecs(0),
 	fRTSPTimeoutString(fRTSPTimeoutBuf, 0),
@@ -470,7 +470,7 @@ void QTSServerPrefs::SetupAttributes()
 
 
 
-void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
+void QTSServerPrefs::RereadServerPreferences(bool inWriteMissingPrefs)
 {
 	OSMutexLocker locker(&fPrefsMutex);
 	QTSSDictionaryMap* theMap = QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex);
@@ -633,7 +633,7 @@ char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
 	return inBuffer;
 }
 
-Bool16 QTSServerPrefs::IsPathInsideReliableUDPDir(StrPtrLen* inPath)
+bool QTSServerPrefs::IsPathInsideReliableUDPDir(StrPtrLen* inPath)
 {
 	OSMutexLocker locker(&fPrefsMutex);
 
@@ -706,7 +706,7 @@ char* QTSServerPrefs::GetStringPref(QTSS_AttributeID inAttrID)
 	return theBuffer.Ptr;
 }
 
-void QTSServerPrefs::SetCloseLogsOnWrite(Bool16 closeLogsOnWrite)
+void QTSServerPrefs::SetCloseLogsOnWrite(bool closeLogsOnWrite)
 {
 	QTSSRollingLog::SetCloseOnWrite(closeLogsOnWrite);
 	fCloseLogsOnWrite = closeLogsOnWrite;

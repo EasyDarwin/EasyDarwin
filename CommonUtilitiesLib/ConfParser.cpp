@@ -36,7 +36,7 @@
 #include <string.h> 
 #include <stdio.h>  
 
-static Bool16 SampleConfigSetter(const char* paramName, const char* paramValue[], void* userData);
+static bool SampleConfigSetter(const char* paramName, const char* paramValue[], void* userData);
 static void DisplayConfigErr(const char* fname, int lineCount, const char* lineBuff, const char* errMessage);
 
 void TestParseConfigFile()
@@ -45,7 +45,7 @@ void TestParseConfigFile()
 
 }
 
-static Bool16 SampleConfigSetter(const char* paramName, const char* paramValue[], void* /*userData*/)
+static bool SampleConfigSetter(const char* paramName, const char* paramValue[], void* /*userData*/)
 {
 	qtss_printf("param: %s", paramName);
 
@@ -83,9 +83,9 @@ static void DisplayConfigErr(const char* fname, int lineCount, const char* lineB
 
 
 int ParseConfigFile(
-	Bool16  allowNullValues
+	bool  allowNullValues
 	, const char* fname
-	, Bool16(*ConfigSetter)(const char* paramName, const char* paramValue[], void* userData)
+	, bool(*ConfigSetter)(const char* paramName, const char* paramValue[], void* userData)
 	, void* userData)
 {
 	int     error = -1;

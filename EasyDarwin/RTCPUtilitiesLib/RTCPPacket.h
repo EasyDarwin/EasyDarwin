@@ -61,10 +61,10 @@ public:
 	virtual ~RTCPPacket() {}
 
 	//Call this before any accessor method. Returns true if successful, false otherwise
-	Bool16 ParsePacket(UInt8* inPacketBuffer, UInt32 inPacketLen);
+	bool ParsePacket(UInt8* inPacketBuffer, UInt32 inPacketLen);
 
 	inline int GetVersion();
-	inline Bool16 GetHasPadding();
+	inline bool GetHasPadding();
 	inline int GetReportCount();
 	inline UInt8 GetPacketType();
 	inline UInt16 GetPacketLength();    //in 32-bit words
@@ -72,7 +72,7 @@ public:
 	inline SInt16 GetHeader();
 	UInt8* GetPacketBuffer() { return fReceiverPacketBuffer; }
 
-	//Bool16 IsValidPacket();
+	//bool IsValidPacket();
 
 	virtual void Dump();
 
@@ -119,7 +119,7 @@ public:
 
 	SourceDescriptionPacket() : RTCPPacket() {}
 
-	Bool16 ParseSourceDescription(UInt8* inPacketBuffer, UInt32 inPacketLength)
+	bool ParseSourceDescription(UInt8* inPacketBuffer, UInt32 inPacketLength)
 	{
 		return ParsePacket(inPacketBuffer, inPacketLength);
 	}
@@ -137,7 +137,7 @@ public:
 	RTCPReceiverPacket() : RTCPPacket(), fRTCPReceiverReportArray(NULL) {}
 
 	//Call this before any accessor method. Returns true if successful, false otherwise
-	virtual Bool16 ParseReport(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	virtual bool ParseReport(UInt8* inPacketBuffer, UInt32 inPacketLength);
 
 	inline UInt32 GetReportSourceID(int inReportNum);
 	UInt8 GetFractionLostPackets(int inReportNum);
@@ -151,7 +151,7 @@ public:
 	UInt32 GetCumulativeTotalLostPackets();
 	UInt32 GetCumulativeJitter();
 
-	//Bool16 IsValidPacket();
+	//bool IsValidPacket();
 
 	virtual void Dump(); //Override
 
@@ -182,7 +182,7 @@ protected:
 class RTCPSenderReportPacket : public RTCPReceiverPacket
 {
 public:
-	Bool16 ParseReport(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	bool ParseReport(UInt8* inPacketBuffer, UInt32 inPacketLength);
 	SInt64 GetNTPTimeStamp()
 	{
 		UInt32* fieldPtr = (UInt32*)&fReceiverPacketBuffer[kSRPacketNTPTimeStampMSW];
@@ -214,11 +214,11 @@ inline int RTCPPacket::GetVersion()
 	return (int)((theVersion  & kVersionMask) >> kVersionShift);
 }
 
-inline Bool16 RTCPPacket::GetHasPadding()
+inline bool RTCPPacket::GetHasPadding()
 {
 	UInt32* theHasPaddingPtr = (UInt32*)&fReceiverPacketBuffer[kHasPaddingOffset];
 	UInt32 theHasPadding = ntohl(*theHasPaddingPtr);
-	return (Bool16)(theHasPadding & kHasPaddingMask);
+	return (bool)(theHasPadding & kHasPaddingMask);
 }
 
 inline int RTCPPacket::GetReportCount()

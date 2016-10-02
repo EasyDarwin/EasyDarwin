@@ -502,7 +502,7 @@ void RTSPRequestInterface::AppendRetransmitHeader(UInt32 inAckTimeout)
 
 void RTSPRequestInterface::AppendRTPInfoHeader(QTSS_RTSPHeader inHeader,
 	StrPtrLen* url, StrPtrLen* seqNumber,
-	StrPtrLen* ssrc, StrPtrLen* rtpTime, Bool16 lastRTPInfo)
+	StrPtrLen* ssrc, StrPtrLen* rtpTime, bool lastRTPInfo)
 {
 	static StrPtrLen sURL("url=", 4);
 	static StrPtrLen sSeq(";seq=", 5);
@@ -568,7 +568,7 @@ void RTSPRequestInterface::WriteStandardHeaders()
 
 	//if this is a "200 OK" response (most HTTP responses), we have some special
 	//optmizations here
-	Bool16 sendServerInfo = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPServerInfoEnabled();
+	bool sendServerInfo = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPServerInfoEnabled();
 	if (fStatus == qtssSuccessOK)
 	{
 
@@ -620,7 +620,7 @@ void RTSPRequestInterface::WriteStandardHeaders()
 	// 3gpp release 6 rate adaptation calls for echoing the rate adapt header back
 	// some clients use this header in the response to signal whether to send rate adapt
 	// NADU rtcp reports.
-	Bool16 doRateAdaptation = QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled() && QTSServerInterface::GetServer()->GetPrefs()->Get3GPPRateAdaptationEnabled();
+	bool doRateAdaptation = QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled() && QTSServerInterface::GetServer()->GetPrefs()->Get3GPPRateAdaptationEnabled();
 	if (doRateAdaptation)
 	{
 		StrPtrLen* rateAdaptHeader = fHeaderDictionary.GetValue(qtss3GPPAdaptationHeader);

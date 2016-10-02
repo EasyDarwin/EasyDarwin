@@ -202,8 +202,8 @@ public:
 	UInt64              GetTotalRTPPacketsLost() { return fTotalRTPPacketsLost; }
 	UInt64              GetTotalRTPPackets() { return fTotalRTPPackets; }
 	Float32             GetCPUPercent() { return fCPUPercent; }
-	Bool16              SigIntSet() { return fSigInt; }
-	Bool16				SigTermSet() { return fSigTerm; }
+	bool              SigIntSet() { return fSigInt; }
+	bool				SigTermSet() { return fSigTerm; }
 
 	UInt32              GetNumMP3Sessions() { return fNumMP3Sessions; }
 	UInt32              GetTotalMP3Sessions() { return fTotalMP3Sessions; }
@@ -418,7 +418,7 @@ private:
 	UInt32              fTotalUDPSockets;
 
 	// are we out of descriptors?
-	Bool16              fIsOutOfDescriptors;
+	bool              fIsOutOfDescriptors;
 
 	// Storage for current time attribute
 	SInt64              fCurrentTime_UnixMilli;
@@ -434,8 +434,8 @@ private:
 	UInt64              fTotalMP3Bytes;
 	UInt32              fAvgMP3BandwidthInBits;
 
-	Bool16              fSigInt;
-	Bool16              fSigTerm;
+	bool              fSigInt;
+	bool              fSigTerm;
 
 	UInt32              fDebugLevel;
 	UInt32              fDebugOptions;

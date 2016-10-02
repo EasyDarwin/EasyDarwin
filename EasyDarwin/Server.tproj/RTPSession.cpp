@@ -462,7 +462,7 @@ void RTPSession::SendPlayResponse(RTSPRequestInterface* request, UInt32 inFlags)
 	RTPStream** theStream = NULL;
 	UInt32 theLen = 0;
 	UInt32 valueCount = this->GetNumValues(qtssCliSesStreamObjects);
-	Bool16 lastValue = false;
+	bool lastValue = false;
 	for (UInt32 x = 0; x < valueCount; x++)
 	{
 		this->GetValuePtr(qtssCliSesStreamObjects, x, (void**)&theStream, &theLen);

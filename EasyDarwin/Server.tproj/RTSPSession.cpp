@@ -138,7 +138,7 @@ void RTSPSession::Initialize()
 	Assert(sHTTPResponseNoServerHeaderPtr.Len < kMaxHTTPResponseLen);
 }
 
-RTSPSession::RTSPSession(Bool16 doReportHTTPConnectionAddress)
+RTSPSession::RTSPSession(bool doReportHTTPConnectionAddress)
 	: RTSPSessionInterface(),
 	fRequest(NULL),
 	fRTPSession(NULL),
@@ -640,11 +640,11 @@ SInt64 RTSPSession::Run()
 
 		case kAuthenticatingRequest:
 			{
-				Bool16      allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
-				Bool16      allowed = allowedDefault; //server pref?
-				Bool16      hasUser = false;
-				Bool16      handled = false;
-				Bool16      wasHandled = false;
+				bool      allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
+				bool      allowed = allowedDefault; //server pref?
+				bool      hasUser = false;
+				bool      handled = false;
+				bool      wasHandled = false;
 
 				StrPtrLenDel prefRealm(QTSServerInterface::GetServer()->GetPrefs()->GetAuthorizationRealm());
 				if (prefRealm.Ptr != NULL)
@@ -778,10 +778,10 @@ SInt64 RTSPSession::Run()
 			{
 				// Invoke authorization modules
 				numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPAuthRole);
-				Bool16      allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
-				Bool16      allowed = true;
-				Bool16      hasUser = false;
-				Bool16      handled = false;
+				bool      allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
+				bool      allowed = true;
+				bool      hasUser = false;
+				bool      handled = false;
 				QTSS_Error  theErr = QTSS_NoErr;
 
 				// Invoke authorization modules
@@ -1206,9 +1206,9 @@ SInt64 RTSPSession::Run()
 /*
 *	功能：识别出请求中GET或者POST请求，如果是HTTP请求，
 *	则查找是否有SessionCookie字段和Accept字段
-*	返回值：Bool16型，返回是否是HTTP请求
+*	返回值：bool型，返回是否是HTTP请求
 */
-Bool16 RTSPSession::ParseProxyTunnelHTTP()
+bool RTSPSession::ParseProxyTunnelHTTP()
 {
 	/*
 		if it's an HTTP request
@@ -1220,7 +1220,7 @@ Bool16 RTSPSession::ParseProxyTunnelHTTP()
 		- check for accept "application/x-rtsp-tunnelled.
 	*/
 
-	Bool16          isHTTPRequest = false;
+	bool          isHTTPRequest = false;
 	StrPtrLen       *splRequest;
 
 	HTTP_VTRACE("ParseProxyTunnelHTTP\n")
@@ -1426,7 +1426,7 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 			fSessionType = qtssRTSPHTTPSession;
 		theOtherSessionType = qtssRTSPHTTPInputSession;
 
-		Bool16 showServerInfo = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPServerInfoEnabled();
+		bool showServerInfo = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPServerInfoEnabled();
 		if (fDoReportHTTPConnectionAddress)
 		{
 			// contruct a 200 OK header with an "x-server-ip-address" header
@@ -1583,7 +1583,7 @@ void RTSPSession::CheckAuthentication() {
 	QTSSUserProfile* profile = fRequest->GetUserProfile();
 	StrPtrLen* userPassword = profile->GetValue(qtssUserPassword);
 	QTSS_AuthScheme scheme = fRequest->GetAuthScheme();
-	Bool16 authenticated = true;
+	bool authenticated = true;
 
 	// Check if authorization information returned by the client is for the scheme that the server sent the challenge
 	// 客户端和服务器的验证方式是否一致,如不一致则验证失败
@@ -1733,7 +1733,7 @@ void RTSPSession::CheckAuthentication() {
  *	函数名：ParseOptionsResponse
  *	功能：解析响应报文中是否为RTSP协议
  */
-Bool16 RTSPSession::ParseOptionsResponse()
+bool RTSPSession::ParseOptionsResponse()
 {
 	StringParser parser(fRequest->GetValue(qtssRTSPReqFullRequest));
 	Assert(fRequest->GetValue(qtssRTSPReqFullRequest)->Ptr != NULL);
@@ -2169,11 +2169,11 @@ UInt32 RTSPSession::GenerateNewSessionID(char* ioBuffer)
 	return ::strlen(ioBuffer);
 }
 
-Bool16 RTSPSession::OverMaxConnections(UInt32 buffer)
+bool RTSPSession::OverMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
 	SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();// 获取最大连接数
-	Bool16 overLimit = false;
+	bool overLimit = false;
 
 	if (maxConns > -1) // limit connections
 	{
@@ -2431,7 +2431,7 @@ RTSPMsg* RTSPSessionHandler::GetMsg()
 		return (RTSPMsg*)fFreeMsgQueue.DeQueue()->GetEnclosingObject();
 }
 
-Bool16 RTSPSessionHandler::ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg)
+bool RTSPSessionHandler::ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg)
 {
 	theMsg->fTimeArrived = inMilliseconds;
 	{

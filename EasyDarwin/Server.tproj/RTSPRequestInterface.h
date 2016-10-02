@@ -84,7 +84,7 @@ public:
 	void    AppendContentBaseHeader(StrPtrLen* theURL);
 	void    AppendRTPInfoHeader(QTSS_RTSPHeader inHeader,
 		StrPtrLen* url, StrPtrLen* seqNumber,
-		StrPtrLen* ssrc, StrPtrLen* rtpTime, Bool16 lastRTPInfo);
+		StrPtrLen* ssrc, StrPtrLen* rtpTime, bool lastRTPInfo);
 
 	void    AppendContentLength(UInt32 contentLength);
 	void    AppendDateAndExpires();
@@ -93,7 +93,7 @@ public:
 
 	// MODIFIERS
 
-	void SetKeepAlive(Bool16 newVal) { fResponseKeepAlive = newVal; }
+	void SetKeepAlive(bool newVal) { fResponseKeepAlive = newVal; }
 
 	//SendHeader:
 	//Sends the RTSP headers, in their current state, to the client.
@@ -134,8 +134,8 @@ public:
 
 	QTSS_RTSPMethod             GetMethod() const { return fMethod; }
 	QTSS_RTSPStatusCode         GetStatus() const { return fStatus; }
-	Bool16                      GetResponseKeepAlive() const { return fResponseKeepAlive; }
-	void                        SetResponseKeepAlive(Bool16 keepAlive) { fResponseKeepAlive = keepAlive; }
+	bool                      GetResponseKeepAlive() const { return fResponseKeepAlive; }
+	void                        SetResponseKeepAlive(bool keepAlive) { fResponseKeepAlive = keepAlive; }
 
 	//will be -1 unless there was a Range header. May have one or two values
 	Float64                     GetStartTime() { return fStartTime; }
@@ -161,7 +161,7 @@ public:
 	UInt32                      GetWindowSize() { return fWindowSize; }
 
 
-	Bool16                      HasResponseBeenSent()
+	bool                      HasResponseBeenSent()
 	{
 		return fOutputStream->GetBytesWritten() > 0;
 	}
@@ -169,19 +169,19 @@ public:
 	RTSPSessionInterface*       GetSession() { return fSession; }
 	QTSSDictionary*             GetHeaderDictionary() { return &fHeaderDictionary; }
 
-	Bool16                      GetAllowed() { return fAllowed; }
-	void                        SetAllowed(Bool16 allowed) { fAllowed = allowed; }
+	bool                      GetAllowed() { return fAllowed; }
+	void                        SetAllowed(bool allowed) { fAllowed = allowed; }
 
-	Bool16                      GetHasUser() { return fHasUser; }
-	void                        SetHasUser(Bool16 hasUser) { fHasUser = hasUser; }
+	bool                      GetHasUser() { return fHasUser; }
+	void                        SetHasUser(bool hasUser) { fHasUser = hasUser; }
 
-	Bool16                      GetAuthHandled() { return fAuthHandled; }
-	void                        SetAuthHandled(Bool16 handled) { fAuthHandled = handled; }
+	bool                      GetAuthHandled() { return fAuthHandled; }
+	void                        SetAuthHandled(bool handled) { fAuthHandled = handled; }
 
 	QTSS_ActionFlags            GetAction() { return fAction; }
 	void                        SetAction(QTSS_ActionFlags action) { fAction = action; }
 
-	Bool16						IsPushRequest() { return (fTransportMode == qtssRTPTransportModeRecord) ? true : false; }
+	bool						IsPushRequest() { return (fTransportMode == qtssRTPTransportModeRecord) ? true : false; }
 	UInt16                      GetSetUpServerPort() { return fSetUpServerPort; }
 	QTSS_RTPTransportMode       GetTransportMode() { return fTransportMode; }
 
@@ -199,10 +199,10 @@ public:
 	RTSPRequest3GPP*			GetRequest3GPPInfo() { return fRequest3GPPPtr; }
 
 
-	Bool16                      GetStale() { return fStale; }
-	void                        SetStale(Bool16 stale) { fStale = stale; }
+	bool                      GetStale() { return fStale; }
+	void                        SetStale(bool stale) { fStale = stale; }
 
-	Bool16                      SkipAuthorization() { return fSkipAuthorization; }
+	bool                      SkipAuthorization() { return fSkipAuthorization; }
 
 	SInt32                      GetDynamicRateState() { return fEnableDynamicRateState; }
 
@@ -228,8 +228,8 @@ protected:
 	QTSS_RTSPMethod             fMethod;            //Method of this request
 	QTSS_RTSPStatusCode         fStatus;            //Current status of this request
 	UInt32                      fRealStatusCode;    //Current RTSP status num of this request
-	Bool16                      fRequestKeepAlive;  //Does the client want keep-alive?
-	Bool16                      fResponseKeepAlive; //Are we going to keep-alive?
+	bool                      fRequestKeepAlive;  //Does the client want keep-alive?
+	bool                      fResponseKeepAlive; //Are we going to keep-alive?
 	RTSPProtocol::RTSPVersion   fVersion;
 
 	Float64                     fStartTime;         //Range header info: start time
@@ -267,9 +267,9 @@ protected:
 
 	QTSSDictionary              fHeaderDictionary;
 
-	Bool16                      fAllowed;
-	Bool16                      fHasUser;
-	Bool16                      fAuthHandled;
+	bool                      fAllowed;
+	bool                      fHasUser;
+	bool                      fAuthHandled;
 
 	QTSS_RTPTransportMode       fTransportMode;
 	UInt16                      fSetUpServerPort;           //send this back as the server_port if is SETUP request
@@ -288,9 +288,9 @@ protected:
 	StrPtrLen                   fAuthOpaque;
 	QTSSUserProfile             fUserProfile;
 	QTSSUserProfile*            fUserProfilePtr;
-	Bool16                      fStale;
+	bool                      fStale;
 
-	Bool16                      fSkipAuthorization;
+	bool                      fSkipAuthorization;
 
 	SInt32                      fEnableDynamicRateState;
 
@@ -314,7 +314,7 @@ private:
 		kStaticHeaderSizeInBytes = 512  //UInt32
 	};
 
-	Bool16                  fStandardHeadersWritten;
+	bool                  fStandardHeadersWritten;
 
 	void                    PutTransportStripped(StrPtrLen &outFirstTransport, StrPtrLen &outResultStr);
 	void                    WriteStandardHeaders();

@@ -89,7 +89,7 @@ public:
 		// Track information
 		UInt32          TrackID;
 		QTTrack         *Track;
-		Bool16          IsHintTrack;
+		bool          IsHintTrack;
 
 		// List pointers
 		TrackListEntry  *NextTrack;
@@ -99,7 +99,7 @@ public:
 public:
 	//
 	// Constructors and destructor.
-	QTFile(Bool16 Debug = false, Bool16 DeepDebug = false);
+	QTFile(bool Debug = false, bool DeepDebug = false);
 	virtual             ~QTFile();
 
 
@@ -111,16 +111,16 @@ public:
 
 	//
 	// Table of Contents functions.
-	Bool16      FindTOCEntry(const char * AtomPath,
+	bool      FindTOCEntry(const char * AtomPath,
 		AtomTOCEntry **TOCEntry,
 		AtomTOCEntry *LastFoundTOCEntry = NULL);
 
 	//
 	// Track List functions
 	inline  UInt32      GetNumTracks() { return fNumTracks; }
-	Bool16      NextTrack(QTTrack **Track, QTTrack *LastFoundTrack = NULL);
-	Bool16      FindTrack(UInt32 TrackID, QTTrack **Track);
-	Bool16      IsHintTrack(QTTrack *Track);
+	bool      NextTrack(QTTrack **Track, QTTrack *LastFoundTrack = NULL);
+	bool      FindTrack(UInt32 TrackID, QTTrack **Track);
+	bool      IsHintTrack(QTTrack *Track);
 
 	//
 	// Accessors
@@ -132,7 +132,7 @@ public:
 	char*       GetModDateStr();
 	//
 	// Read functions.
-	Bool16      Read(UInt64 Offset, char * const Buffer, UInt32 Length, QTFile_FileControlBlock * FCB = NULL);
+	bool      Read(UInt64 Offset, char * const Buffer, UInt32 Length, QTFile_FileControlBlock * FCB = NULL);
 
 
 	void        AllocateBuffers(UInt32 inUnitSizeInK, UInt32 inBufferInc, UInt32 inBufferSize, UInt32 inMaxBitRateBuffSizeInBlocks, UInt32 inBitrate);
@@ -144,7 +144,7 @@ public:
 	void        DecBufferUserCount() { fMovieFD.DecMaxBuffers(); }
 #endif
 
-	inline Bool16       ValidTOC();
+	inline bool       ValidTOC();
 
 
 	char*      MapFileToMem(UInt64 offset, UInt32 length);
@@ -158,11 +158,11 @@ public:
 protected:
 	//
 	// Protected member functions.
-	Bool16      GenerateAtomTOC();
+	bool      GenerateAtomTOC();
 
 	//
 	// Protected member variables.
-	Bool16              fDebug, fDeepDebug;
+	bool              fDebug, fDeepDebug;
 
 	UInt32              fNextTOCID;
 #if DSS_USE_API_CALLBACKS
@@ -171,7 +171,7 @@ protected:
 #else
 	OSFileSource        fMovieFD;
 #endif
-	Bool16              fCacheBuffersSet;
+	bool              fCacheBuffersSet;
 
 	DateBuffer          fModDateBuffer;
 	char                *fMoviePath;
@@ -188,7 +188,7 @@ protected:
 
 };
 
-Bool16 QTFile::ValidTOC()
+bool QTFile::ValidTOC()
 {
 	UInt64 theLength = 0;
 	UInt64 thePos = 0;

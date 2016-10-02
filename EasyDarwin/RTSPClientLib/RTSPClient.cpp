@@ -155,10 +155,10 @@ void DSSAuthenticator::Clean()
 }
 
 
-Bool16 DSSAuthenticator::ParseRealm(StringParser *realmParserPtr)
+bool DSSAuthenticator::ParseRealm(StringParser *realmParserPtr)
 {
 	StrPtrLen authRealmTag("");
-	Bool16 result = false;
+	bool result = false;
 	this->ParseTag(realmParserPtr, &authRealmTag);
 	if (authRealmTag.EqualIgnoreCase(DSSAuthenticator::sRealmStr.Ptr, DSSAuthenticator::sRealmStr.Len))
 	{
@@ -222,7 +222,7 @@ void DSSAuthenticator::ParseTag(StringParser *parserPtr, StrPtrLen *outTagPtr)
 	//qtss_printf("DSSAuthenticator::ParseTag =%s\n",STRTOCHAR(outTagPtr));
 }
 
-Bool16 DSSAuthenticator::CopyParam(StrPtrLen *inPtr, StrPtrLen *destPtr)
+bool DSSAuthenticator::CopyParam(StrPtrLen *inPtr, StrPtrLen *destPtr)
 {
 	Assert(inPtr);
 	Assert(destPtr);
@@ -246,7 +246,7 @@ Bool16 DSSAuthenticator::CopyParam(StrPtrLen *inPtr, StrPtrLen *destPtr)
 }
 
 
-Bool16 DSSAuthenticator::GetParamValue(StringParser *valueSourcePtr, StrPtrLen *outParamValuePtr)
+bool DSSAuthenticator::GetParamValue(StringParser *valueSourcePtr, StrPtrLen *outParamValuePtr)
 {
 	Assert(valueSourcePtr);
 	Assert(outParamValuePtr);
@@ -276,7 +276,7 @@ Bool16 DSSAuthenticator::GetParamValue(StringParser *valueSourcePtr, StrPtrLen *
 
 	return true;
 }
-Bool16 DSSAuthenticator::GetParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *outParamValueCopyPtr)
+bool DSSAuthenticator::GetParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *outParamValueCopyPtr)
 {
 	StrPtrLen theParamValue;
 	if (!this->GetParamValue(valueSourcePtr, &theParamValue))
@@ -285,7 +285,7 @@ Bool16 DSSAuthenticator::GetParamValueAsNewCopy(StringParser *valueSourcePtr, St
 	return this->CopyParam(&theParamValue, outParamValueCopyPtr);
 }
 
-Bool16 DSSAuthenticator::GetMatchListParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *inMatchListParamValuePtr, SInt16 numToMatch, StrPtrLen *outParamValueCopyPtr)
+bool DSSAuthenticator::GetMatchListParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *inMatchListParamValuePtr, SInt16 numToMatch, StrPtrLen *outParamValueCopyPtr)
 {
 	StrPtrLen theParamValue;
 	if (!this->GetParamValue(valueSourcePtr, &theParamValue))
@@ -408,9 +408,9 @@ DigestAuth::DigestAuth()
 	fNonceCount = 0;
 
 }
-Bool16  DigestAuth::ParseParams(StrPtrLen *authParamsPtr)
+bool  DigestAuth::ParseParams(StrPtrLen *authParamsPtr)
 {
-	Bool16 result = false;
+	bool result = false;
 	StrPtrLen authTag("");
 
 	if (authParamsPtr != NULL && authParamsPtr->Ptr != NULL) do
@@ -511,7 +511,7 @@ Bool16  DigestAuth::ParseParams(StrPtrLen *authParamsPtr)
 	return result;
 }
 
-void DigestAuth::AddAuthParam(StrPtrLen *theTagPtr, StrPtrLen *theValuePtr, Bool16 quoted)
+void DigestAuth::AddAuthParam(StrPtrLen *theTagPtr, StrPtrLen *theValuePtr, bool quoted)
 {
 	Assert(fReqFields.fNumFields < kMaxReqParams);
 	Assert(theTagPtr); // must be valid
@@ -557,7 +557,7 @@ void DigestAuth::GenerateAuthorizationRequestLine(StrPtrLen *requestPtr)
 	StrPtrLen *theTagPtr;
 	StrPtrLen *theValuePtr;
 	UInt32 paramLen;
-	Bool16 quoted;
+	bool quoted;
 	for (SInt32 paramIndex = 0; paramIndex < fReqFields.fNumFields; paramIndex++)
 	{
 		paramLen = 0;
@@ -738,7 +738,7 @@ DigestAuth::~DigestAuth()
 
 //===========================================
 
-Bool16  BasicAuth::ParseParams(StrPtrLen *authParamsPtr)
+bool  BasicAuth::ParseParams(StrPtrLen *authParamsPtr)
 {
 	StringParser realmParser(authParamsPtr);
 	return this->ParseRealm(&realmParser);
@@ -784,7 +784,7 @@ void BasicAuth::AttachAuthParams(StrPtrLen *theRequestPtr)
 
 DSSAuthenticator *AuthParser::ParseChallenge(StrPtrLen *challengePtr)
 {
-	Bool16 result = false;
+	bool result = false;
 	DSSAuthenticator *authenticator = NULL;
 	StrPtrLen   theChallenge;
 	StrPtrLen   headerTerminator("\r");
@@ -837,7 +837,7 @@ namespace EasyDarwin
 	char* RTSPClient::sControlID = "trackID";
 	RTSPClient::InterleavedParams RTSPClient::sInterleavedParams;
 
-	RTSPClient::RTSPClient(ClientSocket* inSocket, Bool16 verbosePrinting, char* inUserAgent)
+	RTSPClient::RTSPClient(ClientSocket* inSocket, bool verbosePrinting, char* inUserAgent)
 		: fAuthenticator(NULL),
 		fSocket(inSocket),
 		fVerboseLevel(verbosePrinting ? 1 : 0),
@@ -980,7 +980,7 @@ namespace EasyDarwin
 			qtss_sprintf(fSetupHeaders + ::strlen(fSetupHeaders), "x-RTP-Meta-Info: %s\r\n", inMetaInfoFields);
 	}
 
-	OS_Error RTSPClient::SendDescribe(Bool16 inAppendJunkData)
+	OS_Error RTSPClient::SendDescribe(bool inAppendJunkData)
 	{
 		if (!IsTransactionInProgress())
 		{
@@ -1277,7 +1277,7 @@ namespace EasyDarwin
 		return this->DoTransaction();
 	}
 
-	OS_Error RTSPClient::PutMediaPacket(UInt32 inTrackID, Bool16 isRTCP, char* inData, UInt16 inLen)
+	OS_Error RTSPClient::PutMediaPacket(UInt32 inTrackID, bool isRTCP, char* inData, UInt16 inLen)
 	{
 		// Find the right channel number for this trackID
 		for (int x = 0; x < fNumChannelElements; x++)
@@ -1308,7 +1308,7 @@ namespace EasyDarwin
 	}
 
 
-	OS_Error RTSPClient::SendInterleavedWrite(UInt8 channel, UInt16 len, char*data, Bool16 *getNext)
+	OS_Error RTSPClient::SendInterleavedWrite(UInt8 channel, UInt16 len, char*data, bool *getNext)
 	{
 
 		Assert(len < RTSPClient::kReqBufSize);
@@ -1414,7 +1414,7 @@ namespace EasyDarwin
 	}
 
 
-	OS_Error    RTSPClient::GetMediaPacket(UInt32* outTrackID, Bool16* outIsRTCP, char** outBuffer, UInt32* outLen)
+	OS_Error    RTSPClient::GetMediaPacket(UInt32* outTrackID, bool* outIsRTCP, char** outBuffer, UInt32* outLen)
 	{
 		static const UInt32 kPacketHeaderLen = 4;
 		static const UInt32 kMaxPacketSize = 20480;//10M

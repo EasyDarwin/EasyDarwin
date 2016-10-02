@@ -74,8 +74,8 @@ static StrPtrLen            sRequestHeader;
 static QTSS_ModulePrefsObject       sPrefs = NULL;
 static QTSS_ServerObject        sServer = NULL;
 static QTSS_Object          sAttributes = NULL;
-static Bool16               sSkipAuthorization = true;
-static Bool16               sIsRelaySession = true;
+static bool               sSkipAuthorization = true;
+static bool               sIsRelaySession = true;
 static char*                sIsRelaySessionAttrName = "QTSSRelayModuleIsRelaySession";
 static QTSS_AttributeID         sIsRelaySessionAttr = qtssIllegalAttrID;
 
@@ -104,12 +104,12 @@ static XMLParser*   sRelayPrefsFile = NULL;
 static OSMutex      sResolverMutex;
 class DNSResolverThread;
 DNSResolverThread*  sResolverThread = NULL;
-Bool16              sDoResolveAgain = false;
+bool              sDoResolveAgain = false;
 
 // This struct is used when Rereading Relay Prefs
 struct SourceInfoQueueElem
 {
-	SourceInfoQueueElem(SourceInfo* inInfo, Bool16 inRTSPInfo) :fElem(), fSourceInfo(inInfo),
+	SourceInfoQueueElem(SourceInfo* inInfo, bool inRTSPInfo) :fElem(), fSourceInfo(inInfo),
 		fIsRTSPSourceInfo(inRTSPInfo),
 		fShouldDelete(true) {
 		fElem.SetEnclosingObject(this);
@@ -118,8 +118,8 @@ struct SourceInfoQueueElem
 
 	OSQueueElem fElem;
 	SourceInfo* fSourceInfo;
-	Bool16      fIsRTSPSourceInfo;
-	Bool16      fShouldDelete;
+	bool      fIsRTSPSourceInfo;
+	bool      fShouldDelete;
 };
 
 // This struct is used when setting up announced source relays
@@ -145,7 +145,7 @@ static RelaySession* CreateSession(SourceInfoQueueElem* inElem);
 static RelaySession* FindSession(SourceInfoQueueElem* inElem);
 static RelaySession* FindNextSession(SourceInfoQueueElem* inElem, OSQueueIter* inIterPtr);
 
-static void AddOutputs(SourceInfo* inInfo, RelaySession* inSession, Bool16 inIsRTSPSourceInfo);
+static void AddOutputs(SourceInfo* inInfo, RelaySession* inSession, bool inIsRTSPSourceInfo);
 static void RemoveOutput(ReflectorOutput* inOutput, RelaySession* inSession);
 
 static QTSS_Error Filter(QTSS_StandardRTSP_Params* inParams);
@@ -161,10 +161,10 @@ static void FindSourceInfos(OSQueue* inSessionQueue, OSQueue* inAnnouncedQueue, 
 static void ClearSourceInfos(OSQueue* inQueue);
 
 static QTSS_Error RouteAuthorization(QTSS_StandardRTSP_Params* inParams);
-static Bool16 IsRelayRequest(UInt16 inPort);
+static bool IsRelayRequest(UInt16 inPort);
 
 static void ReadRelayPrefsFile();
-static Bool16 CheckDNSNames(XMLParser* prefsFile, Bool16 doResolution);
+static bool CheckDNSNames(XMLParser* prefsFile, bool doResolution);
 static void ResolveDNSAddr(XMLTag* tag);
 
 
@@ -465,7 +465,7 @@ QTSS_Error Filter(QTSS_StandardRTSP_Params* inParams)
 		return QTSS_NoErr;
 
 	// Keep-alive should be off!
-	Bool16 theFalse = false;
+	bool theFalse = false;
 	(void)QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqRespKeepAlive, 0, &theFalse, sizeof(theFalse));
 
 	(void)QTSS_Write(inParams->inRTSPRequest, sResponseHeader, ::strlen(sResponseHeader), NULL, 0);
@@ -519,7 +519,7 @@ void FindRelaySessions(OSQueue* inSessionQueue)
 	for (OSQueueIter theIter(RelayOutput::GetOutputQueue()); !theIter.IsDone(); theIter.Next())
 	{
 		RelayOutput* theOutput = (RelayOutput*)theIter.GetCurrent()->GetEnclosingObject();
-		Bool16 found = false;
+		bool found = false;
 
 		// Check to see if we've already seen this RelaySession
 		for (OSQueueIter theIter2(inSessionQueue); !theIter2.IsDone(); theIter2.Next())
@@ -542,8 +542,8 @@ void FindRelaySessions(OSQueue* inSessionQueue)
 QTSS_Error SetupAnnouncedSessions(QTSS_StandardRTSP_Params* inParams)
 {
 
-	Bool16 setup = false;
-	Bool16 play = false;
+	bool setup = false;
+	bool play = false;
 
 	// Get the RTSP Method
 	QTSS_RTSPMethod* theMethod = NULL;
@@ -702,7 +702,7 @@ RTSPSessionIDQueueElem* FindRTSPSessionIDQueueElem(UInt32 inSessionID)
 RTSPSourceInfo* FindAnnouncedSourceInfo(UInt32 inIP, StrPtrLen& inURL)
 {
 	RTSPSourceInfo* info = NULL;
-	Bool16 ipMatchfound = false;
+	bool ipMatchfound = false;
 
 	// check to see if the ip address + URL match any of the source infos in the sAnnouncedQueue.
 	// in this order:
@@ -817,7 +817,7 @@ void RereadRelayPrefs(XMLParser* prefsParser)
 	{
 		RelayOutput* theOutput = (RelayOutput*)iter.GetCurrent()->GetEnclosingObject();
 
-		Bool16 stillActive = false;
+		bool stillActive = false;
 
 		// Check to see if this RelayOutput matches one of the streams in the
 		// SourceInfo queue. If it does, this has 2 implications:
@@ -923,7 +923,7 @@ void RereadRelayPrefs(XMLParser* prefsParser)
 	ClearSourceInfos(&sourceInfoQueue);
 }
 
-void AddOutputs(SourceInfo* inInfo, RelaySession* inSession, Bool16 inIsRTSPSourceInfo)
+void AddOutputs(SourceInfo* inInfo, RelaySession* inSession, bool inIsRTSPSourceInfo)
 {
 	for (UInt32 x = 0; x < inInfo->GetNumOutputs(); x++)
 	{
@@ -1113,7 +1113,7 @@ QTSS_Error RouteAuthorization(QTSS_StandardRTSP_Params* inParams)
 	return QTSS_NoErr;
 }
 
-Bool16 IsRelayRequest(UInt16 inPort)
+bool IsRelayRequest(UInt16 inPort)
 {
 	for (OSQueueIter iter(sRTSPSourceInfoQueue); !iter.IsDone(); iter.Next())
 	{
@@ -1167,7 +1167,7 @@ void ReadRelayPrefsFile()
 	DNSResolverThread::ResolveRelayPrefs(xmlFile); // will keep or delete xmlFile
 }
 
-Bool16 CheckDNSNames(XMLParser* prefsFile, Bool16 doResolution)
+bool CheckDNSNames(XMLParser* prefsFile, bool doResolution)
 {
 	XMLTag* tag = prefsFile->GetRootTag();
 	XMLTag* relayTag;

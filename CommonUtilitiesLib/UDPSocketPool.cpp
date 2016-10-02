@@ -83,7 +83,7 @@ UDPSocketPair*  UDPSocketPool::CreateUDPSocketPair(UInt32 inAddr, UInt16 inPort)
 	//try to find an open pair of ports to bind these suckers tooo
 	OSMutexLocker locker(&fMutex);
 	UDPSocketPair* theElem = NULL;
-	Bool16 foundPair = false;
+	bool foundPair = false;
 	UInt16 curPort = kLowestUDPPort;
 	UInt16 stopPort = kHighestUDPPort - 1; // prevent roll over when iterating over port nums
 	UInt16 socketBPort = kLowestUDPPort + 1;

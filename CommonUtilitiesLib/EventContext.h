@@ -147,13 +147,13 @@ private:
 	PointerSizedInt fUniqueID;
 	StrPtrLen       fUniqueIDStr;
 	EventThread*    fEventThread;
-	Bool16          fWatchEventCalled;
+	bool          fWatchEventCalled;
 	int             fEventBits;
-	Bool16          fAutoCleanup;
+	bool          fAutoCleanup;
 
 	Task*           fTask;
 #if DEBUG
-	Bool16          fModwatched;
+	bool          fModwatched;
 #endif
 
 	static unsigned int sUniqueID;

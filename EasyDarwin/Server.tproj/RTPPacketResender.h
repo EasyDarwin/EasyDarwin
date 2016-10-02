@@ -53,7 +53,7 @@ public:
 
 	void*               fPacketData;
 	UInt32              fPacketSize;
-	Bool16              fIsSpecialBuffer;
+	bool              fIsSpecialBuffer;
 	SInt64              fExpireTime;
 	SInt64              fAddedTime;
 	SInt64              fOrigRetransTimeout;
@@ -97,7 +97,7 @@ public:
 
 	//
 	// ACCESSORS
-	Bool16              IsFlowControlled() { return fBandwidthTracker->IsFlowControlled(); }
+	bool              IsFlowControlled() { return fBandwidthTracker->IsFlowControlled(); }
 	SInt32              GetMaxPacketsInList() { return fMaxPacketsInList; }
 	SInt32              GetNumPacketsInList() { return fPacketsInList; }
 	SInt32              GetNumResends() { return fNumResends; }
@@ -155,7 +155,7 @@ private:
 
 	RTPResenderEntry*   GetEmptyEntry(UInt16 inSeqNum, UInt32 inPacketSize);
 	void ReallocatePacketArray();
-	void RemovePacket(UInt32 packetIndex, Bool16 reuse = true);
+	void RemovePacket(UInt32 packetIndex, bool reuse = true);
 	void RemovePacket(RTPResenderEntry* inEntry);
 
 	static OSBufferPool sBufferPool;

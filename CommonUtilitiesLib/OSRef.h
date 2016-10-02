@@ -87,7 +87,7 @@ public:
 	}
 
 #if DEBUG
-	Bool16  IsInTable() { return fInATable; }
+	bool  IsInTable() { return fInATable; }
 #endif
 	void**  GetObjectPtr() { return &fObjectP; }
 	void*   GetObject() { return fObjectP; }
@@ -103,8 +103,8 @@ private:
 	//refcounting
 	UInt32  fRefCount;
 #if DEBUG
-	Bool16  fInATable;
-	Bool16  fSwapCalled;
+	bool  fInATable;
+	bool  fSwapCalled;
 #endif
 	OSCond  fCond;//to block threads waiting for this ref.
 
@@ -207,7 +207,7 @@ public:
 
 	// Same as UnRegister, but guarenteed not to block. Will return
 	// true if ref was sucessfully unregistered, false otherwise
-	Bool16      TryUnRegister(OSRef* ref, UInt32 refCount = 0);
+	bool      TryUnRegister(OSRef* ref, UInt32 refCount = 0);
 
 	//Resolve. This function uses the provided key string to identify and grab
 	//the Ref keyed by that string. Once the Ref is resolved, it is safe to use

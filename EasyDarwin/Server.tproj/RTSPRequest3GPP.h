@@ -216,7 +216,7 @@ public:
 	//these do very little. Just initialize / delete some member data.
 	//
 	//Arguments:        enable the object
-	RTSPRequest3GPP(Bool16 enabled);
+	RTSPRequest3GPP(bool enabled);
 	~RTSPRequest3GPP() {}
 
 	//Parses the request. Returns an error if there was an error encountered
@@ -228,19 +228,19 @@ public:
 	QTSS_Error ParseLinkCharHeader(QTSSDictionary* headerDictionaryPtr);
 
 
-	Bool16                  Is3GPP() { return fIs3GPP; }
-	Bool16                  HasRateAdaptation() { return fHasRateAdaptation; }
-	Bool16                  HasLinkChar() { return fHasLinkChar; }
+	bool                  Is3GPP() { return fIs3GPP; }
+	bool                  HasRateAdaptation() { return fHasRateAdaptation; }
+	bool                  HasLinkChar() { return fHasLinkChar; }
 
 private:
 	void ParseAdpationHeaderTest();
 	void ParseLinkCharHeaderTest(QTSSDictionary* headerDictionaryPtr);
 
 
-	Bool16                  fEnabled;
-	Bool16                  fIs3GPP;
-	Bool16                  fHasRateAdaptation;
-	Bool16                  fHasLinkChar;
+	bool                  fEnabled;
+	bool                  fIs3GPP;
+	bool                  fHasRateAdaptation;
+	bool                  fHasLinkChar;
 
 
 

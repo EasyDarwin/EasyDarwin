@@ -54,7 +54,7 @@ private:
 	// This function will get called by StringFormatter if the current
 	// output buffer is full. This object allocates a buffer that's twice
 	// as big as the old one.
-	virtual Bool16    BufferIsFull(char* inBuffer, UInt32 inBufferLen);
+	virtual bool    BufferIsFull(char* inBuffer, UInt32 inBufferLen);
 
 	char*           fOriginalBuffer;
 

@@ -33,7 +33,7 @@ public:
 	virtual ~HTTPSession();
 
 	////发送HTTP响应报文
-	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
+	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement);
 
 private:
 	SInt64 Run();
@@ -47,7 +47,7 @@ private:
 	QTSS_Error ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char* json);
 
 	// test current connections handled by this object against server pref connection limit
-	Bool16 OverMaxConnections(UInt32 buffer);
+	bool OverMaxConnections(UInt32 buffer);
 
 	HTTPRequest*        fRequest;
 	OSMutex             fReadMutex;

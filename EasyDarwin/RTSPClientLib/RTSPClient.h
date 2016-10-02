@@ -60,7 +60,7 @@ public:
 	DSSAuthenticator();
 	virtual ~DSSAuthenticator() {};
 	virtual SInt16 GetType() { return 0; };
-	virtual Bool16 ParseParams(StrPtrLen *authParamsPtr) { return 0; };
+	virtual bool ParseParams(StrPtrLen *authParamsPtr) { return 0; };
 	virtual void AttachAuthParams(StrPtrLen *theRequestPtr) {};
 	virtual void ResetAuthParams() {};
 
@@ -79,7 +79,7 @@ public:
 	//Does nothing if the Authorization header is not found
 	void RemoveAuthLine(StrPtrLen *theRequestPtr);
 
-	static Bool16 CopyParam(StrPtrLen *inPtr, StrPtrLen *outPtr);
+	static bool CopyParam(StrPtrLen *inPtr, StrPtrLen *outPtr);
 
 	void SetName(StrPtrLen *inNamePtr);
 	void SetPassword(StrPtrLen *inPasswordPtr);
@@ -90,10 +90,10 @@ public:
 	void ResetRequestLen(StrPtrLen *theRequestPtr, StrPtrLen *theParamsPtr);
 	void ParseTag(StringParser *parserPtr, StrPtrLen *outTagPtr);
 
-	Bool16 GetParamValue(StringParser *valueSourcePtr, StrPtrLen *outParamValuePtr);
-	Bool16 GetParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *outParamValueCopyPtr);
-	Bool16 GetMatchListParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *inMatchListParamValuePtr, SInt16 numToMatch, StrPtrLen *outParamValueCopyPtr);
-	Bool16 ParseRealm(StringParser *realmParserPtr);
+	bool GetParamValue(StringParser *valueSourcePtr, StrPtrLen *outParamValuePtr);
+	bool GetParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *outParamValueCopyPtr);
+	bool GetMatchListParamValueAsNewCopy(StringParser *valueSourcePtr, StrPtrLen *inMatchListParamValuePtr, SInt16 numToMatch, StrPtrLen *outParamValueCopyPtr);
+	bool ParseRealm(StringParser *realmParserPtr);
 
 	static StrPtrLen    sAuthorizationStr;
 	static StrPtrLen    sRealmStr;
@@ -119,7 +119,7 @@ public:
 	~BasicAuth() { Clean(); }
 
 	SInt16  GetType() { return kBasicType; };
-	Bool16  ParseParams(StrPtrLen *authParamsPtr);
+	bool  ParseParams(StrPtrLen *authParamsPtr);
 	void    AttachAuthParams(StrPtrLen *theRequestPtr);
 	UInt32  ParamsLen(StrPtrLen *requestParams);
 	void    ResetAuthParams() {};
@@ -134,7 +134,7 @@ class DigestAuth : public DSSAuthenticator
 public:
 
 	SInt16  GetType() { return kDigestType; };
-	Bool16  ParseParams(StrPtrLen *authParamsPtr);
+	bool  ParseParams(StrPtrLen *authParamsPtr);
 	void    AttachAuthParams(StrPtrLen *theRequestPtr);
 	void    ResetAuthParams();
 
@@ -152,7 +152,7 @@ public:
 	StrPtrLen   fRequestDigestStr;
 
 	SInt16      fAlgorithm;
-	Bool16      fStale;
+	bool      fStale;
 
 	void GenerateAuthorizationRequestLine(StrPtrLen *requestPtr);
 	DigestAuth();
@@ -166,18 +166,18 @@ private:
 	{
 		StrPtrLen   *fReqParamTags[kMaxReqParams];
 		StrPtrLen   *fReqParamValues[kMaxReqParams];
-		Bool16      fQuoted[kMaxReqParams];
+		bool      fQuoted[kMaxReqParams];
 		SInt16      fNumFields;
 	};
 	ReqFields fReqFields;
 	void ReqFieldsClean() {
 		memset((void *)fReqFields.fReqParamTags, 0, sizeof(StrPtrLen *) * kMaxReqParams);
 		memset((void *)fReqFields.fReqParamValues, 0, sizeof(StrPtrLen *) * kMaxReqParams);
-		memset((void *)fReqFields.fQuoted, 0, sizeof(Bool16) * kMaxReqParams);
+		memset((void *)fReqFields.fQuoted, 0, sizeof(bool) * kMaxReqParams);
 		fReqFields.fNumFields = 0;
 	}
 
-	void AddAuthParam(StrPtrLen *theTagPtr, StrPtrLen *theValuePtr, Bool16 quoted);
+	void AddAuthParam(StrPtrLen *theTagPtr, StrPtrLen *theValuePtr, bool quoted);
 
 	UInt32 ParamsLen(StrPtrLen *requestParams);
 	void SetNonceCountStr();
@@ -228,7 +228,7 @@ namespace EasyDarwin
 		static void     SetUserAgentStr(char* inUserAgent) { sUserAgent = inUserAgent; }
 
 		// verbosePrinting = print out all requests and responses
-		RTSPClient(ClientSocket* inSocket, Bool16 verbosePrinting = false, char* inUserAgent = NULL);
+		RTSPClient(ClientSocket* inSocket, bool verbosePrinting = false, char* inUserAgent = NULL);
 		~RTSPClient();
 
 		// This must be called before any other function. Sets up very important info; sets the URL
@@ -248,7 +248,7 @@ namespace EasyDarwin
 		// These return EAGAIN if transaction is in progress, OS_NoErr if transaction
 		// was successful, EINPROGRESS if connection is in progress, or some other
 		// error if transaction failed entirely.
-		OS_Error    SendDescribe(Bool16 inAppendJunkData = false);
+		OS_Error    SendDescribe(bool inAppendJunkData = false);
 
 		OS_Error    SendReliableUDPSetup(UInt32 inTrackID, UInt16 inClientPort);
 		OS_Error    SendUDPSetup(UInt32 inTrackID, UInt16 inClientPort);
@@ -258,7 +258,7 @@ namespace EasyDarwin
 		OS_Error    SendReceive(UInt32 inStartPlayTimeInSec);
 		OS_Error    SendAnnounce(char *sdp);
 		OS_Error    SendTeardown();
-		OS_Error    SendInterleavedWrite(UInt8 channel, UInt16 len, char*data, Bool16 *getNext);
+		OS_Error    SendInterleavedWrite(UInt8 channel, UInt16 len, char*data, bool *getNext);
 
 		OS_Error    SendSetParameter();
 		OS_Error    SendOptions();
@@ -277,14 +277,14 @@ namespace EasyDarwin
 		// If any of the tracks are being interleaved, this fetches a media packet from
 		// the control connection. This function assumes that SendPlay has already completed
 		// successfully and media packets are being sent.
-		OS_Error    GetMediaPacket(UInt32* outTrackID, Bool16* outIsRTCP,
+		OS_Error    GetMediaPacket(UInt32* outTrackID, bool* outIsRTCP,
 			char** outBuffer, UInt32* outLen);
 
 		//
 		// If any of the tracks are being interleaved, this puts a media packet to the control
 		// connection. This function assumes that SendPlay has already completed
 		// successfully and media packets are being sent.
-		OS_Error    PutMediaPacket(UInt32 inTrackID, Bool16 isRTCP, char* inBuffer, UInt16 inLen);
+		OS_Error    PutMediaPacket(UInt32 inTrackID, bool isRTCP, char* inBuffer, UInt16 inLen);
 
 		// set name and password for authentication in case we are challenged
 		void    SetName(char *name);
@@ -325,8 +325,8 @@ namespace EasyDarwin
 
 		char*       GetResponse() { return fRecvHeaderBuffer; }
 		UInt32      GetResponseLen() { return fHeaderLen; }
-		Bool16      IsTransactionInProgress() { return fState != kInitial; }
-		Bool16      IsVerbose() { return fVerboseLevel >= 1; }
+		bool      IsTransactionInProgress() { return fState != kInitial; }
+		bool      IsVerbose() { return fVerboseLevel >= 1; }
 
 		// If available, returns the SSRC associated with the track in the PLAY response.
 		// Returns 0 if SSRC is not available.
@@ -393,7 +393,7 @@ namespace EasyDarwin
 		struct ChannelMapElem
 		{
 			UInt32  fTrackID;
-			Bool16  fIsRTCP;
+			bool  fIsRTCP;
 		};
 		ChannelMapElem* fChannelTrackMap;
 		UInt8           fNumChannelElements;
@@ -422,7 +422,7 @@ namespace EasyDarwin
 		// If we are interleaving, we need this stuff to support the GetMediaPacket function
 		char*           fPacketBuffer;
 		UInt32          fPacketBufferOffset;
-		Bool16          fPacketOutstanding;
+		bool          fPacketOutstanding;
 
 
 		// Data buffers
@@ -441,7 +441,7 @@ namespace EasyDarwin
 		UInt32      fState;
 
 		//UInt32      fEventMask;
-		Bool16      fAuthAttempted;
+		bool      fAuthAttempted;
 		UInt32      fTransportMode;
 
 		//

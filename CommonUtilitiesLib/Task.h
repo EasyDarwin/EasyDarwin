@@ -96,7 +96,7 @@ public:
 	//Send an event to this task.
 	void                    Signal(EventFlags eventFlags);
 	void                    GlobalUnlock();
-	Bool16                  Valid(); // for debugging
+	bool                  Valid(); // for debugging
 	char            fTaskName[48];
 	void            SetTaskName(char* name);
 
@@ -141,7 +141,7 @@ private:
 	EventFlags      fEvents;
 	TaskThread*     fUseThisThread;
 	TaskThread*     fDefaultThread;
-	Bool16          fWriteLock;
+	bool          fWriteLock;
 
 #if DEBUG
 	//The whole premise of a task is that the Run function cannot be re-entered.
@@ -201,7 +201,7 @@ class TaskThreadPool {
 public:
 
 	//Adds some threads to the pool
-	static Bool16   AddThreads(UInt32 numToAdd); // creates the threads: takes NumShortTaskThreads + NumBLockingThreads,  sets num short task threads.
+	static bool   AddThreads(UInt32 numToAdd); // creates the threads: takes NumShortTaskThreads + NumBLockingThreads,  sets num short task threads.
 	static void     SwitchPersonality(char *user = NULL, char *group = NULL);
 	static void     RemoveThreads();
 	static TaskThread* GetThread(UInt32 index);

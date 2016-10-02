@@ -50,13 +50,13 @@ public:
 	//these do very little. Just initialize / delete some member data.
 	//
 	//Arguments:        enable the object
-	RTSPSession3GPP(Bool16 enabled);
+	RTSPSession3GPP(bool enabled);
 	~RTSPSession3GPP() {}
 
 
 
 private:
-	Bool16 fEnabled;
+	bool fEnabled;
 
 	//Dictionary support
 	static QTSSAttrInfoDict::AttrInfo   sAttributes[];

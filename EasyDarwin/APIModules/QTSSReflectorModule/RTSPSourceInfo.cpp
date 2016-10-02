@@ -159,7 +159,7 @@ void RTSPSourceInfo::SetClientInfo(UInt32 inAddr, UInt16 inPort, char* inURL, UI
 		fClientSocket->GetSocket()->Bind(inLocalAddr, 0);
 }
 
-QTSS_Error RTSPSourceInfo::ParsePrefs(XMLTag* relayTag, Bool16 inAnnounce)
+QTSS_Error RTSPSourceInfo::ParsePrefs(XMLTag* relayTag, bool inAnnounce)
 {
 	XMLTag* prefTag;
 	UInt32 localAddr = 0;
@@ -475,7 +475,7 @@ void RTSPSourceInfo::AllocateOutputArray(UInt32 numOutputs)
 	fRTSPInfoArray = new RTSPOutputInfo[numOutputs];
 }
 
-Bool16 RTSPSourceInfo::Equal(SourceInfo* inInfo)
+bool RTSPSourceInfo::Equal(SourceInfo* inInfo)
 {
 	if (!inInfo->IsRTSPSourceInfo())
 		return false;

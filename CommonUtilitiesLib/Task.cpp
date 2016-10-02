@@ -67,7 +67,7 @@ void Task::SetTaskName(char* name)
 
 }
 
-Bool16 Task::Valid()
+bool Task::Valid()
 {
 	if ((this->fTaskName == NULL) || (0 != ::strncmp(sTaskStateStr, this->fTaskName, 5)))
 	{
@@ -200,7 +200,7 @@ void TaskThread::Entry()
 		if (theTask == NULL || false == theTask->Valid())
 			return;
 
-		Bool16 doneProcessingEvent = false;
+		bool doneProcessingEvent = false;
 
 		while (!doneProcessingEvent)
 		{
@@ -355,7 +355,7 @@ UInt32       TaskThreadPool::sNumTaskThreads = 0;
 UInt32       TaskThreadPool::sNumShortTaskThreads = 0;
 UInt32       TaskThreadPool::sNumBlockingTaskThreads = 0;
 
-Bool16 TaskThreadPool::AddThreads(UInt32 numToAdd)
+bool TaskThreadPool::AddThreads(UInt32 numToAdd)
 {
 	Assert(sTaskThreadArray == NULL);
 	sTaskThreadArray = new TaskThread*[numToAdd];

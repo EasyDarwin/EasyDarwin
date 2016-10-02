@@ -109,7 +109,7 @@ string (Pascal string).
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_hinf::QTAtom_hinf(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
+QTAtom_hinf::QTAtom_hinf(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fTotalRTPBytes32(0), //totl
 	fTotalRTPBytes64(0), //trpy
@@ -139,7 +139,7 @@ QTAtom_hinf::~QTAtom_hinf()
 // -------------------------------------
 // Initialization functions
 //
-Bool16 QTAtom_hinf::Initialize()
+bool QTAtom_hinf::Initialize()
 {
 	//
 	// Parse this atom's sub-atoms.

@@ -33,7 +33,7 @@
 #include "ResizeableStringFormatter.h"
 #include "OSMemory.h"
 
-Bool16 ResizeableStringFormatter::BufferIsFull(char* inBuffer, UInt32 inBufferLen)
+bool ResizeableStringFormatter::BufferIsFull(char* inBuffer, UInt32 inBufferLen)
 {
 	//allocate a buffer twice as big as the old one, and copy over the contents
 	UInt32 theNewBufferSize = this->GetTotalBufferSize() * 2;

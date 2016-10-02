@@ -90,10 +90,10 @@ private:
 
 	char*	fStreamName;//需要停止推流的StreamID/Serial/Channel组合
 	UInt32	fEasyMsgType;
-	Bool16	fLiveSession;
+	bool	fLiveSession;
 
 	// 初步判断Session Socket是否已连接
-	Bool16 IsConnected() { return fSocket->GetSocket()->IsConnected(); }
+	bool IsConnected() { return fSocket->GetSocket()->IsConnected(); }
 
 
 };

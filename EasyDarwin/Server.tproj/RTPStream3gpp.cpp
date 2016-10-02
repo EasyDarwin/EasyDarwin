@@ -74,7 +74,7 @@ void    RTPStream3GPP::Initialize()
 }
 
 
-RTPStream3GPP::RTPStream3GPP(RTPStream &owner, Bool16 enabled)
+RTPStream3GPP::RTPStream3GPP(RTPStream &owner, bool enabled)
 	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::k3GPPStreamDictIndex), NULL),
 	fRTPStream(owner),
 	fEnabled(enabled),
@@ -234,7 +234,7 @@ void RTPStream3GPP::UpdateTimeAndQuality(SInt64 curTime)
 		return;
 
 
-	Bool16 limitTargetDelay = true;
+	bool limitTargetDelay = true;
 	UInt32 maxTargetDelayMilli = 5000;
 
 	UInt32 adjustedFreeBuffer = fLastReportedFreeBufferSpace;

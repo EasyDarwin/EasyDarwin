@@ -33,9 +33,9 @@
 #include "StringParser.h"
 #include "QTSServerInterface.h"
 
-Bool16  QTSSModule::sHasRTSPRequestModule = false;
-Bool16  QTSSModule::sHasOpenFileModule = false;
-Bool16  QTSSModule::sHasRTSPAuthenticateModule = false;
+bool  QTSSModule::sHasRTSPRequestModule = false;
+bool  QTSSModule::sHasOpenFileModule = false;
+bool  QTSSModule::sHasRTSPAuthenticateModule = false;
 
 QTSSAttrInfoDict::AttrInfo  QTSSModule::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */

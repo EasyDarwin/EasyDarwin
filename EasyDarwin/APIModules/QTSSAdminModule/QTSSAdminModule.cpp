@@ -139,14 +139,14 @@ enum
 static UInt32 sDefaultRequestTimeIntervalMilli = kDefaultRequestTimeIntervalMilli;
 static UInt32 sRequestTimeIntervalMilli = kDefaultRequestTimeIntervalMilli;
 
-static Bool16 sAuthenticationEnabled = true;
-static Bool16 sDefaultAuthenticationEnabled = true;
+static bool sAuthenticationEnabled = true;
+static bool sDefaultAuthenticationEnabled = true;
 
-static Bool16 sLocalLoopBackOnlyEnabled = true;
-static Bool16 sDefaultLocalLoopBackOnlyEnabled = true;
+static bool sLocalLoopBackOnlyEnabled = true;
+static bool sDefaultLocalLoopBackOnlyEnabled = true;
 
-static Bool16 sEnableRemoteAdmin = true;
-static Bool16 sDefaultEnableRemoteAdmin = true;
+static bool sEnableRemoteAdmin = true;
+static bool sDefaultEnableRemoteAdmin = true;
 
 static QTSS_AttributeID sIPAccessListID = qtssIllegalAttrID;
 static char*            sIPAccessList = NULL;
@@ -155,7 +155,7 @@ static char*            sLocalLoopBackAddress = "127.0.0.*";
 static char*            sAdministratorGroup = NULL;
 static char*            sDefaultAdministratorGroup = "admin";
 
-static Bool16           sFlushing = false;
+static bool           sFlushing = false;
 static QTSS_AttributeID sFlushingID = qtssIllegalAttrID;
 static char*            sFlushingName = "QTSSAdminModuleFlushingState";
 static UInt32           sFlushingLen = sizeof(sFlushing);
@@ -180,13 +180,13 @@ static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error FilterRequest(QTSS_Filter_Params* inParams);
 static QTSS_Error RereadPrefs();
 static QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request);
-static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
+static bool AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
 
 
 //***********************EasyDarwin WEB管理***********************
 
 //用户认证
-static	Bool16	EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword);
+static	bool	EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword);
 
 //获取服务累计运行时间(单位毫秒ms)
 static	SInt64	EasyAdmin_GetServiceRunTime();
@@ -236,7 +236,7 @@ static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
 //是否同步输出HLS
 static	bool	EasyAdmin_GetReflectHLSOutput();
 //设置是否同步输出HLS
-static	void	EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput);
+static	void	EasyAdmin_SetReflectHLSOutput(bool hlsOutput);
 //---------------------------RTSP转发配置E---------------------------
 
 //===============RTSP直播栏E===============
@@ -797,7 +797,7 @@ void APITests_DEBUG()
 
 #endif
 
-inline void KeepSession(QTSS_RTSPRequestObject theRequest, Bool16 keep)
+inline void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep)
 {
 	(void)QTSS_SetValue(theRequest, qtssRTSPReqRespKeepAlive, 0, &keep, sizeof(keep));
 }
@@ -940,11 +940,11 @@ void ReportErr(QTSS_Filter_Params* inParams, UInt32 err)
 }
 
 
-inline Bool16 AcceptAddress(StrPtrLen *theAddressPtr)
+inline bool AcceptAddress(StrPtrLen *theAddressPtr)
 {
 	IPComponentStr ipComponentStr(theAddressPtr);
 
-	Bool16 isLocalRequest = ipComponentStr.IsLocal();
+	bool isLocalRequest = ipComponentStr.IsLocal();
 	if (sLocalLoopBackOnlyEnabled && isLocalRequest)
 		return true;
 
@@ -957,9 +957,9 @@ inline Bool16 AcceptAddress(StrPtrLen *theAddressPtr)
 	return false;
 }
 
-inline Bool16 IsAdminRequest(StringParser *theFullRequestPtr)
+inline bool IsAdminRequest(StringParser *theFullRequestPtr)
 {
-	Bool16 handleRequest = false;
+	bool handleRequest = false;
 	if (theFullRequestPtr != NULL) do
 	{
 		StrPtrLen   strPtr;
@@ -1018,11 +1018,11 @@ inline void ParseAuthNameAndPassword(StrPtrLen *codedStrPtr, StrPtrLen* namePtr,
 };
 
 
-inline Bool16 OSXAuthenticate(StrPtrLen *keyStrPtr)
+inline bool OSXAuthenticate(StrPtrLen *keyStrPtr)
 {
 #if __MacOSX__
 	//  Authorization: AuthRef QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-	Bool16 result = false;
+	bool result = false;
 
 	if (keyStrPtr == NULL || keyStrPtr->Len == 0)
 		return result;
@@ -1060,10 +1060,10 @@ inline Bool16 OSXAuthenticate(StrPtrLen *keyStrPtr)
 
 }
 
-inline Bool16 HasAuthentication(StringParser *theFullRequestPtr, StrPtrLen* namePtr, StrPtrLen* passwordPtr, StrPtrLen* outAuthTypePtr)
+inline bool HasAuthentication(StringParser *theFullRequestPtr, StrPtrLen* namePtr, StrPtrLen* passwordPtr, StrPtrLen* outAuthTypePtr)
 {
 	//  Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-	Bool16 hasAuthentication = false;
+	bool hasAuthentication = false;
 	StrPtrLen   strPtr;
 	StrPtrLen   authType;
 	StrPtrLen   authString;
@@ -1108,9 +1108,9 @@ inline Bool16 HasAuthentication(StringParser *theFullRequestPtr, StrPtrLen* name
 	return hasAuthentication;
 }
 
-Bool16  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrLen* passwordPtr)
+bool  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrLen* passwordPtr)
 {
-	Bool16 authenticated = true;
+	bool authenticated = true;
 
 	char* authName = namePtr->GetAsCString();
 	OSCharArrayDeleter authNameDeleter(authName);
@@ -1156,7 +1156,7 @@ Bool16  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrL
 	}
 
 	char* realm = NULL;
-	Bool16 allowed = true;
+	bool allowed = true;
 	//authorize callback to check authorization
 	// allocates memory for realm
 	err = QTSS_Authorize(request, &realm, &allowed);
@@ -1180,7 +1180,7 @@ Bool16  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrL
 
 QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request)
 {
-	Bool16 allowed = false;
+	bool allowed = false;
 
 	// get the resource path
 	// if the path does not match the admin path, don't handle the request
@@ -1231,7 +1231,7 @@ QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request)
 }
 
 
-Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession)
+bool AcceptSession(QTSS_RTSPSessionObject inRTSPSession)
 {
 	char remoteAddress[20] = { 0 };
 	StrPtrLen theClientIPAddressStr(remoteAddress, sizeof(remoteAddress));
@@ -1241,7 +1241,7 @@ Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession)
 	return AcceptAddress(&theClientIPAddressStr);
 }
 
-Bool16 StillFlushing(QTSS_Filter_Params* inParams, Bool16 flushing)
+bool StillFlushing(QTSS_Filter_Params* inParams, bool flushing)
 {
 
 	QTSS_Error err = QTSS_NoErr;
@@ -1275,9 +1275,9 @@ Bool16 StillFlushing(QTSS_Filter_Params* inParams, Bool16 flushing)
 	return sFlushing;
 }
 
-Bool16 IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
+bool IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
 {
-	Bool16 isAuthentic = false;
+	bool isAuthentic = false;
 
 	if (!sAuthenticationEnabled) // no authentication
 	{
@@ -1287,12 +1287,12 @@ Bool16 IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
 	{
 		StrPtrLen theClientIPAddressStr;
 		(void)QTSS_GetValuePtr(inParams->inRTSPSession, qtssRTSPSesRemoteAddrStr, 0, (void**)&theClientIPAddressStr.Ptr, &theClientIPAddressStr.Len);
-		Bool16 isLocal = IPComponentStr(&theClientIPAddressStr).IsLocal();
+		bool isLocal = IPComponentStr(&theClientIPAddressStr).IsLocal();
 
 		StrPtrLen authenticateName;
 		StrPtrLen authenticatePassword;
 		StrPtrLen authType;
-		Bool16 hasAuthentication = HasAuthentication(fullRequestPtr, &authenticateName, &authenticatePassword, &authType);
+		bool hasAuthentication = HasAuthentication(fullRequestPtr, &authenticateName, &authenticatePassword, &authType);
 		if (hasAuthentication)
 		{
 			if (authType.Equal(sAuthRef))
@@ -1311,7 +1311,7 @@ Bool16 IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
 	return isAuthentic;
 }
 
-inline Bool16 InWaitInterval(QTSS_Filter_Params* inParams)
+inline bool InWaitInterval(QTSS_Filter_Params* inParams)
 {
 	QTSS_TimeVal nextExecuteTime = sLastRequestTime + sRequestTimeIntervalMilli;
 	QTSS_TimeVal currentTime = QTSS_Milliseconds();
@@ -1364,9 +1364,9 @@ inline void SendResult(QTSS_StreamRef inStream)
 
 }
 
-inline Bool16 GetRequestAuthenticatedState(QTSS_Filter_Params* inParams)
+inline bool GetRequestAuthenticatedState(QTSS_Filter_Params* inParams)
 {
-	Bool16 result = false;
+	bool result = false;
 	UInt32 paramLen = sizeof(result);
 	QTSS_Error err = QTSS_GetValue(inParams->inRTSPRequest, sAuthenticatedID, 0, (void*)&result, &paramLen);
 	if (err != QTSS_NoErr)
@@ -1378,9 +1378,9 @@ inline Bool16 GetRequestAuthenticatedState(QTSS_Filter_Params* inParams)
 	return result;
 }
 
-inline Bool16 GetRequestFlushState(QTSS_Filter_Params* inParams)
+inline bool GetRequestFlushState(QTSS_Filter_Params* inParams)
 {
-	Bool16 result = false;
+	bool result = false;
 	UInt32 paramLen = sizeof(result);
 	QTSS_Error err = QTSS_GetValue(inParams->inRTSPRequest, sFlushingID, 0, (void*)&result, &paramLen);
 	if (err != QTSS_NoErr)
@@ -1536,7 +1536,7 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
 
 //*****************************************
 
-Bool16 EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword)
+bool EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword)
 {
 	qtss_printf("User:%s Password:%s Authenticated!\n", inUserName, inPassword);
 	return true;
@@ -1653,14 +1653,14 @@ bool EasyAdmin_GetReflectHLSOutput()
 	if (sReflectorPrefs == NULL)
 		return false;
 
-	Bool16 hlsOutputEnabled = false;
+	bool hlsOutputEnabled = false;
 	QTSSModuleUtils::GetAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutputEnabled, NULL, sizeof(hlsOutputEnabled));
 	return hlsOutputEnabled;
 }
 
-void EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput)
+void EasyAdmin_SetReflectHLSOutput(bool hlsOutput)
 {
-	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutput, sizeof(Bool16));
+	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutput, sizeof(bool));
 }
 
 char* EasyAdmin_GetHlsHttpRoot()

@@ -62,7 +62,7 @@ public:
 	//ACCESS FUNCTIONS
 
 	QTSSModule* GetPacketSendingModule() { return fModule; }
-	Bool16      HasAnRTPStream() { return fHasAnRTPStream; }
+	bool      HasAnRTPStream() { return fHasAnRTPStream; }
 
 	RTPStream*  FindRTPStreamForChannelNum(UInt8 inChannelNum);
 
@@ -141,7 +141,7 @@ private:
 	};
 
 	QTSSModule*         fModule;
-	Bool16              fHasAnRTPStream;
+	bool              fHasAnRTPStream;
 	SInt32              fSessionQualityLevel;
 
 	char        fRTPStreamArray[kRTPStreamArraySize];
@@ -164,10 +164,10 @@ private:
 	UInt32              fCurrentModule;
 	// This is here to give the ability to the ClientSessionClosing role to
 	// do asynchronous I/O
-	Bool16              fModuleDoingAsyncStuff;
+	bool              fModuleDoingAsyncStuff;
 
 #if DEBUG
-	Bool16 fActivateCalled;
+	bool fActivateCalled;
 #endif
 	SInt64              fLastBandwidthTrackerStatsUpdate;
 

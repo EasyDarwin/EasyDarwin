@@ -48,14 +48,14 @@ public:
 
 	//Initialize must be called right off the bat to initialize dictionary resources
 	static void     Initialize();
-	static void     SetBase64Decoding(Bool16 newVal) { sDoBase64Decoding = newVal; }
+	static void     SetBase64Decoding(bool newVal) { sDoBase64Decoding = newVal; }
 
 	RTSPSessionInterface();
 	virtual ~RTSPSessionInterface();
 
 	//Is this session alive? If this returns false, clean up and begone as
 	//fast as possible
-	Bool16 IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
+	bool IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
 
 	// Allows clients to refresh the timeout
 	void RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
@@ -118,7 +118,7 @@ public:
 	void		RevertOutputStream();
 	void		ResetOutputStream() { fOutputStream.Reset(); fOutputStream.ResetBytesWritten(); }
 	void		SendOptionsRequest();
-	Bool16		SentOptionsRequest() { return fSentOptionsRequest; }
+	bool		SentOptionsRequest() { return fSentOptionsRequest; }
 	SInt32		RoundTripTime() { return fRoundTripTime; }
 
 	enum
@@ -182,7 +182,7 @@ protected:
 
 	// What session type are we?
 	QTSS_RTSPSessionType    fSessionType;
-	Bool16              fLiveSession;
+	bool              fLiveSession;
 	unsigned int        fObjectHolders;
 	UInt8               fCurChannelNum;
 	StrPtrLen*          fChNumToSessIDMap;
@@ -199,16 +199,16 @@ protected:
 
 	// For OPTIONS request
 	StrPtrLen				fOldOutputStreamBuffer;
-	Bool16					fSentOptionsRequest;
+	bool					fSentOptionsRequest;
 	SInt64					fOptionsRequestSendTime;
 	SInt32					fRoundTripTime;
-	Bool16					fRoundTripTimeCalculation;
+	bool					fRoundTripTimeCalculation;
 
 	RTSPSession3GPP         fRTSPSession3GPP;
 	RTSPSession3GPP*        fRTSPSession3GPPPtr;
 
 	static unsigned int sSessionIDCounter;
-	static Bool16           sDoBase64Decoding;
+	static bool           sDoBase64Decoding;
 
 	static 	UInt32			sOptionsRequestBody[kMaxRandomDataSize / sizeof(UInt32)];
 
