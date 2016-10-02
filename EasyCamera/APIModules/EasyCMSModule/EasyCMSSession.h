@@ -51,7 +51,7 @@ private:
 	void				stopPushStream() const;
 
 	// 初步判断Session Socket是否已连接
-	Bool16				isConnected() const { return fSocket->GetSocket()->IsConnected(); }
+	bool				isConnected() const { return fSocket->GetSocket()->IsConnected(); }
 
 	// transfer error code for http status code
 	static size_t		getStatusNo(QTSS_Error errNo);

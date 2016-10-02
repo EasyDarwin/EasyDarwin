@@ -93,7 +93,7 @@ QTSServer::~QTSServer()
 	delete fSrvrPrefs;
 }
 
-Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource)
+bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource)
 {
 	fServerState = qtssFatalErrorState;
 	sPrefsSource = inPrefsSource;
@@ -285,7 +285,7 @@ void    QTSServer::InitCallbacks()
 
 }
 
-Bool16 QTSServer::AddModule(QTSSModule* inModule)
+bool QTSServer::AddModule(QTSSModule* inModule)
 {
 	Assert(inModule->IsInitialized());
 

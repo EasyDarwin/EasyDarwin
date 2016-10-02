@@ -89,7 +89,7 @@ void KeyValuePair::ResetValue(const char* inValue)
 }
 
 
-FilePrefsSource::FilePrefsSource(Bool16 allowDuplicates)
+FilePrefsSource::FilePrefsSource(bool allowDuplicates)
 	: fKeyValueList(NULL),
 	fNumKeys(0),
 	fAllowDuplicates(allowDuplicates)
@@ -202,7 +202,7 @@ void FilePrefsSource::SetValue(const char* inKey, const char* inValue)
 
 
 
-Bool16 FilePrefsSource::FilePrefsConfigSetter(const char* paramName, const char* paramValue[], void* userData)
+bool FilePrefsSource::FilePrefsConfigSetter(const char* paramName, const char* paramValue[], void* userData)
 {
 	/*
 		static callback routine for ParseConfigFile

@@ -138,7 +138,7 @@ static OSMutex*         sLogMutex = NULL;//Log module isn't reentrant
 static QTSSErrorLog*    sErrorLog = NULL;
 static char             sLastErrorString[kMaxLogStringLen] = "";
 static int              sDupErrorStringCount = 0;
-static Bool16           sStartedUp = false;
+static bool           sStartedUp = false;
 static ErrorLogCheckTask* sErrorLogCheckTask = NULL;
 
 
@@ -248,7 +248,7 @@ QTSS_Error LogError(QTSS_RoleParamPtr inParamBlock)
 	{
 		size_t inStringLen = ::strlen(inParamBlock->errorParams.inBuffer);
 		size_t lastStringLen = ::strlen(sLastErrorString);
-		Bool16 isDuplicate = true;
+		bool isDuplicate = true;
 
 		if (inStringLen > sizeof(sLastErrorString) - 1) //truncate to max char buffer subtract \0 terminator
 			inStringLen = sizeof(sLastErrorString) - 1;
@@ -283,7 +283,7 @@ QTSS_Error LogError(QTSS_RoleParamPtr inParamBlock)
 
 				//timestamp the error
 				char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-				Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+				bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 				//for now, just ignore the error.
 				if (!result)
 					theDateBuffer[0] = '\0';
@@ -315,7 +315,7 @@ QTSS_Error LogError(QTSS_RoleParamPtr inParamBlock)
 
 		//timestamp the error
 		char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-		Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+		bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 		//for now, just ignore the error.
 		if (!result)
 			theDateBuffer[0] = '\0';
@@ -371,7 +371,7 @@ void    WriteStartupMessage()
 
 	//format a date for the startup time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	char tempBuffer[kMaxLogStringLen];
 	if (result)
@@ -399,7 +399,7 @@ void    WriteShutdownMessage()
 	//log shutdown message
 	//format a date for the shutdown time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	char tempBuffer[kMaxLogStringLen];
 	if (result)
@@ -412,7 +412,7 @@ void    WriteShutdownMessage()
 // This task runs once an hour to check and see if the log needs to roll.
 SInt64 ErrorLogCheckTask::Run()
 {
-	static Bool16 firstTime = true;
+	static bool firstTime = true;
 
 	// don't check the log for rolling the first time we run.
 	if (firstTime)
@@ -421,7 +421,7 @@ SInt64 ErrorLogCheckTask::Run()
 	}
 	else
 	{
-		Bool16 success = false;
+		bool success = false;
 
 		if (sErrorLog != NULL && sErrorLog->IsLogEnabled())
 			success = sErrorLog->CheckRollLog();
