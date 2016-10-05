@@ -8,7 +8,7 @@
 #define	EASY_PROTOCOL_H
 
 #include <EasyProtocolBase.h>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
@@ -39,12 +39,12 @@ public:
 //typedef vector<EasyDevice> EasyDevices;		//摄像头数组
 //typedef EasyDevices::iterator EasyDevicesIterator;
 
-typedef map<string,EasyDevice> EasyDevices;		//摄像头表，改为map.方便查找。key为channel_，value为EasyDevice
+typedef unordered_map<string,EasyDevice> EasyDevices;		//摄像头表，改为map.方便查找。key为channel_，value为EasyDevice
 typedef EasyDevices::iterator EasyDevicesIterator;
 
 
 typedef boost::variant<int, float, string> value_t;
-typedef map<string, value_t> EasyJsonValue;	//key为string,value可以是int、float、string的一种
+typedef unordered_map<string, value_t> EasyJsonValue;	//key为string,value可以是int、float、string的一种
 typedef void* EasyObject;
 
 

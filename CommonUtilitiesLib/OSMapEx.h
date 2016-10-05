@@ -12,9 +12,9 @@
 #ifndef __OSMAPEX__H__
 #define __OSMAPEX__H__
 
-#include<map>
-#include<string>
-#include"OSMutex.h"//互斥操作
+#include <unordered_map>
+#include <string>
+#include "OSMutex.h"//互斥操作
 //#include <iostream>
 using namespace std;
 
@@ -29,12 +29,12 @@ struct strMapData
 	strMapData() :m_AllExist(0), m_LastingTime(0) {}
 	strMapData(SInt64 LastingTime, char AllExist = 0) :m_AllExist(AllExist), m_LastingTime(LastingTime) {}
 };
-typedef map<string, strMapData> MapType;
+typedef unordered_map<string, strMapData> MapType;
 
 class OSMapEx
 {
 public:
-	static string GenerateSessionIdForRedis(string strIP, UInt16 uPort);//生成sessionid，可重入，不保证生成的唯一性
+	static string GenerateSessionIdForRedis(const string& strIP, UInt16 uPort);//生成sessionid，可重入，不保证生成的唯一性
 	static string GenerateSessionId();//生成sessionid,可重入，不保证生成的唯一性
 	bool Insert(const string& strSessionID, SInt64 lastingTime = sLastingTimeOneYear);//插入，线程安全，返回true成功插入，否则重复插入,用于一些长期存在的SessionID
 	//bool Delete(string&strSessionID);//删除,线程安全，成功删除返回true,否则false
