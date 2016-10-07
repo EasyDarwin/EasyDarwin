@@ -78,7 +78,7 @@ OS_Error TCPListenerSocket::Initialize(UInt32 addr, UInt16 port)
 		// Unfortunately we need to advertise a big buffer because our TCP sockets
 		// can be used for incoming broadcast data. This could force the server
 		// to run out of memory faster if it gets bogged down, but it is unavoidable.
-		this->SetSocketRcvBufSize(96 * 1024);
+		this->SetSocketRcvBufSize(512 * 1024);
 		err = this->listen(kListenQueueLength);
 		AssertV(err == 0, OSThread::GetErrno());
 		if (err != 0) break;
