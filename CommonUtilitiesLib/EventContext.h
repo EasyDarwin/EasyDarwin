@@ -40,6 +40,9 @@
 #include "OSThread.h"
 #include "Task.h"
 #include "OSRef.h"
+#include <atomic>
+
+using namespace std;
 
 #if MACOSXEVENTQUEUE
 #ifdef AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER
@@ -156,7 +159,8 @@ private:
 	bool          fModwatched;
 #endif
 
-	static unsigned int sUniqueID;
+	//static unsigned int sUniqueID;
+	static atomic_uint sUniqueID;
 
 	friend class EventThread;
 };

@@ -28,7 +28,7 @@
 	 Contains:   Implements QTSS Callback functions.
  */
 
-#undef COMMON_UTILITIES_LIB
+//#undef COMMON_UTILITIES_LIB
 #include "QTSSCallbacks.h"
 #include "QTSSDictionary.h"
 #include "QTSSStream.h"

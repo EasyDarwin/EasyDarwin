@@ -49,6 +49,9 @@
 #include "OSHeap.h"
 #include "OSThread.h"
 #include "OSMutexRW.h"
+#include <atomic>
+
+using namespace std;
 
 #define TASK_DEBUG 0
 
@@ -138,7 +141,10 @@ private:
 
 	void            SetTaskThread(TaskThread *thread);
 
-	EventFlags      fEvents;
+	//EventFlags      fEvents;
+
+	atomic<EventFlags> fEvents;
+
 	TaskThread*     fUseThisThread;
 	TaskThread*     fDefaultThread;
 	bool          fWriteLock;
@@ -155,6 +161,9 @@ private:
 	OSQueueElem     fTaskQueueElem;
 
 	unsigned int *pickerToUse;
+
+	OSMutex fAtomicMutex;
+
 	//Variable used for assigning tasks to threads in a round-robin fashion
 	static unsigned int sShortTaskThreadPicker; //default picker
 	static unsigned int sBlockingTaskThreadPicker;

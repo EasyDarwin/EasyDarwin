@@ -9,7 +9,7 @@
 	Contains:   实现对服务单元每一个Session会话的网络报文处理
 */
 
-#undef COMMON_UTILITIES_LIB
+//#undef COMMON_UTILITIES_LIB
 #include "HTTPSession.h"
 #include "QTSServerInterface.h"
 #include "OSArrayObjectDeleter.h"

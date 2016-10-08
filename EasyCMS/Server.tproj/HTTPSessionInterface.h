@@ -19,15 +19,12 @@
 #include "Task.h"
 #include "QTSS.h"
 #include "QTSSDictionary.h"
-#include "atomic.h"
-#include "base64.h"
+#include <atomic>
 #include <string>
-#include <boost/thread/condition.hpp>
 
 #include "OSRefTableEx.h"
 #include "EasyProtocolDef.h"
 #include "EasyProtocol.h"
-#include <map>
 
 using namespace EasyDarwin::Protocol;
 using namespace std;
@@ -55,7 +52,7 @@ public:
     // object holders is > 0, the RTSPSession will NEVER go away. However,
     // the object managing the session should be aware that if IsLiveSession returns
     // false it may be wise to relinquish control of the session
-    void IncrementObjectHolderCount() { (void)atomic_add(&fObjectHolders, 1); }
+	void IncrementObjectHolderCount() { /*(void)atomic_add(&fObjectHolders, 1);*/ ++fObjectHolders; }
     void DecrementObjectHolderCount();
 
     //Two main things are persistent through the course of a session, not
@@ -140,7 +137,8 @@ protected:
     //UInt32				fTerminalType;	//÷’∂À¿‡–ÕARM°¢PC°¢Android°¢IOS
 
     bool              fLiveSession;
-    unsigned int        fObjectHolders;
+    //unsigned int        fObjectHolders;
+	std::atomic_int		fObjectHolders;
 
     UInt32              fSessionIndex;
     UInt32              fLocalAddr;

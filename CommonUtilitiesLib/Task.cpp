@@ -33,7 +33,7 @@
 #include "Task.h"
 #include "OS.h"
 #include "OSMemory.h"
-#include "atomic.h"
+//#include "atomic.h"
 #include "OSMutexRW.h"
 
 
@@ -84,7 +84,8 @@ Task::EventFlags Task::GetEvents()
 	//Mask off every event currently in the mask except for the alive bit, of course,
 	//which should remain unaffected and unreported by this call.
 	EventFlags events = fEvents & kAliveOff;
-	(void)atomic_sub(&fEvents, events);
+	//(void)atomic_sub(&fEvents, events);
+	fEvents.fetch_sub(events);
 	return events;
 }
 
@@ -97,7 +98,8 @@ void Task::Signal(EventFlags events)
 	//the event mask. Because atomic_or returns the old state of the mask,
 	//we only schedule this task once.
 	events |= kAlive;
-	EventFlags oldEvents = atomic_or(&fEvents, events);
+	//EventFlags oldEvents = atomic_or(&fEvents, events);
+	auto oldEvents = fEvents.fetch_or(events);
 	if ((!(oldEvents & kAlive)) && (TaskThreadPool::sNumTaskThreads > 0))
 	{
 		if (fDefaultThread != NULL && fUseThisThread == NULL)
@@ -118,7 +120,13 @@ void Task::Signal(EventFlags events)
 		else
 		{
 			//find a thread to put this task on
-			unsigned int theThreadIndex = atomic_add((unsigned int *)pickerToUse, 1);
+			//unsigned int theThreadIndex = atomic_add((unsigned int *)pickerToUse, 1);
+
+			unsigned int theThreadIndex = 0;
+			{
+				OSMutexLocker locker(&fAtomicMutex);
+				theThreadIndex = ++(*pickerToUse);
+			}
 
 			if (&Task::sShortTaskThreadPicker == pickerToUse)
 			{
@@ -255,7 +263,8 @@ void TaskThread::Entry()
 					if (theTask->fEvents &~Task::kAlive)
 						qtss_printf("TaskThread::Entry flags still set  before delete\n");
 
-					(void)atomic_sub(&theTask->fEvents, 0);
+					//(void)atomic_sub(&theTask->fEvents, 0);
+					theTask->fEvents.fetch_sub(0);
 
 					::strncat(theTask->fTaskName, " deleted", sizeof(theTask->fTaskName) - 1);
 				}
@@ -271,9 +280,14 @@ void TaskThread::Entry()
 				//be invoked when another thread calls Signal. We also want to make sure
 				//that if an event sneaks in right as the task is returning from Run()
 				//(via Signal) that the Run function will be invoked again.
-				doneProcessingEvent = compare_and_store(Task::kAlive, 0, &theTask->fEvents);
+				/*doneProcessingEvent = compare_and_store(Task::kAlive, 0, &theTask->fEvents);
 				if (doneProcessingEvent)
-					theTask = NULL;
+					theTask = NULL;*/
+
+				unsigned int val = Task::kAlive;
+				doneProcessingEvent = theTask->fEvents.compare_exchange_weak(val, 0);
+				if (doneProcessingEvent)
+					theTask = nullptr;
 			}
 			else
 			{
@@ -282,7 +296,8 @@ void TaskThread::Entry()
 				if (TASK_DEBUG) qtss_printf("TaskThread::Entry insert TaskName=%s in timer heap thread=%p elem=%p task=%p timeout=%.2f\n", theTask->fTaskName, (void *) this, (void *)&theTask->fTimerHeapElem, (void *)theTask, (float)theTimeout / (float)1000);
 				theTask->fTimerHeapElem.SetValue(OS::Milliseconds() + theTimeout);
 				fHeap.Insert(&theTask->fTimerHeapElem);
-				(void)atomic_or(&theTask->fEvents, Task::kIdleEvent);
+				//(void)atomic_or(&theTask->fEvents, Task::kIdleEvent);
+				theTask->fEvents.fetch_or(Task::kIdleEvent);
 				doneProcessingEvent = true;
 			}
 
