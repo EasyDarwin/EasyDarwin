@@ -34,7 +34,6 @@
 
 #include "RTPPacketResender.h"
 #include "RTPStream.h"
-#include "atomic.h"
 #include "OSMutex.h"
 
 #if RTP_PACKET_RESENDER_DEBUGGING

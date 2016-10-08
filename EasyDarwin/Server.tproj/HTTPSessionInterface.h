@@ -17,7 +17,7 @@
 #include "Task.h"
 #include "QTSS.h"
 #include "QTSSDictionary.h"
-#include "atomic.h"
+#include <atomic>
 
 class HTTPSessionInterface : public QTSSDictionary, public Task
 {
@@ -32,7 +32,7 @@ public:
 
 	void RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
 
-	void IncrementObjectHolderCount() { (void)atomic_add(&fObjectHolders, 1); }
+	void IncrementObjectHolderCount() { ++fObjectHolders; }
 	void DecrementObjectHolderCount();
 
 	RTSPRequestStream*  GetInputStream() { return &fInputStream; }
@@ -92,7 +92,7 @@ protected:
 	void        SnarfInputSocket(HTTPSessionInterface* fromHTTPSession);
 
 	bool              fLiveSession;
-	unsigned int        fObjectHolders;
+	atomic_int			fObjectHolders;
 
 	UInt32              fSessionIndex;
 	UInt32              fLocalAddr;

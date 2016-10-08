@@ -9,7 +9,6 @@
     Contains:   Implementation of HTTPSessionInterface object.
 */
 
-//#include "atomic.h"
 #include "HTTPSessionInterface.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"

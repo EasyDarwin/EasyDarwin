@@ -30,7 +30,6 @@
 
 #include "EventContext.h"
 #include "OSThread.h"
-#include "atomic.h"
 
 #include <errno.h>
 

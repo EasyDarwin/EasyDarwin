@@ -32,7 +32,6 @@
 
 #include "OSMemory.h"
 #include "OS.h"
-#include "atomic.h"
 
 #include "QTSServerInterface.h"
 #include <errno.h>

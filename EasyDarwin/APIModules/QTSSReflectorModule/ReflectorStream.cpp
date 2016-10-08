@@ -32,7 +32,6 @@
 #include "QTSSModuleUtils.h"
 #include "OSMemory.h"
 #include "SocketUtils.h"
-#include "atomic.h"
 #include "RTCPPacket.h"
 #include "ReflectorSession.h"
 

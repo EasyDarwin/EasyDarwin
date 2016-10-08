@@ -28,7 +28,6 @@
 	 Contains:   Implementation of RTSPSessionInterface object.
  */
 
-#include "atomic.h"
 
 #include "RTSPSessionInterface.h"
 #include "QTSServerInterface.h"
