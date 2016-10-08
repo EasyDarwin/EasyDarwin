@@ -49,11 +49,11 @@ public:
 	};
 
 	OSHeap(UInt32 inStartSize = kDefaultStartSize);
-	~OSHeap() { if (fHeap != NULL) delete fHeap; }
+	~OSHeap() { if (fHeap != nullptr) delete fHeap; }
 
 	//ACCESSORS
 	UInt32      CurrentHeapSize() { return fFreeIndex - 1; }
-	OSHeapElem* PeekMin() { if (CurrentHeapSize() > 0) return fHeap[1]; return NULL; }
+	OSHeapElem* PeekMin() { if (CurrentHeapSize() > 0) return fHeap[1]; return nullptr; }
 
 	//MODIFIERS
 
@@ -86,8 +86,8 @@ private:
 class OSHeapElem
 {
 public:
-	OSHeapElem(void* enclosingObject = NULL)
-		: fValue(0), fEnclosingObject(enclosingObject), fCurrentHeap(NULL) {}
+	OSHeapElem(void* enclosingObject = nullptr)
+		: fValue(0), fEnclosingObject(enclosingObject), fCurrentHeap(nullptr) {}
 	~OSHeapElem() {}
 
 	//This data structure emphasizes performance over extensibility
@@ -99,7 +99,7 @@ public:
 	SInt64  GetValue() { return fValue; }
 	void*   GetEnclosingObject() { return fEnclosingObject; }
 	void	SetEnclosingObject(void* obj) { fEnclosingObject = obj; }
-	bool  IsMemberOfAnyHeap() { return fCurrentHeap != NULL; }
+	bool  IsMemberOfAnyHeap() { return fCurrentHeap != nullptr; }
 
 private:
 

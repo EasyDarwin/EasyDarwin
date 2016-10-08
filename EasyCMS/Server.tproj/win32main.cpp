@@ -384,11 +384,11 @@ void RunAsService(char* inServiceName)
 	if (theService)
 	{
 		const SInt32 kNotRunning = 1062;
-		bool stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, &lpServiceStatus);
+		auto stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, &lpServiceStatus);
 		if (!stopped && ((SInt32) ::GetLastError() != kNotRunning))
 			qtss_printf("Stopping Service Error: %d\n", ::GetLastError());
 
-		bool started = ::StartService(theService, 0, NULL);
+		auto started = ::StartService(theService, 0, NULL);
 		if (!started)
 			qtss_printf("Starting Service Error: %d\n", ::GetLastError());
 
@@ -468,7 +468,7 @@ void RemoveService(char* inServiceName)
 	theService = ::OpenService(theSCManager, inServiceName, SERVICE_ALL_ACCESS);
 	if (theService != NULL)
 	{
-		bool stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, NULL);
+		auto stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, NULL);
 		if (!stopped)
 			qtss_printf("Stopping Service Error: %d\n", ::GetLastError());
 
