@@ -73,13 +73,13 @@ static char *(*clua_error_vector) (clua_status_t);
 struct clucall_vector clua_vectors[] = {
 		{ "clua_getaliasaddress", &clua_getaliasaddress_vector },
 		{ "clua_error", &clua_error_vector },
-		{ NULL,     NULL }              /* END OF LIST */
+		{ nullptr,     nullptr }              /* END OF LIST */
 };
 
 #endif /* TRUCLUSTER */
 
 UInt32                          SocketUtils::sNumIPAddrs = 0;
-SocketUtils::IPAddrInfo*        SocketUtils::sIPAddrInfoArray = NULL;
+SocketUtils::IPAddrInfo*        SocketUtils::sIPAddrInfoArray = nullptr;
 OSMutex SocketUtils::sMutex;
 
 #if __FreeBSD__
@@ -97,7 +97,7 @@ void SocketUtils::Initialize(bool lookupDNSName)
 
 	//Count them first
 	currentifap = ifap;
-	while (currentifap != NULL)
+	while (currentifap != nullptr)
 	{
 		sockaddr = (struct sockaddr_in*)currentifap->ifa_addr;
 		if (sockaddr->sin_family == AF_INET)
@@ -114,7 +114,7 @@ void SocketUtils::Initialize(bool lookupDNSName)
 
 	int addrArrayIndex = 0;
 	currentifap = ifap;
-	while (currentifap != NULL)
+	while (currentifap != nullptr)
 	{
 		sockaddr = (struct sockaddr_in*)currentifap->ifa_addr;
 
@@ -130,13 +130,13 @@ void SocketUtils::Initialize(bool lookupDNSName)
 			sIPAddrInfoArray[addrArrayIndex].fIPAddrStr.Ptr = new char[sIPAddrInfoArray[addrArrayIndex].fIPAddrStr.Len + 2];
 			::strcpy(sIPAddrInfoArray[addrArrayIndex].fIPAddrStr.Ptr, theAddrStr);
 
-			struct hostent* theDNSName = NULL;
+			struct hostent* theDNSName = nullptr;
 			if (lookupDNSName) //convert this addr to a dns name, and store it
 			{
 				theDNSName = ::gethostbyaddr((char *)&sockaddr->sin_addr, sizeof(sockaddr->sin_addr), AF_INET);
 			}
 
-			if (theDNSName != NULL)
+			if (theDNSName != nullptr)
 			{
 				sIPAddrInfoArray[addrArrayIndex].fDNSNameStr.Len = ::strlen(theDNSName->h_name);
 				sIPAddrInfoArray[addrArrayIndex].fDNSNameStr.Ptr = new char[sIPAddrInfoArray[addrArrayIndex].fDNSNameStr.Len + 2];
@@ -184,8 +184,8 @@ void SocketUtils::Initialize(bool lookupDNSName)
 		inBuffer, kMaxAddrBufferSize,
 		outBuffer, kMaxAddrBufferSize,
 		&theReturnedSize,
-		NULL,
-		NULL);
+		nullptr,
+		nullptr);
 	Assert(theErr == 0);
 	if (theErr != 0)
 		return;
@@ -211,7 +211,7 @@ void SocketUtils::Initialize(bool lookupDNSName)
 	::memset(&ifc, 0, sizeof(ifc));
 	ifc.ifc_len = sNumIPAddrs * sizeof(struct ifreq);
 	ifc.ifc_buf = (caddr_t)new struct ifreq[sNumIPAddrs];
-	Assert(ifc.ifc_buf != NULL);
+	Assert(ifc.ifc_buf != nullptr);
 
 	::memset(ifc.ifc_buf, '\0', ifc.ifc_len);
 	int theErr = ::ioctl(tempSocket, SIOCGIFCONF, (char*)&ifc);
@@ -290,13 +290,13 @@ void SocketUtils::Initialize(bool lookupDNSName)
 		::strcpy(sIPAddrInfoArray[currentIndex].fIPAddrStr.Ptr, theAddrStr);
 
 
-		struct hostent* theDNSName = NULL;
+		struct hostent* theDNSName = nullptr;
 		if (lookupDNSName) //convert this addr to a dns name, and store it
 		{
 			theDNSName = ::gethostbyaddr((char *)&theAddr->sin_addr, sizeof(theAddr->sin_addr), AF_INET);
 		}
 
-		if (theDNSName != NULL)
+		if (theDNSName != nullptr)
 		{
 			sIPAddrInfoArray[currentIndex].fDNSNameStr.Len = ::strlen(theDNSName->h_name);
 			sIPAddrInfoArray[currentIndex].fDNSNameStr.Ptr = new char[sIPAddrInfoArray[currentIndex].fDNSNameStr.Len + 2];
@@ -369,7 +369,7 @@ void SocketUtils::Initialize(bool lookupDNSName)
 
 	//walk through the list of IP addrs twice. Once to find out how many,
 	//the second time to actually grab their information
-	char* ifReqIter = NULL;
+	char* ifReqIter = nullptr;
 	sNumIPAddrs = 0;
 
 	for (ifReqIter = buffer; ifReqIter < (buffer + ifc.ifc_len);)
@@ -395,7 +395,7 @@ void SocketUtils::Initialize(bool lookupDNSName)
 	if (clu_is_member())
 	{
 		/* loading the vector table */
-		if (clua_getaliasaddress_vector == NULL)
+		if (clua_getaliasaddress_vector == nullptr)
 		{
 			clucall_stat    clustat;
 			struct sockaddr_in  sin;
@@ -404,7 +404,7 @@ void SocketUtils::Initialize(bool lookupDNSName)
 			int context = 0;
 			clua_status_t      addr_err;
 
-			if (clua_getaliasaddress_vector != NULL)
+			if (clua_getaliasaddress_vector != nullptr)
 				while ((addr_err = clua_getaliasaddress
 				((struct sockaddr*)&sin, &context)) == CLUA_SUCCESS)
 				{
@@ -450,7 +450,7 @@ void SocketUtils::Initialize(bool lookupDNSName)
 			//convert this addr to a dns name, and store it
 			struct hostent* theDNSName = ::gethostbyaddr((char *)&sin.sin_addr,
 				sizeof(sin.sin_addr), AF_INET);
-			if (theDNSName != NULL)
+			if (theDNSName != nullptr)
 			{
 				sIPAddrInfoArray[currentIndex].fDNSNameStr.Len = ::strlen(theDNSName->h_name);
 				sIPAddrInfoArray[currentIndex].fDNSNameStr.Ptr = new char[sIPAddrInfoArray[currentIndex].fDNSNameStr.Len + 2];
@@ -492,13 +492,13 @@ void SocketUtils::Initialize(bool lookupDNSName)
 			sIPAddrInfoArray[currentIndex].fIPAddrStr.Ptr = new char[sIPAddrInfoArray[currentIndex].fIPAddrStr.Len + 2];
 			::strcpy(sIPAddrInfoArray[currentIndex].fIPAddrStr.Ptr, theAddrStr);
 
-			struct hostent* theDNSName = NULL;
+			struct hostent* theDNSName = nullptr;
 			if (lookupDNSName) //convert this addr to a dns name, and store it
 			{
 				theDNSName = ::gethostbyaddr((char *)&addrPtr->sin_addr, sizeof(addrPtr->sin_addr), AF_INET);
 			}
 
-			if (theDNSName != NULL)
+			if (theDNSName != nullptr)
 			{
 				sIPAddrInfoArray[currentIndex].fDNSNameStr.Len = ::strlen(theDNSName->h_name);
 				sIPAddrInfoArray[currentIndex].fDNSNameStr.Ptr = new char[sIPAddrInfoArray[currentIndex].fDNSNameStr.Len + 2];
@@ -600,7 +600,7 @@ void SocketUtils::ConvertAddrToString(const struct in_addr& theAddr, StrPtrLen* 
 
 UInt32 SocketUtils::ConvertStringToAddr(const char* inAddrStr)
 {
-	if (inAddrStr == NULL)
+	if (inAddrStr == nullptr)
 		return 0;
 
 	return ntohl(::inet_addr(inAddrStr));

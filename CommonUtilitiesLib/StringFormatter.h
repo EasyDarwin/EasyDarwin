@@ -148,13 +148,13 @@ inline UInt32 StringFormatter::GetTotalBufferSize()
 
 inline void StringFormatter::PutFilePath(StrPtrLen* inPath, StrPtrLen* inFileName)
 {
-	if (inPath != NULL && inPath->Len > 0)
+	if (inPath != nullptr && inPath->Len > 0)
 	{
 		Put(inPath->Ptr, inPath->Len);
 		if (kPathDelimiterChar != inPath->Ptr[inPath->Len - 1])
 			Put(kPathDelimiterString);
 	}
-	if (inFileName != NULL && inFileName->Len > 0)
+	if (inFileName != nullptr && inFileName->Len > 0)
 		Put(inFileName->Ptr, inFileName->Len);
 }
 

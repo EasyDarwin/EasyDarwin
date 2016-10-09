@@ -27,7 +27,7 @@
 #include "OSHeaders.h"
 #include "SafeStdLib.h"
 
-static AssertLogger* sLogger = NULL;
+static AssertLogger* sLogger = nullptr;
 
 void SetAssertLogger(AssertLogger* theLogger)
 {
@@ -36,7 +36,7 @@ void SetAssertLogger(AssertLogger* theLogger)
 
 void MyAssert(char* inMessage)
 {
-	if (sLogger != NULL)
+	if (sLogger != nullptr)
 		sLogger->LogAssert(inMessage);
 	else
 	{

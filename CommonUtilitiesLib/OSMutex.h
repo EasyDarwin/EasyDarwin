@@ -106,11 +106,11 @@ class OSMutexLocker
 {
 public:
 
-	OSMutexLocker(OSMutex* inMutexP) : fMutex(inMutexP) { if (fMutex != NULL) fMutex->Lock(); }
-	~OSMutexLocker() { if (fMutex != NULL) fMutex->Unlock(); }
+	OSMutexLocker(OSMutex* inMutexP) : fMutex(inMutexP) { if (fMutex != nullptr) fMutex->Lock(); }
+	~OSMutexLocker() { if (fMutex != nullptr) fMutex->Unlock(); }
 
-	void Lock() { if (fMutex != NULL) fMutex->Lock(); }
-	void Unlock() { if (fMutex != NULL) fMutex->Unlock(); }
+	void Lock() { if (fMutex != nullptr) fMutex->Lock(); }
+	void Unlock() { if (fMutex != nullptr) fMutex->Unlock(); }
 
 private:
 	OSMutex*    fMutex;

@@ -99,21 +99,21 @@ private:
 
 inline UInt32 SocketUtils::GetIPAddr(UInt32 inAddrIndex)
 {
-	Assert(sIPAddrInfoArray != NULL);
+	Assert(sIPAddrInfoArray != nullptr);
 	Assert(inAddrIndex < sNumIPAddrs);
 	return sIPAddrInfoArray[inAddrIndex].fIPAddr;
 }
 
 inline StrPtrLen* SocketUtils::GetIPAddrStr(UInt32 inAddrIndex)
 {
-	Assert(sIPAddrInfoArray != NULL);
+	Assert(sIPAddrInfoArray != nullptr);
 	Assert(inAddrIndex < sNumIPAddrs);
 	return &sIPAddrInfoArray[inAddrIndex].fIPAddrStr;
 }
 
 inline StrPtrLen* SocketUtils::GetDNSNameStr(UInt32 inDNSIndex)
 {
-	Assert(sIPAddrInfoArray != NULL);
+	Assert(sIPAddrInfoArray != nullptr);
 	Assert(inDNSIndex < sNumIPAddrs);
 	return &sIPAddrInfoArray[inDNSIndex].fDNSNameStr;
 }

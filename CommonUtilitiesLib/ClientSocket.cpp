@@ -51,10 +51,11 @@ ClientSocket::ClientSocket()
 	: fHostAddr(0),
 	fHostPort(0),
 	fEventMask(0),
-	fSocketP(NULL),
+	fSocketP(nullptr),
 	fSendBuffer(fSendBuf, 0),
 	fSentLength(0)
-{}
+{
+}
 
 OS_Error ClientSocket::Open(TCPSocket* inSocket)
 {
@@ -141,7 +142,7 @@ OS_Error ClientSocket::SendSendBuffer(TCPSocket* inSocket)
 
 
 TCPClientSocket::TCPClientSocket(UInt32 inSocketType)
-	: fSocket(NULL, inSocketType)
+	: fSocket(nullptr, inSocketType)
 {
 	//
 	// It is necessary to open the socket right when we construct the
@@ -210,8 +211,8 @@ HTTPClientSocket::HTTPClientSocket(const StrPtrLen& inURL, UInt32 inCookie, UInt
 	fSocketType(inSocketType),
 	fGetReceived(0),
 
-	fGetSocket(NULL, inSocketType),
-	fPostSocket(NULL)
+	fGetSocket(nullptr, inSocketType),
+	fPostSocket(nullptr)
 {
 	fURL.Ptr = NEW char[inURL.Len + 1];
 	fURL.Len = inURL.Len;
@@ -266,7 +267,7 @@ OS_Error HTTPClientSocket::Read(void* inBuffer, const UInt32 inLength, UInt32* o
 			fSendBuffer.Ptr[fGetReceived] = '\0';
 			char* theGetEnd = ::strstr(fSendBuffer.Ptr, "\r\n\r\n");
 
-			if (theGetEnd != NULL)
+			if (theGetEnd != nullptr)
 			{
 				// We got the entire GET response, so we are ready to move onto
 				// real RTSP response data. First skip past the \r\n\r\n
@@ -317,8 +318,8 @@ OS_Error HTTPClientSocket::SendV(iovec* inVec, UInt32 inNumVecs)
 {
 	//
 	// Bring up the POST connection if we need to
-	if (fPostSocket == NULL)
-		fPostSocket = NEW TCPSocket(NULL, fSocketType);
+	if (fPostSocket == nullptr)
+		fPostSocket = NEW TCPSocket(nullptr, fSocketType);
 
 	if (!fPostSocket->IsConnected())
 	{

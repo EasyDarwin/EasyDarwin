@@ -99,8 +99,8 @@ void TCPListenerSocket::ProcessEvent(int /*eventBits*/)
 #else
 	socklen_t size = sizeof(addr);
 #endif
-	Task* theTask = NULL;
-	TCPSocket* theSocket = NULL;
+	Task* theTask = nullptr;
+	TCPSocket* theSocket = nullptr;
 
 	//fSocket data member of TCPSocket.
 	int osSocket = accept(fFileDesc, (struct sockaddr*)&addr, &size);
@@ -141,7 +141,7 @@ void TCPListenerSocket::ProcessEvent(int /*eventBits*/)
 			WarnV((acceptError == 0), errStr);
 
 			theTask = this->GetSessionTask(&theSocket);
-			if (theTask == NULL)
+			if (theTask == nullptr)
 			{
 				close(osSocket);
 			}
@@ -158,7 +158,7 @@ void TCPListenerSocket::ProcessEvent(int /*eventBits*/)
 	}
 
 	theTask = this->GetSessionTask(&theSocket);
-	if (theTask == NULL)
+	if (theTask == nullptr)
 	{    //this should be a disconnect. do an ioctl call?
 		close(osSocket);
 		if (theSocket)

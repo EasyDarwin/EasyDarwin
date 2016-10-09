@@ -5,7 +5,7 @@
 
 using namespace std;
 
-CSdpCache* CSdpCache::cache = NULL;
+CSdpCache* CSdpCache::cache = nullptr;
 
 typedef struct sdpCache_Tag
 {
@@ -17,7 +17,7 @@ static unordered_map<string, SdpCache> sdpmap;
 
 CSdpCache* CSdpCache::GetInstance()
 {
-	if (cache == NULL)
+	if (cache == nullptr)
 	{
 		cache = new CSdpCache();
 	}
@@ -26,12 +26,12 @@ CSdpCache* CSdpCache::GetInstance()
 
 void CSdpCache::setSdpMap(char* path, char* context)
 {
-	if (path == NULL || context == NULL)
+	if (path == nullptr || context == nullptr)
 	{
 		return;
 	}
 	SdpCache cache = { 0 };
-	cache.date = time(NULL);
+	cache.date = time(nullptr);
 	cache.context = string(context);
 
 	sdpmap[string(path)] = cache;
@@ -42,7 +42,7 @@ char* CSdpCache::getSdpMap(char* path)
 	auto it = sdpmap.find(string(path));
 	if (it == sdpmap.end())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	return (char*)it->second.context.c_str();
@@ -66,7 +66,7 @@ unsigned long long CSdpCache::getSdpCacheDate(char *path)
 	auto it = sdpmap.find(string(path));
 	if (it == sdpmap.end())
 	{
-		return NULL;
+		return 0;
 	}
 
 	date = it->second.date;

@@ -46,10 +46,12 @@ class StringParser
 public:
 
 	StringParser(StrPtrLen* inStream)
-		: fStartGet(inStream == NULL ? NULL : inStream->Ptr),
-		fEndGet(inStream == NULL ? NULL : inStream->Ptr + inStream->Len),
+		: fStartGet(inStream == nullptr ? nullptr : inStream->Ptr),
+		fEndGet(inStream == nullptr ? nullptr : inStream->Ptr + inStream->Len),
 		fCurLineNumber(1),
-		fStream(inStream) {}
+		fStream(inStream)
+	{
+	}
 	~StringParser() {}
 
 	// Built-in masks for common stop conditions
@@ -76,7 +78,7 @@ public:
 	bool          ExpectEOL();
 
 	//Returns the next word
-	void            ConsumeWord(StrPtrLen* outString = NULL)
+	void            ConsumeWord(StrPtrLen* outString = nullptr)
 	{
 		ConsumeUntil(outString, sNonWordMask);
 	}
@@ -85,14 +87,14 @@ public:
 	void            ConsumeUntil(StrPtrLen* outString, char inStopChar);
 
 	//Returns whatever integer is currently in the stream
-	UInt32          ConsumeInteger(StrPtrLen* outString = NULL);
+	UInt32          ConsumeInteger(StrPtrLen* outString = nullptr);
 	Float32         ConsumeFloat();
 	Float32         ConsumeNPT();
 
 	//Keeps on going until non-whitespace
 	void            ConsumeWhitespace()
 	{
-		ConsumeUntil(NULL, sWhitespaceMask);
+		ConsumeUntil(nullptr, sWhitespaceMask);
 	}
 
 	//Assumes 'stop' is a 255-char array of booleans. Set this array
@@ -103,12 +105,12 @@ public:
 
 	//+ rt 8.19.99
 	//returns whatever is avaliable until non-whitespace
-	void            ConsumeUntilWhitespace(StrPtrLen* spl = NULL)
+	void            ConsumeUntilWhitespace(StrPtrLen* spl = nullptr)
 	{
 		ConsumeUntil(spl, sEOLWhitespaceMask);
 	}
 
-	void            ConsumeUntilDigit(StrPtrLen* spl = NULL)
+	void            ConsumeUntilDigit(StrPtrLen* spl = nullptr)
 	{
 		ConsumeUntil(spl, sDigitMask);
 	}
@@ -184,11 +186,11 @@ bool StringParser::GetThruEOL(StrPtrLen* outString)
 
 bool StringParser::ParserIsEmpty(StrPtrLen* outString)
 {
-	if (NULL == fStartGet || NULL == fEndGet)
+	if (nullptr == fStartGet || nullptr == fEndGet)
 	{
-		if (NULL != outString)
+		if (nullptr != outString)
 		{
-			outString->Ptr = NULL;
+			outString->Ptr = nullptr;
 			outString->Len = 0;
 		}
 

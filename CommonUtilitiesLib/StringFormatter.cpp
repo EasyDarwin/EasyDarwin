@@ -94,7 +94,7 @@ void StringFormatter::Put(char* buffer, UInt32 bufferSize)
 //Alter the buffer.  Will not count the '\0' terminator as among the bytes written
 bool StringFormatter::PutFmtStr(const char* fmt, ...)
 {
-	Assert(fmt != NULL);
+	Assert(fmt != nullptr);
 
 	va_list args;
 	for (;;)

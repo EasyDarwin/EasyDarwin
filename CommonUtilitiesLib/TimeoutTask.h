@@ -48,6 +48,8 @@
 #include "OSMutex.h"
 #include "OS.h"
 
+#include <memory>
+
 #define TIMEOUT_DEBUGGING 0 //messages to help debugging timeouts
 
 class TimeoutTaskThread : public IdleTask
@@ -105,7 +107,9 @@ private:
 	//for putting on our global queue of timeout tasks
 	OSQueueElem fQueueElem;
 
-	static TimeoutTaskThread*   sThread;
+	//static TimeoutTaskThread*   sThread;
+
+	static shared_ptr<TimeoutTaskThread> sThread;
 
 	friend class TimeoutTaskThread;
 };

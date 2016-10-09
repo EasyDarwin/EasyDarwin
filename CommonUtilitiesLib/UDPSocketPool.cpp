@@ -48,7 +48,7 @@ UDPSocketPair* UDPSocketPool::GetUDPSocketPair(UInt32 inIPAddr, UInt16 inPort,
 			{
 				//check to make sure this source IP & port is not already in the demuxer.
 				//If not, we can return this socket pair.
-				if ((theElem->fSocketB->GetDemuxer() == NULL) ||
+				if ((theElem->fSocketB->GetDemuxer() == nullptr) ||
 					((!theElem->fSocketB->GetDemuxer()->AddrInMap(0, 0)) &&
 					(!theElem->fSocketB->GetDemuxer()->AddrInMap(inSrcIPAddr, inSrcPort))))
 				{
@@ -58,7 +58,7 @@ UDPSocketPair* UDPSocketPool::GetUDPSocketPair(UInt32 inIPAddr, UInt16 inPort,
 				//If port is specified, there is NO WAY a socket pair can exist that matches
 				//the criteria (because caller wants a specific ip & port combination)
 				else if (inPort != 0)
-					return NULL;
+					return nullptr;
 			}
 		}
 	}
@@ -82,7 +82,7 @@ UDPSocketPair*  UDPSocketPool::CreateUDPSocketPair(UInt32 inAddr, UInt16 inPort)
 {
 	//try to find an open pair of ports to bind these suckers tooo
 	OSMutexLocker locker(&fMutex);
-	UDPSocketPair* theElem = NULL;
+	UDPSocketPair* theElem = nullptr;
 	bool foundPair = false;
 	UInt16 curPort = kLowestUDPPort;
 	UInt16 stopPort = kHighestUDPPort - 1; // prevent roll over when iterating over port nums
@@ -101,16 +101,16 @@ UDPSocketPair*  UDPSocketPool::CreateUDPSocketPair(UInt32 inAddr, UInt16 inPort)
 		socketBPort = curPort + 1; // make socket pairs adjacent to one another
 
 		theElem = ConstructUDPSocketPair();
-		Assert(theElem != NULL);
+		Assert(theElem != nullptr);
 		if (theElem->fSocketA->Open() != OS_NoErr)
 		{
 			this->DestructUDPSocketPair(theElem);
-			return NULL;
+			return nullptr;
 		}
 		if (theElem->fSocketB->Open() != OS_NoErr)
 		{
 			this->DestructUDPSocketPair(theElem);
-			return NULL;
+			return nullptr;
 		}
 
 		// Set socket options on these new sockets
@@ -142,11 +142,11 @@ UDPSocketPair*  UDPSocketPool::CreateUDPSocketPair(UInt32 inAddr, UInt16 inPort)
 		curPort += 2; //try a higher port pair
 
 		this->DestructUDPSocketPair(theElem); //a bind failure
-		theElem = NULL;
+		theElem = nullptr;
 	}
 	//if we couldn't find a pair of sockets, make sure to clean up our mess
-	if (theElem != NULL)
+	if (theElem != nullptr)
 		this->DestructUDPSocketPair(theElem);
 
-	return NULL;
+	return nullptr;
 }

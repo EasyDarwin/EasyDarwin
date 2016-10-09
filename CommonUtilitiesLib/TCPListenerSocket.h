@@ -44,7 +44,7 @@ class TCPListenerSocket : public TCPSocket, public IdleTask
 {
 public:
 
-	TCPListenerSocket() : TCPSocket(NULL, Socket::kNonBlockingSocketType), IdleTask(),
+	TCPListenerSocket() : TCPSocket(nullptr, Socket::kNonBlockingSocketType), IdleTask(),
 		fAddr(0), fPort(0), fOutOfDescriptors(false), fSleepBetweenAccepts(false) {
 		this->SetTaskName("TCPListenerSocket");
 	}

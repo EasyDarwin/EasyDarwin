@@ -62,7 +62,7 @@ class OSRef
 {
 public:
 
-	OSRef() : fObjectP(NULL), fRefCount(0), fNextHashEntry(NULL)
+	OSRef() : fObjectP(nullptr), fRefCount(0), fNextHashEntry(nullptr)
 	{
 #if DEBUG
 		fInATable = false;
@@ -70,7 +70,7 @@ public:
 #endif          
 	}
 	OSRef(const StrPtrLen& inString, void* inObjectP)
-		: fRefCount(0), fNextHashEntry(NULL)
+		: fRefCount(0), fNextHashEntry(nullptr)
 	{
 		Set(inString, inObjectP);
 	}
@@ -145,7 +145,9 @@ private:
 	//these functions are only used by the hash table itself. This constructor
 	//will break the "Set" functions.
 	OSRefKey(OSRef* elem) : fStringP(&elem->fString),
-		fHashValue(elem->fHashValue) {}
+		fHashValue(elem->fHashValue)
+	{
+	}
 
 	friend int operator ==(const OSRefKey& key1, const OSRefKey& key2)
 	{
@@ -193,7 +195,7 @@ public:
 
 	// RegisterOrResolve
 	// If the ID of the input ref is unique, this function is equivalent to
-	// Register, and returns NULL.
+	// Register, and returns nullptr.
 	// If there is a duplicate ID already in the map, this funcion
 	// leave it, resolves it, and returns it.
 	OSRef*              RegisterOrResolve(OSRef* inRef);

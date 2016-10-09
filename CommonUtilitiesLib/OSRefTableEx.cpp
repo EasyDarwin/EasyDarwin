@@ -8,11 +8,11 @@
 #include"OSRefTableEx.h"
 #include <errno.h>
 
-OSRefTableEx::OSRefEx * OSRefTableEx::Resolve(const string& key)//引用对象，存在返回指针，否则返回NULL
+OSRefTableEx::OSRefEx * OSRefTableEx::Resolve(const string& key)//引用对象，存在返回指针，否则返回nullptr
 {
 	OSMutexLocker locker(&m_Mutex);
 	if (m_Map.find(key) == m_Map.end())//不存在
-		return NULL;
+		return nullptr;
 	m_Map[key]->AddRef(1);
 
 	return m_Map[key];
@@ -32,8 +32,8 @@ OS_Error OSRefTableEx::Release(const string& key)//释放引用
 
 OS_Error OSRefTableEx::Register(const string& key, void* pObject)//加入到map中
 {
-	Assert(pObject != NULL);
-	if (pObject == NULL)
+	Assert(pObject != nullptr);
+	if (pObject == nullptr)
 		return EPERM;
 
 	OSMutexLocker locker(&m_Mutex);//互斥
