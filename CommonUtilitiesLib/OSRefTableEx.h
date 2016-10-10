@@ -19,7 +19,7 @@ public:
 	{
 
 	public:
-		OSRefEx() : mp_Object(NULL), m_Count(0) {}
+		OSRefEx() : mp_Object(nullptr), m_Count(0) {}
 		OSRefEx(void* pobject) : mp_Object(pobject), m_Count(0) {}
 		void* GetObjectPtr() const { return mp_Object; }
 		int GetRefNum() const { return m_Count; }
