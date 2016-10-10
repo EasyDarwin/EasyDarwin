@@ -160,7 +160,8 @@ private:
 #endif
 
 	//static unsigned int sUniqueID;
-	static atomic_uint sUniqueID;
+	//static atomic_uint sUniqueID;
+        static atomic<unsigned int> sUniqueID;
 
 	friend class EventThread;
 };

@@ -73,7 +73,7 @@ ${CND_CONF}/libeasyredisclient.a: ${OBJECTFILES}
 ${OBJECTDIR}/EasyRedisClient.o: EasyRedisClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../EasyProtocol/Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyRedisClient.o EasyRedisClient.cpp
+	$(COMPILE.cc) -O2 -I../EasyProtocol/Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyRedisClient.o EasyRedisClient.cpp
 
 ${OBJECTDIR}/async.o: async.c 
 	${MKDIR} -p ${OBJECTDIR}

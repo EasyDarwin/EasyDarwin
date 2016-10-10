@@ -892,6 +892,7 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
           <incDir>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
@@ -903,9 +904,8 @@
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-fPIC</commandLine>
+          <commandLine>-fPIC -std=c++11</commandLine>
           <preprocessorList>
-            <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>
@@ -1393,6 +1393,8 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
@@ -1406,7 +1408,6 @@
           </incFile>
           <commandLine>-m32 -fPIC</commandLine>
           <preprocessorList>
-            <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>

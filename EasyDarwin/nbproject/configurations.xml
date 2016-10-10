@@ -1161,6 +1161,7 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
           <incDir>
             <pElem>../HTTPUtilitiesLib</pElem>
             <pElem>../CommonUtilitiesLib</pElem>
@@ -1199,7 +1200,6 @@
           </incFile>
           <commandLine>-m32 -pipe -Wall -Wno-format-y2k</commandLine>
           <preprocessorList>
-            <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>DSS_USE_API_CALLBACKS</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
@@ -2784,9 +2784,8 @@
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-pipe -Wall -Wno-format-y2k</commandLine>
+          <commandLine>-pipe -Wall -Wno-format-y2k -std=c++11</commandLine>
           <preprocessorList>
-            <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>DSS_USE_API_CALLBACKS</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
