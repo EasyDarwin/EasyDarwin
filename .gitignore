@@ -57,3 +57,4 @@ Movies*/
 /EasyRedisClient/build/
 *.doc
 *.VC.db
+*.VC.opendb
