@@ -62,11 +62,11 @@ class ClientSession : public Task
                         ClientType inClientType,
                         UInt32 inDurationInSec, UInt32 inStartPlayTimeInSec,
                         UInt32 inRTCPIntervalInMS, UInt32 inOptionsIntervalInSec,
-                        UInt32 inHTTPCookie, Bool16 inAppendJunkData, UInt32 inReadInterval,
+                        UInt32 inHTTPCookie, bool inAppendJunkData, UInt32 inReadInterval,
                         UInt32 inSockRcvBufSize, Float32 inLateTolerance, char* inMetaInfoFields,
                         Float32 inSpeed, UInt32 verboseLevel, char* inPacketRangePlayHeader, UInt32 inOverbufferWindowSizeInK,
-                        Bool16 sendOptions, Bool16 requestRandomData, SInt32 randomDataSize, Bool16 enable3GPP,
-                        UInt32 GBW = 0, UInt32 MBW = 0, UInt32 MTD = 0, Bool16 enableForcePlayoutDelay = false, UInt32 playoutDelay = 0,
+                        bool sendOptions, bool requestRandomData, SInt32 randomDataSize, bool enable3GPP,
+                        UInt32 GBW = 0, UInt32 MBW = 0, UInt32 MTD = 0, bool enableForcePlayoutDelay = false, UInt32 playoutDelay = 0,
                         UInt32 bandwidth = 0, UInt32 bufferSpace = 0, UInt32 delayTime = 0, UInt32 startPlayDelay = 0,
                         char *controlID = NULL, char *name = NULL, char *password = NULL);
 
@@ -114,7 +114,7 @@ class ClientSession : public Task
         // Once this client session is completely done with the TEARDOWN and ready to be
         // destructed, this will return true. Until it returns true, this object should not
         // be deleted. When it does return true, this object should be deleted.
-        Bool16  IsDone()        { return fState == kDone; }
+        bool  IsDone()        { return fState == kDone; }
         
         //
         // ACCESSORS
@@ -200,8 +200,8 @@ class ClientSession : public Task
         UInt32          fRTCPIntervalInMs;
         UInt32          fOptionsIntervalInSec;
         
-        Bool16          fOptions;
-        Bool16          fOptionsRequestRandomData;
+        bool          fOptions;
+        bool          fOptionsRequestRandomData;
         SInt32          fOptionsRandomDataSize;
         SInt64          fTransactionStartTimeMilli;
 
@@ -215,8 +215,8 @@ class ClientSession : public Task
         SInt64          fTotalPlayTime;
         SInt64          fLastRTCPTime;
         
-        Bool16          fTeardownImmediately;
-        Bool16          fAppendJunk;
+        bool          fTeardownImmediately;
+        bool          fAppendJunk;
         UInt32          fReadInterval;
         UInt32          fSockRcvBufSize;
         
@@ -228,14 +228,14 @@ class ClientSession : public Task
         UInt32 fGuarenteedBitRate;
         UInt32 fMaxBitRate;
         UInt32 fMaxTransferDelay;
-		Bool16 fEnableForcePlayoutDelay;
+		bool fEnableForcePlayoutDelay;
 		UInt32 fPlayoutDelay;
         UInt32 fBandwidth;				//bps
 		//the buffer space is per stream, not total space
 		UInt32 fBufferSpace;
 		UInt32 fDelayTime;				//target buffering delay
 		UInt32 fStartPlayDelay;			//how much buffer should we keep before we start playing? in milliseconds
-		Bool16 fEnable3GPP;
+		bool fEnable3GPP;
 
         // Client stats
         struct TrackStats
@@ -291,11 +291,11 @@ class ClientSession : public Task
             UInt8           fSequenceNumberMap[kSeqNumMapSize];
             UInt16          fWrapSeqNum;
             UInt32          fSSRC;
-            Bool16          fIsSSRCValid;
+            bool          fIsSSRCValid;
             
             UInt16          fHighestSeqNum;
             UInt16          fLastAckedSeqNum;
-            Bool16          fHighestSeqNumValid;
+            bool          fHighestSeqNumValid;
             
             UInt32          fNumAcks;
             UInt32          fNumDuplicates;

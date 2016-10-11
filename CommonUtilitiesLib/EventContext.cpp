@@ -53,7 +53,7 @@
 atomic_uint EventContext::sUniqueID = WM_USER;
 #else
 //unsigned int EventContext::sUniqueID = 1;
-atomic_uint EventContext::sUniqueID = 1;
+atomic<unsigned int> EventContext::sUniqueID{1};
 #endif
 
 EventContext::EventContext(int inFileDesc, EventThread* inThread)
@@ -223,8 +223,14 @@ void EventContext::RequestEvent(int theMask)
 #else
 		do
 		{
-			if (!compare_and_store(10000000, 1, &sUniqueID))
-				fUniqueID = (PointerSizedInt)atomic_add(&sUniqueID, 1);
+			//if (!compare_and_store(10000000, 1, &sUniqueID))
+			//	fUniqueID = (PointerSizedInt)atomic_add(&sUniqueID, 1);
+			//else
+			//	fUniqueID = 1;
+                    
+                        unsigned int topVal = 10000000;
+			if (!sUniqueID.compare_exchange_weak(topVal, 1))  // Fix 2466667: message IDs above a
+				fUniqueID = ++sUniqueID;         // level are ignored, so wrap at 8192
 			else
 				fUniqueID = 1;
 

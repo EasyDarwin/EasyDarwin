@@ -241,7 +241,7 @@ char* RTPSessionInterface::GetSRBuffer(UInt32 inSRLen)
 	if (fSRBuffer.Len < inSRLen)
 	{
 		delete[] fSRBuffer.Ptr;
-		fSRBuffer.Set(NEW char[2 * inSRLen], 2 * inSRLen);
+		fSRBuffer.Set(new char[2 * inSRLen], 2 * inSRLen);
 	}
 	return fSRBuffer.Ptr;
 }
@@ -360,7 +360,7 @@ void RTPSessionInterface::CreateDigestAuthenticationNonce() {
 
 	// Calculate nonce: MD5 of sessionid:timestamp
 	SInt64 curTime = OS::Milliseconds();
-	char* curTimeStr = NEW char[128];
+	char* curTimeStr = new char[128];
 	qtss_sprintf(curTimeStr, "%" _64BITARG_ "d", curTime);
 
 	// Delete old nonce before creating a new one
@@ -406,11 +406,11 @@ void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop,
 			SInt64 theMicroseconds = OS::Microseconds();
 			::srand((unsigned int)theMicroseconds);
 			UInt32 randomNum = ::rand();
-			char* randomNumStr = NEW char[128];
+			char* randomNumStr = new char[128];
 			qtss_sprintf(randomNumStr, "%"   _U32BITARG_   "", randomNum);
 			int len = ::strlen(randomNumStr);
 			fAuthOpaque.Len = Base64encode_len(len);
-			char *opaqueStr = NEW char[fAuthOpaque.Len];
+			char *opaqueStr = new char[fAuthOpaque.Len];
 			(void)Base64encode(opaqueStr, randomNumStr, len);
 			delete[] randomNumStr;                 // Don't need this anymore
 			if (fAuthOpaque.Ptr != NULL)             // Delete existing pointer before assigning new
@@ -442,11 +442,11 @@ void RTPSessionInterface::UpdateDigestAuthChallengeParams(bool newNonce, bool cr
 		SInt64 theMicroseconds = OS::Microseconds();
 		::srand((unsigned int)theMicroseconds);
 		UInt32 randomNum = ::rand();
-		char* randomNumStr = NEW char[128];
+		char* randomNumStr = new char[128];
 		qtss_sprintf(randomNumStr, "%"   _U32BITARG_   "", randomNum);
 		int len = ::strlen(randomNumStr);
 		fAuthOpaque.Len = Base64encode_len(len);
-		char *opaqueStr = NEW char[fAuthOpaque.Len];
+		char *opaqueStr = new char[fAuthOpaque.Len];
 		(void)Base64encode(opaqueStr, randomNumStr, len);
 		delete[] randomNumStr;                 // Don't need this anymore
 		if (fAuthOpaque.Ptr != NULL)             // Delete existing pointer before assigning new

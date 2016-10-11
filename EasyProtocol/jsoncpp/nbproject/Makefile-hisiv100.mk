@@ -18,7 +18,7 @@ CC=arm-hisiv100-linux-uclibcgnueabi-gcc
 CCC=arm-hisiv100-linux-uclibcgnueabi-g++
 CXX=arm-hisiv100-linux-uclibcgnueabi-g++
 FC=gfortran
-AS=as
+AS=arm-hisiv100-linux-uclibcgnueabi-as
 
 # Macros
 CND_PLATFORM=hisiv100-Linux

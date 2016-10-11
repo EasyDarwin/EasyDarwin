@@ -35,6 +35,7 @@
 #include "RTPPacketResender.h"
 #include "RTPStream.h"
 #include "OSMutex.h"
+#include <new>
 
 #if RTP_PACKET_RESENDER_DEBUGGING
 #include "QTSSRollingLog.h"
@@ -49,7 +50,7 @@ public:
 
 	virtual char* GetLogName()
 	{
-		char *logFileNameStr = NEW char[80];
+		char *logFileNameStr = new char[80];
 
 		::strcpy(logFileNameStr, fLogFName);
 		return logFileNameStr;
@@ -57,7 +58,7 @@ public:
 
 	virtual char* GetLogDir()
 	{
-		char *logDirStr = NEW char[80];
+		char *logDirStr = new char[80];
 
 		::strcpy(logDirStr, DEFAULTPATHS_LOG_DIR);
 		return logDirStr;
@@ -97,7 +98,7 @@ RTPPacketResender::RTPPacketResender()
 	fLastUsed(0),
 	fPacketQMutex()
 {
-	fPacketArray = (RTPResenderEntry*)NEW char[sizeof(RTPResenderEntry) * fPacketArraySize];
+	fPacketArray = (RTPResenderEntry*)new char[sizeof(RTPResenderEntry) * fPacketArraySize];
 	::memset(fPacketArray, 0, sizeof(RTPResenderEntry) * fPacketArraySize);
 
 }
@@ -241,7 +242,7 @@ RTPResenderEntry*   RTPPacketResender::GetEmptyEntry(UInt16 inSeqNum, UInt32 inP
 	if (fPacketsInList == fPacketArraySize) // allocate a new array
 	{
 		fPacketArraySize += kPacketArrayIncreaseInterval;
-		RTPResenderEntry* tempArray = (RTPResenderEntry*)NEW char[sizeof(RTPResenderEntry) * fPacketArraySize];
+		RTPResenderEntry* tempArray = (RTPResenderEntry*)new char[sizeof(RTPResenderEntry) * fPacketArraySize];
 		::memset(tempArray, 0, sizeof(RTPResenderEntry) * fPacketArraySize);
 		::memcpy(tempArray, fPacketArray, sizeof(RTPResenderEntry) * fPacketsInList);
 		delete[] fPacketArray;
@@ -279,7 +280,7 @@ RTPResenderEntry*   RTPPacketResender::GetEmptyEntry(UInt16 inSeqNum, UInt32 inP
 	{
 		//sBufferPool.Put(theEntry->fPacketData);
 		theEntry->fIsSpecialBuffer = true;
-		theEntry->fPacketData = NEW char[inPacketSize];
+		theEntry->fPacketData = new char[inPacketSize];
 	}
 	else// It is not special, it's from the buffer pool
 	{
@@ -344,7 +345,7 @@ void RTPPacketResender::AddPacket(void * inRTPPacket, UInt32 packetSize, SInt32 
 		// Track the number of wasted bytes we have
 		atomic_add(&sNumWastedBytes, kMaxDataBufferSize - packetSize);
 
-		//PLDoubleLinkedListNode<RTPResenderEntry> * listNode = NEW PLDoubleLinkedListNode<RTPResenderEntry>( new RTPResenderEntry(inRTPPacket, packetSize, ageLimit, fRTTEstimator.CurRetransmitTimeout() ) );
+		//PLDoubleLinkedListNode<RTPResenderEntry> * listNode = new PLDoubleLinkedListNode<RTPResenderEntry>( new RTPResenderEntry(inRTPPacket, packetSize, ageLimit, fRTTEstimator.CurRetransmitTimeout() ) );
 		//fAckList.AddNodeToTail(listNode);
 		fBandwidthTracker->FillWindow(packetSize);
 	}

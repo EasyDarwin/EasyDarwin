@@ -269,7 +269,7 @@ RTPStream::RTPStream(UInt32 inSSRC, RTPSessionInterface* inSession)
 		fDisableThinning = thinningDisabledForUserAgent;
 
 
-	fStream3GPP = NEW RTPStream3GPP(*this, doRateAdaptation);
+	fStream3GPP = new RTPStream3GPP(*this, doRateAdaptation);
 	fStreamRef = this;
 	if (fUDPMonitorEnabled)
 	{
