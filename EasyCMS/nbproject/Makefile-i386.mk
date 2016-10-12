@@ -98,172 +98,172 @@ ${CND_CONF}/easycms: ${OBJECTFILES}
 ${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o: ../HTTPUtilitiesLib/HTTPProtocol.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o ../HTTPUtilitiesLib/HTTPProtocol.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o ../HTTPUtilitiesLib/HTTPProtocol.cpp
 
 ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o: ../HTTPUtilitiesLib/HTTPRequest.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o ../HTTPUtilitiesLib/HTTPRequest.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o ../HTTPUtilitiesLib/HTTPRequest.cpp
 
 ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/dfc17a71
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o ../OSMemoryLib/OSMemory.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o ../OSMemoryLib/OSMemory.cpp
 
 ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/cbf2331e
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o ../SafeStdLib/InternalStdLib.cpp
 
 ${OBJECTDIR}/APICommonCode/QTAccessFile.o: APICommonCode/QTAccessFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTAccessFile.o APICommonCode/QTAccessFile.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTAccessFile.o APICommonCode/QTAccessFile.cpp
 
 ${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o: APICommonCode/QTSSModuleUtils.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o APICommonCode/QTSSModuleUtils.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o APICommonCode/QTSSModuleUtils.cpp
 
 ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o: APICommonCode/QTSSRollingLog.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APICommonCode
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o APICommonCode/QTSSRollingLog.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o APICommonCode/QTSSRollingLog.cpp
 
 ${OBJECTDIR}/APIModules/EasyAuthModule/EasyAuthModule.o: APIModules/EasyAuthModule/EasyAuthModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyAuthModule
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyAuthModule/EasyAuthModule.o APIModules/EasyAuthModule/EasyAuthModule.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyAuthModule/EasyAuthModule.o APIModules/EasyAuthModule/EasyAuthModule.cpp
 
 ${OBJECTDIR}/APIModules/EasyRedisModule/EasyRedisModule.o: APIModules/EasyRedisModule/EasyRedisModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyRedisModule
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyRedisModule/EasyRedisModule.o APIModules/EasyRedisModule/EasyRedisModule.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyRedisModule/EasyRedisModule.o APIModules/EasyRedisModule/EasyRedisModule.cpp
 
 ${OBJECTDIR}/APIStubLib/QTSS_Private.o: APIStubLib/QTSS_Private.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APIStubLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIStubLib/QTSS_Private.o APIStubLib/QTSS_Private.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIStubLib/QTSS_Private.o APIStubLib/QTSS_Private.cpp
 
 ${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o: PrefsSourceLib/FilePrefsSource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o PrefsSourceLib/FilePrefsSource.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o PrefsSourceLib/FilePrefsSource.cpp
 
 ${OBJECTDIR}/PrefsSourceLib/XMLParser.o: PrefsSourceLib/XMLParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLParser.o PrefsSourceLib/XMLParser.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLParser.o PrefsSourceLib/XMLParser.cpp
 
 ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o: PrefsSourceLib/XMLPrefsParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
 
 ${OBJECTDIR}/Server.tproj/DecoderHelper.o: Server.tproj/DecoderHelper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/DecoderHelper.o Server.tproj/DecoderHelper.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/DecoderHelper.o Server.tproj/DecoderHelper.cpp
 
 ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o: Server.tproj/GenerateXMLPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o Server.tproj/GenerateXMLPrefs.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o Server.tproj/GenerateXMLPrefs.cpp
 
 ${OBJECTDIR}/Server.tproj/HTTPRequestStream.o: Server.tproj/HTTPRequestStream.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPRequestStream.o Server.tproj/HTTPRequestStream.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPRequestStream.o Server.tproj/HTTPRequestStream.cpp
 
 ${OBJECTDIR}/Server.tproj/HTTPResponseStream.o: Server.tproj/HTTPResponseStream.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPResponseStream.o Server.tproj/HTTPResponseStream.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPResponseStream.o Server.tproj/HTTPResponseStream.cpp
 
 ${OBJECTDIR}/Server.tproj/HTTPSession.o: Server.tproj/HTTPSession.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPSession.o Server.tproj/HTTPSession.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPSession.o Server.tproj/HTTPSession.cpp
 
 ${OBJECTDIR}/Server.tproj/HTTPSessionInterface.o: Server.tproj/HTTPSessionInterface.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPSessionInterface.o Server.tproj/HTTPSessionInterface.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/HTTPSessionInterface.o Server.tproj/HTTPSessionInterface.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSCallbacks.o: Server.tproj/QTSSCallbacks.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSCallbacks.o Server.tproj/QTSSCallbacks.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSCallbacks.o Server.tproj/QTSSCallbacks.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSDataConverter.o: Server.tproj/QTSSDataConverter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDataConverter.o Server.tproj/QTSSDataConverter.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDataConverter.o Server.tproj/QTSSDataConverter.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSDictionary.o: Server.tproj/QTSSDictionary.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDictionary.o Server.tproj/QTSSDictionary.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSDictionary.o Server.tproj/QTSSDictionary.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSErrorLogModule.o: Server.tproj/QTSSErrorLogModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSErrorLogModule.o Server.tproj/QTSSErrorLogModule.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSErrorLogModule.o Server.tproj/QTSSErrorLogModule.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSExpirationDate.o: Server.tproj/QTSSExpirationDate.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSExpirationDate.o Server.tproj/QTSSExpirationDate.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSExpirationDate.o Server.tproj/QTSSExpirationDate.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSFile.o: Server.tproj/QTSSFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSFile.o Server.tproj/QTSSFile.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSFile.o Server.tproj/QTSSFile.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSMessages.o: Server.tproj/QTSSMessages.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSMessages.o Server.tproj/QTSSMessages.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSMessages.o Server.tproj/QTSSMessages.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSModule.o: Server.tproj/QTSSModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSModule.o Server.tproj/QTSSModule.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSModule.o Server.tproj/QTSSModule.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSPrefs.o: Server.tproj/QTSSPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSPrefs.o Server.tproj/QTSSPrefs.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSPrefs.o Server.tproj/QTSSPrefs.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSSSocket.o: Server.tproj/QTSSSocket.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSSocket.o Server.tproj/QTSSSocket.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSSSocket.o Server.tproj/QTSSSocket.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSServer.o: Server.tproj/QTSServer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServer.o Server.tproj/QTSServer.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServer.o Server.tproj/QTSServer.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSServerInterface.o: Server.tproj/QTSServerInterface.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerInterface.o Server.tproj/QTSServerInterface.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerInterface.o Server.tproj/QTSServerInterface.cpp
 
 ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o: Server.tproj/QTSServerPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o Server.tproj/QTSServerPrefs.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/QTSServerPrefs.o Server.tproj/QTSServerPrefs.cpp
 
 ${OBJECTDIR}/Server.tproj/RunServer.o: Server.tproj/RunServer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/RunServer.o Server.tproj/RunServer.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/RunServer.o Server.tproj/RunServer.cpp
 
 ${OBJECTDIR}/Server.tproj/main.o: Server.tproj/main.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/main.o Server.tproj/main.cpp
+	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/main.o Server.tproj/main.cpp
 
 # Subprojects
 .build-subprojects:
