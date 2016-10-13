@@ -45,7 +45,7 @@
 #define HTTP_SESSION_INTERFACE_DEBUGGING 0
 #endif
 
-unsigned int	HTTPSessionInterface::sSessionIndexCounter = kFirstHTTPSessionID;
+std::atomic_uint HTTPSessionInterface::sSessionIndexCounter{ kFirstHTTPSessionID };
 
 QTSSAttrInfoDict::AttrInfo  HTTPSessionInterface::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
@@ -93,7 +93,8 @@ HTTPSessionInterface::HTTPSessionInterface()
 	fTimeoutTask.SetTask(this);
 	fSocket.SetTask(this);
 
-	fSessionIndex = (UInt32)atomic_add(&sSessionIndexCounter, 1);
+	//fSessionIndex = (UInt32)atomic_add(&sSessionIndexCounter, 1);
+	fSessionIndex = ++sSessionIndexCounter;
 	this->SetVal(easyHTTPSesID, &fSessionIndex, sizeof(fSessionIndex));
 
 	this->SetVal(easyHTTPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));

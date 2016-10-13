@@ -66,7 +66,7 @@ public:
 	// object holders is > 0, the RTSPSession will NEVER go away. However,
 	// the object managing the session should be aware that if IsLiveSession returns
 	// false it may be wise to relinquish control of the session
-	void IncrementObjectHolderCount() { (void)atomic_add(&fObjectHolders, 1); }
+	void IncrementObjectHolderCount() { /*(void)atomic_add(&fObjectHolders, 1);*/ ++fObjectHolders; }
 	void DecrementObjectHolderCount();
 
 	// If RTP data is interleaved into the RTSP connection, we need to associate
@@ -183,7 +183,8 @@ protected:
 	// What session type are we?
 	QTSS_RTSPSessionType    fSessionType;
 	bool              fLiveSession;
-	unsigned int        fObjectHolders;
+	//unsigned int        fObjectHolders;
+	std::atomic_uint	fObjectHolders;
 	UInt8               fCurChannelNum;
 	StrPtrLen*          fChNumToSessIDMap;
 
@@ -207,7 +208,9 @@ protected:
 	RTSPSession3GPP         fRTSPSession3GPP;
 	RTSPSession3GPP*        fRTSPSession3GPPPtr;
 
-	static unsigned int sSessionIDCounter;
+	//static unsigned int sSessionIDCounter;
+	static std::atomic_uint sSessionIDCounter;
+
 	static bool           sDoBase64Decoding;
 
 	static 	UInt32			sOptionsRequestBody[kMaxRandomDataSize / sizeof(UInt32)];

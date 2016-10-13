@@ -7,9 +7,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="atomic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="base64.c">
       <Filter>Source Files</Filter>
     </ClCompile>

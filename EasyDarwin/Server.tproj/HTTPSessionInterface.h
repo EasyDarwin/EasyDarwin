@@ -104,7 +104,8 @@ protected:
 
 	bool				fAuthenticated;
 
-	static unsigned int	sSessionIndexCounter;
+	//static unsigned int	sSessionIndexCounter;
+	static std::atomic_uint sSessionIndexCounter;
 
 	// Dictionary support Param retrieval function
 	static void*        SetupParams(QTSSDictionary* inSession, UInt32* outLen);

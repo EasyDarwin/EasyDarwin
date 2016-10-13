@@ -45,7 +45,7 @@
 
 
 
-unsigned int            RTSPSessionInterface::sSessionIDCounter = kFirstRTSPSessionID;
+std::atomic_uint RTSPSessionInterface::sSessionIDCounter{ kFirstRTSPSessionID };
 bool                  RTSPSessionInterface::sDoBase64Decoding = true;
 UInt32					RTSPSessionInterface::sOptionsRequestBody[kMaxRandomDataSize / sizeof(UInt32)];
 
@@ -120,7 +120,9 @@ RTSPSessionInterface::RTSPSessionInterface()
 	fSocket.SetTask(this);
 	fStreamRef = this;
 
-	fSessionID = (UInt32)atomic_add(&sSessionIDCounter, 1);
+	//fSessionID = (UInt32)atomic_add(&sSessionIDCounter, 1);
+	fSessionID = ++sSessionIDCounter;
+
 	this->SetVal(qtssRTSPSesID, &fSessionID, sizeof(fSessionID));
 	this->SetVal(qtssRTSPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));
 	this->SetVal(qtssRTSPSesType, &fSessionType, sizeof(fSessionType));
@@ -156,7 +158,8 @@ void RTSPSessionInterface::DecrementObjectHolderCount()
 #if __Win32__
 	//maybe don't need this special case but for now on Win32 we do it the old way since the killEvent code hasn't been verified on Windows.
 	this->Signal(Task::kReadEvent);//have the object wakeup in case it can go away.
-	atomic_sub(&fObjectHolders, 1);
+	//atomic_sub(&fObjectHolders, 1);
+	--fObjectHolders;
 #else
 	if (0 == atomic_sub(&fObjectHolders, 1))
 		this->Signal(Task::kKillEvent);

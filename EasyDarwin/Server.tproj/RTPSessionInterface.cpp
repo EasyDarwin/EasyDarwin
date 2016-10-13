@@ -43,7 +43,7 @@
 #include "md5digest.h"
 #include "base64.h"
 
-unsigned int            RTPSessionInterface::sRTPSessionIDCounter = 0;
+std::atomic_uint RTPSessionInterface::sRTPSessionIDCounter{ 0 };
 
 
 QTSSAttrInfoDict::AttrInfo  RTPSessionInterface::sAttributes[] =
@@ -153,7 +153,8 @@ RTPSessionInterface::RTPSessionInterface()
 
 	fTimeoutTask.SetTask(this);
 	fTimeout = QTSServerInterface::GetServer()->GetPrefs()->GetRTPTimeoutInSecs() * 1000;
-	fUniqueID = (UInt32)atomic_add(&sRTPSessionIDCounter, 1);
+	//fUniqueID = (UInt32)atomic_add(&sRTPSessionIDCounter, 1);
+	fUniqueID = ++sRTPSessionIDCounter;
 
 	// fQualityUpdate is a counter the starting value is the unique ID so every session starts at a different position
 	fQualityUpdate = fUniqueID;

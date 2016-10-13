@@ -48,6 +48,8 @@
 #include "OSMutex.h"
 #include "RTPSession3GPP.h"
 
+#include <atomic>
+
 class RTSPRequestInterface;
 
 class RTPSessionInterface : public QTSSDictionary, public Task
@@ -332,7 +334,8 @@ private:
 
 	// Built in dictionary attributes
 	static QTSSAttrInfoDict::AttrInfo   sAttributes[];
-	static unsigned int sRTPSessionIDCounter;
+	//static unsigned int sRTPSessionIDCounter;
+	static std::atomic_uint sRTPSessionIDCounter;
 
 	// Authentication information that needs to be kept around
 	// for the duration of the session      

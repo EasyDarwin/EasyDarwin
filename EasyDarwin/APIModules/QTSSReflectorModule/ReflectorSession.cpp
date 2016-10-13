@@ -379,12 +379,14 @@ void    ReflectorSession::AddOutput(ReflectorOutput* inOutput, bool isClient)
 		else
 			break;
 	}
-	(void)atomic_add(&fNumOutputs, 1);
+	//(void)atomic_add(&fNumOutputs, 1);
+	++fNumOutputs;
 }
 
 void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, bool isClient)
 {
-	(void)atomic_sub(&fNumOutputs, 1);
+	//(void)atomic_sub(&fNumOutputs, 1);
+	--fNumOutputs;
 	for (UInt32 y = 0; y < fSourceInfo->GetNumStreams(); y++)
 	{
 		fStreamArray[y]->RemoveOutput(inOutput);

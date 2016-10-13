@@ -107,17 +107,20 @@ public:
 	//total rtp bytes sent by the server
 	void            IncrementTotalRTPBytes(UInt32 bytes)
 	{
-		(void)atomic_add(&fPeriodicRTPBytes, bytes);
+		//(void)atomic_add(&fPeriodicRTPBytes, bytes);
+		fPeriodicRTPBytes.fetch_add(bytes);
 	}
 	//total rtp packets sent by the server
 	void            IncrementTotalPackets()
 	{
-		(void)atomic_add(&fPeriodicRTPPackets, 1);
+		//(void)atomic_add(&fPeriodicRTPPackets, 1);
+		++fPeriodicRTPPackets;
 	}
 	//total rtp bytes reported as lost by the clients
 	void            IncrementTotalRTPPacketsLost(UInt32 packets)
 	{
-		(void)atomic_add(&fPeriodicRTPPacketsLost, packets);
+		//(void)atomic_add(&fPeriodicRTPPacketsLost, packets);
+		fPeriodicRTPPacketsLost.fetch_add(packets);
 	}
 
 	// Also increments current RTP session count
@@ -401,9 +404,17 @@ private:
 	//because there is no 64 bit atomic add (for obvious reasons), we efficiently
 	//implement total byte counting by atomic adding to this variable, then every
 	//once in awhile updating the sTotalBytes.
-	unsigned int        fPeriodicRTPBytes;
-	unsigned int        fPeriodicRTPPacketsLost;
-	unsigned int        fPeriodicRTPPackets;
+	//unsigned int        fPeriodicRTPBytes;
+
+	std::atomic_uint	fPeriodicRTPBytes;
+
+	//unsigned int        fPeriodicRTPPacketsLost;
+
+	std::atomic_uint	fPeriodicRTPPacketsLost;
+
+	//unsigned int        fPeriodicRTPPackets;
+
+	std::atomic_uint	fPeriodicRTPPackets;
 
 	//stores the current served bandwidth in BITS per second
 	UInt32              fCurrentRTPBandwidthInBits;

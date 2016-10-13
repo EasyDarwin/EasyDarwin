@@ -501,7 +501,8 @@ private:
 	// Used for calculating average bit rate
 	UInt32              fCurrentBitRate;
 	SInt64              fLastBitRateSample;
-	unsigned int        fBytesSentInThisInterval;// unsigned int because we need to atomic_add 
+	//unsigned int        fBytesSentInThisInterval;// unsigned int because we need to atomic_add 
+	atomic_uint			fBytesSentInThisInterval;
 
 	// If incoming data is RTSP interleaved
 	SInt16              fRTPChannel; //These will be -1 if not set to anything
@@ -543,7 +544,8 @@ void    ReflectorStream::UpdateBitRate(SInt64 currentTime)
 	if ((fLastBitRateSample + ReflectorStream::kBitRateAvgIntervalInMilSecs) < currentTime)
 	{
 		unsigned int intervalBytes = fBytesSentInThisInterval;
-		(void)atomic_sub(&fBytesSentInThisInterval, intervalBytes);
+		//(void)atomic_sub(&fBytesSentInThisInterval, intervalBytes);
+		fBytesSentInThisInterval.fetch_sub(intervalBytes);
 
 		// Multiply by 1000 to convert from milliseconds to seconds, and by 8 to convert from bytes to bits
 		Float32 bps = (Float32)(intervalBytes * 8) / (Float32)(currentTime - fLastBitRateSample);
