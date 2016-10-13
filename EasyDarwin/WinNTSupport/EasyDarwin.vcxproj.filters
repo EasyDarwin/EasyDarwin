@@ -33,21 +33,12 @@
     <Filter Include="Source Files\RTCP Utilities">
       <UniqueIdentifier>{cc60b61c-8df6-4989-9e00-12c6ace79658}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\HTTPUtilitiesLib">
+      <UniqueIdentifier>{6001c7bb-eacc-49e8-8760-7e5e43d01e2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\SafeStdLib\InternalStdLib.cpp">
@@ -284,14 +275,20 @@
     <ClCompile Include="..\RTCPUtilitiesLib\RTCPSRPacket.cpp">
       <Filter>Source Files\RTCP Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPClientRequestStream.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.h">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClInclude>
@@ -309,6 +306,12 @@
     </ClInclude>
     <ClInclude Include="..\Server.tproj\HTTPSessionInterface.h">
       <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientRequestStream.h">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.h">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

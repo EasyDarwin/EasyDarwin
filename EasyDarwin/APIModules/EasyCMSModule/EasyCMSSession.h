@@ -19,8 +19,8 @@
 #include "QTSS.h"
 #include "EasyProtocol.h"
 
-#include "HTTPRequestStream.h"
-#include "HTTPResponseStream.h"
+#include "HTTPClientRequestStream.h"
+#include "HTTPClientResponseStream.h"
 #include "HTTPRequest.h"
 
 using namespace EasyDarwin::Protocol;
@@ -60,9 +60,9 @@ public:
 
 
 	// 为CMSSession专门进行网络数据包读取的对象
-	HTTPRequestStream   fInputStream;
+	HTTPClientRequestStream   fInputStream;
 	// 为CMSSession专门进行网络数据包发送的对象
-	HTTPResponseStream  fOutputStream;
+	HTTPClientResponseStream  fOutputStream;
 
 	// 初始化时为NULL
 	// 在每一次请求发出或者接收命令时,都有可能生成HTTPRequest对象并进行处理
