@@ -95,7 +95,7 @@ public:
         kMaxUserPasswordLen = 32
     };
 
-    void PushNVRMessage(EasyNVRMessage &msg) { fNVRMessageQueue.push_back(msg); }
+    //void PushNVRMessage(EasyNVRMessage &msg) { fNVRMessageQueue.push_back(msg); }
 
 	Easy_SessionType GetSessionType() { return fSessionType; }
 
@@ -117,7 +117,7 @@ protected:
     //boost::mutex		fNVROperatorMutex;
     //boost::mutex		fStreamReqCountMutex;
     //boost::condition_variable fCond;
-    EasyNVRMessageQueue fNVRMessageQueue;
+    //EasyNVRMessageQueue fNVRMessageQueue;
     //OSRef				fDevRef;
 
     TimeoutTask         fTimeoutTask;//allows the session to be timed out
