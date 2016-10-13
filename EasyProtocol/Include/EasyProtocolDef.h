@@ -130,6 +130,8 @@
 #define EASY_TAG_AUDIO_DATA								"AudioData"
 #define EASY_TAG_PTS									"Pts"
 
+#define EASY_TAG_SERVER_HEADER							"Server"
+
 /*!
 \}
 */
@@ -172,6 +174,8 @@
 #define MSG_SC_TALKBACK_CONTROL_ACK							0xe00e
 #define MSG_SD_CONTROL_TALKBACK_REQ							0x000f
 #define MSG_DS_CONTROL_TALKBACK_ACK							0xe00f
+
+#define	MSG_SC_SERVER_VERSION_ACK							0x1000
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
