@@ -392,19 +392,24 @@ SInt64 RTPStatsUpdaterTask::Run()
 	// because the fPeriodicRTPBytes variable is being manipulated from within an
 	// atomic_add. On PowerPC, assignments are atomic, so the assignment below is ok.
 	// On a non-PowerPC platform, the following would be thread safe:
-	//unsigned int periodicBytes = atomic_add(&theServer->fPeriodicRTPBytes, 0);
+	//unsigned int periodicBytes = atomic_add(&theServer->fPeriodicRTPBytes, 0);-----------
 	unsigned int periodicBytes = theServer->fPeriodicRTPBytes;
-	(void)atomic_sub(&theServer->fPeriodicRTPBytes, periodicBytes);
+	//(void)atomic_sub(&theServer->fPeriodicRTPBytes, periodicBytes);
+
+	theServer->fPeriodicRTPBytes.fetch_sub(periodicBytes);
 	theServer->fTotalRTPBytes += periodicBytes;
 
 	// Same deal for packet totals
 	unsigned int periodicPackets = theServer->fPeriodicRTPPackets;
-	(void)atomic_sub(&theServer->fPeriodicRTPPackets, periodicPackets);
+	//(void)atomic_sub(&theServer->fPeriodicRTPPackets, periodicPackets);
+	theServer->fPeriodicRTPPackets.fetch_sub(periodicPackets);
 	theServer->fTotalRTPPackets += periodicPackets;
 
 	// ..and for lost packet totals
 	unsigned int periodicPacketsLost = theServer->fPeriodicRTPPacketsLost;
-	(void)atomic_sub(&theServer->fPeriodicRTPPacketsLost, periodicPacketsLost);
+	//(void)atomic_sub(&theServer->fPeriodicRTPPacketsLost, periodicPacketsLost);
+	theServer->fPeriodicRTPPacketsLost.fetch_sub(periodicPacketsLost);
+
 	theServer->fTotalRTPPacketsLost += periodicPacketsLost;
 
 	SInt64 curTime = OS::Milliseconds();

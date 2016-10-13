@@ -78,7 +78,7 @@ static const UInt32 kInitialPacketArraySize = 64;// must be multiple of kPacketA
 
 static const UInt32 kMaxDataBufferSize = 1600;
 OSBufferPool RTPPacketResender::sBufferPool(kMaxDataBufferSize);
-unsigned int    RTPPacketResender::sNumWastedBytes = 0;
+std::atomic_uint RTPPacketResender::sNumWastedBytes{ 0 };
 
 RTPPacketResender::RTPPacketResender()
 	: fBandwidthTracker(NULL),
@@ -108,7 +108,8 @@ RTPPacketResender::~RTPPacketResender()
 	for (UInt32 x = 0; x < fPacketArraySize; x++)
 	{
 		if (fPacketArray[x].fPacketSize > 0)
-			atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - fPacketArray[x].fPacketSize);
+			//atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - fPacketArray[x].fPacketSize);
+			sNumWastedBytes.fetch_sub(kMaxDataBufferSize - fPacketArray[x].fPacketSize);
 		if (fPacketArray[x].fPacketData != NULL)
 		{
 			if (fPacketArray[x].fIsSpecialBuffer)
@@ -343,7 +344,8 @@ void RTPPacketResender::AddPacket(void * inRTPPacket, UInt32 packetSize, SInt32 
 
 		//
 		// Track the number of wasted bytes we have
-		atomic_add(&sNumWastedBytes, kMaxDataBufferSize - packetSize);
+		//atomic_add(&sNumWastedBytes, kMaxDataBufferSize - packetSize);
+		sNumWastedBytes.fetch_add(kMaxDataBufferSize - packetSize);
 
 		//PLDoubleLinkedListNode<RTPResenderEntry> * listNode = new PLDoubleLinkedListNode<RTPResenderEntry>( new RTPResenderEntry(inRTPPacket, packetSize, ageLimit, fRTTEstimator.CurRetransmitTimeout() ) );
 		//fAckList.AddNodeToTail(listNode);
@@ -456,7 +458,9 @@ void RTPPacketResender::RemovePacket(UInt32 packetIndex, bool reuseIndex)
 
 	//
 	// Track the number of wasted bytes we have
-	atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - theEntry->fPacketSize);
+	//atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - theEntry->fPacketSize);
+	sNumWastedBytes.fetch_sub(kMaxDataBufferSize - theEntry->fPacketSize);
+
 	Assert(theEntry->fPacketSize > 0);
 
 	//

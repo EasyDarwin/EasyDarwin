@@ -106,7 +106,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="atomic.cpp" />
     <ClCompile Include="base64.c" />
     <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="ConfParser.cpp" />
