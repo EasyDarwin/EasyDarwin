@@ -15,7 +15,7 @@
 #include <errno.h>
 #include "EasyUtil.h"
 
-unsigned int HTTPSessionInterface::sSessionIndexCounter = kFirstHTTPSessionID;
+std::atomic_uint HTTPSessionInterface::sSessionIndexCounter{ kFirstHTTPSessionID };
 
 QTSSAttrInfoDict::AttrInfo HTTPSessionInterface::sAttributes[] =
 {
@@ -70,7 +70,7 @@ HTTPSessionInterface::HTTPSessionInterface()
     fTimeoutTask.SetTask(this);
     fSocket.SetTask(this);
 
-    fSessionIndex = static_cast<UInt32>(atomic_add(&sSessionIndexCounter, 1));
+    fSessionIndex = ++sSessionIndexCounter;
     this->SetVal(EasyHTTPSesIndex, &fSessionIndex, sizeof(fSessionIndex));
 
     this->SetVal(EasyHTTPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));

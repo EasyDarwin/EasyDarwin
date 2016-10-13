@@ -150,7 +150,8 @@ protected:
 
     bool				fAuthenticated;
 
-    static unsigned int		sSessionIndexCounter;
+    //static unsigned int		sSessionIndexCounter;
+	static std::atomic_uint sSessionIndexCounter;
 
     static QTSSAttrInfoDict::AttrInfo   sAttributes[];
 
