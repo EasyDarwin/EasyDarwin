@@ -394,18 +394,18 @@ public:
     // This enum allows all QTSSDictionaryMaps to be stored in an array 
     enum
     {
-        kServerDictIndex = 0,
-        kPrefsDictIndex = 1,
-        kTextMessagesDictIndex = 2,
-        kServiceDictIndex = 3,
+        kServerDictIndex		= 0,
+        kPrefsDictIndex			= 1,
+        kTextMessagesDictIndex	= 2,
+        kServiceDictIndex		= 3,
 
-        kHTTPSessionDictIndex = 4,
-        kFileDictIndex = 5,
-        kModuleDictIndex = 6,
-        kModulePrefsDictIndex = 7,
-        kAttrInfoDictIndex = 8,
+        kHTTPSessionDictIndex	= 4,
+        kFileDictIndex			= 5,
+        kModuleDictIndex		= 6,
+        kModulePrefsDictIndex	= 7,
+        kAttrInfoDictIndex		= 8,
 
-        kNumDictionaries = 9,
+        kNumDictionaries		= 9,
 
         kNumDynamicDictionaryTypes = 500,
         kIllegalDictionary = kNumDynamicDictionaryTypes + kNumDictionaries

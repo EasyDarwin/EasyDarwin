@@ -5,7 +5,7 @@
 	Website: http://www.easydarwin.org
 */
 /*
-	File:       HTTPRequestStream.h
+	File:       HTTPClientRequestStream.h
 
 	Contains:   Provides a stream abstraction for HTTP. Given a socket, this object
 				can read in data until an entire HTTP request header is available.
@@ -14,8 +14,8 @@
 				& HTTP request data.
 */
 
-#ifndef __HTTP_REQUEST_STREAM_H__
-#define __HTTP_REQUEST_STREAM_H__
+#ifndef __HTTPClient_REQUEST_STREAM_H__
+#define __HTTPClient_REQUEST_STREAM_H__
 
 
 //INCLUDES
@@ -23,15 +23,15 @@
 #include "ClientSocket.h"
 #include "QTSS.h"
 
-class HTTPRequestStream
+class HTTPClientRequestStream
 {
 public:
 
 	//CONSTRUCTOR / DESTRUCTOR
-	HTTPRequestStream(ClientSocket* sock);
+	HTTPClientRequestStream(ClientSocket* sock);
 
 	// We may have to delete this memory if it was allocated due to base64 decoding
-	~HTTPRequestStream() { if (fRequest.Ptr != &fRequestBuffer[0]) delete[] fRequest.Ptr; }
+	~HTTPClientRequestStream() { if (fRequest.Ptr != &fRequestBuffer[0]) delete[] fRequest.Ptr; }
 
 	//ReadRequest
 	//This function will not block.
@@ -69,7 +69,7 @@ public:
 	StrPtrLen*			GetRequestBuffer() { return fRequestPtr; }
 	bool				IsDataPacket() { return fIsDataPacket; }
 	void				ShowMsg(bool enable) { fPrintMsg = enable; }
-	void				SnarfRetreat(HTTPRequestStream &fromRequest);
+	void				SnarfRetreat(HTTPClientRequestStream &fromRequest);
 
 private:
 	//CONSTANTS:

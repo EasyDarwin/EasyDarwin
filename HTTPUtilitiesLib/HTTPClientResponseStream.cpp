@@ -5,19 +5,19 @@
 	Website: http://www.easydarwin.org
 */
 /*
-	File:       HTTPResponseStream.cpp
+	File:       HTTPClientResponseStream.cpp
 	Contains:   Impelementation of object in .h
 */
 /*
 	用于响应HTTP流数据
 */
 
-#include "HTTPResponseStream.h"
+#include "HTTPClientResponseStream.h"
 #include "OS.h"
 
 #include <errno.h>
 
-QTSS_Error HTTPResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength,
+QTSS_Error HTTPClientResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength,
 	UInt32* outLengthSent, UInt32 inSendType)
 {
 	QTSS_Error theErr = QTSS_NoErr;
@@ -128,13 +128,13 @@ QTSS_Error HTTPResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 
 	return QTSS_NoErr;
 }
 
-void HTTPResponseStream::ResetResponseBuffer()
+void HTTPClientResponseStream::ResetResponseBuffer()
 {
 	this->Reset();
 	fBytesSentInBuffer = 0;
 }
 
-QTSS_Error HTTPResponseStream::Flush()
+QTSS_Error HTTPClientResponseStream::Flush()
 {
 	QTSS_Error theErr = QTSS_NoErr;
 

@@ -5,11 +5,11 @@
 	Website: http://www.easydarwin.org
 */
 /*
-	File:       HTTPRequestStream.cpp
+	File:       HTTPClientRequestStream.cpp
 
-	Contains:   Implementation of HTTPRequestStream class.
+	Contains:   Implementation of HTTPClientRequestStream class.
 */
-#include "HTTPRequestStream.h"
+#include "HTTPClientRequestStream.h"
 #include "StringParser.h"
 #include "OSMemory.h"
 #include "base64.h"
@@ -18,7 +18,7 @@
 
 #define READ_DEBUGGING 0
 
-HTTPRequestStream::HTTPRequestStream(ClientSocket* sock)
+HTTPClientRequestStream::HTTPClientRequestStream(ClientSocket* sock)
 	: fSocket(sock),
 	fRetreatBytes(0),
 	fRetreatBytesRead(0),
@@ -31,7 +31,7 @@ HTTPRequestStream::HTTPRequestStream(ClientSocket* sock)
 	fIsDataPacket(false)
 {}
 
-void HTTPRequestStream::SnarfRetreat(HTTPRequestStream &fromRequest)
+void HTTPClientRequestStream::SnarfRetreat(HTTPClientRequestStream &fromRequest)
 {
 	// Simplest thing to do is to just completely blow away everything in this current
 	// stream, and replace it with the retreat bytes from the other stream.
@@ -42,7 +42,7 @@ void HTTPRequestStream::SnarfRetreat(HTTPRequestStream &fromRequest)
 	::memcpy(&fRequestBuffer[0], fromRequest.fRequest.Ptr + fromRequest.fRequest.Len, fromRequest.fRetreatBytes);
 }
 
-QTSS_Error HTTPRequestStream::ReadRequest()
+QTSS_Error HTTPClientRequestStream::ReadRequest()
 {
 	while (true)
 	{
@@ -244,7 +244,7 @@ QTSS_Error HTTPRequestStream::ReadRequest()
 	}
 }
 
-QTSS_Error HTTPRequestStream::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outLengthRead)
+QTSS_Error HTTPClientRequestStream::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outLengthRead)
 {
 	UInt32 theLengthRead = 0;
 	UInt8* theIoBuffer = (UInt8*)ioBuffer;
@@ -266,7 +266,7 @@ QTSS_Error HTTPRequestStream::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outL
 		fRetreatBytes -= theLengthRead;
 		fRetreatBytesRead += theLengthRead;
 #if READ_DEBUGGING
-		qtss_printf("In HTTPRequestStream::Read: Got %d Retreat Bytes\n", theLengthRead);
+		qtss_printf("In HTTPClientRequestStream::Read: Got %d Retreat Bytes\n", theLengthRead);
 #endif  
 	}
 
@@ -284,7 +284,7 @@ QTSS_Error HTTPRequestStream::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outL
 	UInt32 theNewOffset = 0;
 	QTSS_Error theErr = fSocket->Read(&theIoBuffer[theLengthRead], inBufLen - theLengthRead, &theNewOffset);
 #if READ_DEBUGGING
-	qtss_printf("In HTTPRequestStream::Read: Got %d bytes off Socket\n", theNewOffset);
+	qtss_printf("In HTTPClientRequestStream::Read: Got %d bytes off Socket\n", theNewOffset);
 #endif  
 	if (outLengthRead != NULL)
 		*outLengthRead = theNewOffset + theLengthRead;
@@ -292,7 +292,7 @@ QTSS_Error HTTPRequestStream::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outL
 	return theErr;
 }
 
-void HTTPRequestStream::ResetRequestBuffer()
+void HTTPClientRequestStream::ResetRequestBuffer()
 {
 	fRetreatBytes = 0;
 	fRetreatBytesRead = 0;
@@ -300,7 +300,7 @@ void HTTPRequestStream::ResetRequestBuffer()
 	fEncodedBytesRemaining = 0;
 }
 
-QTSS_Error HTTPRequestStream::DecodeIncomingData(char* inSrcData, UInt32 inSrcDataLen)
+QTSS_Error HTTPClientRequestStream::DecodeIncomingData(char* inSrcData, UInt32 inSrcDataLen)
 {
 	Assert(fRetreatBytes == 0);
 

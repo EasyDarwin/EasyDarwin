@@ -5,7 +5,7 @@
 	Website: http://www.easydarwin.org
 */
 /*
-	File:       HTTPResponseStream.h
+	File:       HTTPClientResponseStream.h
 
 	Contains:   Object that provides a "buffered WriteV" service. Clients
 				can call this function to write to a socket, and buffer flow
@@ -15,8 +15,8 @@
 				stream buffer. The buffer may grow infinitely.
 */
 
-#ifndef __HTTP_RESPONSE_STREAM_H__
-#define __HTTP_RESPONSE_STREAM_H__
+#ifndef __HTTPClient_RESPONSE_STREAM_H__
+#define __HTTPClient_RESPONSE_STREAM_H__
 
 #include "ResizeableStringFormatter.h"
 #include "ClientSocket.h"
@@ -25,18 +25,18 @@
 
 #define QTSS_MAX_RESPONSE_BUFFER_SIZE 2048
 
-class HTTPResponseStream : public ResizeableStringFormatter
+class HTTPClientResponseStream : public ResizeableStringFormatter
 {
 public:
 
 	// This object provides some flow control buffering services.
 	// It also refreshes the timeout whenever there is a successful write
 	// on the socket.
-	HTTPResponseStream(ClientSocket* inSocket, TimeoutTask* inTimeoutTask)
+	HTTPClientResponseStream(ClientSocket* inSocket, TimeoutTask* inTimeoutTask)
 		: ResizeableStringFormatter(fOutputBuf, kOutputBufferSizeInBytes),
 		fSocket(inSocket), fBytesSentInBuffer(0), fTimeoutTask(inTimeoutTask), fPrintMsg(true) {}
 
-	virtual ~HTTPResponseStream() {}
+	virtual ~HTTPClientResponseStream() {}
 
 	// WriteV
 	//
@@ -96,4 +96,4 @@ private:
 };
 
 
-#endif // __HTTP_RESPONSE_STREAM_H__
+#endif // __HTTPClient_RESPONSE_STREAM_H__
