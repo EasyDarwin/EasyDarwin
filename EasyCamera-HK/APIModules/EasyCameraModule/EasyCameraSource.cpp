@@ -33,7 +33,7 @@ bool IsIFrame(unsigned char* buf)
 	}
 }
 
-bool GetH246FromPS(IN BYTE* pBuffer, IN int nBufLenth, BYTE** pH264, int& nH264Lenth, BOOL& bVideo)
+bool GetH246FromPS(IN BYTE* pBuffer, IN int nBufLenth, BYTE** pH264, int& nH264Lenth, BOOL& bVideo,BOOL& bAudio)
 {
 	if (!pBuffer || nBufLenth <= 0)
 	{
@@ -47,10 +47,11 @@ bool GetH246FromPS(IN BYTE* pBuffer, IN int nBufLenth, BYTE** pH264, int& nH264L
 		&& pBuffer[0] == 0x00
 		&& pBuffer[1] == 0x00
 		&& pBuffer[2] == 0x01
-		&& pBuffer[3] == 0xE0)//E==ÊÓÆµÊı¾İ(´Ë´¦E0±êÊ¶ÎªÊÓÆµ)
+		&& pBuffer[3] == 0xE0)//E==è§†é¢‘æ•°æ®(æ­¤å¤„E0æ ‡è¯†ä¸ºè§†é¢‘)
 	{
 		bVideo = TRUE;
-		nHerderLen = 9 + (int)pBuffer[8];//9¸öÎª¹Ì¶¨µÄÊı¾İ°üÍ·³¤¶È£¬pBuffer[8]ÎªÌî³äÍ·²¿·ÖµÄ³¤¶È
+		bAudio = FALSE;
+		nHerderLen = 9 + (int)pBuffer[8];//9ä¸ªä¸ºå›ºå®šçš„æ•°æ®åŒ…å¤´é•¿åº¦ï¼ŒpBuffer[8]ä¸ºå¡«å……å¤´éƒ¨åˆ†çš„é•¿åº¦
 		pH264Buffer = pBuffer + nHerderLen;
 		if (*pH264 == NULL)
 		{
@@ -61,24 +62,37 @@ bool GetH246FromPS(IN BYTE* pBuffer, IN int nBufLenth, BYTE** pH264, int& nH264L
 			memcpy(*pH264, pH264Buffer, (nBufLenth - nHerderLen));
 		}
 		nH264Lenth = nBufLenth - nHerderLen;
-
 		return TRUE;
 	}
 	else if (pBuffer
 		&& pBuffer[0] == 0x00
 		&& pBuffer[1] == 0x00
 		&& pBuffer[2] == 0x01
-		&& pBuffer[3] == 0xC0) //C==ÒôÆµÊı¾İ£¿
+		&& pBuffer[3] == 0xC0) //C==éŸ³é¢‘æ•°æ®ï¼Ÿ
 	{
 		*pH264 = NULL;
 		nH264Lenth = 0;
 		bVideo = FALSE;
+		bAudio = TRUE;
+		//BYTE * pOutBuffer = NULL;
+		nHerderLen = 9 + (int)pBuffer[8];//9ä¸ªä¸ºå›ºå®šçš„æ•°æ®åŒ…å¤´é•¿åº¦ï¼ŒpBuffer[8]ä¸ºå¡«å……å¤´éƒ¨åˆ†çš„é•¿åº¦
+		pH264Buffer = pBuffer + nHerderLen;
+		if (*pH264 == NULL)
+		{
+			*pH264 = new BYTE[nBufLenth];
+		}
+		if (*pH264&&pH264Buffer && (nBufLenth - nHerderLen)>0)
+		{
+			memcpy(*pH264, pH264Buffer, (nBufLenth - nHerderLen));
+		}
+		nH264Lenth = nBufLenth - nHerderLen;
+		return TRUE;
 	}
 	else if (pBuffer
 		&& pBuffer[0] == 0x00
 		&& pBuffer[1] == 0x00
 		&& pBuffer[2] == 0x01
-		&& pBuffer[3] == 0xBA)//ÊÓÆµÁ÷Êı¾İ°ü °üÍ·
+		&& pBuffer[3] == 0xBA)//è§†é¢‘æµæ•°æ®åŒ… åŒ…å¤´
 	{
 		bVideo = TRUE;
 		*pH264 = NULL;
@@ -178,7 +192,7 @@ void CALLBACK g_ExceptionCallBack(DWORD dwType, LONG lUserID, LONG lHandle, void
 	char tempbuf[256] = { 0 };
 	switch (dwType)
 	{
-	case EXCEPTION_RECONNECT: //Ô¤ÀÀÊ±ÖØÁ¬
+	case EXCEPTION_RECONNECT: //é¢„è§ˆæ—¶é‡è¿
 		printf("----------reconnect--------%d\n", time(NULL));
 		break;
 	default:
@@ -192,10 +206,29 @@ void CALLBACK myStreamProc(LONG lPlayHandle, DWORD dwDataType, BYTE *pBuffer, DW
 	pThis->PushFrame((unsigned char*)pBuffer, dwBufSize, dwDataType);
 }
 
+
+void CALLBACK  myAudioStreamProc(LONG  lVoiceComHandle, char  *pBuffer, DWORD  dwBufSize, BYTE  byAudioFlag, void  *pUser)
+{
+	EasyCameraSource* pThis = (EasyCameraSource*)pUser;
+	switch (byAudioFlag)
+	{
+	case 1:
+		pThis->PushFrame((unsigned char*)pBuffer, dwBufSize, NET_DVR_AUDIOSTREAMDATA);
+		break;
+	case 2:
+		qtss_printf("NET_DVR_AudioStream Exit\n");
+		break;
+	default:
+		break;
+	}
+}
+
+
 EasyCameraSource::EasyCameraSource()
 	: Task(),
 	m_u32Handle(-1),
 	streamHandle(-1),
+	audioHandle(-1),
 	fCameraLogin(false),
 	m_bStreamFlag(false),
 	m_bForceIFrame(true),
@@ -207,18 +240,18 @@ EasyCameraSource::EasyCameraSource()
 {
 	this->SetTaskName("EasyCameraSource");
 
-	//SDK³õÊ¼»¯£¬È«¾Öµ÷ÓÃÒ»´Î
+	//SDKåˆå§‹åŒ–ï¼Œå…¨å±€è°ƒç”¨ä¸€æ¬¡
 	NET_DVR_Init();
 
-	//ÉèÖÃÁ¬½ÓÊ±¼äÓëÖØÁ¬Ê±¼ä
+	//è®¾ç½®è¿æ¥æ—¶é—´ä¸é‡è¿æ—¶é—´
 	NET_DVR_SetConnectTime(2000, 1);
 	NET_DVR_SetReconnect(10000, true);
 
-	//µÇÂ½ÉãÏñ»ú
+	//ç™»é™†æ‘„åƒæœº
 	cameraLogin();
 
 	//---------------------------------------
-	//ÉèÖÃÒì³£ÏûÏ¢»Øµ÷º¯Êı
+	//è®¾ç½®å¼‚å¸¸æ¶ˆæ¯å›è°ƒå‡½æ•°
 	NET_DVR_SetExceptionCallBack_V30(0, NULL, g_ExceptionCallBack, NULL);
 
 	fCameraSnapPtr = new unsigned char[EASY_SNAP_BUFFER_SIZE];
@@ -228,7 +261,7 @@ EasyCameraSource::EasyCameraSource()
 	fTimeoutTask->RefreshTimeout();
 
 	//fTalkbackBuff = (char*)malloc(164 * sizeof(char));
-	fPusherBuff = new unsigned char[1024 * 50];
+	fPusherBuff = new unsigned char[1024 * 1024];
 
 }
 
@@ -254,22 +287,22 @@ EasyCameraSource::~EasyCameraSource()
 		fTimeoutTask = NULL;
 	}
 
-	//ÏÈÍ£Ö¹Stream£¬ÄÚ²¿ÓĞÊÇ·ñÔÚStreamµÄÅĞ¶Ï
+	//å…ˆåœæ­¢Streamï¼Œå†…éƒ¨æœ‰æ˜¯å¦åœ¨Streamçš„åˆ¤æ–­
 	netDevStopStream();
 
 	if (fCameraLogin)
 		NET_DVR_Logout_V30(m_u32Handle);
 
-	//SDKÊÍ·Å£¬È«¾Öµ÷ÓÃÒ»´Î
+	//SDKé‡Šæ”¾ï¼Œå…¨å±€è°ƒç”¨ä¸€æ¬¡
 	NET_DVR_Cleanup();
 }
 
 bool EasyCameraSource::cameraLogin()
 {
-	//Èç¹ûÒÑµÇÂ¼£¬·µ»Øtrue
+	//å¦‚æœå·²ç™»å½•ï¼Œè¿”å›true
 	if (fCameraLogin) return true;
 
-	//µÇÂ¼µ½ÉãÏñ»ú
+	//ç™»å½•åˆ°æ‘„åƒæœº
 	NET_DVR_DEVICEINFO_V30 deviceInfoTmp;
 	memset(&deviceInfoTmp, 0, sizeof(NET_DVR_DEVICEINFO_V30));
 	m_u32Handle = NET_DVR_Login_V30(sCamera_IP, sCameraPort, sCameraUser, sCameraPassword, &deviceInfoTmp);
@@ -289,20 +322,22 @@ bool EasyCameraSource::cameraLogin()
 
 QTSS_Error EasyCameraSource::netDevStartStream()
 {
-	//Èç¹ûÎ´µÇÂ¼,·µ»ØÊ§°Ü
+	//å¦‚æœæœªç™»å½•,è¿”å›å¤±è´¥
 	if (!cameraLogin()) return QTSS_RequestFailed;
 
-	//ÒÑ¾­ÔÚÁ÷´«ÊäÖĞ£¬·µ»ØQTSS_NoErr
+	//å·²ç»åœ¨æµä¼ è¾“ä¸­ï¼Œè¿”å›QTSS_NoErr
 	if (m_bStreamFlag) return QTSS_NoErr;
 
 	OSMutexLocker locker(this->GetMutex());
 
 	NET_DVR_PREVIEWINFO struPlayInfo = { 0 };
-	struPlayInfo.hPlayWnd = NULL; //ĞèÒª SDK ½âÂëÊ±¾ä±úÉèÎªÓĞĞ§Öµ£¬½öÈ¡Á÷²»½âÂëÊ±¿ÉÉèÎª¿Õ
-	struPlayInfo.lChannel = 1; //Ô¤ÀÀÍ¨µÀºÅ
-	struPlayInfo.dwStreamType = 0; //0-Ö÷ÂëÁ÷£¬ 1-×ÓÂëÁ÷£¬ 2-ÂëÁ÷ 3£¬ 3-ÂëÁ÷ 4£¬ÒÔ´ËÀàÍÆ
-	struPlayInfo.dwLinkMode = 0; //0- TCP ·½Ê½£¬ 1- UDP ·½Ê½£¬ 2- ¶à²¥·½Ê½£¬ 3- RTP ·½Ê½£¬ 4-RTP/RTSP£¬ 5-RSTP/HTTP
-	struPlayInfo.bBlocked = 1; //0- ·Ç×èÈûÈ¡Á÷£¬ 1- ×èÈûÈ¡Á÷
+	struPlayInfo.hPlayWnd = NULL; //éœ€è¦ SDK è§£ç æ—¶å¥æŸ„è®¾ä¸ºæœ‰æ•ˆå€¼ï¼Œä»…å–æµä¸è§£ç æ—¶å¯è®¾ä¸ºç©º
+	struPlayInfo.lChannel = 1; //é¢„è§ˆé€šé“å·
+	struPlayInfo.dwStreamType = 0; //0-ä¸»ç æµï¼Œ 1-å­ç æµï¼Œ 2-ç æµ 3ï¼Œ 3-ç æµ 4ï¼Œä»¥æ­¤ç±»æ¨
+	struPlayInfo.dwLinkMode = 0; //0- TCP æ–¹å¼ï¼Œ 1- UDP æ–¹å¼ï¼Œ 2- å¤šæ’­æ–¹å¼ï¼Œ 3- RTP æ–¹å¼ï¼Œ 4-RTP/RTSPï¼Œ 5-RSTP/HTTP
+	struPlayInfo.bBlocked = 1; //0- éé˜»å¡å–æµï¼Œ 1- é˜»å¡å–æµ
+
+	
 
 	streamHandle = NET_DVR_RealPlay_V40(m_u32Handle, &struPlayInfo, myStreamProc, this);
 	if (streamHandle < 0)
@@ -343,10 +378,10 @@ void EasyCameraSource::doStopGettingFrames()
 
 bool EasyCameraSource::getSnapData(unsigned char* pBuf, UInt32 uBufLen, int* uSnapLen)
 {
-	//Èç¹ûÉãÏñ»úÎ´µÇÂ¼£¬·µ»Øfalse
+	//å¦‚æœæ‘„åƒæœºæœªç™»å½•ï¼Œè¿”å›false
 	if (!cameraLogin()) return false;
 
-	//µ÷ÓÃSDK»ñÈ¡Êı¾İ
+	//è°ƒç”¨SDKè·å–æ•°æ®
 	LPNET_DVR_JPEGPARA jpegPara = new NET_DVR_JPEGPARA;
 	jpegPara->wPicQuality = 0;
 	jpegPara->wPicSize = 9;
@@ -409,7 +444,7 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 				mediainfo.u32AudioChannel = 1;
 				if (!NET_DVR_GetDVRConfig(m_u32Handle, NET_DVR_GET_COMPRESSCFG_V30, 1, &struCompressionCfg, sizeof(NET_DVR_COMPRESSIONCFG_V30), &dwReturned))
 				{
-					printf("can't get config£¡\n");
+					printf("can't get configï¼\n");
 
 					mediainfo.u32VideoFps = 25;
 					mediainfo.u32AudioCodec = EASY_SDK_AUDIO_CODEC_G711A;				
@@ -417,27 +452,29 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 				}
 				else
 				{
-					mediainfo.u32VideoFps = getFrameRateFromHKSDK(struCompressionCfg.struNormHighRecordPara.dwVideoFrameRate);
-					mediainfo.u32AudioCodec = getAudioCodecFromHKSDK(struCompressionCfg.struNormHighRecordPara.byAudioEncType);
-					mediainfo.u32AudioSamplerate = getAudioSimpleRateFromHKSDK(struCompressionCfg.struNormHighRecordPara.byAudioSamplingRate);
+					mediainfo.u32VideoFps = getFrameRateFromHKSDK(struCompressionCfg.struNetPara.dwVideoFrameRate);
+					mediainfo.u32AudioCodec = getAudioCodecFromHKSDK(struCompressionCfg.struNetPara.byAudioEncType);
+					mediainfo.u32AudioSamplerate = getAudioSimpleRateFromHKSDK(struCompressionCfg.struNetPara.byAudioSamplingRate);
+					//mediainfo.u32AudioBitsPerSample = struCompressionCfg.struNetPara.byAudioBitRate;
 				}
+				mediainfo.u32AudioSamplerate = 8000;//è·å–åˆ°çš„æ˜¯32khz å¯æ˜¯ç”¨8000æ‰èƒ½æ­£å¸¸æ’­æ”¾ã€‚ã€‚ã€‚ã€‚ã€‚
 
 				fPusherHandle = EasyPusher_Create();
 				if (fPusherHandle == NULL)
 				{
-					//EasyPusher³õÊ¼»¯´´½¨Ê§°Ü,¿ÉÄÜÊÇEasyPusher SDKÎ´ÊÚÈ¨
+					//EasyPusheråˆå§‹åŒ–åˆ›å»ºå¤±è´¥,å¯èƒ½æ˜¯EasyPusher SDKæœªæˆæƒ
 					theErr = QTSS_Unimplemented;
 					break;
 				}
 
-				// ×¢²áÁ÷ÍÆËÍÊÂ¼ş»Øµ÷
+				// æ³¨å†Œæµæ¨é€äº‹ä»¶å›è°ƒ
 				EasyPusher_SetEventCallback(fPusherHandle, __EasyPusher_Callback, 0, NULL);
 
-				// ¸ù¾İ½ÓÊÕµ½µÄÃüÁîÉú³ÉÁ÷ĞÅÏ¢
+				// æ ¹æ®æ¥æ”¶åˆ°çš„å‘½ä»¤ç”Ÿæˆæµä¿¡æ¯
 				char sdpName[128] = { 0 };
 				sprintf(sdpName, "%s/%s.sdp", /*inParams->inStreamID,*/ inParams->inSerial, inParams->inChannel);
 
-				// ¿ªÊ¼ÍÆËÍÁ÷Ã½ÌåÊı¾İ
+				// å¼€å§‹æ¨é€æµåª’ä½“æ•°æ®
 				EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
 
 				saveStartStreamParams(inParams);
@@ -451,12 +488,12 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 	if (theErr != QTSS_NoErr)
 	{
-		// Èç¹ûÍÆËÍ²»³É¹¦£¬ĞèÒªÊÍ·ÅÖ®Ç°ÒÑ¾­¿ªÆôµÄ×ÊÔ´
+		// å¦‚æœæ¨é€ä¸æˆåŠŸï¼Œéœ€è¦é‡Šæ”¾ä¹‹å‰å·²ç»å¼€å¯çš„èµ„æº
 		StopStreaming(NULL);
 	}
 	else
 	{
-		// ÍÆËÍ³É¹¦£¬½«µ±Ç°ÕıÔÚÍÆËÍµÄ²ÎÊıĞÅÏ¢»Øµ÷
+		// æ¨é€æˆåŠŸï¼Œå°†å½“å‰æ­£åœ¨æ¨é€çš„å‚æ•°ä¿¡æ¯å›è°ƒ
 		inParams->inChannel = fStartStreamInfo.channel;
 		inParams->inIP = fStartStreamInfo.ip;
 		inParams->inPort = fStartStreamInfo.port;
@@ -470,7 +507,7 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 void EasyCameraSource::saveStartStreamParams(Easy_StartStream_Params * inParams)
 {
-	// ±£´æ×îĞÂÍÆËÍ²ÎÊı
+	// ä¿å­˜æœ€æ–°æ¨é€å‚æ•°
 	strncpy(fStartStreamInfo.serial, inParams->inSerial, strlen(inParams->inSerial));
 	fStartStreamInfo.serial[strlen(inParams->inSerial)] = 0;
 
@@ -506,6 +543,7 @@ QTSS_Error EasyCameraSource::StopStreaming(Easy_StopStream_Params* inParams)
 	return QTSS_NoErr;
 }
 
+//static long long  time_audio = 0;
 QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len, DWORD dataType)
 {
 	OSMutexLocker locker(&fStreamingMutex);
@@ -518,7 +556,8 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len, DWORD data
 			unsigned char *h264Buf = NULL;
 			int h264Len = 0;
 			BOOL isVideo;
-			GetH246FromPS(frame, len, &h264Buf, h264Len, isVideo);
+			BOOL isAudio;
+			GetH246FromPS(frame, len, &h264Buf, h264Len, isVideo, isAudio);
 			if (isVideo)
 			{
 				if (h264Buf)
@@ -561,6 +600,29 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len, DWORD data
 					h264Buf = NULL;
 				}
 			}
+
+			if (isAudio)
+			{
+				if (h264Buf)
+				{
+					//time_audio += 200;
+					EASY_AV_Frame avFrameAudio;
+					memset(&avFrameAudio, 0x00, sizeof(EASY_AV_Frame));
+					avFrameAudio.u32AVFrameLen = h264Len-4;// h264Len;
+					//avFrameAudio.u32TimestampSec = time_audio / 1000000;
+					//avFrameAudio.u32TimestampUsec = time_audio;
+					avFrameAudio.pBuffer = (unsigned char*)h264Buf+4;// h264Buf;
+					avFrameAudio.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
+					
+					int result =	EasyPusher_PushFrame(fPusherHandle, &avFrameAudio);
+					//printf("%d", result);
+				}
+				if (h264Buf)
+				{
+					delete[] h264Buf;
+					h264Buf = NULL;
+				}
+			}
 		}
 	}
 	else if (dataType == NET_DVR_AUDIOSTREAMDATA)
@@ -574,8 +636,13 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len, DWORD data
 			avFrameAudio.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
 			//avFrameAudio.u32TimestampSec = pstruAV->u32AVFramePTS / 1000;
 			//avFrameAudio.u32TimestampUsec = (pstruAV->u32AVFramePTS % 1000) * 1000;
+			
 			EasyPusher_PushFrame(fPusherHandle, &avFrameAudio);
 		}
+	}
+	else if(dataType>3)
+	{
+		return Easy_NoErr;
 	}
 
 	return Easy_NoErr;
@@ -599,7 +666,7 @@ QTSS_Error EasyCameraSource::GetCameraSnap(Easy_CameraSnap_Params* params)
 	{
 		if (!getSnapData(fCameraSnapPtr, EASY_SNAP_BUFFER_SIZE, &snapBufLen))
 		{
-			//Î´»ñÈ¡µ½Êı¾İ
+			//æœªè·å–åˆ°æ•°æ®
 			qtss_printf("EasyCameraSource::GetCameraSnap::getSnapData() => Get Snap Data Fail \n");
 			theErr = QTSS_ValueNotFound;
 			break;
@@ -615,19 +682,119 @@ QTSS_Error EasyCameraSource::GetCameraSnap(Easy_CameraSnap_Params* params)
 
 QTSS_Error EasyCameraSource::ControlPTZ(Easy_CameraPTZ_Params* params)
 {
-	return QTSS_NoErr;
+	QTSS_Error result = QTSS_RequestFailed;
+
+	if (cameraLogin())
+	{
+		Easy_U32 error;
+		if (params->inActionType == EASY_PTZ_ACTION_TYPE_CONTINUOUS)
+		{
+			if (params->inCommand != EASY_PTZ_CMD_TYPE_STOP) {
+				error = NET_DVR_PTZControlWithSpeed(streamHandle, getPTZCMDFromCMDType(params->inCommand), 0, params->inSpeed);
+			}
+			else {
+				error = NET_DVR_PTZControlWithSpeed(streamHandle, TILT_UP, 1, params->inSpeed);
+			}
+		}
+		else if (params->inActionType == EASY_PTZ_ACTION_TYPE_SINGLE)
+		{
+			if (params->inCommand != EASY_PTZ_CMD_TYPE_STOP) {
+				error = NET_DVR_PTZControlWithSpeed(streamHandle, getPTZCMDFromCMDType(params->inCommand), 0, params->inSpeed);
+			}
+			else {
+				error = NET_DVR_PTZControlWithSpeed(streamHandle, TILT_UP, 1, params->inSpeed);
+			}
+		}
+		else
+		{
+			return QTSS_BadArgument;
+		}
+
+		if (error == true)
+		{
+			result = QTSS_NoErr;
+		}
+		else
+		{
+			result = QTSS_RequestFailed;
+		}
+	}
+
+	return result;
 }
 
 QTSS_Error EasyCameraSource::ControlPreset(Easy_CameraPreset_Params* params)
 {
-	return QTSS_NoErr;
+	//QTSS_Error result = QTSS_RequestFailed;
+
+	if (cameraLogin())
+	{
+		if(NET_DVR_PTZPreset(m_u32Handle, getPTZCMDFromCMDType(params->inCommand), params->inPreset))
+			return QTSS_NoErr;
+	}
+	return  QTSS_RequestFailed;
 }
 
 QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 {
-	return QTSS_NoErr;
-}
+	QTSS_Error result = QTSS_RequestFailed;
+	if (cameraLogin())
+	{
+		switch (params->inCommand)
+		{
+		case EASY_TALKBACK_CMD_TYPE_START:
+			NET_DVR_PUSHMODEPARAM pushParam;
+			pushParam.byVoiceWorkMode = 1;
+			NET_DVR_SetPushModeParam(&pushParam);
+			audioHandle = NET_DVR_StartVoiceCom_MR_V30(m_u32Handle, 1, myAudioStreamProc, (void*)this);  //å»ºç«‹è¯­éŸ³è½¬å‘
+			if (audioHandle == -1)
+				return QTSS_RequestFailed;
+			else
+				return QTSS_NoErr;
+			break;
+		case EASY_TALKBACK_CMD_TYPE_STOP:
+			result = NET_DVR_StopVoiceCom(audioHandle);  //åœæ­¢è¯­éŸ³è½¬å‘
+			audioHandle = -1;
+			break;
+		case EASY_TALKBACK_CMD_TYPE_SENDDATA:
+			//æµ·åº·SDKè¦æ±‚
+			//å½“å‰æ˜¯G722 éŸ³é¢‘ç¼–ç ç±»å‹æ—¶ï¼Œæ¯æ¬¡å‘é€çš„æ•°
+			//æ®ä¸º80 å­—èŠ‚ï¼›å½“å‰æ˜¯G711 éŸ³é¢‘ç¼–ç ç±»å‹æ—¶ï¼Œæ¯æ¬¡å‘é€çš„æ•°æ®
+			//ä¸º160 å­—èŠ‚ã€‚
+			if (params->inType == EASY_TALKBACK_AUDIO_TYPE_G711A)
+			{
+				int len = 0;
+				while (len != params->inBuffLen)
+				{
+					result = NET_DVR_VoiceComSendData(audioHandle, (params->inBuff)+sizeof(char)*len, 160);
+					len += 160;
 
+				}
+			}
+				
+			if (params->inType == EASY_TALKBACK_AUDIO_TYPE_G726)
+			{
+				int len = 0;
+				while (len != params->inBuffLen)
+				{
+					result = NET_DVR_VoiceComSendData(audioHandle, (params->inBuff) + sizeof(char)*len, 80);
+					len += 80;
+
+				}
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	if (result == true)
+		return QTSS_NoErr;
+	else
+		return QTSS_RequestFailed;
+}
+//å¸§ç‡ 0-å…¨éƒ¨; 1-1/16; 2-1/8; 3-1/4; 4-1/2; 5-1; 6-2; 7-4; 8-6; 9-8; 10-10; 11-12; 12-16; 13-20;
 int EasyCameraSource::getFrameRateFromHKSDK(DWORD type)
 {
 	switch (type)
@@ -693,92 +860,94 @@ int EasyCameraSource::getFrameRateFromHKSDK(DWORD type)
 	}
 }
 
+//éŸ³é¢‘ç¼–ç ä¼˜å…ˆçº§1ï¼Œ0-G722ï¼Œ1-G711_Uï¼Œ2-G711_Aï¼Œ 5-MPEG2,6-G726ï¼Œ7-AAC
 int EasyCameraSource::getAudioCodecFromHKSDK(unsigned char type)
 {
 	switch (type)
 	{
-	case '1':
+	case 1:
 		return EASY_SDK_AUDIO_CODEC_G711U;
-	case '2':
+	case 2:
 		return EASY_SDK_AUDIO_CODEC_G711A;
-	case '6':
+	case 6:
 		return EASY_SDK_AUDIO_CODEC_G726;
-	case '7':
+	case 7:
 		return EASY_SDK_AUDIO_CODEC_AAC;
 	default:
 		return EASY_SDK_AUDIO_CODEC_G711A;
 	}
 }
-
+//éŸ³é¢‘é‡‡æ ·ç‡0-é»˜è®¤,1- 16kHZ, 2-32kHZ, 3-48kHZ, 4- 44.1kHZ,5-8kHZ
 unsigned int EasyCameraSource::getAudioSimpleRateFromHKSDK(unsigned char type)
 {
 	switch (type)
 	{
-	case '1':
+	case 1:
 		return 16000;
-	case '2':
+	case 2:
 		return 32000;
-	case '3':
+	case 3:
 		return 48000;
-	case '4':
+	case 4:
 		return 44100;
-	case '5':
+	case 5:
 		return 8000;
 	default:
 		return 8000;
 	}
 }
 
-//HI_U32 EasyCameraSource::getPTZCMDFromCMDType(int cmdType)
-//{
-//	switch (cmdType)
-//	{
-//	case EASY_PTZ_CMD_TYPE_STOP:
-//		return HI_NET_DEV_CTRL_PTZ_STOP;
-//	case EASY_PTZ_CMD_TYPE_UP:
-//		return HI_NET_DEV_CTRL_PTZ_UP;
-//	case EASY_PTZ_CMD_TYPE_DOWN:
-//		return HI_NET_DEV_CTRL_PTZ_DOWN;
-//	case EASY_PTZ_CMD_TYPE_LEFT:
-//		return HI_NET_DEV_CTRL_PTZ_LEFT;
-//	case EASY_PTZ_CMD_TYPE_RIGHT:
-//		return HI_NET_DEV_CTRL_PTZ_RIGHT;
-//	case EASY_PTZ_CMD_TYPE_LEFTUP:
-//		return 0;
-//	case EASY_PTZ_CMD_TYPE_LEFTDOWN:
-//		return 0;
-//	case EASY_PTZ_CMD_TYPE_RIGHTUP:
-//		return 0;
-//	case EASY_PTZ_CMD_TYPE_RIGHTDOWN:
-//		return 0;
-//	case EASY_PTZ_CMD_TYPE_ZOOMIN:
-//		return HI_NET_DEV_CTRL_PTZ_ZOOMIN;
-//	case EASY_PTZ_CMD_TYPE_ZOOMOUT:
-//		return HI_NET_DEV_CTRL_PTZ_ZOOMOUT;
-//	case EASY_PTZ_CMD_TYPE_FOCUSIN:
-//		return HI_NET_DEV_CTRL_PTZ_FOCUSIN;
-//	case EASY_PTZ_CMD_TYPE_FOCUSOUT:
-//		return HI_NET_DEV_CTRL_PTZ_FOCUSOUT;
-//	case EASY_PTZ_CMD_TYPE_APERTUREIN:
-//		return HI_NET_DEV_CTRL_PTZ_APERTUREIN;
-//	case EASY_PTZ_CMD_TYPE_APERTUREOUT:
-//		return HI_NET_DEV_CTRL_PTZ_APERTUREOUT;
-//	default:
-//		return 0;
-//	}
-//}
-//
-//HI_U32 EasyCameraSource::getPresetCMDFromCMDType(int cmdType)
-//{
-//	switch (cmdType)
-//	{
-//	case EASY_PRESET_CMD_TYPE_GOTO:
-//		return HI_NET_DEV_CTRL_PTZ_GOTO_PRESET;
-//	case EASY_PRESET_CMD_TYPE_SET:
-//		return HI_NET_DEV_CTRL_PTZ_SET_PRESET;
-//	case EASY_PRESET_CMD_TYPE_REMOVE:
-//		return HI_NET_DEV_CTRL_PTZ_CLE_PRESET;
-//	default:
-//		return 0;
-//	}
-//}
+Easy_U32 EasyCameraSource::getPTZCMDFromCMDType(int cmdType)
+{
+	switch (cmdType)
+	{
+	case EASY_PTZ_CMD_TYPE_STOP:
+		return 1;
+	case EASY_PTZ_CMD_TYPE_UP:
+		return TILT_UP;			/* äº‘å°ä»¥SSçš„é€Ÿåº¦ä¸Šä»° */
+	case EASY_PTZ_CMD_TYPE_DOWN:
+		return TILT_DOWN;		/* äº‘å°ä»¥SSçš„é€Ÿåº¦ä¸‹ä¿¯ */
+	case EASY_PTZ_CMD_TYPE_LEFT:
+		return PAN_LEFT;		/* äº‘å°ä»¥SSçš„é€Ÿåº¦å·¦è½¬ */
+	case EASY_PTZ_CMD_TYPE_RIGHT:
+		return PAN_RIGHT;		/* äº‘å°ä»¥SSçš„é€Ÿåº¦å³è½¬ */
+	case EASY_PTZ_CMD_TYPE_LEFTUP:
+		return UP_LEFT;			/* äº‘å°ä»¥SSçš„é€Ÿåº¦ä¸Šä»°å’Œå·¦è½¬ */
+	case EASY_PTZ_CMD_TYPE_LEFTDOWN:
+		return DOWN_LEFT;		/* äº‘å°ä»¥SSçš„é€Ÿåº¦ä¸‹ä¿¯å’Œå·¦è½¬ */
+	case EASY_PTZ_CMD_TYPE_RIGHTUP:
+		return UP_RIGHT;		/* äº‘å°ä»¥SSçš„é€Ÿåº¦ä¸Šä»°å’Œå³è½¬ */
+	case EASY_PTZ_CMD_TYPE_RIGHTDOWN:
+		return DOWN_RIGHT;		/* äº‘å°ä»¥SSçš„é€Ÿåº¦ä¸‹ä¿¯å’Œå³è½¬ */
+	case EASY_PTZ_CMD_TYPE_ZOOMIN:
+		return ZOOM_IN;			/* ç„¦è·ä»¥é€Ÿåº¦SSå˜å¤§(å€ç‡å˜å¤§) */
+	case EASY_PTZ_CMD_TYPE_ZOOMOUT:
+		return ZOOM_OUT;		/* ç„¦è·ä»¥é€Ÿåº¦SSå˜å°(å€ç‡å˜å°) */
+	case EASY_PTZ_CMD_TYPE_FOCUSIN:
+		return FOCUS_NEAR;		/* ç„¦ç‚¹ä»¥é€Ÿåº¦SSå‰è°ƒ */
+	case EASY_PTZ_CMD_TYPE_FOCUSOUT:
+		return FOCUS_FAR;		/* ç„¦ç‚¹ä»¥é€Ÿåº¦SSåè°ƒ */
+	case EASY_PTZ_CMD_TYPE_APERTUREIN:
+		return IRIS_OPEN;		/* å…‰åœˆä»¥é€Ÿåº¦SSæ‰©å¤§ */
+	case EASY_PTZ_CMD_TYPE_APERTUREOUT:
+		return IRIS_CLOSE;		/* å…‰åœˆä»¥é€Ÿåº¦SSç¼©å° */
+	default:
+		return 0;
+	}
+}
+
+
+Easy_U32 EasyCameraSource::getPresetCMDFromCMDType(int cmdType)
+{
+	switch (cmdType)
+	{
+	case EASY_PRESET_CMD_TYPE_GOTO:
+		return GOTO_PRESET;
+	case EASY_PRESET_CMD_TYPE_SET:
+		return SET_PRESET;
+	case EASY_PRESET_CMD_TYPE_REMOVE:
+		return CLE_PRESET;
+	default:
+		return 0;
+	}
+}
