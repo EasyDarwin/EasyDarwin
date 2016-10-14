@@ -74,6 +74,8 @@ private:
 	LONG m_u32Handle;
 	//语音对讲句柄
 	LONG audioHandle;
+	//语音对讲标志
+	bool m_bTalk;
 
 	//预览句柄
 	LONG streamHandle;
