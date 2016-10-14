@@ -229,6 +229,7 @@ EasyCameraSource::EasyCameraSource()
 	m_u32Handle(-1),
 	streamHandle(-1),
 	audioHandle(-1),
+	m_bTalk(false),
 	fCameraLogin(false),
 	m_bStreamFlag(false),
 	m_bForceIFrame(true),
@@ -601,7 +602,7 @@ QTSS_Error EasyCameraSource::PushFrame(unsigned char* frame, int len, DWORD data
 				}
 			}
 
-			if (isAudio)
+			if (isAudio && !m_bTalk)
 			{
 				if (h264Buf)
 				{
@@ -750,11 +751,15 @@ QTSS_Error EasyCameraSource::ControlTalkback(Easy_CameraTalkback_Params* params)
 			if (audioHandle == -1)
 				return QTSS_RequestFailed;
 			else
+			{
+				m_bTalk = true;
 				return QTSS_NoErr;
+			}
 			break;
 		case EASY_TALKBACK_CMD_TYPE_STOP:
 			result = NET_DVR_StopVoiceCom(audioHandle);  //停止语音转发
 			audioHandle = -1;
+			m_bTalk = false;
 			break;
 		case EASY_TALKBACK_CMD_TYPE_SENDDATA:
 			//海康SDK要求
