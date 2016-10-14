@@ -134,6 +134,11 @@
 #define EASY_TAG_SERVER_RUNNING_TIME					"RunningTime"
 #define EASY_TAG_SERVER_HARDWARE						"Hardware"
 
+#define EASY_TAG_CONFIG_SERVICE_LAN_PORT				"ServiceLanPort"
+#define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
+#define EASY_TAG_CONFIG_SERIVCE_WAN_PORT				"ServiceWanPort"
+#define EASY_TAG_CONFIG_SERVICE_WAN_IP					"ServiceWanIP"
+
 /*!
 \}
 */
@@ -177,7 +182,9 @@
 #define MSG_SD_CONTROL_TALKBACK_REQ							0x000f
 #define MSG_DS_CONTROL_TALKBACK_ACK							0xe00f
 
-#define	MSG_SC_SERVER_INFO_ACK							0x1000
+#define	MSG_SC_SERVER_INFO_ACK								0x1000
+#define MSG_SC_SERVER_BASE_CONFIG_ACK						0x1001
+
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
