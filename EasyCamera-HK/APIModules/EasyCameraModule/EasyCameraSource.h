@@ -62,17 +62,20 @@ private:
 
 	QTSS_Error netDevStartStream();
 	void netDevStopStream();
-	//static HI_U32 getPTZCMDFromCMDType(int cmdType);
-	//static HI_U32 getPresetCMDFromCMDType(int cmdType);
+	static Easy_U32 getPTZCMDFromCMDType(int cmdType);
+	static Easy_U32 getPresetCMDFromCMDType(int cmdType);
 
 	static int getFrameRateFromHKSDK(DWORD type);
 	static int getAudioCodecFromHKSDK(unsigned char type);
 	static unsigned int getAudioSimpleRateFromHKSDK(unsigned char type);
 
 private:
-	//ÉãÏñ»ú²Ù×÷¾ä±ú
+	//æ‘„åƒæœºæ“ä½œå¥æŸ„
 	LONG m_u32Handle;
-	//Ô¤ÀÀ¾ä±ú
+	//è¯­éŸ³å¯¹è®²å¥æŸ„
+	LONG audioHandle;
+
+	//é¢„è§ˆå¥æŸ„
 	LONG streamHandle;
 
 	bool fCameraLogin;
