@@ -140,14 +140,14 @@
       <logicalFolder name="HTTPUtilitiesLib"
                      displayName="HTTPUtilitiesLib"
                      projectFiles="true">
+        <itemPath>../HTTPUtilitiesLib/HTTPClientRequestStream.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPClientRequestStream.h</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPClientResponseStream.cpp</itemPath>
+        <itemPath>../HTTPUtilitiesLib/HTTPClientResponseStream.h</itemPath>
         <itemPath>../HTTPUtilitiesLib/HTTPProtocol.cpp</itemPath>
         <itemPath>../HTTPUtilitiesLib/HTTPProtocol.h</itemPath>
         <itemPath>../HTTPUtilitiesLib/HTTPRequest.cpp</itemPath>
         <itemPath>../HTTPUtilitiesLib/HTTPRequest.h</itemPath>
-        <itemPath>../HTTPUtilitiesLib/HTTPRequestStream.cpp</itemPath>
-        <itemPath>../HTTPUtilitiesLib/HTTPRequestStream.h</itemPath>
-        <itemPath>../HTTPUtilitiesLib/HTTPResponseStream.cpp</itemPath>
-        <itemPath>../HTTPUtilitiesLib/HTTPResponseStream.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Include" displayName="Include" projectFiles="true">
         <itemPath>Include/EasyHLSAPI.h</itemPath>
@@ -430,6 +430,26 @@
           <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
             ex="false"
             tool="1"
@@ -443,26 +463,6 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1224,6 +1224,26 @@
           <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
             ex="false"
             tool="1"
@@ -1237,26 +1257,6 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -2017,6 +2017,26 @@
           <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
             ex="false"
             tool="1"
@@ -2030,26 +2050,6 @@
             flavor2="9">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -2810,6 +2810,26 @@
           <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../HTTPUtilitiesLib/HTTPClientResponseStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
             ex="false"
             tool="1"
@@ -2823,26 +2843,6 @@
             flavor2="9">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPRequestStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../HTTPUtilitiesLib/HTTPResponseStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
       </item>

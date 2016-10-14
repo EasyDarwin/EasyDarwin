@@ -1162,7 +1162,7 @@ SInt64 RTSPSession::Run()
 		}
 	}
 
-    printf("RTSPSession fObjectHolders:%d !\n", fObjectHolders);
+    printf("RTSPSession fObjectHolders:%d !\n", fObjectHolders.load());
 
     // Release所有RTSPSessionHandler对RTSPSession的引用
     if(fRTSPSessionHandler)

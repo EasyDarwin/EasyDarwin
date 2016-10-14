@@ -104,7 +104,7 @@ RTSPSessionInterface::RTSPSessionInterface()
 	fInputSocketP(&fSocket),
 	fSessionType(qtssRTSPSession),
 	fLiveSession(true),
-	fObjectHolders(0),
+        fObjectHolders(0),
 	fCurChannelNum(0),
 	fChNumToSessIDMap(nullptr),
 	fRequestBodyLen(-1),
@@ -115,7 +115,6 @@ RTSPSessionInterface::RTSPSessionInterface()
 	fRTSPSession3GPP(QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled()),
 	fRTSPSession3GPPPtr(&fRTSPSession3GPP)
 {
-
 	fTimeoutTask.SetTask(this);
 	fSocket.SetTask(this);
 	fStreamRef = this;
@@ -161,7 +160,7 @@ void RTSPSessionInterface::DecrementObjectHolderCount()
 	//atomic_sub(&fObjectHolders, 1);
 	--fObjectHolders;
 #else
-	if (0 == atomic_sub(&fObjectHolders, 1))
+	if (0 == --fObjectHolders)
 		this->Signal(Task::kKillEvent);
 #endif
 
