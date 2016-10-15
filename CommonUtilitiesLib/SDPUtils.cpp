@@ -40,7 +40,7 @@ SInt32 SDPContainer::AddHeaderLine(StrPtrLen *theLinePtr)
 	fNumUsedLines++;
 	if (fNumUsedLines == fNumSDPLines)
 	{
-		SDPLine* tempSDPLineArray = NEW SDPLine[fNumSDPLines * 2];
+		SDPLine* tempSDPLineArray = new SDPLine[fNumSDPLines * 2];
 		for (int i = 0; i < fNumSDPLines; i++)
 		{
 			tempSDPLineArray[i].Set(fSDPLineArray[i].Ptr, fSDPLineArray[i].Len);
@@ -190,7 +190,7 @@ void SDPContainer::Initialize()
 	fCurrentLine = 0;
 	fNumUsedLines = 0;
 	delete[] fSDPLineArray;
-	fSDPLineArray = NEW SDPLine[fNumSDPLines];
+	fSDPLineArray = new SDPLine[fNumSDPLines];
 	fValid = false;
 	fReqLines = 0;
 	::memset(fFieldStr, sizeof(fFieldStr), 0);
@@ -366,7 +366,7 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
 
 char* SDPLineSorter::GetSortedSDPCopy()
 {
-	char* fullbuffCopy = NEW char[fSessionHeaders.Len + fMediaHeaders.Len + 2];
+	char* fullbuffCopy = new char[fSessionHeaders.Len + fMediaHeaders.Len + 2];
 	SInt32 buffPos = 0;
 	memcpy(&fullbuffCopy[buffPos], fSessionHeaders.Ptr, fSessionHeaders.Len);
 	buffPos += fSessionHeaders.Len;

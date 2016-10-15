@@ -44,7 +44,7 @@ OSHeap::OSHeap(UInt32 inStartSize)
 	else
 		fArraySize = inStartSize;
 
-	fHeap = NEW OSHeapElem*[fArraySize];
+	fHeap = new OSHeapElem*[fArraySize];
 }
 
 void OSHeap::Insert(OSHeapElem* inElem)
@@ -54,7 +54,7 @@ void OSHeap::Insert(OSHeapElem* inElem)
 	if ((fHeap == nullptr) || (fFreeIndex == fArraySize))
 	{
 		fArraySize *= 2;
-		OSHeapElem** tempArray = NEW OSHeapElem*[fArraySize];
+		OSHeapElem** tempArray = new OSHeapElem*[fArraySize];
 		if ((fHeap != nullptr) && (fFreeIndex > 1))
 			memcpy(tempArray, fHeap, sizeof(OSHeapElem*) * fFreeIndex);
 

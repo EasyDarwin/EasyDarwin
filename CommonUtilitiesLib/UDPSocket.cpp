@@ -60,7 +60,7 @@ UDPSocket::UDPSocket(Task* inTask, UInt32 inSocketType)
 	: Socket(inTask, inSocketType), fDemuxer(nullptr)
 {
 	if (inSocketType & kWantsDemuxer)
-		fDemuxer = NEW UDPDemuxer();
+		fDemuxer = new UDPDemuxer();
 
 	//setup msghdr
 	::memset(&fMsgAddr, 0, sizeof(fMsgAddr));

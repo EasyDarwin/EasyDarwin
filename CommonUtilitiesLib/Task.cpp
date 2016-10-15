@@ -376,7 +376,7 @@ bool TaskThreadPool::AddThreads(UInt32 numToAdd)
 
 	for (UInt32 x = 0; x < numToAdd; x++)
 	{
-		sTaskThreadArray[x] = NEW TaskThread();
+		sTaskThreadArray[x] = new TaskThread();
 		sTaskThreadArray[x]->Start();
 		if (TASK_DEBUG)  qtss_printf("TaskThreadPool::AddThreads sTaskThreadArray[%"   _U32BITARG_   "]=%p\n", x, sTaskThreadArray[x]);
 	}

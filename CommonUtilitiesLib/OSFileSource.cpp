@@ -119,7 +119,7 @@ FileBlockBuffer::~FileBlockBuffer()
 void FileBlockBuffer::AllocateBuffer(UInt32 buffSize)
 {
 	fBufferSize = buffSize;
-	fDataBuffer = NEW char[buffSize + 1];
+	fDataBuffer = new char[buffSize + 1];
 	fDataBuffer[buffSize] = 0;
 
 #if FILE_SOURCE_DEBUG
@@ -157,9 +157,9 @@ FileBlockBuffer* FileBlockPool::GetBufferElement(UInt32 bufferSizeBytes)
 	if (fNumCurrentBuffers < fMaxBuffers)
 	{
 #if FILE_SOURCE_DEBUG
-		qtss_printf("FileBlockPool::GetBufferElement NEW element fNumCurrentBuffers=%" _U32BITARG_ " fMaxBuffers=%"   _U32BITARG_   " fBufferUnitSizeBytes=%"   _U32BITARG_   " bufferSizeBytes=%"   _U32BITARG_   "\n", fNumCurrentBuffers, fMaxBuffers, fBufferUnitSizeBytes, bufferSizeBytes);
+		qtss_printf("FileBlockPool::GetBufferElement new element fNumCurrentBuffers=%" _U32BITARG_ " fMaxBuffers=%"   _U32BITARG_   " fBufferUnitSizeBytes=%"   _U32BITARG_   " bufferSizeBytes=%"   _U32BITARG_   "\n", fNumCurrentBuffers, fMaxBuffers, fBufferUnitSizeBytes, bufferSizeBytes);
 #endif
-		theNewBuf = NEW FileBlockBuffer();
+		theNewBuf = new FileBlockBuffer();
 		theNewBuf->AllocateBuffer(bufferSizeBytes);
 		fNumCurrentBuffers++;
 		theNewBuf->fQElem.SetEnclosingObject(theNewBuf);
@@ -243,7 +243,7 @@ void FileMap::AllocateBufferMap(UInt32 inUnitSizeInK, UInt32 inNumBuffSizeUnits,
 	fBlockPool.SetBuffIncValue(inBufferIncCount);
 
 	fMapArraySize = (fileLen / fDataBufferSize) + 1;
-	fFileMapArray = NEW FileBlockBuffer *[(SInt32)(fMapArraySize + 1)];
+	fFileMapArray = new FileBlockBuffer *[(SInt32)(fMapArraySize + 1)];
 
 	this->Clean(); // required because fFileMapArray's array is used to store buffer pointers.
 #if FILE_SOURCE_DEBUG
