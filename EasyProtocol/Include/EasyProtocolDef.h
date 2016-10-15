@@ -187,6 +187,7 @@
 
 #define	MSG_SC_SERVER_INFO_ACK								0x1000
 #define MSG_SC_SERVER_BASE_CONFIG_ACK						0x1001
+#define MSG_SC_SERVER_SET_BASE_CONFIG_ACK					0x1002
 
 
 #define MSG_SC_START_HLS_ACK								0xeee0
