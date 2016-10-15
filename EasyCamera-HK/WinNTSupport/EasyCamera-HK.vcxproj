@@ -166,10 +166,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPClientRequestStream.cpp" />
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.cpp" />
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp" />
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp" />
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp" />
     <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
     <ClCompile Include="..\..\SafeStdLib\InternalStdLib.cpp" />
     <ClCompile Include="..\APIModules\EasyCameraModule\EasyCameraModule.cpp" />
@@ -197,10 +197,10 @@
     <ClCompile Include="..\Server.tproj\win32main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientRequestStream.h" />
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.h" />
     <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPProtocol.h" />
     <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequest.h" />
-    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.h" />
-    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.h" />
     <ClInclude Include="..\APIModules\EasyCameraModule\EasyCameraModule.h" />
     <ClInclude Include="..\APIModules\EasyCameraModule\EasyCameraSource.h" />
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h" />
