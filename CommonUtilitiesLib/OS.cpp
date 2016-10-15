@@ -112,7 +112,7 @@ void OS::Initialize()
 
 
 #if DEBUG || __Win32__ 
-	sLastMillisMutex = NEW OSMutex();
+	sLastMillisMutex = new OSMutex();
 #endif
 }
 

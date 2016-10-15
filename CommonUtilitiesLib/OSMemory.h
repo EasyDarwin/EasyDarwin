@@ -53,9 +53,9 @@ public:
 	static OSMutex* GetTagQueueMutex() { return &sMutex; }
 	static UInt32   GetAllocatedMemory() { return sAllocatedBytes; }
 
-	static void*    DebugNew(size_t size, char* inFile, int inLine, Bool16 sizeCheck);
+	static void*    DebugNew(size_t size, char* inFile, int inLine, bool sizeCheck);
 	static void     DebugDelete(void *mem);
-	static Bool16       MemoryDebuggingTest();
+	static bool       MemoryDebuggingTest();
 	static void     ValidateMemoryQueue();
 
 	enum

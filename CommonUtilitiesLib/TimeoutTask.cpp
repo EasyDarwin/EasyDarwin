@@ -39,7 +39,7 @@ void TimeoutTask::Initialize()
 {
 	if (sThread == nullptr)
 	{
-		//sThread = NEW TimeoutTaskThread();
+		//sThread = new TimeoutTaskThread();
 		sThread = make_shared<TimeoutTaskThread>();
 		sThread->Signal(Task::kStartEvent);
 	}

@@ -306,7 +306,7 @@ QTSS_Error HTTPClientRequestStream::DecodeIncomingData(char* inSrcData, UInt32 i
 
 	if (fRequest.Ptr == &fRequestBuffer[0])
 	{
-		fRequest.Ptr = NEW char[QTSS_MAX_REQUEST_BUFFER_SIZE];
+		fRequest.Ptr = new char[QTSS_MAX_REQUEST_BUFFER_SIZE];
 		fRequest.Len = 0;
 	}
 

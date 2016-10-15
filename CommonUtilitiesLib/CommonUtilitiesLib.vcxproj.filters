@@ -145,6 +145,9 @@
     <ClCompile Include="win32ev.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\OSMemoryLib\OSMemory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientSocket.h">
@@ -159,5 +162,6 @@
     <ClInclude Include="Format.h" />
     <ClInclude Include="OSMapEx.h" />
     <ClInclude Include="OSRefTableEx.h" />
+    <ClInclude Include="OSMemory.h" />
   </ItemGroup>
 </Project>

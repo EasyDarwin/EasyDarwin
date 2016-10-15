@@ -156,7 +156,7 @@ int ParseConfigFile(
 
 					Assert(*wordBuff);
 
-					param = NEW char[strlen(wordBuff) + 1];
+					param = new char[strlen(wordBuff) + 1];
 
 					Assert(param);
 
@@ -181,7 +181,7 @@ int ParseConfigFile(
 								else
 									next = GetWord(wordBuff, next, wordBuffSize);
 
-								char* value = NEW char[strlen(wordBuff) + 1];
+								char* value = new char[strlen(wordBuff) + 1];
 
 								Assert(value);
 

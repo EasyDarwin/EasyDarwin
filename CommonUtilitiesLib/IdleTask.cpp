@@ -102,7 +102,7 @@ void IdleTask::Initialize()
 {
 	if (!sIdleThread)
 	{
-		//sIdleThread = NEW IdleTaskThread();
+		//sIdleThread = new IdleTaskThread();
 		sIdleThread = std::shared_ptr<IdleTaskThread>(new IdleTaskThread(), [&](IdleTaskThread* idle) { delete idle; idle = nullptr; });
 		sIdleThread->Start();
 	}

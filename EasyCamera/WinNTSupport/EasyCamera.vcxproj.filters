@@ -103,10 +103,10 @@
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp">
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPClientRequestStream.cpp">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp">
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.cpp">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,10 +129,10 @@
     <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequest.h">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.h">
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientRequestStream.h">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.h">
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.h">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClInclude>
   </ItemGroup>

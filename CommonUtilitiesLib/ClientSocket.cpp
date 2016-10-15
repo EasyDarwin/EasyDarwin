@@ -214,7 +214,7 @@ HTTPClientSocket::HTTPClientSocket(const StrPtrLen& inURL, UInt32 inCookie, UInt
 	fGetSocket(nullptr, inSocketType),
 	fPostSocket(nullptr)
 {
-	fURL.Ptr = NEW char[inURL.Len + 1];
+	fURL.Ptr = new char[inURL.Len + 1];
 	fURL.Len = inURL.Len;
 	::memcpy(fURL.Ptr, inURL.Ptr, inURL.Len);
 	fURL.Ptr[fURL.Len] = '\0';
@@ -319,7 +319,7 @@ OS_Error HTTPClientSocket::SendV(iovec* inVec, UInt32 inNumVecs)
 	//
 	// Bring up the POST connection if we need to
 	if (fPostSocket == nullptr)
-		fPostSocket = NEW TCPSocket(nullptr, fSocketType);
+		fPostSocket = new TCPSocket(nullptr, fSocketType);
 
 	if (!fPostSocket->IsConnected())
 	{

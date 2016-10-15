@@ -36,7 +36,7 @@
 QueryParamList::QueryParamList(StrPtrLen* querySPL)
 {
 	// ctor from StrPtrLen
-	fNameValueQueryParamlist = NEW PLDoubleLinkedList<QueryParamListElement>;
+	fNameValueQueryParamlist = new PLDoubleLinkedList<QueryParamListElement>;
 
 	this->BulidList(querySPL);
 }
@@ -47,7 +47,7 @@ QueryParamList::QueryParamList(char* queryString)
 	// ctor from char*
 	StrPtrLen       querySPL(queryString);
 
-	fNameValueQueryParamlist = NEW PLDoubleLinkedList<QueryParamListElement>;
+	fNameValueQueryParamlist = new PLDoubleLinkedList<QueryParamListElement>;
 
 	this->BulidList(&querySPL);
 }
@@ -160,11 +160,11 @@ void QueryParamList::AddNameValuePairToList(char* name, char* value)
 	this->DecodeArg(name);
 	this->DecodeArg(value);
 
-	nvPair = NEW  QueryParamListElement(name, value);
+	nvPair = new  QueryParamListElement(name, value);
 
 
 	// create a node to hold the pair
-	nvNode = NEW PLDoubleLinkedListNode<QueryParamListElement>(nvPair);
+	nvNode = new PLDoubleLinkedListNode<QueryParamListElement>(nvPair);
 
 	// add it to the list
 	fNameValueQueryParamlist->AddNode(nvNode);

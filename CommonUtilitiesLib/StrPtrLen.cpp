@@ -89,9 +89,9 @@ UInt8 StrPtrLen::sNonPrintChars[] =
 
 char* StrPtrLen::GetAsCString() const
 {
-	// convert to a "NEW'd" zero terminated char array
+	// convert to a "new'd" zero terminated char array
 	// caler is reponsible for the newly allocated memory
-	char *theString = NEW char[Len + 1];
+	char *theString = new char[Len + 1];
 
 	if (Ptr && Len > 0)
 		::memcpy(theString, Ptr, Len);
@@ -181,7 +181,7 @@ char* StrPtrLen::FindStringCase(char* queryCharStr, StrPtrLen* resultStr, bool c
 
 	if (lastSourceChar != 0) // need to modify for termination. 
 	{
-		editSource = NEW char[Len + 1]; // Ptr could be a static string so make a copy
+		editSource = new char[Len + 1]; // Ptr could be a static string so make a copy
 		::memcpy(editSource, Ptr, Len);
 		editSource[Len] = 0; // this won't work on static strings so we are modifing a new string here
 	}
