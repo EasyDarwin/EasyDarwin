@@ -15,57 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Define.h">
+    <ClInclude Include="BindParames.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SmartDB.h">
+    <ClInclude Include="Database.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="JsonCpp.h">
+    <ClInclude Include="Define.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="detail\BindParams.h">
+    <ClInclude Include="Query.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="detail\Json.h">
+    <ClInclude Include="Traits.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="detail\Tuple.h">
+    <ClInclude Include="TupleHelper.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\NonCopyable.hpp">
+    <ClInclude Include="Variant.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\sqlite3.h">
+    <ClInclude Include="sqlite3\sqlite3.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\Variant.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\rapidjson\document.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\rapidjson\filestream.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\rapidjson\prettywriter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\rapidjson\rapidjson.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\rapidjson\reader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\rapidjson\stringbuffer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\rapidjson\writer.h">
+    <ClInclude Include="sqlite3\sqlite3ext.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SmartDB.cpp">
+    <ClCompile Include="sqlite3\shell.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3\sqlite3.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
