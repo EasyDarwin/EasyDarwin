@@ -143,6 +143,12 @@
 #define EASY_TAG_CONFIG_NGINX_WEB_PATH					"NginxWebPath"
 #define EASY_TAG_CONFIG_NGINX_RTMP_PATH					"NginxRTMPPath"
 
+#define EASY_TAG_THRID_PART_PLATFORM_NAME				"ThridPlatform"
+#define	EASY_TAG_THRID_PART_PLATFORM_IP					"ThridPlatformIP"
+#define	EASY_TAG_THRID_PART_PLATFORM_PORT				"ThridPlatformPort"
+#define	EASY_TAG_THRID_PART_PLATFORM_UID				"ThridPlatformUID"
+#define EASY_TAG_THRID_PART_PLATFORM_TOKEN				"ThridPlatformToken"
+
 /*!
 \}
 */
@@ -189,6 +195,7 @@
 #define	MSG_SC_SERVER_INFO_ACK								0x1000
 #define MSG_SC_SERVER_BASE_CONFIG_ACK						0x1001
 #define MSG_SC_SERVER_SET_BASE_CONFIG_ACK					0x1002
+#define MSG_SC_SERVER_GET_THRID_PART_PLATFORM_ACK			0x1003
 
 
 #define MSG_SC_START_HLS_ACK								0xeee0
