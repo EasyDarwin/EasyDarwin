@@ -68,6 +68,7 @@
 #define EASY_TAG_NAME									"Name"
 #define EASY_TAG_L_NAME									"name"
 #define EASY_TAG_PASSWORD								"Password"
+#define EASY_TAG_L_PASSWORD								"password"
 #define EASY_TAG_LAST_LOGIN_TIME						"LastLoginTime"
 #define EASY_TAG_LAST_LOGIN_ADDRESS						"LastLoginAddress"
 #define EASY_TAG_PERMISSION								"Permission"
