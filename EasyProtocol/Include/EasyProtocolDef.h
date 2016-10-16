@@ -151,6 +151,15 @@
 #define	EASY_TAG_THRID_PART_PLATFORM_CUSTOMIZE			"ThridPlatformCustomize"
 #define	EASY_TAG_THRID_PART_PLATFORM_ALIVE_INTERVAL		"ThridPlatformAliveInterval"
 
+#define EASY_TAG_ID										"Id"
+#define EASY_TAG_ENABLE									"Enable"
+#define EASY_TAG_ONLINE									"Online"
+#define EASY_TAG_RTSP									"Rtsp"
+#define EASY_TAG_ONVIF									"Onvif"
+#define EASY_TAG_CDN									"Cdn"
+
+
+
 /*!
 \}
 */
@@ -199,7 +208,7 @@
 #define MSG_SC_SERVER_SET_BASE_CONFIG_ACK					0x1002
 #define MSG_SC_SERVER_GET_THRID_PART_PLATFORM_ACK			0x1003
 #define	MSG_SC_SERVER_SET_THRID_PART_PLATFORM_ACK			0x1004
-
+#define MSG_SC_SERVER_GET_CHANNELS_ACK						0x1005
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
