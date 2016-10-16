@@ -133,6 +133,7 @@
 #define EASY_TAG_SERVER_HEADER							"Server"
 #define EASY_TAG_SERVER_RUNNING_TIME					"RunningTime"
 #define EASY_TAG_SERVER_HARDWARE						"Hardware"
+#define EASY_TAG_SERVER_INTERFACE_VERSION				"InterfaceVersion"
 
 #define EASY_TAG_CONFIG_SERVICE_LAN_PORT				"ServiceLanPort"
 #define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
