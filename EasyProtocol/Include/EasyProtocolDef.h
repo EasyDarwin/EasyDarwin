@@ -148,6 +148,7 @@
 #define	EASY_TAG_THRID_PART_PLATFORM_PORT				"ThridPlatformPort"
 #define	EASY_TAG_THRID_PART_PLATFORM_UID				"ThridPlatformUID"
 #define EASY_TAG_THRID_PART_PLATFORM_TOKEN				"ThridPlatformToken"
+#define	EASY_TAG_THRID_PART_PLATFORM_CUSTOMIZE			"ThridPlatformCustomize"
 #define	EASY_TAG_THRID_PART_PLATFORM_ALIVE_INTERVAL		"ThridPlatformAliveInterval"
 
 /*!
