@@ -44,6 +44,11 @@
 #include "version.h"
 #include "libavutil/avconfig.h"
 
+#ifndef INT64_C
+#define INT64_C(c) (c ## LL)
+#define UINT64_C(c) (c ## ULL)
+#endif
+
 #if AV_HAVE_BIGENDIAN
 #   define AV_NE(be, le) (be)
 #else
