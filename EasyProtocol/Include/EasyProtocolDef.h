@@ -130,6 +130,8 @@
 #define EASY_TAG_AUDIO_TYPE								"AudioType"
 #define EASY_TAG_AUDIO_DATA								"AudioData"
 #define EASY_TAG_PTS									"Pts"
+#define EASY_TAG_LINE									"Line"
+#define	EASY_TAG_L_LINE									"line"
 
 #define EASY_TAG_SERVER_HEADER							"Server"
 #define EASY_TAG_SERVER_RUNNING_TIME					"RunningTime"
