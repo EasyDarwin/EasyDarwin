@@ -96,9 +96,11 @@
 #define EASY_TAG_WAN_IP									"WanIP"
 #define EASY_TAG_LAN_IP									"LanIP"
 #define EASY_TAG_PORT									"Port"
+#define EASY_TAG_L_PORT									"port"
 #define EASY_TAG_LOAD									"Load"
 #define EASY_TAG_USER									"User"
 #define EASY_TAG_USER_NAME								"UserName"
+#define EASY_TAG_L_USER_NAME							"username"
 #define EASY_TAG_PROTOCOL								"Protocol"
 #define EASY_TAG_L_PROTOCOL								"protocol"
 #define EASY_TAG_AUDIO									"Audio"
@@ -107,6 +109,7 @@
 #define EASY_TAG_L_CMD                                  "command"
 #define EASY_TAG_VALUE									"Value"
 #define EASY_TAG_IP										"IP"
+#define EASY_TAG_L_IP									"ip"
 #define EASY_TAG_LIVE_TYPE								"LiveType"
 #define EASY_TAG_USER_PLAY_COUNT						"UserPlayCount"
 #define EASY_TAG_PROXY_PLAY_COUNT						"ProxyPlayCount"
@@ -156,10 +159,14 @@
 
 #define EASY_TAG_ID										"Id"
 #define EASY_TAG_ENABLE									"Enable"
+#define EASY_TAG_L_ENABLE								"enable"
 #define EASY_TAG_ONLINE									"Online"
 #define EASY_TAG_RTSP									"Rtsp"
+#define EASY_TAG_L_RTSP									"rtsp"
 #define EASY_TAG_ONVIF									"Onvif"
+#define EASY_TAG_L_ONVIF								"onvif"
 #define EASY_TAG_CDN									"Cdn"
+#define EASY_TAG_L_CDN									"cdn"
 
 
 
