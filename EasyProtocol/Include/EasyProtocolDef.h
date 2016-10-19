@@ -225,7 +225,7 @@
 
 #define	MSG_SC_SERVER_LOGIN_ACK								0x1009
 #define MSG_SC_SERVER_LOGOUT_ACK							0x100a
-
+#define MSG_SC_SERVER_MODIFY_PASSWORD_ACK					0x100b
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
