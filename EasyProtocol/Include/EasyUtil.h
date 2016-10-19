@@ -17,6 +17,7 @@
 #include <EasyProtocolDef.h>
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -68,6 +69,20 @@ public:
 
 	static unsigned char* Urldecode(unsigned char* encd, unsigned char* decd);
 	static std::string Urldecode(const std::string& encd);
+
+	static string ToLower(const string& inStr)
+	{
+		auto result = inStr;
+		boost::to_lower(result);
+		return result;
+	}
+
+	static string ToUpper(const string& inStr)
+	{
+		auto result = inStr;
+		boost::to_upper(result);
+		return result;
+	}
 
 };
 
