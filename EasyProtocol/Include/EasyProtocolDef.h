@@ -89,6 +89,7 @@
 #define EASY_TAG_SNAPSHOT								"Snapshot"
 #define EASY_TAG_DESCRIPTION							"Description"
 #define EASY_TAG_TOKEN									"Token"
+#define EASY_TAG_L_TOKEN								"token"
 #define EASY_TAG_CUSTOM_FIELD							"CustomField"
 #define EASY_TAG_ORDER									"Order"
 #define EASY_TAG_SERVICE_TYPE							"ServiceType"
