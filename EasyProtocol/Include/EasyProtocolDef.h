@@ -146,6 +146,8 @@
 #define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
 #define EASY_TAG_CONFIG_SERIVCE_WAN_PORT				"ServiceWanPort"
 #define EASY_TAG_CONFIG_SERVICE_WAN_IP					"ServiceWanIP"
+#define EASY_TAG_CONFIG_CHANNEL_SNAP_INTERVAL			"ChannelSnapInterval"
+
 #define EASY_TAG_CONFIG_NGINX_LOCAL_PATH				"NginxLocalPath"
 #define EASY_TAG_CONFIG_NGINX_WEB_PATH					"NginxWebPath"
 #define EASY_TAG_CONFIG_NGINX_RTMP_PATH					"NginxRTMPPath"
