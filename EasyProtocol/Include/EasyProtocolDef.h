@@ -169,6 +169,9 @@
 #define EASY_TAG_CDN									"Cdn"
 #define EASY_TAG_L_CDN									"cdn"
 
+#define EASY_TAG_L_OLD_PASSWORD							"oldpassword"
+#define EASY_TAG_L_NEW_PASSWORD							"newpassword"
+
 
 
 /*!
