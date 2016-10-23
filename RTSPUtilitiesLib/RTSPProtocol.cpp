@@ -418,12 +418,14 @@ bool RTSPProtocol::ParseRTSPURL(char const* url, char* username, char* password,
 
 				char const* usernameStart = from;
 				unsigned usernameLen = colonPasswordStart - usernameStart;
-				copyUsernameOrPasswordStringFromURL(username, usernameStart, usernameLen);
+				if(username)
+					copyUsernameOrPasswordStringFromURL(username, usernameStart, usernameLen);
 
 				char const* passwordStart = colonPasswordStart;
 				if (passwordStart < p) ++passwordStart; // skip over the ':'
 				unsigned passwordLen = p - passwordStart;
-				copyUsernameOrPasswordStringFromURL(password, passwordStart, passwordLen);
+				if(password)
+					copyUsernameOrPasswordStringFromURL(password, passwordStart, passwordLen);
 
 				from = p + 1; // skip over the '@'
 				break;
