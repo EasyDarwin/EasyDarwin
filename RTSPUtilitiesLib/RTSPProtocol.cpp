@@ -449,7 +449,7 @@ bool RTSPProtocol::ParseRTSPURL(char const* url, char* username, char* password,
 		}
 
 		if (ip)
-			strncpy(ip, parseBuffer, parseBufferSize);
+			strncpy(ip, parseBuffer, i);
 
 		*port = 554; // default value
 		char nextChar = *from;
