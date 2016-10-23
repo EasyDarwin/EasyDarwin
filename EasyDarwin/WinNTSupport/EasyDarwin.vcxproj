@@ -59,7 +59,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../APIModules/EasyHLSModule/;../APIModules/EasyRelayModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../../EasyRedisClient/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../APIModules/EasyHLSModule/;../APIModules/EasyRelayModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../../EasyRedisClient/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/EasyDarwin.pch</PrecompiledHeaderOutputFile>
@@ -140,6 +140,7 @@
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp" />
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
     <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
+    <ClCompile Include="..\..\RTSPUtilitiesLib\RTSPProtocol.cpp" />
     <ClCompile Include="..\..\SafeStdLib\InternalStdLib.cpp" />
     <ClCompile Include="..\APICommonCode\QTSS3GPPModuleUtils.cpp" />
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSModule.cpp" />
@@ -233,7 +234,6 @@
     <ClCompile Include="..\Server.tproj\RTPSessionInterface.cpp" />
     <ClCompile Include="..\Server.tproj\RTPStream.cpp" />
     <ClCompile Include="..\Server.tproj\RTPStream3gpp.cpp" />
-    <ClCompile Include="..\Server.tproj\RTSPProtocol.cpp" />
     <ClCompile Include="..\Server.tproj\RTSPRequest.cpp" />
     <ClCompile Include="..\Server.tproj\RTSPRequest3GPP.cpp" />
     <ClCompile Include="..\Server.tproj\RTSPRequestInterface.cpp" />
@@ -248,6 +248,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientRequestStream.h" />
     <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.h" />
+    <ClInclude Include="..\..\RTSPUtilitiesLib\RTSPProtocol.h" />
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h" />
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSSession.h" />
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />

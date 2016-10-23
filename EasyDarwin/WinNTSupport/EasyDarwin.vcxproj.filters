@@ -27,14 +27,14 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{e727d50d-3391-4555-8db1-6a4f07960b2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\RTSPClientLib">
-      <UniqueIdentifier>{0469c66a-019d-4dfc-b698-0144a67c2e97}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\RTCP Utilities">
       <UniqueIdentifier>{cc60b61c-8df6-4989-9e00-12c6ace79658}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\HTTPUtilitiesLib">
       <UniqueIdentifier>{6001c7bb-eacc-49e8-8760-7e5e43d01e2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RTSPUtilitiesLib">
+      <UniqueIdentifier>{0469c66a-019d-4dfc-b698-0144a67c2e97}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -221,9 +221,6 @@
     <ClCompile Include="..\Server.tproj\RTPStream3gpp.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\Server.tproj\RTSPProtocol.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Server.tproj\RTSPRequest.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -255,7 +252,7 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\RTSPClientLib\RTSPClient.cpp">
-      <Filter>Source Files\RTSPClientLib</Filter>
+      <Filter>Source Files\RTSPUtilitiesLib</Filter>
     </ClCompile>
     <ClCompile Include="..\RTCPUtilitiesLib\RTCPAckPacket.cpp">
       <Filter>Source Files\RTCP Utilities</Filter>
@@ -287,6 +284,9 @@
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\RTSPUtilitiesLib\RTSPProtocol.cpp">
+      <Filter>Source Files\RTSPUtilitiesLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.h">
@@ -312,6 +312,9 @@
     </ClInclude>
     <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.h">
       <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTSPUtilitiesLib\RTSPProtocol.h">
+      <Filter>Source Files\RTSPUtilitiesLib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
