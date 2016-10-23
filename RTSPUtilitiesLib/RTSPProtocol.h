@@ -29,9 +29,6 @@
 				 in the RTSP protocol. This should be maintained as new versions
 				 of the RTSP protoocl appear & as the server evolves to take
 				 advantage of new RTSP features.
-
-
-
  */
 
 
@@ -70,7 +67,6 @@ public:
 		return sHeaders[inHeader];
 	}
 
-
 	//STATUS CODES
 
 	//returns name of this error
@@ -105,6 +101,8 @@ public:
 	{
 		return sVersionString[version];
 	}
+
+	static bool				ParseRTSPURL(char const* url, char* username, char* password, char* ip, UInt16* port, char const** urlSuffix = NULL);
 
 private:
 

@@ -26,7 +26,6 @@
 	 File:       RTSPProtocol.cpp
 
 	 Contains:   Implementation of class defined in RTSPProtocol.h
-
  */
 
 #include "RTSPProtocol.h"
@@ -48,8 +47,7 @@ StrPtrLen RTSPProtocol::sMethods[] =
 	StrPtrLen("RECORD")
 };
 
-QTSS_RTSPMethod
-RTSPProtocol::GetMethod(const StrPtrLen &inMethodStr)
+QTSS_RTSPMethod RTSPProtocol::GetMethod(const StrPtrLen &inMethodStr)
 {
 	//chances are this is one of our selected "VIP" methods. so check for this.
 	QTSS_RTSPMethod theMethod = qtssIllegalMethod;
@@ -72,7 +70,6 @@ RTSPProtocol::GetMethod(const StrPtrLen &inMethodStr)
 			return x;
 	return qtssIllegalMethod;
 }
-
 
 StrPtrLen RTSPProtocol::sHeaders[] =
 {
@@ -361,11 +358,118 @@ StrPtrLen RTSPProtocol::sVersionString[] =
 	StrPtrLen("RTSP/1.0")
 };
 
-RTSPProtocol::RTSPVersion
-RTSPProtocol::GetVersion(StrPtrLen &versionStr)
+RTSPProtocol::RTSPVersion RTSPProtocol::GetVersion(StrPtrLen &versionStr)
 {
 	if (versionStr.Len != 8)
 		return kIllegalVersion;
 	else
 		return k10Version;
+}
+
+static void copyUsernameOrPasswordStringFromURL(char* dest, char const* src, unsigned len) {
+	// Normally, we just copy from the source to the destination.  However, if the source contains
+	// %-encoded characters, then we decode them while doing the copy:
+	while (len > 0) {
+		int nBefore = 0;
+		int nAfter = 0;
+
+		if (*src == '%' && len >= 3 && sscanf(src + 1, "%n%2hhx%n", &nBefore, dest, &nAfter) == 1) {
+			unsigned codeSize = nAfter - nBefore; // should be 1 or 2
+
+			++dest;
+			src += (1 + codeSize);
+			len -= (1 + codeSize);
+		}
+		else {
+			*dest++ = *src++;
+			--len;
+		}
+	}
+	*dest = '\0';
+}
+
+// Parse the URL as "rtsp://[<username>[:<password>]@]<server-address-or-name>[:<port>][/<stream-name>]"
+bool RTSPProtocol::ParseRTSPURL(char const* url, char* username, char* password, char* ip, UInt16* port, char const** urlSuffix)
+{
+	do {
+		
+		char const* prefix = "rtsp://";
+		unsigned const prefixLength = 7;
+		if (_strnicmp(url, prefix, prefixLength) != 0) {
+			printf("URL is not of the form rtsp://\n");
+			break;
+		}
+
+		unsigned const parseBufferSize = 100;
+		char parseBuffer[parseBufferSize];
+		char const* from = &url[prefixLength];
+
+		// Check whether "<username>[:<password>]@" occurs next.
+		// We do this by checking whether '@' appears before the end of the URL, or before the first '/'.
+		char const* colonPasswordStart = NULL;
+		char const* p;
+		for (p = from; *p != '\0' && *p != '/'; ++p) {
+			if (*p == ':' && colonPasswordStart == NULL) {
+				colonPasswordStart = p;
+			}
+			else if (*p == '@') {
+				// We found <username> (and perhaps <password>).  Copy them into newly-allocated result strings:
+				if (colonPasswordStart == NULL) colonPasswordStart = p;
+
+				char const* usernameStart = from;
+				unsigned usernameLen = colonPasswordStart - usernameStart;
+				copyUsernameOrPasswordStringFromURL(username, usernameStart, usernameLen);
+
+				char const* passwordStart = colonPasswordStart;
+				if (passwordStart < p) ++passwordStart; // skip over the ':'
+				unsigned passwordLen = p - passwordStart;
+				copyUsernameOrPasswordStringFromURL(password, passwordStart, passwordLen);
+
+				from = p + 1; // skip over the '@'
+				break;
+			}
+		}
+
+		// Next, parse <server-address-or-name>
+		char* to = &parseBuffer[0];
+		unsigned i;
+		for (i = 0; i < parseBufferSize; ++i) {
+			if (*from == '\0' || *from == ':' || *from == '/') {
+				// We've completed parsing the address
+				*to = '\0';
+				break;
+			}
+			*to++ = *from++;
+		}
+		if (i == parseBufferSize) {
+			printf("URL is too long");
+			break;
+		}
+
+		if (ip)
+			strncpy(ip, parseBuffer, parseBufferSize);
+
+		*port = 554; // default value
+		char nextChar = *from;
+		if (nextChar == ':') {
+			int portNumInt;
+			if (sscanf(++from, "%d", &portNumInt) != 1) {
+				printf("No port number follows ':'");
+				break;
+			}
+			if (portNumInt < 1 || portNumInt > 65535) {
+				printf("Bad port number");
+				break;
+			}
+			*port = portNumInt;
+			while (*from >= '0' && *from <= '9') ++from; // skip over port number
+		}
+
+		// The remainder of the URL is the suffix:
+		if (urlSuffix != NULL) *urlSuffix = from;
+
+		return true;
+	} while (0);
+
+	return false;
 }
