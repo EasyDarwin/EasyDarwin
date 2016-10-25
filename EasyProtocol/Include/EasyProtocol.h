@@ -435,6 +435,8 @@ class Easy_API EasyMsgSCRecordListACK : public EasyProtocolACK//封装录像列表回应
 public:
 	EasyMsgSCRecordListACK(int iMsgType) :EasyProtocolACK(iMsgType) {}
 	void AddRecord(const string& record);
+	void AddRecord(int day_of_month/*1~31*/);
+	void AddRecord(const string& starttime, const string &endtime);//format-HH:MM:SS
 };
 
 //add,Unisiot，start

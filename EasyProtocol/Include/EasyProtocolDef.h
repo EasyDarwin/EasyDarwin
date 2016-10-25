@@ -174,7 +174,9 @@
 #define EASY_TAG_L_OLD_PASSWORD							"oldpassword"
 #define EASY_TAG_L_NEW_PASSWORD							"newpassword"
 
-
+#define EASY_TAG_DATE									"Date"
+#define EASY_TAG_START_TIME								"StartTime"
+#define EASY_TAG_END_TIME								"EndTime"
 
 /*!
 \}

@@ -673,6 +673,21 @@ namespace EasyDarwin { namespace Protocol
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
 	}
 
+	void EasyMsgSCRecordListACK::AddRecord(int day_of_month)
+	{
+		Json::Value value;
+		value[EASY_TAG_DATE] = day_of_month;
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
+	}
+
+	void EasyMsgSCRecordListACK::AddRecord(const string & starttime, const string & endtime)
+	{
+		Json::Value value;
+		value[EASY_TAG_START_TIME] = starttime;
+		value[EASY_TAG_END_TIME] = endtime;
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
+	}
+
 	//add,�Ϲ⣬start
 	strDevice::strDevice() : eDeviceType(), eAppType()
 	{
