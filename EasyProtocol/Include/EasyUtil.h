@@ -84,6 +84,34 @@ public:
 		return result;
 	}
 
+
+	static string& ReplaceInPlace(string& str, const string& from, const string& to, string::size_type start = 0)
+	{
+		string result;
+		string::size_type pos = 0;
+		result.append(str, 0, start);
+		do
+		{
+			pos = str.find(from, start);
+			if (pos != string::npos)
+			{
+				result.append(str, start, pos - start);
+				result.append(to);
+				start = pos + from.length();
+			}
+			else result.append(str, start, str.size() - start);
+		} while (pos != string::npos);
+		str.swap(result);
+		return str;
+	}
+
+	static string Replace(const string& str, const string& from, const string& to, string::size_type start = 0)
+	{
+		string result(str);
+		ReplaceInPlace(result, from, to);
+		return result;
+	}
+
 };
 
 #endif	/* EASY_UTIL_H */
