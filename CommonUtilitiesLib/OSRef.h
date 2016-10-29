@@ -62,7 +62,7 @@ class OSRef
 {
 public:
 
-	OSRef() : fObjectP(nullptr), fRefCount(0), fNextHashEntry(nullptr)
+	OSRef() : fObjectP(nullptr), fRefCount(0), fHashValue(0), fNextHashEntry(nullptr)
 	{
 #if DEBUG
 		fInATable = false;
