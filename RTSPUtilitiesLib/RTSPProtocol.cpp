@@ -395,7 +395,11 @@ bool RTSPProtocol::ParseRTSPURL(char const* url, char* username, char* password,
 		
 		char const* prefix = "rtsp://";
 		unsigned const prefixLength = 7;
+#ifdef WIN32
 		if (_strnicmp(url, prefix, prefixLength) != 0) {
+#else
+		if (strncasecmp(url, prefix, prefixLength) != 0) {
+#endif
 			printf("URL is not of the form rtsp://\n");
 			break;
 		}
