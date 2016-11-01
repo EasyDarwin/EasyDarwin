@@ -117,6 +117,7 @@
     <ClCompile Include="GetWord.c" />
     <ClCompile Include="IdleTask.cpp" />
     <ClCompile Include="keyframecache.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="md5.c" />
     <ClCompile Include="md5digest.cpp" />
     <ClCompile Include="MyAssert.cpp" />
