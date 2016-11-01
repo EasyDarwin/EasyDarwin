@@ -163,5 +163,6 @@
     <ClInclude Include="OSMapEx.h" />
     <ClInclude Include="OSRefTableEx.h" />
     <ClInclude Include="OSMemory.h" />
+    <ClInclude Include="Logger.h" />
   </ItemGroup>
 </Project>

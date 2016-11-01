@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="ClientSocket.h" />
     <ClInclude Include="Format.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="OSMapEx.h" />
     <ClInclude Include="OSMemory.h" />
     <ClInclude Include="OSRefTableEx.h" />
