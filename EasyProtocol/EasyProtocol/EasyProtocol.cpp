@@ -733,17 +733,20 @@ namespace EasyDarwin { namespace Protocol
 					camera.channel_ = json_camera[EASY_TAG_CHANNEL].asString();
 					camera.status_ = json_camera[EASY_TAG_STATUS].asString();
 
-					//channels_.push_back(camera);
-					//如果已经存在，则只修改status_属性，否则插入到map中。这样对于1个线程写，多个线程读不用加锁，因为不会出现不可预知的中间值。  
-					//注意NVR包含摄像头的信息除了状态外不应该发生变化，否则多线程操作可能会出bug.
-					if (channels_.find(camera.channel_) != channels_.end())//Already exist
-					{
-						channels_[camera.channel_].status_ = camera.status_;//change status_
-					}
-					else//insert
-					{
-						channels_[camera.channel_] = camera;
-					}
+					//update channels enable true to false
+					channels_[camera.channel_] = camera;
+
+					////channels_.push_back(camera);
+					////如果已经存在，则只修改status_属性，否则插入到map中。这样对于1个线程写，多个线程读不用加锁，因为不会出现不可预知的中间值。  
+					////注意NVR包含摄像头的信息除了状态外不应该发生变化，否则多线程操作可能会出bug.
+					//if (channels_.find(camera.channel_) != channels_.end())//Already exist
+					//{
+					//	channels_[camera.channel_].status_ = camera.status_;//change status_
+					//}
+					//else//insert
+					//{
+					//	channels_[camera.channel_] = camera;
+					//}
 				}
 			}
 			return true;
