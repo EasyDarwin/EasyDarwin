@@ -277,7 +277,7 @@ ${OBJECTDIR}/StringTranslator.o: StringTranslator.cpp
 ${OBJECTDIR}/TCPListenerSocket.o: TCPListenerSocket.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -I../EasyProtocol/Include -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TCPListenerSocket.o TCPListenerSocket.cpp
+	$(COMPILE.cc) -O2 -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -I../EasyProtocol/Include -I../RTSPUtilitiesLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TCPListenerSocket.o TCPListenerSocket.cpp
 
 ${OBJECTDIR}/TCPSocket.o: TCPSocket.cpp 
 	${MKDIR} -p ${OBJECTDIR}
