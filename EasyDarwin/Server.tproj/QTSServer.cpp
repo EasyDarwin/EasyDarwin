@@ -57,10 +57,10 @@
 
  //Compile time modules
 #include "QTSSErrorLogModule.h"
-#include "QTSSFileModule.h"
 #include "QTSSAccessLogModule.h"
 #include "QTSSFlowControlModule.h"
 #include "QTSSReflectorModule.h"
+#include "EasyHLSModule.h"
 #include "EasyCMSModule.h"
 #include "EasyRedisModule.h"
 #ifdef PROXYSERVER
@@ -78,7 +78,6 @@
 #include "RTSPSessionInterface.h"
 #include "RTPSessionInterface.h"
 #include "RTSPSession.h"
-
 #include "HTTPSession.h"
 
 #include "RTPStream.h"
@@ -744,22 +743,14 @@ void    QTSServer::LoadCompiledInModules()
 	// QTSSModule* myModule = new QTSSModule("__MODULE_NAME__");
 	// (void)myModule->Initialize(&sCallbacks, &__MODULE_MAIN_ROUTINE__);
 	// (void)AddModule(myModule);
-	//
-	// The following modules are all compiled into the server. 
-	QTSSModule* theFileModule = new QTSSModule("QTSSFileModule");
-	(void)theFileModule->SetupModule(&sCallbacks, &QTSSFileModule_Main);
-	(void)AddModule(theFileModule);
 
 	QTSSModule* theReflectorModule = new QTSSModule("QTSSReflectorModule");
 	(void)theReflectorModule->SetupModule(&sCallbacks, &QTSSReflectorModule_Main);
 	(void)AddModule(theReflectorModule);
 
-	//we not used QTSSRelayModule
-	/*
-	QTSSModule* theRelayModule = new QTSSModule("QTSSRelayModule");
-	(void)theRelayModule->SetupModule(&sCallbacks, &QTSSRelayModule_Main);
-	(void)AddModule(theRelayModule);
-	*/
+	QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
+	(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
+	(void)AddModule(theHLSModule);
 
 	QTSSModule* theAccessLog = new QTSSModule("QTSSAccessLogModule");
 	(void)theAccessLog->SetupModule(&sCallbacks, &QTSSAccessLogModule_Main);

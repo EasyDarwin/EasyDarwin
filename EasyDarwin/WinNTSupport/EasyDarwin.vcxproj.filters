@@ -11,10 +11,6 @@
     <Filter Include="Source Files\API Modules\QTSSReflectorModule">
       <UniqueIdentifier>{f1ae693e-42f3-4af9-8c03-c761c5722ece}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\API Modules\QTSSMP3StreamingModule">
-      <UniqueIdentifier>{2ce293e2-5d2c-4e17-bd34-f05f5efa57fa}</UniqueIdentifier>
-      <Extensions>.cpp</Extensions>
-    </Filter>
     <Filter Include="Source Files\API Modules\QTSSAdminModule">
       <UniqueIdentifier>{f2cbdd5a-6c96-48ba-83c9-a3cf3e7279e1}</UniqueIdentifier>
     </Filter>
@@ -35,6 +31,9 @@
     </Filter>
     <Filter Include="Source Files\RTSPUtilitiesLib">
       <UniqueIdentifier>{0469c66a-019d-4dfc-b698-0144a67c2e97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\API Modules\EasyHLSModule">
+      <UniqueIdentifier>{eb0f0f80-805b-43ce-8c72-721b1b382245}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,9 +123,6 @@
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\SequenceNumberMap.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSMP3StreamingModule\QTSSMP3StreamingModule.cpp">
-      <Filter>Source Files\API Modules\QTSSMP3StreamingModule</Filter>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSAdminModule\frozen.c">
       <Filter>Source Files\API Modules\QTSSAdminModule</Filter>
@@ -287,6 +283,12 @@
     <ClCompile Include="..\..\RTSPUtilitiesLib\RTSPProtocol.cpp">
       <Filter>Source Files\RTSPUtilitiesLib</Filter>
     </ClCompile>
+    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSModule.cpp">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSSession.cpp">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.h">
@@ -315,6 +317,12 @@
     </ClInclude>
     <ClInclude Include="..\..\RTSPUtilitiesLib\RTSPProtocol.h">
       <Filter>Source Files\RTSPUtilitiesLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSModule.h">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSSession.h">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

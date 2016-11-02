@@ -59,7 +59,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../RTSPClientLib/;../APIModules/QTSSFileModule/;../APIModules/QTSSHttpFileModule/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/QTSSMP3StreamingModule/;../APIModules/EasyHLSModule/;../APIModules/EasyRelayModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../../EasyRedisClient/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTSPClientLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/EasyHLSModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../../EasyRedisClient/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/EasyDarwin.pch</PrecompiledHeaderOutputFile>
@@ -77,7 +77,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;libEasyRTSPClient.lib;libEasyHLS.lib;libEasyAACEncoder.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\WinNTSupport\Debug\EasyDarwin.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -145,6 +145,8 @@
     <ClCompile Include="..\APICommonCode\QTSS3GPPModuleUtils.cpp" />
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSModule.cpp" />
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSSession.cpp" />
+    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSModule.cpp" />
+    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSSession.cpp" />
     <ClCompile Include="..\APIModules\EasyRedisModule\EasyRedisModule.cpp" />
     <ClCompile Include="..\APIModules\QTSSAccessLogModule\QTSSAccessLogModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
@@ -176,7 +178,6 @@
     <ClCompile Include="..\APIModules\QTSSFlowControlModule\QTSSFlowControlModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSMP3StreamingModule\QTSSMP3StreamingModule.cpp" />
     <ClCompile Include="..\APIModules\QTSSPOSIXFileSysModule\QTSSPosixFileSysModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
@@ -251,6 +252,8 @@
     <ClInclude Include="..\..\RTSPUtilitiesLib\RTSPProtocol.h" />
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h" />
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSSession.h" />
+    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSModule.h" />
+    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSSession.h" />
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />
     <ClInclude Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.h" />
     <ClInclude Include="..\Server.tproj\HTTPSession.h" />

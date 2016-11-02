@@ -6,10 +6,9 @@
 */
 /*
 	File:       HTTPSession.cpp
-	Contains:   实现对服务单元每一个Session会话的网络报文处理
+	Contains:   
 */
 
-//#undef COMMON_UTILITIES_LIB
 #include "HTTPSession.h"
 #include "QTSServerInterface.h"
 #include "OSArrayObjectDeleter.h"
@@ -54,7 +53,6 @@ HTTPSession::HTTPSession()
 {
 	this->SetTaskName("HTTPSession");
 
-	//在全局服务对象中Session数增长一个
 	QTSServerInterface::GetServer()->AlterCurrentRTSPSessionCount(1);
 
 	// Setup the QTSS param block, as none of these fields will change through the course of this session.
@@ -92,13 +90,6 @@ HTTPSession::~HTTPSession()
 
 }
 
-/*!
-	\brief 事件由HTTPSession Task进行处理，大多数为网络报文处理事件
-	\param
-	\return 处理完成返回0,断开Session返回-1
-	\ingroup
-	\see
-*/
 SInt64 HTTPSession::Run()
 {
 	//获取事件类型
@@ -336,13 +327,8 @@ SInt64 HTTPSession::Run()
 	return 0;
 }
 
-/*
-	发送HTTP+json报文，决定是否关闭当前Session
-	HTTP部分构造，json部分由函数传递
-*/
 QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement)
 {
-	//构造响应报文(HTTP头)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 	httpAck.CreateResponseHeader(contentXML->Len ? httpOK : httpNotImplemented);
 	if (contentXML->Len)
@@ -375,9 +361,6 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClo
 	return QTSS_NoErr;
 }
 
-/*
-	处理HTTP请求报文
-*/
 QTSS_Error HTTPSession::SetupRequest()
 {
 	//解析请求报文
@@ -538,7 +521,6 @@ bool HTTPSession::OverMaxConnections(UInt32 buffer)
 	return overLimit;
 }
 
-
 QTSS_Error HTTPSession::DumpRequestData()
 {
 	char theDumpBuffer[QTSS_MAX_REQUEST_BUFFER_SIZE];
@@ -646,7 +628,6 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	return QTSS_NoErr;
 }
 
-
 QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
@@ -680,7 +661,6 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 
 	return theErr;
 }
-
 
 QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char* json)
 {
