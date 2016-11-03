@@ -88,9 +88,6 @@
     <ClCompile Include="..\APIModules\QTSSReflectorModule\QTSSReflectorModule.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\QTSSRelayModule.cpp">
-      <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RCFSourceInfo.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
@@ -100,19 +97,10 @@
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorStream.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RelayOutput.cpp">
-      <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RelaySDPSourceInfo.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RelaySession.cpp">
-      <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RTPSessionOutput.cpp">
-      <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RTSPSourceInfo.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\SequenceNumberMap.cpp">
@@ -228,9 +216,6 @@
     </ClCompile>
     <ClCompile Include="..\Server.tproj\win32main.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\RTSPClientLib\RTSPClient.cpp">
-      <Filter>Source Files\RTSPUtilitiesLib</Filter>
     </ClCompile>
     <ClCompile Include="..\RTCPUtilitiesLib\RTCPAckPacket.cpp">
       <Filter>Source Files\RTCP Utilities</Filter>

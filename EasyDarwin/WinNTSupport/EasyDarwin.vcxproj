@@ -179,15 +179,11 @@
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\QTSSReflectorModule.cpp" />
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\QTSSRelayModule.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RCFSourceInfo.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorSession.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorStream.cpp" />
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RelayOutput.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RelaySDPSourceInfo.cpp" />
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RelaySession.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RTPSessionOutput.cpp" />
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RTSPSourceInfo.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\SequenceNumberMap.cpp" />
     <ClCompile Include="..\APIModules\QTSSWebDebugModule\QTSSWebDebugModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
@@ -204,7 +200,6 @@
     <ClCompile Include="..\RTCPUtilitiesLib\RTCPAPPQTSSPacket.cpp" />
     <ClCompile Include="..\RTCPUtilitiesLib\RTCPPacket.cpp" />
     <ClCompile Include="..\RTCPUtilitiesLib\RTCPSRPacket.cpp" />
-    <ClCompile Include="..\RTSPClientLib\RTSPClient.cpp" />
     <ClCompile Include="..\Server.tproj\GenerateXMLPrefs.cpp" />
     <ClCompile Include="..\Server.tproj\HTTPSession.cpp" />
     <ClCompile Include="..\Server.tproj\HTTPSessionInterface.cpp" />
