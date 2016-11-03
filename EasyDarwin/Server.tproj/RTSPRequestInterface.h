@@ -46,7 +46,6 @@
 #include "RTSPResponseStream.h"
 #include "RTSPProtocol.h"
 #include "QTSSUserProfile.h"
-#include "RTSPRequest3GPP.h"
 
 class RTSPRequestInterface : public QTSSDictionary
 {

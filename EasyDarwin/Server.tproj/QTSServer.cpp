@@ -84,9 +84,6 @@
 #include "RTCPTask.h"
 #include "QTSSFile.h"
 
-#include "RTPStream3gpp.h"
-#include "RTSPRequest3GPP.h"
-
 // CLASS DEFINITIONS
 
 class RTSPListenerSocket : public TCPListenerSocket
@@ -202,9 +199,6 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 	RTSPSession::Initialize();
 	QTSSFile::Initialize();
 	QTSSUserProfile::Initialize();
-
-	RTSPRequest3GPP::Initialize();
-	RTPStream3GPP::Initialize();
 
 	//
 	// STUB SERVER INITIALIZATION

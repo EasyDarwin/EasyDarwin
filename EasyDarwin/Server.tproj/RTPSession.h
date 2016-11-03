@@ -115,8 +115,6 @@ public:
 	SInt32          GetQualityLevel();
 	void            SetQualityLevel(SInt32 level);
 
-	void            SetMovieBitRateData();
-
 private:
 
 	//where timeouts, deletion conditions get processed

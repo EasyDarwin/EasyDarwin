@@ -37,8 +37,6 @@
 
 #include "QTSServerInterface.h"
 #include "QTSS.h"
-#include "RTSPRequest3GPP.h"
-
 #include "OS.h"
 #include "OSMemory.h"
 
@@ -265,21 +263,6 @@ void RTPSession::SetStreamThinningParams(Float32 inLateTolerance)
 	}
 }
 
-
-void RTPSession::SetMovieBitRateData()
-{
-	RTPStream** theStream = NULL;
-	UInt32 theLen = 0;
-
-	//should eventually set the stream rate too. Use some gross amount right now.
-	UInt32 movieBitRate = GetMovieAvgBitrate();
-
-	for (int x = 0; this->GetValuePtr(qtssCliSesStreamObjects, x, (void**)&theStream, &theLen) == QTSS_NoErr; x++)
-	{
-		(*theStream)->SetBitRateData(movieBitRate);
-	}
-}
-
 QTSS_Error  RTPSession::Play(RTSPRequestInterface* request, QTSS_PlayFlags inFlags)
 {
 	//first setup the play associated session interface variables
@@ -374,7 +357,6 @@ QTSS_Error  RTPSession::Play(RTSPRequestInterface* request, QTSS_PlayFlags inFla
 		if (theBufferSize > thePrefs->GetMaxTCPBufferSizeInBytes())
 			theBufferSize = thePrefs->GetMaxTCPBufferSizeInBytes();
 
-		this->SetMovieBitRateData();
 	}
 
 	Assert(fRTSPSession != NULL); // can this ever happen?
@@ -400,7 +382,7 @@ void RTPSession::Pause()
 	{
 		Assert(theStream != NULL);
 		Assert(theLen == sizeof(RTPStream*));
-		(*theStream)->Pause();
+		//(*theStream)->Pause();
 	}
 }
 

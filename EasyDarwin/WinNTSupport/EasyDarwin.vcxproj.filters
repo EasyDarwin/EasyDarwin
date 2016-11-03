@@ -211,13 +211,7 @@
     <ClCompile Include="..\Server.tproj\RTPStream.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\Server.tproj\RTPStream3gpp.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Server.tproj\RTSPRequest.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Server.tproj\RTSPRequest3GPP.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\Server.tproj\RTSPRequestInterface.cpp">

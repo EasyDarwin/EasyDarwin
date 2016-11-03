@@ -455,9 +455,9 @@ enum
     qtssRTPStrSvrRTPPort            = 36,   //read      //UInt16            // Port the server is sending RTP packets from for this stream
     qtssRTPStrClientRTPPort         = 37,   //read      //UInt16            // Port the server is sending RTP packets to for this stream
     qtssRTPStrNetworkMode           = 38,   //read      //QTSS_RTPNetworkMode // unicast or multicast
-    qtssRTPStr3gppObject            = 39,   //read      //QTSS_3GPPStreamObject // QTSS_ObjectType qtss3GPPStreamObjectType  3gpp data for the stream object
-    qtssRTPStrThinningDisabled      = 40,   //read      //bool            //Stream thinning is disabled on this stream.
-    qtssRTPStrNumParams             = 41
+
+	qtssRTPStrThinningDisabled      = 39,   //read      //bool            //Stream thinning is disabled on this stream.
+    qtssRTPStrNumParams             = 40
 
 };
 typedef UInt32 QTSS_RTPStreamAttributes;

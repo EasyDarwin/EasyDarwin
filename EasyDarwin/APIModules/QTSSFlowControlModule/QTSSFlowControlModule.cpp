@@ -170,7 +170,6 @@ QTSS_Error RereadPrefs()
 	return QTSS_NoErr;
 }
 
-
 QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
 {
 	if (!sModuleEnabled || sDisableThinning)

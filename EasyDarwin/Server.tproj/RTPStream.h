@@ -50,15 +50,9 @@
 
 #include "RTSPRequestInterface.h"
 #include "RTPSessionInterface.h"
-
 #include "RTPPacketResender.h"
 #include "QTSServerInterface.h"
-
-#include "RTPStream3gpp.h"
-
 #include "RTCPPacket.h"
-
-#include "RTSPRequest3GPP.h"
 
 #ifndef MIN
 #define	MIN(a,b) (((a)<(b))?(a):(b))
@@ -158,13 +152,7 @@ class RTPStream : public QTSSDictionary, public UDPDemuxerTask
 		
 		void EnableSSRC() { fEnableSSRC = true; }
 		void DisableSSRC() { fEnableSSRC = false; }
-		
-		void SetRateAdaptData(RateAdapationStreamDataFields *rateAdaptStreamData);
-		void SetBitRateData(UInt32 movieBitRate) { fStream3GPP->SetBitRateData(movieBitRate); }
-		
-		//Tells the stream that it has been paused; the next Write will restart the stream.
-		void Pause()		{ fStream3GPP->Pause(); }
-		
+				
         void            SetMinQuality() { SetQualityLevel(fNumQualityLevels); }
         void            SetMaxQuality() { SetQualityLevel(kMaxQualityLevel); }
         SInt32          GetQualityLevel();
@@ -194,7 +182,6 @@ class RTPStream : public QTSSDictionary, public UDPDemuxerTask
             kMaxStreamURLSizeInBytes    = 32,
             kDefaultPayloadBufSize      = 32,
             kSenderReportIntervalInSecs = 7,
-			kSenderReportInterval3GPPInSecs = 1,
             kNumPrebuiltChNums          = 10,
             kMaxQualityLevel            = 0,
             kIsRTCPPacket                 = TRUE,
@@ -344,9 +331,7 @@ class RTPStream : public QTSSDictionary, public UDPDemuxerTask
         QTSS_RTPNetworkMode     fNetworkMode;
         
         SInt64  fStreamStartTimeOSms;
-        
-		RTPStream3GPP*			fStream3GPP;
-        
+                
         SInt32 fLastQualityLevel;
         SInt32 fLastRateLevel;
        
@@ -383,8 +368,6 @@ class RTPStream : public QTSSDictionary, public UDPDemuxerTask
                                         const SInt64& inCurrentTime, UInt32 inPacketSize);
         
         void            DisableThinning() { fDisableThinning = true; }
-        void            Update3GPPQualityLevels(QTSS_PacketStruct* thePacket, SInt64 theTime);
-        bool          Supports3GPPQualityLevels();
 		void			SetInitialMaxQualityLevel();
         
         char *GetStreamTypeStr();
