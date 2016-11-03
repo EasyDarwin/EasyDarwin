@@ -664,13 +664,13 @@ enum
                                                                             // allowed by all authorization modules
     qtssRTSPReqNetworkMode          = 36,   //read      //QTSS_RTPNetworkMode // unicast or multicast
     qtssRTSPReqDynamicRateState     = 37,   //read      //SInt32            // -1 not in request, 0 off, 1 on
-    qtssRTSPReq3GPPRequestObject    = 38,   //read      //QTSS_3GPPRequestObject //QTSS_ObjectType qtss3GPPRequestObject
-    qtssRTSPReqBandwidthBits        = 39,   //read      //UInt32            //  Value of the Bandwdith header. Default is 0.
-    qtssRTSPReqUserFound            = 40,   //r/w       //bool    //Default is false, set to true if the user is found in the authenticate role and the module wants to take ownership of authenticating the user.
-    qtssRTSPReqAuthHandled          = 41,   //r/w       //bool    //Default is false, set to true in the authorize role to take ownerhsip of authorizing the request. 
-    qtssRTSPReqDigestChallenge      = 42,   //read      //char array //Challenge used by the server for Digest authentication
-    qtssRTSPReqDigestResponse       = 43,   //read      //char array //Digest response used by the server for Digest authentication
-    qtssRTSPReqNumParams            = 44
+
+	qtssRTSPReqBandwidthBits        = 38,   //read      //UInt32            //  Value of the Bandwdith header. Default is 0.
+    qtssRTSPReqUserFound            = 39,   //r/w       //bool    //Default is false, set to true if the user is found in the authenticate role and the module wants to take ownership of authenticating the user.
+    qtssRTSPReqAuthHandled          = 40,   //r/w       //bool    //Default is false, set to true in the authorize role to take ownerhsip of authorizing the request. 
+    qtssRTSPReqDigestChallenge      = 41,   //read      //char array //Challenge used by the server for Digest authentication
+    qtssRTSPReqDigestResponse       = 42,   //read      //char array //Digest response used by the server for Digest authentication
+    qtssRTSPReqNumParams            = 43
     
 };
 typedef UInt32 QTSS_RTSPRequestAttributes;

@@ -137,9 +137,6 @@ private:
 	// test current connections handled by this object against server pref connection limit
 	bool OverMaxConnections(UInt32 buffer);
 
-	// Process the 3GPP Request Data for the session
-	void Process3GPPData();
-
 	char                fLastRTPSessionID[QTSS_MAX_SESSION_ID_LENGTH];
 	StrPtrLen           fLastRTPSessionIDPtr;
 

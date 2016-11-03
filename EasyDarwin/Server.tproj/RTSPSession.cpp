@@ -992,8 +992,6 @@ SInt64 RTSPSession::Run()
 					if (fRTPSession->HasAnRTPStream() && fRTPSession->GetPacketSendingModule() == nullptr)
 						fRTPSession->SetPacketSendingModule(theModule);
 
-					this->Process3GPPData();
-
 					if (fModuleState.globalLockRequested) // call this request back locked
 						return this->CallLocked();
 
@@ -1715,47 +1713,6 @@ bool RTSPSession::ParseOptionsResponse()
 	return (theProtocol.Equal(sRTSPStr));
 }
 
-void RTSPSession::Process3GPPData()
-{
-	if (fRTPSession == nullptr)
-		return;
-
-
-	RTSPRequest3GPP* request3GPPInfoPtr = fRequest->GetRequest3GPPInfo();
-
-	if (!request3GPPInfoPtr || !request3GPPInfoPtr->Is3GPP())
-		return;
-
-	fRTPSession->SetIs3GPPSession(true);
-
-	if (request3GPPInfoPtr->HasLinkChar())
-	{
-		StrPtrLen dataStr;
-		LinkCharDataFields linkCharFieldsParser;
-		if (0 == fRequest->GetHeaderDictionary()->GetValuePtr(qtss3GPPLinkCharHeader, 0, (void**)&dataStr.Ptr, &dataStr.Len, true))
-		{
-			linkCharFieldsParser.SetData(&dataStr);
-			fRTPSession->Set3GPPLinkCharData(&linkCharFieldsParser);
-		}
-	}
-
-
-	if (request3GPPInfoPtr->HasRateAdaptation())
-	{
-		StrPtrLen dataStr;
-		RateAdapationStreamDataFields fieldsParser;
-
-		for (int numValues = 0; request3GPPInfoPtr->GetValuePtr(qtss3GPPRequestRateAdaptationStreamData, numValues, (void**)&dataStr.Ptr, &dataStr.Len) == QTSS_NoErr; numValues++)
-		{
-			//dataStr.PrintStr("RTSPSession::Process3GPPData qtss3GPPRequestRateAdaptationStreamData=[","]\n");      
-			fieldsParser.SetData(&dataStr);
-			fRTPSession->Set3GPPRateAdaptionData(&fieldsParser);
-		}
-	}
-
-	return;
-}
-
 void RTSPSession::SetupRequest()
 {
 	// First parse the request
@@ -1790,11 +1747,6 @@ void RTSPSession::SetupRequest()
 	// send a standard OPTIONS response, and be done.
 	if (fRequest->GetMethod() == qtssOptionsMethod)// OPTIONSÇëÇó
 	{
-
-
-
-		this->Process3GPPData();
-
 		StrPtrLen* cSeqPtr = fRequest->GetHeaderDictionary()->GetValue(qtssCSeqHeader);
 		if (cSeqPtr == nullptr || cSeqPtr->Len == 0)
 		{

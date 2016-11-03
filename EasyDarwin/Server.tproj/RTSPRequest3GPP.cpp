@@ -215,36 +215,6 @@ RTSPRequest3GPP::RTSPRequest3GPP(bool enabled)
 
 QTSS_Error RTSPRequest3GPP::ParseAdpationHeader(QTSSDictionary* headerDictionaryPtr)
 {
-
-	if (NULL == headerDictionaryPtr)
-	{
-		Assert(0);
-		return -1;
-	}
-
-	if (!fEnabled)
-		return QTSS_NoErr;
-
-	StringParser theRateAdaptHeaderParser(headerDictionaryPtr->GetValue(qtss3GPPAdaptationHeader));
-
-	if (theRateAdaptHeaderParser.GetDataRemaining() == 0)
-		return -1;
-
-	fIs3GPP = true;
-	fHasRateAdaptation = true;
-
-	StrPtrLen theStreamData;
-	UInt32 numValueIndex = 0;
-	while (theRateAdaptHeaderParser.GetDataRemaining() != 0)
-	{
-		theRateAdaptHeaderParser.GetThru(&theStreamData, ',');
-		theStreamData.TrimWhitespace();
-		(void) this->SetValuePtr(qtss3GPPRequestRateAdaptationStreamData, theStreamData.Ptr, theStreamData.Len, QTSSDictionary::kDontObeyReadOnly);
-		numValueIndex++;
-	}
-
-	//this->ParseAdpationHeaderTest();
-
 	return QTSS_NoErr;
 }
 
@@ -271,46 +241,12 @@ void RTSPRequest3GPP::ParseAdpationHeaderTest()
 
 QTSS_Error RTSPRequest3GPP::ParseLinkCharHeader(QTSSDictionary* headerDictionaryPtr)
 {
-
-	if (NULL == headerDictionaryPtr)
-	{
-		Assert(0);
-		return -1;
-	}
-
-	StrPtrLen* theLinkCharStr = headerDictionaryPtr->GetValue(qtss3GPPLinkCharHeader);
-	if (theLinkCharStr == NULL)
-		return -1;
-
-	if (theLinkCharStr->Len == 0)
-		return -1;
-
-	fIs3GPP = true;
-	fHasLinkChar = true;
-
-	//this->ParseLinkCharHeaderTest(headerDictionaryPtr);
-
 	return QTSS_NoErr;
 }
 
 
 void RTSPRequest3GPP::ParseLinkCharHeaderTest(QTSSDictionary* headerDictionaryPtr)
 {
-	StrPtrLen dataStr;
-	UInt32 numValues = headerDictionaryPtr->GetNumValues(qtss3GPPLinkCharHeader);
-	qtss_printf("RTSPRequest3GPP::ParseLinkCharHeaderTest qtss3GPPLinkCharHeader numValues =%lu\n", numValues); //should be 1
-
-	for (; numValues > 0; numValues--)
-	{
-
-		if (0 != headerDictionaryPtr->GetValuePtr(qtss3GPPLinkCharHeader, numValues - 1, (void**)&dataStr.Ptr, &dataStr.Len, true))
-			qtss_printf("RTSPRequest3GPP::ParseLinkCharHeaderTest err GetValuePtr(qtss3GPPLinkCharHeader\n");
-
-		dataStr.PrintStr("RTSPRequest3GPP::ParseLinkCharHeaderTest qtss3GPPLinkCharHeader=[", "]\n");
-		LinkCharDataFields fieldsParser;
-		fieldsParser.SetData(&dataStr);
-		fieldsParser.PrintData(NULL);
-	}
 }
 
 

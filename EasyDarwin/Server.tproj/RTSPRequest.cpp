@@ -363,8 +363,6 @@ QTSS_Error RTSPRequest::ParseHeaders(StringParser& parser)
 		case qtssXPreBufferHeader:          ParsePrebufferHeader(); break;
 		case qtssXDynamicRateHeader:		ParseDynamicRateHeader(); break;
 		case qtssXRandomDataSizeHeader:		ParseRandomDataSizeHeader(); break;
-		case qtss3GPPAdaptationHeader:      fRequest3GPP.ParseAdpationHeader(&fHeaderDictionary); break;
-		case qtss3GPPLinkCharHeader:        fRequest3GPP.ParseLinkCharHeader(&fHeaderDictionary); break;
 		case qtssBandwidthHeader:           ParseBandwidthHeader(); break;
 		default:    break;
 		}

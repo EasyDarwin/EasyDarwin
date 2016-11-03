@@ -196,8 +196,6 @@ public:
 	StrPtrLen*                  GetAuthResponse() { return &fAuthResponse; }
 	StrPtrLen*                  GetAuthOpaque() { return &fAuthOpaque; }
 	QTSSUserProfile*            GetUserProfile() { return fUserProfilePtr; }
-	RTSPRequest3GPP*			GetRequest3GPPInfo() { return fRequest3GPPPtr; }
-
 
 	bool                      GetStale() { return fStale; }
 	void                        SetStale(bool stale) { fStale = stale; }
@@ -296,9 +294,6 @@ protected:
 
 	// DJM PROTOTYPE
 	UInt32						fRandomDataSize;
-
-	RTSPRequest3GPP				fRequest3GPP;
-	RTSPRequest3GPP*			fRequest3GPPPtr;
 
 	UInt32                      fBandwidthBits;
 	StrPtrLen                   fAuthDigestChallenge;
