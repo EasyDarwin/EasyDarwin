@@ -142,7 +142,6 @@
     <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
     <ClCompile Include="..\..\RTSPUtilitiesLib\RTSPProtocol.cpp" />
     <ClCompile Include="..\..\SafeStdLib\InternalStdLib.cpp" />
-    <ClCompile Include="..\APICommonCode\QTSS3GPPModuleUtils.cpp" />
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSModule.cpp" />
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSSession.cpp" />
     <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSModule.cpp" />
@@ -170,9 +169,6 @@
     <ClCompile Include="..\APIModules\QTSSAdminModule\frozen.c" />
     <ClCompile Include="..\APIModules\QTSSAdminModule\mongoose.c" />
     <ClCompile Include="..\APIModules\QTSSAdminModule\QTSSAdminModule.cpp">
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSFileModule\QTSSFileModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSFlowControlModule\QTSSFlowControlModule.cpp">

@@ -39,7 +39,6 @@
 #include "ResizeableStringFormatter.h"
 #include "StringParser.h"
 #include "QTAccessFile.h"
-#include "QTSS3GPPModuleUtils.h"
 
 #include "RTPSessionOutput.h"
 #include "SDPSourceInfo.h"
@@ -378,7 +377,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
 	// Setup module utils
 	QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
-	QTSS3GPPModuleUtils::Initialize(inParams);
 	QTAccessFile::Initialize();
 	sSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 	sServerPrefs = inParams->inPrefs;
@@ -588,8 +586,6 @@ QTSS_Error RereadPrefs()
 	}
 
 	KillCommandPathInList();
-
-	QTSS3GPPModuleUtils::ReadPrefs();
 
 	//Êä³öHLS
 	QTSSModuleUtils::GetAttribute(sPrefs, "hls_output_enabled", qtssAttrDataTypeBool16,
@@ -1276,7 +1272,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 		adjustMediaBandwidthPercent = (Float32)sAdjustMediaBandwidthPercent / 100.0;
 
 	ResizeableStringFormatter buffer;
-	SDPContainer* insertMediaLines = QTSS3GPPModuleUtils::Get3GPPSDPFeatureListCopy(buffer);
+	SDPContainer* insertMediaLines = NULL;
 	SDPLineSorter sortedSDP(&checkedSDPContainer, adjustMediaBandwidthPercent, insertMediaLines);
 	delete insertMediaLines;
 

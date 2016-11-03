@@ -64,16 +64,10 @@
     <ClCompile Include="..\APIModules\QTSSAdminModule\AdminQuery.cpp">
       <Filter>Source Files\API Modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\APICommonCode\QTSS3GPPModuleUtils.cpp">
-      <Filter>Source Files\API Modules</Filter>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSAccessLogModule\QTSSAccessLogModule.cpp">
       <Filter>Source Files\API Modules</Filter>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSAccessModule\QTSSAccessModule.cpp">
-      <Filter>Source Files\API Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSFileModule\QTSSFileModule.cpp">
       <Filter>Source Files\API Modules</Filter>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSFlowControlModule\QTSSFlowControlModule.cpp">
