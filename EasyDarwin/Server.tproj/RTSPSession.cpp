@@ -35,7 +35,6 @@
 #include "RTSPSession.h"
 #include "RTSPRequest.h"
 #include "QTSServerInterface.h"
-#include "RTSPRequest3GPP.h"
 
 #include "MyAssert.h"
 #include "OSMemory.h"
@@ -219,10 +218,7 @@ RTSPSession::~RTSPSession()
 	}
 }
 
-/*
-*	函数名：Run()
-*	功能：状态机处理RTSP请求中的各种报文
-*/
+
 SInt64 RTSPSession::Run()
 {
 	EventFlags events = this->GetEvents();
@@ -1203,11 +1199,6 @@ SInt64 RTSPSession::Run()
 	return 0;
 }
 
-/*
-*	功能：识别出请求中GET或者POST请求，如果是HTTP请求，
-*	则查找是否有SessionCookie字段和Accept字段
-*	返回值：bool型，返回是否是HTTP请求
-*/
 bool RTSPSession::ParseProxyTunnelHTTP()
 {
 	/*
@@ -1388,10 +1379,6 @@ bool RTSPSession::ParseProxyTunnelHTTP()
 	tunnel HTTP requests, merge the 2 sessions
 	into one, let the donor Session die.
 */
-/*
-*	函数功能:预先过滤请求,查找HTTP Proxy tunnel 请求,
-*	合并两个会话为一个,杀掉donor session会话
-*/
 QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 {
 	// returns true if it's an HTTP request that can tunnel
@@ -1542,14 +1529,6 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 	return QTSS_NoErr;
 }
 
-/*
-*	名称:RegisterRTSPSessionIntoHTTPProxyTunnelMap
-*	功能:注册会话到Map表中
-*	返回值:
-*	1.注册成功,则返回当前会话的fProxyRef
-*	2.如果逻辑数和会话类型相同,则返回另一个会话的fProxyRef
-*	3.如果一个会话的逻辑数相同,但是无法解析,则返回nullptr
-*/
 OSRef* RTSPSession::RegisterRTSPSessionIntoHTTPProxyTunnelMap(QTSS_RTSPSessionType inSessionType)
 {
 	// This function attempts to register the current session's fProxyRef into the map, and
@@ -1574,10 +1553,6 @@ OSRef* RTSPSession::RegisterRTSPSessionIntoHTTPProxyTunnelMap(QTSS_RTSPSessionTy
 	return theRef;
 }
 
-/*
- *	名称:CheckAuthentication
- *	功能:RTSP会话的验证模块,基础验证和MD5验证
- */
 void RTSPSession::CheckAuthentication() {
 
 	QTSSUserProfile* profile = fRequest->GetUserProfile();
@@ -1729,10 +1704,6 @@ void RTSPSession::CheckAuthentication() {
 	}
 }
 
-/*
- *	函数名：ParseOptionsResponse
- *	功能：解析响应报文中是否为RTSP协议
- */
 bool RTSPSession::ParseOptionsResponse()
 {
 	StringParser parser(fRequest->GetValue(qtssRTSPReqFullRequest));

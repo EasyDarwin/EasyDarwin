@@ -564,10 +564,8 @@ enum
     qtssRTSPSesLocalPort    = 12,       //read      //UInt16        // This is the local port for the connection
     qtssRTSPSesRemotePort   = 13,       //read      //UInt16        // This is the client port for the connection
     
-    qtssRTSPSes3GPPObject  = 14,        //read  //QTSS_3GPPRTSPSessionObject //QTSS_ObjectType qtss3GPPRTSPObjectType 3gpp data and state info
-
-    qtssRTSPSesLastDigestChallenge = 15,//read      //char array        // Private
-    qtssRTSPSesNumParams    = 16
+    qtssRTSPSesLastDigestChallenge = 14,//read      //char array        // Private
+    qtssRTSPSesNumParams    = 15
 };
 typedef UInt32 QTSS_RTSPSessionAttributes;
 

@@ -205,9 +205,6 @@ protected:
 	SInt32					fRoundTripTime;
 	bool					fRoundTripTimeCalculation;
 
-	RTSPSession3GPP         fRTSPSession3GPP;
-	RTSPSession3GPP*        fRTSPSession3GPPPtr;
-
 	//static unsigned int sSessionIDCounter;
 	static std::atomic_uint sSessionIDCounter;
 

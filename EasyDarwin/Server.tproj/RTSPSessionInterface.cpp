@@ -67,9 +67,8 @@ QTSSAttrInfoDict::AttrInfo  RTSPSessionInterface::sAttributes[] =
 
 	/* 12 */{ "qtssRTSPSesLocalPort",       SetupParams,    qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
 	/* 13 */{ "qtssRTSPSesRemotePort",      SetupParams,    qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
-	/* 14 */{ "qtssRTSPSes3GPPObject",      nullptr,           qtssAttrDataTypeQTSS_Object,qtssAttrModeRead | qtssAttrModePreempSafe },
 
-	/* 15 */{ "qtssRTSPSesLastDigestChallenge",nullptr,        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe  }
+	/* 14 */{ "qtssRTSPSesLastDigestChallenge",nullptr,        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe  }
 
 
 };
@@ -111,9 +110,7 @@ RTSPSessionInterface::RTSPSessionInterface()
 	fSentOptionsRequest(false),
 	fOptionsRequestSendTime(-1),
 	fRoundTripTime(-1),
-	fRoundTripTimeCalculation(true),
-	fRTSPSession3GPP(QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled()),
-	fRTSPSession3GPPPtr(&fRTSPSession3GPP)
+	fRoundTripTimeCalculation(true)
 {
 	fTimeoutTask.SetTask(this);
 	fSocket.SetTask(this);
@@ -126,7 +123,6 @@ RTSPSessionInterface::RTSPSessionInterface()
 	this->SetVal(qtssRTSPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));
 	this->SetVal(qtssRTSPSesType, &fSessionType, sizeof(fSessionType));
 	this->SetVal(qtssRTSPSesStreamRef, &fStreamRef, sizeof(fStreamRef));
-	this->SetVal(qtssRTSPSes3GPPObject, &fRTSPSession3GPPPtr, sizeof(fRTSPSession3GPPPtr));
 
 	this->SetEmptyVal(qtssRTSPSesLastUserName, &fUserNameBuf[0], kMaxUserNameLen);
 	this->SetEmptyVal(qtssRTSPSesLastUserPassword, &fUserPasswordBuf[0], kMaxUserPasswordLen);
