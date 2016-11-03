@@ -520,10 +520,10 @@ enum
     qtssCliSesRTCPPacketsRecv       = 34,   //read      //UInt32    //Number of RTCP packets received so far on this session.
     qtssCliSesRTCPBytesRecv         = 35,   //read      //UInt32    //Number of RTCP bytes received so far on this session.
     qtssCliSesStartedThinning       = 36,   //read      //bool    // At least one of the streams in the session is thinned
-    qtssCliSes3GPPObject            = 37,   //read      //QTSS_3GPPClientSessionObject //QTSS_ObjectType qtss3GPPClientSessionObjectType
-    qtssCliSessLastRTSPBandwidth    = 38,   //read      //UInt32    // The last RTSP Bandwidth header value received from the client.
-    qtssCliSessIs3GPPSession        = 39,   //read      //bool    // Client is using 3gpp RTSP headers
-    qtssCliSesNumParams             = 40
+
+	qtssCliSessLastRTSPBandwidth    = 37,   //read      //UInt32    // The last RTSP Bandwidth header value received from the client.
+    qtssCliSessIs3GPPSession        = 38,   //read      //bool    // Client is using 3gpp RTSP headers
+    qtssCliSesNumParams             = 39
     
 };
 typedef UInt32 QTSS_ClientSessionAttributes;

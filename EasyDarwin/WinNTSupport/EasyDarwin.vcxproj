@@ -231,7 +231,6 @@
     <ClCompile Include="..\Server.tproj\RTPOverbufferWindow.cpp" />
     <ClCompile Include="..\Server.tproj\RTPPacketResender.cpp" />
     <ClCompile Include="..\Server.tproj\RTPSession.cpp" />
-    <ClCompile Include="..\Server.tproj\RTPSession3GPP.cpp" />
     <ClCompile Include="..\Server.tproj\RTPSessionInterface.cpp" />
     <ClCompile Include="..\Server.tproj\RTPStream.cpp" />
     <ClCompile Include="..\Server.tproj\RTPStream3gpp.cpp" />

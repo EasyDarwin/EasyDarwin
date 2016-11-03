@@ -46,7 +46,6 @@
 #include "RTPOverbufferWindow.h"
 #include "QTSServerInterface.h"
 #include "OSMutex.h"
-#include "RTPSession3GPP.h"
 
 #include <atomic>
 
@@ -198,14 +197,11 @@ public:
 	UInt32          GetLastRTSPBandwithBits() { return fLastRTSPBandwidthHeaderBits; }
 	UInt32          GetCurrentMovieBitRate() { return fMovieCurrentBitRate; }
 
-	UInt32          GetMaxBandwidthBits() { UInt32 maxRTSP = GetLastRTSPBandwithBits(); UInt32 maxLink = fRTPSession3GPP.GetLinkCharMaxKBits() * 1000;  return (maxRTSP > maxLink) ? maxRTSP : maxLink; }
+	UInt32          GetMaxBandwidthBits() { UInt32 maxRTSP = GetLastRTSPBandwithBits();  return  maxRTSP; }
 
 	void            SetIs3GPPSession(bool is3GPP) { fIs3GPPSession = is3GPP; }
 
 protected:
-
-	RTPSession3GPP* Get3GPPSessPtr() { return fRTPSession3GPPPtr; }
-
 	// These variables are setup by the derived RTPSession object when
 	// Play and Pause get called
 
@@ -348,8 +344,6 @@ private:
 
 	UInt32                      fFramesSkipped;
 
-	RTPSession3GPP			fRTPSession3GPP;
-	RTPSession3GPP*			fRTPSession3GPPPtr;
 	UInt32                  fLastRTSPBandwidthHeaderBits;
 	bool                  fIs3GPPSession;
 

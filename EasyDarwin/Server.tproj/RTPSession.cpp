@@ -266,21 +266,6 @@ void RTPSession::SetStreamThinningParams(Float32 inLateTolerance)
 }
 
 
-void RTPSession::Set3GPPRateAdaptionData(RateAdapationStreamDataFields *rateAdaptStreamData)
-{
-	RTPStream** theStream = NULL;
-	UInt32 theLen = 0;
-
-	for (int x = 0; this->GetValuePtr(qtssCliSesStreamObjects, x, (void**)&theStream, &theLen) == QTSS_NoErr; x++)
-	{
-		if ((*theStream)->GetSDPStreamID() == rateAdaptStreamData->GetSDPStreamID())
-		{
-			(*theStream)->SetRateAdaptData(rateAdaptStreamData);
-			break;
-		}
-	}
-}
-
 void RTPSession::SetMovieBitRateData()
 {
 	RTPStream** theStream = NULL;
@@ -294,14 +279,6 @@ void RTPSession::SetMovieBitRateData()
 		(*theStream)->SetBitRateData(movieBitRate);
 	}
 }
-
-
-
-void RTPSession::Set3GPPLinkCharData(LinkCharDataFields *linkCharData)
-{
-	this->Get3GPPSessPtr()->SetLinkCharData(linkCharData);
-}
-
 
 QTSS_Error  RTPSession::Play(RTSPRequestInterface* request, QTSS_PlayFlags inFlags)
 {

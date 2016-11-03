@@ -87,9 +87,8 @@ QTSSAttrInfoDict::AttrInfo  RTPSessionInterface::sAttributes[] =
 	/* 34 */ { "qtssCliSesRTCPPacketsRecv",         NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModePreempSafe },
 	/* 35 */ { "qtssCliSesRTCPBytesRecv",           NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModePreempSafe },
 	/* 36 */ { "qtssCliSesStartedThinning",         NULL, 	qtssAttrDataTypeBool16,		qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-	/* 37 */ { "qtssCliSes3GPPObject",              NULL, 	qtssAttrDataTypeQTSS_Object,		qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 38 */ { "qtssCliSessLastRTSPBandwidth",      NULL, 	qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 39 */ { "qtssCliSessIs3GPPSession",          NULL, 	qtssAttrDataTypeBool16,		qtssAttrModeRead | qtssAttrModePreempSafe }
+	/* 37 */ { "qtssCliSessLastRTSPBandwidth",      NULL, 	qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 38 */ { "qtssCliSessIs3GPPSession",          NULL, 	qtssAttrDataTypeBool16,		qtssAttrModeRead | qtssAttrModePreempSafe }
 
 
 };
@@ -143,8 +142,6 @@ RTPSessionInterface::RTPSessionInterface()
 	fAuthQop(RTSPSessionInterface::kNoQop),
 	fAuthNonceCount(0),
 	fFramesSkipped(0),
-	fRTPSession3GPP(QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled()),
-	fRTPSession3GPPPtr(&fRTPSession3GPP),
 	fLastRTSPBandwidthHeaderBits(0),
 	fIs3GPPSession(false)
 {
@@ -204,7 +201,6 @@ RTPSessionInterface::RTPSessionInterface()
 
 	this->SetVal(qtssCliSesOverBufferEnabled, this->GetOverbufferWindow()->OverbufferingEnabledPtr(), sizeof(bool));
 	this->SetVal(qtssCliSesStartedThinning, &fStartedThinning, sizeof(bool));
-	this->SetVal(qtssCliSes3GPPObject, &fRTPSession3GPPPtr, sizeof(fRTPSession3GPPPtr));
 
 	this->SetVal(qtssCliSessLastRTSPBandwidth, &fLastRTSPBandwidthHeaderBits, sizeof(fLastRTSPBandwidthHeaderBits));
 	this->SetVal(qtssCliSessIs3GPPSession, &fIs3GPPSession, sizeof(fIs3GPPSession));
