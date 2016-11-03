@@ -241,7 +241,6 @@
     <ClCompile Include="..\Server.tproj\RTSPRequestStream.cpp" />
     <ClCompile Include="..\Server.tproj\RTSPResponseStream.cpp" />
     <ClCompile Include="..\Server.tproj\RTSPSession.cpp" />
-    <ClCompile Include="..\Server.tproj\RTSPSession3GPP.cpp" />
     <ClCompile Include="..\Server.tproj\RTSPSessionInterface.cpp" />
     <ClCompile Include="..\Server.tproj\RunServer.cpp" />
     <ClCompile Include="..\Server.tproj\win32main.cpp" />

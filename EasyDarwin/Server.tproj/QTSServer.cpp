@@ -206,7 +206,6 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 	RTSPRequest3GPP::Initialize();
 	RTPStream3GPP::Initialize();
 	RTPSession3GPP::Initialize();
-	RTSPSession3GPP::Initialize();
 
 	//
 	// STUB SERVER INITIALIZATION

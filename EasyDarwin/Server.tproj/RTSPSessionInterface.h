@@ -40,7 +40,6 @@
 #include "QTSS.h"
 #include "QTSSDictionary.h"
 #include "atomic.h"
-#include "RTSPSession3GPP.h"
 
 class RTSPSessionInterface : public QTSSDictionary, public Task
 {

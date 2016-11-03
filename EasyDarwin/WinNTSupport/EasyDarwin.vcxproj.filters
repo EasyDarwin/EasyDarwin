@@ -235,9 +235,6 @@
     <ClCompile Include="..\Server.tproj\RTSPSession.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\Server.tproj\RTSPSession3GPP.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\Server.tproj\RTSPSessionInterface.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
