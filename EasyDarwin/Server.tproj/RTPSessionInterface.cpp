@@ -87,10 +87,7 @@ QTSSAttrInfoDict::AttrInfo  RTPSessionInterface::sAttributes[] =
 	/* 34 */ { "qtssCliSesRTCPPacketsRecv",         NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModePreempSafe },
 	/* 35 */ { "qtssCliSesRTCPBytesRecv",           NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModePreempSafe },
 	/* 36 */ { "qtssCliSesStartedThinning",         NULL, 	qtssAttrDataTypeBool16,		qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-	/* 37 */ { "qtssCliSessLastRTSPBandwidth",      NULL, 	qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 38 */ { "qtssCliSessIs3GPPSession",          NULL, 	qtssAttrDataTypeBool16,		qtssAttrModeRead | qtssAttrModePreempSafe }
-
-
+	/* 37 */ { "qtssCliSessLastRTSPBandwidth",      NULL, 	qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModePreempSafe }
 };
 
 void    RTPSessionInterface::Initialize()
@@ -142,8 +139,7 @@ RTPSessionInterface::RTPSessionInterface()
 	fAuthQop(RTSPSessionInterface::kNoQop),
 	fAuthNonceCount(0),
 	fFramesSkipped(0),
-	fLastRTSPBandwidthHeaderBits(0),
-	fIs3GPPSession(false)
+	fLastRTSPBandwidthHeaderBits(0)
 {
 	//don't actually setup the fTimeoutTask until the session has been bound!
 	//(we don't want to get timeouts before the session gets bound)
@@ -203,9 +199,6 @@ RTPSessionInterface::RTPSessionInterface()
 	this->SetVal(qtssCliSesStartedThinning, &fStartedThinning, sizeof(bool));
 
 	this->SetVal(qtssCliSessLastRTSPBandwidth, &fLastRTSPBandwidthHeaderBits, sizeof(fLastRTSPBandwidthHeaderBits));
-	this->SetVal(qtssCliSessIs3GPPSession, &fIs3GPPSession, sizeof(fIs3GPPSession));
-
-
 }
 
 void RTPSessionInterface::SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap* inMap,

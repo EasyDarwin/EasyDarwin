@@ -522,8 +522,7 @@ enum
     qtssCliSesStartedThinning       = 36,   //read      //bool    // At least one of the streams in the session is thinned
 
 	qtssCliSessLastRTSPBandwidth    = 37,   //read      //UInt32    // The last RTSP Bandwidth header value received from the client.
-    qtssCliSessIs3GPPSession        = 38,   //read      //bool    // Client is using 3gpp RTSP headers
-    qtssCliSesNumParams             = 39
+    qtssCliSesNumParams             = 38
     
 };
 typedef UInt32 QTSS_ClientSessionAttributes;

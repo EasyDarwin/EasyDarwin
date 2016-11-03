@@ -171,23 +171,10 @@ QTSS_Error RereadPrefs()
 }
 
 
-
-bool Is3GPPSession(QTSS_RTCPProcess_Params *inParams)
-{
-
-	bool is3GPP = false;
-	UInt32 theLen = sizeof(is3GPP);
-	(void)QTSS_GetValue(inParams->inClientSession, qtssCliSessIs3GPPSession, 0, (void*)&is3GPP, &theLen);
-
-	return is3GPP;
-}
-
-
 QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
 {
-	if (!sModuleEnabled || sDisableThinning || Is3GPPSession(inParams))
+	if (!sModuleEnabled || sDisableThinning)
 	{
-		//qtss_printf("QTSSFlowControlModule.cpp:ProcessRTCPPacket processing disabled sModuleEnabled=%d sDisableThinning=%d Is3GPPSession(inParams)=%d\n", sModuleEnabled, sDisableThinning,Is3GPPSession(inParams));
 		return QTSS_NoErr;
 	}
 

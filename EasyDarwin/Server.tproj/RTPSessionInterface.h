@@ -199,8 +199,6 @@ public:
 
 	UInt32          GetMaxBandwidthBits() { UInt32 maxRTSP = GetLastRTSPBandwithBits();  return  maxRTSP; }
 
-	void            SetIs3GPPSession(bool is3GPP) { fIs3GPPSession = is3GPP; }
-
 protected:
 	// These variables are setup by the derived RTPSession object when
 	// Play and Pause get called
@@ -345,8 +343,6 @@ private:
 	UInt32                      fFramesSkipped;
 
 	UInt32                  fLastRTSPBandwidthHeaderBits;
-	bool                  fIs3GPPSession;
-
 };
 
 #endif //_RTPSESSIONINTERFACE_H_
