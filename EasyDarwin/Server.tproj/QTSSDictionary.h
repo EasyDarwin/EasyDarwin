@@ -409,13 +409,10 @@ public:
 		kAttrInfoDictIndex = 12,
 		kQTSSUserProfileDictIndex = 13,
 		kQTSSConnectedUserDictIndex = 14,
-		k3GPPRequestDictIndex = 15,
-		k3GPPStreamDictIndex = 16,
-		k3GPPClientSessionDictIndex = 17,
-		k3GPPRTSPSessionDictIndex = 18,
-		kHTTPSessionDictIndex = 19,
 
-		kNumDictionaries = 20,
+		kHTTPSessionDictIndex = 15,
+
+		kNumDictionaries = 16,
 
 		kNumDynamicDictionaryTypes = 500,
 		kIllegalDictionary = kNumDynamicDictionaryTypes + kNumDictionaries

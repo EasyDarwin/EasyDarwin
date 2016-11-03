@@ -271,10 +271,6 @@ enum
     qtssAttrInfoObjectType          = FOUR_CHARS_TO_INT('a', 't', 't', 'r'), //attr
     qtssUserProfileObjectType       = FOUR_CHARS_TO_INT('u', 's', 'p', 'o'), //uspo
     qtssConnectedUserObjectType     = FOUR_CHARS_TO_INT('c', 'u', 's', 'r'), //cusr
-    qtss3GPPStreamObjectType        = FOUR_CHARS_TO_INT('3', 's', 't', 'r'), //3str
-    qtss3GPPClientSessionObjectType = FOUR_CHARS_TO_INT('3', 's', 'e', 's'), //3ses
-    qtss3GPPRTSPObjectType          = FOUR_CHARS_TO_INT('3', 'r', 't', 's'), //3rts
-    qtss3GPPRequestObjectType       = FOUR_CHARS_TO_INT('3', 'r', 'e', 'q'), //3req
 	easyHTTPSessionObjectType		= FOUR_CHARS_TO_INT('e', 'h', 's', 'o')  //ehso
     
 };
@@ -462,17 +458,6 @@ enum
 };
 typedef UInt32 QTSS_RTPStreamAttributes;
 
-enum 
-{
-    //All text names are identical to the enumerated type names
-    qtss3GPPStreamEnabled               = 0,
-    qtss3GPPStreamRateAdaptBufferBytes  = 1,
-    qtss3GPPStreamRateAdaptTimeMilli    = 2,
-    qtss3GPPStreamNumParams             = 3
-};
-typedef UInt32 QTSS_RTPStream3GPPAttributes; //QTSS_3GPPStreamObject
-
-
 enum
 {
     //QTSS_ClientSessionObject parameters. All of these are preemptive safe
@@ -527,19 +512,6 @@ enum
 };
 typedef UInt32 QTSS_ClientSessionAttributes;
 
-//QTSS_3GPPClientSessionObject //class RTPSession3GPP
-enum 
-{
-    //All text names are identical to the enumerated type names
-    qtss3GPPCliSesEnabled                           = 0, //read      //bool       //initialized to preference setting
-    qtss3GPPCliSesLinkCharGuaranteedBitRate         = 1, //read      //UInt32       //The Received Link Characteristic rate. default = 0
-    qtss3GPPCliSesLinkCharMaxBitRate                = 2, //read      //UInt32       //The Received Link Characteristic max. default = 0
-    qtss3GPPCliSesLinkCharMaxTransferDelayMilliSec  = 3, //read      //UInt32       //The Received Link Characteristic transfer delay. default = 0
-    qtss3GPPCliSesLinkCharURL                       = 4, //read      //char array   //The Received Link Characteristic URL.
- 
-    qtss3GPPCliSesNumParams                         = 5
-};
-typedef UInt32 QTSS_ClientSession3GPPAttributes;
 
 enum
 {
@@ -594,16 +566,6 @@ enum
     easyHTTPSesNumParams			= 15
 };
 typedef UInt32 Easy_HTTPSessionAttributes;
-
-//QTSS_3GPPRTSPSessionObject //class RTSPSession3GPP
-enum 
-{
-    //All text names are identical to the enumerated type names
-    qtss3GPPRTSPSesEnabled           = 0,
-    qtss3GPPRTSPSessNumParams        = 1
-};
-typedef UInt32 QTSS_3GPPRTSPSessionAttributes;
-
 
 enum 
 {
@@ -673,16 +635,6 @@ enum
     
 };
 typedef UInt32 QTSS_RTSPRequestAttributes;
-
-enum 
-{
-    //All text names are identical to the enumerated type names
-    qtss3GPPRequestEnabled              = 0, //r/w       //bool           
-    qtss3GPPRequestRateAdaptationStreamData = 1, //read      //char array    //the rate adaptation url and parameters per stream
-    qtss3GPPRequestNumParams             = 2
-};
-typedef UInt32 QTSS_RTSPRequest3GPPAttributes;
-
 
 enum
 {
@@ -1101,11 +1053,6 @@ typedef QTSS_Object             QTSS_ModulePrefsObject;
 typedef QTSS_Object             QTSS_AttrInfoObject;
 typedef QTSS_Object             QTSS_UserProfileObject;
 typedef QTSS_Object             QTSS_ConnectedUserObject;
-
-typedef QTSS_Object             QTSS_3GPPStreamObject;
-typedef QTSS_Object             QTSS_3GPPClientSessionObject;
-typedef QTSS_Object             QTSS_3GPPRTSPSessionObject;
-typedef QTSS_Object             QTSS_3GPPRequestObject;
 
 typedef QTSS_StreamRef          QTSS_ErrorLogStream;
 typedef QTSS_StreamRef          QTSS_FileStream;
