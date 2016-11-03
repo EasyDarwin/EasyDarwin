@@ -1081,7 +1081,6 @@ namespace EasyDarwin
 			if (fBandwidth != 0)
 				fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
-			Attach3GPPHeaders(fmt, inTrackID);
 			fmt.PutFmtStr("\r\n");
 			fmt.PutTerminator();
 		}
@@ -1116,7 +1115,6 @@ namespace EasyDarwin
 			if (fBandwidth != 0)
 				fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
-			Attach3GPPHeaders(fmt, inTrackID);
 			fmt.PutFmtStr("\r\n");
 			fmt.PutTerminator();
 		}
@@ -1157,7 +1155,6 @@ namespace EasyDarwin
 			if (fBandwidth != 0)
 				fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
-			Attach3GPPHeaders(fmt, inTrackID);
 			fmt.PutFmtStr("\r\n");
 			fmt.PutTerminator();
 
@@ -1192,7 +1189,6 @@ namespace EasyDarwin
 			if (fBandwidth != 0)
 				fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
-			Attach3GPPHeaders(fmt, inTrackID);
 			fmt.PutFmtStr("\r\n");
 			fmt.PutTerminator();
 
@@ -1225,7 +1221,6 @@ namespace EasyDarwin
 			if (fBandwidth != 0)
 				fmt.PutFmtStr("Bandwidth: %"   _U32BITARG_   "\r\n", fBandwidth);
 
-			Attach3GPPHeaders(fmt);
 			fmt.PutFmtStr("\r\n");
 			fmt.PutTerminator();
 		}
@@ -1956,35 +1951,6 @@ namespace EasyDarwin
 		fChannelTrackMap[theRTPChannel].fIsRTCP = false;
 		fChannelTrackMap[theRTCPChannel].fTrackID = fSetupTrackID;
 		fChannelTrackMap[theRTCPChannel].fIsRTCP = true;
-	}
-
-	//Use a trackID of kUInt32_Max to turn the Rate-Adaptation header off.
-	void RTSPClient::Attach3GPPHeaders(StringFormatter &fmt, UInt32 inTrackID)
-	{
-		if (fGuarenteedBitRate != 0 | fMaxBitRate != 0 | fMaxTransferDelay != 0)
-		{
-			fmt.PutFmtStr("3GPP-Link-Char: url=\"%s\"", fURL.Ptr);
-
-			if (fGuarenteedBitRate != 0)
-				fmt.PutFmtStr("; GBW=%"   _U32BITARG_, fGuarenteedBitRate);
-			if (fMaxBitRate != 0)
-				fmt.PutFmtStr("; MBW=%"   _U32BITARG_, fMaxBitRate);
-			if (fMaxTransferDelay != 0)
-				fmt.PutFmtStr("; MTD=%"   _U32BITARG_, fMaxTransferDelay);
-			fmt.PutFmtStr("\r\n");
-		}
-
-		if ((fBufferSpace != 0 | fDelayTime != 0) && inTrackID != kUInt32_Max)
-		{
-			fmt.PutFmtStr("3GPP-Adaptation: ");
-
-			fmt.PutFmtStr("url=\"%s/%s=%"   _U32BITARG_   "\"", fURL.Ptr, fControlID, inTrackID);
-			if (fBufferSpace != 0)
-				fmt.PutFmtStr("; size=%"   _U32BITARG_, fBufferSpace);
-			if (fDelayTime != 0)
-				fmt.PutFmtStr("; target-time=%"   _U32BITARG_, fDelayTime);
-			fmt.PutFmtStr("\r\n");
-		}
 	}
 }//namespace
 

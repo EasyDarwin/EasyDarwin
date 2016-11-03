@@ -357,7 +357,6 @@ namespace EasyDarwin
 		void        ParseRTPInfoHeader(StrPtrLen* inHeader);
 		void        ParseRTPMetaInfoHeader(StrPtrLen* inHeader);
 		//Use a inTrackID of kUInt32_Max to turn the Rate-Adaptation header off
-		void		Attach3GPPHeaders(StringFormatter &fmt, UInt32 inTrackID = kUInt32_Max);
 
 		// Call this to receive an RTSP response from the server.
 		// Returns EAGAIN until a complete response has been received.
