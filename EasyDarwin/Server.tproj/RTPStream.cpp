@@ -58,13 +58,10 @@
 
 #if DEBUG
 #define RTP_TCP_STREAM_DEBUG 1
-#define RTP_3GPP_DEBUG 1
 #define RTP_RTCP_DEBUG 1
 #else
 #define RTP_TCP_STREAM_DEBUG 0
-#define RTP_3GPP_DEBUG 0
 #define RTP_RTCP_DEBUG 0
-
 #endif
 
 
@@ -73,13 +70,6 @@
 #else
 #define DEBUG_RTCP_PRINTF(s) {}
 #endif
-
-#if RTP_3GPP_DEBUG
-#define DEBUG_3GPP_PRINTF(s) qtss_printf s
-#else
-#define DEBUG_3GPP_PRINTF(s) {}
-#endif
-
 
 #define RTCP_TESTING 0
 
@@ -258,10 +248,6 @@ RTPStream::RTPStream(UInt32 inSSRC, RTPSessionInterface* inSession)
 
 	QTSS_StandardRTSP_Params inParamBlock;
 	inParamBlock.inClientSession = inSession;
-	bool disableRateAdaptForPlayer = !QTSSModuleUtils::HavePlayerProfile((void *)QTSServerInterface::GetServer()->GetPrefs(), &inParamBlock, QTSSModuleUtils::kDisable3gppRateAdaptation);
-	if (doRateAdaptation)
-		doRateAdaptation = disableRateAdaptForPlayer;
-
 	// Set the whether thinning is enabled.
 	bool thinningDisabledForUserAgent = QTSSModuleUtils::HavePlayerProfile((void *)QTSServerInterface::GetServer()->GetPrefs(), &inParamBlock, QTSSModuleUtils::kDisableThinning);
 	if (thinningDisabledForUserAgent)
@@ -953,8 +939,6 @@ void RTPStream::SetInitialMaxQualityLevel()
 		//interpolate between ratio and fNumQualityLevels such that 0.90 maps to 0 and 3.0 maps to fNumQualityLevels
 		SetMaxQualityLevelLimit(static_cast<SInt32>(fNumQualityLevels * (ratio / 2.1 - 0.43)));
 		SetQualityLevel(GetQualityLevel());
-		DEBUG_3GPP_PRINTF(("RTPStream::SetInitialMaxQualityLevel movieBitRate=%"   _U32BITARG_   ", bandwidth=%"   _U32BITARG_   ", ratio=%f, fMaxQualityLevel=%" _S32BITARG_ "\n",
-			movieBitRate, bandwidth, ratio, fMaxQualityLevel));
 	}
 }
 
@@ -1601,7 +1585,6 @@ void RTPStream::ProcessIncomingRTCPPacket(StrPtrLen* inPacket)
 					{
 						fEstRTT = fEstRTT == 0 ? measuredRTT : MIN(measuredRTT, fEstRTT);
 					}
-					DEBUG_3GPP_PRINTF(("RTPStream::ProcessIncomingRTCPPacket measuredRTT=%"   _U32BITARG_   ", fEstRTT=%"   _U32BITARG_   "\n", measuredRTT, fEstRTT));
 				}
 			}
 

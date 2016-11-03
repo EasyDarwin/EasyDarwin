@@ -1043,19 +1043,6 @@ bool QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QT
         }
         break;
         
-        case QTSSModuleUtils::kDisable3gppRateAdaptation:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqDisable3gppRateAdapt, &userAgentStr);
-        }
-        break;
-		
-        
-        case QTSSModuleUtils::kAdjust3gppTargetTime:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReq3GPPTargetTime, &userAgentStr);
-        }
-        break;
-        
         case QTSSModuleUtils::kDisableThinning:
         {
             return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqDisableThinning, &userAgentStr);
