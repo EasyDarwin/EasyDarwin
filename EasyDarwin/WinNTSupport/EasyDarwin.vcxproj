@@ -177,12 +177,10 @@
     <ClCompile Include="..\APIModules\QTSSPOSIXFileSysModule\QTSSPosixFileSysModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\QTSSReflectorModule.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RCFSourceInfo.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorSession.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorStream.cpp" />
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RelaySDPSourceInfo.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RTPSessionOutput.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\SequenceNumberMap.cpp" />
     <ClCompile Include="..\APIModules\QTSSWebDebugModule\QTSSWebDebugModule.cpp">
@@ -242,7 +240,6 @@
     <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSModule.h" />
     <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSSession.h" />
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />
-    <ClInclude Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.h" />
     <ClInclude Include="..\Server.tproj\HTTPSession.h" />
     <ClInclude Include="..\Server.tproj\HTTPSessionInterface.h" />
   </ItemGroup>

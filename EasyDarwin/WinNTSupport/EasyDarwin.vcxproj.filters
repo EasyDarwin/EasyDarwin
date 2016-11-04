@@ -82,9 +82,6 @@
     <ClCompile Include="..\APIModules\QTSSWebStatsModule\QTSSWebStatsModule.cpp">
       <Filter>Source Files\API Modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.cpp">
-      <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\QTSSReflectorModule.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
@@ -95,9 +92,6 @@
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorStream.cpp">
-      <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSReflectorModule\RelaySDPSourceInfo.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RTPSessionOutput.cpp">
@@ -258,9 +252,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\APIModules\QTSSReflectorModule\MuxSessionOutput.h">
-      <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
-    </ClInclude>
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h">
       <Filter>Source Files\API Modules\EasyCMSModule</Filter>
     </ClInclude>
