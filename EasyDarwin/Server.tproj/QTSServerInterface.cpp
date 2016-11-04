@@ -25,10 +25,7 @@
  /*
 	 File:       QTSServerInterface.cpp
 
-	 Contains:   Implementation of object defined in QTSServerInterface.h.
-
-
-
+	 Contains:   Implementation of object defined in QTSServerInterface.h
  */
 
  //INCLUDES:
