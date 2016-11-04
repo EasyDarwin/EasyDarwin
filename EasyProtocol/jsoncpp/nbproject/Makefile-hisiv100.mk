@@ -18,7 +18,7 @@ CC=arm-hisiv100-linux-uclibcgnueabi-gcc
 CCC=arm-hisiv100-linux-uclibcgnueabi-g++
 CXX=arm-hisiv100-linux-uclibcgnueabi-g++
 FC=gfortran
-AS=arm-hisiv100-linux-uclibcgnueabi-as
+AS=as
 
 # Macros
 CND_PLATFORM=hisiv100-Linux
@@ -66,17 +66,17 @@ ${CND_CONF}/libjsoncpp.a: ${OBJECTFILES}
 	${AR} -rv ${CND_CONF}/libjsoncpp.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libjsoncpp.a
 
-${OBJECTDIR}/src/lib_json/json_reader.o: src/lib_json/json_reader.cpp 
+${OBJECTDIR}/src/lib_json/json_reader.o: src/lib_json/json_reader.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/lib_json
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/lib_json/json_reader.o src/lib_json/json_reader.cpp
 
-${OBJECTDIR}/src/lib_json/json_value.o: src/lib_json/json_value.cpp 
+${OBJECTDIR}/src/lib_json/json_value.o: src/lib_json/json_value.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/lib_json
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/lib_json/json_value.o src/lib_json/json_value.cpp
 
-${OBJECTDIR}/src/lib_json/json_writer.o: src/lib_json/json_writer.cpp 
+${OBJECTDIR}/src/lib_json/json_writer.o: src/lib_json/json_writer.cpp
 	${MKDIR} -p ${OBJECTDIR}/src/lib_json
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/lib_json/json_writer.o src/lib_json/json_writer.cpp
@@ -87,7 +87,6 @@ ${OBJECTDIR}/src/lib_json/json_writer.o: src/lib_json/json_writer.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_CONF}/libjsoncpp.a
 
 # Subprojects
 .clean-subprojects:

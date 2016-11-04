@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="EasyDarwin" displayName="EasyDarwin" projectFiles="true">
       <logicalFolder name="APICommonCode"
@@ -7,8 +7,6 @@
                      projectFiles="true">
         <itemPath>APICommonCode/QTAccessFile.cpp</itemPath>
         <itemPath>APICommonCode/QTAccessFile.h</itemPath>
-        <itemPath>APICommonCode/QTSS3GPPModuleUtils.cpp</itemPath>
-        <itemPath>APICommonCode/QTSS3GPPModuleUtils.h</itemPath>
         <itemPath>APICommonCode/QTSSModuleUtils.cpp</itemPath>
         <itemPath>APICommonCode/QTSSModuleUtils.h</itemPath>
         <itemPath>APICommonCode/QTSSRollingLog.cpp</itemPath>
@@ -69,12 +67,6 @@
           <itemPath>APIModules/QTSSAdminModule/mongoose.c</itemPath>
           <itemPath>APIModules/QTSSAdminModule/mongoose.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="QTSSFileModule"
-                       displayName="QTSSFileModule"
-                       projectFiles="true">
-          <itemPath>APIModules/QTSSFileModule/QTSSFileModule.cpp</itemPath>
-          <itemPath>APIModules/QTSSFileModule/QTSSFileModule.h</itemPath>
-        </logicalFolder>
         <logicalFolder name="QTSSFlowControlModule"
                        displayName="QTSSFlowControlModule"
                        projectFiles="true">
@@ -98,25 +90,15 @@
                        projectFiles="true">
           <itemPath>APIModules/QTSSReflectorModule/QTSSReflectorModule.cpp</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/QTSSReflectorModule.h</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/QTSSRelayModule.cpp</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/QTSSRelayModule.h</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/RCFSourceInfo.cpp</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/RCFSourceInfo.h</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/RTPSessionOutput.cpp</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/RTPSessionOutput.h</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RTSPSourceInfo.cpp</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RTSPSourceInfo.h</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/ReflectorOutput.h</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/ReflectorSession.cpp</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/ReflectorSession.h</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/ReflectorStream.cpp</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/ReflectorStream.h</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RelayOutput.cpp</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RelayOutput.h</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RelaySDPSourceInfo.cpp</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RelaySDPSourceInfo.h</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RelaySession.cpp</itemPath>
-          <itemPath>APIModules/QTSSReflectorModule/RelaySession.h</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/SequenceNumberMap.cpp</itemPath>
           <itemPath>APIModules/QTSSReflectorModule/SequenceNumberMap.h</itemPath>
         </logicalFolder>
@@ -230,16 +212,12 @@
         <itemPath>RTPMetaInfoLib/RTPMetaInfoPacket.cpp</itemPath>
         <itemPath>RTPMetaInfoLib/RTPMetaInfoPacket.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="RTSPClientLib"
-                     displayName="RTSPClientLib"
+      <logicalFolder name="RTSPUtilitiesLib"
+                     displayName="RTSPUtilitiesLib"
                      projectFiles="true">
-        <itemPath>RTSPClientLib/ClientSession.cpp</itemPath>
-        <itemPath>RTSPClientLib/ClientSession.h</itemPath>
-        <itemPath>RTSPClientLib/PlayerSimulator.h</itemPath>
-        <itemPath>RTSPClientLib/RTPPacket.h</itemPath>
-        <itemPath>RTSPClientLib/RTSPClient.cpp</itemPath>
-        <itemPath>RTSPClientLib/RTSPClient.h</itemPath>
-        <itemPath>RTSPClientLib/RTSPRelaySession.h</itemPath>
+        <itemPath>../RTSPUtilitiesLib/QTSSRTSPProtocol.h</itemPath>
+        <itemPath>../RTSPUtilitiesLib/RTSPProtocol.cpp</itemPath>
+        <itemPath>../RTSPUtilitiesLib/RTSPProtocol.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Server.tproj"
                      displayName="Server.tproj"
@@ -290,20 +268,12 @@
         <itemPath>Server.tproj/RTPPacketResender.h</itemPath>
         <itemPath>Server.tproj/RTPSession.cpp</itemPath>
         <itemPath>Server.tproj/RTPSession.h</itemPath>
-        <itemPath>Server.tproj/RTPSession3GPP.cpp</itemPath>
-        <itemPath>Server.tproj/RTPSession3GPP.h</itemPath>
         <itemPath>Server.tproj/RTPSessionInterface.cpp</itemPath>
         <itemPath>Server.tproj/RTPSessionInterface.h</itemPath>
         <itemPath>Server.tproj/RTPStream.cpp</itemPath>
         <itemPath>Server.tproj/RTPStream.h</itemPath>
-        <itemPath>Server.tproj/RTPStream3gpp.cpp</itemPath>
-        <itemPath>Server.tproj/RTPStream3gpp.h</itemPath>
-        <itemPath>Server.tproj/RTSPProtocol.cpp</itemPath>
-        <itemPath>Server.tproj/RTSPProtocol.h</itemPath>
         <itemPath>Server.tproj/RTSPRequest.cpp</itemPath>
         <itemPath>Server.tproj/RTSPRequest.h</itemPath>
-        <itemPath>Server.tproj/RTSPRequest3GPP.cpp</itemPath>
-        <itemPath>Server.tproj/RTSPRequest3GPP.h</itemPath>
         <itemPath>Server.tproj/RTSPRequestInterface.cpp</itemPath>
         <itemPath>Server.tproj/RTSPRequestInterface.h</itemPath>
         <itemPath>Server.tproj/RTSPRequestStream.cpp</itemPath>
@@ -312,8 +282,6 @@
         <itemPath>Server.tproj/RTSPResponseStream.h</itemPath>
         <itemPath>Server.tproj/RTSPSession.cpp</itemPath>
         <itemPath>Server.tproj/RTSPSession.h</itemPath>
-        <itemPath>Server.tproj/RTSPSession3GPP.cpp</itemPath>
-        <itemPath>Server.tproj/RTSPSession3GPP.h</itemPath>
         <itemPath>Server.tproj/RTSPSessionInterface.cpp</itemPath>
         <itemPath>Server.tproj/RTSPSessionInterface.h</itemPath>
         <itemPath>Server.tproj/RunServer.cpp</itemPath>
@@ -358,6 +326,7 @@
     <Elem>../HTTPUtilitiesLib</Elem>
     <Elem>.</Elem>
     <Elem>../HTTPUtilitiesLib</Elem>
+    <Elem>../RTSPUtilitiesLib</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -404,6 +373,7 @@
             <pElem>APIModules/EasyCMSModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
+            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -464,19 +434,21 @@
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../RTSPUtilitiesLib/QTSSRTSPProtocol.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.cpp"
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -604,16 +576,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSFlowControlModule/QTSSFlowControlModule.cpp"
             ex="false"
             tool="1"
@@ -654,16 +616,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSReflectorModule/RCFSourceInfo.cpp"
             ex="false"
             tool="1"
@@ -680,16 +632,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/QTSSReflectorModule/RTPSessionOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -715,36 +657,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/QTSSReflectorModule/ReflectorStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -944,20 +856,6 @@
       </item>
       <item path="RTPMetaInfoLib/RTPMetaInfoPacket.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="RTSPClientLib/ClientSession.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTPPacket.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPRelaySession.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
@@ -1071,10 +969,6 @@
       </item>
       <item path="Server.tproj/RTPSession.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPSession3GPP.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTPSession3GPP.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTPSessionInterface.cpp"
             ex="false"
             tool="1"
@@ -1086,21 +980,9 @@
       </item>
       <item path="Server.tproj/RTPStream.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPStream3gpp.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTPStream3gpp.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTSPRequest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPRequestInterface.cpp"
             ex="false"
@@ -1126,10 +1008,6 @@
       <item path="Server.tproj/RTSPSession.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPSessionInterface.cpp"
             ex="false"
@@ -1194,6 +1072,7 @@
             <pElem>APIModules/EasyCMSModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
+            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -1258,19 +1137,21 @@
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../RTSPUtilitiesLib/QTSSRTSPProtocol.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.cpp"
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1398,16 +1279,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSFlowControlModule/QTSSFlowControlModule.cpp"
             ex="false"
             tool="1"
@@ -1448,16 +1319,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSReflectorModule/RCFSourceInfo.cpp"
             ex="false"
             tool="1"
@@ -1474,16 +1335,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/QTSSReflectorModule/RTPSessionOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1509,36 +1360,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/QTSSReflectorModule/ReflectorStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1738,20 +1559,6 @@
       </item>
       <item path="RTPMetaInfoLib/RTPMetaInfoPacket.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="RTSPClientLib/ClientSession.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTPPacket.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPRelaySession.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
@@ -1865,10 +1672,6 @@
       </item>
       <item path="Server.tproj/RTPSession.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPSession3GPP.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTPSession3GPP.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTPSessionInterface.cpp"
             ex="false"
             tool="1"
@@ -1880,21 +1683,9 @@
       </item>
       <item path="Server.tproj/RTPStream.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPStream3gpp.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTPStream3gpp.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTSPRequest.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPRequestInterface.cpp"
             ex="false"
@@ -1920,10 +1711,6 @@
       <item path="Server.tproj/RTSPSession.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPSessionInterface.cpp"
             ex="false"
@@ -1986,6 +1773,7 @@
             <pElem>APIModules/EasyCMSModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
+            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -2051,19 +1839,21 @@
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.h"
+      <item path="../RTSPUtilitiesLib/QTSSRTSPProtocol.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -2191,16 +1981,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSFlowControlModule/QTSSFlowControlModule.cpp"
             ex="false"
             tool="1"
@@ -2241,16 +2021,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSReflectorModule/RCFSourceInfo.cpp"
             ex="false"
             tool="1"
@@ -2267,16 +2037,6 @@
             flavor2="9">
       </item>
       <item path="APIModules/QTSSReflectorModule/RTPSessionOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2302,36 +2062,6 @@
             flavor2="9">
       </item>
       <item path="APIModules/QTSSReflectorModule/ReflectorStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2531,20 +2261,6 @@
       </item>
       <item path="RTPMetaInfoLib/RTPMetaInfoPacket.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="RTSPClientLib/ClientSession.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTPPacket.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPRelaySession.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
@@ -2658,10 +2374,6 @@
       </item>
       <item path="Server.tproj/RTPSession.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPSession3GPP.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTPSession3GPP.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTPSessionInterface.cpp"
             ex="false"
             tool="1"
@@ -2673,21 +2385,9 @@
       </item>
       <item path="Server.tproj/RTPStream.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPStream3gpp.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTPStream3gpp.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTSPRequest.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/RTSPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPRequestInterface.cpp"
             ex="false"
@@ -2713,10 +2413,6 @@
       <item path="Server.tproj/RTSPSession.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/RTSPSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPSessionInterface.cpp"
             ex="false"
@@ -2780,6 +2476,7 @@
             <pElem>APIModules/EasyCMSModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
+            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -2844,19 +2541,21 @@
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APICommonCode/QTSS3GPPModuleUtils.h"
+      <item path="../RTSPUtilitiesLib/QTSSRTSPProtocol.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../RTSPUtilitiesLib/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="APICommonCode/QTAccessFile.cpp" ex="false" tool="1" flavor2="9">
+      </item>
+      <item path="APICommonCode/QTAccessFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="APICommonCode/QTSSModuleUtils.cpp" ex="false" tool="1" flavor2="9">
       </item>
@@ -2984,16 +2683,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSFileModule/QTSSFileModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSFlowControlModule/QTSSFlowControlModule.cpp"
             ex="false"
             tool="1"
@@ -3034,16 +2723,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/QTSSRelayModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSReflectorModule/RCFSourceInfo.cpp"
             ex="false"
             tool="1"
@@ -3060,16 +2739,6 @@
             flavor2="9">
       </item>
       <item path="APIModules/QTSSReflectorModule/RTPSessionOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RTSPSourceInfo.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3095,36 +2764,6 @@
             flavor2="9">
       </item>
       <item path="APIModules/QTSSReflectorModule/ReflectorStream.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelayOutput.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySDPSourceInfo.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSReflectorModule/RelaySession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3324,20 +2963,6 @@
       </item>
       <item path="RTPMetaInfoLib/RTPMetaInfoPacket.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="RTSPClientLib/ClientSession.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="RTSPClientLib/ClientSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/PlayerSimulator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTPPacket.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="RTSPClientLib/RTSPClient.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="RTSPClientLib/RTSPRelaySession.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/GenerateXMLPrefs.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/GenerateXMLPrefs.h" ex="false" tool="3" flavor2="0">
@@ -3451,10 +3076,6 @@
       </item>
       <item path="Server.tproj/RTPSession.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPSession3GPP.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTPSession3GPP.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTPSessionInterface.cpp"
             ex="false"
             tool="1"
@@ -3466,21 +3087,9 @@
       </item>
       <item path="Server.tproj/RTPStream.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Server.tproj/RTPStream3gpp.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTPStream3gpp.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTSPProtocol.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Server.tproj/RTSPRequest.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/RTSPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTSPRequest3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPRequestInterface.cpp"
             ex="false"
@@ -3506,10 +3115,6 @@
       <item path="Server.tproj/RTSPSession.cpp" ex="false" tool="1" flavor2="9">
       </item>
       <item path="Server.tproj/RTSPSession.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.cpp" ex="false" tool="1" flavor2="9">
-      </item>
-      <item path="Server.tproj/RTSPSession3GPP.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.tproj/RTSPSessionInterface.cpp"
             ex="false"

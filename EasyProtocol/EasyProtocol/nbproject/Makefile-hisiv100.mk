@@ -18,7 +18,7 @@ CC=arm-hisiv100-linux-uclibcgnueabi-gcc
 CCC=arm-hisiv100-linux-uclibcgnueabi-g++
 CXX=arm-hisiv100-linux-uclibcgnueabi-g++
 FC=gfortran
-AS=arm-hisiv100-linux-uclibcgnueabi-as
+AS=as
 
 # Macros
 CND_PLATFORM=hisiv100-Linux
@@ -66,17 +66,17 @@ ${CND_CONF}/libEasyProtocol.a: ${OBJECTFILES}
 	${AR} -rv ${CND_CONF}/libEasyProtocol.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libEasyProtocol.a
 
-${OBJECTDIR}/EasyProtocol.o: EasyProtocol.cpp 
+${OBJECTDIR}/EasyProtocol.o: EasyProtocol.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DEASYDARWIN -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocol.o EasyProtocol.cpp
 
-${OBJECTDIR}/EasyProtocolBase.o: EasyProtocolBase.cpp 
+${OBJECTDIR}/EasyProtocolBase.o: EasyProtocolBase.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DEASYDARWIN -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocolBase.o EasyProtocolBase.cpp
 
-${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp 
+${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DEASYDARWIN -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyUtil.o EasyUtil.cpp
@@ -87,7 +87,6 @@ ${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_CONF}/libEasyProtocol.a
 
 # Subprojects
 .clean-subprojects:
