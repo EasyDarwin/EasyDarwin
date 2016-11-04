@@ -178,6 +178,12 @@
 #define EASY_TAG_START_TIME								"StartTime"
 #define EASY_TAG_END_TIME								"EndTime"
 
+#define EASY_TAG_PATH									"Path"
+#define EASY_TAG_TOTAL_SIZE								"TotalSize"
+#define EASY_TAG_AVAILABLE_SIZE							"AvailableSize"
+#define EASY_TAG_FREE_SIZE								"FreeSize"
+#define EASY_TAG_PATHS									"Paths"
+
 /*!
 \}
 */
