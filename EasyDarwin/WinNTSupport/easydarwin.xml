@@ -90,7 +90,6 @@
 			<VALUE>Android</VALUE>
 			<VALUE>IOS</VALUE>
 		</LIST-PREF>
-		<PREF NAME="3gpp_protocol_rate_adaptation_report_frequency" TYPE="UInt16" >1</PREF>
 		<PREF NAME="default_stream_quality" TYPE="UInt16" >0</PREF>
 		<PREF NAME="player_requires_rtp_start_time_adjust" >Real</PREF>
 		<PREF NAME="udp_monitor_video_port" TYPE="UInt16" >5002</PREF>
@@ -100,7 +99,6 @@
 		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >4</PREF>
 		<PREF NAME="player_requires_disable_3gpp_rate_adapt" ></PREF>
 		<PREF NAME="player_requires_3gpp_target_time" ></PREF>
-		<PREF NAME="3gpp_target_time_milliseconds" TYPE="UInt32" >3000</PREF>
 		<PREF NAME="player_requires_disable_thinning" ></PREF>
 		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
 		<PREF NAME="break_on_assert" TYPE="bool" >false</PREF>
@@ -122,9 +120,6 @@
 		<PREF NAME="RTSP_server_info" TYPE="bool" >true</PREF>
 		<PREF NAME="force_logs_close_on_write" TYPE="bool" >false</PREF>
 		<PREF NAME="disable_thinning" TYPE="bool" >false</PREF>
-		<PREF NAME="enable_3gpp_protocol" TYPE="bool" >true</PREF>
-		<PREF NAME="enable_3gpp_protocol_rate_adaptation" TYPE="bool" >true</PREF>
-		<PREF NAME="enable_3gpp_debug_printfs" TYPE="bool" >false</PREF>
 		<PREF NAME="enable_udp_monitor_stream" TYPE="bool" >false</PREF>
 		<PREF NAME="enable_allow_guest_default" TYPE="bool" >true</PREF>
 	</SERVER>
@@ -135,52 +130,6 @@
 		<PREF NAME="request_logfile_name" >EasyDarwin_access</PREF>
 		<PREF NAME="request_logging" TYPE="bool" >true</PREF>
 		<PREF NAME="request_logtime_in_gmt" TYPE="bool" >true</PREF>
-	</MODULE>
-	<MODULE NAME="QTSSFileModule" >
-		<PREF NAME="sdp_url" ></PREF>
-		<PREF NAME="admin_email" ></PREF>
-		<PREF NAME="max_allowed_speed" TYPE="Float32" >4.000000</PREF>
-		<PREF NAME="flow_control_probe_interval" TYPE="UInt32" >10</PREF>
-		<PREF NAME="num_shared_buffer_increase_per_session" TYPE="UInt32" >2</PREF>
-		<PREF NAME="shared_buffer_unit_k_size" TYPE="UInt32" >32</PREF>
-		<PREF NAME="private_buffer_unit_k_size" TYPE="UInt32" >32</PREF>
-		<PREF NAME="num_shared_buffer_units_per_buffer" TYPE="UInt32" >0</PREF>
-		<PREF NAME="num_private_buffer_units_per_buffer" TYPE="UInt32" >1</PREF>
-		<PREF NAME="max_shared_buffer_units_per_buffer" TYPE="UInt32" >8</PREF>
-		<PREF NAME="max_private_buffer_units_per_buffer" TYPE="UInt32" >8</PREF>
-		<PREF NAME="add_seconds_to_client_buffer_delay" TYPE="Float32" >0.000000</PREF>
-		<PREF NAME="compatibility_adjust_sdp_media_bandwidth_percent" TYPE="UInt32" >50</PREF>
-		<PREF NAME="compatibility_adjust_rtp_start_time_milli" TYPE="SInt64" >500</PREF>
-		<PREF NAME="enable_shared_file_buffers" TYPE="bool" >true</PREF>
-		<PREF NAME="enable_private_file_buffers" TYPE="bool" >false</PREF>
-		<PREF NAME="record_movie_file_sdp" TYPE="bool" >false</PREF>
-		<PREF NAME="enable_movie_file_sdp" TYPE="bool" >false</PREF>
-		<PREF NAME="enable_player_compatibility" TYPE="bool" >true</PREF>
-		<PREF NAME="allow_invalid_hint_track_refs" TYPE="bool" >false</PREF>
-	</MODULE>
-	<MODULE NAME="QTSSMP3StreamingModule" >
-		<PREF NAME="mp3_streaming_enabled" TYPE="Bool16" >true</PREF>
-		<PREF NAME="mp3_broadcast_password" > </PREF>
-		<PREF NAME="mp3_broadcast_buffer_size" TYPE="UInt32" >8192</PREF>
-		<PREF NAME="mp3_max_flow_control_time" TYPE="SInt32" >10000</PREF>
-		<PREF NAME="mp3_request_logfile_name" >mp3_access</PREF>
-		<PREF NAME="mp3_request_logfile_dir" >./Logs</PREF>
-		<PREF NAME="mp3_request_logging" TYPE="Bool16" >true</PREF>
-		<PREF NAME="mp3_request_logfile_size" TYPE="UInt32" >10240000</PREF>
-		<PREF NAME="mp3_request_logfile_interval" TYPE="UInt32" >7</PREF>
-		<PREF NAME="mp3_request_logtime_in_gmt" TYPE="Bool16" >true</PREF>
-	</MODULE>
-	<MODULE NAME="QTSSWebStatsModule" >
-		<PREF NAME="web_stats_url" ></PREF>
-	</MODULE>
-	<MODULE NAME="QTSSHttpFileModule" >
-		<PREF NAME="http_xfer_enabled" TYPE="Bool16" >false</PREF>
-		<PREF NAME="http_folder" >./http</PREF>
-		<PREF NAME="http_logging" TYPE="Bool16" >true</PREF>
-		<PREF NAME="http_logfile_name" >Http</PREF>
-		<PREF NAME="http_logfile_dir" >./httpLogs</PREF>
-		<PREF NAME="http_logfile_size" TYPE="UInt32" >256000</PREF>
-		<PREF NAME="http_logfile_interval" TYPE="UInt32" >7</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSReflectorModule" >
 		<PREF NAME="reflector_bucket_size" TYPE="UInt32" >16</PREF>
@@ -228,10 +177,6 @@
 		<PREF NAME="num_worses_to_thin" TYPE="UInt32" >2</PREF>
 		<PREF NAME="flow_control_udp_thinning_module_enabled" TYPE="bool" >true</PREF>
 	</MODULE>
-	<MODULE NAME="QTSSRelayModule" >
-		<PREF NAME="relay_prefs_file" >./relayconfig.xml</PREF>
-		<PREF NAME="relay_stats_url" ></PREF>
-	</MODULE>
 	<MODULE NAME="QTSSAccessModule" >
 		<PREF NAME="modAccess_qtaccessfilename" >qtaccess</PREF>
 		<PREF NAME="modAccess_groupsfilepath" >./qtgroups</PREF>
@@ -250,16 +195,6 @@
 	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
-	<MODULE NAME="EasyHLSModule" >
-		<PREF NAME="HTTP_ROOT_DIR" >http://127.0.0.1:80/</PREF>
-		<PREF NAME="M3U8_VERSION" TYPE="UInt32" >3</PREF>
-		<PREF NAME="TARGET_DURATION" TYPE="UInt32" >4</PREF>
-		<PREF NAME="PLAYLIST_CAPACITY" TYPE="UInt32" >4</PREF>
-		<PREF NAME="ALLOW_CACHE" TYPE="bool" >false</PREF>
-	</MODULE>
-	<MODULE NAME="EasyRelayModule" >
-		<PREF NAME="local_ip_address" >127.0.0.1</PREF>
-	</MODULE>
 	<MODULE NAME="EasyCMSModule" ></MODULE>
 	<MODULE NAME="EasyRedisModule" >
 		<PREF NAME="redis_ip" >127.0.0.1</PREF>

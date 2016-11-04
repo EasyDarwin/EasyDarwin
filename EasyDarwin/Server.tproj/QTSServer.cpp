@@ -791,7 +791,6 @@ void    QTSServer::LoadCompiledInModules()
 	(void)theQTACCESSmodule->SetupModule(&sCallbacks, &QTSSAccessModule_Main);
 	(void)AddModule(theQTACCESSmodule);
 
-
 #endif //DSS_DYNAMIC_MODULES_ONLY
 
 #ifdef PROXYSERVER
@@ -801,8 +800,6 @@ void    QTSServer::LoadCompiledInModules()
 #endif
 
 }
-
-
 
 void    QTSServer::InitCallbacks()
 {
