@@ -32,9 +32,6 @@
     <Filter Include="Source Files\RTSPUtilitiesLib">
       <UniqueIdentifier>{0469c66a-019d-4dfc-b698-0144a67c2e97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\API Modules\EasyHLSModule">
-      <UniqueIdentifier>{eb0f0f80-805b-43ce-8c72-721b1b382245}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
@@ -244,12 +241,6 @@
     <ClCompile Include="..\..\RTSPUtilitiesLib\RTSPProtocol.cpp">
       <Filter>Source Files\RTSPUtilitiesLib</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSModule.cpp">
-      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSSession.cpp">
-      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h">
@@ -275,12 +266,6 @@
     </ClInclude>
     <ClInclude Include="..\..\RTSPUtilitiesLib\RTSPProtocol.h">
       <Filter>Source Files\RTSPUtilitiesLib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSModule.h">
-      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSSession.h">
-      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
