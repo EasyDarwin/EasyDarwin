@@ -210,11 +210,7 @@ public:
 
 	bool  GetDisableThinning() { return fDisableThinning; }
 
-	bool  Get3GPPEnabled() { return f3gppProtocolEnabled; }
-	bool  Get3GPPRateAdaptationEnabled() { return f3gppProtocolRateAdaptationEnabled; }
-	UInt16  Get3GPPRateAdaptReportFrequency() { return f3gppProtocolRateAdaptationReportFrequency; }
 	UInt16  GetDefaultStreamQuality() { return fDefaultStreamQuality; }
-	bool  Get3GPPDebugPrintfs() { return f3gppDebugPrintfsEnabled; }
 	bool  GetUDPMonitorEnabled() { return fUDPMonitorEnabled; }
 	UInt16  GetUDPMonitorVideoPort() { return fUDPMonitorVideoPort; }
 	UInt16  GetUDPMonitorAudioPort() { return fUDPMonitorAudioPort; }
@@ -224,8 +220,6 @@ public:
 	char* GetMonitorSrcIP() { return this->GetStringPref(qtssPrefsUDPMonitorSourceIPAddr); }
 
 	bool GetAllowGuestDefault() { return fAllowGuestAuthorizeDefault; }
-
-	UInt32 Get3GPPForcedTargetTime() { return f3GPPRateAdaptTargetTime; }
 
 	UInt16 GetHTTPServicePort() { return fHTTPServicePort; }
 private:
@@ -293,7 +287,6 @@ private:
 	bool  fEnableRTSPServerInfo;
 	UInt32  fNumThreads;
 	UInt32  fNumRTSPThreads;
-	UInt32 f3GPPRateAdaptTargetTime;
 
 	UInt16	fHTTPServicePort;
 
@@ -307,12 +300,7 @@ private:
 	bool  fCloseLogsOnWrite;
 
 	bool fDisableThinning;
-
-	bool f3gppProtocolEnabled;
-	bool f3gppProtocolRateAdaptationEnabled;
-	UInt16 f3gppProtocolRateAdaptationReportFrequency;
 	UInt16 fDefaultStreamQuality;
-	bool f3gppDebugPrintfsEnabled;
 	bool fUDPMonitorEnabled;
 	UInt16 fUDPMonitorVideoPort;
 	UInt16 fUDPMonitorAudioPort;

@@ -515,7 +515,7 @@ void RTSPRequestInterface::AppendRTPInfoHeader(QTSS_RTSPHeader inHeader,
 	{
 		fOutputStream->Put(sURL);
 
-		if (true) //3gpp requires this and it follows RTSP RFC.
+		if (true)
 		{
 			RTSPRequestInterface* theRequest = (RTSPRequestInterface*)this;
 			StrPtrLen *path = (StrPtrLen *)theRequest->GetValue(qtssRTSPReqAbsoluteURL);

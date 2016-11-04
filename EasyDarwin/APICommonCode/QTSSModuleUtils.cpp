@@ -1041,14 +1041,7 @@ bool QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QT
         {
             return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqRTPStartTimeAdjust, &userAgentStr);
         }
-        break;
-        
-        case QTSSModuleUtils::kDisableThinning:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqDisableThinning, &userAgentStr);
-        }
-        break;
-        
+        break;        
     }
     
     return false;

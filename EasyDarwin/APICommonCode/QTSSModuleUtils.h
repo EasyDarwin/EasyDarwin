@@ -49,7 +49,6 @@ class QTSSModuleUtils
                     kAdjustBandwidth            = 1,
                     kDisablePauseAdjustedRTPTime= 2,
                     kDelayRTPStreamsUntilAfterRTSPResponse = 3,
-                    kDisableThinning = 4,
                 };
     
       

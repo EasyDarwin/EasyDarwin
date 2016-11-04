@@ -244,15 +244,6 @@ RTPStream::RTPStream(UInt32 inSSRC, RTPSessionInterface* inSession)
 	fMonitorVideoDestPort(QTSServerInterface::GetServer()->GetPrefs()->GetUDPMonitorVideoPort()),
 	fMonitorAudioDestPort(QTSServerInterface::GetServer()->GetPrefs()->GetUDPMonitorAudioPort())
 {
-	bool doRateAdaptation = QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled() && QTSServerInterface::GetServer()->GetPrefs()->Get3GPPRateAdaptationEnabled();
-
-	QTSS_StandardRTSP_Params inParamBlock;
-	inParamBlock.inClientSession = inSession;
-	// Set the whether thinning is enabled.
-	bool thinningDisabledForUserAgent = QTSSModuleUtils::HavePlayerProfile((void *)QTSServerInterface::GetServer()->GetPrefs(), &inParamBlock, QTSSModuleUtils::kDisableThinning);
-	if (thinningDisabledForUserAgent)
-		fDisableThinning = thinningDisabledForUserAgent;
-
 	fStreamRef = this;
 	if (fUDPMonitorEnabled)
 	{
