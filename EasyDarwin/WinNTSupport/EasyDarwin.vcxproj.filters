@@ -73,12 +73,6 @@
     <ClCompile Include="..\APIModules\QTSSPOSIXFileSysModule\QTSSPosixFileSysModule.cpp">
       <Filter>Source Files\API Modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSWebDebugModule\QTSSWebDebugModule.cpp">
-      <Filter>Source Files\API Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSWebStatsModule\QTSSWebStatsModule.cpp">
-      <Filter>Source Files\API Modules</Filter>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSReflectorModule\QTSSReflectorModule.cpp">
       <Filter>Source Files\API Modules\QTSSReflectorModule</Filter>
     </ClCompile>
