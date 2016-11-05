@@ -59,7 +59,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTSPClientLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSWebStatsModule/;../APIModules/QTSSWebDebugModule/;../APIModules/QTSSFlowControlModule/;../APIModules/EasyHLSModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../../EasyRedisClient/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTSPClientLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../../EasyRedisClient/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSFlowControlModule/;../APIModules/EasyHLSModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/EasyDarwin.pch</PrecompiledHeaderOutputFile>
@@ -181,12 +181,6 @@
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorStream.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RTPSessionOutput.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\SequenceNumberMap.cpp" />
-    <ClCompile Include="..\APIModules\QTSSWebDebugModule\QTSSWebDebugModule.cpp">
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSWebStatsModule\QTSSWebStatsModule.cpp">
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
-    </ClCompile>
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp" />
     <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp" />
     <ClCompile Include="..\PrefsSourceLib\XMLPrefsParser.cpp" />
