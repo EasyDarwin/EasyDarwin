@@ -25,149 +25,144 @@
 ]>
 <CONFIGURATION>
 	<SERVER>
-		<LIST-PREF NAME="rtsp_port" TYPE="UInt16" >
-			<VALUE>554</VALUE>
-		</LIST-PREF>
 		<PREF NAME="default_authorization_realm" >EasyDarwin</PREF>
-		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
-		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
-		<PREF NAME="min_tcp_buffer_size" TYPE="UInt32" >8192</PREF>
-		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >3</PREF>
-		<PREF NAME="error_logfile_size" TYPE="UInt32" >512000</PREF>
-		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
-		<PREF NAME="error_logfile_dir" >./Logs/</PREF>
-		<PREF NAME="error_logfile_name" >EasyDarwin</PREF>
-		<PREF NAME="module_folder" >./QTSSModules</PREF>
-		<PREF NAME="safe_play_duration" TYPE="UInt32" >600</PREF>
-		<PREF NAME="average_bandwidth_update" TYPE="UInt32" >60</PREF>
-		<PREF NAME="total_bytes_update" TYPE="UInt32" >15</PREF>
-		<PREF NAME="bind_ip_addr" >0</PREF>
-		<PREF NAME="movie_folder" >./Movies/</PREF>
-		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >1024000</PREF>
-		<PREF NAME="maximum_connections" TYPE="SInt32" >10000</PREF>
-		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
-		<PREF NAME="real_rtsp_timeout" TYPE="UInt32" >30</PREF>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
-		<PREF NAME="run_user_name" ></PREF>
-		<PREF NAME="run_group_name" ></PREF>
-		<PREF NAME="drop_all_packets_delay" TYPE="SInt32" >2500</PREF>
+		<PREF NAME="real_rtsp_timeout" TYPE="UInt32" >180</PREF>
+		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
+		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
+		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
+		<PREF NAME="movie_folder" >c:\Program Files\EasyDarwin\Movies\</PREF>
+		<PREF NAME="bind_ip_addr" >0</PREF>
+		<PREF NAME="break_on_assert" TYPE="bool" >false</PREF>
+		<PREF NAME="auto_restart" TYPE="bool" >true</PREF>
+		<PREF NAME="total_bytes_update" TYPE="UInt32" >1</PREF>
+		<PREF NAME="average_bandwidth_update" TYPE="UInt32" >60</PREF>
+		<PREF NAME="safe_play_duration" TYPE="UInt32" >600</PREF>
+		<PREF NAME="module_folder" >c:\Program Files\EasyDarwin\QTSSModules\</PREF>
+		<PREF NAME="error_logfile_name" >Error</PREF>
+		<PREF NAME="error_logfile_dir" >c:\Program Files\EasyDarwin\Logs\</PREF>
+		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
+		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
+		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >2</PREF>
+		<PREF NAME="screen_logging" TYPE="bool" >true</PREF>
+		<PREF NAME="error_logging" TYPE="bool" >true</PREF>
 		<PREF NAME="drop_all_video_delay" TYPE="SInt32" >1750</PREF>
-		<PREF NAME="thin_all_the_way_delay" TYPE="SInt32" >1500</PREF>
-		<PREF NAME="always_thin_delay" TYPE="SInt32" >750</PREF>
 		<PREF NAME="start_thinning_delay" TYPE="SInt32" >0</PREF>
-		<PREF NAME="start_thicking_delay" TYPE="SInt32" >250</PREF>
-		<PREF NAME="thick_all_the_way_delay" TYPE="SInt32" >-2000</PREF>
-		<PREF NAME="quality_check_interval" TYPE="UInt32" >1000</PREF>
-		<PREF NAME="max_retransmit_delay" TYPE="UInt32" >500</PREF>
-		<PREF NAME="small_window_size" TYPE="UInt32" >24</PREF>
-		<PREF NAME="medium_window_size" TYPE="UInt32" >48</PREF>
 		<PREF NAME="large_window_size" TYPE="UInt32" >64</PREF>
 		<PREF NAME="window_size_threshold" TYPE="UInt32" >200</PREF>
-		<PREF NAME="window_size_max_threshold" TYPE="UInt32" >1000</PREF>
+		<PREF NAME="min_tcp_buffer_size" TYPE="UInt32" >8192</PREF>
+		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
+		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
+		<PREF NAME="do_report_http_connection_ip_address" TYPE="bool" >false</PREF>
+		<PREF NAME="run_user_name" ></PREF>
+		<PREF NAME="run_group_name" ></PREF>
+		<PREF NAME="append_source_addr_in_transport" TYPE="bool" >false</PREF>
+		<LIST-PREF NAME="rtsp_port" TYPE="UInt16" >
+			<VALUE>554</VALUE>
+			<VALUE>8554</VALUE>
+		</LIST-PREF>
+		<PREF NAME="max_retransmit_delay" TYPE="UInt32" >500</PREF>
+		<PREF NAME="small_window_size" TYPE="UInt32" >24</PREF>
+		<PREF NAME="ack_logging_enabled" TYPE="bool" >false</PREF>
 		<PREF NAME="rtcp_poll_interval" TYPE="UInt32" >100</PREF>
 		<PREF NAME="rtcp_rcv_buf_size" TYPE="UInt32" >768</PREF>
 		<PREF NAME="send_interval" TYPE="UInt32" >50</PREF>
+		<PREF NAME="thick_all_the_way_delay" TYPE="SInt32" >-2000</PREF>
+		<PREF NAME="alt_transport_src_ipaddr" ></PREF>
 		<PREF NAME="max_send_ahead_time" TYPE="UInt32" >25</PREF>
+		<PREF NAME="reliable_udp_slow_start" TYPE="bool" >true</PREF>
+		<PREF NAME="enable_cloud_platform" TYPE="bool" >true</PREF>
 		<PREF NAME="authentication_scheme" >digest</PREF>
 		<PREF NAME="sdp_file_delete_interval_seconds" TYPE="UInt32" >10</PREF>
+		<PREF NAME="auto_start" TYPE="bool" >false</PREF>
+		<PREF NAME="reliable_udp" TYPE="bool" >true</PREF>
 		<PREF NAME="reliable_udp_dirs" >\</PREF>
-		<PREF NAME="run_num_threads" TYPE="UInt32" >12</PREF>
-		<PREF NAME="overbuffer_rate" TYPE="Float32" >2.0</PREF>
+		<PREF NAME="reliable_udp_printfs" TYPE="bool" >false</PREF>
+		<PREF NAME="drop_all_packets_delay" TYPE="SInt32" >2500</PREF>
+		<PREF NAME="thin_all_the_way_delay" TYPE="SInt32" >1500</PREF>
+		<PREF NAME="always_thin_delay" TYPE="SInt32" >750</PREF>
+		<PREF NAME="start_thicking_delay" TYPE="SInt32" >250</PREF>
+		<PREF NAME="quality_check_interval" TYPE="UInt32" >1000</PREF>
+		<PREF NAME="RTSP_error_message" TYPE="bool" >false</PREF>
+		<PREF NAME="RTSP_debug_printfs" TYPE="bool" >false</PREF>
+		<PREF NAME="enable_monitor_stats_file" TYPE="bool" >false</PREF>
 		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="monitor_stats_file_name" >server_status</PREF>
+		<PREF NAME="enable_packet_header_printfs" TYPE="bool" >false</PREF>
 		<PREF NAME="packet_header_printf_options" >rtp;rr;sr;app;ack;</PREF>
-		<PREF NAME="alt_transport_src_ipaddr" ></PREF>
+		<PREF NAME="overbuffer_rate" TYPE="Float32" >2.0</PREF>
+		<PREF NAME="medium_window_size" TYPE="UInt32" >48</PREF>
+		<PREF NAME="window_size_max_threshold" TYPE="UInt32" >1000</PREF>
+		<PREF NAME="RTSP_server_info" TYPE="bool" >true</PREF>
+		<PREF NAME="run_num_threads" TYPE="UInt32" >0</PREF>
 		<PREF NAME="pid_file" >EasyDarwin.pid</PREF>
+		<PREF NAME="force_logs_close_on_write" TYPE="bool" >false</PREF>
+		<PREF NAME="disable_thinning" TYPE="bool" >false</PREF>
 		<LIST-PREF NAME="player_requires_rtp_header_info" >
 			<VALUE>Android</VALUE>
-			<VALUE>IOS</VALUE>
+			<VALUE>vlc</VALUE>
 		</LIST-PREF>
 		<LIST-PREF NAME="player_requires_bandwidth_adjustment" >
 			<VALUE>Android</VALUE>
-			<VALUE>IOS</VALUE>
+			<VALUE>vlc</VALUE>
 		</LIST-PREF>
 		<LIST-PREF NAME="player_requires_no_pause_time_adjustment" >
 			<VALUE>Android</VALUE>
-			<VALUE>IOS</VALUE>
+			<VALUE>vlc</VALUE>
+			<VALUE>EasyPlayer</VALUE>
 		</LIST-PREF>
 		<PREF NAME="default_stream_quality" TYPE="UInt16" >0</PREF>
 		<PREF NAME="player_requires_rtp_start_time_adjust" >Real</PREF>
+		<PREF NAME="enable_udp_monitor_stream" TYPE="bool" >false</PREF>
 		<PREF NAME="udp_monitor_video_port" TYPE="UInt16" >5002</PREF>
 		<PREF NAME="udp_monitor_audio_port" TYPE="UInt16" >5004</PREF>
 		<PREF NAME="udp_monitor_dest_ip" >127.0.0.1</PREF>
 		<PREF NAME="udp_monitor_src_ip" >0.0.0.0</PREF>
-		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >4</PREF>
-		<PREF NAME="player_requires_disable_3gpp_rate_adapt" ></PREF>
-		<PREF NAME="player_requires_3gpp_target_time" ></PREF>
-		<PREF NAME="player_requires_disable_thinning" ></PREF>
-		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
-		<PREF NAME="break_on_assert" TYPE="bool" >false</PREF>
-		<PREF NAME="auto_restart" TYPE="bool" >true</PREF>
-		<PREF NAME="screen_logging" TYPE="bool" >true</PREF>
-		<PREF NAME="error_logging" TYPE="bool" >true</PREF>
-		<PREF NAME="do_report_http_connection_ip_address" TYPE="bool" >false</PREF>
-		<PREF NAME="append_source_addr_in_transport" TYPE="bool" >false</PREF>
-		<PREF NAME="ack_logging_enabled" TYPE="bool" >false</PREF>
-		<PREF NAME="reliable_udp_slow_start" TYPE="bool" >true</PREF>
-		<PREF NAME="enable_cloud_platform" TYPE="bool" >false</PREF>
-		<PREF NAME="auto_start" TYPE="bool" >false</PREF>
-		<PREF NAME="reliable_udp" TYPE="bool" >true</PREF>
-		<PREF NAME="reliable_udp_printfs" TYPE="bool" >false</PREF>
-		<PREF NAME="RTSP_error_message" TYPE="bool" >false</PREF>
-		<PREF NAME="RTSP_debug_printfs" TYPE="bool" >false</PREF>
-		<PREF NAME="enable_monitor_stats_file" TYPE="bool" >false</PREF>
-		<PREF NAME="enable_packet_header_printfs" TYPE="bool" >false</PREF>
-		<PREF NAME="RTSP_server_info" TYPE="bool" >true</PREF>
-		<PREF NAME="force_logs_close_on_write" TYPE="bool" >false</PREF>
-		<PREF NAME="disable_thinning" TYPE="bool" >false</PREF>
-		<PREF NAME="enable_udp_monitor_stream" TYPE="bool" >false</PREF>
 		<PREF NAME="enable_allow_guest_default" TYPE="bool" >true</PREF>
+		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >1</PREF>
+		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
 		<PREF NAME="request_logfile_interval" TYPE="UInt32" >7</PREF>
-		<PREF NAME="request_logfile_size" TYPE="UInt32" >10240000</PREF>
-		<PREF NAME="request_logfile_dir" >./Logs</PREF>
-		<PREF NAME="request_logfile_name" >EasyDarwin_access</PREF>
 		<PREF NAME="request_logging" TYPE="bool" >true</PREF>
+		<PREF NAME="request_logfile_size" TYPE="UInt32" >10240000</PREF>
 		<PREF NAME="request_logtime_in_gmt" TYPE="bool" >true</PREF>
+		<PREF NAME="request_logfile_dir" >c:\Program Files\EasyDarwin\Logs\</PREF>
+		<PREF NAME="request_logfile_name" >StreamingServer</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSReflectorModule" >
-		<PREF NAME="reflector_bucket_size" TYPE="UInt32" >16</PREF>
-		<PREF NAME="reflector_delay" TYPE="UInt32" >100</PREF>
-		<PREF NAME="max_broadcast_announce_duration_secs" TYPE="UInt32" >0</PREF>
-		<PREF NAME="maximum_static_sdp_port" TYPE="UInt16" >65535</PREF>
-		<PREF NAME="minimum_static_sdp_port" TYPE="UInt16" >20000</PREF>
-		<PREF NAME="timeout_stream_SSRC_secs" TYPE="UInt32" >30</PREF>
+		<PREF NAME="hls_output_enabled" TYPE="bool" >false</PREF>
 		<PREF NAME="reflector_bucket_offset_delay_msec" TYPE="UInt32" >73</PREF>
-		<PREF NAME="reflector_buffer_size_sec" TYPE="UInt32" >0</PREF>
-		<PREF NAME="reflector_in_packet_max_receive_sec" TYPE="UInt32" >60</PREF>
-		<PREF NAME="enable_rtp_play_info" TYPE="Bool16" >false</PREF>
-		<PREF NAME="timeout_broadcaster_session_secs" TYPE="UInt32" >20</PREF>
-		<PREF NAME="max_announced_sdp_length_kbytes" TYPE="UInt32" >0</PREF>
-		<PREF NAME="redirect_broadcast_keyword" ></PREF>
-		<PREF NAME="redirect_broadcasts_dir" ></PREF>
-		<PREF NAME="broadcast_dir_list" ></PREF>
-		<PREF NAME="reflector_rtp_info_offset_msec" TYPE="UInt32" >500</PREF>
-		<PREF NAME="compatibility_adjust_sdp_media_bandwidth_percent" TYPE="UInt32" >100</PREF>
-		<PREF NAME="BroadcasterGroup" >broadcaster</PREF>
-		<PREF NAME="ip_allow_list" >127.0.0.*</PREF>
+		<PREF NAME="reflector_buffer_size_sec" TYPE="UInt32" >1</PREF>
 		<PREF NAME="reflector_use_in_packet_receive_time" TYPE="bool" >false</PREF>
+		<PREF NAME="reflector_in_packet_max_receive_sec" TYPE="UInt32" >60</PREF>
+		<PREF NAME="reflector_rtp_info_offset_msec" TYPE="UInt32" >500</PREF>
 		<PREF NAME="disable_rtp_play_info" TYPE="bool" >false</PREF>
 		<PREF NAME="allow_non_sdp_urls" TYPE="bool" >true</PREF>
 		<PREF NAME="enable_broadcast_announce" TYPE="bool" >true</PREF>
 		<PREF NAME="enable_broadcast_push" TYPE="bool" >true</PREF>
+		<PREF NAME="max_broadcast_announce_duration_secs" TYPE="UInt32" >0</PREF>
 		<PREF NAME="allow_duplicate_broadcasts" TYPE="bool" >false</PREF>
 		<PREF NAME="enforce_static_sdp_port_range" TYPE="bool" >false</PREF>
+		<PREF NAME="minimum_static_sdp_port" TYPE="UInt16" >20000</PREF>
+		<PREF NAME="maximum_static_sdp_port" TYPE="UInt16" >65535</PREF>
 		<PREF NAME="kill_clients_when_broadcast_stops" TYPE="bool" >false</PREF>
 		<PREF NAME="use_one_SSRC_per_stream" TYPE="bool" >true</PREF>
+		<PREF NAME="timeout_stream_SSRC_secs" TYPE="UInt32" >30</PREF>
+		<PREF NAME="timeout_broadcaster_session_secs" TYPE="UInt32" >20</PREF>
 		<PREF NAME="authenticate_local_broadcast" TYPE="bool" >false</PREF>
 		<PREF NAME="disable_overbuffering" TYPE="bool" >false</PREF>
 		<PREF NAME="allow_broadcasts" TYPE="bool" >true</PREF>
 		<PREF NAME="allow_announced_kill" TYPE="bool" >true</PREF>
 		<PREF NAME="enable_play_response_range_header" TYPE="bool" >true</PREF>
 		<PREF NAME="enable_player_compatibility" TYPE="bool" >true</PREF>
+		<PREF NAME="compatibility_adjust_sdp_media_bandwidth_percent" TYPE="UInt32" >100</PREF>
 		<PREF NAME="force_rtp_info_sequence_and_time" TYPE="bool" >false</PREF>
-		<PREF NAME="hls_output_enabled" TYPE="bool" >false</PREF>
+		<PREF NAME="BroadcasterGroup" >broadcaster</PREF>
+		<PREF NAME="redirect_broadcast_keyword" ></PREF>
+		<PREF NAME="redirect_broadcasts_dir" ></PREF>
+		<PREF NAME="broadcast_dir_list" ></PREF>
+		<PREF NAME="ip_allow_list" >127.0.0.*</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSFlowControlModule" >
 		<PREF NAME="loss_thin_tolerance" TYPE="UInt32" >30</PREF>
@@ -179,19 +174,19 @@
 	</MODULE>
 	<MODULE NAME="QTSSAccessModule" >
 		<PREF NAME="modAccess_qtaccessfilename" >qtaccess</PREF>
-		<PREF NAME="modAccess_groupsfilepath" >./qtgroups</PREF>
-		<PREF NAME="modAccess_usersfilepath" >./qtusers</PREF>
 		<PREF NAME="modAccess_enabled" TYPE="bool" >true</PREF>
+		<PREF NAME="modAccess_usersfilepath" >c:\Program Files\EasyDarwin\qtusers</PREF>
+		<PREF NAME="modAccess_groupsfilepath" >c:\Program Files\EasyDarwin\qtgroups</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSAdminModule" >
 		<PREF NAME="RequestTimeIntervalMilli" TYPE="UInt32" >50</PREF>
 		<PREF NAME="IPAccessList" >127.0.0.*</PREF>
-		<PREF NAME="AdministratorGroup" >admin</PREF>
-		<PREF NAME="http_port" TYPE="UInt16" >8088</PREF>
-		<PREF NAME="document_root" >./html/</PREF>
 		<PREF NAME="Authenticate" TYPE="bool" >true</PREF>
 		<PREF NAME="LocalAccessOnly" TYPE="bool" >true</PREF>
 		<PREF NAME="enable_remote_admin" TYPE="bool" >true</PREF>
+		<PREF NAME="http_port" TYPE="UInt16" >80</PREF>
+		<PREF NAME="document_root" >./html/</PREF>
+		<PREF NAME="AdministratorGroup" >admin</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
@@ -200,8 +195,8 @@
 		<PREF NAME="redis_ip" >127.0.0.1</PREF>
 		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
 		<PREF NAME="redis_user" >admin</PREF>
-		<PREF NAME="redis_password" >zijideredismima</PREF>
-		<PREF NAME="rtsp_wan_ip" >121.40.50.44</PREF>
-		<PREF NAME="rtsp_wan_port" TYPE="UInt16" >6554</PREF>
+		<PREF NAME="redis_password" >admin</PREF>
+		<PREF NAME="rtsp_wan_ip" >127.0.0.1</PREF>
+		<PREF NAME="rtsp_wan_port" TYPE="UInt16" >554</PREF>
 	</MODULE>
 </CONFIGURATION>
