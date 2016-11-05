@@ -301,11 +301,7 @@ void LogStatus(QTSS_ServerState theServerState)
 		"qtssRTPSvrCurBandwidth",
 		"qtssRTPSvrCurPackets",
 		"qtssRTPSvrTotalConn",
-		"qtssRTPSvrTotalBytes",
-		"qtssMP3SvrCurConn",
-		"qtssMP3SvrTotalConn",
-		"qtssMP3SvrCurBandwidth",
-		"qtssMP3SvrTotalBytes"
+		"qtssRTPSvrTotalBytes"
 	};
 	static int numAttributes = sizeof(sAttributes) / sizeof(char*);
 

@@ -771,10 +771,6 @@ void    QTSServer::LoadCompiledInModules()
 		(void)AddModule(theRedisModule);
 	}
 
-	//QTSSModule* theMP3StreamingModule = new QTSSModule("QTSSMP3StreamingModule");
-	//(void)theMP3StreamingModule->SetupModule(&sCallbacks, &QTSSMP3StreamingModule_Main);
-	//(void)AddModule(theMP3StreamingModule);
-
 #if MEMORY_DEBUGGING
 	QTSSModule* theWebDebug = new QTSSModule("QTSSWebDebugModule");
 	(void)theWebDebug->SetupModule(&sCallbacks, &QTSSWebDebugModule_Main);

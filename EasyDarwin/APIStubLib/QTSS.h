@@ -683,19 +683,13 @@ enum
     qtssSvrNumReliableUDPBuffers    = 30,   //read      //UInt32    //Number of buffers currently allocated for UDP retransmits
     qtssSvrReliableUDPWastageInBytes= 31,   //read      //UInt32    //Amount of data in the reliable UDP buffers being wasted
     qtssSvrConnectedUsers           = 32,   //r/w       //QTSS_Object   //List of connected user sessions (updated by modules for their sessions)
-    
-    qtssMP3SvrCurConn               = 33,   //r/w       //UInt32    //Number of MP3 client sessions connected
-    qtssMP3SvrTotalConn             = 34,   //r/w       //UInt32    //Total number of MP3  clients since startup
-    qtssMP3SvrCurBandwidth          = 35,   //r/w       //UInt32    //Current MP3 bandwidth being output by the server in bits per second
-    qtssMP3SvrTotalBytes            = 36,   //r/w       //UInt64    //Total number of MP3 bytes served since startup
-    qtssMP3SvrAvgBandwidth          = 37,   //r/w       //UInt32    //Average MP3 bandwidth being output by the server in bits per second
 
-    qtssSvrServerBuild              = 38,   //read      //char array //build of the server
-    qtssSvrServerPlatform           = 39,   //read      //char array //Platform (OS) of the server
-    qtssSvrRTSPServerComment        = 40,   //read      //char array //RTSP comment for the server header    
-    qtssSvrNumThinned               = 41,   //read      //SInt32    //Number of thinned sessions
-    qtssSvrNumThreads               = 42,   //read		//UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
-    qtssSvrNumParams                = 43
+    qtssSvrServerBuild              = 33,   //read      //char array //build of the server
+    qtssSvrServerPlatform           = 34,   //read      //char array //Platform (OS) of the server
+    qtssSvrRTSPServerComment        = 35,   //read      //char array //RTSP comment for the server header    
+    qtssSvrNumThinned               = 36,   //read      //SInt32    //Number of thinned sessions
+    qtssSvrNumThreads               = 37,   //read		//UInt32    //Number of task threads // see also qtssPrefsRunNumThreads
+    qtssSvrNumParams                = 38
 };
 typedef UInt32 QTSS_ServerAttributes;
 
@@ -938,7 +932,7 @@ enum
     
     //All of these are preemptive safe
     
-    qtssConnectionType                  = 0,    //read      //char array    // type of user connection (e.g. "RTP reflected" or "MP3")
+    qtssConnectionType                  = 0,    //read      //char array    // type of user connection (e.g. "RTP reflected")
     qtssConnectionCreateTimeInMsec      = 1,    //read      //QTSS_TimeVal  //Time in milliseconds the session was created.
     qtssConnectionTimeConnectedInMsec   = 2,    //read      //QTSS_TimeVal  //Time in milliseconds the session was created.
     qtssConnectionBytesSent             = 3,    //read      //UInt32        //Number of RTP bytes sent so far on this session.

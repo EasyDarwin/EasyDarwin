@@ -208,10 +208,6 @@ public:
 	bool              SigIntSet() { return fSigInt; }
 	bool				SigTermSet() { return fSigTerm; }
 
-	UInt32              GetNumMP3Sessions() { return fNumMP3Sessions; }
-	UInt32              GetTotalMP3Sessions() { return fTotalMP3Sessions; }
-	UInt64              GetTotalMP3Bytes() { return fTotalMP3Bytes; }
-
 	UInt32              GetDebugLevel() { return fDebugLevel; }
 	UInt32              GetDebugOptions() { return fDebugOptions; }
 	void                SetDebugLevel(UInt32 debugLevel) { fDebugLevel = debugLevel; }
@@ -438,13 +434,6 @@ private:
 	UInt32              fUDPWastageInBytes;
 	UInt32              fNumUDPBuffers;
 
-	// MP3 Client Session params
-	UInt32              fNumMP3Sessions;
-	UInt32              fTotalMP3Sessions;
-	UInt32              fCurrentMP3BandwidthInBits;
-	UInt64              fTotalMP3Bytes;
-	UInt32              fAvgMP3BandwidthInBits;
-
 	bool              fSigInt;
 	bool              fSigTerm;
 
@@ -492,7 +481,6 @@ private:
 	SInt64 fLastBandwidthTime;
 	SInt64 fLastBandwidthAvg;
 	SInt64 fLastBytesSent;
-	SInt64 fLastTotalMP3Bytes;
 };
 
 #endif // __QTSSERVERINTERFACE_H__
