@@ -456,7 +456,7 @@ SInt64 RTSPSession::Run()
 				// through any of the remaining steps
 
 				// 判断当前数据是否是一个数据包，而不是一个RTSP请求
-				if (fInputStream.IsDataPacket()) // can this interfere with MP3?
+				if (fInputStream.IsDataPacket())
 				{
                     if(fRTSPSessionHandler)
                     {
