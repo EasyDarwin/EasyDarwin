@@ -25,19 +25,11 @@
           <itemPath>APIModules/EasyCMSModule/EasyCMSSession.cpp</itemPath>
           <itemPath>APIModules/EasyCMSModule/EasyCMSSession.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="EasyHLSModule"
-                       displayName="EasyHLSModule"
-                       projectFiles="true">
-        </logicalFolder>
         <logicalFolder name="EasyRedisModule"
                        displayName="EasyRedisModule"
                        projectFiles="true">
           <itemPath>APIModules/EasyRedisModule/EasyRedisModule.cpp</itemPath>
           <itemPath>APIModules/EasyRedisModule/EasyRedisModule.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="EasyRelayModule"
-                       displayName="EasyRelayModule"
-                       projectFiles="true">
         </logicalFolder>
         <logicalFolder name="QTSSAccessLogModule"
                        displayName="QTSSAccessLogModule"
@@ -72,12 +64,6 @@
                        projectFiles="true">
           <itemPath>APIModules/QTSSFlowControlModule/QTSSFlowControlModule.cpp</itemPath>
           <itemPath>APIModules/QTSSFlowControlModule/QTSSFlowControlModule.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="QTSSMP3StreamingModule"
-                       displayName="QTSSMP3StreamingModule"
-                       projectFiles="true">
-          <itemPath>APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp</itemPath>
-          <itemPath>APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.h</itemPath>
         </logicalFolder>
         <logicalFolder name="QTSSPOSIXFileSysModule"
                        displayName="QTSSPOSIXFileSysModule"
@@ -582,16 +568,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/QTSSFlowControlModule/QTSSFlowControlModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1289,16 +1265,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp"
             ex="false"
             tool="1"
@@ -1991,16 +1957,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp"
             ex="false"
             tool="1"
@@ -2689,16 +2645,6 @@
             flavor2="9">
       </item>
       <item path="APIModules/QTSSFlowControlModule/QTSSFlowControlModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="9">
-      </item>
-      <item path="APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.h"
             ex="false"
             tool="3"
             flavor2="0">

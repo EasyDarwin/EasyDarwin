@@ -57,7 +57,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/APIModules/QTSSAdminModule/frozen.o \
 	${OBJECTDIR}/APIModules/QTSSAdminModule/mongoose.o \
 	${OBJECTDIR}/APIModules/QTSSFlowControlModule/QTSSFlowControlModule.o \
-	${OBJECTDIR}/APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.o \
 	${OBJECTDIR}/APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.o \
 	${OBJECTDIR}/APIModules/QTSSReflectorModule/QTSSReflectorModule.o \
 	${OBJECTDIR}/APIModules/QTSSReflectorModule/RCFSourceInfo.o \
@@ -264,11 +263,6 @@ ${OBJECTDIR}/APIModules/QTSSFlowControlModule/QTSSFlowControlModule.o: APIModule
 	${MKDIR} -p ${OBJECTDIR}/APIModules/QTSSFlowControlModule
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DDSS_USE_API_CALLBACKS -D_REENTRANT -D__USE_POSIX -D__linux__ -I../HTTPUtilitiesLib -I../CommonUtilitiesLib -IServer.tproj -IQTFileLib/ -IRTPMetaInfoLib/ -IPrefsSourceLib/ -IAPIStubLib/ -IAPICommonCode/ -IRTCPUtilitiesLib/ -IRTSPClientLib/ -IAPIModules/QTSSFileModule/ -IAPIModules/QTSSHttpFileModule/ -IAPIModules/QTSSAccessModule/ -IAPIModules/QTSSAccessLogModule/ -IAPIModules/QTSSPOSIXFileSysModule -IAPIModules/QTSSAdminModule/ -IAPIModules/QTSSReflectorModule/ -IAPIModules/QTSSWebStatsModule/ -IAPIModules/QTSSWebDebugModule/ -IAPIModules/QTSSFlowControlModule/ -IAPIModules/QTSSMP3StreamingModule/ -IAPIModules/EasyHLSModule -IAPIModules/EasyRelayModule -IInclude -I. -I../Include -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../RTSPUtilitiesLib -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/QTSSFlowControlModule/QTSSFlowControlModule.o APIModules/QTSSFlowControlModule/QTSSFlowControlModule.cpp
-
-${OBJECTDIR}/APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.o: APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp
-	${MKDIR} -p ${OBJECTDIR}/APIModules/QTSSMP3StreamingModule
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DDSS_USE_API_CALLBACKS -D_REENTRANT -D__USE_POSIX -D__linux__ -I../HTTPUtilitiesLib -I../CommonUtilitiesLib -IServer.tproj -IQTFileLib/ -IRTPMetaInfoLib/ -IPrefsSourceLib/ -IAPIStubLib/ -IAPICommonCode/ -IRTCPUtilitiesLib/ -IRTSPClientLib/ -IAPIModules/QTSSFileModule/ -IAPIModules/QTSSHttpFileModule/ -IAPIModules/QTSSAccessModule/ -IAPIModules/QTSSAccessLogModule/ -IAPIModules/QTSSPOSIXFileSysModule -IAPIModules/QTSSAdminModule/ -IAPIModules/QTSSReflectorModule/ -IAPIModules/QTSSWebStatsModule/ -IAPIModules/QTSSWebDebugModule/ -IAPIModules/QTSSFlowControlModule/ -IAPIModules/QTSSMP3StreamingModule/ -IAPIModules/EasyHLSModule -IAPIModules/EasyRelayModule -IInclude -I. -I../Include -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../RTSPUtilitiesLib -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.o APIModules/QTSSMP3StreamingModule/QTSSMP3StreamingModule.cpp
 
 ${OBJECTDIR}/APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.o: APIModules/QTSSPOSIXFileSysModule/QTSSPosixFileSysModule.cpp
 	${MKDIR} -p ${OBJECTDIR}/APIModules/QTSSPOSIXFileSysModule
