@@ -17,6 +17,9 @@
 	> 
 	> Tip：原有版本可以在：https://github.com/babosa/EasyDarwin 获取源码功能；
 
+- EasyDarwin编译不过？
+
+	由于我们的EasyDarwin开发者各自熟悉的开发平台不一样，有的熟悉Windows开发，有的熟悉Linux开发，所以就会导致有的时候版本经常会出现Windows或者Linux编译不过的情况，那么这种情况下，我们可以通过下载https://github.com/EasyDarwin/EasyDarwin/releases里面已经归档的版本进行编译即可；	
 
 ## 云平台结构 ##
 
