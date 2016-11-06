@@ -1,36 +1,34 @@
 <CONFIGURATION>
 	<SERVER>
 		<PREF NAME="session_timeout" TYPE="UInt32" >90</PREF>
+		<PREF NAME="run_num_msg_threads" TYPE="UInt32" >2</PREF>
 		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
 		<PREF NAME="bind_ip_addr" >0</PREF>
-		<PREF NAME="break_on_assert" TYPE="Bool16" >false</PREF>
-		<PREF NAME="auto_restart" TYPE="Bool16" >true</PREF>
+		<PREF NAME="break_on_assert" TYPE="bool" >false</PREF>
+		<PREF NAME="auto_restart" TYPE="bool" >true</PREF>
 		<PREF NAME="module_folder" >c:\Program Files\EasyCMS\QTSSModules\</PREF>
 		<PREF NAME="error_logfile_name" >Error</PREF>
 		<PREF NAME="error_logfile_dir" >c:\Program Files\EasyCMS\Logs\</PREF>
 		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
 		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
 		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >2</PREF>
-		<PREF NAME="screen_logging" TYPE="Bool16" >true</PREF>
-		<PREF NAME="error_logging" TYPE="Bool16" >true</PREF>
-		<PREF NAME="service_id" >CMS000</PREF>
-		<PREF NAME="redis_ip_addr" >127.0.0.1</PREF>
-		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
-		<PREF NAME="snap_local_path" >D:\snap\snap1\snap2\snap3\</PREF>
+		<PREF NAME="screen_logging" TYPE="bool" >true</PREF>
+		<PREF NAME="error_logging" TYPE="bool" >true</PREF>
+		<PREF NAME="service_id" >EasyCMS0</PREF>
+		<PREF NAME="snap_local_path" >./snap/</PREF>
 		<PREF NAME="snap_web_path" >http://snap.easydarwin.org/</PREF>
-		<PREF NAME="auto_start" TYPE="Bool16" >false</PREF>
-		<PREF NAME="MSG_debug_printfs" TYPE="Bool16" >true</PREF>
-		<PREF NAME="enable_monitor_stats_file" TYPE="Bool16" >false</PREF>
+		<PREF NAME="auto_start" TYPE="bool" >false</PREF>
+		<PREF NAME="MSG_debug_printfs" TYPE="bool" >false</PREF>
+		<PREF NAME="enable_monitor_stats_file" TYPE="bool" >false</PREF>
 		<PREF NAME="monitor_stats_file_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="monitor_stats_file_name" >server_status</PREF>
-		<PREF NAME="run_num_threads" TYPE="UInt32" >2</PREF>
+		<PREF NAME="run_num_threads" TYPE="UInt32" >0</PREF>
 		<PREF NAME="pid_file" >easycms.pid</PREF>
-		<PREF NAME="force_logs_close_on_write" TYPE="Bool16" >false</PREF>
+		<PREF NAME="force_logs_close_on_write" TYPE="bool" >false</PREF>
 		<PREF NAME="monitor_lan_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="monitor_wan_port" TYPE="UInt16" >10000</PREF>
 		<PREF NAME="monitor_lan_ip" >127.0.0.1</PREF>
-		<PREF NAME="monitor_wan_ip" >121.40.50.44</PREF>
-		<PREF NAME="run_num_msg_threads" TYPE="UInt32" >2</PREF>
+		<PREF NAME="monitor_wan_ip" >0.0.0.0</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSAuthModule" ></MODULE>

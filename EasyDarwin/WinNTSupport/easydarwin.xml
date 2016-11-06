@@ -25,7 +25,6 @@
 ]>
 <CONFIGURATION>
 	<SERVER>
-		<PREF NAME="default_authorization_realm" >EasyDarwin</PREF>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
 		<PREF NAME="real_rtsp_timeout" TYPE="UInt32" >180</PREF>
 		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
@@ -54,6 +53,7 @@
 		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
 		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
 		<PREF NAME="do_report_http_connection_ip_address" TYPE="bool" >false</PREF>
+		<PREF NAME="default_authorization_realm" >Streaming Server</PREF>
 		<PREF NAME="run_user_name" ></PREF>
 		<PREF NAME="run_group_name" ></PREF>
 		<PREF NAME="append_source_addr_in_transport" TYPE="bool" >false</PREF>
@@ -71,7 +71,7 @@
 		<PREF NAME="alt_transport_src_ipaddr" ></PREF>
 		<PREF NAME="max_send_ahead_time" TYPE="UInt32" >25</PREF>
 		<PREF NAME="reliable_udp_slow_start" TYPE="bool" >true</PREF>
-		<PREF NAME="enable_cloud_platform" TYPE="bool" >true</PREF>
+		<PREF NAME="enable_cloud_platform" TYPE="bool" >false</PREF>
 		<PREF NAME="authentication_scheme" >digest</PREF>
 		<PREF NAME="sdp_file_delete_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="auto_start" TYPE="bool" >false</PREF>
@@ -94,7 +94,7 @@
 		<PREF NAME="medium_window_size" TYPE="UInt32" >48</PREF>
 		<PREF NAME="window_size_max_threshold" TYPE="UInt32" >1000</PREF>
 		<PREF NAME="RTSP_server_info" TYPE="bool" >true</PREF>
-		<PREF NAME="run_num_threads" TYPE="UInt32" >0</PREF>
+		<PREF NAME="run_num_threads" TYPE="UInt32" >4</PREF>
 		<PREF NAME="pid_file" >EasyDarwin.pid</PREF>
 		<PREF NAME="force_logs_close_on_write" TYPE="bool" >false</PREF>
 		<PREF NAME="disable_thinning" TYPE="bool" >false</PREF>
@@ -119,7 +119,7 @@
 		<PREF NAME="udp_monitor_dest_ip" >127.0.0.1</PREF>
 		<PREF NAME="udp_monitor_src_ip" >0.0.0.0</PREF>
 		<PREF NAME="enable_allow_guest_default" TYPE="bool" >true</PREF>
-		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >1</PREF>
+		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >4</PREF>
 		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
