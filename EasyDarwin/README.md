@@ -37,7 +37,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 > ![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/0.png)
 
 
-- Linux版本编译，将从Github获取的EasyDarwin源码zip文件进行unzip解压，再进行具体编译：
+- Linux版本编译(**gcc4.8+，support c++ 11**)，将从Github获取的EasyDarwin源码zip文件进行unzip解压，再进行具体编译：
 
 >
 	cd ./EasyDarwin-master/EasyDarwin/
