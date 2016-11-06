@@ -163,7 +163,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues,	"48",		NULL					},	//medium_window_size
 	{ kDontAllowMultipleValues,	"1000",		NULL					},	//window_size_max_threshold
 	{ kDontAllowMultipleValues, "true",     NULL                    },  //RTSP_server_info
-	{ kDontAllowMultipleValues, "0",        NULL                    },  //run_num_threads
+	{ kDontAllowMultipleValues, "4",        NULL                    },  //run_num_threads
 	{ kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//pid_file
 	{ kDontAllowMultipleValues, "false",    NULL                    },   //force_logs_close_on_write
 	{ kDontAllowMultipleValues, "false",    NULL                    },   //disable_thinning
@@ -178,7 +178,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //udp_monitor_dest_ip
 	{ kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //udp_monitor_src_ip
 	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_allow_guest_default
-	{ kDontAllowMultipleValues, "1",        NULL                     },  //run_num_rtsp_threads
+	{ kDontAllowMultipleValues, "4",        NULL                     },  //run_num_rtsp_threads
 
 	{ kDontAllowMultipleValues, "8080",     NULL                        }  //http_service_port   
 
