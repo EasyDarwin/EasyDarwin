@@ -179,6 +179,7 @@
 #define EASY_TAG_END_TIME								"EndTime"
 
 #define EASY_TAG_PATH									"Path"
+#define EASY_TAG_L_PATH									"path"
 #define EASY_TAG_TOTAL_SIZE								"TotalSize"
 #define EASY_TAG_AVAILABLE_SIZE							"AvailableSize"
 #define EASY_TAG_FREE_SIZE								"FreeSize"
@@ -245,7 +246,9 @@
 #define MSG_SC_SERVER_DISCOVER_DEVICES_ACK					0x100d
 #define MSG_SC_SERVER_PROBE_DEVICE_ACK						0x100e
 
-#define MSG_SC_SERVER_GET_REDORD_PATH_LIST_ACK				0x100f
+#define MSG_SC_SERVER_GET_RECORD_PATH_LIST_ACK				0x1010
+#define MSG_SC_SERVER_ADD_RECORD_PATH_ACK					0x1011
+#define MSG_SC_SERVER_REMOVE_RECORD_PATH_ACK				0x1012
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
