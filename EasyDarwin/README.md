@@ -109,7 +109,7 @@ Nginx的WEB地址为：http://8.8.8.8/，那么我们配置：
 
 ### 5、检查EasyDarwin是否部署成功 ###
 
-通过访问EasyDarwin RESTful接口可以初步判断EasyDarwin流媒体服务器是否已经运行起来了，例如我们可以访问：rtsp://[ip]:[http\_service\_port]/api/getrtsppushsessions 接口查看EasyDarwin是否运行响应，后面的版本我们会增加一个获取EasyDarwin整体运行配置信息RESTful接口，这样在外部就能查看EasyDarwin是否读取到了正确的用户配置；
+通过访问EasyDarwin RESTful接口可以初步判断EasyDarwin流媒体服务器是否已经运行起来了，例如我们可以访问：http://[ip]:[http\_service\_port]/api/getrtsppushsessions 接口查看EasyDarwin是否运行响应，后面的版本我们会增加一个获取EasyDarwin整体运行配置信息RESTful接口，这样在外部就能查看EasyDarwin是否读取到了正确的用户配置；
 
 
 ## 调用方法 ##
