@@ -29,7 +29,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 
 *【如果直接下载已经编译好的Release归档版本，可跳过此步骤】*  
 
-- Windows版本编译，可以直接用**Visual Studio 2008**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe，也可以用更高版本的vs进行编译，vs向下兼容，所以编译应该不是什么大问题，可能会有部分编译选项需要调整，这个根据实际情况调整即可，可以肯定的是，源码编译都是没有问题的；
+- Windows版本编译，可以直接用**Visual Studio 2015**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe，也可以用更高版本的vs进行编译，vs向下兼容，所以编译应该不是什么大问题，可能会有部分编译选项需要调整，这个根据实际情况调整即可，可以肯定的是，源码编译都是没有问题的；
 > 经常会有开发者在编译完成后直接vs运行出现无法运行xxx.lib或者缺少xxx.dll的问题，建议好好补补基础知识：
 > 
 > 1. vs调试运行需要设置EasyDarwin项目为启动项；
