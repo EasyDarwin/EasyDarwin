@@ -29,7 +29,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 
 *【如果直接下载已经编译好的Release归档版本，可跳过此步骤】*  
 
-- Windows版本编译，可以直接用**Visual Studio 2008**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe，也可以用更高版本的vs进行编译，vs向下兼容，所以编译应该不是什么大问题，可能会有部分编译选项需要调整，这个根据实际情况调整即可，可以肯定的是，源码编译都是没有问题的；
+- Windows版本编译，可以直接用**Visual Studio 2015**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe，也可以用更高版本的vs进行编译，vs向下兼容，所以编译应该不是什么大问题，可能会有部分编译选项需要调整，这个根据实际情况调整即可，可以肯定的是，源码编译都是没有问题的；
 > 经常会有开发者在编译完成后直接vs运行出现无法运行xxx.lib或者缺少xxx.dll的问题，建议好好补补基础知识：
 > 
 > 1. vs调试运行需要设置EasyDarwin项目为启动项；
@@ -109,7 +109,7 @@ Nginx的WEB地址为：http://8.8.8.8/，那么我们配置：
 
 ### 5、检查EasyDarwin是否部署成功 ###
 
-通过访问EasyDarwin RESTful接口可以初步判断EasyDarwin流媒体服务器是否已经运行起来了，例如我们可以访问：rtsp://[ip]:[http\_service\_port]/api/getrtsppushsessions 接口查看EasyDarwin是否运行响应，后面的版本我们会增加一个获取EasyDarwin整体运行配置信息RESTful接口，这样在外部就能查看EasyDarwin是否读取到了正确的用户配置；
+通过访问EasyDarwin RESTful接口可以初步判断EasyDarwin流媒体服务器是否已经运行起来了，例如我们可以访问：http://[ip]:[http\_service\_port]/api/getrtsppushsessions 接口查看EasyDarwin是否运行响应，后面的版本我们会增加一个获取EasyDarwin整体运行配置信息RESTful接口，这样在外部就能查看EasyDarwin是否读取到了正确的用户配置；
 
 
 ## 调用方法 ##
@@ -391,5 +391,5 @@ QQ交流群：288214068
 
 Copyright &copy; EasyDarwin.org 2012-2016
 
-![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
+![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg) 
 
