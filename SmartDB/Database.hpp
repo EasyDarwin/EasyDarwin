@@ -8,44 +8,43 @@
 #include <functional>
 #include <unordered_map>
 #include <type_traits>
-#include "Traits.hpp"
-#include "BindParames.hpp"
-#include "TupleHelper.hpp"
-#include "Query.hpp"
+#include "traits.hpp"
+#include "bind_parames.hpp"
+#include "tuple_helper.hpp"
+#include "db_query.hpp"
 
 namespace smartdb
 {
 
-class Database
+class database
 {
 public:
-    Database(const Database&) = delete;
-    Database& operator=(const Database&) = delete;
-    Database() : m_query(m_buf, m_code) {}
-
-    ~Database()
+    database(const database&) = delete;
+    database& operator=(const database&) = delete;
+    database() : _query(_buf, _code) {}
+    ~database()
     {
         close();
     }
 
     bool open(const std::string& databaseName)
     {
-        m_code = sqlite3_open(databaseName.c_str(), &m_dbHandle);
-        return m_code == SQLITE_OK;
+        _code = sqlite3_open(databaseName.c_str(), &_db_handle);
+        return _code == SQLITE_OK;
     }
 
     bool close()
     {
-        if (m_dbHandle == nullptr)
+        if (_db_handle == nullptr)
         {
             return true;
         }
 
-        sqlite3_finalize(m_statement);
-        m_code = closeDBHandle();
-        m_statement = nullptr;
-        m_dbHandle = nullptr;
-        return m_code == SQLITE_OK;
+        sqlite3_finalize(_statement);
+        _code = close_db_handle();
+        _statement = nullptr;
+        _db_handle = nullptr;
+        return _code == SQLITE_OK;
     }
 
     bool execute(const std::string& sql)
@@ -59,7 +58,7 @@ public:
         {
             return false;
         }
-        return trySelect();
+        return try_select();
     }
 
     template<typename... Args>
@@ -70,11 +69,11 @@ public:
             return false;
         }
 
-        if (!addBindValue(std::forward<Args>(args)...))
+        if (!add_bind_value(std::forward<Args>(args)...))
         {
             return false;
         }
-        return trySelect();
+        return try_select();
     }
 
     template<typename Tuple>
@@ -85,37 +84,37 @@ public:
             return false;
         }
 
-        if (!addBindValue(std::forward<Tuple>(t)))
+        if (!add_bind_value(std::forward<Tuple>(t)))
         {
             return false;
         }
-        return trySelect();
+        return try_select();
     }
 
-    bool trySelect()
+    bool try_select()
     {
-        if (m_query.isSelect(m_statement))
+        if (_query.is_select(_statement))
         {
-            if (!m_query.readTable(m_statement))
+            if (!_query.read_table(_statement))
             {
                 return false;
             }
-            moveFirst();
+            move_first();
         }
         return true;
     }
 
     bool prepare(const std::string& sql)
     {
-        m_code = sqlite3_prepare_v2(m_dbHandle, sql.c_str(), -1, &m_statement, nullptr);
-        return m_code == SQLITE_OK;
+        _code = sqlite3_prepare_v2(_db_handle, sql.c_str(), -1, &_statement, nullptr);
+        return _code == SQLITE_OK;
     }
 
     template<typename... Args>
-    bool addBindValue(Args&&... args)
+    bool add_bind_value(Args&&... args)
     {
-        m_code = bindParams(m_statement, 1, std::forward<Args>(args)...);
-        if (m_code != SQLITE_OK)
+        _code = bind_params(_statement, 1, std::forward<Args>(args)...);
+        if (_code != SQLITE_OK)
         {
             return false;
         }
@@ -123,10 +122,10 @@ public:
     }
 
     template<typename Tuple>
-    typename std::enable_if<is_tuple<Tuple>::value, bool>::type addBindValue(Tuple&& t)
+    typename std::enable_if<is_tuple<Tuple>::value, bool>::type add_bind_value(Tuple&& t)
     {
-        m_code = addBindTuple(m_statement, std::forward<Tuple>(t)); 
-        if (m_code != SQLITE_OK)
+        _code = add_bind_tuple(_statement, std::forward<Tuple>(t)); 
+        if (_code != SQLITE_OK)
         {
             return false;
         }
@@ -134,77 +133,85 @@ public:
     }
 
     template<typename T>
-    T& getFiled(int index)
+    T& get(int index)
     {
-        //return boost::get<T>((*m_iter)[index]);
-		return (*m_iter)[index].Get<T>();
+        return boost::get<T>((*_iter)[index]);
     }
 
-    void moveFirst()
+    void move_first()
     {
-        m_iter = m_buf.begin();
+        _iter = _buf.begin();
     }
 
-    void moveNext()
+    void move_next()
     {
-        ++m_iter;
+        if (!is_end())
+        {
+            ++_iter;
+        }
     }
 
-    bool isEnd()
+    bool is_end()
     {
-        return m_iter == m_buf.end(); 
+        if (_iter == _buf.end())
+        {
+            _buf.clear();
+            move_first();
+            return true;
+        }
+        return false;
     }
 
-    std::size_t recordCount()
+    std::size_t record_count()
     {
-        return m_buf.size();
+        return _buf.size();
     }
 
     bool begin()
     {
-        m_code = sqlite3_exec(m_dbHandle, Begin.c_str(), nullptr, nullptr, nullptr);
-        return m_code == SQLITE_OK;
+        _code = sqlite3_exec(_db_handle, begin_str.c_str(), nullptr, nullptr, nullptr);
+        return _code == SQLITE_OK;
     }
 
     bool commit()
     {
-        m_code = sqlite3_exec(m_dbHandle, Commit.c_str(), nullptr, nullptr, nullptr);
-        return m_code == SQLITE_OK;
+        _code = sqlite3_exec(_db_handle, commit_str.c_str(), nullptr, nullptr, nullptr);
+        return _code == SQLITE_OK;
     }
 
     bool rollback()
     {
-        m_code = sqlite3_exec(m_dbHandle, Rollback.c_str(), nullptr, nullptr, nullptr);
-        return m_code == SQLITE_OK;
+        _code = sqlite3_exec(_db_handle, rollback_str.c_str(), nullptr, nullptr, nullptr);
+        return _code == SQLITE_OK;
     }
 
-    int affectedRows()
+    int affected_rows()
     {
-        return sqlite3_changes(m_dbHandle);
+        return sqlite3_changes(_db_handle);
     }
 
-    int getErrorCode() const
+    int get_error_code() const
     {
-        return m_code; 
+        return _code; 
     }
 
-    const char* getErrorString() const
+    const char* get_error_string() const
     {
-        return sqlite3_errstr(m_code);
+        return sqlite3_errstr(_code);
     }
 
-    const char* getErrorMessage() const
+    const char* get_error_message() const
     {
-        return sqlite3_errmsg(m_dbHandle);
+        return sqlite3_errmsg(_db_handle);
     }
 
 private:
-    int closeDBHandle()
+    int close_db_handle()
     {
-        int ret = sqlite3_close(m_dbHandle);
+        int ret = sqlite3_close(_db_handle);
         while (ret == SQLITE_BUSY)
         {
-            sqlite3_stmt* stmt = sqlite3_next_stmt(m_dbHandle, nullptr);
+            sqlite3_stmt* stmt = sqlite3_next_stmt(_db_handle, nullptr);
             if (stmt == nullptr)
             {
                 break;
@@ -213,7 +220,7 @@ private:
             ret = sqlite3_finalize(stmt);
             if (ret == SQLITE_OK)
             {
-                ret = sqlite3_close(m_dbHandle);
+                ret = sqlite3_close(_db_handle);
             }
         }
 
@@ -222,20 +229,20 @@ private:
 
     bool execute()
     {
-        m_code = sqlite3_step(m_statement);
-        sqlite3_reset(m_statement);
+        _code = sqlite3_step(_statement);
+        sqlite3_reset(_statement);
         // 当执行insert、update、drop等操作时成功返回SQLITE_DONE.
         // 当执行select操作时，成功返回SQLITE_ROW.
-        return (m_code == SQLITE_DONE || m_code == SQLITE_ROW || m_code == SQLITE_OK);
+        return (_code == SQLITE_DONE || _code == SQLITE_ROW || _code == SQLITE_OK);
     }
 
 private:
-    sqlite3* m_dbHandle = nullptr;
-    sqlite3_stmt* m_statement = nullptr;
-    int m_code = 0;
-    std::vector<std::vector<DBVariant>> m_buf;
-    std::vector<std::vector<DBVariant>>::iterator m_iter = m_buf.end();
-    Query m_query;
+    sqlite3* _db_handle = nullptr;
+    sqlite3_stmt* _statement = nullptr;
+    int _code = 0;
+    std::vector<std::vector<db_variant>> _buf;
+    std::vector<std::vector<db_variant>>::iterator _iter = _buf.end();
+    db_query _query;
 };
 
 }

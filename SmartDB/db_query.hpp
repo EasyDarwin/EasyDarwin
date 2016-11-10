@@ -1,42 +1,42 @@
-#ifndef _QUERY_H
-#define _QUERY_H
+#ifndef _DB_QUERY_H
+#define _DB_QUERY_H
 
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <functional>
-#include "Define.hpp"
+#include "define.hpp"
 
 namespace smartdb
 {
 
-class Query
+class db_query
 {
 public:
-    Query() = default;
-    Query(std::vector<std::vector<DBVariant>>& buf, int& code) : m_buf(buf), m_code(code) {}
+    db_query() = default;
+    db_query(std::vector<std::vector<db_variant>>& buf, int& code) : _buf(buf), _code(code) {}
 
-    bool isSelect(sqlite3_stmt* statement)
+    bool is_select(sqlite3_stmt* statement)
     {
-        m_colCount = sqlite3_column_count(statement);
-        return m_colCount == 0 ? false : true;
+        _col_count = sqlite3_column_count(statement);
+        return _col_count == 0 ? false : true;
     }
     
-    bool readTable(sqlite3_stmt* statement)
+    bool read_table(sqlite3_stmt* statement)
     {
-        m_buf.clear();
+        _buf.clear();
         while (true)
         {
-            m_code = sqlite3_step(statement);
-            if (m_code == SQLITE_DONE)
+            _code = sqlite3_step(statement);
+            if (_code == SQLITE_DONE)
             {
                 break;
             }
 
-            if (!readRow(statement))
+            if (!read_row(statement))
             {
                 sqlite3_reset(statement);
-                m_buf.clear();
+                _buf.clear();
                 return false;
             }
         }
@@ -46,23 +46,23 @@ public:
     }
 
 private:
-    bool readRow(sqlite3_stmt* statement)
+    bool read_row(sqlite3_stmt* statement)
     {
-        std::vector<DBVariant> rowBuf;
-        rowBuf.reserve(m_colCount);
-        for (int i = 0; i < m_colCount; ++i)
+        std::vector<db_variant> rowBuf;
+        rowBuf.reserve(_col_count);
+        for (int i = 0; i < _col_count; ++i)
         {
-            if (!readValue(statement, i, rowBuf))
+            if (!read_value(statement, i, rowBuf))
             {
                 return false;
             }
         }
 
-        m_buf.emplace_back(std::move(rowBuf));
+        _buf.emplace_back(std::move(rowBuf));
         return true;
     }
 
-    bool readValue(sqlite3_stmt* statement, int index, std::vector<DBVariant>& buf)
+    bool read_value(sqlite3_stmt* statement, int index, std::vector<db_variant>& buf)
     {
         int type = sqlite3_column_type(statement, index);
         switch (type)
@@ -104,9 +104,9 @@ private:
     }
 
 private:
-    std::vector<std::vector<DBVariant>>& m_buf;
-    int& m_code;
-    int m_colCount = 0;
+    std::vector<std::vector<db_variant>>& _buf;
+    int& _code;
+    int _col_count = 0;
 };
 
 }

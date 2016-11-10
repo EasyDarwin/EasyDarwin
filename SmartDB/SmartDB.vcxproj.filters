@@ -15,31 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BindParames.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Database.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Define.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Query.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Traits.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="TupleHelper.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Variant.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="sqlite3\sqlite3.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="sqlite3\sqlite3ext.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bind_parames.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="database.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="db_query.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="define.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="traits.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple_helper.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

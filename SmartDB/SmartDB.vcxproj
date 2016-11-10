@@ -112,15 +112,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BindParames.hpp" />
-    <ClInclude Include="Database.hpp" />
-    <ClInclude Include="Define.hpp" />
-    <ClInclude Include="Query.hpp" />
+    <ClInclude Include="bind_parames.hpp" />
+    <ClInclude Include="database.hpp" />
+    <ClInclude Include="db_query.hpp" />
+    <ClInclude Include="define.hpp" />
     <ClInclude Include="sqlite3\sqlite3.h" />
     <ClInclude Include="sqlite3\sqlite3ext.h" />
-    <ClInclude Include="Traits.hpp" />
-    <ClInclude Include="TupleHelper.hpp" />
-    <ClInclude Include="Variant.hpp" />
+    <ClInclude Include="traits.hpp" />
+    <ClInclude Include="tuple_helper.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sqlite3\shell.c" />
