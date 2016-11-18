@@ -30,6 +30,30 @@
 
 #if __solaris__ || __linux__ || __sgi__	|| __hpux__
 #include <crypt.h>
+
+typedef struct BITMAPFILEHEADER
+{
+	u_int16_t bfType;
+	u_int32_t bfSize;
+	u_int16_t bfReserved1;
+	u_int16_t bfReserved2;
+	u_int32_t bfOffBits;
+} BITMAPFILEHEADER;
+
+typedef struct BITMAPINFOHEADER
+{
+	u_int32_t biSize;
+	u_int32_t biWidth;
+	u_int32_t biHeight;
+	u_int16_t biPlanes;
+	u_int16_t biBitCount;
+	u_int32_t biCompression;
+	u_int32_t biSizeImage;
+	u_int32_t biXPelsPerMeter;
+	u_int32_t biYPelsPerMeter;
+	u_int32_t biClrUsed;
+	u_int32_t biClrImportant;
+} BITMAPINFODEADER;
 #endif
 
 using namespace std;
@@ -424,10 +448,10 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSFreeStreamReqRESTful(fRequest->GetQueryString());
 				}
-                if (path[0] == "api" && path[1] == "ptzcontrol")
-                {
-                    return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
-                }
+				if (path[0] == "api" && path[1] == "ptzcontrol")
+				{
+					return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
+				}
 				if (path[0] == "api" && path[1] == "presetcontrol")
 				{
 					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
@@ -1122,7 +1146,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString
 	if (strDeviceSerial == nullptr || strProtocol == nullptr)
 		return QTSS_BadArgument;
 
-    string strCSeq = EasyUtil::ToString(GetCSeq());
+	string strCSeq = EasyUtil::ToString(GetCSeq());
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);////////////////////////////////++
@@ -1348,7 +1372,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	string msg = rsp.GetMsg();
 	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
 	this->SendHTTPPacket(&theValue, false, false);
-	
+
 	return QTSS_NoErr;
 }
 
@@ -1580,10 +1604,10 @@ QTSS_Error HTTPSession::processRequest()//处理请求
 		theErr = execNetMsgDSPostSnapReq(fRequestBody);
 		nRspMsg = MSG_SD_POST_SNAP_ACK;
 		break;
-    case MSG_DS_CONTROL_PTZ_ACK:
-        theErr = execNetMsgDSPTZControlAck(fRequestBody);
-        nRspMsg = MSG_DS_CONTROL_PTZ_ACK;
-        break;
+	case MSG_DS_CONTROL_PTZ_ACK:
+		theErr = execNetMsgDSPTZControlAck(fRequestBody);
+		nRspMsg = MSG_DS_CONTROL_PTZ_ACK;
+		break;
 	case MSG_DS_CONTROL_PRESET_ACK:
 		theErr = execNetMsgDSPresetControlAck(fRequestBody);
 		nRspMsg = MSG_DS_CONTROL_PRESET_ACK;
@@ -1660,8 +1684,7 @@ QTSS_Error HTTPSession::processRequest()//处理请求
 
 int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata)
 {
-#ifndef __linux__
-    int nBpp = 24;
+	int nBpp = 24;
 	int dwW, dwH, dwWB;
 
 	dwW = width;
@@ -1675,27 +1698,28 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 	bfh.bfReserved1 = 0;
 	bfh.bfReserved2 = 0;
 	bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-	if (nBpp == 16)
+	/*if (nBpp == 16)
 	{
 		bfh.bfOffBits += sizeof(RGBQUAD) * 3;
 	}
 	else
 	{
 		bfh.bfOffBits += sizeof(RGBQUAD) * 1;
-	}
+	}*/
 
-	DWORD dwWriteLength = sizeof(BITMAPFILEHEADER);
+	auto dwWriteLength = sizeof(BITMAPFILEHEADER);
 	int rgbOffset = 0;
-	memcpy(rgbdata + rgbOffset, (PVOID)&bfh, dwWriteLength);
+	memcpy(rgbdata + rgbOffset, static_cast<void*>(&bfh), dwWriteLength);
 	rgbOffset += dwWriteLength;
 
 	BITMAPINFOHEADER	bih = { 0, };
 	bih.biSize = sizeof(BITMAPINFOHEADER);
 	bih.biWidth = dwW;
-	bih.biHeight = -(INT)dwH;
+	bih.biHeight = -static_cast<int>(dwH);
 	bih.biPlanes = 1;
 	bih.biBitCount = nBpp;
-	bih.biCompression = (nBpp == 16) ? BI_BITFIELDS : BI_RGB;
+	//bih.biCompression = (nBpp == 16) ? BI_BITFIELDS : BI_RGB;
+	bih.biCompression = 0;
 	bih.biSizeImage = dwWB * height;
 	bih.biXPelsPerMeter = 0;
 	bih.biYPelsPerMeter = 0;
@@ -1704,23 +1728,23 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 
 	dwWriteLength = sizeof(BITMAPINFOHEADER);
 
-	memcpy(rgbdata + rgbOffset, (PVOID)&bih, dwWriteLength);
+	memcpy(rgbdata + rgbOffset, static_cast<void*>(&bih), dwWriteLength);
 	rgbOffset += dwWriteLength;
 
 	if (nBpp == 24)
 	{
-		DWORD rgbQuad = 0;
+		unsigned long rgbQuad = 0;
 		dwWriteLength = sizeof(rgbQuad);
-		memcpy(rgbdata + rgbOffset, (PVOID)&rgbQuad, dwWriteLength);
+		memcpy(rgbdata + rgbOffset, static_cast<void*>(&rgbQuad), dwWriteLength);
 		rgbOffset += dwWriteLength;
 	}
 
 	dwWriteLength = dwWB * height;
-	memcpy(rgbdata + rgbOffset, (PVOID)yuvpbuf, dwWriteLength);
+	memcpy(rgbdata + rgbOffset, static_cast<void*>(yuvpbuf), dwWriteLength);
 	rgbOffset += dwWriteLength;
 
 	if (nullptr != rgbsize)	*rgbsize = rgbOffset;
-#endif
+
 	return 0;
 }
 
@@ -1761,36 +1785,36 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 
 QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString)
 {
-    /*//暂时注释掉，实际上是需要认证的
-    if(!fAuthenticated)//没有进行认证请求
-    return httpUnAuthorized;
-    */
+	/*//暂时注释掉，实际上是需要认证的
+	if(!fAuthenticated)//没有进行认证请求
+	return httpUnAuthorized;
+	*/
 
-    if (queryString == nullptr)
-    {
-        return QTSS_BadArgument;
-    }
+	if (queryString == nullptr)
+	{
+		return QTSS_BadArgument;
+	}
 
 	string decQueryString = EasyUtil::Urldecode(queryString);
 
 	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
 
-    const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
-    const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
-    const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//获取通道
-    const char* chReserve(parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE));//获取通道
-    const char* chActionType = parList.DoFindCGIValueForParam(EASY_TAG_L_ACTION_TYPE);
-    const char* chCmd = parList.DoFindCGIValueForParam(EASY_TAG_L_CMD);
-    const char* chSpeed = parList.DoFindCGIValueForParam(EASY_TAG_L_SPEED);
+	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
+	const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
+	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//获取通道
+	const char* chReserve(parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE));//获取通道
+	const char* chActionType = parList.DoFindCGIValueForParam(EASY_TAG_L_ACTION_TYPE);
+	const char* chCmd = parList.DoFindCGIValueForParam(EASY_TAG_L_CMD);
+	const char* chSpeed = parList.DoFindCGIValueForParam(EASY_TAG_L_SPEED);
 
-    if (chSerial == nullptr || chProtocol == nullptr || chActionType == nullptr || chCmd == nullptr)
-        return QTSS_BadArgument;
+	if (chSerial == nullptr || chProtocol == nullptr || chActionType == nullptr || chCmd == nullptr)
+		return QTSS_BadArgument;
 
-    //为可选参数填充默认值
-    if (!isRightChannel(chChannel))
-        chChannel = "0";
-    if (chReserve == nullptr)
-        chReserve = "1";
+	//为可选参数填充默认值
+	if (!isRightChannel(chChannel))
+		chChannel = "0";
+	if (chReserve == nullptr)
+		chReserve = "1";
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(chSerial);
@@ -1850,64 +1874,64 @@ QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString
 	string msg = rsp.GetMsg();
 	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
 	this->SendHTTPPacket(&theValueAck, false, false);
-	
-    return QTSS_NoErr;
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error HTTPSession::execNetMsgDSPTZControlAck(const char* json)
 {
-  //  if (!fAuthenticated)//没有进行认证请求
-  //      return httpUnAuthorized;
+	//  if (!fAuthenticated)//没有进行认证请求
+	//      return httpUnAuthorized;
 
-  //  //对于设备的推流回应是不需要在进行回应的，直接解析找到对应的客户端Session，赋值即可	
-  //  EasyProtocol req(json);
+	//  //对于设备的推流回应是不需要在进行回应的，直接解析找到对应的客户端Session，赋值即可	
+	//  EasyProtocol req(json);
 
-  //  string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//设备序列号
-  //  string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//摄像头序列号
-  //  string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//协议,终端仅支持RTSP推送
-  //  string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);//流类型
-  //  string strFrom = req.GetBodyValue(EASY_TAG_FROM);
-  //  string strTo = req.GetBodyValue(EASY_TAG_TO);
-  //  string strVia = req.GetBodyValue(EASY_TAG_VIA);
+	//  string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//设备序列号
+	//  string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//摄像头序列号
+	//  string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//协议,终端仅支持RTSP推送
+	//  string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);//流类型
+	//  string strFrom = req.GetBodyValue(EASY_TAG_FROM);
+	//  string strTo = req.GetBodyValue(EASY_TAG_TO);
+	//  string strVia = req.GetBodyValue(EASY_TAG_VIA);
 
-  //  string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//这个是关键字
-  //  string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//状态码
+	//  string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//这个是关键字
+	//  string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//状态码
 
-  //  if (strChannel.empty())
-  //      strChannel = "0";
-  //  if (strReserve.empty())
-  //      strReserve = "1";
+	//  if (strChannel.empty())
+	//      strChannel = "0";
+	//  if (strReserve.empty())
+	//      strReserve = "1";
 
-  //  OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
-  //  OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
-  //  if (sessionRef == nullptr)
-  //      return EASY_ERROR_SESSION_NOT_FOUND;
+	//  OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
+	//  OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
+	//  if (sessionRef == nullptr)
+	//      return EASY_ERROR_SESSION_NOT_FOUND;
 
-  //  OSRefReleaserEx releaser(sessionMap, strTo);
-  //  HTTPSession* httpSession = static_cast<HTTPSession *>(sessionRef->GetObjectPtr());
+	//  OSRefReleaserEx releaser(sessionMap, strTo);
+	//  HTTPSession* httpSession = static_cast<HTTPSession *>(sessionRef->GetObjectPtr());
 
-  //  if (httpSession->IsLiveSession())
-  //  {
-  //      //走到这说明对客户端的正确回应,因为错误回应直接返回。
-  //      EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
-  //      EasyJsonValue header, body;
-  //      body[EASY_TAG_SERIAL] = strDeviceSerial;
-  //      body[EASY_TAG_CHANNEL] = strChannel;
-  //      body[EASY_TAG_PROTOCOL] = strProtocol;//如果当前已经推流，则返回请求的，否则返回实际推流类型
-  //      body[EASY_TAG_RESERVE] = strReserve;//如果当前已经推流，则返回请求的，否则返回实际推流类型
+	//  if (httpSession->IsLiveSession())
+	//  {
+	//      //走到这说明对客户端的正确回应,因为错误回应直接返回。
+	//      EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
+	//      EasyJsonValue header, body;
+	//      body[EASY_TAG_SERIAL] = strDeviceSerial;
+	//      body[EASY_TAG_CHANNEL] = strChannel;
+	//      body[EASY_TAG_PROTOCOL] = strProtocol;//如果当前已经推流，则返回请求的，否则返回实际推流类型
+	//      body[EASY_TAG_RESERVE] = strReserve;//如果当前已经推流，则返回请求的，否则返回实际推流类型
 
-  //      header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
-  //      header[EASY_TAG_CSEQ] = strCSeq;
-  //      header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
-  //      header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+	//      header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	//      header[EASY_TAG_CSEQ] = strCSeq;
+	//      header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	//      header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
-  //      rsp.SetHead(header);
-  //      rsp.SetBody(body);
-  //      string msg = rsp.GetMsg();
-		//httpSession->ProcessEvent(msg, httpResponseType);
-  //  }
+	//      rsp.SetHead(header);
+	//      rsp.SetBody(body);
+	//      string msg = rsp.GetMsg();
+		  //httpSession->ProcessEvent(msg, httpResponseType);
+	//  }
 
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryString)
@@ -2145,7 +2169,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 			}
 		}
 
-			
+
 		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
 		EasyJsonValue headerheader, bodybody;
 
@@ -2215,7 +2239,7 @@ bool HTTPSession::isRightChannel(const char* channel)
 			return false;
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		return false;
 	}

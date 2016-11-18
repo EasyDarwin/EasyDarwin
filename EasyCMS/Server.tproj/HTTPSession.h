@@ -97,7 +97,7 @@ private:
 	static bool overMaxConnections(UInt32 buffer);
 
 	QTSS_Error rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height);
-	int	yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
+	static int	yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
 
 	HTTPRequest*        fRequest;
 	OSMutex             fReadMutex;
