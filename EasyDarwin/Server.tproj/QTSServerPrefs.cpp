@@ -279,7 +279,7 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissin
 	fRTSPTimeoutInSecs(0),
 	fRTSPTimeoutString(fRTSPTimeoutBuf, 0),
 	fRTSPSessionTimeoutInSecs(0),
-	fRTPTimeoutInSecs(0),
+	fRTPSessionTimeoutInSecs(0),
 	fMaximumConnections(0),
 	fMaxBandwidthInKBits(0),
 	fBreakOnAssert(false),
@@ -363,7 +363,7 @@ void QTSServerPrefs::SetupAttributes()
 {
 	this->SetVal(qtssPrefsRTSPTimeout, &fRTSPTimeoutInSecs, sizeof(fRTSPTimeoutInSecs));
 	this->SetVal(qtssPrefsRTSPSessionTimeout, &fRTSPSessionTimeoutInSecs, sizeof(fRTSPSessionTimeoutInSecs));
-	this->SetVal(qtssPrefsRTPTimeout, &fRTPTimeoutInSecs, sizeof(fRTPTimeoutInSecs));
+	this->SetVal(qtssPrefsRTPTimeout, &fRTPSessionTimeoutInSecs, sizeof(fRTPSessionTimeoutInSecs));
 	this->SetVal(qtssPrefsMaximumConnections, &fMaximumConnections, sizeof(fMaximumConnections));
 	this->SetVal(qtssPrefsMaximumBandwidth, &fMaxBandwidthInKBits, sizeof(fMaxBandwidthInKBits));
 	this->SetVal(qtssPrefsBreakOnAssert, &fBreakOnAssert, sizeof(fBreakOnAssert));
