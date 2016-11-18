@@ -270,7 +270,7 @@ OS_Error OS::MakeDir(char* inPath)
 
 		if (::mkdir(inPath) == -1)
 #else
-		if (::mkdir(inPath, S_IRWXU) == -1)
+		if (::mkdir(inPath, 0777) == -1)
 #endif
 			return (OS_Error)OSThread::GetErrno();
 	}
