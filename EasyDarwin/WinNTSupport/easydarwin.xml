@@ -27,7 +27,7 @@
 	<SERVER>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
 		<PREF NAME="rtsp_session_timeout" TYPE="UInt32" >90</PREF>
-		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
+		<PREF NAME="rtp_session_timeout" TYPE="UInt32" >90</PREF>
 		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
 		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
 		<PREF NAME="movie_folder" >c:\Program Files\EasyDarwin\Movies\</PREF>

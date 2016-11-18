@@ -90,7 +90,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
 	{ kDontAllowMultipleValues, "0",        NULL                    },  //rtsp_timeout
 	{ kDontAllowMultipleValues, "180",      NULL                    },  //rtsp_session_timeout
-	{ kDontAllowMultipleValues,	"120",		NULL					},	//rtp_timeout
+	{ kDontAllowMultipleValues,	"120",		NULL					},	//rtp_session_timeout
 	{ kDontAllowMultipleValues, "1000",     NULL                    },  //maximum_connections
 	{ kDontAllowMultipleValues, "102400",   NULL                    },  //maximum_bandwidth
 	{ kDontAllowMultipleValues,	DEFAULTPATHS_MOVIES_DIR, NULL       },	//movie_folder
@@ -188,7 +188,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
 	/* 0 */ { "rtsp_timeout",                           NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 1 */ { "rtsp_session_timeout",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 2 */ { "rtp_timeout",                            NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 2 */ { "rtp_session_timeout",                            NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 3 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 4 */ { "maximum_bandwidth",                      NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 5 */ { "movie_folder",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
@@ -363,7 +363,7 @@ void QTSServerPrefs::SetupAttributes()
 {
 	this->SetVal(qtssPrefsRTSPTimeout, &fRTSPTimeoutInSecs, sizeof(fRTSPTimeoutInSecs));
 	this->SetVal(qtssPrefsRTSPSessionTimeout, &fRTSPSessionTimeoutInSecs, sizeof(fRTSPSessionTimeoutInSecs));
-	this->SetVal(qtssPrefsRTPTimeout, &fRTPSessionTimeoutInSecs, sizeof(fRTPSessionTimeoutInSecs));
+	this->SetVal(qtssPrefsRTPSessionTimeout, &fRTPSessionTimeoutInSecs, sizeof(fRTPSessionTimeoutInSecs));
 	this->SetVal(qtssPrefsMaximumConnections, &fMaximumConnections, sizeof(fMaximumConnections));
 	this->SetVal(qtssPrefsMaximumBandwidth, &fMaxBandwidthInKBits, sizeof(fMaxBandwidthInKBits));
 	this->SetVal(qtssPrefsBreakOnAssert, &fBreakOnAssert, sizeof(fBreakOnAssert));
