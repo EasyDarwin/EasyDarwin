@@ -92,7 +92,7 @@ void    RTSPSessionInterface::Initialize()
 RTSPSessionInterface::RTSPSessionInterface()
 	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kRTSPSessionDictIndex)),
 	Task(),
-	fTimeoutTask(nullptr, QTSServerInterface::GetServer()->GetPrefs()->GetRealRTSPTimeoutInSecs() * 1000),
+	fTimeoutTask(nullptr, QTSServerInterface::GetServer()->GetPrefs()->GetRTSPSessionTimeoutInSecs() * 1000),
 	fInputStream(&fSocket),
 	fOutputStream(&fSocket, &fTimeoutTask),
 	fSessionMutex(),

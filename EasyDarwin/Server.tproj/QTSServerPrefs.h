@@ -66,7 +66,7 @@ public:
 	StrPtrLen*  GetRTSPTimeoutAsString() { return &fRTSPTimeoutString; }
 
 	//This is the real timeout
-	UInt32  GetRealRTSPTimeoutInSecs() { return fRealRTSPTimeoutInSecs; }
+	UInt32  GetRTSPSessionTimeoutInSecs() { return fRTSPSessionTimeoutInSecs; }
 
 	//-1 means unlimited
 	SInt32  GetMaxConnections() { return fMaximumConnections; }
@@ -227,7 +227,7 @@ private:
 	UInt32      fRTSPTimeoutInSecs;
 	char        fRTSPTimeoutBuf[20];
 	StrPtrLen   fRTSPTimeoutString;
-	UInt32      fRealRTSPTimeoutInSecs;
+	UInt32      fRTSPSessionTimeoutInSecs;
 	UInt32      fRTPTimeoutInSecs;
 
 	SInt32  fMaximumConnections;

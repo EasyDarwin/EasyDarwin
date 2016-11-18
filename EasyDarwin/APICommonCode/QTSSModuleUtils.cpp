@@ -1021,7 +1021,6 @@ bool QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QT
         case QTSSModuleUtils::kRequiresRTPInfoSeqAndTime:
         {        
             return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqRTPHeader, &userAgentStr);
-
         }
         break;
         
