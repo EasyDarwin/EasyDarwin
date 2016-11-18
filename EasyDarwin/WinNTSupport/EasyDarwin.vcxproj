@@ -165,7 +165,6 @@
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="..\APIModules\QTSSAdminModule\frozen.c" />
-    <ClCompile Include="..\APIModules\QTSSAdminModule\mongoose.c" />
     <ClCompile Include="..\APIModules\QTSSAdminModule\QTSSAdminModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
