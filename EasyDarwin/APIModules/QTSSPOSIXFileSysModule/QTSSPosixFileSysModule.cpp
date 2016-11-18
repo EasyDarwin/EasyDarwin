@@ -28,9 +28,6 @@
 	 Contains:   Implements web stats module
 
 	 Written By: Denis Serenyi
-
-
-
  */
 
 #include "QTSSPosixFileSysModule.h"
