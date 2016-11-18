@@ -77,7 +77,7 @@ void    HTTPSessionInterface::Initialize()
 HTTPSessionInterface::HTTPSessionInterface()
 	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kHTTPSessionDictIndex)),
 	Task(),
-	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTSPTimeoutInSecs() * 1000),
+	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTSPSessionTimeoutInSecs() * 1000),
 	fInputStream(&fSocket),
 	fOutputStream(&fSocket, &fTimeoutTask),
 	fSessionMutex(),
