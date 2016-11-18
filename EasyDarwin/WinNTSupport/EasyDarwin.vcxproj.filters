@@ -94,9 +94,6 @@
     <ClCompile Include="..\APIModules\QTSSAdminModule\frozen.c">
       <Filter>Source Files\API Modules\QTSSAdminModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSAdminModule\mongoose.c">
-      <Filter>Source Files\API Modules\QTSSAdminModule</Filter>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSAdminModule\QTSSAdminModule.cpp">
       <Filter>Source Files\API Modules\QTSSAdminModule</Filter>
     </ClCompile>
