@@ -26,10 +26,10 @@
 <CONFIGURATION>
 	<SERVER>
 		<PREF NAME="rtsp_timeout" TYPE="UInt32" >0</PREF>
-		<PREF NAME="real_rtsp_timeout" TYPE="UInt32" >180</PREF>
-		<PREF NAME="rtp_timeout" TYPE="UInt32" >120</PREF>
-		<PREF NAME="maximum_connections" TYPE="SInt32" >1000</PREF>
-		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >102400</PREF>
+		<PREF NAME="rtsp_session_timeout" TYPE="UInt32" >90</PREF>
+		<PREF NAME="rtp_session_timeout" TYPE="UInt32" >90</PREF>
+		<PREF NAME="maximum_connections" TYPE="SInt32" >2000</PREF>
+		<PREF NAME="maximum_bandwidth" TYPE="SInt32" >1024000</PREF>
 		<PREF NAME="movie_folder" >c:\Program Files\EasyDarwin\Movies\</PREF>
 		<PREF NAME="bind_ip_addr" >0</PREF>
 		<PREF NAME="break_on_assert" TYPE="bool" >false</PREF>
@@ -59,6 +59,7 @@
 		<PREF NAME="append_source_addr_in_transport" TYPE="bool" >false</PREF>
 		<LIST-PREF NAME="rtsp_port" TYPE="UInt16" >
 			<VALUE>554</VALUE>
+			<VALUE>10554</VALUE>
 		</LIST-PREF>
 		<PREF NAME="max_retransmit_delay" TYPE="UInt32" >500</PREF>
 		<PREF NAME="small_window_size" TYPE="UInt32" >24</PREF>
@@ -119,7 +120,7 @@
 		<PREF NAME="udp_monitor_src_ip" >0.0.0.0</PREF>
 		<PREF NAME="enable_allow_guest_default" TYPE="bool" >true</PREF>
 		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >4</PREF>
-		<PREF NAME="http_service_port" TYPE="UInt16" >8080</PREF>
+		<PREF NAME="http_service_port" TYPE="UInt16" >10008</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
 		<PREF NAME="request_logfile_interval" TYPE="UInt32" >7</PREF>

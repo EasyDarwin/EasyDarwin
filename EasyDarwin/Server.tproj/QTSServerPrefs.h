@@ -62,7 +62,7 @@ public:
 
 	//This is the value we advertise to clients (lower than the real one)
 	UInt32  GetRTSPTimeoutInSecs() { return fRTSPTimeoutInSecs; }
-	UInt32  GetRTPTimeoutInSecs() { return fRTPTimeoutInSecs; }
+	UInt32  GetRTPSessionTimeoutInSecs() { return fRTPSessionTimeoutInSecs; }
 	StrPtrLen*  GetRTSPTimeoutAsString() { return &fRTSPTimeoutString; }
 
 	//This is the real timeout
@@ -228,7 +228,7 @@ private:
 	char        fRTSPTimeoutBuf[20];
 	StrPtrLen   fRTSPTimeoutString;
 	UInt32      fRTSPSessionTimeoutInSecs;
-	UInt32      fRTPTimeoutInSecs;
+	UInt32      fRTPSessionTimeoutInSecs;
 
 	SInt32  fMaximumConnections;
 	SInt32  fMaxBandwidthInKBits;

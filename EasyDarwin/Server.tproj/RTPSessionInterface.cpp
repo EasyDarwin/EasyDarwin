@@ -119,7 +119,7 @@ RTPSessionInterface::RTPSessionInterface()
 	fMovieCurrentBitRate(0),
 	fRTSPSession(NULL),
 	fLastRTSPReqRealStatusCode(200),
-	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTPTimeoutInSecs() * 1000),
+	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs() * 1000),
 	fNumQualityLevels(0),
 	fBytesSent(0),
 	fPacketsSent(0),
@@ -145,7 +145,7 @@ RTPSessionInterface::RTPSessionInterface()
 	//(we don't want to get timeouts before the session gets bound)
 
 	fTimeoutTask.SetTask(this);
-	fTimeout = QTSServerInterface::GetServer()->GetPrefs()->GetRTPTimeoutInSecs() * 1000;
+	fTimeout = QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs() * 1000;
 	//fUniqueID = (UInt32)atomic_add(&sRTPSessionIDCounter, 1);
 	fUniqueID = ++sRTPSessionIDCounter;
 

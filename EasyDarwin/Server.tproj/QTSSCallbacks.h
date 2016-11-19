@@ -45,7 +45,6 @@ public:
 	static void*    QTSS_New(FourCharCode inMemoryIdentifier, UInt32 inSize);
 	static void     QTSS_Delete(void* inMemory);
 
-
 	// TIME ROUTINES
 	static void QTSS_Milliseconds(SInt64* outMilliseconds);
 	static void QTSS_ConvertToUnixTime(SInt64* inQTSS_MilliSecondsPtr, time_t* outSecondsPtr);
@@ -148,7 +147,7 @@ public:
 
 
 	static QTSS_Error   QTSS_RequestLockedCallback();
-	static bool       QTSS_IsGlobalLocked();
+	static bool			QTSS_IsGlobalLocked();
 	static QTSS_Error   QTSS_UnlockGlobalLock();
 
 	// AUTHENTICATION AND AUTHORIZATION ROUTINE

@@ -43,8 +43,8 @@ struct PrefConversionInfo
 static const PrefConversionInfo kPrefs[] =
 {
 	{ "rtsp_timeout",                   NULL,           qtssAttrDataTypeUInt32 },
-	{ "real_rtsp_timeout",              NULL,           qtssAttrDataTypeUInt32 },
-	{ "rtp_timeout",                    NULL,           qtssAttrDataTypeUInt32 },
+	{ "rtsp_session_timeout",              NULL,           qtssAttrDataTypeUInt32 },
+	{ "rtp_session_timeout",                    NULL,           qtssAttrDataTypeUInt32 },
 	{ "maximum_connections",            NULL,           qtssAttrDataTypeSInt32 },
 	{ "maximum_bandwidth",              NULL,           qtssAttrDataTypeSInt32 },
 	{ "movie_folder",                   NULL,           qtssAttrDataTypeCharArray },
