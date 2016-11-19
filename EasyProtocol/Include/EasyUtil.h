@@ -112,6 +112,18 @@ public:
 		return result;
 	}
 
+	template <class S, class It>
+	static S Cat(const S& delim, const It& begin, const It& end)
+	{
+		S result;
+		for (It it = begin; it != end; ++it)
+		{
+			if (!result.empty()) result.append(delim);
+			result += *it;
+		}
+		return result;
+	}
+
 };
 
 #endif	/* EASY_UTIL_H */
