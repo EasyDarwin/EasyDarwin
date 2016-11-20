@@ -11,7 +11,7 @@ For the license information refer to format.h.
 #define FMT_OSTREAM_H_
 
 // commented out by spdlog
-//#include "format.h"
+// #include "format.h"
 #include <ostream>
 
 namespace fmt
@@ -21,7 +21,7 @@ namespace internal
 {
 
 template <class Char>
-class FormatBuf : public std::basic_streambuf<Char>
+class FormatBuf: public std::basic_streambuf<Char>
 {
 private:
     typedef typename std::basic_streambuf<Char>::int_type int_type;
@@ -31,7 +31,7 @@ private:
     Char *start_;
 
 public:
-    FormatBuf(Buffer<Char> &buffer) : buffer_(buffer), start_(&buffer[0])
+    FormatBuf(Buffer<Char> &buffer): buffer_(buffer), start_(&buffer[0])
     {
         this->setp(start_, start_ + buffer_.capacity());
     }
@@ -59,7 +59,7 @@ public:
 
 Yes &convert(std::ostream &);
 
-struct DummyStream : std::ostream
+struct DummyStream: std::ostream
 {
     DummyStream();  // Suppress a bogus warning in MSVC.
     // Hide all operator<< overloads from std::ostream.
