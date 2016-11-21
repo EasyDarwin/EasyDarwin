@@ -403,15 +403,15 @@ QTSS_Error HTTPSession::SetupRequest()
 			if (path.size() == 3)
 			{
 
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "login")
-				//{
-				//	return execNetMsgCSLoginReqRESTful(fRequest->GetQueryString());
-				//}
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "login")
+				{
+					return execNetMsgCSLoginReqRESTful(fRequest->GetQueryString());
+				}
 
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "logout")
-				//{
-				//	return execNetMsgCSLogoutReqRESTful(fRequest->GetQueryString());
-				//}
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "logout")
+				{
+					return execNetMsgCSLogoutReqRESTful(fRequest->GetQueryString());
+				}
 
 				//if (path[0] == "api" && path[1] == "v1" && path[2] == "modifypassword")
 				//{
@@ -815,6 +815,73 @@ QTSS_Error HTTPSession::execNetMsgCSGetServerVersionReqRESTful(const char* query
 	string msg = rsp.GetMsg();
 	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
 	this->SendHTTPPacket(&theValue, true, false);
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSLoginReqRESTful(const char* queryString)
+{
+	std::string queryTemp;
+	if (queryString != nullptr)
+	{
+		queryTemp = EasyUtil::Urldecode(queryString);
+	}
+
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
+	const char* chUserName = parList.DoFindCGIValueForParam(EASY_TAG_L_USER_NAME);//username
+	const char* chPassword = parList.DoFindCGIValueForParam(EASY_TAG_L_PASSWORD);//password
+
+	QTSS_Error theErr = QTSS_BadArgument;
+
+	if (!chUserName || !chPassword)
+	{
+		return theErr;
+	}
+
+	//Authentication->token->redis->Platform use
+	theErr = QTSS_NoErr;
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_LOGIN_ACK);
+	EasyJsonValue header, body;
+
+	body[EASY_TAG_TOKEN] = "EasyDarwinTestToken";
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	int errNo = theErr == QTSS_NoErr ? EASY_ERROR_SUCCESS_OK : EASY_ERROR_CLIENT_UNAUTHORIZED;
+	header[EASY_TAG_ERROR_NUM] = errNo;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(errNo);
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSLogoutReqRESTful(const char* queryString)
+{
+	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	
+	//cookie->token->clear redis->Platform clear,need login again
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_LOGOUT_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
 }
