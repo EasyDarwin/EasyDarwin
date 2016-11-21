@@ -53,7 +53,7 @@ HTTPSession::HTTPSession()
 {
 	this->SetTaskName("HTTPSession");
 
-	QTSServerInterface::GetServer()->AlterCurrentRTSPSessionCount(1);
+	QTSServerInterface::GetServer()->AlterCurrentRTSPHTTPSessionCount(1);
 
 	// Setup the QTSS param block, as none of these fields will change through the course of this session.
 	fRoleParams.rtspRequestParams.inRTSPSession = this;
