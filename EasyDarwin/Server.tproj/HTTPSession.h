@@ -28,6 +28,8 @@ private:
 	QTSS_Error SetupRequest();
 	void CleanupRequest();
 
+	QTSS_Error execNetMsgCSGetServerVersionReqRESTful(const char* queryString);
+
 	QTSS_Error ExecNetMsgEasyHLSModuleReq(char* queryString, char* json);
 	QTSS_Error ExecNetMsgGetHlsSessionsReq(char* queryString, char* json);
 	QTSS_Error ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char* json);
