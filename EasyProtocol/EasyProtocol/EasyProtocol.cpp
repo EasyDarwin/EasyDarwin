@@ -608,16 +608,16 @@ namespace EasyDarwin { namespace Protocol
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 	}
 
-	EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK()
-		: EasyProtocol(MSG_SC_RTSP_PUSH_SESSION_LIST_ACK)
+	EasyMsgSCRTSPLiveSessionsACK::EasyMsgSCRTSPLiveSessionsACK()
+		: EasyProtocol(MSG_SC_RTSP_LIVE_SESSIONS_ACK)
 	{
 	}
 
-	EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK(const string& msg)
-		: EasyProtocol(msg, MSG_SC_RTSP_PUSH_SESSION_LIST_ACK)
+	EasyMsgSCRTSPLiveSessionsACK::EasyMsgSCRTSPLiveSessionsACK(const string& msg)
+		: EasyProtocol(msg, MSG_SC_RTSP_LIVE_SESSIONS_ACK)
 	{
 	}
-	bool EasyMsgSCRTSPPushSessionListACK::AddSession(EasyDarwinRTSPSession &session)
+	bool EasyMsgSCRTSPLiveSessionsACK::AddSession(EasyDarwinRTSPSession &session)
 	{
 		Json::Value value;
 		value[EASY_TAG_L_INDEX] = session.index;
