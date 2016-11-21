@@ -390,13 +390,13 @@ private:
 	list<EasyDarwinHLSession> sessions;
 };
 
-// MSG_SC_RTSP_PUSH_SESSION_LIST_ACK
-class Easy_API EasyMsgSCRTSPPushSessionListACK : public EasyProtocol
+// MSG_SC_RTSP_LIVE_SESSIONS_ACK
+class Easy_API EasyMsgSCRTSPLiveSessionsACK : public EasyProtocol
 {
 public:
-	EasyMsgSCRTSPPushSessionListACK();
-	EasyMsgSCRTSPPushSessionListACK(const string& msg);
-	virtual ~EasyMsgSCRTSPPushSessionListACK() {}
+	EasyMsgSCRTSPLiveSessionsACK();
+	EasyMsgSCRTSPLiveSessionsACK(const string& msg);
+	virtual ~EasyMsgSCRTSPLiveSessionsACK() {}
 
 public:
 	bool AddSession(EasyDarwinRTSPSession& session);

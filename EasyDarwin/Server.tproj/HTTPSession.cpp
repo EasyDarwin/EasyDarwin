@@ -19,6 +19,7 @@
 #include "EasyProtocolDef.h"
 #include "EasyProtocol.h"
 #include "EasyUtil.h"
+#include "Format.h"
 
 using namespace EasyDarwin::Protocol;
 using namespace std;
@@ -35,7 +36,6 @@ using namespace std;
 
 static StrPtrLen	sEasyHLSModule("api/easyhlsmodule");
 static StrPtrLen	sGetHLSSessions("api/gethlssessions");
-static StrPtrLen	sGetRTSPPushSessions("api/getrtsppushsessions");
 
 #define	QUERY_STREAM_NAME		"name"
 #define QUERY_STREAM_URL		"url"
@@ -53,7 +53,7 @@ HTTPSession::HTTPSession()
 {
 	this->SetTaskName("HTTPSession");
 
-	QTSServerInterface::GetServer()->AlterCurrentRTSPSessionCount(1);
+	QTSServerInterface::GetServer()->AlterCurrentRTSPHTTPSessionCount(1);
 
 	// Setup the QTSS param block, as none of these fields will change through the course of this session.
 	fRoleParams.rtspRequestParams.inRTSPSession = this;
@@ -75,6 +75,8 @@ HTTPSession::~HTTPSession()
 	char msgStr[2048] = { 0 };
 	qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession offline from ip[%s]", remoteAddress);
 	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+	QTSServerInterface::GetServer()->AlterCurrentRTSPHTTPSessionCount(-1);
+
 	// Invoke the session closing modules
 	QTSS_RoleParams theParams;
 	theParams.rtspSessionClosingParams.inRTSPSession = this;
@@ -382,10 +384,82 @@ QTSS_Error HTTPSession::SetupRequest()
 		{
 			return ExecNetMsgGetHlsSessionsReq(fRequest->GetQueryString(), NULL);
 		}
+	}
 
-		if (theFullPath.Equal(sGetRTSPPushSessions))
+	if (fRequest->GetRequestPath() != nullptr)
+	{
+		string sRequest(fRequest->GetRequestPath());
+
+		if (!sRequest.empty())
 		{
-			return ExecNetMsgGetRTSPPushSessionsReq(fRequest->GetQueryString(), NULL);
+			boost::to_lower(sRequest);
+
+			vector<string> path;
+			if (boost::ends_with(sRequest, "/"))
+			{
+				boost::erase_tail(sRequest, 1);
+			}
+			boost::split(path, sRequest, boost::is_any_of("/"), boost::token_compress_on);
+			if (path.size() == 3)
+			{
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "login")
+				//{
+				//	return execNetMsgCSLoginReqRESTful(fRequest->GetQueryString());
+				//}
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "logout")
+				//{
+				//	return execNetMsgCSLogoutReqRESTful(fRequest->GetQueryString());
+				//}
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "modifypassword")
+				//{
+				//	return execNetMsgCSModifyPasswordRESTful(fRequest->GetQueryString());
+				//}
+
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "getserverinfo")
+				{
+					return execNetMsgCSGetServerVersionReqRESTful(fRequest->GetQueryString());
+				}
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "getbaseconfig")
+				//{
+				//	return execNetMsgCSGetBaseConfigReqRESTful(fRequest->GetQueryString());
+				//}
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "setbaseconfig")
+				//{
+				//	return execNetMsgCSSetBaseConfigReqRESTful(fRequest->GetQueryString());
+				//}
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "restart")
+				//{
+				//	return execNetMsgCSRestartServiceRESTful(fRequest->GetQueryString());
+				//}
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "getchannels")
+				//{
+				//	return execNetMsgCSGetChannelsRESTful(fRequest->GetQueryString());
+				//}
+
+				//if (path[0] == "api" && path[1] == "v1" && path[2] == "getchannelstream")
+				//{
+				//	return execNetMsgCSGetChannelStreamRESTful(fRequest->GetQueryString());
+				//}
+
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
+				{
+					return ExecNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString(), NULL);
+				}
+			}
+
+			EasyMsgExceptionACK rsp;
+			string msg = rsp.GetMsg();
+			StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+			this->SendHTTPPacket(&theValue, false, false);
+
+			return QTSS_NoErr;
 		}
 	}
 
@@ -662,7 +736,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char* json)
+QTSS_Error HTTPSession::ExecNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -696,4 +770,51 @@ QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char
 	} while (0);
 
 	return theErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSGetServerVersionReqRESTful(const char* queryString)
+{
+	/*auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	if (!hasLogin(cokieTemp))
+	{
+	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+	}*/
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_INFO_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	char* serverHeader = nullptr;
+	(void)QTSS_GetValueAsString(QTSServerInterface::GetServer(), qtssSvrRTSPServerHeader, 0, &serverHeader);
+	QTSSCharArrayDeleter theFullPathStrDeleter(serverHeader);
+	body[EASY_TAG_SERVER_HEADER] = serverHeader;
+
+	SInt64 timeNow = OS::Milliseconds();
+	SInt64 startupTime = 0;
+	UInt32 startupTimeSize = sizeof(startupTime);
+	(void)QTSS_GetValue(QTSServerInterface::GetServer(), qtssSvrStartupTime, 0, &startupTime, &startupTimeSize);
+	SInt64 longstTime = (timeNow - startupTime) / 1000;
+
+	unsigned int timeDays = longstTime / (24 * 60 * 60);
+	unsigned int timeHours = (longstTime % (24 * 60 * 60)) / (60 * 60);
+	unsigned int timeMins = ((longstTime % (24 * 60 * 60)) % (60 * 60)) / 60;
+	unsigned int timeSecs = ((longstTime % (24 * 60 * 60)) % (60 * 60)) % 60;
+
+	body[EASY_TAG_SERVER_RUNNING_TIME] = Format("%u Days %u Hours %u Mins %u Secs", timeDays, timeHours, timeMins, timeSecs);
+
+	body[EASY_TAG_SERVER_HARDWARE] = "x86";
+	body[EASY_TAG_SERVER_INTERFACE_VERSION] = "v1";
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, true, false);
+
+	return QTSS_NoErr;
 }

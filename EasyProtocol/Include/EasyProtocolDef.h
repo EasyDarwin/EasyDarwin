@@ -255,7 +255,7 @@
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
-#define MSG_SC_RTSP_PUSH_SESSION_LIST_ACK					0xeee2
+#define MSG_SC_RTSP_LIVE_SESSIONS_ACK						0xeee2
 #define MSG_SC_LIST_RECORD_ACK								0xeee3
 #define MSG_SC_EXCEPTION									0xeeee
 

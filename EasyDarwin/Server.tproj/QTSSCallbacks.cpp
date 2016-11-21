@@ -1005,7 +1005,7 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 {
 	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 
-	EasyMsgSCRTSPPushSessionListACK ack;
+	EasyMsgSCRTSPLiveSessionsACK ack;
 	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
 	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");
 
