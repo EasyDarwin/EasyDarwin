@@ -75,6 +75,8 @@ HTTPSession::~HTTPSession()
 	char msgStr[2048] = { 0 };
 	qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession offline from ip[%s]", remoteAddress);
 	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+	QTSServerInterface::GetServer()->AlterCurrentRTSPHTTPSessionCount(-1);
+
 	// Invoke the session closing modules
 	QTSS_RoleParams theParams;
 	theParams.rtspSessionClosingParams.inRTSPSession = this;
