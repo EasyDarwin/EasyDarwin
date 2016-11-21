@@ -29,10 +29,10 @@ private:
 	void CleanupRequest();
 
 	QTSS_Error execNetMsgCSGetServerVersionReqRESTful(const char* queryString);
+	QTSS_Error ExecNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json);
 
 	QTSS_Error ExecNetMsgEasyHLSModuleReq(char* queryString, char* json);
 	QTSS_Error ExecNetMsgGetHlsSessionsReq(char* queryString, char* json);
-	QTSS_Error ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char* json);
 
 	// test current connections handled by this object against server pref connection limit
 	bool OverMaxConnections(UInt32 buffer);

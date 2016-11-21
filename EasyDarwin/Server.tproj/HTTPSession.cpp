@@ -36,7 +36,6 @@ using namespace std;
 
 static StrPtrLen	sEasyHLSModule("api/easyhlsmodule");
 static StrPtrLen	sGetHLSSessions("api/gethlssessions");
-static StrPtrLen	sGetRTSPPushSessions("api/getrtsppushsessions");
 
 #define	QUERY_STREAM_NAME		"name"
 #define QUERY_STREAM_URL		"url"
@@ -385,11 +384,6 @@ QTSS_Error HTTPSession::SetupRequest()
 		{
 			return ExecNetMsgGetHlsSessionsReq(fRequest->GetQueryString(), NULL);
 		}
-
-		if (theFullPath.Equal(sGetRTSPPushSessions))
-		{
-			return ExecNetMsgGetRTSPPushSessionsReq(fRequest->GetQueryString(), NULL);
-		}
 	}
 
 	if (fRequest->GetRequestPath() != nullptr)
@@ -453,6 +447,11 @@ QTSS_Error HTTPSession::SetupRequest()
 				//{
 				//	return execNetMsgCSGetChannelStreamRESTful(fRequest->GetQueryString());
 				//}
+
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
+				{
+					return ExecNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString(), NULL);
+				}
 			}
 
 			EasyMsgExceptionACK rsp;
@@ -737,7 +736,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgGetRTSPPushSessionsReq(char* queryString, char* json)
+QTSS_Error HTTPSession::ExecNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
