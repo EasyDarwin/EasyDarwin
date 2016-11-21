@@ -694,7 +694,7 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, bool displayHel
 
 		case 28:
 			{
-				(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsRTPTimeout, 0, &thePrefStr);
+				(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsRTPSessionTimeout, 0, &thePrefStr);
 				qtss_sprintf(buffer, "<b>RTP Timeout: </b> %s<BR>\n", thePrefStr);
 				(void)QTSS_Write(inStream, buffer, ::strlen(buffer), NULL, 0);
 			}
