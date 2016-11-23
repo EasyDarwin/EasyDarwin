@@ -185,11 +185,13 @@ inline void spdlog::logger::warn(const T& msg)
     log(level::warn, msg);
 }
 
+
 template<typename T>
 inline void spdlog::logger::error(const T& msg)
 {
     log(level::err, msg);
 }
+
 
 template<typename T>
 inline void spdlog::logger::critical(const T& msg)
@@ -198,6 +200,40 @@ inline void spdlog::logger::critical(const T& msg)
 }
 
 
+inline void spdlog::logger::trace(const char* msg)
+{
+	log(level::trace, msg);
+}
+
+
+inline void spdlog::logger::debug(const char* msg)
+{
+	log(level::debug, msg);
+}
+
+
+inline void spdlog::logger::info(const char* msg)
+{
+	log(level::info, msg);
+}
+
+
+inline void spdlog::logger::warn(const char* msg)
+{
+	log(level::warn, msg);
+}
+
+
+inline void spdlog::logger::error(const char* msg)
+{
+	log(level::err, msg);
+}
+
+
+inline void spdlog::logger::critical(const char* msg)
+{
+	log(level::critical, msg);
+}
 
 
 //
