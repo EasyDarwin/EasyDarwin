@@ -175,6 +175,7 @@
 #define EASY_TAG_L_NEW_PASSWORD							"newpassword"
 
 #define EASY_TAG_DATE									"Date"
+#define EASY_TAG_DATE_TIME								"DateTime"
 #define EASY_TAG_START_TIME								"StartTime"
 #define EASY_TAG_END_TIME								"EndTime"
 
@@ -252,7 +253,12 @@
 
 #define MSG_SC_SERVER_START_RECORD_ACK						0x1013
 #define MSG_SC_SERVER_STOP_RECORD_ACK						0x1014
+
 #define MSG_SC_SERVER_SEARCH_RECORD_ACK						0x1015
+#define MSG_SC_SERVER_PLAY_RECORD_ACK						0x1016
+#define MSG_SC_SERVER_STOP_PLAY_RECORD_ACK					0x1017
+#define MSG_SC_SERVER_SEEK_PLAY_RECORD_ACK					0x1018
+#define MSG_SC_SERVER_TOUCH_PLAY_RECORD_ACK					0x1019
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
