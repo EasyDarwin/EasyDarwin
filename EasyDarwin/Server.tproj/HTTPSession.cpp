@@ -445,7 +445,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
 				{
-					return ExecNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString(), NULL);
+					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString(), NULL);
 				}
 			}
 
@@ -731,7 +731,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json)
+QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
