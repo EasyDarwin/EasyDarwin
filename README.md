@@ -21,6 +21,12 @@
 
 	由于我们的EasyDarwin开发者各自熟悉的开发平台不一样，有的熟悉Windows开发，有的熟悉Linux开发，所以就会导致有的时候版本经常会出现Windows或者Linux编译不过的情况，那么这种情况下，我们可以通过下载https://github.com/EasyDarwin/EasyDarwin/releases里面已经归档的版本进行编译即可；	
 
+## 最新进展 ##
+
+### 2016.11.25
+1. EasyDarwin正在进行新架构模型的迭代，包括直播(RTSP/RTMP/HLS)，点播(ffmpeg+HLS)等方案；
+2. 移除Mongoose web管理功能，直接采用RESTful接口对外提供服务，届时会配套开发调用的html后台；
+
 ## 云平台结构 ##
 
 目前EasyDarwin流媒体平台整套解决方案包括有：**EasyCMS**(中心管理服务)，**EasyDarwin**(流媒体服务)，**EasyCamera**(开源流媒体摄像机)、**EasyPlayer**（流媒体播放器）、**EasyClient**（云平台客户端）、以及周边众多工具库([**EasyHLS**](https://github.com/EasyDarwin/EasyHLS "EasyHLS") / [**EasyRTSPClient**](https://github.com/EasyDarwin/EasyRTSPClient "EasyRTSPClient") / [**EasyPusher**](https://github.com/EasyDarwin/EasyPusher "EasyPusher") / [**EasyAACEncoder**](https://github.com/EasyDarwin/EasyAACEncoder "EasyAACEncoder"))，后续也将继续扩展的录像、回放等多种服务和工具集，各个功能单元既可以独立使用于项目，又可以整体使用，形成一个完整、简单、易用、高效的流媒体解决方案：
