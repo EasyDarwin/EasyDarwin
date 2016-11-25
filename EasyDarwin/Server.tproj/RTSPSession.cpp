@@ -1125,7 +1125,7 @@ SInt64 RTSPSession::Run()
 		}
 	}
 
-    printf("RTSPSession fObjectHolders:%d !\n", fObjectHolders.load());
+    //printf("RTSPSession fObjectHolders:%d !\n", fObjectHolders.load());
 
     if(fRTSPSessionHandler)
     {
@@ -1154,7 +1154,7 @@ SInt64 RTSPSession::Run()
 	// Only delete if it is ok to delete!
 	if (fObjectHolders == 0)
     {
-        printf("RTSPSesion Run Return -1\n");
+        //printf("RTSPSesion Run Return -1\n");
 		return -1;
     }
 
@@ -2227,7 +2227,7 @@ RTSPSessionHandler::RTSPSessionHandler(RTSPSession* session)
 
 RTSPSessionHandler::~RTSPSessionHandler()
 {
-    printf("~RTSPSessionHandler()\n");
+    //printf("~RTSPSessionHandler()\n");
     fRTSPSession = nullptr;
 
 	{
@@ -2285,7 +2285,7 @@ void RTSPSessionHandler::Release()
 {
     fLiveHandler = false;
     this->Run();
-    printf("RTSPSessionHandler::Release()\n");
+    //printf("RTSPSessionHandler::Release()\n");
 }
 
 RTSPMsg* RTSPSessionHandler::GetMsg()
