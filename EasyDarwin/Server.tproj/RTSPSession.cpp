@@ -2332,7 +2332,11 @@ void RTSPSessionHandler::HandleDataPacket(RTSPMsg* theMsg)
         rtpSession = (RTPSession*)theRef->GetObject();
 
 	if (rtpSession == nullptr)
+	{
+		if (fRTSPSession)
+			fRTSPSession->fLiveSession = false;
 		return;
+	}
 
     StrPtrLen packetWithoutHeaders(theMsg->fPacketPtr.Ptr + 4, theMsg->fPacketPtr.Len - 4);
 
