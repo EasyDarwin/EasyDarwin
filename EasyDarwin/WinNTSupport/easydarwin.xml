@@ -178,14 +178,6 @@
 		<PREF NAME="modAccess_usersfilepath" >c:\Program Files\EasyDarwin\qtusers</PREF>
 		<PREF NAME="modAccess_groupsfilepath" >c:\Program Files\EasyDarwin\qtgroups</PREF>
 	</MODULE>
-	<MODULE NAME="QTSSAdminModule" >
-		<PREF NAME="RequestTimeIntervalMilli" TYPE="UInt32" >50</PREF>
-		<PREF NAME="IPAccessList" >127.0.0.*</PREF>
-		<PREF NAME="Authenticate" TYPE="bool" >true</PREF>
-		<PREF NAME="LocalAccessOnly" TYPE="bool" >true</PREF>
-		<PREF NAME="enable_remote_admin" TYPE="bool" >true</PREF>
-		<PREF NAME="AdministratorGroup" >admin</PREF>
-	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
 	<MODULE NAME="EasyCMSModule" ></MODULE>
