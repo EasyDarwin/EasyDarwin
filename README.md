@@ -4,14 +4,14 @@
 
 - 使用EasyDarwin收费吗？
 
-	免费，EasyDarwin是在Apple开源项目Darwin Streaming Server的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体技术的迭代开发；
+	免费，EasyDarwin流媒体服务器是在Apple开源项目Darwin Streaming Server的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体技术的迭代开发；
 	
 	
-	> 注：即使EasyDarwin流媒体服务器调用到了开源团队其他非开源的、需要商业收费授权的SDK，使用EasyDarwin开源流媒体服务器的个人或者商业用户都无需再申请授权，可以直接用于个人或者商业项目，EasyDarwin调用到的非开源SDK License会长期保持更新有效；
+	> 注：即使EasyDarwin流媒体服务器可能会调用到一些第三方的收费或者授权SDK代码，请直接与第三方团队或者开发者联系获取商业授权，EasyDarwin开源流媒体服务器只做技术研究的先行者；
 
 - EasyDarwin开源吗？
 
-	EasyDarwin开源流媒体服务器完全开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧推送等优化，这些都是完全开源免费的；
+	EasyDarwin开源流媒体服务器完全开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧推送等优化，这些都是全代码完全开源的；
 
 	> EasyDarwin流媒体服务器原来带有非开源SDK的EasyRelayModule和EasyHLSModule已经移除，新版本的拉模式转发和HLS直播模块功能将全部采用开源live555/ffmpeg等开源项目结合实现，敬请期待！
 	> 
