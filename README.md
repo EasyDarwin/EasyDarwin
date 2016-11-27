@@ -46,6 +46,17 @@
 
 [![EasyDarwin Protocol](http://www.easydarwin.org/github/images/EProtocol.jpg)](https://github.com/EasyDarwin/EasyDarwin/tree/master/Doc "EasyDarwin Protocol")
 
+## 默认端口 ##
+
+- EasyCMS：接口服务端口,10000
+- EasyDarwin：接口服务端口,10008
+- EasyDarwin：RTSP服务端口,10554
+- EasyDarwin：后台管理端口,10080
+- EasyNVR：接口服务端口,10010
+- EasyNVR：后台管理端口,10080
+
+
+
 ## 平台在线演示客户端 ##
 
 - Windows版本：[https://github.com/EasyDarwin/EasyClient/releases](https://github.com/EasyDarwin/EasyClient/releases "EasyClient Windows")
