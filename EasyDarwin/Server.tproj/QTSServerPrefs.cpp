@@ -93,7 +93,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues,	"120",		NULL					},	//rtp_session_timeout
 	{ kDontAllowMultipleValues, "1000",     NULL                    },  //maximum_connections
 	{ kDontAllowMultipleValues, "102400",   NULL                    },  //maximum_bandwidth
-	{ kDontAllowMultipleValues,	DEFAULTPATHS_MOVIES_DIR, NULL       },	//nginx_root_folder
+	{ kDontAllowMultipleValues,	NONE_CONFIG_NGINX_LOCAL_PATH, NULL  },	//nginx_root_folder
 	{ kAllowMultipleValues,     "0",        NULL                    },  //bind_ip_addr
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //break_on_assert
 	{ kDontAllowMultipleValues, "true",     NULL                    },  //auto_restart
