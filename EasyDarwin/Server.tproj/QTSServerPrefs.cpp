@@ -48,7 +48,7 @@
 
 char* QTSServerPrefs::sAdditionalDefaultPorts[] =
 {
-	"8554",
+	"554",
 	NULL
 };
 
@@ -125,7 +125,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "",         NULL                    },  //run_group_name
 #endif
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //append_source_addr_in_transport
-	{ kAllowMultipleValues,     "554",      sAdditionalDefaultPorts },  //rtsp_ports
+	{ kAllowMultipleValues,     "10554",    sAdditionalDefaultPorts },  //rtsp_ports
 	{ kDontAllowMultipleValues, "500",      NULL                    },  //max_retransmit_delay
 	{ kDontAllowMultipleValues, "24",       NULL                    },  //small_window_size
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //ack_logging_enabled
@@ -180,7 +180,12 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_allow_guest_default
 	{ kDontAllowMultipleValues, "4",        NULL                     },  //run_num_rtsp_threads
 
-	{ kDontAllowMultipleValues, "8080",     NULL                        }  //http_service_port   
+	{ kDontAllowMultipleValues, "10008",     NULL					 },  //http_service_port
+
+	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_ip
+	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //rtsp_wan_port
+	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL },  //nginx_web_path
+	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }   //nginx_rtmp_path
 
 };
 
