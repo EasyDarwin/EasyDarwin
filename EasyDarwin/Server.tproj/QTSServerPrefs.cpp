@@ -600,7 +600,7 @@ char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
 	OSMutexLocker locker(&fPrefsMutex);
 
 	// Get the movie folder attribute
-	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsMovieFolder);
+	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsNginxRootFolder);
 
 	// If the movie folder path fits inside the provided buffer, copy it there
 	if (theMovieFolder->Len < *ioLen)
