@@ -355,7 +355,8 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissin
 	fUDPMonitorVideoPort(0),
 	fUDPMonitorAudioPort(0),
 	fAllowGuestAuthorizeDefault(true),
-	fHTTPServicePort(8080)
+	fHTTPServicePort(10008),
+	fRTSPWANPort(10554)
 {
 	SetupAttributes();
 	RereadServerPreferences(inWriteMissingPrefs);
@@ -445,6 +446,9 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(qtssPrefsNumRTSPThreads, &fNumRTSPThreads, sizeof(fNumRTSPThreads));
 
 	this->SetVal(easyPrefsHTTPServicePort, &fHTTPServicePort, sizeof(fHTTPServicePort));
+
+	this->SetVal(easyPrefsRTSPWANIPAddr, &fRTSPWANAddr, sizeof(fRTSPWANAddr));
+	this->SetVal(easyPrefsRTSPWANPort, &fRTSPWANPort, sizeof(fRTSPWANPort));
 }
 
 

@@ -222,6 +222,13 @@ public:
 	bool GetAllowGuestDefault() { return fAllowGuestAuthorizeDefault; }
 
 	UInt16 GetHTTPServicePort() { return fHTTPServicePort; }
+
+	char* GetRTSPWANIP() { return this->GetStringPref(easyPrefsRTSPWANIPAddr); }
+	UInt16 GetRTSPWANPort() const {	return fRTSPWANPort; }
+
+	char* GetNginxWebPath() { return this->GetStringPref(easyPrefsNginxWebPath); }
+	char* GetNginxRTMPPath() { return this->GetStringPref(easyPrefsNginxRTMPPath); }
+
 private:
 
 	UInt32      fRTSPTimeoutInSecs;
@@ -307,6 +314,9 @@ private:
 	char   fUDPMonitorDestAddr[20];
 	char   fUDPMonitorSrcAddr[20];
 	bool fAllowGuestAuthorizeDefault;
+
+	char   fRTSPWANAddr[20];
+	UInt16 fRTSPWANPort;
 
 	enum //fPacketHeaderPrintfOptions
 	{
