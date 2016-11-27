@@ -47,7 +47,7 @@ static const PrefConversionInfo kPrefs[] =
 	{ "rtp_session_timeout",            NULL,           qtssAttrDataTypeUInt32 },
 	{ "maximum_connections",            NULL,           qtssAttrDataTypeSInt32 },
 	{ "maximum_bandwidth",              NULL,           qtssAttrDataTypeSInt32 },
-	{ "movie_folder",                   NULL,           qtssAttrDataTypeCharArray },
+	{ "nginx_root_path",				NULL,           qtssAttrDataTypeCharArray },
 	{ "bind_ip_addr",                   NULL,           qtssAttrDataTypeCharArray },
 	{ "break_on_assert",                NULL,           qtssAttrDataTypeBool16 },
 	{ "auto_restart",                   NULL,           qtssAttrDataTypeBool16 },

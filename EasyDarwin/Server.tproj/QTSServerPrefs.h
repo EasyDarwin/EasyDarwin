@@ -300,20 +300,20 @@ private:
 	bool  fEnableMonitorStatsFile;
 	UInt32  fStatsFileIntervalSeconds;
 
-	Float32    fOverbufferRate;
+	Float32	fOverbufferRate;
 
-	bool  fEnablePacketHeaderPrintfs;
-	UInt32  fPacketHeaderPrintfOptions;
-	bool  fCloseLogsOnWrite;
+	bool   fEnablePacketHeaderPrintfs;
+	UInt32 fPacketHeaderPrintfOptions;
+	bool   fCloseLogsOnWrite;
 
-	bool fDisableThinning;
+	bool   fDisableThinning;
 	UInt16 fDefaultStreamQuality;
-	bool fUDPMonitorEnabled;
+	bool   fUDPMonitorEnabled;
 	UInt16 fUDPMonitorVideoPort;
 	UInt16 fUDPMonitorAudioPort;
 	char   fUDPMonitorDestAddr[20];
 	char   fUDPMonitorSrcAddr[20];
-	bool fAllowGuestAuthorizeDefault;
+	bool   fAllowGuestAuthorizeDefault;
 
 	char   fRTSPWANAddr[20];
 	UInt16 fRTSPWANPort;
