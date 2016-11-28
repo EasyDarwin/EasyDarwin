@@ -146,8 +146,8 @@
 #define EASY_TAG_CONFIG_SERVICE_LAN_PORT				"ServiceLanPort"
 #define EASY_TAG_CONFIG_SERVICE_L_LAN_PORT				"servicelanport"
 
-#define EASY_TAG_CONFIG_SERIVCE_WAN_PORT				"ServiceWanPort"
-#define EASY_TAG_CONFIG_SERIVCE_L_WAN_PORT				"servicewanport"
+#define EASY_TAG_CONFIG_SERVICE_WAN_PORT				"ServiceWanPort"
+#define EASY_TAG_CONFIG_SERVICE_L_WAN_PORT				"servicewanport"
 
 #define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
 #define EASY_TAG_CONFIG_SERVICE_L_LAN_IP				"servicelanip"
