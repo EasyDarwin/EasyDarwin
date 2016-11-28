@@ -942,68 +942,83 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	}
 	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
 
-	//const char* chLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
-	//if (chLanPort)
-	//{
-	//	UInt16 uLanPort = stoi(chLanPort);
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsMonitorLANPort, 0, &uLanPort, sizeof(uLanPort));
-	//}
+	//EASY_TAG_CONFIG_RTSP_LAN_PORT
+	const char* chRTSPLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_RTSP_LAN_PORT);
+	if (chRTSPLanPort)
+	{
+		UInt16 uRTSPLanPort = stoi(chRTSPLanPort);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsRTSPPorts, 0, &uRTSPLanPort, sizeof(uRTSPLanPort));
+	}
 
-	//const char* chLanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_IP);
-	//if (chLanIP)
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsBindIPAddr, 0, (void*)chLanIP, strlen(chLanIP));
+	//EASY_TAG_CONFIG_RTSP_WAN_PORT
+	const char*	chRTSPWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_RTSP_WAN_PORT);
+	if (chRTSPWanPort)
+	{
+		UInt16 uRTSPWanPort = stoi(chRTSPWanPort);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsRTSPWANPort, 0, &uRTSPWanPort, sizeof(uRTSPWanPort));
+	}
 
-	//const char*	chWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERIVCE_WAN_PORT);
-	//if (chWanPort)
-	//{
-	//	UInt16 uWanPort = stoi(chWanPort);
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsMonitorWANPort, 0, &uWanPort, sizeof(uWanPort));
-	//}
+	//EASY_TAG_CONFIG_SERVICE_LAN_IP
+	const char* chLanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_IP);
+	if (chLanIP)
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsRTSPIPAddr, 0, (void*)chLanIP, strlen(chLanIP));
 
-	//const char* chWanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_IP);
-	//if (chWanIP)
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsMonitorWANIPAddr, 0, (void*)chWanIP, strlen(chWanIP));
+	//EASY_TAG_CONFIG_SERVICE_WAN_IP
+	const char* chWanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_IP);
+	if (chWanIP)
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsRTSPWANIPAddr, 0, (void*)chWanIP, strlen(chWanIP));
 
+	//EASY_TAG_CONFIG_NGINX_ROOT_FOLDER
+	const char* chNginxRootFolder = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_ROOT_FOLDER);
+	if (chNginxRootFolder)
+	{
+		string nginxRootFolder(chNginxRootFolder);
+		if (nginxRootFolder.back() != '\\')
+		{
+			nginxRootFolder.push_back('\\');
+		}
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxRootFolder, 0, (void*)nginxRootFolder.c_str(), nginxRootFolder.size());
+	}
 
-	//const char* chChannelSnapInterval = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_CHANNEL_SNAP_INTERVAL);
-	//if (chChannelSnapInterval)
-	//{
-	//	UInt16 uChannelSnapInterval = stoi(chChannelSnapInterval);
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsChannelSnapInterval, 0, &uChannelSnapInterval, sizeof(uChannelSnapInterval));
-	//}
+	//EASY_TAG_CONFIG_NGINX_WEB_PATH
+	const char* chNginxWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_WEB_PATH);
+	if (chNginxWebPath)
+	{
+		string nginxWebPath(chNginxWebPath);
+		if (nginxWebPath.back() != '\/')
+		{
+			nginxWebPath.push_back('\/');
+		}
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)nginxWebPath.c_str(), nginxWebPath.size());
+	}
 
-	//const char* chNginxLocalPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_ROOT_FOLDER);
-	//if (chNginxLocalPath)
-	//{
-	//	string nginxLocalPath(chNginxLocalPath);
-	//	if (nginxLocalPath.back() != '\\')
-	//	{
-	//		nginxLocalPath.push_back('\\');
-	//	}
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxLocalPath, 0, (void*)nginxLocalPath.c_str(), nginxLocalPath.size());
-	//}
+	//EASY_TAG_CONFIG_NGINX_RTMP_PATH
+	const char* chNginxRTMPPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_RTMP_PATH);
+	if (chNginxRTMPPath)
+	{
+		string nginxRTMPPath(chNginxRTMPPath);
+		if (nginxRTMPPath.back() != '\/')
+		{
+			nginxRTMPPath.push_back('\/');
+		}
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxRTMPPath, 0, (void*)nginxRTMPPath.c_str(), nginxRTMPPath.size());
+	}
 
-	//const char* chNginxWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_WEB_PATH);
-	//if (chNginxWebPath)
-	//{
-	//	string nginxWebPath(chNginxWebPath);
-	//	if (nginxWebPath.back() != '\/')
-	//	{
-	//		nginxWebPath.push_back('\/');
-	//	}
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxWebPath, 0, (void*)nginxWebPath.c_str(), nginxWebPath.size());
-	//}
+	//EASY_TAG_CONFIG_SERVICE_LAN_PORT
+	const char* chHTTPLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
+	if (chHTTPLanPort)
+	{
+		UInt16 uHTTPLanPort = stoi(chHTTPLanPort);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsHTTPServicePort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
+	}
 
-	//const char* chNginxRTMPPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_RTMP_PATH);
-	//if (chNginxRTMPPath)
-	//{
-	//	string nginxRTMPPath(chNginxRTMPPath);
-	//	if (nginxRTMPPath.back() != '\/')
-	//	{
-	//		nginxRTMPPath.push_back('\/');
-	//	}
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxRTMPPath, 0, (void*)nginxRTMPPath.c_str(), nginxRTMPPath.size());
-	//}
+	//EASY_TAG_CONFIG_SERIVCE_WAN_PORT
+	const char*	chHTTPWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERIVCE_WAN_PORT);
+	if (chHTTPWanPort)
+	{
+		UInt16 uHTTPWanPort = stoi(chHTTPWanPort);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsHTTPServicePort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
+	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);
 	EasyJsonValue header, body;
