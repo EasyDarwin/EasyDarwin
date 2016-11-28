@@ -80,16 +80,43 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 
 2. 登录服务器
 
+接口：http://121.40.50.44:10008/api/v1/login?username=aaa&password=bbb
+
+说明：username表示用户名，password表示密码
+
+返回：200 OK表示成功，其他表示失败
+
+
 3. 登出服务器
+
+接口：http://121.40.50.44:10008/api/v1/logout
+
+返回：200 OK
 
 4. 获取服务器基本配置信息
 
+接口：http://121.40.50.44:10008/api/v1/getbaseconfig
+
+返回：
+
+         "ServiceLanPort" : EasyDarwin HTTP本地监听端口
+         "ServiceWanPort" : EasyDarwin HTTP公网端口
+         "RTSPLanPort" : EasyDarwin RTSP本地监听端口
+         "RTSPWanPort" : EasyDarwin RTSP公网端口
+         "ServiceLanIP" : EasyDarwin本地地址
+         "ServiceWanIP" : EasyDarwin公网地址
+
+         "NginxRootFolder" : NGINX 本地磁盘根目录
+         "NginxWebPath" : NGINX WEB 地址
+         "NginxRTMPPath" :NGINX RTMP 地址
+
+
 5. 设置服务器基本配置信息
 
+接口：http://121.40.50.44:10008/api/v1/setbaseconfig?ServiceLanPort=10008&ServiceWanPort=0&RTSPLanPort=10554&ServiceLanIP=192.168.66.189
 
-http://121.40.50.44:10008/api/v1/login?username=aaa&password=bbb
-http://121.40.50.44:10008/api/v1/logout
-http://121.40.50.44:10008/api/v1/getserverinfo
+
+
 
 ## 编译、配置、部署的方法 ##
 
