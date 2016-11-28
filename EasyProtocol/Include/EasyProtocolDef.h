@@ -143,12 +143,17 @@
 #define EASY_TAG_SERVER_INTERFACE_VERSION				"InterfaceVersion"
 
 #define EASY_TAG_CONFIG_SERVICE_LAN_PORT				"ServiceLanPort"
-#define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
 #define EASY_TAG_CONFIG_SERIVCE_WAN_PORT				"ServiceWanPort"
+
+#define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
 #define EASY_TAG_CONFIG_SERVICE_WAN_IP					"ServiceWanIP"
+
+#define EASY_TAG_CONFIG_RTSP_LAN_PORT					"RTSPLanPort"
+#define	EASY_TAG_CONFIG_RTSP_WAN_PORT					"RTSPWanPort"
+
 #define EASY_TAG_CONFIG_CHANNEL_SNAP_INTERVAL			"ChannelSnapInterval"
 
-#define EASY_TAG_CONFIG_NGINX_LOCAL_PATH				"NginxLocalPath"
+#define EASY_TAG_CONFIG_NGINX_ROOT_FOLDER				"NginxRootFolder"
 #define EASY_TAG_CONFIG_NGINX_WEB_PATH					"NginxWebPath"
 #define EASY_TAG_CONFIG_NGINX_RTMP_PATH					"NginxRTMPPath"
 
@@ -164,11 +169,11 @@
 #define EASY_TAG_ENABLE									"Enable"
 #define EASY_TAG_L_ENABLE								"enable"
 #define EASY_TAG_ONLINE									"Online"
-#define EASY_TAG_RTSP									"Rtsp"
+#define EASY_TAG_RTSP									"RTSP"
 #define EASY_TAG_L_RTSP									"rtsp"
 #define EASY_TAG_ONVIF									"Onvif"
 #define EASY_TAG_L_ONVIF								"onvif"
-#define EASY_TAG_CDN									"Cdn"
+#define EASY_TAG_CDN									"CDN"
 #define EASY_TAG_L_CDN									"cdn"
 
 #define EASY_TAG_L_OLD_PASSWORD							"oldpassword"
