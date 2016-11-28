@@ -144,33 +144,26 @@
 #define EASY_TAG_SERVER_INTERFACE_VERSION				"InterfaceVersion"
 
 #define EASY_TAG_CONFIG_SERVICE_LAN_PORT				"ServiceLanPort"
-<<<<<<< HEAD
+#define EASY_TAG_CONFIG_SERVICE_L_LAN_PORT				"servicelanport"
+
 #define EASY_TAG_CONFIG_SERIVCE_WAN_PORT				"ServiceWanPort"
+#define EASY_TAG_CONFIG_SERIVCE_L_WAN_PORT				"servicewanport"
 
 #define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
+#define EASY_TAG_CONFIG_SERVICE_L_LAN_IP				"servicelanip"
+
 #define EASY_TAG_CONFIG_SERVICE_WAN_IP					"ServiceWanIP"
+#define EASY_TAG_CONFIG_SERVICE_L_WAN_IP				"servicewanip"
 
 #define EASY_TAG_CONFIG_RTSP_LAN_PORT					"RTSPLanPort"
 #define	EASY_TAG_CONFIG_RTSP_WAN_PORT					"RTSPWanPort"
 
-=======
-#define EASY_TAG_CONFIG_SERVICE_L_LAN_PORT				"servicelanport"
-#define EASY_TAG_CONFIG_SERVICE_LAN_IP					"ServiceLanIP"
-#define EASY_TAG_CONFIG_SERVICE_L_LAN_IP				"servicelanip"
-#define EASY_TAG_CONFIG_SERIVCE_WAN_PORT				"ServiceWanPort"
-#define EASY_TAG_CONFIG_SERIVCE_L_WAN_PORT				"servicewanport"
-#define EASY_TAG_CONFIG_SERVICE_WAN_IP					"ServiceWanIP"
-#define EASY_TAG_CONFIG_SERVICE_L_WAN_IP				"servicewanip"
->>>>>>> b768939ded6d4a48bc29d88d461e04558e5005b3
 #define EASY_TAG_CONFIG_CHANNEL_SNAP_INTERVAL			"ChannelSnapInterval"
 #define EASY_TAG_CONFIG_CHANNEL_L_SNAP_INTERVAL			"channelsnapinterval"
 
-<<<<<<< HEAD
 #define EASY_TAG_CONFIG_NGINX_ROOT_FOLDER				"NginxRootFolder"
-=======
-#define EASY_TAG_CONFIG_NGINX_LOCAL_PATH				"NginxLocalPath"
-#define EASY_TAG_CONFIG_NGINX_L_LOCAL_PATH				"nginxlocalpath"
->>>>>>> b768939ded6d4a48bc29d88d461e04558e5005b3
+#define EASY_TAG_CONFIG_NGINX_L_ROOT_FOLDER				"nginxrootfolder"
+
 #define EASY_TAG_CONFIG_NGINX_WEB_PATH					"NginxWebPath"
 #define EASY_TAG_CONFIG_NGINX_L_WEB_PATH				"nginxwebpath"
 #define EASY_TAG_CONFIG_NGINX_RTMP_PATH					"NginxRTMPPath"
