@@ -9,7 +9,7 @@ EasyDarwin本身提供了一个高性能的服务端框架，Linux/Windows跨平
 EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn.net/course/detail/2431](http://edu.csdn.net/course/detail/2431 "EasyDarwin开源流媒体服务器视频教程")
 
 ## EasyDarwin目前支持 ##
-1. MP4点播(QTSSFileModule)；
+1. MP4点播(nginx)；
 2. 标准RTSP推模式直播(QTSSReflectorModule)；
 3. 标准RTSP拉模式直播(EasyRelayModule)；
 4. HLS直播(EasyHLSModule)；
@@ -19,6 +19,77 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 1. 点播；
 2. WEB管理后台；
 3. RTMP/HLS直播功能；
+
+## 接口列表 ##
+
+#### 1.获取服务器信息 ####
+
+- 功能说明
+> 获取服务器当前的软/硬件版本信息，接口版本信息以及累计运行时长等信息；
+
+- URL
+> http://[域名]:10008/api/v1/getserverinfo
+
+- 格式
+> json
+
+- HTTP请求方式
+> GET,POST
+
+- 参数说明
+> 公共参数：无
+
+
+> 私有参数：无
+
+- 请求示例
+> http://121.40.50.44:10008/api/v1/getserverinfo
+
+- 返回参数说明
+> "Hardware" : 服务器所在的硬件平台；
+> 
+> "InterfaceVersion" : api接口版本；
+> 
+> "RunningTime" : 服务累计运行时间；
+> 
+> "Server" : 服务器版本信息
+
+- 正确返回示例
+
+    {
+       "EasyDarwin" : {
+      "Body" : {
+     "Hardware" : "x86",
+     "InterfaceVersion" : "v1",
+     "RunningTime" : "2 Days 2 Hours 38 Mins 52 Secs",
+     "Server" : "Server: EasyDarwin/7.1 (Build/16.1111; Platform/Win32; Release/EasyDarwin; State/Development; )"
+      },
+      "Header" : {
+     "CSeq" : "1",
+     "ErrorNum" : "200",
+     "ErrorString" : "Success OK",
+     "MessageType" : "MSG_SC_SERVER_INFO_ACK",
+     "Version" : "1.0"
+      }
+       }
+    }
+
+- 错误返回示例
+> 无
+    
+
+2. 登录服务器
+
+3. 登出服务器
+
+4. 获取服务器基本配置信息
+
+5. 设置服务器基本配置信息
+
+
+http://121.40.50.44:10008/api/v1/login?username=aaa&password=bbb
+http://121.40.50.44:10008/api/v1/logout
+http://121.40.50.44:10008/api/v1/getserverinfo
 
 ## 编译、配置、部署的方法 ##
 
