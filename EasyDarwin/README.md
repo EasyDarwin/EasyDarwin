@@ -16,8 +16,9 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 5. 接入EasyDarwin流媒体平台，分布式部署(EasyCMSModule)；
 
 ## EasyDarwin正在进行开发的 ##
-1. Onvif支持；
-2. 分布式部署负载均衡（结合EasyCMS）；
+1. 点播；
+2. WEB管理后台；
+3. RTMP/HLS直播功能；
 
 ## 编译、配置、部署的方法 ##
 
