@@ -78,7 +78,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 > 无
     
 
-2. 登录服务器
+#### 2.登录服务器 ####
 
 接口：http://121.40.50.44:10008/api/v1/login?username=aaa&password=bbb
 
@@ -87,13 +87,13 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 返回：200 OK表示成功，其他表示失败
 
 
-3. 登出服务器
+#### 3.登出服务器 ####
 
 接口：http://121.40.50.44:10008/api/v1/logout
 
 返回：200 OK
 
-4. 获取服务器基本配置信息
+#### 4.获取服务器基本配置信息 ####
 
 接口：http://121.40.50.44:10008/api/v1/getbaseconfig
 
@@ -111,11 +111,9 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
          "NginxRTMPPath" :NGINX RTMP 地址
 
 
-5. 设置服务器基本配置信息
+#### 5.设置服务器基本配置信息 ####
 
 接口：http://121.40.50.44:10008/api/v1/setbaseconfig?ServiceLanPort=10008&ServiceWanPort=0&RTSPLanPort=10554&ServiceLanIP=192.168.66.189
-
-
 
 
 ## 编译、配置、部署的方法 ##
