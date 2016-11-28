@@ -42,10 +42,14 @@ extern "C" {
 #define QTSS_MAX_ATTRIBUTE_NAME_SIZE    64
 #define QTSS_MAX_URL_LENGTH				512
 #define QTSS_MAX_FILE_NAME_LENGTH		128
-#define QTSS_MAX_REQUEST_BUFFER_SIZE	512*1024
+#define QTSS_MAX_REQUEST_BUFFER_SIZE	8*1024
 #define EASY_ACCENCODER_BUFFER_SIZE_LEN	16*1024*4
 
 #define QTSS_MAX_ATTRIBUTE_NUMS			128
+
+#define NONE_CONFIG_NGINX_WEB_PATH		"http://127.0.0.1:10080/"
+#define NONE_CONFIG_NGINX_RTMP_PATH		"rtmp://127.0.0.1:10035/live/"
+#define NONE_CONFIG_NGINX_LOCAL_PATH	"./nginx/www/"
 
 //*******************************
 // ENUMERATED TYPES
@@ -703,11 +707,11 @@ enum
     // All of these parameters are read-write. 
     
     qtssPrefsRTSPTimeout					= 0,    //"rtsp_timeout"                //UInt32    //RTSP timeout in seconds sent to the client.
-    qtssPrefsRTSPSessionTimeout				= 1,    //"rtsp_session_timeout"           //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
-    qtssPrefsRTPSessionTimeout				= 2,    //"rtp_session_timeout"                 //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTP clients. 0 means no timeout
+    qtssPrefsRTSPSessionTimeout				= 1,    //"rtsp_session_timeout"        //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
+    qtssPrefsRTPSessionTimeout				= 2,    //"rtp_session_timeout"         //UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTP clients. 0 means no timeout
     qtssPrefsMaximumConnections				= 3,    //"maximum_connections"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
     qtssPrefsMaximumBandwidth				= 4,    //"maximum_bandwidth"           //SInt32    //Maximum amt of bandwidth the server is allowed to serve in K bits. -1 means unlimited.
-    qtssPrefsMovieFolder					= 5,    //"movie_folder"                //char array    //Path to the root movie folder
+    qtssPrefsNginxRootFolder				= 5,    //"nginx_root_folder"           //char array    //Path to the root movie folder
     qtssPrefsRTSPIPAddr						= 6,    //"bind_ip_addr"                //char array    //IP address the server should accept RTSP connections on. 0.0.0.0 means all addresses on the machine.
     qtssPrefsBreakOnAssert					= 7,    //"break_on_assert"             //bool        //If true, the server will break in the debugger when an assert fails.
     qtssPrefsAutoRestart					= 8,    //"auto_restart"                //bool        //If true, the server will automatically restart itself if it crashes.
@@ -801,9 +805,13 @@ enum
     qtssPrefsEnableAllowGuestDefault        = 80,   // "enable_allow_guest_authorize_default" //Boo1l6 // server hint to access modules to allow guest access as the default (can be overriden in a qtaccess file or other means)
     qtssPrefsNumRTSPThreads                 = 81,   // "run_num_rtsp_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 	
-	easyPrefsHTTPServicePort				= 82,	// "http_service_port"
-    
-	qtssPrefsNumParams                      = 83
+	easyPrefsHTTPServicePort				= 82,	// "http_service_port"	//UInt16
+	easyPrefsRTSPWANIPAddr					= 83,	// "rtsp_wan_ip"		//char array
+	easyPrefsRTSPWANPort					= 84,	// "rtsp_wan_port"		//UInt16
+	easyPrefsNginxWebPath					= 85,	// "nginx_web_path"		//char array
+	easyPrefsNginxRTMPPath					= 86,	// "nginx_rtmp_path"	//char array
+
+	qtssPrefsNumParams                      = 87
 };
 
 typedef UInt32 QTSS_PrefsAttributes;

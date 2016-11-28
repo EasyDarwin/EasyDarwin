@@ -222,6 +222,13 @@ public:
 	bool GetAllowGuestDefault() { return fAllowGuestAuthorizeDefault; }
 
 	UInt16 GetHTTPServicePort() { return fHTTPServicePort; }
+
+	char* GetRTSPWANIP() { return this->GetStringPref(easyPrefsRTSPWANIPAddr); }
+	UInt16 GetRTSPWANPort() const {	return fRTSPWANPort; }
+
+	char* GetNginxWebPath() { return this->GetStringPref(easyPrefsNginxWebPath); }
+	char* GetNginxRTMPPath() { return this->GetStringPref(easyPrefsNginxRTMPPath); }
+
 private:
 
 	UInt32      fRTSPTimeoutInSecs;
@@ -293,20 +300,23 @@ private:
 	bool  fEnableMonitorStatsFile;
 	UInt32  fStatsFileIntervalSeconds;
 
-	Float32    fOverbufferRate;
+	Float32	fOverbufferRate;
 
-	bool  fEnablePacketHeaderPrintfs;
-	UInt32  fPacketHeaderPrintfOptions;
-	bool  fCloseLogsOnWrite;
+	bool   fEnablePacketHeaderPrintfs;
+	UInt32 fPacketHeaderPrintfOptions;
+	bool   fCloseLogsOnWrite;
 
-	bool fDisableThinning;
+	bool   fDisableThinning;
 	UInt16 fDefaultStreamQuality;
-	bool fUDPMonitorEnabled;
+	bool   fUDPMonitorEnabled;
 	UInt16 fUDPMonitorVideoPort;
 	UInt16 fUDPMonitorAudioPort;
 	char   fUDPMonitorDestAddr[20];
 	char   fUDPMonitorSrcAddr[20];
-	bool fAllowGuestAuthorizeDefault;
+	bool   fAllowGuestAuthorizeDefault;
+
+	char   fRTSPWANAddr[20];
+	UInt16 fRTSPWANPort;
 
 	enum //fPacketHeaderPrintfOptions
 	{

@@ -437,7 +437,7 @@ char *GetTrimmedKeyWord(char *prefKeyWord)
 void SetMoviesRelativeDir()
 {
 	char* movieFolderString = NULL;
-	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsMovieFolder, 0, &movieFolderString);
+	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsNginxRootFolder, 0, &movieFolderString);
 	OSCharArrayDeleter deleter(movieFolderString);
 
 	ResizeableStringFormatter redirectPath(NULL, 0);

@@ -413,11 +413,6 @@ QTSS_Error HTTPSession::SetupRequest()
 					return execNetMsgCSLogoutReqRESTful(fRequest->GetQueryString());
 				}
 
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "modifypassword")
-				//{
-				//	return execNetMsgCSModifyPasswordRESTful(fRequest->GetQueryString());
-				//}
-
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getserverinfo")
 				{
 					return execNetMsgCSGetServerVersionReqRESTful(fRequest->GetQueryString());
@@ -433,10 +428,10 @@ QTSS_Error HTTPSession::SetupRequest()
 				//	return execNetMsgCSSetBaseConfigReqRESTful(fRequest->GetQueryString());
 				//}
 
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "restart")
-				//{
-				//	return execNetMsgCSRestartServiceRESTful(fRequest->GetQueryString());
-				//}
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "restart")
+				{
+					return execNetMsgCSRestartServiceRESTful(fRequest->GetQueryString());
+				}
 
 				//if (path[0] == "api" && path[1] == "v1" && path[2] == "getchannels")
 				//{
@@ -450,7 +445,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
 				{
-					return ExecNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString(), NULL);
+					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString(), NULL);
 				}
 			}
 
@@ -736,7 +731,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json)
+QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -884,4 +879,15 @@ QTSS_Error HTTPSession::execNetMsgCSLogoutReqRESTful(const char* queryString)
 	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryString) const
+{
+	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//if (!hasLogin(cokieTemp))
+	//{
+	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+	//}
+
+	exit(-2);
 }

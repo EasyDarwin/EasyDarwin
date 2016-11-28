@@ -67,7 +67,7 @@
 #include "QTSSProxyModule.h"
 #endif
 #include "QTSSPosixFileSysModule.h"
-#include "QTSSAdminModule.h"
+//#include "QTSSAdminModule.h"
 #include "QTSSAccessModule.h"
 //#include "QTSSDSAuthModule.h"
 #if MEMORY_DEBUGGING
@@ -755,10 +755,6 @@ void    QTSServer::LoadCompiledInModules()
 	QTSSModule* theFileSysModule = new QTSSModule("QTSSPosixFileSysModule");
 	(void)theFileSysModule->SetupModule(&sCallbacks, &QTSSPosixFileSysModule_Main);
 	(void)AddModule(theFileSysModule);
-
-	QTSSModule* theAdminModule = new QTSSModule("QTSSAdminModule");
-	(void)theAdminModule->SetupModule(&sCallbacks, &QTSSAdminModule_Main);
-	(void)AddModule(theAdminModule);
 
 	if (this->GetPrefs()->CloudPlatformEnabled())
 	{

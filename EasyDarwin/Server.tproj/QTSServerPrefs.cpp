@@ -48,7 +48,7 @@
 
 char* QTSServerPrefs::sAdditionalDefaultPorts[] =
 {
-	"8554",
+	"554",
 	NULL
 };
 
@@ -93,7 +93,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues,	"120",		NULL					},	//rtp_session_timeout
 	{ kDontAllowMultipleValues, "1000",     NULL                    },  //maximum_connections
 	{ kDontAllowMultipleValues, "102400",   NULL                    },  //maximum_bandwidth
-	{ kDontAllowMultipleValues,	DEFAULTPATHS_MOVIES_DIR, NULL       },	//movie_folder
+	{ kDontAllowMultipleValues,	NONE_CONFIG_NGINX_LOCAL_PATH, NULL  },	//nginx_root_folder
 	{ kAllowMultipleValues,     "0",        NULL                    },  //bind_ip_addr
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //break_on_assert
 	{ kDontAllowMultipleValues, "true",     NULL                    },  //auto_restart
@@ -116,7 +116,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues,	"200000",	NULL					},	//max_tcp_buffer_size
 	{ kDontAllowMultipleValues, ".5",       NULL                    },  //tcp_seconds_to_buffer
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //do_report_http_connection_ip_address
-	{ kDontAllowMultipleValues, "Streaming Server", NULL            },  //default_authorization_realm
+	{ kDontAllowMultipleValues, "EasyDarwin", NULL					},  //default_authorization_realm
 #ifndef __Win32__
 	{ kDontAllowMultipleValues, "qtss",     NULL                    },  //run_user_name
 	{ kDontAllowMultipleValues, "qtss",     NULL                    },  //run_group_name
@@ -125,7 +125,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "",         NULL                    },  //run_group_name
 #endif
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //append_source_addr_in_transport
-	{ kAllowMultipleValues,     "554",      sAdditionalDefaultPorts },  //rtsp_ports
+	{ kAllowMultipleValues,     "10554",    sAdditionalDefaultPorts },  //rtsp_ports
 	{ kDontAllowMultipleValues, "500",      NULL                    },  //max_retransmit_delay
 	{ kDontAllowMultipleValues, "24",       NULL                    },  //small_window_size
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //ack_logging_enabled
@@ -180,7 +180,12 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_allow_guest_default
 	{ kDontAllowMultipleValues, "4",        NULL                     },  //run_num_rtsp_threads
 
-	{ kDontAllowMultipleValues, "8080",     NULL                        }  //http_service_port   
+	{ kDontAllowMultipleValues, "10008",     NULL					 },  //http_service_port
+
+	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_ip
+	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //rtsp_wan_port
+	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL },  //nginx_web_path
+	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }   //nginx_rtmp_path
 
 };
 
@@ -188,10 +193,10 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
 	/* 0 */ { "rtsp_timeout",                           NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 1 */ { "rtsp_session_timeout",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 2 */ { "rtp_session_timeout",                            NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 2 */ { "rtp_session_timeout",                    NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 3 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 4 */ { "maximum_bandwidth",                      NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 5 */ { "movie_folder",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 5 */ { "nginx_root_folder",                       NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 6 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 7 */ { "break_on_assert",                        NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 8 */ { "auto_restart",                           NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -261,15 +266,21 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 	/* 72 */ { "player_requires_no_pause_time_adjustment",	NULL,				qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
 	/* 73 */ { "default_stream_quality",                NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 74 */ { "player_requires_rtp_start_time_adjust", NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 75 */ { "enable_udp_monitor_stream",  NULL,                              qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 76 */ { "udp_monitor_video_port",  NULL,                                 qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 77 */ { "udp_monitor_audio_port",  NULL,                                 qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 78 */ { "udp_monitor_dest_ip",  NULL,                                    qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 79 */ { "udp_monitor_src_ip",  NULL,                                     qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 80 */ { "enable_allow_guest_default",  NULL,                             qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 81 */ { "run_num_rtsp_threads",  NULL,                                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 75 */ { "enable_udp_monitor_stream",				NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 76 */ { "udp_monitor_video_port",				NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 77 */ { "udp_monitor_audio_port",				NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 78 */ { "udp_monitor_dest_ip",					NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 79 */ { "udp_monitor_src_ip",					NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 80 */ { "enable_allow_guest_default",			NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 81 */ { "run_num_rtsp_threads",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 82 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
+	/* 82 */ { "http_service_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+
+	/* 83 */ { "rtsp_wan_ip",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 84 */ { "rtsp_wan_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+
+	/* 85 */{ "nginx_web_path",							NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 86 */{ "nginx_rtmp_path",						NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite }
 
 };
 
@@ -344,7 +355,8 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissin
 	fUDPMonitorVideoPort(0),
 	fUDPMonitorAudioPort(0),
 	fAllowGuestAuthorizeDefault(true),
-	fHTTPServicePort(8080)
+	fHTTPServicePort(10008),
+	fRTSPWANPort(10554)
 {
 	SetupAttributes();
 	RereadServerPreferences(inWriteMissingPrefs);
@@ -434,6 +446,9 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(qtssPrefsNumRTSPThreads, &fNumRTSPThreads, sizeof(fNumRTSPThreads));
 
 	this->SetVal(easyPrefsHTTPServicePort, &fHTTPServicePort, sizeof(fHTTPServicePort));
+
+	this->SetVal(easyPrefsRTSPWANIPAddr, &fRTSPWANAddr, sizeof(fRTSPWANAddr));
+	this->SetVal(easyPrefsRTSPWANPort, &fRTSPWANPort, sizeof(fRTSPWANPort));
 }
 
 
@@ -585,7 +600,7 @@ char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
 	OSMutexLocker locker(&fPrefsMutex);
 
 	// Get the movie folder attribute
-	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsMovieFolder);
+	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsNginxRootFolder);
 
 	// If the movie folder path fits inside the provided buffer, copy it there
 	if (theMovieFolder->Len < *ioLen)

@@ -110,6 +110,7 @@ public:
 
 	bool IsPlaying() { if (fRTPSession == NULL) return false; if (fRTPSession->GetSessionState() == qtssPlayingState) return true; return false; }
 
+
 private:
 
 	SInt64 Run();
