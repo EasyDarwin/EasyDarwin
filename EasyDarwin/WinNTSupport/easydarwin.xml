@@ -36,9 +36,7 @@
 		<PREF NAME="total_bytes_update" TYPE="UInt32" >1</PREF>
 		<PREF NAME="average_bandwidth_update" TYPE="UInt32" >60</PREF>
 		<PREF NAME="safe_play_duration" TYPE="UInt32" >600</PREF>
-		<PREF NAME="module_folder" >c:\Program Files\EasyDarwin\QTSSModules\</PREF>
 		<PREF NAME="error_logfile_name" >Error</PREF>
-		<PREF NAME="error_logfile_dir" >c:\Program Files\EasyDarwin\Logs\</PREF>
 		<PREF NAME="error_logfile_interval" TYPE="UInt32" >7</PREF>
 		<PREF NAME="error_logfile_size" TYPE="UInt32" >256000</PREF>
 		<PREF NAME="error_logfile_verbosity" TYPE="UInt32" >2</PREF>
@@ -52,7 +50,7 @@
 		<PREF NAME="max_tcp_buffer_size" TYPE="UInt32" >200000</PREF>
 		<PREF NAME="tcp_seconds_to_buffer" TYPE="Float32" >.5</PREF>
 		<PREF NAME="do_report_http_connection_ip_address" TYPE="bool" >false</PREF>
-		<PREF NAME="default_authorization_realm" >Streaming Server</PREF>
+		<PREF NAME="default_authorization_realm" >EasyDarwin</PREF>
 		<PREF NAME="run_user_name" ></PREF>
 		<PREF NAME="run_group_name" ></PREF>
 		<PREF NAME="append_source_addr_in_transport" TYPE="bool" >false</PREF>
@@ -94,7 +92,7 @@
 		<PREF NAME="window_size_max_threshold" TYPE="UInt32" >1000</PREF>
 		<PREF NAME="RTSP_server_info" TYPE="bool" >true</PREF>
 		<PREF NAME="run_num_threads" TYPE="UInt32" >4</PREF>
-		<PREF NAME="pid_file" >EasyDarwin.pid</PREF>
+		<PREF NAME="pid_file" >easydarwin.pid</PREF>
 		<PREF NAME="force_logs_close_on_write" TYPE="bool" >false</PREF>
 		<PREF NAME="disable_thinning" TYPE="bool" >false</PREF>
 		<LIST-PREF NAME="player_requires_rtp_header_info" >
@@ -131,8 +129,7 @@
 		<PREF NAME="request_logging" TYPE="bool" >true</PREF>
 		<PREF NAME="request_logfile_size" TYPE="UInt32" >10240000</PREF>
 		<PREF NAME="request_logtime_in_gmt" TYPE="bool" >true</PREF>
-		<PREF NAME="request_logfile_dir" >c:\Program Files\EasyDarwin\Logs\</PREF>
-		<PREF NAME="request_logfile_name" >StreamingServer</PREF>
+		<PREF NAME="request_logfile_name" >EasyDarwin</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSReflectorModule" >
 		<PREF NAME="hls_output_enabled" TYPE="bool" >false</PREF>
@@ -179,8 +176,6 @@
 	<MODULE NAME="QTSSAccessModule" >
 		<PREF NAME="modAccess_qtaccessfilename" >qtaccess</PREF>
 		<PREF NAME="modAccess_enabled" TYPE="bool" >true</PREF>
-		<PREF NAME="modAccess_usersfilepath" >c:\Program Files\EasyDarwin\qtusers</PREF>
-		<PREF NAME="modAccess_groupsfilepath" >c:\Program Files\EasyDarwin\qtgroups</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
