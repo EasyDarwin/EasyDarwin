@@ -22,7 +22,7 @@
 #define Easy_API
 #endif
 //#define Easy_API
-#define EASY_PROTOCOL_VERSION                         "1.0"
+#define EASY_PROTOCOL_VERSION							"1.0"
 #define EASY_PROTOCOL_STREAM_MAIN						"0"
 #define EASY_PROTOCOL_STREAM_SUB						"1"
 
@@ -354,7 +354,7 @@
 enum EasyDarwinTimeFormat
 {
 	EASY_TIME_FORMAT_YYYYMMDDHHMMSS = 1,    ///< Format like 2014-08-31 08:15:30
-	EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx,		///<Format like 20140831081530
+	EASY_TIME_FORMAT_YYYYMMDDHHMMSSEx,		///< Format like 20140831081530
 	EASY_TIME_FORMAT_YYYYMMDD,              ///< Format like 2014-08-31
 	EASY_TIME_FORMAT_HHMMSS                 ///< Format like 08:15:30    
 };
