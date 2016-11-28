@@ -418,15 +418,15 @@ QTSS_Error HTTPSession::SetupRequest()
 					return execNetMsgCSGetServerVersionReqRESTful(fRequest->GetQueryString());
 				}
 
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "getbaseconfig")
-				//{
-				//	return execNetMsgCSGetBaseConfigReqRESTful(fRequest->GetQueryString());
-				//}
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "getbaseconfig")
+				{
+					return execNetMsgCSGetBaseConfigReqRESTful(fRequest->GetQueryString());
+				}
 
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "setbaseconfig")
-				//{
-				//	return execNetMsgCSSetBaseConfigReqRESTful(fRequest->GetQueryString());
-				//}
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "setbaseconfig")
+				{
+					return execNetMsgCSSetBaseConfigReqRESTful(fRequest->GetQueryString());
+				}
 
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "restart")
 				{
@@ -445,7 +445,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
 				{
-					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString(), NULL);
+					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString());
 				}
 			}
 
@@ -731,7 +731,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 	return theErr;
 }
 
-QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json)
+QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -864,6 +864,148 @@ QTSS_Error HTTPSession::execNetMsgCSLogoutReqRESTful(const char* queryString)
 	//cookie->token->clear redis->Platform clear,need login again
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_LOGOUT_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryString)
+{
+	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//if (!hasLogin(cokieTemp))
+	//{
+	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+	//}
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_BASE_CONFIG_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	UInt16 port;
+	UInt32 len = sizeof(UInt16);
+	(void)QTSS_GetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsRTSPPorts, 0, static_cast<void*>(&port), &len);
+	body[EASY_TAG_CONFIG_RTSP_LAN_PORT] = to_string(port);
+
+	char* lanip = nullptr;
+	(void)QTSS_GetValueAsString(QTSServerInterface::GetServer(), qtssSvrDefaultIPAddrStr, 0, &lanip);
+	QTSSCharArrayDeleter theWanIPStrDeleter(lanip);
+	body[EASY_TAG_CONFIG_SERVICE_LAN_IP] = lanip;
+
+	body[EASY_TAG_CONFIG_RTSP_WAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort());
+	body[EASY_TAG_CONFIG_SERVICE_WAN_IP] = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANIP();
+
+	body[EASY_TAG_CONFIG_NGINX_ROOT_FOLDER] = QTSServerInterface::GetServer()->GetPrefs()->GetNginxRootFolder();
+	body[EASY_TAG_CONFIG_NGINX_WEB_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath();
+	body[EASY_TAG_CONFIG_NGINX_RTMP_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath();
+
+	body[EASY_TAG_CONFIG_SERVICE_LAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetHTTPServicePort());
+	body[EASY_TAG_CONFIG_SERIVCE_WAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetHTTPServicePort());
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryString)
+{
+	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//if (!hasLogin(cokieTemp))
+	//{
+	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+	//}
+
+	std::string queryTemp;
+	if (queryString)
+	{
+		queryTemp = EasyUtil::Urldecode(queryString);
+	}
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
+
+	//const char* chLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
+	//if (chLanPort)
+	//{
+	//	UInt16 uLanPort = stoi(chLanPort);
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsMonitorLANPort, 0, &uLanPort, sizeof(uLanPort));
+	//}
+
+	//const char* chLanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_IP);
+	//if (chLanIP)
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsBindIPAddr, 0, (void*)chLanIP, strlen(chLanIP));
+
+	//const char*	chWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERIVCE_WAN_PORT);
+	//if (chWanPort)
+	//{
+	//	UInt16 uWanPort = stoi(chWanPort);
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsMonitorWANPort, 0, &uWanPort, sizeof(uWanPort));
+	//}
+
+	//const char* chWanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_IP);
+	//if (chWanIP)
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsMonitorWANIPAddr, 0, (void*)chWanIP, strlen(chWanIP));
+
+
+	//const char* chChannelSnapInterval = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_CHANNEL_SNAP_INTERVAL);
+	//if (chChannelSnapInterval)
+	//{
+	//	UInt16 uChannelSnapInterval = stoi(chChannelSnapInterval);
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsChannelSnapInterval, 0, &uChannelSnapInterval, sizeof(uChannelSnapInterval));
+	//}
+
+	//const char* chNginxLocalPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_ROOT_FOLDER);
+	//if (chNginxLocalPath)
+	//{
+	//	string nginxLocalPath(chNginxLocalPath);
+	//	if (nginxLocalPath.back() != '\\')
+	//	{
+	//		nginxLocalPath.push_back('\\');
+	//	}
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxLocalPath, 0, (void*)nginxLocalPath.c_str(), nginxLocalPath.size());
+	//}
+
+	//const char* chNginxWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_WEB_PATH);
+	//if (chNginxWebPath)
+	//{
+	//	string nginxWebPath(chNginxWebPath);
+	//	if (nginxWebPath.back() != '\/')
+	//	{
+	//		nginxWebPath.push_back('\/');
+	//	}
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxWebPath, 0, (void*)nginxWebPath.c_str(), nginxWebPath.size());
+	//}
+
+	//const char* chNginxRTMPPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_RTMP_PATH);
+	//if (chNginxRTMPPath)
+	//{
+	//	string nginxRTMPPath(chNginxRTMPPath);
+	//	if (nginxRTMPPath.back() != '\/')
+	//	{
+	//		nginxRTMPPath.push_back('\/');
+	//	}
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxRTMPPath, 0, (void*)nginxRTMPPath.c_str(), nginxRTMPPath.size());
+	//}
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);
 	EasyJsonValue header, body;
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;

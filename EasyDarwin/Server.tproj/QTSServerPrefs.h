@@ -226,6 +226,7 @@ public:
 	char* GetRTSPWANIP() { return this->GetStringPref(easyPrefsRTSPWANIPAddr); }
 	UInt16 GetRTSPWANPort() const {	return fRTSPWANPort; }
 
+	char* GetNginxRootFolder() { return this->GetStringPref(qtssPrefsNginxRootFolder); }
 	char* GetNginxWebPath() { return this->GetStringPref(easyPrefsNginxWebPath); }
 	char* GetNginxRTMPPath() { return this->GetStringPref(easyPrefsNginxRTMPPath); }
 

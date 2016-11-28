@@ -31,7 +31,11 @@ private:
 	QTSS_Error execNetMsgCSLoginReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSLogoutReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSGetServerVersionReqRESTful(const char* queryString);
-	QTSS_Error execNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString, char* json);
+
+	QTSS_Error execNetMsgCSGetBaseConfigReqRESTful(const char* queryString);
+	QTSS_Error execNetMsgCSSetBaseConfigReqRESTful(const char* queryString);
+
+	QTSS_Error execNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString);
 	QTSS_Error execNetMsgCSRestartServiceRESTful(const char* queryString) const;
 
 
