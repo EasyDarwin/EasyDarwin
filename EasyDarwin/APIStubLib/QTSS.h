@@ -808,7 +808,7 @@ enum
 	easyPrefsHTTPServiceLanPort				= 82,	// "service_lan_port"	//UInt16
 	easyPrefsHTTPServiceWanPort				= 83,	// "service_wan_port"	//UInt16
 
-	easyPrefsRTSPWANIPAddr					= 84,	// "rtsp_wan_ip"		//char array
+	easyPrefsServiceWANIPAddr				= 84,	// "service_wan_ip"		//char array
 	easyPrefsRTSPWANPort					= 85,	// "rtsp_wan_port"		//UInt16
 
 	easyPrefsNginxWebPath					= 86,	// "nginx_web_path"		//char array

@@ -127,7 +127,7 @@ QTSS_Error RereadPrefs()
 	sRedisPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_password", sDefaultRedisPassword);
 
 	delete[] sRTSPWanIP;
-	(void)QTSS_GetValueAsString(sServerPrefs, easyPrefsRTSPWANIPAddr, 0, &sRTSPWanIP);
+	(void)QTSS_GetValueAsString(sServerPrefs, easyPrefsServiceWANIPAddr, 0, &sRTSPWanIP);
 
 	sRTSPWanPort = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort();
 

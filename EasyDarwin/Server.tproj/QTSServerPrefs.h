@@ -224,7 +224,7 @@ public:
 	UInt16 GetServiceLanPort() { return fServiceLANPort; }
 	UInt16 GetServiceWanPort() { return fServiceWANPort; }
 
-	char* GetRTSPWANIP() { return this->GetStringPref(easyPrefsRTSPWANIPAddr); }
+	char* GetServiceWANIP() { return this->GetStringPref(easyPrefsServiceWANIPAddr); }
 	UInt16 GetRTSPWANPort() const {	return fRTSPWANPort; }
 
 	char* GetNginxRootFolder() { return this->GetStringPref(qtssPrefsNginxRootFolder); }

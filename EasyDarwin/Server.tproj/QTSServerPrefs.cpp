@@ -183,7 +183,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_lan_port
 	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_wan_port
 
-	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //rtsp_wan_ip
+	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //service_wan_ip
 	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_port
 	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL },  //nginx_web_path
 	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }   //nginx_rtmp_path
@@ -278,7 +278,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 	/* 82 */ { "service_lan_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 83 */ { "service_wan_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 84 */ { "rtsp_wan_ip",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 84 */ { "service_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 85 */ { "rtsp_wan_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
 	/* 86 */{ "nginx_web_path",							NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
@@ -451,7 +451,7 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(easyPrefsHTTPServiceLanPort, &fServiceLANPort, sizeof(fServiceLANPort));
 	this->SetVal(easyPrefsHTTPServiceWanPort, &fServiceWANPort, sizeof(fServiceWANPort));
 
-	this->SetVal(easyPrefsRTSPWANIPAddr, &fRTSPWANAddr, sizeof(fRTSPWANAddr));
+	this->SetVal(easyPrefsServiceWANIPAddr, &fRTSPWANAddr, sizeof(fRTSPWANAddr));
 	this->SetVal(easyPrefsRTSPWANPort, &fRTSPWANPort, sizeof(fRTSPWANPort));
 }
 
