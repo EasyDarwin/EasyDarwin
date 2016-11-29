@@ -805,7 +805,7 @@ enum
     qtssPrefsEnableAllowGuestDefault        = 80,   // "enable_allow_guest_authorize_default" //Boo1l6 // server hint to access modules to allow guest access as the default (can be overriden in a qtaccess file or other means)
     qtssPrefsNumRTSPThreads                 = 81,   // "run_num_rtsp_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 	
-	easyPrefsHTTPServicePort				= 82,	// "http_service_port"	//UInt16
+	easyPrefsHTTPServiceLanPort				= 82,	// "service_lan_port"	//UInt16
 	easyPrefsRTSPWANIPAddr					= 83,	// "rtsp_wan_ip"		//char array
 	easyPrefsRTSPWANPort					= 84,	// "rtsp_wan_port"		//UInt16
 	easyPrefsNginxWebPath					= 85,	// "nginx_web_path"		//char array

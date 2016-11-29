@@ -180,7 +180,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_allow_guest_default
 	{ kDontAllowMultipleValues, "4",        NULL                     },  //run_num_rtsp_threads
 
-	{ kDontAllowMultipleValues, "10008",     NULL					 },  //http_service_port
+	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_lan_port
 
 	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_ip
 	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //rtsp_wan_port
@@ -274,7 +274,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 	/* 80 */ { "enable_allow_guest_default",			NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 81 */ { "run_num_rtsp_threads",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 82 */ { "http_service_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 82 */ { "service_lan_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
 	/* 83 */ { "rtsp_wan_ip",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 84 */ { "rtsp_wan_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -445,7 +445,7 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(qtssPrefsEnableAllowGuestDefault, &fAllowGuestAuthorizeDefault, sizeof(fAllowGuestAuthorizeDefault)); //enable_allow_guest_authorize_default
 	this->SetVal(qtssPrefsNumRTSPThreads, &fNumRTSPThreads, sizeof(fNumRTSPThreads));
 
-	this->SetVal(easyPrefsHTTPServicePort, &fHTTPServicePort, sizeof(fHTTPServicePort));
+	this->SetVal(easyPrefsHTTPServiceLanPort, &fHTTPServicePort, sizeof(fHTTPServicePort));
 
 	this->SetVal(easyPrefsRTSPWANIPAddr, &fRTSPWANAddr, sizeof(fRTSPWANAddr));
 	this->SetVal(easyPrefsRTSPWANPort, &fRTSPWANPort, sizeof(fRTSPWANPort));

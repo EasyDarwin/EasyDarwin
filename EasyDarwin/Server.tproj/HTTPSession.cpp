@@ -1009,7 +1009,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	if (chHTTPLanPort)
 	{
 		UInt16 uHTTPLanPort = stoi(chHTTPLanPort);
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsHTTPServicePort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsHTTPServiceLanPort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
 	}
 
 	//9.EASY_TAG_CONFIG_SERVICE_WAN_PORT
@@ -1017,7 +1017,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	if (chHTTPWanPort)
 	{
 		UInt16 uHTTPWanPort = stoi(chHTTPWanPort);
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsHTTPServicePort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsHTTPServiceLanPort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
 	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);
