@@ -181,9 +181,10 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "4",        NULL                     },  //run_num_rtsp_threads
 
 	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_lan_port
+	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_wan_port
 
-	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_ip
-	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //rtsp_wan_port
+	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //rtsp_wan_ip
+	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_port
 	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL },  //nginx_web_path
 	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }   //nginx_rtmp_path
 
@@ -275,12 +276,13 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 	/* 81 */ { "run_num_rtsp_threads",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 
 	/* 82 */ { "service_lan_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 83 */ { "service_wan_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 83 */ { "rtsp_wan_ip",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 84 */ { "rtsp_wan_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 84 */ { "rtsp_wan_ip",							NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 85 */ { "rtsp_wan_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 85 */{ "nginx_web_path",							NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 86 */{ "nginx_rtmp_path",						NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite }
+	/* 86 */{ "nginx_web_path",							NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 87 */{ "nginx_rtmp_path",						NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite }
 
 };
 
@@ -355,7 +357,8 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissin
 	fUDPMonitorVideoPort(0),
 	fUDPMonitorAudioPort(0),
 	fAllowGuestAuthorizeDefault(true),
-	fHTTPServicePort(10008),
+	fServiceLANPort(10008),
+	fServiceWANPort(10008),
 	fRTSPWANPort(10554)
 {
 	SetupAttributes();
@@ -445,7 +448,8 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(qtssPrefsEnableAllowGuestDefault, &fAllowGuestAuthorizeDefault, sizeof(fAllowGuestAuthorizeDefault)); //enable_allow_guest_authorize_default
 	this->SetVal(qtssPrefsNumRTSPThreads, &fNumRTSPThreads, sizeof(fNumRTSPThreads));
 
-	this->SetVal(easyPrefsHTTPServiceLanPort, &fHTTPServicePort, sizeof(fHTTPServicePort));
+	this->SetVal(easyPrefsHTTPServiceLanPort, &fServiceLANPort, sizeof(fServiceLANPort));
+	this->SetVal(easyPrefsHTTPServiceWanPort, &fServiceWANPort, sizeof(fServiceWANPort));
 
 	this->SetVal(easyPrefsRTSPWANIPAddr, &fRTSPWANAddr, sizeof(fRTSPWANAddr));
 	this->SetVal(easyPrefsRTSPWANPort, &fRTSPWANPort, sizeof(fRTSPWANPort));

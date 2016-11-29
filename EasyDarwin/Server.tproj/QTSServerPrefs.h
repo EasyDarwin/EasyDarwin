@@ -221,7 +221,8 @@ public:
 
 	bool GetAllowGuestDefault() { return fAllowGuestAuthorizeDefault; }
 
-	UInt16 GetHTTPServicePort() { return fHTTPServicePort; }
+	UInt16 GetServiceLanPort() { return fServiceLANPort; }
+	UInt16 GetServiceWanPort() { return fServiceWANPort; }
 
 	char* GetRTSPWANIP() { return this->GetStringPref(easyPrefsRTSPWANIPAddr); }
 	UInt16 GetRTSPWANPort() const {	return fRTSPWANPort; }
@@ -296,7 +297,8 @@ private:
 	UInt32  fNumThreads;
 	UInt32  fNumRTSPThreads;
 
-	UInt16	fHTTPServicePort;
+	UInt16	fServiceLANPort;
+	UInt16	fServiceWANPort;
 
 	bool  fEnableMonitorStatsFile;
 	UInt32  fStatsFileIntervalSeconds;

@@ -431,7 +431,7 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
 		theTotalHTTPPortTrackers = theNumAddrs;
 		theHTTPPortTrackers = NEW PortTracking[theTotalHTTPPortTrackers];
 
-		UInt16 theHTTPPort = inPrefs->GetHTTPServicePort();
+		UInt16 theHTTPPort = inPrefs->GetServiceLanPort();
 		UInt32 currentIndex = 0;
 
 		for (index = 0; index < theNumAddrs; index++)

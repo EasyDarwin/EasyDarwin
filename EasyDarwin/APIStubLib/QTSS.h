@@ -806,12 +806,15 @@ enum
     qtssPrefsNumRTSPThreads                 = 81,   // "run_num_rtsp_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 	
 	easyPrefsHTTPServiceLanPort				= 82,	// "service_lan_port"	//UInt16
-	easyPrefsRTSPWANIPAddr					= 83,	// "rtsp_wan_ip"		//char array
-	easyPrefsRTSPWANPort					= 84,	// "rtsp_wan_port"		//UInt16
-	easyPrefsNginxWebPath					= 85,	// "nginx_web_path"		//char array
-	easyPrefsNginxRTMPPath					= 86,	// "nginx_rtmp_path"	//char array
+	easyPrefsHTTPServiceWanPort				= 83,	// "service_wan_port"	//UInt16
 
-	qtssPrefsNumParams                      = 87
+	easyPrefsRTSPWANIPAddr					= 84,	// "rtsp_wan_ip"		//char array
+	easyPrefsRTSPWANPort					= 85,	// "rtsp_wan_port"		//UInt16
+
+	easyPrefsNginxWebPath					= 86,	// "nginx_web_path"		//char array
+	easyPrefsNginxRTMPPath					= 87,	// "nginx_rtmp_path"	//char array
+
+	qtssPrefsNumParams                      = 88
 };
 
 typedef UInt32 QTSS_PrefsAttributes;
