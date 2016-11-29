@@ -144,7 +144,7 @@ public:
 	// Movie folder pref. If the path fits inside the buffer provided,
 	// the path is copied into that buffer. Otherwise, a new buffer is allocated
 	// and returned.
-	char*   GetMovieFolder(char* inBuffer, UInt32* ioLen);
+	//char*   GetMovieFolder(char* inBuffer, UInt32* ioLen);
 
 	//
 	// Transport addr pref. Caller must provide a buffer big enough for an IP addr

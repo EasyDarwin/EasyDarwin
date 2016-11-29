@@ -599,26 +599,26 @@ void    QTSServerPrefs::UpdateAuthScheme()
 		fAuthScheme = qtssAuthDigest;
 }
 
-char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
-{
-	OSMutexLocker locker(&fPrefsMutex);
-
-	// Get the movie folder attribute
-	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsNginxRootFolder);
-
-	// If the movie folder path fits inside the provided buffer, copy it there
-	if (theMovieFolder->Len < *ioLen)
-		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
-	else
-	{
-		// Otherwise, allocate a buffer to store the path
-		inBuffer = NEW char[theMovieFolder->Len + 2];
-		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
-	}
-	inBuffer[theMovieFolder->Len] = 0;
-	*ioLen = theMovieFolder->Len;
-	return inBuffer;
-}
+//char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
+//{
+//	OSMutexLocker locker(&fPrefsMutex);
+//
+//	// Get the movie folder attribute
+//	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsNginxRootFolder);
+//
+//	// If the movie folder path fits inside the provided buffer, copy it there
+//	if (theMovieFolder->Len < *ioLen)
+//		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
+//	else
+//	{
+//		// Otherwise, allocate a buffer to store the path
+//		inBuffer = NEW char[theMovieFolder->Len + 2];
+//		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
+//	}
+//	inBuffer[theMovieFolder->Len] = 0;
+//	*ioLen = theMovieFolder->Len;
+//	return inBuffer;
+//}
 
 bool QTSServerPrefs::IsPathInsideReliableUDPDir(StrPtrLen* inPath)
 {

@@ -220,10 +220,9 @@ RTSPRequestInterface::RTSPRequestInterface(RTSPSessionInterface *session)
 	// Get the default root directory from QTSSPrefs, and store that in the proper parameter
 	// Note that the GetMovieFolderPath function may allocate memory, so we check for that
 	// in this object's destructor and free that memory if necessary.
-	UInt32 pathLen = kMovieFolderBufSizeInBytes;
-	fMovieFolderPtr = QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(fMovieFolderPtr, &pathLen);
-	//this->SetVal(qtssRTSPReqRootDir, fMovieFolderPtr, pathLen);
-	this->SetValue(qtssRTSPReqRootDir, 0, fMovieFolderPtr, pathLen, QTSSDictionary::kDontObeyReadOnly);
+	//UInt32 pathLen = kMovieFolderBufSizeInBytes;
+	//fMovieFolderPtr = QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(fMovieFolderPtr, &pathLen);
+	//this->SetValue(qtssRTSPReqRootDir, 0, fMovieFolderPtr, pathLen, QTSSDictionary::kDontObeyReadOnly);
 
 	//There are actually other attributes that point to member variables that we COULD setup now, but they are attributes that
 	//typically aren't set for every request, so we lazy initialize those when we parse the request

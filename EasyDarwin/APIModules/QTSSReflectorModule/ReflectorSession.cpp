@@ -152,15 +152,10 @@ QTSS_Error ReflectorSession::SetSessionName()
 {
 	if (fSourceID.Len > 0)
 	{
-		char movieFolder[256] = { 0 };
-		UInt32 thePathLen = 256;
-		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
 		StringParser parser(&fSourceID);
 		StrPtrLen strName;
 
-		parser.ConsumeLength(NULL, thePathLen);
-
-		parser.Expect('\\');
+		parser.Expect(kPathDelimiterChar);
 		parser.ConsumeUntil(&strName, '\.');
 		fSessionName = NEW char[strName.Len + 1];
 		::memcpy(fSessionName, strName.Ptr, strName.Len);
