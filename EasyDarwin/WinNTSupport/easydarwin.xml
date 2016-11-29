@@ -118,11 +118,13 @@
 		<PREF NAME="enable_allow_guest_default" TYPE="bool" >true</PREF>
 		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >4</PREF>
 		<PREF NAME="http_service_port" TYPE="UInt16" >10008</PREF>
-		<PREF NAME="rtsp_wan_ip" >121.40.50.44</PREF>
 		<PREF NAME="rtsp_wan_port" TYPE="UInt16" >10554</PREF>
 		<PREF NAME="nginx_web_path" >http://127.0.0.1:10080/</PREF>
 		<PREF NAME="nginx_rtmp_path" >rtmp://127.0.0.1:10035/live/</PREF>
 		<PREF NAME="nginx_root_folder" >./nginx/www/</PREF>
+		<PREF NAME="service_lan_port" TYPE="UInt16" >10008</PREF>
+		<PREF NAME="service_wan_port" TYPE="UInt16" >10008</PREF>
+		<PREF NAME="service_wan_ip" >0.0.0.0</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
 		<PREF NAME="request_logfile_interval" TYPE="UInt32" >7</PREF>
@@ -185,7 +187,5 @@
 		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
 		<PREF NAME="redis_user" >admin</PREF>
 		<PREF NAME="redis_password" >admin</PREF>
-		<PREF NAME="rtsp_wan_ip" >127.0.0.1</PREF>
-		<PREF NAME="rtsp_wan_port" TYPE="UInt16" >554</PREF>
 	</MODULE>
 </CONFIGURATION>
