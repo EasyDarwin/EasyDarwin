@@ -11,11 +11,7 @@
 #ifndef BOOST_CONTAINER_DETAIL_VARIADIC_TEMPLATES_TOOLS_HPP
 #define BOOST_CONTAINER_DETAIL_VARIADIC_TEMPLATES_TOOLS_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
@@ -54,7 +50,7 @@ class tuple<Head, Tail...>
    // Construct tuple from another tuple.
    template<typename... VValues>
    tuple(const tuple<VValues...>& other)
-      : inherited(other.tail()), m_head(other.head())
+      : m_head(other.head()), inherited(other.tail())
    {}
 
    template<typename... VValues>

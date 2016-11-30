@@ -107,7 +107,7 @@ void OSMapEx::CheckTimeoutAndDelete()//遍历map里的SessionID,删除失效的SessionID
 }
 //for redis
 
-string OSMapEx::GenerateSessionIdForRedis(const string& strIP, UInt16 uPort)
+string OSMapEx::GenerateSessionIdForRedis(string strIP, UInt16 uPort)
 {
 	SInt64 theMicroseconds = OS::Microseconds();//Windows下1ms内多次执行会造成产生的随机数时一样的，因为Windows下微秒的获取也是靠毫秒*1000来进行的
 	::srand((unsigned int)theMicroseconds);

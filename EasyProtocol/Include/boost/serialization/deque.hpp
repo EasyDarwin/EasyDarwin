@@ -20,11 +20,8 @@
 
 #include <boost/config.hpp>
 
-#include <boost/archive/basic_archive.hpp>
-
 #include <boost/serialization/collections_save_imp.hpp>
 #include <boost/serialization/collections_load_imp.hpp>
-#include <boost/serialization/detail/stack_constructor.hpp>
 #include <boost/serialization/split_free.hpp>
 
 namespace boost { 
@@ -45,19 +42,16 @@ template<class Archive, class U, class Allocator>
 inline void load(
     Archive & ar,
     std::deque<U, Allocator> &t,
-    const unsigned int /* file_version */
+    const unsigned int /*file_version*/
 ){
-    const boost::archive::library_version_type library_version(
-        ar.get_library_version()
-    );
-    // retrieve number of elements
-    item_version_type item_version(0);
-    collection_size_type count;
-    ar >> BOOST_SERIALIZATION_NVP(count);
-    if(boost::archive::library_version_type(3) < library_version){
-        ar >> BOOST_SERIALIZATION_NVP(item_version);
-    }
-    stl::collection_load_impl(ar, t, count, item_version);
+    boost::serialization::stl::load_collection<
+        Archive,
+        std::deque<U, Allocator>,
+        boost::serialization::stl::archive_input_seq<
+        Archive, std::deque<U, Allocator> 
+        >,
+        boost::serialization::stl::no_reserve_imp<std::deque<U, Allocator> >
+    >(ar, t);
 }
 
 // split non-intrusive serialization function member into separate

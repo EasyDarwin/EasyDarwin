@@ -86,7 +86,7 @@ void QTRTPFile::Initialize()
 }
 
 
-QTRTPFile::ErrorCode QTRTPFile::new_QTFile(const char * filePath, QTFile ** theQTFile, bool debugFlag, bool deepDebugFlag)
+QTRTPFile::ErrorCode QTRTPFile::new_QTFile(const char * filePath, QTFile ** theQTFile, Bool16 debugFlag, Bool16 deepDebugFlag)
 {
 	// Temporary vars
 	QTFile::ErrorCode   rcFile;
@@ -310,7 +310,7 @@ void QTRTPFile::AddFileToCache(const char *inFilename, QTRTPFile::RTPFileCacheEn
 	}
 }
 
-bool QTRTPFile::FindAndRefcountFileCacheEntry(const char *inFilename, QTRTPFile::RTPFileCacheEntry **cacheEntry)
+Bool16 QTRTPFile::FindAndRefcountFileCacheEntry(const char *inFilename, QTRTPFile::RTPFileCacheEntry **cacheEntry)
 {
 	// General vars
 	OSMutexLocker                   fileCacheMutex(QTRTPFile::gFileCacheMutex);
@@ -347,7 +347,7 @@ bool QTRTPFile::FindAndRefcountFileCacheEntry(const char *inFilename, QTRTPFile:
 // -------------------------------------
 // Constructors and destructors
 //
-QTRTPFile::QTRTPFile(bool debugFlag, bool deepDebugFlag)
+QTRTPFile::QTRTPFile(Bool16 debugFlag, Bool16 deepDebugFlag)
 	: fDebug(debugFlag)
 	, fDeepDebug(deepDebugFlag)
 	, fFile(NULL)
@@ -558,7 +558,7 @@ char * QTRTPFile::GetSDPFile(int * sdpFileLength)
 
 	// General vars
 	QTFile::AtomTOCEntry*   globalSDPTOCEntry;
-	bool                  haveGlobalSDPAtom = false;
+	Bool16                  haveGlobalSDPAtom = false;
 	char                    sdpRangeLine[256];
 	char*                   pSDPFile;
 
@@ -679,7 +679,7 @@ char*   QTRTPFile::GetMoviePath()
 // -------------------------------------
 // track functions
 //
-QTRTPFile::ErrorCode QTRTPFile::AddTrack(UInt32 trackID, bool useRandomOffset)
+QTRTPFile::ErrorCode QTRTPFile::AddTrack(UInt32 trackID, Bool16 useRandomOffset)
 {
 	// General vars
 	RTPTrackListEntry   *trackEntry = NULL;
@@ -813,7 +813,7 @@ void QTRTPFile::SetTrackQualityLevel(RTPTrackListEntry* inEntry, UInt32 inNewQua
 	}
 }
 
-void QTRTPFile::SetTrackRTPMetaInfo(UInt32 TrackID, RTPMetaInfoPacket::FieldID* inFieldArray, bool isVideo)
+void QTRTPFile::SetTrackRTPMetaInfo(UInt32 TrackID, RTPMetaInfoPacket::FieldID* inFieldArray, Bool16 isVideo)
 {
 	// General vars
 	RTPTrackListEntry   *trackEntry = NULL;
@@ -1211,7 +1211,7 @@ UInt32 QTRTPFile::GetSeekTimestamp(UInt32 trackID)
 Float64 QTRTPFile::GetFirstPacketTransmitTime()
 {
 	RTPTrackListEntry   *listEntry = NULL;
-	bool              haveFirstPacketTime = false;
+	Bool16              haveFirstPacketTime = false;
 	Float64             firstPacketTime = 0;
 
 	//
@@ -1258,7 +1258,7 @@ Float64 QTRTPFile::GetNextPacket(char ** outPacket, int * outPacketLength)
 	// General vars
 	RTPTrackListEntry   *listEntry = NULL;
 
-	bool              haveFirstPacketTime = false;
+	Bool16              haveFirstPacketTime = false;
 	Float64             firstPacketTime = 0.0;
 	RTPTrackListEntry   *firstPacket = NULL;
 
@@ -1321,7 +1321,7 @@ Float64 QTRTPFile::GetNextPacket(char ** outPacket, int * outPacketLength)
 // -------------------------------------
 // Protected member functions
 //
-bool QTRTPFile::FindTrackEntry(UInt32 trackID, RTPTrackListEntry **trackEntry)
+Bool16 QTRTPFile::FindTrackEntry(UInt32 trackID, RTPTrackListEntry **trackEntry)
 {
 	// General vars
 	RTPTrackListEntry   *listEntry;
@@ -1371,12 +1371,12 @@ SInt32  QTRTPFile::GetMovieHintType()
 }
 
 
-bool QTRTPFile::PrefetchNextPacket(RTPTrackListEntry * trackEntry, bool doSeek)
+Bool16 QTRTPFile::PrefetchNextPacket(RTPTrackListEntry * trackEntry, Bool16 doSeek)
 {
 	// General vars
 	UInt16          *pSequenceNumber;
 	UInt32          *pTimestamp;
-	bool          skipThisSample = false;
+	Bool16          skipThisSample = false;
 
 	// Temporary vars
 	QTTrack::ErrorCode  getPacketErr = QTTrack::errIsSkippedPacket;

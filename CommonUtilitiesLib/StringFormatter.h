@@ -83,7 +83,7 @@ public:
 	void        PutTerminator() { PutChar('\0'); }
 
 	//Writes a printf style formatted string
-	bool		PutFmtStr(const char *fmt, ...);
+	Bool16		PutFmtStr(const char *fmt, ...);
 
 
 	//the number of characters in the buffer
@@ -115,7 +115,7 @@ protected:
 	//reset the buffer, and then returns true.
 	//Use the ResizeableStringFormatter if you want a buffer that will dynamically grow.
 	//Returns true if the buffer has been resized.
-	virtual bool    BufferIsFull(char* /*inBuffer*/, UInt32 /*inBufferLen*/) { return false; }
+	virtual Bool16    BufferIsFull(char* /*inBuffer*/, UInt32 /*inBufferLen*/) { return false; }
 
 	char*       fCurrentPut;
 	char*       fStartPut;
@@ -148,13 +148,13 @@ inline UInt32 StringFormatter::GetTotalBufferSize()
 
 inline void StringFormatter::PutFilePath(StrPtrLen* inPath, StrPtrLen* inFileName)
 {
-	if (inPath != nullptr && inPath->Len > 0)
+	if (inPath != NULL && inPath->Len > 0)
 	{
 		Put(inPath->Ptr, inPath->Len);
 		if (kPathDelimiterChar != inPath->Ptr[inPath->Len - 1])
 			Put(kPathDelimiterString);
 	}
-	if (inFileName != nullptr && inFileName->Len > 0)
+	if (inFileName != NULL && inFileName->Len > 0)
 		Put(inFileName->Ptr, inFileName->Len);
 }
 

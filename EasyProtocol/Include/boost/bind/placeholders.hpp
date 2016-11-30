@@ -11,11 +11,10 @@
 //  bind/placeholders.hpp - _N definitions
 //
 //  Copyright (c) 2002 Peter Dimov and Multi Media Ltd.
-//  Copyright 2015 Peter Dimov
 //
-//  Distributed under the Boost Software License, Version 1.0.
-//  See accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 //  See http://www.boost.org/libs/bind/bind.html for documentation.
 //
@@ -23,40 +22,48 @@
 #include <boost/bind/arg.hpp>
 #include <boost/config.hpp>
 
-namespace boost
-{
-
-namespace placeholders
+namespace
 {
 
 #if defined(__BORLANDC__) || defined(__GNUC__) && (__GNUC__ < 4)
 
-inline boost::arg<1> _1() { return boost::arg<1>(); }
-inline boost::arg<2> _2() { return boost::arg<2>(); }
-inline boost::arg<3> _3() { return boost::arg<3>(); }
-inline boost::arg<4> _4() { return boost::arg<4>(); }
-inline boost::arg<5> _5() { return boost::arg<5>(); }
-inline boost::arg<6> _6() { return boost::arg<6>(); }
-inline boost::arg<7> _7() { return boost::arg<7>(); }
-inline boost::arg<8> _8() { return boost::arg<8>(); }
-inline boost::arg<9> _9() { return boost::arg<9>(); }
+static inline boost::arg<1> _1() { return boost::arg<1>(); }
+static inline boost::arg<2> _2() { return boost::arg<2>(); }
+static inline boost::arg<3> _3() { return boost::arg<3>(); }
+static inline boost::arg<4> _4() { return boost::arg<4>(); }
+static inline boost::arg<5> _5() { return boost::arg<5>(); }
+static inline boost::arg<6> _6() { return boost::arg<6>(); }
+static inline boost::arg<7> _7() { return boost::arg<7>(); }
+static inline boost::arg<8> _8() { return boost::arg<8>(); }
+static inline boost::arg<9> _9() { return boost::arg<9>(); }
+
+#elif defined(BOOST_MSVC) || (defined(__DECCXX_VER) && __DECCXX_VER <= 60590031) || defined(__MWERKS__) || \
+    defined(__GNUC__) && (__GNUC__ == 4 && __GNUC_MINOR__ < 2)  
+
+static boost::arg<1> _1;
+static boost::arg<2> _2;
+static boost::arg<3> _3;
+static boost::arg<4> _4;
+static boost::arg<5> _5;
+static boost::arg<6> _6;
+static boost::arg<7> _7;
+static boost::arg<8> _8;
+static boost::arg<9> _9;
 
 #else
 
-BOOST_STATIC_CONSTEXPR boost::arg<1> _1;
-BOOST_STATIC_CONSTEXPR boost::arg<2> _2;
-BOOST_STATIC_CONSTEXPR boost::arg<3> _3;
-BOOST_STATIC_CONSTEXPR boost::arg<4> _4;
-BOOST_STATIC_CONSTEXPR boost::arg<5> _5;
-BOOST_STATIC_CONSTEXPR boost::arg<6> _6;
-BOOST_STATIC_CONSTEXPR boost::arg<7> _7;
-BOOST_STATIC_CONSTEXPR boost::arg<8> _8;
-BOOST_STATIC_CONSTEXPR boost::arg<9> _9;
+boost::arg<1> _1;
+boost::arg<2> _2;
+boost::arg<3> _3;
+boost::arg<4> _4;
+boost::arg<5> _5;
+boost::arg<6> _6;
+boost::arg<7> _7;
+boost::arg<8> _8;
+boost::arg<9> _9;
 
 #endif
 
-} // namespace placeholders
-
-} // namespace boost
+} // unnamed namespace
 
 #endif // #ifndef BOOST_BIND_PLACEHOLDERS_HPP_INCLUDED

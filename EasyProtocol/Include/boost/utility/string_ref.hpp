@@ -1,5 +1,5 @@
 /*
-   Copyright (c) Marshall Clow 2012-2015.
+   Copyright (c) Marshall Clow 2012-2012.
 
    Distributed under the Boost Software License, Version 1.0. (See accompanying
    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -82,12 +82,12 @@ namespace boost {
 #ifndef BOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS
         template<typename Allocator>
         explicit operator std::basic_string<charT, traits, Allocator>() const {
-            return std::basic_string<charT, traits, Allocator> ( begin(), end());
+            return std::basic_string<charT, traits, Allocator> ( ptr_, len_ );
             }
 #endif
 
         std::basic_string<charT, traits> to_string () const {
-            return std::basic_string<charT, traits> ( begin(), end());
+            return std::basic_string<charT, traits> ( ptr_, len_ );
             }
 
         // iterators

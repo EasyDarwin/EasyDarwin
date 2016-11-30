@@ -84,7 +84,7 @@ public:
 	// this returns QTSS_NoErr, otherwise, it returns EWOULDBLOCK
 	QTSS_Error Flush();
 
-	void        ShowRTSP(bool enable) { fPrintRTSP = enable; }
+	void        ShowRTSP(Bool16 enable) { fPrintRTSP = enable; }
 
 
 private:
@@ -102,7 +102,7 @@ private:
 	TCPSocket*              fSocket;
 	UInt32                  fBytesSentInBuffer;
 	TimeoutTask*            fTimeoutTask;
-	bool                  fPrintRTSP;     // debugging printfs
+	Bool16                  fPrintRTSP;     // debugging printfs
 
 	friend class RTSPRequestInterface;
 };

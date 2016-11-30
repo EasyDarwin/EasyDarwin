@@ -23,8 +23,7 @@ namespace boost { namespace mpl {
 
 struct empty_sequence
 {
-    struct tag;
-    typedef empty_sequence type;
+    struct tag; 
     struct begin { typedef random_access_iterator_tag category; };    
     typedef begin end;
 };

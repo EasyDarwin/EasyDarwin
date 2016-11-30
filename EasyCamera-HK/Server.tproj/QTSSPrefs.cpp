@@ -40,7 +40,7 @@
 
 
 QTSSPrefs::QTSSPrefs(XMLPrefsParser* inPrefsSource, StrPtrLen* inModuleName, QTSSDictionaryMap* inMap,
-	bool areInstanceAttrsAllowed, QTSSPrefs* parentDictionary)
+	Bool16 areInstanceAttrsAllowed, QTSSPrefs* parentDictionary)
 	: QTSSDictionary(inMap, &fPrefsMutex),
 	fPrefsSource(inPrefsSource),
 	fPrefName(NULL),

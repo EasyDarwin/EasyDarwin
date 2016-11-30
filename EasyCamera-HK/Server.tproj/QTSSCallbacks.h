@@ -133,7 +133,7 @@ public:
 	static QTSS_Error   QTSS_SetIdleRoleTimer(SInt64 inMsecToWait);
 
 	static QTSS_Error   QTSS_RequestLockedCallback();
-	static bool       QTSS_IsGlobalLocked();
+	static Bool16       QTSS_IsGlobalLocked();
 	static QTSS_Error   QTSS_UnlockGlobalLock();
 
 	static void   QTSS_LockStdLib();

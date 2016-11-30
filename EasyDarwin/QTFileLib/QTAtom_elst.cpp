@@ -70,7 +70,7 @@ const int       elstEntryPosV1_MediaRate = 16;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_elst::QTAtom_elst(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_elst::QTAtom_elst(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEdits(0), fEdits(NULL),
 	fFirstEditMovieTime(0)
@@ -90,7 +90,7 @@ QTAtom_elst::~QTAtom_elst()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_elst::Initialize()
+Bool16 QTAtom_elst::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;

@@ -6,7 +6,7 @@
  Default integrate times implementation.
  [end_description]
 
- Copyright 2011-2015 Mario Mulansky
+ Copyright 2011-2012 Mario Mulansky
  Copyright 2012 Karsten Ahnert
  Copyright 2012 Christoph Koke
 
@@ -26,7 +26,6 @@
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
 #include <boost/numeric/odeint/util/detail/less_with_sign.hpp>
-#include <boost/numeric/odeint/integrate/max_step_checker.hpp>
 
 
 namespace boost {
@@ -39,18 +38,15 @@ namespace detail {
 /*
  * integrate_times for simple stepper
  */
-template<class Stepper, class System, class State, class TimeIterator, class Time, class Observer>
+template< class Stepper , class System , class State , class TimeIterator , class Time , class Observer >
 size_t integrate_times(
         Stepper stepper , System system , State &start_state ,
         TimeIterator start_time , TimeIterator end_time , Time dt ,
         Observer observer , stepper_tag
 )
 {
-    typedef typename odeint::unwrap_reference< Stepper >::type stepper_type;
-    typedef typename odeint::unwrap_reference< Observer >::type observer_type;
-
-    stepper_type &st = stepper;
-    observer_type &obs = observer;
+    typename odeint::unwrap_reference< Observer >::type &obs = observer;
+    typename odeint::unwrap_reference< Stepper >::type &st = stepper;
     typedef typename unit_value_type<Time>::type time_type;
 
     size_t steps = 0;
@@ -86,10 +82,12 @@ size_t integrate_times(
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
     typedef typename unit_value_type<Time>::type time_type;
 
-    failed_step_checker fail_checker;  // to throw a runtime_error if step size adjustment fails
+    const size_t max_attempts = 1000;
+    const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
     size_t steps = 0;
     while( true )
     {
+        size_t fail_steps = 0;
         Time current_time = *start_time++;
         obs( start_state , current_time );
         if( start_time == end_time )
@@ -101,16 +99,15 @@ size_t integrate_times(
             if( st.try_step( system , start_state , current_time , current_dt ) == success )
             {
                 ++steps;
-                // successful step -> reset the fail counter, see #173
-                fail_checker.reset();
                 // continue with the original step size if dt was reduced due to observation
                 dt = max_abs( dt , current_dt );
             }
             else
             {
-                fail_checker();  // check for possible overflow of failed steps in step size adjustment
+                ++fail_steps;
                 dt = current_dt;
             }
+            if( fail_steps == max_attempts ) BOOST_THROW_EXCEPTION( std::overflow_error( error_string ));
         }
     }
     return steps;
@@ -128,15 +125,12 @@ size_t integrate_times(
 {
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
-
     typedef typename unit_value_type<Time>::type time_type;
 
     if( start_time == end_time )
         return 0;
 
-    TimeIterator last_time_iterator = end_time;
-    --last_time_iterator;
-    Time last_time_point = static_cast<time_type>(*last_time_iterator);
+    Time last_time_point = static_cast<time_type>(*(end_time-1));
 
     st.initialize( start_state , *start_time , dt );
     obs( start_state , *start_time++ );

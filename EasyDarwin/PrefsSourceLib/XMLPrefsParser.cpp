@@ -69,12 +69,12 @@ static char* kFileHeader[] =
 	"<!ELEMENT PREF (#PCDATA)>",
 	"<!ATTLIST PREF",
 	"\tNAME CDATA #REQUIRED",
-	"\tTYPE (UInt8|SInt8|UInt16|SInt16|UInt32|SInt32|UInt64|SInt64|Float32|Float64|bool|Bool8|char) \"char\">",
+	"\tTYPE (UInt8|SInt8|UInt16|SInt16|UInt32|SInt32|UInt64|SInt64|Float32|Float64|Bool16|Bool8|char) \"char\">",
 	"<!ELEMENT LIST-PREF (VALUE*)>",
 	"<!ELEMENT VALUE (#PCDATA)>",
 	"<!ATTLIST LIST-PREF",
 	"\tNAME CDATA #REQUIRED",
-	"\tTYPE  (UInt8|SInt8|UInt16|SInt16|UInt32|SInt32|UInt64|SInt64|Float32|Float64|bool|Bool8|char) \"char\">",
+	"\tTYPE  (UInt8|SInt8|UInt16|SInt16|UInt32|SInt32|UInt64|SInt64|Float32|Float64|Bool16|Bool8|char) \"char\">",
 	"<!ELEMENT OBJECT (PREF|LIST-PREF|OBJECT|LIST-OBJECT)*>",
 	"<!ATTLIST OBJECT",
 	"\tNAME CDATA #REQUIRED>",
@@ -106,7 +106,7 @@ ContainerRef XMLPrefsParser::GetConfigurationTag()
 	return result;
 }
 
-ContainerRef XMLPrefsParser::GetRefForModule(char* inModuleName, bool create)
+ContainerRef XMLPrefsParser::GetRefForModule(char* inModuleName, Bool16 create)
 {
 	if (inModuleName == NULL)
 		return GetRefForServer();

@@ -45,7 +45,7 @@ public:
 	QTSSPrefs(XMLPrefsParser* inPrefsSource,
 		StrPtrLen* inModuleName,
 		QTSSDictionaryMap* inMap,
-		bool areInstanceAttrsAllowed,
+		Bool16 areInstanceAttrsAllowed,
 		QTSSPrefs* parentDictionary = NULL);
 	virtual ~QTSSPrefs() { if (fPrefName != NULL) delete[] fPrefName; }
 

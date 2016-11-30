@@ -15,21 +15,12 @@
 #define BOOST_TT_DETAIL_IS_FUNCTION_PTR_TESTER_HPP_INCLUDED
 
 #include <boost/type_traits/detail/yes_no_type.hpp>
+#include <boost/type_traits/config.hpp>
 
 #if defined(BOOST_TT_PREPROCESSING_MODE)
-//
-// Hide include dependencies from analysers since they're
-// only require in maintenance mode:
-//
-#define PP1 <boost/preprocessor/iterate.hpp>
-#define PP2 <boost/preprocessor/enum_params.hpp>
-#define PP3 <boost/preprocessor/comma_if.hpp>
-#include PP1
-#include PP2
-#include PP3
-#undef PP1
-#undef PP2
-#undef PP3
+#   include <boost/preprocessor/iterate.hpp>
+#   include <boost/preprocessor/enum_params.hpp>
+#   include <boost/preprocessor/comma_if.hpp>
 #endif
 
 namespace boost {

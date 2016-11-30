@@ -77,7 +77,7 @@ public:
 	// If you want this HTCB to build RTP Meta Info packets,
 	// tell it which fields to add, and also which IDs to assign, by passing
 	// in an array of RTPMetaInfoPacket::kNumFields size, with all the right info
-	void SetupRTPMetaInfo(RTPMetaInfoPacket::FieldID* inFieldArray, bool isVideo)
+	void SetupRTPMetaInfo(RTPMetaInfoPacket::FieldID* inFieldArray, Bool16 isVideo)
 	{
 		Assert(fRTPMetaInfoFieldArray == NULL); fRTPMetaInfoFieldArray = inFieldArray;
 		fIsVideo = isVideo;
@@ -112,7 +112,7 @@ public:
 	// To support RTP-Meta-Info payload
 	RTPMetaInfoPacket::FieldID*         fRTPMetaInfoFieldArray;
 	UInt32                              fSyncSampleCursor; // Where are we in the sync sample table?
-	bool                              fIsVideo; // so that we know what to do with the frame type field
+	Bool16                              fIsVideo; // so that we know what to do with the frame type field
 	UInt64              fCurrentPacketNumber;
 	UInt64              fCurrentPacketPosition;
 
@@ -130,7 +130,7 @@ public:
 	//
 	// Constructors and destructor.
 	QTHintTrack(QTFile * File, QTFile::AtomTOCEntry * trakAtom,
-		bool Debug = false, bool DeepDebug = false);
+		Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTHintTrack();
 
 
@@ -138,7 +138,7 @@ public:
 	// Initialization functions.
 	virtual ErrorCode   Initialize();
 
-	bool              IsHintTrackInitialized() { return fHintTrackInitialized; }
+	Bool16              IsHintTrackInitialized() { return fHintTrackInitialized; }
 
 	//
 	// Accessors.
@@ -149,11 +149,11 @@ public:
 	inline  UInt64      GetTotalRTPPackets() { return fHintInfoAtom ? fHintInfoAtom->GetTotalRTPPackets() : 0; }
 
 	inline  UInt32      GetFirstRTPTimestamp() { return fFirstRTPTimestamp; }
-	inline  void        SetAllowInvalidHintRefs(bool inAllowInvalidHintRefs) { fAllowInvalidHintRefs = inAllowInvalidHintRefs; }
+	inline  void        SetAllowInvalidHintRefs(Bool16 inAllowInvalidHintRefs) { fAllowInvalidHintRefs = inAllowInvalidHintRefs; }
 
 	//
 	// Sample functions
-	bool      GetSamplePtr(UInt32 SampleNumber, char ** Buffer, UInt32 * Length,
+	Bool16      GetSamplePtr(UInt32 SampleNumber, char ** Buffer, UInt32 * Length,
 		QTHintTrack_HintTrackControlBlock * HTCB);
 
 	//
@@ -181,8 +181,8 @@ public:
 	ErrorCode   GetPacket(UInt32 SampleNumber, UInt16 PacketNumber,
 		char * Buffer, UInt32 * Length,
 		Float64 * TransmitTime,
-		bool dropBFrames,
-		bool dropRepeatPackets = false,
+		Bool16 dropBFrames,
+		Bool16 dropRepeatPackets = false,
 		UInt32 SSRC = 0,
 		QTHintTrack_HintTrackControlBlock * HTCB = NULL);
 
@@ -227,10 +227,10 @@ protected:
 	UInt32              fRTPTimescale, fFirstRTPTimestamp;
 	UInt32              fTimestampRandomOffset;
 	UInt16              fSequenceNumberRandomOffset;
-	bool              fHintTrackInitialized;
+	Bool16              fHintTrackInitialized;
 	SInt16              fHintType;
 	Float64  			fFirstTransmitTime;
-	bool              fAllowInvalidHintRefs;
+	Bool16              fAllowInvalidHintRefs;
 	//
 	// Used by GetPacket for RTP-Meta-Info payload stuff
 	void                WriteMetaInfoField(RTPMetaInfoPacket::FieldIndex inFieldIndex,

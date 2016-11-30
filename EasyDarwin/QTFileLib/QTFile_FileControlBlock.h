@@ -61,19 +61,19 @@ public:
 	//following position in the file
 	// void Advise(OSFileSource *dflt, UInt64 advisePos, UInt32 adviseAmt);
 
-	bool Read(FILE_SOURCE *dflt, UInt64 inPosition, void* inBuffer, UInt32 inLength);
+	Bool16 Read(FILE_SOURCE *dflt, UInt64 inPosition, void* inBuffer, UInt32 inLength);
 
-	bool ReadInternal(FILE_SOURCE *dataFD, UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32 *inReadLenPtr = NULL);
+	Bool16 ReadInternal(FILE_SOURCE *dataFD, UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32 *inReadLenPtr = NULL);
 
 	//
 	// Buffer management functions
 	void AdjustDataBufferBitRate(UInt32 inUnitSizeInK = 32, UInt32 inFileBitRate = 32768, UInt32 inNumBuffSizeUnits = 0, UInt32 inMaxBitRateBuffSizeInBlocks = 8);
 	void AdjustDataBuffers(UInt32 inBlockSizeKBits = 32, UInt32 inBlockCountPerBuff = 1);
-	void EnableCacheBuffers(bool enabled) { fCacheEnabled = enabled; }
+	void EnableCacheBuffers(Bool16 enabled) { fCacheEnabled = enabled; }
 
 	// QTSS_ErrorCode Close();
 
-	bool IsValid()
+	Bool16 IsValid()
 	{
 #if DSS_USE_API_CALLBACKS
 		return fDataFD != NULL;
@@ -106,7 +106,7 @@ private:
 
 	UInt32              fNumBlocksPerBuff;
 	UInt32              fNumBuffs;
-	bool              fCacheEnabled;
+	Bool16              fCacheEnabled;
 };
 
 #endif //_QTFILE_FILECONTROLBLOCK_H_

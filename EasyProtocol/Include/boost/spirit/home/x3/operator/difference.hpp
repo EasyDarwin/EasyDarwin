@@ -7,6 +7,10 @@
 #if !defined(SPIRIT_DIFFERENCE_FEBRUARY_11_2007_1250PM)
 #define SPIRIT_DIFFERENCE_FEBRUARY_11_2007_1250PM
 
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
 #include <boost/spirit/home/x3/support/traits/attribute_of.hpp>
 #include <boost/spirit/home/x3/support/traits/has_attribute.hpp>
 #include <boost/spirit/home/x3/core/parser.hpp>
@@ -43,7 +47,7 @@ namespace boost { namespace spirit { namespace x3
         difference<Left_, Right_>
         make(Left_ const& left, Right_ const& right) const
         {
-            return { left, right };
+            return difference<Left_, Right_>(left, right);
         }
     };
 
@@ -53,7 +57,7 @@ namespace boost { namespace spirit { namespace x3
       , typename extension::as_parser<Right>::value_type>
     operator-(Left const& left, Right const& right)
     {
-        return { as_parser(left), as_parser(right) };
+        return {as_parser(left), as_parser(right)};
     }
 }}}
 

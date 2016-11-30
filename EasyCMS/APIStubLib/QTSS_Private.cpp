@@ -312,9 +312,9 @@ QTSS_Error QTSS_RequestGlobalLock()
 
 // SYNCH GLOBAL MULTIPLE READERS/SINGLE WRITER ROUTINES
 
-bool QTSS_IsGlobalLocked()
+Bool16 QTSS_IsGlobalLocked()
 {
-	return (bool)(sCallbacks->addr[kIsGlobalLockedCallback])();
+	return (Bool16)(sCallbacks->addr[kIsGlobalLockedCallback])();
 }
 
 QTSS_Error QTSS_GlobalUnLock()
@@ -342,7 +342,7 @@ void QTSS_UnlockStdLib()
 	(sCallbacks->addr[kUnlockStdLibCallback])();
 }
 
-QTSS_Error Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, bool connectionClose, bool decrement)
+QTSS_Error Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose, Bool16 decrement)
 {
 	return (sCallbacks->addr[kEasySendMsgCallback])(inHTTPSession, inMsg, inMsgLen, connectionClose, decrement);
 }

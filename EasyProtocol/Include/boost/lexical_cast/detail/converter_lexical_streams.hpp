@@ -34,6 +34,7 @@
 #include <cstdio>
 #include <boost/limits.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/detail/workaround.hpp>
@@ -61,6 +62,7 @@
 #include <boost/lexical_cast/detail/lcast_char_constants.hpp>
 #include <boost/lexical_cast/detail/lcast_unsigned_converters.hpp>
 #include <boost/lexical_cast/detail/inf_nan.hpp>
+#include <boost/lexical_cast/detail/lcast_float_converters.hpp>
 
 #include <istream>
 
@@ -737,10 +739,12 @@ namespace boost {
                 return true;
             }
 
+            bool operator>>(float& output) { return lcast_ret_float<Traits>(output,start,finish); }
+
         private:
             // Not optimised converter
             template <class T>
-            bool float_types_converter_internal(T& output) {
+            bool float_types_converter_internal(T& output, int /*tag*/) {
                 if (parse_inf_nan(start, finish, output)) return true;
                 bool const return_value = shr_using_base_class(output);
 
@@ -766,10 +770,36 @@ namespace boost {
                 return return_value;
             }
 
+            // Optimised converter
+            bool float_types_converter_internal(double& output, char /*tag*/) {
+                return lcast_ret_float<Traits>(output, start, finish);
+            }
         public:
-            bool operator>>(float& output) { return float_types_converter_internal(output); }
-            bool operator>>(double& output) { return float_types_converter_internal(output); }
-            bool operator>>(long double& output) { return float_types_converter_internal(output); }
+
+            bool operator>>(double& output) {
+                /*
+                 * Some compilers implement long double as double. In that case these types have
+                 * same size, same precision, same max and min values... And it means,
+                 * that current implementation of lcast_ret_float cannot be used for type
+                 * double, because it will give a big precision loss.
+                 * */
+                boost::mpl::if_c<
+#if (defined(BOOST_HAS_LONG_LONG) || defined(BOOST_HAS_MS_INT64)) && !defined(BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS)
+                    boost::type_traits::ice_eq< sizeof(double), sizeof(long double) >::value,
+#else
+                     1,
+#endif
+                    int,
+                    char
+                >::type tag = 0;
+
+                return float_types_converter_internal(output, tag);
+            }
+
+            bool operator>>(long double& output) {
+                int tag = 0;
+                return float_types_converter_internal(output, tag);
+            }
 
             // Generic istream-based algorithm.
             // lcast_streambuf_for_target<InputStreamable>::value is true.

@@ -45,7 +45,7 @@
 class RTPBandwidthTracker
 {
 public:
-	RTPBandwidthTracker(bool inUseSlowStart)
+	RTPBandwidthTracker(Bool16 inUseSlowStart)
 		: fRunningAverageMSecs(0),
 		fRunningMeanDevationMSecs(0),
 		fCurRetransmitTimeout(kMinRetransmitIntervalMSecs),
@@ -88,7 +88,7 @@ public:
 	//
 	// When data is acked, let the tracker know how much
 	// data was acked so it can adjust the window
-	void EmptyWindow(UInt32 inNumBytes, bool updateBytesInList = true);
+	void EmptyWindow(UInt32 inNumBytes, Bool16 updateBytesInList = true);
 
 	//
 	// When retransmitting a packet, call this function so
@@ -97,8 +97,8 @@ public:
 
 	//
 	// ACCESSORS
-	const bool ReadyForAckProcessing() { return (fClientWindow > 0 && fCongestionWindow > 0); } // see RTPBandwidthTracker::EmptyWindow for requirements
-	const bool IsFlowControlled() { return ((SInt32)fBytesInList >= fCongestionWindow); }
+	const Bool16 ReadyForAckProcessing() { return (fClientWindow > 0 && fCongestionWindow > 0); } // see RTPBandwidthTracker::EmptyWindow for requirements
+	const Bool16 IsFlowControlled() { return ((SInt32)fBytesInList >= fCongestionWindow); }
 	const SInt32 ClientWindowSize() { return fClientWindow; }
 	const UInt32 BytesInList() { return fBytesInList; }
 	const SInt32 CongestionWindow() { return fCongestionWindow; }
@@ -154,8 +154,8 @@ private:
 	UInt32              fBytesInList;               // how many unacked bytes on this stream
 	UInt32              fAckTimeout;
 
-	bool              fUseSlowStart;
-	bool              fIsRetransmitting;      // are we in the re-transmit 'state' ( started resending, but have yet to send 'new' data
+	Bool16              fUseSlowStart;
+	Bool16              fIsRetransmitting;      // are we in the re-transmit 'state' ( started resending, but have yet to send 'new' data
 
 	//
 	// Stats

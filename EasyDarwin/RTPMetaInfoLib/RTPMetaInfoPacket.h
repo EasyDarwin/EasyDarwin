@@ -109,7 +109,7 @@ public:
 	// Pass in an array of FieldIDs, make sure it is kNumFields in length.
 	// This function will use the array as a guide to tell which field IDs in the
 	// packet refer to which fields.
-	bool  ParsePacket(UInt8* inPacketBuffer, UInt32 inPacketLen, FieldID* inFieldIDArray);
+	Bool16  ParsePacket(UInt8* inPacketBuffer, UInt32 inPacketLen, FieldID* inFieldIDArray);
 
 	//
 	// Call this if you would like to rewrite the Meta-Info packet

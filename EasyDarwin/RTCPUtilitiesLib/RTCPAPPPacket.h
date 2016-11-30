@@ -44,11 +44,11 @@ class RTCPAPPPacket : public RTCPPacket
 {
 
 public:
-	RTCPAPPPacket(bool debug = false);
+	RTCPAPPPacket(Bool16 debug = false);
 	virtual ~RTCPAPPPacket() {};
 	virtual void Dump();
-	virtual bool ParseAPPPacket(UInt8* inPacketBuffer, UInt32 inPacketLength); //default app header check
-	virtual bool ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength) { return false; }; //derived class implements
+	virtual Bool16 ParseAPPPacket(UInt8* inPacketBuffer, UInt32 inPacketLength); //default app header check
+	virtual Bool16 ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength) { return false; }; //derived class implements
 	inline FourCharCode GetAppPacketName(char *outName = NULL, UInt32 len = 0);
 	inline UInt32 GetAppPacketSSRC();
 
@@ -68,10 +68,10 @@ public:
 	char*           mDumpArray;
 	StrPtrLenDel    mDumpArrayStrDeleter;
 	ResizeableStringFormatter fDumpReport;
-	bool fDebug;
+	Bool16 fDebug;
 
 private:
-	virtual bool ParseAPPPacketHeader(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	virtual Bool16 ParseAPPPacketHeader(UInt8* inPacketBuffer, UInt32 inPacketLength);
 
 };
 

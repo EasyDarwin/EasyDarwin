@@ -80,7 +80,7 @@ QTSSDictionary* QTSSDictionary::CreateNewDictionary(QTSSDictionaryMap* inMap, OS
 
 QTSS_Error QTSSDictionary::GetValuePtr(QTSS_AttributeID inAttrID, UInt32 inIndex,
 	void** outValueBuffer, UInt32* outValueLen,
-	bool isInternal)
+	Bool16 isInternal)
 {
 	// Check first to see if this is a static attribute or an instance attribute
 	QTSSDictionaryMap* theMap = fMap;
@@ -114,7 +114,7 @@ QTSS_Error QTSSDictionary::GetValuePtr(QTSS_AttributeID inAttrID, UInt32 inIndex
 	char* theBuffer = theAttrs[theMapIndex].fAttributeData.Ptr;
 	*outValueLen = theAttrs[theMapIndex].fAttributeData.Len;
 
-	bool cacheable = theMap->IsCacheable(theMapIndex);
+	Bool16 cacheable = theMap->IsCacheable(theMapIndex);
 	if ((theMap->GetAttrFunction(theMapIndex) != NULL) && ((cacheable && (*outValueLen == 0)) || !cacheable))
 	{
 		// If function is cacheable: 
@@ -869,6 +869,10 @@ void QTSSDictionaryMap::Initialize()
 	sDictionaryMaps[kModulePrefsDictIndex] = new QTSSDictionaryMap(0, QTSSDictionaryMap::kInstanceAttrsAllowed | QTSSDictionaryMap::kCompleteFunctionsAllowed);
 	sDictionaryMaps[kQTSSUserProfileDictIndex] = new QTSSDictionaryMap(qtssUserNumParams);
 	sDictionaryMaps[kQTSSConnectedUserDictIndex] = new QTSSDictionaryMap(qtssConnectionNumParams);
+	sDictionaryMaps[k3GPPRequestDictIndex] = new QTSSDictionaryMap(qtss3GPPRequestNumParams);
+	sDictionaryMaps[k3GPPStreamDictIndex] = new QTSSDictionaryMap(qtss3GPPStreamNumParams);
+	sDictionaryMaps[k3GPPClientSessionDictIndex] = new QTSSDictionaryMap(qtss3GPPCliSesNumParams);
+	sDictionaryMaps[k3GPPRTSPSessionDictIndex] = new QTSSDictionaryMap(qtss3GPPRTSPSessNumParams);
 	sDictionaryMaps[kHTTPSessionDictIndex] = new QTSSDictionaryMap(qtssRTSPSesNumParams);
 }
 
@@ -1022,7 +1026,7 @@ QTSS_Error  QTSSDictionaryMap::UnRemoveAttribute(QTSS_AttributeID inAttrID)
 }
 
 QTSS_Error  QTSSDictionaryMap::GetAttrInfoByName(const char* inAttrName, QTSSAttrInfoDict** outAttrInfoObject,
-	bool returnRemovedAttr)
+	Bool16 returnRemovedAttr)
 {
 	if (outAttrInfoObject == NULL)
 		return QTSS_BadArgument;
@@ -1128,6 +1132,11 @@ UInt32  QTSSDictionaryMap::GetMapIndex(QTSS_ObjectType inType)
 	case qtssAttrInfoObjectType:        return kAttrInfoDictIndex;
 	case qtssUserProfileObjectType:     return kQTSSUserProfileDictIndex;
 	case qtssConnectedUserObjectType:   return kQTSSConnectedUserDictIndex;
+
+	case qtss3GPPStreamObjectType:          return k3GPPStreamDictIndex;
+	case qtss3GPPClientSessionObjectType:   return k3GPPClientSessionDictIndex;
+	case qtss3GPPRTSPObjectType:            return k3GPPRTSPSessionDictIndex;
+	case qtss3GPPRequestObjectType:         return k3GPPRequestDictIndex;
 
 	case easyHTTPSessionObjectType:     return kHTTPSessionDictIndex;
 

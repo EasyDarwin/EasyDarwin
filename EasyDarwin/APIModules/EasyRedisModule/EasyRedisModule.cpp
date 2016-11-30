@@ -26,7 +26,10 @@ static char*            sRedisPassword			= NULL;
 static char*            sDefaultRedisPassword	= "admin";
 
 static char*			sRTSPWanIP				= NULL;
-static UInt16			sRTSPWanPort			= 10554;
+static char*			sDefaultRTSPWanIP		= "127.0.0.1";
+
+static UInt16			sRTSPWanPort			= 554;
+static UInt16			sDefaultRTSPWanPort		= 554;
 
 static EasyRedisClient* sRedisClient			= NULL;//the object pointer that package the redis operation
 static bool				sIfConSucess			= false;
@@ -126,10 +129,11 @@ QTSS_Error RereadPrefs()
 	delete[] sRedisPassword;
 	sRedisPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_password", sDefaultRedisPassword);
 
+	//get EasyDarwin WAN ip and port
 	delete[] sRTSPWanIP;
-	(void)QTSS_GetValueAsString(sServerPrefs, easyPrefsServiceWANIPAddr, 0, &sRTSPWanIP);
+	sRTSPWanIP = QTSSModuleUtils::GetStringAttribute(modulePrefs, "rtsp_wan_ip", sDefaultRTSPWanIP);
 
-	sRTSPWanPort = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort();
+	QTSSModuleUtils::GetAttribute(modulePrefs, "rtsp_wan_port", qtssAttrDataTypeUInt16, &sRTSPWanPort, &sDefaultRTSPWanPort, sizeof(sRTSPWanPort));
 
 	return QTSS_NoErr;
 

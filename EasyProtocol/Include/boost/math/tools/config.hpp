@@ -11,7 +11,6 @@
 #endif
 
 #include <boost/config.hpp>
-#include <boost/predef.h>
 #include <boost/cstdint.hpp> // for boost::uintmax_t
 #include <boost/detail/workaround.hpp>
 #include <boost/type_traits/is_integral.hpp>
@@ -50,18 +49,6 @@
 // pass at long double precision, but fail with real_concept, those tests
 // are disabled for now.  (JM 2012).
 #  define BOOST_MATH_NO_REAL_CONCEPT_TESTS
-#endif
-#ifdef sun
-// Any use of __float128 in program startup code causes a segfault  (tested JM 2015, Solaris 11).
-#  define BOOST_MATH_DISABLE_FLOAT128
-#endif
-#ifdef __HAIKU__
-//
-// Not sure what's up with the math detection on Haiku, but linking fails with
-// float128 code enabled, and we don't have an implementation of __expl, so
-// disabling long double functions for now as well.
-#  define BOOST_MATH_DISABLE_FLOAT128
-#  define BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
 #endif
 #if (defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)) && ((LDBL_MANT_DIG == 106) || (__LDBL_MANT_DIG__ == 106)) && !defined(BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS)
 //
@@ -184,20 +171,14 @@
 //
 #ifdef BOOST_MSVC
 #  define BOOST_MATH_POLY_METHOD 2
-#  define BOOST_MATH_RATIONAL_METHOD 1
 #elif defined(BOOST_INTEL)
 #  define BOOST_MATH_POLY_METHOD 2
-#  define BOOST_MATH_RATIONAL_METHOD 1
+#  define BOOST_MATH_RATIONAL_METHOD 2
 #elif defined(__GNUC__)
-#if __GNUC__ < 4
 #  define BOOST_MATH_POLY_METHOD 3
 #  define BOOST_MATH_RATIONAL_METHOD 3
 #  define BOOST_MATH_INT_TABLE_TYPE(RT, IT) RT
 #  define BOOST_MATH_INT_VALUE_SUFFIX(RV, SUF) RV##.0L
-#else
-#  define BOOST_MATH_POLY_METHOD 3
-#  define BOOST_MATH_RATIONAL_METHOD 1
-#endif
 #endif
 
 #if defined(BOOST_NO_LONG_LONG) && !defined(BOOST_MATH_INT_TABLE_TYPE)
@@ -206,54 +187,20 @@
 #endif
 
 //
-// constexpr support, early GCC implementations can't cope so disable
-// constexpr for them:
-//
-#if !defined(__clang) && defined(__GNUC__)
-#if (__GNUC__ * 100 + __GNUC_MINOR__) < 490
-#  define BOOST_MATH_DISABLE_CONSTEXPR
-#endif
-#endif
-
-#ifdef BOOST_MATH_DISABLE_CONSTEXPR
-#  define BOOST_MATH_CONSTEXPR
-#else
-#  define BOOST_MATH_CONSTEXPR BOOST_CONSTEXPR
-#endif
-
-//
-// noexcept support:
-//
-#ifndef BOOST_NO_CXX11_NOEXCEPT
-#ifndef BOOST_NO_CXX11_HDR_TYPE_TRAITS
-#include <type_traits>
-#  define BOOST_MATH_NOEXCEPT(T) noexcept(std::is_floating_point<T>::value)
-#  define BOOST_MATH_IS_FLOAT(T) (std::is_floating_point<T>::value)
-#else
-#include <boost/type_traits/is_floating_point.hpp>
-#  define BOOST_MATH_NOEXCEPT(T) noexcept(boost::is_floating_point<T>::value)
-#  define BOOST_MATH_IS_FLOAT(T) (boost::is_floating_point<T>::value)
-#endif
-#else
-#  define BOOST_MATH_NOEXCEPT(T)
-#  define BOOST_MATH_IS_FLOAT(T) false
-#endif
-
-//
 // The maximum order of polynomial that will be evaluated 
 // via an unrolled specialisation:
 //
 #ifndef BOOST_MATH_MAX_POLY_ORDER
-#  define BOOST_MATH_MAX_POLY_ORDER 20
+#  define BOOST_MATH_MAX_POLY_ORDER 17
 #endif 
 //
 // Set the method used to evaluate polynomials and rationals:
 //
 #ifndef BOOST_MATH_POLY_METHOD
-#  define BOOST_MATH_POLY_METHOD 2
+#  define BOOST_MATH_POLY_METHOD 1
 #endif 
 #ifndef BOOST_MATH_RATIONAL_METHOD
-#  define BOOST_MATH_RATIONAL_METHOD 1
+#  define BOOST_MATH_RATIONAL_METHOD 0
 #endif 
 //
 // decide whether to store constants as integers or reals:
@@ -265,7 +212,7 @@
 #  define BOOST_MATH_INT_VALUE_SUFFIX(RV, SUF) RV##SUF
 #endif
 //
-// And then the actual configuration:
+// Test whether to support __float128:
 //
 #if defined(_GLIBCXX_USE_FLOAT128) && defined(BOOST_GCC) && !defined(__STRICT_ANSI__) \
    && !defined(BOOST_MATH_DISABLE_FLOAT128) || defined(BOOST_MATH_USE_FLOAT128)
@@ -337,13 +284,13 @@ namespace tools
 {
 
 template <class T>
-inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c) BOOST_MATH_NOEXCEPT(T)
+inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c)
 {
    return (std::max)((std::max)(a, b), c);
 }
 
 template <class T>
-inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d) BOOST_MATH_NOEXCEPT(T)
+inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d)
 {
    return (std::max)((std::max)(a, b), (std::max)(c, d));
 }
@@ -351,7 +298,7 @@ inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d) BOOST_MATH_NOE
 } // namespace tools
 
 template <class T>
-void suppress_unused_variable_warning(const T&) BOOST_MATH_NOEXCEPT(T)
+void suppress_unused_variable_warning(const T&)
 {
 }
 

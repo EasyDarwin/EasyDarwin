@@ -1,4 +1,4 @@
-/* Copyright 2003-2015 Joaquin M Lopez Munoz.
+/* Copyright 2003-2013 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -17,7 +17,6 @@
 #include <algorithm>
 #include <boost/noncopyable.hpp>
 #include <boost/multi_index/detail/auto_space.hpp>
-#include <boost/multi_index/detail/raw_ptr.hpp>
 #include <cstddef>
 #include <functional>
 
@@ -180,7 +179,7 @@ protected:
   }
 
 private:
-  entry* entries()const{return raw_ptr<entry*>(spc.data());}
+  entry* entries()const{return &*spc.data();}
 
   auto_space<entry,Allocator> spc;
   std::size_t                 size_;

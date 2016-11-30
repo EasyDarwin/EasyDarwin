@@ -1,6 +1,6 @@
 // Copyright Kevlin Henney, 2000-2005.
 // Copyright Alexander Nasonov, 2006-2010.
-// Copyright Antony Polukhin, 2011-2016.
+// Copyright Antony Polukhin, 2011-2014.
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -23,17 +23,9 @@
 #   pragma once
 #endif
 
-#if defined(__clang__) || (defined(__GNUC__) && \
-    !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && \
-    (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#endif
-
 #include <string>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/type_traits/ice.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 
@@ -57,30 +49,25 @@ namespace boost {
             : boost::true_type
         {};
 
-        // Sun Studio has problem with partial specialization of templates differing only in namespace.
-        // We workaround that by making `is_booststring` trait, instead of specializing `is_stdstring` for `boost::container::basic_string`.
-        template<typename T>
-        struct is_booststring
-            : boost::false_type
-        {};
-
         template<typename CharT, typename Traits, typename Alloc>
-        struct is_booststring< boost::container::basic_string<CharT, Traits, Alloc> >
+        struct is_stdstring< boost::container::basic_string<CharT, Traits, Alloc> >
             : boost::true_type
         {};
 
         template<typename Target, typename Source>
         struct is_arithmetic_and_not_xchars
         {
-            typedef boost::mpl::bool_<
-                    !(boost::detail::is_character<Target>::value) &&
-                    !(boost::detail::is_character<Source>::value) &&
-                    boost::is_arithmetic<Source>::value &&
-                    boost::is_arithmetic<Target>::value
-                > type;
-        
             BOOST_STATIC_CONSTANT(bool, value = (
-                type::value
+                boost::type_traits::ice_and<
+                    boost::type_traits::ice_not<
+                        boost::detail::is_character<Target>::value
+                    >::value,
+                    boost::type_traits::ice_not<
+                        boost::detail::is_character<Source>::value
+                    >::value,
+                    boost::is_arithmetic<Source>::value,
+                    boost::is_arithmetic<Target>::value       
+                >::value
             ));
         };
 
@@ -91,15 +78,13 @@ namespace boost {
         template<typename Target, typename Source>
         struct is_xchar_to_xchar 
         {
-            typedef boost::mpl::bool_<
-                     sizeof(Source) == sizeof(Target) &&
-                     sizeof(Source) == sizeof(char) &&
-                     boost::detail::is_character<Target>::value &&
-                     boost::detail::is_character<Source>::value
-                > type;
-                
             BOOST_STATIC_CONSTANT(bool, value = (
-                type::value
+                boost::type_traits::ice_and<
+                     boost::type_traits::ice_eq<sizeof(Source), sizeof(Target)>::value,
+                     boost::type_traits::ice_eq<sizeof(Source), sizeof(char)>::value,
+                     boost::detail::is_character<Target>::value,
+                     boost::detail::is_character<Source>::value
+                >::value
             ));
         };
 
@@ -118,20 +103,13 @@ namespace boost {
             : boost::true_type
         {};
 
-        // Sun Studio has problem with partial specialization of templates differing only in namespace.
-        // We workaround that by making `is_char_array_to_booststring` trait, instead of specializing `is_char_array_to_stdstring` for `boost::container::basic_string`.
-        template<typename Target, typename Source>
-        struct is_char_array_to_booststring
-            : boost::false_type
-        {};
-
         template<typename CharT, typename Traits, typename Alloc>
-        struct is_char_array_to_booststring< boost::container::basic_string<CharT, Traits, Alloc>, CharT* >
+        struct is_char_array_to_stdstring< boost::container::basic_string<CharT, Traits, Alloc>, CharT* >
             : boost::true_type
         {};
 
         template<typename CharT, typename Traits, typename Alloc>
-        struct is_char_array_to_booststring< boost::container::basic_string<CharT, Traits, Alloc>, const CharT* >
+        struct is_char_array_to_stdstring< boost::container::basic_string<CharT, Traits, Alloc>, const CharT* >
             : boost::true_type
         {};
 
@@ -162,18 +140,17 @@ namespace boost {
         {
             typedef BOOST_DEDUCED_TYPENAME boost::detail::array_to_pointer_decay<Source>::type src;
 
-            typedef boost::mpl::bool_<
-                boost::detail::is_xchar_to_xchar<Target, src >::value ||
-                boost::detail::is_char_array_to_stdstring<Target, src >::value ||
-                boost::detail::is_char_array_to_booststring<Target, src >::value ||
-                (
-                     boost::is_same<Target, src >::value &&
-                     (boost::detail::is_stdstring<Target >::value || boost::detail::is_booststring<Target >::value)
-                ) ||
-                (
-                     boost::is_same<Target, src >::value &&
+            typedef BOOST_DEDUCED_TYPENAME boost::type_traits::ice_or<
+                boost::detail::is_xchar_to_xchar<Target, src >::value,
+                boost::detail::is_char_array_to_stdstring<Target, src >::value,
+                boost::type_traits::ice_and<
+                     boost::is_same<Target, src >::value,
+                     boost::detail::is_stdstring<Target >::value
+                >::value,
+                boost::type_traits::ice_and<
+                     boost::is_same<Target, src >::value,
                      boost::detail::is_character<Target >::value
-                )
+                >::value
             > shall_we_copy_t;
 
             typedef boost::detail::is_arithmetic_and_not_xchars<Target, src >
@@ -216,12 +193,6 @@ namespace boost {
     }
 
 } // namespace boost
-
-#if defined(__clang__) || (defined(__GNUC__) && \
-    !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) && \
-    (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
-#pragma GCC diagnostic pop
-#endif
 
 #endif // BOOST_LEXICAL_CAST_TRY_LEXICAL_CONVERT_HPP
 

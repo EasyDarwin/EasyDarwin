@@ -9,112 +9,15 @@ EasyDarwin本身提供了一个高性能的服务端框架，Linux/Windows跨平
 EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn.net/course/detail/2431](http://edu.csdn.net/course/detail/2431 "EasyDarwin开源流媒体服务器视频教程")
 
 ## EasyDarwin目前支持 ##
-1. MP4点播(nginx)；
+1. MP4点播(QTSSFileModule)；
 2. 标准RTSP推模式直播(QTSSReflectorModule)；
 3. 标准RTSP拉模式直播(EasyRelayModule)；
 4. HLS直播(EasyHLSModule)；
 5. 接入EasyDarwin流媒体平台，分布式部署(EasyCMSModule)；
 
 ## EasyDarwin正在进行开发的 ##
-1. 点播；
-2. WEB管理后台；
-3. RTMP/HLS直播功能；
-
-## 接口列表 ##
-
-#### 1.获取服务器信息 ####
-
-- 功能说明
-> 获取服务器当前的软/硬件版本信息，接口版本信息以及累计运行时长等信息；
-
-- URL
-> http://[域名]:10008/api/v1/getserverinfo
-
-- 格式
-> json
-
-- HTTP请求方式
-> GET,POST
-
-- 参数说明
-> 公共参数：无
-
-
-> 私有参数：无
-
-- 请求示例
-> http://121.40.50.44:10008/api/v1/getserverinfo
-
-- 返回参数说明
-> "Hardware" : 服务器所在的硬件平台；
-> 
-> "InterfaceVersion" : api接口版本；
-> 
-> "RunningTime" : 服务累计运行时间；
-> 
-> "Server" : 服务器版本信息
-
-- 正确返回示例
-
-    {
-       "EasyDarwin" : {
-      "Body" : {
-     "Hardware" : "x86",
-     "InterfaceVersion" : "v1",
-     "RunningTime" : "2 Days 2 Hours 38 Mins 52 Secs",
-     "Server" : "Server: EasyDarwin/7.1 (Build/16.1111; Platform/Win32; Release/EasyDarwin; State/Development; )"
-      },
-      "Header" : {
-     "CSeq" : "1",
-     "ErrorNum" : "200",
-     "ErrorString" : "Success OK",
-     "MessageType" : "MSG_SC_SERVER_INFO_ACK",
-     "Version" : "1.0"
-      }
-       }
-    }
-
-- 错误返回示例
-> 无
-    
-
-#### 2.登录服务器 ####
-
-接口：http://121.40.50.44:10008/api/v1/login?username=aaa&password=bbb
-
-说明：username表示用户名，password表示密码
-
-返回：200 OK表示成功，其他表示失败
-
-
-#### 3.登出服务器 ####
-
-接口：http://121.40.50.44:10008/api/v1/logout
-
-返回：200 OK
-
-#### 4.获取服务器基本配置信息 ####
-
-接口：http://121.40.50.44:10008/api/v1/getbaseconfig
-
-返回：
-
-         "ServiceLanPort" : EasyDarwin HTTP本地监听端口
-         "ServiceWanPort" : EasyDarwin HTTP公网端口
-         "RTSPLanPort" : EasyDarwin RTSP本地监听端口
-         "RTSPWanPort" : EasyDarwin RTSP公网端口
-         "ServiceLanIP" : EasyDarwin本地地址
-         "ServiceWanIP" : EasyDarwin公网地址
-
-         "NginxRootFolder" : NGINX 本地磁盘根目录
-         "NginxWebPath" : NGINX WEB 地址
-         "NginxRTMPPath" :NGINX RTMP 地址
-
-
-#### 5.设置服务器基本配置信息 ####
-
-接口：http://121.40.50.44:10008/api/v1/setbaseconfig?ServiceLanPort=10008&ServiceWanPort=0&RTSPLanPort=10554&ServiceLanIP=192.168.66.189
-
+1. Onvif支持；
+2. 分布式部署负载均衡（结合EasyCMS）；
 
 ## 编译、配置、部署的方法 ##
 
@@ -126,7 +29,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 
 *【如果直接下载已经编译好的Release归档版本，可跳过此步骤】*  
 
-- Windows版本编译，可以直接用**Visual Studio 2015**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe，也可以用更高版本的vs进行编译，vs向下兼容，所以编译应该不是什么大问题，可能会有部分编译选项需要调整，这个根据实际情况调整即可，可以肯定的是，源码编译都是没有问题的；
+- Windows版本编译，可以直接用**Visual Studio 2008**打开源码文件中的：**/EasyDarwin-master/EasyDarwin/WinNTSupport/EasyDarwin.sln**解决方案文件，编译出exe可执行文件EasyDarwin.exe，也可以用更高版本的vs进行编译，vs向下兼容，所以编译应该不是什么大问题，可能会有部分编译选项需要调整，这个根据实际情况调整即可，可以肯定的是，源码编译都是没有问题的；
 > 经常会有开发者在编译完成后直接vs运行出现无法运行xxx.lib或者缺少xxx.dll的问题，建议好好补补基础知识：
 > 
 > 1. vs调试运行需要设置EasyDarwin项目为启动项；
@@ -134,7 +37,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 > ![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/0.png)
 
 
-- Linux版本编译(**gcc4.8+，support c++ 11**)，将从Github获取的EasyDarwin源码zip文件进行unzip解压，再进行具体编译：
+- Linux版本编译，将从Github获取的EasyDarwin源码zip文件进行unzip解压，再进行具体编译：
 
 >
 	cd ./EasyDarwin-master/EasyDarwin/
@@ -206,7 +109,7 @@ Nginx的WEB地址为：http://8.8.8.8/，那么我们配置：
 
 ### 5、检查EasyDarwin是否部署成功 ###
 
-通过访问EasyDarwin RESTful接口可以初步判断EasyDarwin流媒体服务器是否已经运行起来了，例如我们可以访问：http://[ip]:[http\_service\_port]/api/getrtsppushsessions 接口查看EasyDarwin是否运行响应，后面的版本我们会增加一个获取EasyDarwin整体运行配置信息RESTful接口，这样在外部就能查看EasyDarwin是否读取到了正确的用户配置；
+通过访问EasyDarwin RESTful接口可以初步判断EasyDarwin流媒体服务器是否已经运行起来了，例如我们可以访问：rtsp://[ip]:[http\_service\_port]/api/getrtsppushsessions 接口查看EasyDarwin是否运行响应，后面的版本我们会增加一个获取EasyDarwin整体运行配置信息RESTful接口，这样在外部就能查看EasyDarwin是否读取到了正确的用户配置；
 
 
 ## 调用方法 ##
@@ -488,5 +391,5 @@ QQ交流群：288214068
 
 Copyright &copy; EasyDarwin.org 2012-2016
 
-![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg) 
+![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
 

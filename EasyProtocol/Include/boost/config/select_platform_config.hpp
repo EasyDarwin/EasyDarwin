@@ -41,10 +41,6 @@
 // win32:
 #  define BOOST_PLATFORM_CONFIG "boost/config/platform/win32.hpp"
 
-#elif defined(__HAIKU__)
-// Haiku
-#  define BOOST_PLATFORM_CONFIG "boost/config/platform/haiku.hpp"
-
 #elif defined(__BEOS__)
 // BeOS
 #  define BOOST_PLATFORM_CONFIG "boost/config/platform/beos.hpp"
@@ -80,10 +76,6 @@
 #elif defined(__VMS) 
 // VMS:
 #  define BOOST_PLATFORM_CONFIG "boost/config/platform/vms.hpp" 
-
-#elif defined(__CloudABI__)
-// Nuxi CloudABI:
-#  define BOOST_PLATFORM_CONFIG "boost/config/platform/cloudabi.hpp"
 #else
 
 #  if defined(unix) \

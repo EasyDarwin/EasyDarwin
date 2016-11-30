@@ -30,6 +30,7 @@
 #include <cstdio>
 #include <boost/limits.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/type_traits/ice.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/detail/workaround.hpp>
 
@@ -143,7 +144,7 @@ namespace boost
                 int_type const digit = static_cast<int_type>(m_value % 10U);
                 Traits::assign(*m_finish, Traits::to_char_type(m_zero + digit));
                 m_value /= 10;
-                return !!m_value; // suppressing warnings
+                return !!m_value; // supressing warnings
             }
 
             inline CharT* main_convert_loop() BOOST_NOEXCEPT {

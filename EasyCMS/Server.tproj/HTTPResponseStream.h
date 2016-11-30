@@ -90,7 +90,7 @@ public:
     // this returns QTSS_NoErr, otherwise, it returns EWOULDBLOCK
     QTSS_Error Flush();
 
-    void        ShowMSG(bool enable) { fPrintMSG = enable; }
+    void        ShowMSG(Bool16 enable) { fPrintMSG = enable; }
 
 
 private:
@@ -108,7 +108,7 @@ private:
     TCPSocket*              fSocket;
     UInt32                  fBytesSentInBuffer;
     TimeoutTask*            fTimeoutTask;
-    bool                  fPrintMSG;     // debugging printfs
+    Bool16                  fPrintMSG;     // debugging printfs
 
     friend class HTTPRequestInterface;
 };

@@ -59,11 +59,11 @@ public:
 	// Call initialize before using any socket functions.
 	// (pass true for lookupDNSName if you want the hostname
 	// looked up via DNS during initialization -- %%sfu)
-	static void Initialize(bool lookupDNSName = true);
+	static void Initialize(Bool16 lookupDNSName = true);
 
 	//static utility routines
-	static bool   IsMulticastIPAddr(UInt32 inAddress);
-	static bool   IsLocalIPAddr(UInt32 inAddress);
+	static Bool16   IsMulticastIPAddr(UInt32 inAddress);
+	static Bool16   IsLocalIPAddr(UInt32 inAddress);
 
 	//This function converts an integer IP address to a dotted-decimal string.
 	//This function is NOT THREAD SAFE!!!
@@ -82,7 +82,7 @@ private:
 
 	//Utility function used by Initialize
 #ifndef __Win32__
-	static bool IncrementIfReqIter(char** inIfReqIter, ifreq* ifr);
+	static Bool16 IncrementIfReqIter(char** inIfReqIter, ifreq* ifr);
 #endif
 	//For storing relevent information about each IP interface
 	struct IPAddrInfo
@@ -99,21 +99,21 @@ private:
 
 inline UInt32 SocketUtils::GetIPAddr(UInt32 inAddrIndex)
 {
-	Assert(sIPAddrInfoArray != nullptr);
+	Assert(sIPAddrInfoArray != NULL);
 	Assert(inAddrIndex < sNumIPAddrs);
 	return sIPAddrInfoArray[inAddrIndex].fIPAddr;
 }
 
 inline StrPtrLen* SocketUtils::GetIPAddrStr(UInt32 inAddrIndex)
 {
-	Assert(sIPAddrInfoArray != nullptr);
+	Assert(sIPAddrInfoArray != NULL);
 	Assert(inAddrIndex < sNumIPAddrs);
 	return &sIPAddrInfoArray[inAddrIndex].fIPAddrStr;
 }
 
 inline StrPtrLen* SocketUtils::GetDNSNameStr(UInt32 inDNSIndex)
 {
-	Assert(sIPAddrInfoArray != nullptr);
+	Assert(sIPAddrInfoArray != NULL);
 	Assert(inDNSIndex < sNumIPAddrs);
 	return &sIPAddrInfoArray[inDNSIndex].fDNSNameStr;
 }

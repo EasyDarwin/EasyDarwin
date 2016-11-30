@@ -168,6 +168,13 @@ struct pure_traversal_tag
 {
 };
 
+// This import is needed for backward compatibility with Boost.Range:
+// boost/range/detail/demote_iterator_traversal_tag.hpp
+// It should be removed when that header is fixed.
+namespace detail {
+using iterators::pure_traversal_tag;
+} // namespace detail
+
 //
 // Trait to retrieve one of the iterator traversal tags from the iterator category or traversal.
 //

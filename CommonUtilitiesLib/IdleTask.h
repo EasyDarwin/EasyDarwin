@@ -46,8 +46,6 @@
 #include "OSMutex.h"
 #include "OSCond.h"
 
-#include <memory>
-
 class IdleTask;
 
 //merely a private implementation detail of IdleTask
@@ -103,9 +101,7 @@ private:
 	OSHeapElem fIdleElem;
 
 	//there is only one idle thread shared by all idle tasks.
-	//static IdleTaskThread*  sIdleThread;
-
-	static std::shared_ptr<IdleTaskThread> sIdleThread;
+	static IdleTaskThread*  sIdleThread;
 
 	friend class IdleTaskThread;
 };

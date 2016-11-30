@@ -275,7 +275,7 @@ void QueryURI::SetCommand()
 
 	for (commandIndex = 0; commandIndex < kLastCommand; commandIndex++)
 	{
-		bool foundCommand = queryCommandPtr->EqualIgnoreCase(sCommandDefs[commandIndex], strlen(sCommandDefs[commandIndex]));
+		Bool16 foundCommand = queryCommandPtr->EqualIgnoreCase(sCommandDefs[commandIndex], strlen(sCommandDefs[commandIndex]));
 		if (foundCommand)
 		{
 			fTheCommand = commandIndex;

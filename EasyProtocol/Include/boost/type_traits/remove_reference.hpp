@@ -12,6 +12,9 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 
+// should be the last #include
+#include <boost/type_traits/detail/type_trait_def.hpp>
+
 namespace boost {
 
 
@@ -35,20 +38,22 @@ struct remove_rvalue_ref<T&&>
 
 } // namespace detail
 
-template <class T> struct remove_reference{ typedef typename boost::detail::remove_rvalue_ref<T>::type type; };
-template <class T> struct remove_reference<T&>{ typedef T type; };
+BOOST_TT_AUX_TYPE_TRAIT_DEF1(remove_reference,T,typename boost::detail::remove_rvalue_ref<T>::type)
+BOOST_TT_AUX_TYPE_TRAIT_PARTIAL_SPEC1_1(typename T,remove_reference,T&,T)
 
 #if defined(BOOST_ILLEGAL_CV_REFERENCES)
 // these are illegal specialisations; cv-qualifies applied to
 // references have no effect according to [8.3.2p1],
 // C++ Builder requires them though as it treats cv-qualified
 // references as distinct types...
-template <class T> struct remove_reference<T&const>{ typedef T type; };
-template <class T> struct remove_reference<T&volatile>{ typedef T type; };
-template <class T> struct remove_reference<T&const volatile>{ typedef T type; };
+BOOST_TT_AUX_TYPE_TRAIT_PARTIAL_SPEC1_1(typename T,remove_reference,T& const,T)
+BOOST_TT_AUX_TYPE_TRAIT_PARTIAL_SPEC1_1(typename T,remove_reference,T& volatile,T)
+BOOST_TT_AUX_TYPE_TRAIT_PARTIAL_SPEC1_1(typename T,remove_reference,T& const volatile,T)
 #endif
 
 
 } // namespace boost
+
+#include <boost/type_traits/detail/type_trait_undef.hpp>
 
 #endif // BOOST_TT_REMOVE_REFERENCE_HPP_INCLUDED

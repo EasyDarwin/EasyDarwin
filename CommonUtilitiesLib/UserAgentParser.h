@@ -84,7 +84,7 @@ public:
 	StrPtrLen* GetUserOSVersion() { return    &(fFieldData[eOsver].fData); };
 	StrPtrLen* GetUserCPU() { return    &(fFieldData[eCpu].fData); };
 
-	UserAgentParser(StrPtrLen *inStream) { if (inStream != nullptr) Parse(inStream); }
+	UserAgentParser(StrPtrLen *inStream) { if (inStream != NULL) Parse(inStream); }
 
 
 };

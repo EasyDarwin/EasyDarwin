@@ -86,7 +86,7 @@ protected:
 		, kRcvHexDigitOne
 	};
 
-	bool          IsHex(char c);
+	Bool16          IsHex(char c);
 
 	PLDoubleLinkedList<QueryParamListElement>* fNameValueQueryParamlist;
 

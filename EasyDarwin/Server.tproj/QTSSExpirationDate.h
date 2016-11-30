@@ -44,14 +44,14 @@ class QTSSExpirationDate
 public:
 
 	//checks current time vs. hard coded time constant.
-	static bool   WillSoftwareExpire() { return sIsExpirationEnabled; }
-	static bool   IsSoftwareExpired();
+	static Bool16   WillSoftwareExpire() { return sIsExpirationEnabled; }
+	static Bool16   IsSoftwareExpired();
 	static void PrintExpirationDate();
 	static void sPrintExpirationDate(char* ioExpireMessage);
 
 private:
 
-	static bool sIsExpirationEnabled;
+	static Bool16 sIsExpirationEnabled;
 	static char*    sExpirationDate;
 
 };

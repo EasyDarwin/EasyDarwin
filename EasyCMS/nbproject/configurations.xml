@@ -361,7 +361,6 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
           <incDir>
             <pElem>APICommonCode</pElem>
             <pElem>APIStubLib</pElem>
@@ -588,7 +587,6 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
           <incDir>
             <pElem>APICommonCode</pElem>
             <pElem>APIStubLib</pElem>

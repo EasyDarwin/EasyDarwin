@@ -85,7 +85,7 @@ void QTFile_FileControlBlock::Set(char * DataPath)
 
 }
 
-bool QTFile_FileControlBlock::ReadInternal(FILE_SOURCE *dataFD, UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32 *inReadLenPtr)
+Bool16 QTFile_FileControlBlock::ReadInternal(FILE_SOURCE *dataFD, UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32 *inReadLenPtr)
 {
 	UInt32 readLen = 0;
 	if (NULL != inReadLenPtr)
@@ -111,7 +111,7 @@ bool QTFile_FileControlBlock::ReadInternal(FILE_SOURCE *dataFD, UInt64 inPositio
 }
 
 
-bool QTFile_FileControlBlock::Read(FILE_SOURCE *dflt, UInt64 inPosition, void* inBuffer, UInt32 inLength)
+Bool16 QTFile_FileControlBlock::Read(FILE_SOURCE *dflt, UInt64 inPosition, void* inBuffer, UInt32 inLength)
 {
 	// Temporary vars
 	UInt32 rcSize;
@@ -120,7 +120,7 @@ bool QTFile_FileControlBlock::Read(FILE_SOURCE *dflt, UInt64 inPosition, void* i
 	FILE_SOURCE     *dataFD;
 
 	// success or failure
-	bool result = false;
+	Bool16 result = false;
 
 	// Get the file descriptor.  If the FCB is NULL, or the descriptor in
 	// the FCB is -1, then we need to use the class' descriptor.

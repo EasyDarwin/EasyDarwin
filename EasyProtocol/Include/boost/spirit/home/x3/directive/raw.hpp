@@ -60,11 +60,11 @@ namespace boost { namespace spirit { namespace x3
         raw_directive<typename extension::as_parser<Subject>::value_type>
         operator[](Subject const& subject) const
         {
-            return { as_parser(subject) };
+            return {as_parser(subject)};
         }
     };
 
-    auto const raw = raw_gen{};
+    raw_gen const raw = raw_gen();
 }}}
 
 #endif

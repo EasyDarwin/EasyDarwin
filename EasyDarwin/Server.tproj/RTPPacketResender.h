@@ -53,7 +53,7 @@ public:
 
 	void*               fPacketData;
 	UInt32              fPacketSize;
-	bool              fIsSpecialBuffer;
+	Bool16              fIsSpecialBuffer;
 	SInt64              fExpireTime;
 	SInt64              fAddedTime;
 	SInt64              fOrigRetransTimeout;
@@ -97,7 +97,7 @@ public:
 
 	//
 	// ACCESSORS
-	bool              IsFlowControlled() { return fBandwidthTracker->IsFlowControlled(); }
+	Bool16              IsFlowControlled() { return fBandwidthTracker->IsFlowControlled(); }
 	SInt32              GetMaxPacketsInList() { return fMaxPacketsInList; }
 	SInt32              GetNumPacketsInList() { return fPacketsInList; }
 	SInt32              GetNumResends() { return fNumResends; }
@@ -155,12 +155,11 @@ private:
 
 	RTPResenderEntry*   GetEmptyEntry(UInt16 inSeqNum, UInt32 inPacketSize);
 	void ReallocatePacketArray();
-	void RemovePacket(UInt32 packetIndex, bool reuse = true);
+	void RemovePacket(UInt32 packetIndex, Bool16 reuse = true);
 	void RemovePacket(RTPResenderEntry* inEntry);
 
 	static OSBufferPool sBufferPool;
-	//static unsigned int sNumWastedBytes;
-	static std::atomic_uint sNumWastedBytes;
+	static unsigned int sNumWastedBytes;
 
 	void            UpdateCongestionWindow(SInt32 bytesToOpenBy);
 };

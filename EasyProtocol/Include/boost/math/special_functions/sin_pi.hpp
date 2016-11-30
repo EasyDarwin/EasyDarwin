@@ -53,17 +53,10 @@ T sin_pi_imp(T x, const Policy& pol)
 } // namespace detail
 
 template <class T, class Policy>
-inline typename tools::promote_args<T>::type sin_pi(T x, const Policy&)
+inline typename tools::promote_args<T>::type sin_pi(T x, const Policy& pol)
 {
    typedef typename tools::promote_args<T>::type result_type;
-   typedef typename policies::evaluation<result_type, Policy>::type value_type;
-   typedef typename policies::normalise<
-      Policy,
-      policies::promote_float<false>,
-      policies::promote_double<false>,
-      policies::discrete_quantile<>,
-      policies::assert_undefined<> >::type forwarding_policy;
-   return policies::checked_narrowing_cast<result_type, forwarding_policy>(boost::math::detail::sin_pi_imp<value_type>(x, forwarding_policy()), "cos_pi");
+   return boost::math::detail::sin_pi_imp<result_type>(x, pol);
 }
 
 template <class T>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="100">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -154,7 +154,6 @@
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
             <pElem>../EasyProtocol/Include</pElem>
-            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -399,7 +398,6 @@
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
             <pElem>../EasyProtocol/Include</pElem>
-            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -650,7 +648,6 @@
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
             <pElem>../EasyProtocol/Include</pElem>
-            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -895,7 +892,6 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
           <incDir>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
@@ -903,13 +899,13 @@
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
             <pElem>../EasyProtocol/Include</pElem>
-            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
-          <commandLine>-fPIC -std=c++11</commandLine>
+          <commandLine>-fPIC</commandLine>
           <preprocessorList>
+            <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>
@@ -1153,7 +1149,6 @@
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
             <pElem>../EasyProtocol/Include</pElem>
-            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -1398,8 +1393,6 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
-          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>.</pElem>
             <pElem>../Include</pElem>
@@ -1407,13 +1400,13 @@
             <pElem>../EasyDarwin/APIStubLib</pElem>
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
             <pElem>../EasyProtocol/Include</pElem>
-            <pElem>../RTSPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
           </incFile>
           <commandLine>-m32 -fPIC</commandLine>
           <preprocessorList>
+            <Elem>COMMON_UTILITIES_LIB</Elem>
             <Elem>_REENTRANT</Elem>
             <Elem>__USE_POSIX</Elem>
             <Elem>__linux__</Elem>

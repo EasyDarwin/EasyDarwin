@@ -20,9 +20,6 @@
 #include <boost/numeric/ublas/detail/config.hpp>
 #include <boost/numeric/ublas/detail/iterator.hpp>
 #include <boost/numeric/ublas/detail/returntype_deduction.hpp>
-#ifdef BOOST_UBLAS_USE_INTERVAL
-#include <boost/numeric/interval.hpp>
-#endif
 
 #include <boost/type_traits.hpp>
 #include <complex>

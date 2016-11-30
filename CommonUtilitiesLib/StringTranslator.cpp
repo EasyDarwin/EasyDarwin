@@ -52,7 +52,7 @@ SInt32 StringTranslator::DecodeURL(const char* inSrc, SInt32 inSrcLen, char* ioD
 	SInt32 theLengthWritten = 0;
 	int tempChar = 0;
 	int numDotChars = 0;
-	bool inQuery = false;
+	Bool16 inQuery = false;
 
 	while (inSrcLen > 0)
 	{
@@ -235,7 +235,7 @@ void StringTranslator::DecodePath(char* inSrc, UInt32 inSrcLen)
 
 
 #if STRINGTRANSLATORTESTING
-bool StringTranslator::Test()
+Bool16 StringTranslator::Test()
 {
 	//static char* test1 = "/%5D%3f%7eAveryweird%7C/and/long/path/ya/%5d%3F%7eAveryweird%7C/and/long/p%40/ya/%5D%3F%7EAveryweird%7C/and/long/path/ya/%5D%3F%7EAveryweird%7C/and/long/path/ya/%2560%2526a%20strange%3B%23%3D%25filename"
 	static char dest[1000];

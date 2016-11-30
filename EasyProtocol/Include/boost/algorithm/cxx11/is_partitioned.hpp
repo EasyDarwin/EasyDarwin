@@ -19,6 +19,10 @@
 
 namespace boost { namespace algorithm {
 
+#if __cplusplus >= 201103L
+//  Use the C++11 versions of is_partitioned if it is available
+using std::is_partitioned;      // Section 25.3.13
+#else
 /// \fn is_partitioned ( InputIterator first, InputIterator last, UnaryPredicate p )
 /// \brief Tests to see if a sequence is partitioned according to a predicate
 /// 
@@ -41,6 +45,7 @@ bool is_partitioned ( InputIterator first, InputIterator last, UnaryPredicate p 
             return false;
     return true;
 }
+#endif
 
 /// \fn is_partitioned ( const Range &r, UnaryPredicate p )
 /// \brief Generates an increasing sequence of values, and stores them in the input Range.

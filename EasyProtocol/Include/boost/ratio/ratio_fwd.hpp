@@ -34,10 +34,6 @@ time2_demo contained this comment:
 
 #include <boost/ratio/config.hpp>
 
-#if defined(__GNUC__) && (__GNUC__ >= 4)
-#pragma GCC system_header
-#endif
-
 namespace boost
 {
 

@@ -43,17 +43,27 @@ namespace concurrent
     // Modifiers
     void close() { queue->close(); }
 
-    void push(const value_type& x) { queue->push(x); }
+    void push(const value_type& x) { queue->push_back(x); }
 
-    queue_op_status try_push(const value_type& x) { return queue->try_push(x); }
+    void pull(value_type& x) { queue->pull_back(x); }
+    // enable_if is_nothrow_copy_movable<value_type>
+    value_type pull()  { return queue->pull_back(); }
 
-    queue_op_status nonblocking_push(const value_type& x) { return queue->nonblocking_push(x); }
-    queue_op_status wait_push(const value_type& x) { return queue->wait_push(x); }
+    queue_op_status try_push(const value_type& x) { return queue->try_push_back(x); }
 
-    void push(BOOST_THREAD_RV_REF(value_type) x) { queue->push(boost::move(x)); }
-    queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->try_push(boost::move(x)); }
-    queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->nonblocking_push(boost::move(x)); }
-    queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->wait_push(boost::move(x)); }
+    queue_op_status try_pull(value_type& x) { return queue->try_pull_back(x); }
+
+    queue_op_status nonblocking_push(const value_type& x) { return queue->nonblocking_push_back(x); }
+
+    queue_op_status nonblocking_pull(value_type& x) { return queue->nonblocking_pull_back(x); }
+
+    queue_op_status wait_push(const value_type& x) { return queue->wait_push_back(x); }
+    queue_op_status wait_pull(value_type& x) { return queue->wait_pull_back(x); }
+
+    void push(BOOST_THREAD_RV_REF(value_type) x) { queue->push_back(boost::move(x)); }
+    queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->try_push_back(boost::move(x)); }
+    queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->nonblocking_push_back(boost::move(x)); }
+    queue_op_status wait_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->wait_push_back(boost::move(x)); }
   };
 
   template <typename Queue>
@@ -78,20 +88,20 @@ namespace concurrent
 
     void push(const value_type& x) { queue->push_front(x); }
 
-    void pull(value_type& x) { queue->pull(x); };
+    void pull(value_type& x) { queue->pull_front(x); };
     // enable_if is_nothrow_copy_movable<value_type>
-    value_type pull()  { return queue->pull(); }
+    value_type pull()  { return queue->pull_front(); }
 
     queue_op_status try_push(const value_type& x) { return queue->try_push_front(x); }
 
-    queue_op_status try_pull(value_type& x) { return queue->try_pull(x); }
+    queue_op_status try_pull(value_type& x) { return queue->try_pull_front(x); }
 
     queue_op_status nonblocking_push(const value_type& x) { return queue->nonblocking_push_front(x); }
 
-    queue_op_status nonblocking_pull(value_type& x) { return queue->nonblocking_pull(x); }
+    queue_op_status nonblocking_pull(value_type& x) { return queue->nonblocking_pull_front(x); }
 
     queue_op_status wait_push(const value_type& x) { return queue->wait_push_front(x); }
-    queue_op_status wait_pull(value_type& x) { return queue->wait_pull(x); }
+    queue_op_status wait_pull(value_type& x) { return queue->wait_pull_front(x); }
     void push(BOOST_THREAD_RV_REF(value_type) x) { queue->push_front(forward<value_type>(x)); }
     queue_op_status try_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->try_push_front(forward<value_type>(x)); }
     queue_op_status nonblocking_push(BOOST_THREAD_RV_REF(value_type) x) { return queue->nonblocking_push_front(forward<value_type>(x)); }

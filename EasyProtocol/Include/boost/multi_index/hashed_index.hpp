@@ -1,4 +1,4 @@
-/* Copyright 2003-2015 Joaquin M Lopez Munoz.
+/* Copyright 2003-2014 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -32,7 +32,6 @@
 #include <boost/multi_index/detail/hash_index_iterator.hpp>
 #include <boost/multi_index/detail/index_node_base.hpp>
 #include <boost/multi_index/detail/modify_key_adaptor.hpp>
-#include <boost/multi_index/detail/promotes_arg.hpp>
 #include <boost/multi_index/detail/safe_mode.hpp>
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
@@ -460,11 +459,6 @@ public:
    * type as iterator.
    */
 
-  /* Implementation note: When CompatibleKey is consistently promoted to
-   * KeyFromValue::result_type for equality comparison, the promotion is made
-   * once in advance to increase efficiency.
-   */
-
   template<typename CompatibleKey>
   iterator find(const CompatibleKey& k)const
   {
@@ -478,8 +472,14 @@ public:
     const CompatibleKey& k,
     const CompatibleHash& hash,const CompatiblePred& eq)const
   {
-    return find(
-      k,hash,eq,promotes_1st_arg<CompatiblePred,CompatibleKey,key_type>());
+    std::size_t buc=buckets.position(hash(k));
+    for(node_impl_pointer x=buckets.at(buc)->prior();
+        x!=node_impl_pointer(0);x=node_alg::next_to_inspect(x)){
+      if(eq(k,key(node_type::from_impl(x)->value()))){
+        return make_iterator(node_type::from_impl(x));
+      }
+    }
+    return end();
   }
 
   template<typename CompatibleKey>
@@ -495,8 +495,20 @@ public:
     const CompatibleKey& k,
     const CompatibleHash& hash,const CompatiblePred& eq)const
   {
-    return count(
-      k,hash,eq,promotes_1st_arg<CompatiblePred,CompatibleKey,key_type>());
+    std::size_t buc=buckets.position(hash(k));
+    for(node_impl_pointer x=buckets.at(buc)->prior();
+        x!=node_impl_pointer(0);x=node_alg::next_to_inspect(x)){
+      if(eq(k,key(node_type::from_impl(x)->value()))){
+        size_type         res=0;
+        node_impl_pointer y=end_of_range(x);
+        do{
+          ++res;
+          x=node_alg::after(x);
+        }while(x!=y);
+        return res;
+      }
+    }
+    return 0;
   }
 
   template<typename CompatibleKey>
@@ -512,8 +524,16 @@ public:
     const CompatibleKey& k,
     const CompatibleHash& hash,const CompatiblePred& eq)const
   {
-    return equal_range(
-      k,hash,eq,promotes_1st_arg<CompatiblePred,CompatibleKey,key_type>());
+    std::size_t buc=buckets.position(hash(k));
+    for(node_impl_pointer x=buckets.at(buc)->prior();
+        x!=node_impl_pointer(0);x=node_alg::next_to_inspect(x)){
+      if(eq(k,key(node_type::from_impl(x)->value()))){
+        return std::pair<iterator,iterator>(
+          make_iterator(node_type::from_impl(x)),
+          make_iterator(node_type::from_impl(end_of_range(x))));
+      }
+    }
+    return std::pair<iterator,iterator>(end(),end());
   }
 
   /* bucket interface */
@@ -1271,7 +1291,7 @@ private:
 
   void calculate_max_load()
   {
-    float fml=static_cast<float>(mlf*static_cast<float>(bucket_count()));
+    float fml=static_cast<float>(mlf*bucket_count());
     max_load=(std::numeric_limits<size_type>::max)();
     if(max_load>fml)max_load=static_cast<size_type>(fml);
   }
@@ -1507,95 +1527,6 @@ private:
     return make_iterator(p.first);
   }
 
-  template<
-    typename CompatibleHash,typename CompatiblePred
-  >
-  iterator find(
-    const key_type& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::true_)const
-  {
-    return find(k,hash,eq,mpl::false_());
-  }
-
-  template<
-    typename CompatibleKey,typename CompatibleHash,typename CompatiblePred
-  >
-  iterator find(
-    const CompatibleKey& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::false_)const
-  {
-    std::size_t buc=buckets.position(hash(k));
-    for(node_impl_pointer x=buckets.at(buc)->prior();
-        x!=node_impl_pointer(0);x=node_alg::next_to_inspect(x)){
-      if(eq(k,key(node_type::from_impl(x)->value()))){
-        return make_iterator(node_type::from_impl(x));
-      }
-    }
-    return end();
-  }
-
-  template<
-    typename CompatibleHash,typename CompatiblePred
-  >
-  size_type count(
-    const key_type& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::true_)const
-  {
-    return count(k,hash,eq,mpl::false_());
-  }
-
-  template<
-    typename CompatibleKey,typename CompatibleHash,typename CompatiblePred
-  >
-  size_type count(
-    const CompatibleKey& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::false_)const
-  {
-    std::size_t buc=buckets.position(hash(k));
-    for(node_impl_pointer x=buckets.at(buc)->prior();
-        x!=node_impl_pointer(0);x=node_alg::next_to_inspect(x)){
-      if(eq(k,key(node_type::from_impl(x)->value()))){
-        size_type         res=0;
-        node_impl_pointer y=end_of_range(x);
-        do{
-          ++res;
-          x=node_alg::after(x);
-        }while(x!=y);
-        return res;
-      }
-    }
-    return 0;
-  }
-
-  template<
-    typename CompatibleHash,typename CompatiblePred
-  >
-  std::pair<iterator,iterator> equal_range(
-    const key_type& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::true_)const
-  {
-    return equal_range(k,hash,eq,mpl::false_());
-  }
-
-  template<
-    typename CompatibleKey,typename CompatibleHash,typename CompatiblePred
-  >
-  std::pair<iterator,iterator> equal_range(
-    const CompatibleKey& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::false_)const
-  {
-    std::size_t buc=buckets.position(hash(k));
-    for(node_impl_pointer x=buckets.at(buc)->prior();
-        x!=node_impl_pointer(0);x=node_alg::next_to_inspect(x)){
-      if(eq(k,key(node_type::from_impl(x)->value()))){
-        return std::pair<iterator,iterator>(
-          make_iterator(node_type::from_impl(x)),
-          make_iterator(node_type::from_impl(end_of_range(x))));
-      }
-    }
-    return std::pair<iterator,iterator>(end(),end());
-  }
-
   key_from_value               key;
   hasher                       hash_;
   key_equal                    eq_;
@@ -1714,7 +1645,7 @@ template<
 inline boost::mpl::true_* boost_foreach_is_noncopyable(
   boost::multi_index::detail::hashed_index<
     KeyFromValue,Hash,Pred,SuperMeta,TagList,Category>*&,
-  boost_foreach_argument_dependent_lookup_hack)
+  boost::foreach::tag)
 {
   return 0;
 }

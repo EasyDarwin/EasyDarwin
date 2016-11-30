@@ -7,6 +7,10 @@
 #if !defined(BOOST_SPIRIT_X3_NEGATED_CHAR_PARSER_APR_16_2006_0906AM)
 #define BOOST_SPIRIT_X3_NEGATED_CHAR_PARSER_APR_16_2006_0906AM
 
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
 #include <boost/spirit/home/x3/support/traits/attribute_of.hpp>
 #include <boost/spirit/home/x3/support/traits/has_attribute.hpp>
 #include <boost/spirit/home/x3/char/char_parser.hpp>
@@ -36,7 +40,7 @@ namespace boost { namespace spirit { namespace x3
     inline negated_char_parser<Positive>
     operator~(char_parser<Positive> const& cp)
     {
-        return { cp.derived() };
+        return negated_char_parser<Positive>(cp.derived());
     }
 
     template <typename Positive>

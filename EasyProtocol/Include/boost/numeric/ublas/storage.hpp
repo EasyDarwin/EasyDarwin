@@ -370,7 +370,7 @@ namespace boost { namespace numeric { namespace ublas {
         // Random Access Container
         BOOST_UBLAS_INLINE
         size_type max_size () const {
-            return N;
+            return ALLOC ().max_size();
         }
         
         BOOST_UBLAS_INLINE
@@ -537,10 +537,6 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         array_adaptor (size_type size, pointer data):
             size_ (size), own_ (false), data_ (data) {}
-
-        template <size_t N>
-        BOOST_UBLAS_INLINE array_adaptor (T (&data)[N]):
-            size_ (N), own_ (false), data_ (data) {}
         BOOST_UBLAS_INLINE
         array_adaptor (const array_adaptor &a):
             storage_array<self_type> (),
@@ -604,16 +600,6 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         void resize (size_type size, pointer data, value_type init) {
             resize_internal (size, data, init, true);
-        }
-
-        template <size_t N>
-        BOOST_UBLAS_INLINE void resize (T (&data)[N]) {
-            resize_internal (N, data, value_type (), false);
-        }
-
-        template <size_t N>
-        BOOST_UBLAS_INLINE void resize (T (&data)[N], value_type init) {
-            resize_internal (N, data, init, true);
         }
 
         BOOST_UBLAS_INLINE
@@ -748,7 +734,7 @@ namespace boost { namespace numeric { namespace ublas {
             typedef TT *argument_type;
 
             BOOST_UBLAS_INLINE
-            result_type operator () (argument_type /* x */) {}
+            result_type operator () (argument_type x) {}
         };
 
     public:
@@ -777,10 +763,6 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         shallow_array_adaptor (size_type size, pointer data):
             size_ (size), own_ (false), data_ (data, leaker<value_type> ()) {}
-        template <size_t N>
-        BOOST_UBLAS_INLINE
-        shallow_array_adaptor (T (&data)[N]):
-            size_ (N), own_ (false), data_ (data, leaker<value_type> ()) {}
 
         BOOST_UBLAS_INLINE
         shallow_array_adaptor (const shallow_array_adaptor &a):
@@ -802,7 +784,6 @@ namespace boost { namespace numeric { namespace ublas {
                     std::fill (data.get () + (std::min) (size, size_), data.get () + size, init);
                 }
                 size_ = size;
-                own_ = true;
                 data_ = data;
             }
         }
@@ -813,8 +794,7 @@ namespace boost { namespace numeric { namespace ublas {
                 std::fill (data + (std::min) (size, size_), data + size, init);
             }
             size_ = size;
-            own_ = false;
-            data_.reset(data, leaker<value_type> ());
+            data_ = data;
         }
     public:
         BOOST_UBLAS_INLINE
@@ -832,16 +812,6 @@ namespace boost { namespace numeric { namespace ublas {
         BOOST_UBLAS_INLINE
         void resize (size_type size, pointer data, value_type init) {
             resize_internal (size, data, init, true);
-        }
-        template <size_t N>
-        BOOST_UBLAS_INLINE
-        void resize (T (&data)[N]) {
-            resize_internal (N, data, value_type (), false);
-        }
-        template <size_t N>
-        BOOST_UBLAS_INLINE
-        void resize (T (&data)[N], value_type init) {
-            resize_internal (N, data, init, true);
         }
 
         BOOST_UBLAS_INLINE

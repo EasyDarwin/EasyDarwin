@@ -21,7 +21,7 @@ typedef struct FrameBuffer_tag
 	int Encode(unsigned char* output, int& outlen)//outlen is output buffer len first
 	{
 		int dataLen = 0;
-		if (output == nullptr || outlen == 0)
+		if (output == NULL || outlen == 0)
 		{
 			return -1;
 		}
@@ -58,7 +58,7 @@ public:
 	~CKeyFrameCache()
 	{
 		free(_memory);
-		_memory = nullptr;
+		_memory = NULL;
 		mem_size = 0;
 		curdatalen = 0;
 	}

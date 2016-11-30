@@ -11,13 +11,6 @@
 
 #include <boost/config.hpp>
 
-//
-// This header is deprecated and no longer used by type_traits:
-//
-#if defined(__GNUC__) || defined(_MSC_VER)
-# pragma message("NOTE: Use of this header (ice_and.hpp) is deprecated")
-#endif
-
 namespace boost {
 namespace type_traits {
 

@@ -1,4 +1,4 @@
-ï»¿/*
+/*
 	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
@@ -62,22 +62,17 @@ private:
 
 	QTSS_Error netDevStartStream();
 	void netDevStopStream();
-	static Easy_U32 getPTZCMDFromCMDType(int cmdType);
-	static Easy_U32 getPresetCMDFromCMDType(int cmdType);
+	//static HI_U32 getPTZCMDFromCMDType(int cmdType);
+	//static HI_U32 getPresetCMDFromCMDType(int cmdType);
 
 	static int getFrameRateFromHKSDK(DWORD type);
 	static int getAudioCodecFromHKSDK(unsigned char type);
 	static unsigned int getAudioSimpleRateFromHKSDK(unsigned char type);
 
 private:
-	//æ‘„åƒæœºæ“ä½œå¥æŸ„
+	//ÉãÏñ»ú²Ù×÷¾ä±ú
 	LONG m_u32Handle;
-	//è¯­éŸ³å¯¹è®²å¥æŸ„
-	LONG audioHandle;
-	//è¯­éŸ³å¯¹è®²æ ‡å¿—
-	bool m_bTalk;
-
-	//é¢„è§ˆå¥æŸ„
+	//Ô¤ÀÀ¾ä±ú
 	LONG streamHandle;
 
 	bool fCameraLogin;

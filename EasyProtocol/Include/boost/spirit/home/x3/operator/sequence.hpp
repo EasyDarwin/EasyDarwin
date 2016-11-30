@@ -7,6 +7,10 @@
 #if !defined(SPIRIT_SEQUENCE_JAN_06_2013_1015AM)
 #define SPIRIT_SEQUENCE_JAN_06_2013_1015AM
 
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
 #include <boost/spirit/home/x3/support/traits/attribute_of.hpp>
 #include <boost/spirit/home/x3/core/parser.hpp>
 #include <boost/spirit/home/x3/operator/detail/sequence.hpp>
@@ -19,7 +23,7 @@ namespace boost { namespace spirit { namespace x3
     {
         typedef binary_parser<Left, Right, sequence<Left, Right>> base_type;
 
-        sequence(Left const& left, Right const& right)
+        sequence(Left left, Right right)
             : base_type(left, right) {}
 
         template <typename Iterator, typename Context, typename RContext>
@@ -52,13 +56,16 @@ namespace boost { namespace spirit { namespace x3
       , typename extension::as_parser<Right>::value_type>
     operator>>(Left const& left, Right const& right)
     {
-        return { as_parser(left), as_parser(right) };
+        return {as_parser(left), as_parser(right)};
     }
 
     template <typename Left, typename Right>
-    auto operator>(Left const& left, Right const& right)
+    inline sequence<
+        typename extension::as_parser<Left>::value_type
+      , expect_directive<typename extension::as_parser<Right>::value_type>>
+    operator>(Left const& left, Right const& right)
     {
-        return left >> expect[right];
+        return {as_parser(left), as_parser(right)};
     }
 }}}
 

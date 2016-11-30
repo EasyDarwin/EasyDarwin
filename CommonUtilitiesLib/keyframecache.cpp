@@ -5,7 +5,7 @@ static OSMutex sMaxFDPosMutex;		//锁
 
 bool CKeyFrameCache::PutOnePacket(char* buf, int len, int nalutype, int start)
 {
-	if (buf == nullptr || len == 0)
+	if (buf == NULL || len == 0)
 	{
 		return false;
 	}
@@ -102,7 +102,7 @@ bool CKeyFrameCache::GetOnePacket(char* outbuf, int& outLen, int curOffset)
 
 bool CKeyFrameCache::SetBuf(char *frameBuf, int len)
 {
-	if (frameBuf == nullptr || len == 0)
+	if (frameBuf == NULL || len == 0)
 	{
 		return false;
 	}

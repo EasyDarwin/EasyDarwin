@@ -66,20 +66,20 @@ ${CND_CONF}/libEasyProtocol.a: ${OBJECTFILES}
 	${AR} -rv ${CND_CONF}/libEasyProtocol.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libEasyProtocol.a
 
-${OBJECTDIR}/EasyProtocol.o: EasyProtocol.cpp
+${OBJECTDIR}/EasyProtocol.o: EasyProtocol.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../jsoncpp/include -I../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocol.o EasyProtocol.cpp
+	$(COMPILE.cc) -O2 -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocol.o EasyProtocol.cpp
 
-${OBJECTDIR}/EasyProtocolBase.o: EasyProtocolBase.cpp
+${OBJECTDIR}/EasyProtocolBase.o: EasyProtocolBase.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../jsoncpp/include -I../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocolBase.o EasyProtocolBase.cpp
+	$(COMPILE.cc) -O2 -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyProtocolBase.o EasyProtocolBase.cpp
 
-${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp
+${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I../jsoncpp/include -I../Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyUtil.o EasyUtil.cpp
+	$(COMPILE.cc) -O2 -I../jsoncpp/include -I../Include -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyUtil.o EasyUtil.cpp
 
 # Subprojects
 .build-subprojects:
@@ -87,6 +87,7 @@ ${OBJECTDIR}/EasyUtil.o: EasyUtil.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} ${CND_CONF}/libEasyProtocol.a
 
 # Subprojects
 .clean-subprojects:

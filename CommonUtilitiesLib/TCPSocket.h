@@ -35,6 +35,9 @@
 #ifndef __TCPSOCKET_H__
 #define __TCPSOCKET_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "SafeStdLib.h"
 #ifndef __Win32__
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -78,10 +81,8 @@ public:
 	//ACCESSORS:
 	//Returns NULL if not currently available.
 
-	UInt32      GetRemoteAddr() const
-	{ return ntohl(fRemoteAddr.sin_addr.s_addr); }
-	UInt16      GetRemotePort() const
-	{ return ntohs(fRemoteAddr.sin_port); }
+	UInt32      GetRemoteAddr() { return ntohl(fRemoteAddr.sin_addr.s_addr); }
+	UInt16      GetRemotePort() { return ntohs(fRemoteAddr.sin_port); }
 	//This function is NOT thread safe!
 	StrPtrLen*  GetRemoteAddrStr();
 

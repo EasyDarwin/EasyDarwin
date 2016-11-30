@@ -1060,13 +1060,12 @@ namespace boost { namespace spirit { namespace traits
         typedef T type;
     };
 
-#if !defined(BOOST_FUSION_HAS_VARIADIC_VECTOR)
     template <typename T>
     struct strip_single_element_vector<fusion::vector1<T> >
     {
         typedef T type;
     };
-#endif
+
     template <typename T>
     struct strip_single_element_vector<fusion::vector<T> >
     {
@@ -1154,7 +1153,7 @@ namespace boost { namespace spirit { namespace traits
         static void call(boost::optional<T>& val)
         {
             if (val)
-                val = none;   // leave optional uninitialized
+                val = none_t();   // leave optional uninitialized
         }
     };
 

@@ -35,7 +35,7 @@
 #include "MyAssert.h"
 #include "OS.h"
 
-RTCPCompressedQTSSPacket::RTCPCompressedQTSSPacket(bool debug) :
+RTCPCompressedQTSSPacket::RTCPCompressedQTSSPacket(Bool16 debug) :
 	RTCPAPPPacket(debug),
 	fReceiverBitRate(0),
 	fAverageLateMilliseconds(0),
@@ -60,7 +60,7 @@ RTCPCompressedQTSSPacket::RTCPCompressedQTSSPacket(bool debug) :
 }
 
 // use if you don't know what kind of packet this is
-bool RTCPCompressedQTSSPacket::ParseCompressedQTSSPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
+Bool16 RTCPCompressedQTSSPacket::ParseCompressedQTSSPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 	if (!this->ParseAPPPacket(inPacketBuffer, inPacketLength))
 		return false;
@@ -93,7 +93,7 @@ bool RTCPCompressedQTSSPacket::ParseCompressedQTSSPacket(UInt8* inPacketBuffer, 
 
 
 // You know the packet type and just want to parse it now
-bool RTCPCompressedQTSSPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength)
+Bool16 RTCPCompressedQTSSPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 
 	if (!this->ParseCompressedQTSSPacket(inPacketBuffer, inPacketLength))

@@ -27,9 +27,6 @@
 #ifdef BOOST_UBLAS_CPP_GE_2011
 #include <array>
 #include <initializer_list>
-#if defined(BOOST_MSVC) // For std::forward in fixed_vector
-#include <utility>
-#endif
 #endif
 
 // Iterators based on ideas of Jeremy Siek
@@ -906,18 +903,10 @@ namespace boost { namespace numeric { namespace ublas {
         /// \brief Construct a fixed_vector from a list of values
         /// This constructor enables initialization by using any of:
         /// fixed_vector<double, 3> v = { 1, 2, 3 } or fixed_vector<double,3> v( {1, 2, 3} ) or fixed_vector<double,3> v( 1, 2, 3 )
-#if defined(BOOST_MSVC)
-        // This may or may not work. Maybe use this for all instead only for MSVC
-        template <typename... U>
-        fixed_vector(U&&... values) :
-            vector_container<self_type> (),
-            data_{{ std::forward<U>(values)... }} {}
-#else
         template <typename... Types>
         fixed_vector(value_type v0, Types... vrest) :
             vector_container<self_type> (),
             data_{ { v0, vrest... } } {}
-#endif
 
     // -----------------------
     // Random Access Container

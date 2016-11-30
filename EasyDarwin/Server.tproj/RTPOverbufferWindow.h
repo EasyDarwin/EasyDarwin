@@ -66,7 +66,7 @@ public:
 	// using these calls. Defaults to enabled
 	void    TurnOffOverbuffering() { fOverbufferingEnabled = false; }
 	void    TurnOnOverbuffering() { fOverbufferingEnabled = true; }
-	bool*  OverbufferingEnabledPtr() { return &fOverbufferingEnabled; }
+	Bool16*  OverbufferingEnabledPtr() { return &fOverbufferingEnabled; }
 
 	//
 	// If the overbuffer window is full, this returns a time in the future when
@@ -114,8 +114,8 @@ private:
 
 	UInt32 fMaxSendAheadTime;
 
-	bool fWriteBurstBeginning;
-	bool fOverbufferingEnabled;
+	Bool16 fWriteBurstBeginning;
+	Bool16 fOverbufferingEnabled;
 
 	Float32 fOverbufferRate;
 	UInt32 fSendAheadDurationInMsec;

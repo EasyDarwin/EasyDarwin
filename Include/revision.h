@@ -30,7 +30,7 @@
 // tspecials =  ()<>@,;:\/"[]?=
 
 #define kVersionString "7.1"
-#define kBuildString "16.1111"
+#define kBuildString "16.1010"
 
 // Use kCommentString for seed or other release info 
 // Do not use '(' or ')' in the kCommentString

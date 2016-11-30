@@ -9,7 +9,6 @@
 //  09 Nov 2007 - Initial Revision
 //  25 Feb 2008 - moved to namespace boost::uuids::detail
 //  28 Nov 2009 - disabled deprecated warnings for MSVC
-//  28 Jul 2014 - fixed valgrind warnings and better entropy sources for MSVC
 
 // seed_rng models a UniformRandomNumberGenerator (see Boost.Random).
 // Random number generators are hard to seed well.  This is intended to provide
@@ -28,7 +27,6 @@
 #include <ctime> // for time_t, time, clock_t, clock
 #include <cstdlib> // for rand
 #include <cstdio> // for FILE, fopen, fread, fclose
-#include <boost/core/noncopyable.hpp>
 #include <boost/uuid/sha1.hpp>
 //#include <boost/nondet_random.hpp> //forward declare boost::random::random_device
 
@@ -38,20 +36,8 @@
 # include <boost/iterator/iterator_facade.hpp>
 
 #if defined(_MSC_VER)
-#   pragma warning(push) // Save warning settings.
-#   pragma warning(disable : 4996) // Disable deprecated std::fopen
-#   pragma comment(lib, "advapi32.lib")
-#endif
-
-#if defined(BOOST_WINDOWS)
-#   include <boost/detail/winapi/crypt.hpp> // for CryptAcquireContextA, CryptGenRandom, CryptReleaseContext
-#   include <boost/detail/winapi/timers.hpp>
-#   include <boost/detail/winapi/process.hpp>
-#   include <boost/detail/winapi/thread.hpp>
-#else 
-#   include <sys/time.h>  // for gettimeofday
-#   include <sys/types.h> // for pid_t
-#   include <unistd.h>    // for getpid()
+#pragma warning(push) // Save warning settings.
+#pragma warning(disable : 4996) // Disable deprecated std::fopen
 #endif
 
 #ifdef BOOST_NO_STDC_NAMESPACE
@@ -79,51 +65,33 @@ namespace uuids {
 namespace detail {
 
 // should this be part of Boost.Random?
-class seed_rng: private boost::noncopyable
+class seed_rng
 {
 public:
     typedef unsigned int result_type;
     BOOST_STATIC_CONSTANT(bool, has_fixed_range = false);
+    //BOOST_STATIC_CONSTANT(unsigned int, min_value = 0);
+    //BOOST_STATIC_CONSTANT(unsigned int, max_value = UINT_MAX);
 
 public:
     // note: rd_ intentionally left uninitialized
-    seed_rng() BOOST_NOEXCEPT
+    seed_rng()
         : rd_index_(5)
-        , random_(NULL)
-    {
-#if defined(BOOST_WINDOWS)
-        if (!boost::detail::winapi::CryptAcquireContextA(
-                    &random_,
-                    NULL,
-                    NULL,
-                    boost::detail::winapi::PROV_RSA_FULL_,
-                    boost::detail::winapi::CRYPT_VERIFYCONTEXT_ | boost::detail::winapi::CRYPT_SILENT_))
-        {
-            random_ = NULL;
-        }
-#else
-        random_ = std::fopen( "/dev/urandom", "rb" );
-#endif
+        , random_(std::fopen( "/dev/urandom", "rb" ))
+    {}
 
-        std::memset(rd_, 0, sizeof(rd_));
-    }
-    
-    ~seed_rng() BOOST_NOEXCEPT
+    ~seed_rng()
     {
         if (random_) {
-#if defined(BOOST_WINDOWS)
-            boost::detail::winapi::CryptReleaseContext(random_, 0);
-#else
             std::fclose(random_);
-#endif
         }
     }
 
-    result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () const BOOST_NOEXCEPT
+    result_type min BOOST_PREVENT_MACRO_SUBSTITUTION () const
     {
         return (std::numeric_limits<result_type>::min)();
     }
-    result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () const BOOST_NOEXCEPT
+    result_type max BOOST_PREVENT_MACRO_SUBSTITUTION () const
     {
         return (std::numeric_limits<result_type>::max)();
     }
@@ -141,12 +109,11 @@ public:
     }
 
 private:
-    BOOST_STATIC_CONSTANT(std::size_t, internal_state_size = 5);
     inline void ignore_size(size_t) {}
 
     static unsigned int * sha1_random_digest_state_()
     {
-        static unsigned int state[ internal_state_size ];
+        static unsigned int state[ 5 ];
         return state;
     }
 
@@ -154,49 +121,18 @@ private:
     {
         boost::uuids::detail::sha1 sha;
 
+        unsigned int * ps = sha1_random_digest_state_();
 
-        if (random_)
-        {
-            // intentionally left uninitialized
-            unsigned char state[ 20 ];
-#if defined(BOOST_WINDOWS)
-            boost::detail::winapi::CryptGenRandom(random_, sizeof(state), state);
-#else
-            ignore_size(std::fread( state, 1, sizeof(state), random_ ));
-#endif
-            sha.process_bytes( state, sizeof( state ) );
-        }
+        unsigned int state[ 5 ];
+        std::memcpy( state, ps, sizeof( state ) ); // harmless data race
+
+        sha.process_bytes( (unsigned char const*)state, sizeof( state ) );
+        sha.process_bytes( (unsigned char const*)&ps, sizeof( ps ) );
 
         {
-            // Getting enropy from some system specific sources
-#if defined(BOOST_WINDOWS)
-            boost::detail::winapi::DWORD_ procid = boost::detail::winapi::GetCurrentProcessId();
-            sha.process_bytes( (unsigned char const*)&procid, sizeof( procid ) );
-
-            boost::detail::winapi::DWORD_ threadid = boost::detail::winapi::GetCurrentThreadId();
-            sha.process_bytes( (unsigned char const*)&threadid, sizeof( threadid ) );
-
-            boost::detail::winapi::LARGE_INTEGER_ ts;
-            ts.QuadPart = 0;
-            boost::detail::winapi::QueryPerformanceCounter( &ts );
-            sha.process_bytes( (unsigned char const*)&ts, sizeof( ts ) );
-
             std::time_t tm = std::time( 0 );
             sha.process_bytes( (unsigned char const*)&tm, sizeof( tm ) );
-#else
-            pid_t pid = getpid();
-            sha.process_bytes( (unsigned char const*)&pid, sizeof( pid ) );
-
-            timeval ts;
-            gettimeofday(&ts, NULL); // We do not use `clock_gettime` to avoid linkage with -lrt
-            sha.process_bytes( (unsigned char const*)&ts, sizeof( ts ) );
-#endif
         }
-
-
-        unsigned int * ps = sha1_random_digest_state_();
-        sha.process_bytes( ps, internal_state_size * sizeof( unsigned int ) );
-        sha.process_bytes( (unsigned char const*)&ps, sizeof( ps ) );
 
         {
             std::clock_t ck = std::clock();
@@ -213,13 +149,27 @@ private:
         }
 
         {
-            unsigned int * p = new unsigned int;
-            sha.process_bytes( (unsigned char const*)&p, sizeof( p ) );
-            delete p;
+            // intentionally left uninitialized
+            unsigned char buffer[ 20 ];
 
-            const seed_rng* this_ptr = this;
-            sha.process_bytes( (unsigned char const*)&this_ptr, sizeof( this_ptr ) );
-            sha.process_bytes( (unsigned char const*)&std::rand, sizeof( void(*)() ) );
+            if(random_)
+            {
+                ignore_size(std::fread( buffer, 1, 20, random_ ));
+            }
+
+            // using an uninitialized buffer[] if fopen fails
+            // intentional, we rely on its contents being random
+            sha.process_bytes( buffer, sizeof( buffer ) );
+        }
+
+        {
+            // *p is intentionally left uninitialized
+            unsigned int * p = new unsigned int;
+
+            sha.process_bytes( (unsigned char const*)p, sizeof( *p ) );
+            sha.process_bytes( (unsigned char const*)&p, sizeof( p ) );
+
+            delete p;
         }
 
         sha.process_bytes( (unsigned char const*)rd_, sizeof( rd_ ) );
@@ -238,12 +188,11 @@ private:
 private:
     unsigned int rd_[5];
     int rd_index_;
-
-#if defined(BOOST_WINDOWS)
-    boost::detail::winapi::HCRYPTPROV_ random_;
-#else
     std::FILE * random_;
-#endif
+
+private: // make seed_rng noncopyable
+    seed_rng(seed_rng const&);
+    seed_rng& operator=(seed_rng const&);
 };
 
 // almost a copy of boost::generator_iterator

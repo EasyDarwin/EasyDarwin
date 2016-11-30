@@ -13,6 +13,9 @@
 
 #include <boost/config.hpp>
 
+// should be the last #include
+#include <boost/type_traits/detail/type_trait_def.hpp>
+
 namespace boost {
 
 // * convert a type T to a const volatile type - add_cv<T>
@@ -28,14 +31,16 @@ namespace boost {
 #   pragma warning(disable:4181) // warning C4181: qualifier applied to reference type ignored
 #endif 
 
-template <class T> struct add_cv{ typedef T const volatile type; };
+BOOST_TT_AUX_TYPE_TRAIT_DEF1(add_cv,T,T const volatile)
 
 #if defined(BOOST_MSVC)
 #   pragma warning(pop)
 #endif 
 
-template <class T> struct add_cv<T&>{ typedef T& type; };
+BOOST_TT_AUX_TYPE_TRAIT_PARTIAL_SPEC1_1(typename T,add_cv,T&,T&)
 
 } // namespace boost
+
+#include <boost/type_traits/detail/type_trait_undef.hpp>
 
 #endif // BOOST_TT_ADD_CV_HPP_INCLUDED

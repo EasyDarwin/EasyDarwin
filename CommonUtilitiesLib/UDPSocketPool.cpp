@@ -48,7 +48,7 @@ UDPSocketPair* UDPSocketPool::GetUDPSocketPair(UInt32 inIPAddr, UInt16 inPort,
 			{
 				//check to make sure this source IP & port is not already in the demuxer.
 				//If not, we can return this socket pair.
-				if ((theElem->fSocketB->GetDemuxer() == nullptr) ||
+				if ((theElem->fSocketB->GetDemuxer() == NULL) ||
 					((!theElem->fSocketB->GetDemuxer()->AddrInMap(0, 0)) &&
 					(!theElem->fSocketB->GetDemuxer()->AddrInMap(inSrcIPAddr, inSrcPort))))
 				{
@@ -58,7 +58,7 @@ UDPSocketPair* UDPSocketPool::GetUDPSocketPair(UInt32 inIPAddr, UInt16 inPort,
 				//If port is specified, there is NO WAY a socket pair can exist that matches
 				//the criteria (because caller wants a specific ip & port combination)
 				else if (inPort != 0)
-					return nullptr;
+					return NULL;
 			}
 		}
 	}
@@ -82,8 +82,8 @@ UDPSocketPair*  UDPSocketPool::CreateUDPSocketPair(UInt32 inAddr, UInt16 inPort)
 {
 	//try to find an open pair of ports to bind these suckers tooo
 	OSMutexLocker locker(&fMutex);
-	UDPSocketPair* theElem = nullptr;
-	bool foundPair = false;
+	UDPSocketPair* theElem = NULL;
+	Bool16 foundPair = false;
 	UInt16 curPort = kLowestUDPPort;
 	UInt16 stopPort = kHighestUDPPort - 1; // prevent roll over when iterating over port nums
 	UInt16 socketBPort = kLowestUDPPort + 1;
@@ -101,16 +101,16 @@ UDPSocketPair*  UDPSocketPool::CreateUDPSocketPair(UInt32 inAddr, UInt16 inPort)
 		socketBPort = curPort + 1; // make socket pairs adjacent to one another
 
 		theElem = ConstructUDPSocketPair();
-		Assert(theElem != nullptr);
+		Assert(theElem != NULL);
 		if (theElem->fSocketA->Open() != OS_NoErr)
 		{
 			this->DestructUDPSocketPair(theElem);
-			return nullptr;
+			return NULL;
 		}
 		if (theElem->fSocketB->Open() != OS_NoErr)
 		{
 			this->DestructUDPSocketPair(theElem);
-			return nullptr;
+			return NULL;
 		}
 
 		// Set socket options on these new sockets
@@ -142,11 +142,11 @@ UDPSocketPair*  UDPSocketPool::CreateUDPSocketPair(UInt32 inAddr, UInt16 inPort)
 		curPort += 2; //try a higher port pair
 
 		this->DestructUDPSocketPair(theElem); //a bind failure
-		theElem = nullptr;
+		theElem = NULL;
 	}
 	//if we couldn't find a pair of sockets, make sure to clean up our mess
-	if (theElem != nullptr)
+	if (theElem != NULL)
 		this->DestructUDPSocketPair(theElem);
 
-	return nullptr;
+	return NULL;
 }

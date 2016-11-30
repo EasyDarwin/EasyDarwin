@@ -113,10 +113,10 @@ public:
 		this->fPacketPtr.Len = len;
 	}
 
-	bool  IsRTCP() { return fIsRTCP; }
+	Bool16  IsRTCP() { return fIsRTCP; }
 	inline  UInt32  GetPacketRTPTime();
 	inline  UInt16  GetPacketRTPSeqNum();
-	inline  UInt32  GetSSRC(bool isRTCP);
+	inline  UInt32  GetSSRC(Bool16 isRTCP);
 	inline  SInt64  GetPacketNTPTime();
 
 private:
@@ -131,8 +131,8 @@ private:
 	OSQueueElem fQueueElem;
 	char        fPacketData[kMaxReflectorPacketSize];
 	StrPtrLen   fPacketPtr;
-	bool      fIsRTCP;
-	bool      fNeededByOutput; // is this packet still needed for output?
+	Bool16      fIsRTCP;
+	Bool16      fNeededByOutput; // is this packet still needed for output?
 	UInt64      fStreamCountID;
 
 	friend class ReflectorSender;
@@ -142,7 +142,7 @@ private:
 
 };
 
-UInt32 ReflectorPacket::GetSSRC(bool isRTCP)
+UInt32 ReflectorPacket::GetSSRC(Bool16 isRTCP)
 {
 	if (fPacketPtr.Ptr == NULL || fPacketPtr.Len < 8)
 		return 0;
@@ -217,16 +217,16 @@ public:
 	void    RemoveBroadcasterSession(QTSS_ClientSessionObject inSession) { OSMutexLocker locker(this->GetDemuxer()->GetMutex()); if (inSession == fBroadcasterClientSession) fBroadcasterClientSession = NULL; }
 	void    AddSender(ReflectorSender* inSender);
 	void    RemoveSender(ReflectorSender* inStreamElem);
-	bool  HasSender() { return (this->GetDemuxer()->GetHashTable()->GetNumEntries() > 0); }
-	bool  ProcessPacket(const SInt64& inMilliseconds, ReflectorPacket* thePacket, UInt32 theRemoteAddr, UInt16 theRemotePort);
+	Bool16  HasSender() { return (this->GetDemuxer()->GetHashTable()->GetNumEntries() > 0); }
+	Bool16  ProcessPacket(const SInt64& inMilliseconds, ReflectorPacket* thePacket, UInt32 theRemoteAddr, UInt16 theRemotePort);
 	ReflectorPacket*    GetPacket();
 	virtual SInt64      Run();
-	void    SetSSRCFilter(bool state, UInt32 timeoutSecs) { fFilterSSRCs = state; fTimeoutSecs = timeoutSecs; }
+	void    SetSSRCFilter(Bool16 state, UInt32 timeoutSecs) { fFilterSSRCs = state; fTimeoutSecs = timeoutSecs; }
 private:
 
 	//virtual SInt64        Run();
 	void    GetIncomingData(const SInt64& inMilliseconds);
-	void    FilterInvalidSSRCs(ReflectorPacket* thePacket, bool isRTCP);
+	void    FilterInvalidSSRCs(ReflectorPacket* thePacket, Bool16 isRTCP);
 
 	//Number of packets to allocate when the socket is first created
 	enum
@@ -245,10 +245,10 @@ private:
 
 	UInt32  fValidSSRC;
 	SInt64  fLastValidSSRCTime;
-	bool  fFilterSSRCs;
+	Bool16  fFilterSSRCs;
 	UInt32  fTimeoutSecs;
 
-	bool  fHasReceiveTime;
+	Bool16  fHasReceiveTime;
 	UInt64  fFirstReceiveTime;
 	SInt64  fFirstArrivalTime;
 	UInt32  fCurrentSSRC;
@@ -283,11 +283,11 @@ public:
 	//Used for adjusting sequence numbers in light of thinning
 	UInt16      GetPacketSeqNumber(const StrPtrLen& inPacket);
 	void        SetPacketSeqNumber(const StrPtrLen& inPacket, UInt16 inSeqNumber);
-	bool      PacketShouldBeThinned(QTSS_RTPStreamObject inStream, const StrPtrLen& inPacket);
+	Bool16      PacketShouldBeThinned(QTSS_RTPStreamObject inStream, const StrPtrLen& inPacket);
 
 	//We want to make sure that ReflectPackets only gets invoked when there
 	//is actually work to do, because it is an expensive function
-	bool      ShouldReflectNow(const SInt64& inCurrentTime, SInt64* ioWakeupTime);
+	Bool16      ShouldReflectNow(const SInt64& inCurrentTime, SInt64* ioWakeupTime);
 
 	//This function gets data from the multicast source and reflects.
 	//Returns the time at which it next needs to be invoked
@@ -296,26 +296,26 @@ public:
 	//this is the old way of doing reflect packets. It is only here until the relay code can be cleaned up.
 	void        ReflectRelayPackets(SInt64* ioWakeupTime, OSQueue* inFreeQueue);
 
-	OSQueueElem*    SendPacketsToOutput(ReflectorOutput* theOutput, OSQueueElem* currentPacket, SInt64 currentTime, SInt64  bucketDelay, bool firstPacket);
+	OSQueueElem*    SendPacketsToOutput(ReflectorOutput* theOutput, OSQueueElem* currentPacket, SInt64 currentTime, SInt64  bucketDelay, Bool16 firstPacket);
 
-	UInt32      GetOldestPacketRTPTime(bool *foundPtr);
-	UInt16      GetFirstPacketRTPSeqNum(bool *foundPtr);
-	bool      GetFirstPacketInfo(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr);
+	UInt32      GetOldestPacketRTPTime(Bool16 *foundPtr);
+	UInt16      GetFirstPacketRTPSeqNum(Bool16 *foundPtr);
+	Bool16      GetFirstPacketInfo(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr);
 
 	OSQueueElem*GetClientBufferNextPacketTime(UInt32 inRTPTime);
-	bool      GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr);
+	Bool16      GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr);
 
 	void        RemoveOldPackets(OSQueue* inFreeQueue);
-	OSQueueElem* GetClientBufferStartPacketOffset(SInt64 offsetMsec, bool needKeyFrameFirstPacket = false);
+	OSQueueElem* GetClientBufferStartPacketOffset(SInt64 offsetMsec, Bool16 needKeyFrameFirstPacket = false);
 	OSQueueElem* GetClientBufferStartPacket() { return this->GetClientBufferStartPacketOffset(0); };
 
 	// ->geyijyn@20150427
 	// 关键帧索引及丢帧方案
 	OSQueueElem* NeedRelocateBookMark(OSQueueElem* currentElem);
 	OSQueueElem* GetNewestKeyFrameFirstPacket(OSQueueElem* currentElem, SInt64 offsetMsec);
-	bool IsKeyFrameFirstPacket(ReflectorPacket* thePacket);
-	bool IsFrameFirstPacket(ReflectorPacket* thePacket);
-	bool IsFrameLastPacket(ReflectorPacket* thePacket);
+	Bool16 IsKeyFrameFirstPacket(ReflectorPacket* thePacket);
+	Bool16 IsFrameFirstPacket(ReflectorPacket* thePacket);
+	Bool16 IsFrameLastPacket(ReflectorPacket* thePacket);
 
 	ReflectorStream*    fStream;
 	UInt32              fWriteFlag;
@@ -334,7 +334,7 @@ public:
 		//qtss_printf("SetNextTimeToRun =%"_64BITARG_"d\n", fNextTimeToRun);
 	}
 
-	bool      fHasNewPackets;
+	Bool16      fHasNewPackets;
 	SInt64      fNextTimeToRun;
 
 	//how often to send RRs to the source
@@ -386,7 +386,7 @@ public:
 	// Call this to initialize the reflector sockets. Uses the QTSS_RTSPRequestObject
 	// if provided to report any errors that occur 
 	// Passes the QTSS_ClientSessionObject to the socket so the socket can update the session if needed.
-	QTSS_Error BindSockets(QTSS_StandardRTSP_Params* inParams, UInt32 inReflectorSessionFlags, bool filterState, UInt32 timeout);
+	QTSS_Error BindSockets(QTSS_StandardRTSP_Params* inParams, UInt32 inReflectorSessionFlags, Bool16 filterState, UInt32 timeout);
 
 	// This stream reflects packets from the broadcast to specific ReflectorOutputs.
 	// You attach outputs to ReflectorStreams this way. You can force the ReflectorStream
@@ -405,7 +405,7 @@ public:
 	// by channel numbers
 	void	SetRTPChannelNum(SInt16 inChannel) { fRTPChannel = inChannel; }
 	void	SetRTCPChannelNum(SInt16 inChannel) { fRTCPChannel = inChannel; }
-	void	PushPacket(char *packet, UInt32 packetLen, bool isRTCP);
+	void	PushPacket(char *packet, UInt32 packetLen, Bool16 isRTCP);
 
 	//
 	// ACCESSORS
@@ -419,8 +419,8 @@ public:
 	ReflectorSender*        GetRTPSender() { return &fRTPSender; }
 	ReflectorSender*        GetRTCPSender() { return &fRTCPSender; }
 
-	void                    SetHasFirstRTCP(bool hasPacket) { fHasFirstRTCPPacket = hasPacket; }
-	bool                  HasFirstRTCP() { return fHasFirstRTCPPacket; }
+	void                    SetHasFirstRTCP(Bool16 hasPacket) { fHasFirstRTCPPacket = hasPacket; }
+	Bool16                  HasFirstRTCP() { return fHasFirstRTCPPacket; }
 
 	void                    SetFirst_RTCP_RTP_Time(UInt32 time) { fFirst_RTCP_RTP_Time = time; }
 	UInt32                  GetFirst_RTCP_RTP_Time() { return fFirst_RTCP_RTP_Time; }
@@ -429,15 +429,15 @@ public:
 	SInt64                  GetFirst_RTCP_Arrival_Time() { return fFirst_RTCP_Arrival_Time; }
 
 
-	void                    SetHasFirstRTP(bool hasPacket) { fHasFirstRTPPacket = hasPacket; }
-	bool                  HasFirstRTP() { return fHasFirstRTPPacket; }
+	void                    SetHasFirstRTP(Bool16 hasPacket) { fHasFirstRTPPacket = hasPacket; }
+	Bool16                  HasFirstRTP() { return fHasFirstRTPPacket; }
 
 	UInt32                  GetBufferDelay() { return ReflectorStream::sOverBufferInMsec; }
 	UInt32                  GetTimeScale() { return fStreamInfo.fTimeScale; }
 	UInt64                  fPacketCount;
 
-	void                    SetEnableBuffer(bool enableBuffer) { fEnableBuffer = enableBuffer; }
-	bool                  BufferEnabled() { return fEnableBuffer; }
+	void                    SetEnableBuffer(Bool16 enableBuffer) { fEnableBuffer = enableBuffer; }
+	Bool16                  BufferEnabled() { return fEnableBuffer; }
 	inline  void                    UpdateBitRate(SInt64 currentTime);
 	static UInt32           sOverBufferInMsec;
 
@@ -501,17 +501,16 @@ private:
 	// Used for calculating average bit rate
 	UInt32              fCurrentBitRate;
 	SInt64              fLastBitRateSample;
-	//unsigned int        fBytesSentInThisInterval;// unsigned int because we need to atomic_add 
-	atomic_uint			fBytesSentInThisInterval;
+	unsigned int        fBytesSentInThisInterval;// unsigned int because we need to atomic_add 
 
 	// If incoming data is RTSP interleaved
 	SInt16              fRTPChannel; //These will be -1 if not set to anything
 	SInt16              fRTCPChannel;
 
-	bool              fHasFirstRTCPPacket;
-	bool              fHasFirstRTPPacket;
+	Bool16              fHasFirstRTCPPacket;
+	Bool16              fHasFirstRTPPacket;
 
-	bool              fEnableBuffer;
+	Bool16              fEnableBuffer;
 	UInt32              fEyeCount;
 
 	UInt32              fFirst_RTCP_RTP_Time;
@@ -526,7 +525,7 @@ private:
 	static UInt32       sMaxFuturePacketMSec;
 	static UInt32       sOverBufferInSec;
 	static UInt32       sBucketDelayInMsec;
-	static bool       sUsePacketReceiveTime;
+	static Bool16       sUsePacketReceiveTime;
 	static UInt32       sFirstPacketOffsetMsec;
 
 	static UInt32       sRelocatePacketAgeMSec;
@@ -544,8 +543,7 @@ void    ReflectorStream::UpdateBitRate(SInt64 currentTime)
 	if ((fLastBitRateSample + ReflectorStream::kBitRateAvgIntervalInMilSecs) < currentTime)
 	{
 		unsigned int intervalBytes = fBytesSentInThisInterval;
-		//(void)atomic_sub(&fBytesSentInThisInterval, intervalBytes);
-		fBytesSentInThisInterval.fetch_sub(intervalBytes);
+		(void)atomic_sub(&fBytesSentInThisInterval, intervalBytes);
 
 		// Multiply by 1000 to convert from milliseconds to seconds, and by 8 to convert from bytes to bits
 		Float32 bps = (Float32)(intervalBytes * 8) / (Float32)(currentTime - fLastBitRateSample);

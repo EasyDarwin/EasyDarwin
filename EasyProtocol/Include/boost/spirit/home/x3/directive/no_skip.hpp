@@ -9,6 +9,10 @@
 #if !defined(SPIRIT_NO_SKIP_JAN_16_2010_0802PM)
 #define SPIRIT_NO_SKIP_JAN_16_2010_0802PM
 
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
 #include <boost/spirit/home/x3/support/context.hpp>
 #include <boost/spirit/home/x3/support/unused.hpp>
 #include <boost/spirit/home/x3/core/skip_over.hpp>
@@ -68,11 +72,11 @@ namespace boost { namespace spirit { namespace x3
         no_skip_directive<typename extension::as_parser<Subject>::value_type>
         operator[](Subject const& subject) const
         {
-            return { as_parser(subject) };
+            return {as_parser(subject)};
         }
     };
 
-    auto const no_skip = no_skip_gen{};
+    no_skip_gen const no_skip = no_skip_gen();
 }}}
 
 #endif

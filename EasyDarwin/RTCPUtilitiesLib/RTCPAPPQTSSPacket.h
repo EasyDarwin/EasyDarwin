@@ -42,14 +42,14 @@ class RTCPCompressedQTSSPacket : public RTCPAPPPacket
 {
 public:
 
-	RTCPCompressedQTSSPacket(bool debug = false);
+	RTCPCompressedQTSSPacket(Bool16 debug = false);
 	virtual ~RTCPCompressedQTSSPacket() {}
 
 	//Call this before any accessor method. Returns true if successful, false otherwise
-	virtual bool ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	virtual Bool16 ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength);
 
 	// Call to parse if you don't know what kind of packet this is
-	bool ParseCompressedQTSSPacket(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	Bool16 ParseCompressedQTSSPacket(UInt8* inPacketBuffer, UInt32 inPacketLength);
 	inline UInt32 GetQTSSReportSourceID();
 	inline UInt16 GetQTSSPacketVersion();
 	inline UInt16 GetQTSSPacketLength(); //In 'UInt32's
@@ -59,8 +59,8 @@ public:
 	inline UInt16 GetAverageLateMilliseconds() { return fAverageLateMilliseconds; }
 	inline UInt16 GetPercentPacketsLost() { return fPercentPacketsLost; }
 	inline UInt16 GetAverageBufferDelayMilliseconds() { return fAverageBufferDelayMilliseconds; }
-	inline bool GetIsGettingBetter() { return fIsGettingBetter; }
-	inline bool GetIsGettingWorse() { return fIsGettingWorse; }
+	inline Bool16 GetIsGettingBetter() { return fIsGettingBetter; }
+	inline Bool16 GetIsGettingWorse() { return fIsGettingWorse; }
 	inline UInt32 GetNumEyes() { return fNumEyes; }
 	inline UInt32 GetNumEyesActive() { return fNumEyesActive; }
 	inline UInt32 GetNumEyesPaused() { return fNumEyesPaused; }
@@ -83,8 +83,8 @@ public:
 	UInt16 fAverageLateMilliseconds;
 	UInt16 fPercentPacketsLost;
 	UInt16 fAverageBufferDelayMilliseconds;
-	bool fIsGettingBetter;
-	bool fIsGettingWorse;
+	Bool16 fIsGettingBetter;
+	Bool16 fIsGettingWorse;
 	UInt32 fNumEyes;
 	UInt32 fNumEyesActive;
 	UInt32 fNumEyesPaused;
@@ -198,18 +198,18 @@ public:
 	virtual ~RTCPqtssPacket() {}
 
 	//Call this before any accessor method. Returns true if successful, false otherwise
-	virtual bool ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	virtual Bool16 ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength);
 
 	//Call this before any accessor method. Returns true if successful, false otherwise
-	bool ParseQTSSPacket(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	Bool16 ParseQTSSPacket(UInt8* inPacketBuffer, UInt32 inPacketLength);
 
 
 	inline UInt32 GetReceiverBitRate() { return fReceiverBitRate; }
 	inline UInt32 GetAverageLateMilliseconds() { return fAverageLateMilliseconds; }
 	inline UInt32 GetPercentPacketsLost() { return fPercentPacketsLost; }
 	inline UInt32 GetAverageBufferDelayMilliseconds() { return fAverageBufferDelayMilliseconds; }
-	inline bool GetIsGettingBetter() { return fIsGettingBetter; }
-	inline bool GetIsGettingWorse() { return fIsGettingWorse; }
+	inline Bool16 GetIsGettingBetter() { return fIsGettingBetter; }
+	inline Bool16 GetIsGettingWorse() { return fIsGettingWorse; }
 	inline UInt32 GetNumEyes() { return fNumEyes; }
 	inline UInt32 GetNumEyesActive() { return fNumEyesActive; }
 	inline UInt32 GetNumEyesPaused() { return fNumEyesPaused; }
@@ -236,8 +236,8 @@ private:
 	UInt32 fAverageLateMilliseconds;
 	UInt32 fPercentPacketsLost;
 	UInt32 fAverageBufferDelayMilliseconds;
-	bool fIsGettingBetter;
-	bool fIsGettingWorse;
+	Bool16 fIsGettingBetter;
+	Bool16 fIsGettingWorse;
 	UInt32 fNumEyes;
 	UInt32 fNumEyesActive;
 	UInt32 fNumEyesPaused;

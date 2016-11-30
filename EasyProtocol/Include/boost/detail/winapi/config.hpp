@@ -9,18 +9,10 @@
 #ifndef BOOST_DETAIL_WINAPI_CONFIG_HPP_INCLUDED_
 #define BOOST_DETAIL_WINAPI_CONFIG_HPP_INCLUDED_
 
-#if defined __MINGW32__
-#include <_mingw.h>
-#endif
+#include <boost/config.hpp>
 
-// BOOST_WINAPI_IS_MINGW indicates that the target Windows SDK is provided by MinGW (http://mingw.org/).
-// BOOST_WINAPI_IS_MINGW_W64 indicates that the target Windows SDK is provided by MinGW-w64 (http://mingw-w64.org).
-#if defined __MINGW32__
-#if defined __MINGW64_VERSION_MAJOR
-#define BOOST_WINAPI_IS_MINGW_W64
-#else
-#define BOOST_WINAPI_IS_MINGW
-#endif
+#ifdef BOOST_HAS_PRAGMA_ONCE
+#pragma once
 #endif
 
 // These constants reflect _WIN32_WINNT_* macros from sdkddkver.h
@@ -36,8 +28,6 @@
 #define BOOST_WINAPI_VERSION_WIN7 0x0601
 #define BOOST_WINAPI_VERSION_WIN8 0x0602
 #define BOOST_WINAPI_VERSION_WINBLUE 0x0603
-#define BOOST_WINAPI_VERSION_WINTHRESHOLD 0x0A00
-#define BOOST_WINAPI_VERSION_WIN10 0x0A00
 
 #if !defined(BOOST_USE_WINAPI_VERSION)
 #if defined(_WIN32_WINNT)
@@ -45,12 +35,8 @@
 #elif defined(WINVER)
 #define BOOST_USE_WINAPI_VERSION WINVER
 #else
-// By default use Windows Vista API on compilers that support it and XP on the others
-#if (defined(_MSC_VER) && _MSC_VER < 1500) || defined(BOOST_WINAPI_IS_MINGW)
+// By default use Windows XP API
 #define BOOST_USE_WINAPI_VERSION BOOST_WINAPI_VERSION_WINXP
-#else
-#define BOOST_USE_WINAPI_VERSION BOOST_WINAPI_VERSION_WIN6
-#endif
 #endif
 #endif
 
@@ -62,12 +48,6 @@
 #if !defined(WINVER)
 #define WINVER BOOST_USE_WINAPI_VERSION
 #endif
-#endif
-
-#include <boost/config.hpp>
-
-#ifdef BOOST_HAS_PRAGMA_ONCE
-#pragma once
 #endif
 
 #endif // BOOST_DETAIL_WINAPI_CONFIG_HPP_INCLUDED_

@@ -41,14 +41,14 @@ class RTCPNaduPacket : public RTCPAPPPacket
 {
 public:
 
-	RTCPNaduPacket(bool debug);
+	RTCPNaduPacket(Bool16 debug);
 	virtual ~RTCPNaduPacket() {}
 
 	//Call this before any accessor method. Returns true if successful, false otherwise
-	virtual bool ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	virtual Bool16 ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength);
 
 	// Call to parse if you don't know what kind of packet this is
-	bool ParseNaduPacket(UInt8* inPacketBuffer, UInt32 inPacketLength);
+	Bool16 ParseNaduPacket(UInt8* inPacketBuffer, UInt32 inPacketLength);
 
 	UInt32 GetNumReportBlocks() { return fNumBlocks; };
 
@@ -207,7 +207,7 @@ public:
 	}
 	void Initialize(UInt32 listSize = 3);
 
-	bool AddReport(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 *outID);
+	Bool16 AddReport(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 *outID);
 
 	NaduReport*     GetReport(UInt32 id);
 	NaduReport*     GetLastReport();

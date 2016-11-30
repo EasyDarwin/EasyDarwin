@@ -104,11 +104,11 @@ public:
 	~XMLParser();
 
 	// Check for existence, man.
-	bool  DoesFileExist();
-	bool  DoesFileExistAsDirectory();
-	bool  CanWriteFile();
+	Bool16  DoesFileExist();
+	Bool16  DoesFileExistAsDirectory();
+	Bool16  CanWriteFile();
 
-	bool  ParseFile(char* errorBuffer = NULL, int errorBufferSize = 0);
+	Bool16  ParseFile(char* errorBuffer = NULL, int errorBufferSize = 0);
 
 	XMLTag* GetRootTag() { return fRootTag; }
 	void SetRootTag(XMLTag* tag);

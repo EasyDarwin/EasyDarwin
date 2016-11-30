@@ -33,7 +33,6 @@ struct s_item
     typedef void_       last_masked_;
     typedef T           item_type_;
     typedef typename Base::item_ base;
-    typedef s_item type;
     
     typedef typename next< typename Base::size >::type  size;
     typedef typename next< typename Base::order >::type order;
@@ -58,7 +57,6 @@ struct s_mask
     typedef void_   item_type_;
     typedef typename Base::item_ base;
     typedef typename prior< typename Base::size >::type  size;
-    typedef s_mask type;
 
     BOOST_MPL_AUX_SET_OVERLOAD( aux::yes_tag, IS_MASKED, s_mask, aux::type_wrapper<T>* );
 };

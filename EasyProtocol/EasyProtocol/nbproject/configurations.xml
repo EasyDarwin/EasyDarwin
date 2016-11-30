@@ -72,7 +72,6 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
           <incDir>
             <pElem>../jsoncpp/include</pElem>
             <pElem>../Include</pElem>
@@ -162,7 +161,6 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>8</standard>
           <incDir>
             <pElem>../jsoncpp/include</pElem>
             <pElem>../Include</pElem>

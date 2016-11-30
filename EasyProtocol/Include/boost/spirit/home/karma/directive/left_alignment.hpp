@@ -275,10 +275,10 @@ namespace boost { namespace spirit { namespace karma
 
         template <typename Terminal>
         result_type operator()(Terminal const& term, Subject const& subject
-          , Modifiers const& modifiers) const
+          , unused_type) const
         {
             return result_type(subject
-              , compile<karma::domain>(fusion::at_c<1>(term.args), modifiers)
+              , compile<karma::domain>(fusion::at_c<1>(term.args))
               , fusion::at_c<0>(term.args));
         }
     };

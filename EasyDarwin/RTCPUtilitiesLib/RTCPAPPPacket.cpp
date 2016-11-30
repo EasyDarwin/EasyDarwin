@@ -38,7 +38,7 @@
 #include "ResizeableStringFormatter.h"
 
 
-RTCPAPPPacket::RTCPAPPPacket(bool debug) :
+RTCPAPPPacket::RTCPAPPPacket(Bool16 debug) :
 	fRTCPAPPDataBuffer(NULL),
 	fAPPDataBufferSize(0),
 	mDumpArray(NULL),
@@ -66,7 +66,7 @@ void RTCPAPPPacket::Dump()//Override
 }
 
 
-bool RTCPAPPPacket::ParseAPPPacketHeader(UInt8* inPacketBuffer, UInt32 inPacketLength)
+Bool16 RTCPAPPPacket::ParseAPPPacketHeader(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 	if (inPacketLength < kRTCPPacketSizeInBytes + kRTCPAPPHeaderSizeInBytes)
 		return false;
@@ -74,7 +74,7 @@ bool RTCPAPPPacket::ParseAPPPacketHeader(UInt8* inPacketBuffer, UInt32 inPacketL
 	return true;
 }
 
-bool RTCPAPPPacket::ParseAPPPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
+Bool16 RTCPAPPPacket::ParseAPPPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 	if (false == this->ParsePacket(inPacketBuffer, inPacketLength)) // base class
 		return false;

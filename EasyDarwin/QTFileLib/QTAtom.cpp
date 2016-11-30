@@ -55,7 +55,7 @@
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom::QTAtom(QTFile * File, QTFile::AtomTOCEntry * Atom, bool Debug, bool DeepDebug)
+QTAtom::QTAtom(QTFile * File, QTFile::AtomTOCEntry * Atom, Bool16 Debug, Bool16 DeepDebug)
 	: fDebug(Debug), fDeepDebug(DeepDebug),
 	fFile(File)
 {
@@ -73,7 +73,7 @@ QTAtom::~QTAtom(void)
 // -------------------------------------
 // Read functions
 //
-bool QTAtom::ReadBytes(UInt64 Offset, char * Buffer, UInt32 Length)
+Bool16 QTAtom::ReadBytes(UInt64 Offset, char * Buffer, UInt32 Length)
 {
 	//
 	// Validate the arguments.
@@ -98,7 +98,7 @@ char *QTAtom::MemMap(UInt64 Offset, UInt32 Length)
 }
 
 
-bool QTAtom::UnMap(char *memPtr, UInt32 Length)
+Bool16 QTAtom::UnMap(char *memPtr, UInt32 Length)
 {
 	if (-1 == fFile->UnmapMem(memPtr, Length))
 		return false;
@@ -107,14 +107,14 @@ bool QTAtom::UnMap(char *memPtr, UInt32 Length)
 }
 
 
-bool QTAtom::ReadInt8(UInt64 Offset, UInt8 * Datum)
+Bool16 QTAtom::ReadInt8(UInt64 Offset, UInt8 * Datum)
 {
 	//
 	// Read and return.
 	return ReadBytes(Offset, (char *)Datum, 1);
 }
 
-bool QTAtom::ReadInt16(UInt64 Offset, UInt16 * Datum)
+Bool16 QTAtom::ReadInt16(UInt64 Offset, UInt16 * Datum)
 {
 	// General vars
 	UInt16      tempDatum;
@@ -129,7 +129,7 @@ bool QTAtom::ReadInt16(UInt64 Offset, UInt16 * Datum)
 	return true;
 }
 
-bool QTAtom::ReadInt32(UInt64 Offset, UInt32 * Datum)
+Bool16 QTAtom::ReadInt32(UInt64 Offset, UInt32 * Datum)
 {
 	// General vars
 	UInt32      tempDatum;
@@ -144,7 +144,7 @@ bool QTAtom::ReadInt32(UInt64 Offset, UInt32 * Datum)
 	return true;
 }
 
-bool QTAtom::ReadInt32To64(UInt64 Offset, UInt64 * Datum)
+Bool16 QTAtom::ReadInt32To64(UInt64 Offset, UInt64 * Datum)
 {
 	// General vars
 	UInt32      tempDatum;
@@ -160,7 +160,7 @@ bool QTAtom::ReadInt32To64(UInt64 Offset, UInt64 * Datum)
 	return true;
 }
 
-bool QTAtom::ReadInt32To64Signed(UInt64 Offset, SInt64 * Datum)
+Bool16 QTAtom::ReadInt32To64Signed(UInt64 Offset, SInt64 * Datum)
 {
 	// General vars
 	UInt32		tempDatum;
@@ -177,7 +177,7 @@ bool QTAtom::ReadInt32To64Signed(UInt64 Offset, SInt64 * Datum)
 
 
 
-bool QTAtom::ReadInt64(UInt64 Offset, UInt64 * Datum)
+Bool16 QTAtom::ReadInt64(UInt64 Offset, UInt64 * Datum)
 {
 	// General vars
 	UInt64      tempDatum;
@@ -193,7 +193,7 @@ bool QTAtom::ReadInt64(UInt64 Offset, UInt64 * Datum)
 }
 
 
-bool QTAtom::ReadSubAtomBytes(const char * AtomPath, char * Buffer, UInt32 Length)
+Bool16 QTAtom::ReadSubAtomBytes(const char * AtomPath, char * Buffer, UInt32 Length)
 {
 	// General vars
 	QTFile::AtomTOCEntry    *atomTOCEntry;
@@ -214,14 +214,14 @@ bool QTAtom::ReadSubAtomBytes(const char * AtomPath, char * Buffer, UInt32 Lengt
 	return fFile->Read(atomTOCEntry->AtomDataPos, Buffer, Length);
 }
 
-bool QTAtom::ReadSubAtomInt8(const char * AtomPath, UInt8 * Datum)
+Bool16 QTAtom::ReadSubAtomInt8(const char * AtomPath, UInt8 * Datum)
 {
 	//
 	// Read and return.
 	return ReadSubAtomBytes(AtomPath, (char *)Datum, 1);
 }
 
-bool QTAtom::ReadSubAtomInt16(const char * AtomPath, UInt16 * Datum)
+Bool16 QTAtom::ReadSubAtomInt16(const char * AtomPath, UInt16 * Datum)
 {
 	// General vars
 	UInt16      tempDatum;
@@ -236,7 +236,7 @@ bool QTAtom::ReadSubAtomInt16(const char * AtomPath, UInt16 * Datum)
 	return true;
 }
 
-bool QTAtom::ReadSubAtomInt32(const char * AtomPath, UInt32 * Datum)
+Bool16 QTAtom::ReadSubAtomInt32(const char * AtomPath, UInt32 * Datum)
 {
 	// General vars
 	UInt32      tempDatum;
@@ -251,7 +251,7 @@ bool QTAtom::ReadSubAtomInt32(const char * AtomPath, UInt32 * Datum)
 	return true;
 }
 
-bool QTAtom::ReadSubAtomInt64(const char * AtomPath, UInt64 * Datum)
+Bool16 QTAtom::ReadSubAtomInt64(const char * AtomPath, UInt64 * Datum)
 {
 	// General vars
 	UInt64      tempDatum;

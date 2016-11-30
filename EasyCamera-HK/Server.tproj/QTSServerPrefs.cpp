@@ -85,7 +85,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 };
 
 
-QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs)
+QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs)
 	: QTSSPrefs(inPrefsSource, NULL, QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex), false),
 	fConnectionTimeoutInSecs(0),
 	fErrorRollIntervalInDays(0),
@@ -126,7 +126,7 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(qtssPrefsNumBlockingThreads, &fNumBlockingThreads, sizeof(fNumBlockingThreads));
 }
 
-void QTSServerPrefs::RereadServerPreferences(bool inWriteMissingPrefs)
+void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
 {
 	OSMutexLocker locker(&fPrefsMutex);
 	QTSSDictionaryMap* theMap = QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex);
@@ -261,13 +261,13 @@ char* QTSServerPrefs::GetStringPref(QTSS_AttributeID inAttrID)
 	return theBuffer.Ptr;
 }
 
-void QTSServerPrefs::SetCloseLogsOnWrite(bool closeLogsOnWrite)
+void QTSServerPrefs::SetCloseLogsOnWrite(Bool16 closeLogsOnWrite)
 {
 	QTSSRollingLog::SetCloseOnWrite(closeLogsOnWrite);
 	fCloseLogsOnWrite = closeLogsOnWrite;
 }
 
-//bool QTSServerPrefs::GetCMSIP(char* outCMSIP)
+//Bool16 QTSServerPrefs::GetCMSIP(char* outCMSIP)
 //{
 //	if(outCMSIP == NULL)
 //		return false;

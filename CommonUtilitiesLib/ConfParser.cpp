@@ -36,16 +36,16 @@
 #include <string.h> 
 #include <stdio.h>  
 
-static bool SampleConfigSetter(const char* paramName, const char* paramValue[], void* userData);
+static Bool16 SampleConfigSetter(const char* paramName, const char* paramValue[], void* userData);
 static void DisplayConfigErr(const char* fname, int lineCount, const char* lineBuff, const char* errMessage);
 
 void TestParseConfigFile()
 {
-	ParseConfigFile(false, "qtss.conf", SampleConfigSetter, nullptr);
+	ParseConfigFile(false, "qtss.conf", SampleConfigSetter, NULL);
 
 }
 
-static bool SampleConfigSetter(const char* paramName, const char* paramValue[], void* /*userData*/)
+static Bool16 SampleConfigSetter(const char* paramName, const char* paramValue[], void* /*userData*/)
 {
 	qtss_printf("param: %s", paramName);
 
@@ -83,9 +83,9 @@ static void DisplayConfigErr(const char* fname, int lineCount, const char* lineB
 
 
 int ParseConfigFile(
-	bool  allowNullValues
+	Bool16  allowNullValues
 	, const char* fname
-	, bool(*ConfigSetter)(const char* paramName, const char* paramValue[], void* userData)
+	, Bool16(*ConfigSetter)(const char* paramName, const char* paramValue[], void* userData)
 	, void* userData)
 {
 	int     error = -1;
@@ -122,7 +122,7 @@ int ParseConfigFile(
 
 			// get a line ( fgets adds \n+ 0x00 )
 
-			if (fgets(lineBuff, lineBuffSize, configFile) == nullptr)
+			if (fgets(lineBuff, lineBuffSize, configFile) == NULL)
 				break;
 
 			++lineCount;
@@ -156,7 +156,7 @@ int ParseConfigFile(
 
 					Assert(*wordBuff);
 
-					param = new char[strlen(wordBuff) + 1];
+					param = NEW char[strlen(wordBuff) + 1];
 
 					Assert(param);
 
@@ -167,7 +167,7 @@ int ParseConfigFile(
 
 						strcpy(param, wordBuff);
 
-						values[maxValues] = nullptr;
+						values[maxValues] = NULL;
 
 						while (maxValues < kConfParserMaxParamValues && *next)
 						{
@@ -181,7 +181,7 @@ int ParseConfigFile(
 								else
 									next = GetWord(wordBuff, next, wordBuffSize);
 
-								char* value = new char[strlen(wordBuff) + 1];
+								char* value = NEW char[strlen(wordBuff) + 1];
 
 								Assert(value);
 

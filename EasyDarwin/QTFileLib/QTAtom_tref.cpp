@@ -59,7 +59,7 @@ const int       trefPos_SampleTable = 0;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_tref::QTAtom_tref(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_tref::QTAtom_tref(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEntries(0), fTrackReferenceTable(NULL), fTable(NULL)
 {
@@ -78,7 +78,7 @@ QTAtom_tref::~QTAtom_tref()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_tref::Initialize()
+Bool16 QTAtom_tref::Initialize()
 {
 	//
 	// Compute the size of the sample table.

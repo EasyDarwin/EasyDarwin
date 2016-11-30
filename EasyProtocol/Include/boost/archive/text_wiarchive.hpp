@@ -44,7 +44,7 @@ namespace detail {
 } // namespace detail
 
 template<class Archive>
-class BOOST_SYMBOL_VISIBLE text_wiarchive_impl :
+class text_wiarchive_impl : 
     public basic_text_iprimitive<std::wistream>,
     public basic_text_iarchive<Archive>
 {
@@ -76,23 +76,25 @@ protected:
         load(v);
         t = boost::serialization::item_version_type(v);
     }
-    BOOST_WARCHIVE_DECL void
+    BOOST_WARCHIVE_DECL(void)
     load(char * t);
     #ifndef BOOST_NO_INTRINSIC_WCHAR_T
-    BOOST_WARCHIVE_DECL void
+    BOOST_WARCHIVE_DECL(void)
     load(wchar_t * t);
     #endif
-    BOOST_WARCHIVE_DECL void
+    BOOST_WARCHIVE_DECL(void)
     load(std::string &s);
     #ifndef BOOST_NO_STD_WSTRING
-    BOOST_WARCHIVE_DECL void
+    BOOST_WARCHIVE_DECL(void)
     load(std::wstring &ws);
     #endif
+    // note: the following should not needed - but one compiler (vc 7.1)
+    // fails to compile one test (test_shared_ptr) without it !!!
     template<class T>
-    void load_override(T & t){
-        basic_text_iarchive<Archive>::load_override(t);
+    void load_override(T & t, BOOST_PFTO int){
+        basic_text_iarchive<Archive>::load_override(t, 0);
     }
-    BOOST_WARCHIVE_DECL 
+    BOOST_WARCHIVE_DECL(BOOST_PP_EMPTY()) 
     text_wiarchive_impl(std::wistream & is, unsigned int flags);
     ~text_wiarchive_impl(){};
 };
@@ -114,7 +116,7 @@ protected:
 namespace boost { 
 namespace archive {
 
-class BOOST_SYMBOL_VISIBLE text_wiarchive : 
+class text_wiarchive : 
     public text_wiarchive_impl<text_wiarchive>{
 public:
     text_wiarchive(std::wistream & is, unsigned int flags = 0) :

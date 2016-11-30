@@ -52,7 +52,7 @@ class FilePrefsSource : public PrefsSource
 {
     public:
     
-        FilePrefsSource( bool allowDuplicates = false );
+        FilePrefsSource( Bool16 allowDuplicates = false );
         virtual ~FilePrefsSource(); 
     
         virtual int     GetValue(const char* inKey, char* ioValue);
@@ -71,12 +71,12 @@ class FilePrefsSource : public PrefsSource
 
     private:
     
-        static bool FilePrefsConfigSetter( const char* paramName, const char* paramValue[], void* userData );
+        static Bool16 FilePrefsConfigSetter( const char* paramName, const char* paramValue[], void* userData );
         
         KeyValuePair*   FindValue(const char* inKey, char* ioValue, UInt32 index = 0);
         KeyValuePair*   fKeyValueList;
         UInt32          fNumKeys;
-        bool fAllowDuplicates;
+        Bool16 fAllowDuplicates;
 };
 
 #endif //__FILEPREFSSOURCE_H__

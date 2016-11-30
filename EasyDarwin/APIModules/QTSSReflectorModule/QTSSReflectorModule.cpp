@@ -39,6 +39,7 @@
 #include "ResizeableStringFormatter.h"
 #include "StringParser.h"
 #include "QTAccessFile.h"
+#include "QTSS3GPPModuleUtils.h"
 
 #include "RTPSessionOutput.h"
 #include "SDPSourceInfo.h"
@@ -90,21 +91,21 @@ static QTSS_ModulePrefsObject sPrefs = NULL;
 
 //
 // Prefs
-static bool   sAllowNonSDPURLs = true;
-static bool   sDefaultAllowNonSDPURLs = true;
+static Bool16   sAllowNonSDPURLs = true;
+static Bool16   sDefaultAllowNonSDPURLs = true;
 
-static bool   sRTPInfoDisabled = false;
-static bool   sDefaultRTPInfoDisabled = false;
+static Bool16   sRTPInfoDisabled = false;
+static Bool16   sDefaultRTPInfoDisabled = false;
 
-static bool   sHLSOutputEnabled = false;
-static bool   sDefaultHLSOutputEnabled = false;
+static Bool16   sHLSOutputEnabled = false;
+static Bool16   sDefaultHLSOutputEnabled = false;
 
-static bool   sAnnounceEnabled = true;
-static bool   sDefaultAnnounceEnabled = true;
-static bool   sBroadcastPushEnabled = true;
-static bool   sDefaultBroadcastPushEnabled = true;
-static bool   sAllowDuplicateBroadcasts = false;
-static bool   sDefaultAllowDuplicateBroadcasts = false;
+static Bool16   sAnnounceEnabled = true;
+static Bool16   sDefaultAnnounceEnabled = true;
+static Bool16   sBroadcastPushEnabled = true;
+static Bool16   sDefaultBroadcastPushEnabled = true;
+static Bool16   sAllowDuplicateBroadcasts = false;
+static Bool16   sDefaultAllowDuplicateBroadcasts = false;
 
 static UInt32   sMaxBroadcastAnnounceDuration = 0;
 static UInt32   sDefaultMaxBroadcastAnnounceDuration = 0;
@@ -113,11 +114,11 @@ static UInt16   sDefaultMinimumStaticSDPPort = 20000;
 static UInt16   sMaximumStaticSDPPort = 0;
 static UInt16   sDefaultMaximumStaticSDPPort = 65535;
 
-static bool   sTearDownClientsOnDisconnect = false;
-static bool   sDefaultTearDownClientsOnDisconnect = false;
+static Bool16   sTearDownClientsOnDisconnect = false;
+static Bool16   sDefaultTearDownClientsOnDisconnect = false;
 
-static bool   sOneSSRCPerStream = true;
-static bool   sDefaultOneSSRCPerStream = true;
+static Bool16   sOneSSRCPerStream = true;
+static Bool16   sDefaultOneSSRCPerStream = true;
 
 static UInt32   sTimeoutSSRCSecs = 30;
 static UInt32   sDefaultTimeoutSSRCSecs = 30;
@@ -129,8 +130,8 @@ static UInt32   sBroadcasterSessionTimeoutMilliSecs = sBroadcasterSessionTimeout
 static UInt16 sLastMax = 0;
 static UInt16 sLastMin = 0;
 
-static bool   sEnforceStaticSDPPortRange = false;
-static bool   sDefaultEnforceStaticSDPPortRange = false;
+static Bool16   sEnforceStaticSDPPortRange = false;
+static Bool16   sDefaultEnforceStaticSDPPortRange = false;
 
 static UInt32   sMaxAnnouncedSDPLengthInKbytes = 4;
 //static UInt32   sDefaultMaxAnnouncedSDPLengthInKbytes = 4;
@@ -139,31 +140,31 @@ static QTSS_AttributeID sIPAllowListID = qtssIllegalAttrID;
 static char*            sIPAllowList = NULL;
 static char*            sLocalLoopBackAddress = "127.0.0.*";
 
-static bool   sAuthenticateLocalBroadcast = false;
-static bool   sDefaultAuthenticateLocalBroadcast = false;
+static Bool16   sAuthenticateLocalBroadcast = false;
+static Bool16   sDefaultAuthenticateLocalBroadcast = false;
 
-static bool	sDisableOverbuffering = false;
-static bool	sDefaultDisableOverbuffering = false;
-static bool	sFalse = false;
+static Bool16	sDisableOverbuffering = false;
+static Bool16	sDefaultDisableOverbuffering = false;
+static Bool16	sFalse = false;
 
-static bool   sReflectBroadcasts = true;
-static bool   sDefaultReflectBroadcasts = true;
+static Bool16   sReflectBroadcasts = true;
+static Bool16   sDefaultReflectBroadcasts = true;
 
-static bool   sAnnouncedKill = true;
-static bool   sDefaultAnnouncedKill = true;
+static Bool16   sAnnouncedKill = true;
+static Bool16   sDefaultAnnouncedKill = true;
 
 
-static bool   sPlayResponseRangeHeader = true;
-static bool   sDefaultPlayResponseRangeHeader = true;
+static Bool16   sPlayResponseRangeHeader = true;
+static Bool16   sDefaultPlayResponseRangeHeader = true;
 
-static bool   sPlayerCompatibility = true;
-static bool   sDefaultPlayerCompatibility = true;
+static Bool16   sPlayerCompatibility = true;
+static Bool16   sDefaultPlayerCompatibility = true;
 
 static UInt32   sAdjustMediaBandwidthPercent = 100;
 static UInt32   sAdjustMediaBandwidthPercentDefault = 100;
 
-static bool   sForceRTPInfoSeqAndTime = false;
-static bool   sDefaultForceRTPInfoSeqAndTime = false;
+static Bool16   sForceRTPInfoSeqAndTime = false;
+static Bool16   sDefaultForceRTPInfoSeqAndTime = false;
 
 static char*	sRedirectBroadcastsKeyword = NULL;
 static char*    sDefaultRedirectBroadcastsKeyword = "";
@@ -198,24 +199,24 @@ static QTSS_Error Shutdown();
 static QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
-ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData = NULL, bool isPush = false, bool *foundSessionPtr = NULL);
+ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData = NULL, Bool16 isPush = false, Bool16 *foundSessionPtr = NULL);
 static QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSession);
 static QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams);
-static void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool killClients);
-static ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_AttributeID inPathType, bool isPush = false, bool *foundSessionPtr = NULL, char** resultFilePath = NULL);
+static void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16 killClients);
+static ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_AttributeID inPathType, Bool16 isPush = false, Bool16 *foundSessionPtr = NULL, char** resultFilePath = NULL);
 static QTSS_Error RereadPrefs();
 static QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams);
 static QTSS_Error ReflectorAuthorizeRTSPRequest(QTSS_StandardRTSP_Params* inParams);
-static bool InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, StrPtrLen* inPath);
+static Bool16 InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, StrPtrLen* inPath);
 void KillCommandPathInList();
-bool KillSession(StrPtrLen *sdpPath, bool killClients);
+Bool16 KillSession(StrPtrLen *sdpPath, Bool16 killClients);
 QTSS_Error IntervalRole();
-static bool AcceptSession(QTSS_StandardRTSP_Params* inParams);
+static Bool16 AcceptSession(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error RedirectBroadcast(QTSS_StandardRTSP_Params* inParams);
-static bool AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest);
-static bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest);
-static bool IsAbsolutePath(StrPtrLen *inPathPtr);
+static Bool16 AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest);
+static Bool16 InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest);
+static Bool16 IsAbsolutePath(StrPtrLen *inPathPtr);
 
 
 static void MakeTheSameFormat(char *chInput)//replace '\' with '/' ,the end of chInput is '\0'
@@ -229,7 +230,7 @@ static void MakeTheSameFormat(char *chInput)//replace '\' with '/' ,the end of c
 	}
 }
 
-inline void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep)
+inline void KeepSession(QTSS_RTSPRequestObject theRequest, Bool16 keep)
 {
 	(void)QTSS_SetValue(theRequest, qtssRTSPReqRespKeepAlive, 0, &keep, sizeof(keep));
 }
@@ -377,6 +378,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
 	// Setup module utils
 	QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
+	QTSS3GPPModuleUtils::Initialize(inParams);
 	QTAccessFile::Initialize();
 	sSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 	sServerPrefs = inParams->inPrefs;
@@ -437,7 +439,7 @@ char *GetTrimmedKeyWord(char *prefKeyWord)
 void SetMoviesRelativeDir()
 {
 	char* movieFolderString = NULL;
-	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsNginxRootFolder, 0, &movieFolderString);
+	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsMovieFolder, 0, &movieFolderString);
 	OSCharArrayDeleter deleter(movieFolderString);
 
 	ResizeableStringFormatter redirectPath(NULL, 0);
@@ -547,7 +549,7 @@ QTSS_Error RereadPrefs()
 
 	if (sEnforceStaticSDPPortRange)
 	{
-		bool reportErrors = false;
+		Bool16 reportErrors = false;
 		if (sLastMax != sMaximumStaticSDPPort)
 		{
 			sLastMax = sMaximumStaticSDPPort;
@@ -586,6 +588,8 @@ QTSS_Error RereadPrefs()
 	}
 
 	KillCommandPathInList();
+
+	QTSS3GPPModuleUtils::ReadPrefs();
 
 	//输出HLS
 	QTSSModuleUtils::GetAttribute(sPrefs, "hls_output_enabled", qtssAttrDataTypeBool16,
@@ -673,7 +677,7 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
 				SourceInfo::StreamInfo* theStreamInfo = theStream->GetStreamInfo();
 				UInt16 serverReceivePort = theStreamInfo->fPort;
 
-				bool isRTCP = false;
+				Bool16 isRTCP = false;
 				if (theStream != NULL)
 				{
 					if (packetChannel & 1)
@@ -741,7 +745,7 @@ QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 	return QTSS_NoErr;
 }
 
-ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_AttributeID inPathType, bool isPush, bool *foundSessionPtr, char** resultFilePath)
+ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_AttributeID inPathType, Bool16 isPush, Bool16 *foundSessionPtr, char** resultFilePath)
 {
 	char* theFullPathStr = NULL;
 	QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqLocalPath, 0, &theFullPathStr);
@@ -913,8 +917,8 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 	StrPtrLen theFullPath(theFullPathStr);
 
 	// Check for a .kill at the end
-	bool pathOK = false;
-	bool killBroadcast = false;
+	Bool16 pathOK = false;
+	Bool16 killBroadcast = false;
 	if (sAnnouncedKill && theFullPath.Len > sSDPKillSuffix.Len)
 	{
 		StrPtrLen endOfPath(theFullPath.Ptr + (theFullPath.Len - sSDPKillSuffix.Len), sSDPKillSuffix.Len);
@@ -1263,7 +1267,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 
 	// ------------ Put SDP header lines in correct order
 	Float32 adjustMediaBandwidthPercent = 1.0;
-	bool adjustMediaBandwidth = false;
+	Bool16 adjustMediaBandwidth = false;
 
 	if (sPlayerCompatibility)
 		adjustMediaBandwidth = QTSSModuleUtils::HavePlayerProfile(sServerPrefs, inParams, QTSSModuleUtils::kAdjustBandwidth);
@@ -1272,7 +1276,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 		adjustMediaBandwidthPercent = (Float32)sAdjustMediaBandwidthPercent / 100.0;
 
 	ResizeableStringFormatter buffer;
-	SDPContainer* insertMediaLines = NULL;
+	SDPContainer* insertMediaLines = QTSS3GPPModuleUtils::Get3GPPSDPFeatureListCopy(buffer);
 	SDPLineSorter sortedSDP(&checkedSDPContainer, adjustMediaBandwidthPercent, insertMediaLines);
 	delete insertMediaLines;
 
@@ -1300,10 +1304,10 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	return QTSS_NoErr;
 }
 
-bool InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, StrPtrLen* inPath)
+Bool16 InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, StrPtrLen* inPath)
 {
 	// Check the ports based on the Pref whether to enforce a static SDP port range.
-	bool isOK = true;
+	Bool16 isOK = true;
 
 	if (sEnforceStaticSDPPortRange)
 	{
@@ -1344,7 +1348,7 @@ bool InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, Str
 	return isOK;
 }
 
-ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData, bool isPush, bool *foundSessionPtr)
+ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData, Bool16 isPush, Bool16 *foundSessionPtr)
 {
 	// 根据inPath查找ReflectorSession
 	OSMutexLocker locker(sSessionMap->GetMutex());
@@ -1500,7 +1504,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 }
 
 // ONLY call when performing a setup.
-void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSession* theSession, bool foundSession)
+void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSession* theSession, Bool16 foundSession)
 {
 	ReflectorSession* stopSessionProcessing = NULL;
 	QTSS_Error theErr = QTSS_SetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &stopSessionProcessing, sizeof(stopSessionProcessing));
@@ -1551,8 +1555,8 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 	UInt32 theLen = 0;
 	UInt32 *transportModePtr = NULL;
 	QTSS_Error theErr = QTSS_GetValuePtr(inParams->inRTSPRequest, qtssRTSPReqTransportMode, 0, (void**)&transportModePtr, &theLen);
-	bool isPush = (transportModePtr != NULL && *transportModePtr == qtssRTPTransportModeRecord) ? true : false;
-	bool foundSession = false;
+	Bool16 isPush = (transportModePtr != NULL && *transportModePtr == qtssRTPTransportModeRecord) ? true : false;
+	Bool16 foundSession = false;
 
 	// 根据RTPSessionOutput属性判断是否为客户端
 	RTPSessionOutput** theOutput = NULL;
@@ -1757,12 +1761,12 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 
 
 
-bool HaveStreamBuffers(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSession)
+Bool16 HaveStreamBuffers(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSession)
 {
 	if (inSession == NULL || inParams == NULL)
 		return false;
 
-	bool haveBufferedStreams = true; // set to false and return if we can't set the packets
+	Bool16 haveBufferedStreams = true; // set to false and return if we can't set the packets
 	UInt32 y = 0;
 	
 	SInt64 packetArrivalTime = 0;
@@ -1825,7 +1829,7 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
 	QTSS_Error theErr = QTSS_NoErr;
 	UInt32 flags = 0;
 	UInt32 theLen = 0;
-	bool rtpInfoEnabled = false;
+	Bool16 rtpInfoEnabled = false;
 
 	if (inSession == NULL)	// 推送端
 	{
@@ -1928,7 +1932,7 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
 		{
 			flags = qtssPlayRespWriteTrackInfo; //write first timestampe and seq num to rtpinfo
 
-			bool haveBufferedStreams = HaveStreamBuffers(inParams, inSession);
+			Bool16 haveBufferedStreams = HaveStreamBuffers(inParams, inSession);
 			if (haveBufferedStreams) // send the cached rtp time and seq number in the response.
 			{
 
@@ -1979,7 +1983,7 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSessio
 }
 
 
-bool KillSession(StrPtrLen *sdpPathStr, bool killClients)
+Bool16 KillSession(StrPtrLen *sdpPathStr, Bool16 killClients)
 {
 	OSRef* theSessionRef = sSessionMap->Resolve(sdpPathStr);
 	if (theSessionRef != NULL)
@@ -2054,7 +2058,7 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 				theStreamInfo->fSetupToReceive = false;
 		}
 
-		bool killClients = false; // the pref as the default
+		Bool16 killClients = false; // the pref as the default
 		UInt32 theLenTemp = sizeof(killClients);
 		(void)QTSS_GetValue(inParams->inClientSession, sKillClientsEnabledAttr, 0, &killClients, &theLenTemp);
 
@@ -2089,7 +2093,7 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 	return QTSS_NoErr;
 }
 
-void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool killClients)
+void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, Bool16 killClients)
 {
 	// 对ReflectorSession的引用继续处理,包括推送端和客户端
 	Assert(inSession);
@@ -2151,7 +2155,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool k
 }
 
 
-bool AcceptSession(QTSS_StandardRTSP_Params* inParams)
+Bool16 AcceptSession(QTSS_StandardRTSP_Params* inParams)
 {
 	QTSS_RTSPSessionObject inRTSPSession = inParams->inRTSPSession;
 	QTSS_RTSPRequestObject theRTSPRequest = inParams->inRTSPRequest;
@@ -2187,25 +2191,25 @@ QTSS_Error ReflectorAuthorizeRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 {
 	if (AcceptSession(inParams))
 	{
-		bool allowed = true;
+		Bool16 allowed = true;
 		QTSS_RTSPRequestObject request = inParams->inRTSPRequest;
 		(void)QTSSModuleUtils::AuthorizeRequest(request, &allowed, &allowed, &allowed);
 		return QTSS_NoErr;
 	}
 
-	bool allowNoAccessFiles = false;
+	Bool16 allowNoAccessFiles = false;
 	QTSS_ActionFlags noAction = ~qtssActionFlagsWrite; //no action anything but a write
 	QTSS_ActionFlags authorizeAction = QTSSModuleUtils::GetRequestActions(inParams->inRTSPRequest);
 	//printf("ReflectorAuthorizeRTSPRequest authorizeAction=%d qtssActionFlagsWrite=%d\n", authorizeAction, qtssActionFlagsWrite);
-	bool outAllowAnyUser = false;
-	bool outAuthorized = false;
+	Bool16 outAllowAnyUser = false;
+	Bool16 outAuthorized = false;
 	QTAccessFile accessFile;
 	accessFile.AuthorizeRequest(inParams, allowNoAccessFiles, noAction, authorizeAction, &outAuthorized, &outAllowAnyUser);
 
 	if ((outAuthorized == false) && (authorizeAction & qtssActionFlagsWrite)) //handle it
 	{
 		//printf("ReflectorAuthorizeRTSPRequest SET not allowed\n");
-		bool allowed = false;
+		Bool16 allowed = false;
 		(void)QTSSModuleUtils::AuthorizeRequest(inParams->inRTSPRequest, &allowed, &allowed, &allowed);
 	}
 	return QTSS_NoErr;
@@ -2245,7 +2249,7 @@ QTSS_Error RedirectBroadcast(QTSS_StandardRTSP_Params* inParams)
 	return QTSS_NoErr;
 }
 
-bool AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest)
+Bool16 AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest)
 {
 	// If reflection of broadcasts is disabled, return false
 	if (!sReflectBroadcasts)
@@ -2258,9 +2262,9 @@ bool AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest)
 	return true;
 }
 
-bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest)
+Bool16 InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest)
 {
-	bool allowed = false;
+	Bool16 allowed = false;
 
 	char* theURIPathStr;
 	(void)QTSS_GetValueAsString(inRTSPRequest, qtssRTSPReqFilePath, 0, &theURIPathStr);
@@ -2272,7 +2276,7 @@ bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest)
 
 	char* theRequestPathStr = NULL;
 	char* theBroadcastDirStr = NULL;
-	bool isURI = true;
+	Bool16 isURI = true;
 
 	UInt32 index = 0;
 	UInt32 numValues = 0;
@@ -2317,7 +2321,7 @@ bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest)
 	return allowed;
 }
 
-bool IsAbsolutePath(StrPtrLen *inPathPtr)
+Bool16 IsAbsolutePath(StrPtrLen *inPathPtr)
 {
 	StringParser thePathParser(inPathPtr);
 

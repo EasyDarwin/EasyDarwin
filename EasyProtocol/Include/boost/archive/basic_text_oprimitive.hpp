@@ -26,13 +26,14 @@
 
 #include <iomanip>
 #include <locale>
+#include <boost/assert.hpp>
 #include <cstddef> // size_t
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/detail/workaround.hpp>
 #include <boost/io/ios_state.hpp>
 
-#include <boost/detail/workaround.hpp>
 #if BOOST_WORKAROUND(BOOST_DINKUMWARE_STDLIB, == 1)
 #include <boost/archive/dinkumware.hpp>
 #endif
@@ -51,19 +52,21 @@ namespace std{
 #include <boost/limits.hpp>
 #include <boost/integer.hpp>
 #include <boost/io/ios_state.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/serialization/throw_exception.hpp>
-#include <boost/archive/basic_streambuf_locale_saver.hpp>
-#include <boost/archive/codecvt_null.hpp>
 #include <boost/archive/archive_exception.hpp>
+#include <boost/archive/basic_streambuf_locale_saver.hpp>
 #include <boost/archive/detail/abi_prefix.hpp> // must be the last header
 
 namespace boost {
 namespace archive {
 
+class save_access;
+
 /////////////////////////////////////////////////////////////////////////
 // class basic_text_oprimitive - output of prmitives to stream
 template<class OStream>
-class BOOST_SYMBOL_VISIBLE basic_text_oprimitive
+class basic_text_oprimitive
 {
 protected:
     OStream &os;
@@ -71,17 +74,9 @@ protected:
     io::ios_precision_saver precision_saver;
 
     #ifndef BOOST_NO_STD_LOCALE
-    // note order! - if you change this, libstd++ will fail!
-    // a) create new locale with new codecvt facet
-    // b) save current locale
-    // c) change locale to new one
-    // d) use stream buffer
-    // e) change locale back to original
-    // f) destroy new codecvt facet
-    boost::archive::codecvt_null<typename OStream::char_type> codecvt_null_facet;
-    std::locale archive_locale;
-    basic_ostream_locale_saver<
-        typename OStream::char_type,
+    boost::scoped_ptr<std::locale> archive_locale;
+    basic_streambuf_locale_saver<
+        typename OStream::char_type, 
         typename OStream::traits_type
     > locale_saver;
     #endif
@@ -181,9 +176,9 @@ protected:
         save_impl(t, tf);
     }
 
-    BOOST_ARCHIVE_OR_WARCHIVE_DECL
+    BOOST_ARCHIVE_OR_WARCHIVE_DECL(BOOST_PP_EMPTY())
     basic_text_oprimitive(OStream & os, bool no_codecvt);
-    BOOST_ARCHIVE_OR_WARCHIVE_DECL 
+    BOOST_ARCHIVE_OR_WARCHIVE_DECL(BOOST_PP_EMPTY()) 
     ~basic_text_oprimitive();
 public:
     // unformatted append of one character
@@ -199,7 +194,7 @@ public:
         while('\0' != *s)
             os.put(*s++);
     }
-    BOOST_ARCHIVE_OR_WARCHIVE_DECL void 
+    BOOST_ARCHIVE_OR_WARCHIVE_DECL(void) 
     save_binary(const void *address, std::size_t count);
 };
 

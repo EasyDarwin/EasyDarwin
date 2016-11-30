@@ -46,6 +46,7 @@
 #include "RTSPResponseStream.h"
 #include "RTSPProtocol.h"
 #include "QTSSUserProfile.h"
+#include "RTSPRequest3GPP.h"
 
 class RTSPRequestInterface : public QTSSDictionary
 {
@@ -83,7 +84,7 @@ public:
 	void    AppendContentBaseHeader(StrPtrLen* theURL);
 	void    AppendRTPInfoHeader(QTSS_RTSPHeader inHeader,
 		StrPtrLen* url, StrPtrLen* seqNumber,
-		StrPtrLen* ssrc, StrPtrLen* rtpTime, bool lastRTPInfo);
+		StrPtrLen* ssrc, StrPtrLen* rtpTime, Bool16 lastRTPInfo);
 
 	void    AppendContentLength(UInt32 contentLength);
 	void    AppendDateAndExpires();
@@ -92,7 +93,7 @@ public:
 
 	// MODIFIERS
 
-	void SetKeepAlive(bool newVal) { fResponseKeepAlive = newVal; }
+	void SetKeepAlive(Bool16 newVal) { fResponseKeepAlive = newVal; }
 
 	//SendHeader:
 	//Sends the RTSP headers, in their current state, to the client.
@@ -133,8 +134,8 @@ public:
 
 	QTSS_RTSPMethod             GetMethod() const { return fMethod; }
 	QTSS_RTSPStatusCode         GetStatus() const { return fStatus; }
-	bool                      GetResponseKeepAlive() const { return fResponseKeepAlive; }
-	void                        SetResponseKeepAlive(bool keepAlive) { fResponseKeepAlive = keepAlive; }
+	Bool16                      GetResponseKeepAlive() const { return fResponseKeepAlive; }
+	void                        SetResponseKeepAlive(Bool16 keepAlive) { fResponseKeepAlive = keepAlive; }
 
 	//will be -1 unless there was a Range header. May have one or two values
 	Float64                     GetStartTime() { return fStartTime; }
@@ -160,7 +161,7 @@ public:
 	UInt32                      GetWindowSize() { return fWindowSize; }
 
 
-	bool                      HasResponseBeenSent()
+	Bool16                      HasResponseBeenSent()
 	{
 		return fOutputStream->GetBytesWritten() > 0;
 	}
@@ -168,19 +169,19 @@ public:
 	RTSPSessionInterface*       GetSession() { return fSession; }
 	QTSSDictionary*             GetHeaderDictionary() { return &fHeaderDictionary; }
 
-	bool                      GetAllowed() { return fAllowed; }
-	void                        SetAllowed(bool allowed) { fAllowed = allowed; }
+	Bool16                      GetAllowed() { return fAllowed; }
+	void                        SetAllowed(Bool16 allowed) { fAllowed = allowed; }
 
-	bool                      GetHasUser() { return fHasUser; }
-	void                        SetHasUser(bool hasUser) { fHasUser = hasUser; }
+	Bool16                      GetHasUser() { return fHasUser; }
+	void                        SetHasUser(Bool16 hasUser) { fHasUser = hasUser; }
 
-	bool                      GetAuthHandled() { return fAuthHandled; }
-	void                        SetAuthHandled(bool handled) { fAuthHandled = handled; }
+	Bool16                      GetAuthHandled() { return fAuthHandled; }
+	void                        SetAuthHandled(Bool16 handled) { fAuthHandled = handled; }
 
 	QTSS_ActionFlags            GetAction() { return fAction; }
 	void                        SetAction(QTSS_ActionFlags action) { fAction = action; }
 
-	bool						IsPushRequest() { return (fTransportMode == qtssRTPTransportModeRecord) ? true : false; }
+	Bool16						IsPushRequest() { return (fTransportMode == qtssRTPTransportModeRecord) ? true : false; }
 	UInt16                      GetSetUpServerPort() { return fSetUpServerPort; }
 	QTSS_RTPTransportMode       GetTransportMode() { return fTransportMode; }
 
@@ -195,11 +196,13 @@ public:
 	StrPtrLen*                  GetAuthResponse() { return &fAuthResponse; }
 	StrPtrLen*                  GetAuthOpaque() { return &fAuthOpaque; }
 	QTSSUserProfile*            GetUserProfile() { return fUserProfilePtr; }
+	RTSPRequest3GPP*			GetRequest3GPPInfo() { return fRequest3GPPPtr; }
 
-	bool                      GetStale() { return fStale; }
-	void                        SetStale(bool stale) { fStale = stale; }
 
-	bool                      SkipAuthorization() { return fSkipAuthorization; }
+	Bool16                      GetStale() { return fStale; }
+	void                        SetStale(Bool16 stale) { fStale = stale; }
+
+	Bool16                      SkipAuthorization() { return fSkipAuthorization; }
 
 	SInt32                      GetDynamicRateState() { return fEnableDynamicRateState; }
 
@@ -225,8 +228,8 @@ protected:
 	QTSS_RTSPMethod             fMethod;            //Method of this request
 	QTSS_RTSPStatusCode         fStatus;            //Current status of this request
 	UInt32                      fRealStatusCode;    //Current RTSP status num of this request
-	bool                      fRequestKeepAlive;  //Does the client want keep-alive?
-	bool                      fResponseKeepAlive; //Are we going to keep-alive?
+	Bool16                      fRequestKeepAlive;  //Does the client want keep-alive?
+	Bool16                      fResponseKeepAlive; //Are we going to keep-alive?
 	RTSPProtocol::RTSPVersion   fVersion;
 
 	Float64                     fStartTime;         //Range header info: start time
@@ -264,9 +267,9 @@ protected:
 
 	QTSSDictionary              fHeaderDictionary;
 
-	bool                      fAllowed;
-	bool                      fHasUser;
-	bool                      fAuthHandled;
+	Bool16                      fAllowed;
+	Bool16                      fHasUser;
+	Bool16                      fAuthHandled;
 
 	QTSS_RTPTransportMode       fTransportMode;
 	UInt16                      fSetUpServerPort;           //send this back as the server_port if is SETUP request
@@ -285,14 +288,17 @@ protected:
 	StrPtrLen                   fAuthOpaque;
 	QTSSUserProfile             fUserProfile;
 	QTSSUserProfile*            fUserProfilePtr;
-	bool                      fStale;
+	Bool16                      fStale;
 
-	bool                      fSkipAuthorization;
+	Bool16                      fSkipAuthorization;
 
 	SInt32                      fEnableDynamicRateState;
 
 	// DJM PROTOTYPE
 	UInt32						fRandomDataSize;
+
+	RTSPRequest3GPP				fRequest3GPP;
+	RTSPRequest3GPP*			fRequest3GPPPtr;
 
 	UInt32                      fBandwidthBits;
 	StrPtrLen                   fAuthDigestChallenge;
@@ -308,7 +314,7 @@ private:
 		kStaticHeaderSizeInBytes = 512  //UInt32
 	};
 
-	bool                  fStandardHeadersWritten;
+	Bool16                  fStandardHeadersWritten;
 
 	void                    PutTransportStripped(StrPtrLen &outFirstTransport, StrPtrLen &outResultStr);
 	void                    WriteStandardHeaders();

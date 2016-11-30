@@ -70,7 +70,7 @@ EasyCMSSession::EasyCMSSession()
 	: Task(),
 	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),
 	fTimeoutTask(NULL),
-	fInputStream(new HTTPClientRequestStream(fSocket)),
+	fInputStream(new HTTPRequestStream(fSocket)),
 	fOutputStream(NULL),
 	fSessionStatus(kSessionOffline),
 	fState(kIdle),
@@ -97,7 +97,7 @@ EasyCMSSession::EasyCMSSession()
 	}
 
 	fTimeoutTask = new TimeoutTask(this, sKeepAliveInterval * 1000);
-	fOutputStream = new HTTPClientResponseStream(fSocket, fTimeoutTask);
+	fOutputStream = new HTTPResponseStream(fSocket, fTimeoutTask);
 	fTimeoutTask->RefreshTimeout();
 
 }

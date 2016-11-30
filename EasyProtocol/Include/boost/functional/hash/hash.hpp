@@ -411,7 +411,7 @@ namespace boost
     // passed by copy.
     //
     // BOOST_HASH_SPECIALIZE_REF - define a specialization for a type which is
-    // passed by const reference.
+    // passed by copy.
     //
     // These are undefined later.
 

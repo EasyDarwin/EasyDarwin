@@ -123,8 +123,6 @@ StrPtrLen HTTPProtocol::sHeaders[] =
 
 	StrPtrLen("Access-Control-Allow-Origin"),
 
-	StrPtrLen("Cookie"),
-
 	StrPtrLen(" ,")
 };
 

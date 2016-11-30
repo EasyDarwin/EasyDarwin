@@ -76,7 +76,7 @@ void RTPBandwidthTracker::SetWindowSize(SInt32 clientWindowSize)
 		fSlowStartThreshold = kMaximumSegmentSize;
 }
 
-void RTPBandwidthTracker::EmptyWindow(UInt32 bytesIncreased, bool updateBytesInList)
+void RTPBandwidthTracker::EmptyWindow(UInt32 bytesIncreased, Bool16 updateBytesInList)
 {
 	if (bytesIncreased == 0)
 		return;

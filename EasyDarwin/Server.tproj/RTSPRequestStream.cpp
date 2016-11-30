@@ -214,7 +214,7 @@ QTSS_Error RTSPRequestStream::ReadRequest()
 
 		//use a StringParser object to search for a double EOL, which signifies the end of
 		//the header.
-		bool weAreDone = false;
+		Bool16 weAreDone = false;
 		StringParser headerParser(&fRequest);
 
 		UInt16 lcount = 0;

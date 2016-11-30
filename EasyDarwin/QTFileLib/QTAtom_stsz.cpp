@@ -67,7 +67,7 @@ const int       stszPos_SampleTable = 12;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_stsz::QTAtom_stsz(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_stsz::QTAtom_stsz(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fCommonSampleSize(0),
 	fNumEntries(0), fSampleSizeTable(NULL), fTable(NULL)
@@ -87,7 +87,7 @@ QTAtom_stsz::~QTAtom_stsz()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_stsz::Initialize()
+Bool16 QTAtom_stsz::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;
@@ -135,9 +135,9 @@ bool QTAtom_stsz::Initialize()
 	return true;
 }
 
-bool QTAtom_stsz::SampleRangeSize(UInt32 firstSampleNumber, UInt32 lastSampleNumber, UInt32 *sizePtr)
+Bool16 QTAtom_stsz::SampleRangeSize(UInt32 firstSampleNumber, UInt32 lastSampleNumber, UInt32 *sizePtr)
 {
-	bool result = false;
+	Bool16 result = false;
 
 
 	do

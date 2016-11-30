@@ -180,7 +180,7 @@ void RTPSessionOutput::Register()
 
 }
 
-bool RTPSessionOutput::IsPlaying()
+Bool16 RTPSessionOutput::IsPlaying()
 {
 	QTSS_RTPSessionState*   theState = NULL;
 	UInt32                  theLen = 0;
@@ -212,7 +212,7 @@ void RTPSessionOutput::InitializeStreams()
 
 
 
-bool RTPSessionOutput::IsUDP()
+Bool16 RTPSessionOutput::IsUDP()
 {
 	if (fTransportInitialized)
 		return fIsUDP;
@@ -248,7 +248,7 @@ bool RTPSessionOutput::IsUDP()
 }
 
 
-bool  RTPSessionOutput::FilterPacket(QTSS_RTPStreamObject *theStreamPtr, StrPtrLen* inPacket)
+Bool16  RTPSessionOutput::FilterPacket(QTSS_RTPStreamObject *theStreamPtr, StrPtrLen* inPacket)
 {
 
 	UInt32* packetCountPtr = NULL;
@@ -282,14 +282,14 @@ bool  RTPSessionOutput::FilterPacket(QTSS_RTPStreamObject *theStreamPtr, StrPtrL
 }
 
 
-bool  RTPSessionOutput::PacketAlreadySent(QTSS_RTPStreamObject *theStreamPtr, UInt32 inFlags, UInt64* packetIDPtr)
+Bool16  RTPSessionOutput::PacketAlreadySent(QTSS_RTPStreamObject *theStreamPtr, UInt32 inFlags, UInt64* packetIDPtr)
 {
 	Assert(theStreamPtr);
 	Assert(packetIDPtr);
 
 	UInt32 theLen = 0;
 	UInt64 *lastPacketIDPtr = NULL;
-	bool packetSent = false;
+	Bool16 packetSent = false;
 
 	if (inFlags & qtssWriteFlagsIsRTP)
 	{
@@ -316,7 +316,7 @@ bool  RTPSessionOutput::PacketAlreadySent(QTSS_RTPStreamObject *theStreamPtr, UI
 	return packetSent;
 }
 
-bool  RTPSessionOutput::PacketReadyToSend(QTSS_RTPStreamObject *theStreamPtr, SInt64 *currentTimePtr, UInt32 inFlags, UInt64* packetIDPtr, SInt64* timeToSendThisPacketAgainPtr)
+Bool16  RTPSessionOutput::PacketReadyToSend(QTSS_RTPStreamObject *theStreamPtr, SInt64 *currentTimePtr, UInt32 inFlags, UInt64* packetIDPtr, SInt64* timeToSendThisPacketAgainPtr)
 {
 	return true;
 
@@ -324,8 +324,8 @@ bool  RTPSessionOutput::PacketReadyToSend(QTSS_RTPStreamObject *theStreamPtr, SI
 
 QTSS_Error  RTPSessionOutput::TrackRTCPBaseTime(QTSS_RTPStreamObject *theStreamPtr, StrPtrLen* inPacketStrPtr, SInt64 *currentTimePtr, UInt32 inFlags, SInt64* packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTimeMSecPtr)
 {
-	bool haveBaseTime = false;
-	bool haveAllFirstRTPs = true;
+	Bool16 haveBaseTime = false;
+	Bool16 haveAllFirstRTPs = true;
 
 	UInt32 streamTimeScale = 0;
 	UInt32  theLen = sizeof(streamTimeScale);
@@ -563,7 +563,7 @@ QTSS_Error  RTPSessionOutput::TrackPackets(QTSS_RTPStreamObject *theStreamPtr, S
 }
 
 
-QTSS_Error  RTPSessionOutput::WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTimeMSecPtr, bool firstPacket)
+QTSS_Error  RTPSessionOutput::WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTimeMSecPtr, Bool16 firstPacket)
 {
 	QTSS_RTPSessionState*   theState = NULL;
 	UInt32                  theLen = 0;
@@ -684,7 +684,7 @@ void RTPSessionOutput::SetPacketSeqNumber(StrPtrLen* inPacket, UInt16 inSeqNumbe
 }
 
 // this routine is not used
-bool RTPSessionOutput::PacketShouldBeThinned(QTSS_RTPStreamObject inStream, StrPtrLen* inPacket)
+Bool16 RTPSessionOutput::PacketShouldBeThinned(QTSS_RTPStreamObject inStream, StrPtrLen* inPacket)
 {
 	return false; // function is disabled.
 

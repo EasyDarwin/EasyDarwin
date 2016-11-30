@@ -182,7 +182,7 @@ public:
 
 	QTSS_Error      RemoveClient(QTSS_RTSPSessionObject sess);
 
-	bool          IsMyClient(QTSS_RTSPSessionObject sess);
+	Bool16          IsMyClient(QTSS_RTSPSessionObject sess);
 
 	// Session data field accessor methods
 
@@ -190,9 +190,9 @@ public:
 
 	void            SetMountpoint(StrPtrLen& mp);
 
-	bool          MountpointEqual(char* mp);
+	Bool16          MountpointEqual(char* mp);
 
-	bool          MountpointEqual(StrPtrLen& mp);
+	Bool16          MountpointEqual(StrPtrLen& mp);
 
 	char*           GetMountpoint() { return fMountpoint; }
 
@@ -230,7 +230,7 @@ private:
 	char            fSongName[kSongNameBufferSize];
 	char*           fBuffer;
 	OSMutex         fSongNameMutex;
-	bool          fNewSongName;
+	Bool16          fNewSongName;
 };
 
 //
@@ -291,9 +291,9 @@ public:
 
 	void            SetOwner(MP3BroadcasterSession* owner) { fOwner = owner; }
 
-	bool          WasBlocked() { return fWasBlocked; }
+	Bool16          WasBlocked() { return fWasBlocked; }
 
-	bool          WantsContentLength() { return fNeedsContentLength; }
+	Bool16          WantsContentLength() { return fNeedsContentLength; }
 
 	void            SetRequest(char* req) { ::strcpy(fRequestBuffer, req); }
 
@@ -324,11 +324,11 @@ private:
 	char            fUserAgent[kUserAgentBufferSize];
 	char            fSongName[kSongNameBufferSize];
 	OSMutex         fSongNameMutex;
-	bool          fNewSongName;
-	bool          fWasBlocked;
+	Bool16          fNewSongName;
+	Bool16          fWasBlocked;
 	SInt64          fBlockTime;
-	bool          fNeedsContentLength;
-	bool          fWantsMetaData;
+	Bool16          fNeedsContentLength;
+	Bool16          fWantsMetaData;
 	char            fRequestBuffer[kRequestBufferSize];
 	QTSS_Object     fQTSSObject;
 };
@@ -416,7 +416,7 @@ public:
 
 	// Attempt to add a new MP3Session ref to the table's map.
 	// returns true on success or false if it fails.
-	bool          RegisterSession(MP3Session* session);
+	Bool16          RegisterSession(MP3Session* session);
 
 	// Given an QTSS_RTSPSessionObject resolve it into a MP3Session class
 	// reference. Returns NULL if there's none in out map.
@@ -424,7 +424,7 @@ public:
 
 	// Attempt to remove a  MP3Session ref from the table's map.
 	// returns true on success or false if it fails.
-	bool          UnRegisterSession(MP3Session* session);
+	Bool16          UnRegisterSession(MP3Session* session);
 
 private:
 
@@ -451,7 +451,7 @@ public:
 
 	QTSS_Error      RemoveClient(QTSS_RTSPSessionObject clientsess);
 
-	bool          InQueue(QTSS_RTSPSessionObject clientsess);
+	Bool16          InQueue(QTSS_RTSPSessionObject clientsess);
 
 	QTSS_Error      SendToAllClients(char* buffer, UInt32 bufferlen);
 
@@ -485,9 +485,9 @@ public:
 
 	QTSS_Error      RemoveClient(QTSS_RTSPSessionObject clientsess);
 
-	bool          InQueue(QTSS_RTSPSessionObject bcastsess);
+	Bool16          InQueue(QTSS_RTSPSessionObject bcastsess);
 
-	bool          IsActiveClient(QTSS_RTSPSessionObject clientsess);
+	Bool16          IsActiveClient(QTSS_RTSPSessionObject clientsess);
 
 	MP3BroadcasterSession*  FindByMountPoint(char* mountpoint);
 

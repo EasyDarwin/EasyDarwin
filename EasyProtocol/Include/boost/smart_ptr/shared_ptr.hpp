@@ -29,7 +29,6 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/smart_ptr/detail/sp_convertible.hpp>
 #include <boost/smart_ptr/detail/sp_nullptr_t.hpp>
-#include <boost/smart_ptr/detail/sp_disable_deprecated.hpp>
 
 #if !defined(BOOST_SP_NO_ATOMIC_ACCESS)
 #include <boost/smart_ptr/detail/spinlock_pool.hpp>
@@ -48,11 +47,6 @@
 #endif
 #endif
 
-#if defined( BOOST_SP_DISABLE_DEPRECATED )
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-
 namespace boost
 {
 
@@ -60,13 +54,6 @@ template<class T> class shared_ptr;
 template<class T> class weak_ptr;
 template<class T> class enable_shared_from_this;
 class enable_shared_from_raw;
-
-namespace movelib
-{
-
-    template< class T, class D > class unique_ptr;
-
-} // namespace movelib
 
 namespace detail
 {
@@ -508,17 +495,6 @@ public:
 
 #endif
 
-    template< class Y, class D >
-    shared_ptr( boost::movelib::unique_ptr< Y, D > r ): px( r.get() ), pn()
-    {
-        boost::detail::sp_assert_convertible< Y, T >();
-
-        typename boost::movelib::unique_ptr< Y, D >::pointer tmp = r.get();
-        pn = boost::detail::shared_count( r );
-
-        boost::detail::sp_deleter_construct( this, tmp );
-    }
-
     // assignment
 
     shared_ptr & operator=( shared_ptr const & r ) BOOST_NOEXCEPT
@@ -579,27 +555,6 @@ public:
     }
 
 #endif
-
-    template<class Y, class D>
-    shared_ptr & operator=( boost::movelib::unique_ptr<Y, D> r )
-    {
-        // this_type( static_cast< unique_ptr<Y, D> && >( r ) ).swap( *this );
-
-        boost::detail::sp_assert_convertible< Y, T >();
-
-        typename boost::movelib::unique_ptr< Y, D >::pointer p = r.get();
-
-        shared_ptr tmp;
-
-        tmp.px = p;
-        tmp.pn = boost::detail::shared_count( r );
-
-        boost::detail::sp_deleter_construct( &tmp, p );
-
-        tmp.swap( *this );
-
-        return *this;
-    }
 
 // Move support
 
@@ -700,7 +655,7 @@ public:
         BOOST_ASSERT( px != 0 );
         BOOST_ASSERT( i >= 0 && ( i < boost::detail::sp_extent< T >::value || boost::detail::sp_extent< T >::value == 0 ) );
 
-        return static_cast< typename boost::detail::sp_array_access< T >::type >( px[ i ] );
+        return px[ i ];
     }
 
     element_type * get() const BOOST_NOEXCEPT
@@ -1065,13 +1020,9 @@ template< class T > struct hash;
 
 template< class T > std::size_t hash_value( boost::shared_ptr<T> const & p ) BOOST_NOEXCEPT
 {
-    return boost::hash< typename boost::shared_ptr<T>::element_type* >()( p.get() );
+    return boost::hash< T* >()( p.get() );
 }
 
 } // namespace boost
-
-#if defined( BOOST_SP_DISABLE_DEPRECATED )
-#pragma GCC diagnostic pop
-#endif
 
 #endif  // #ifndef BOOST_SMART_PTR_SHARED_PTR_HPP_INCLUDED

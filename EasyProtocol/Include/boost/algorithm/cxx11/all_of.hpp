@@ -18,6 +18,10 @@
 
 namespace boost { namespace algorithm {
 
+#if __cplusplus >= 201103L
+//  Use the C++11 versions of all_of if it is available
+using std::all_of;      // Section 25.2.1
+#else
 /// \fn all_of ( InputIterator first, InputIterator last, Predicate p )
 /// \return true if all elements in [first, last) satisfy the predicate 'p'
 /// \note returns true on an empty range
@@ -37,6 +41,7 @@ bool all_of ( InputIterator first, InputIterator last, Predicate p )
             return false;
     return true; 
 } 
+#endif
 
 /// \fn all_of ( const Range &r, Predicate p )
 /// \return true if all elements in the range satisfy the predicate 'p'

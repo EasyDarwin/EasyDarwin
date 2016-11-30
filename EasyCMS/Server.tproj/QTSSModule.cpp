@@ -45,7 +45,7 @@
 #include "Socket.h"
 #include "QTSServerInterface.h"
 
-bool  QTSSModule::sHasOpenFileModule = false;
+Bool16  QTSSModule::sHasOpenFileModule = false;
 
 QTSSAttrInfoDict::AttrInfo  QTSSModule::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */

@@ -19,7 +19,7 @@
 //        [
 //            _Ty=non_copyable
 //        ]
-#if defined BOOST_THREAD_USES_BOOST_DEQUE || defined BOOST_NO_CXX11_RVALUE_REFERENCES || (defined _MSC_VER && _MSC_FULL_VER < 180020827)
+#if defined BOOST_THREAD_USES_BOOST_DEQUE || defined BOOST_NO_CXX11_HDR_DEQUE || defined BOOST_NO_CXX11_RVALUE_REFERENCES || (defined _MSC_VER && _MSC_FULL_VER < 180020827)
 #ifndef BOOST_THREAD_USES_BOOST_DEQUE
 #define BOOST_THREAD_USES_BOOST_DEQUE
 #endif

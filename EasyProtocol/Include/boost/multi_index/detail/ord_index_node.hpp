@@ -1,4 +1,4 @@
-/* Copyright 2003-2015 Joaquin M Lopez Munoz.
+/* Copyright 2003-2013 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -43,7 +43,6 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <cstddef>
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/multi_index/detail/raw_ptr.hpp>
 
 #if !defined(BOOST_MULTI_INDEX_DISABLE_COMPRESSED_ORDERED_INDEX_NODES)
 #include <boost/mpl/and.hpp>
@@ -64,24 +63,24 @@ namespace detail{
 enum ordered_index_color{red=false,black=true};
 enum ordered_index_side{to_left=false,to_right=true};
 
-template<typename AugmentPolicy,typename Allocator>
+template<typename Allocator>
 struct ordered_index_node_impl; /* fwd decl. */
 
-template<typename AugmentPolicy,typename Allocator>
+template<typename Allocator>
 struct ordered_index_node_std_base
 {
   typedef typename
   boost::detail::allocator::rebind_to<
     Allocator,
-    ordered_index_node_impl<AugmentPolicy,Allocator>
-  >::type::pointer                                   pointer;
+    ordered_index_node_impl<Allocator>
+  >::type::pointer                     pointer;
   typedef typename
   boost::detail::allocator::rebind_to<
     Allocator,
-    ordered_index_node_impl<AugmentPolicy,Allocator>
-  >::type::const_pointer                             const_pointer;
-  typedef ordered_index_color&                       color_ref;
-  typedef pointer&                                   parent_ref;
+    ordered_index_node_impl<Allocator>
+  >::type::const_pointer               const_pointer;
+  typedef ordered_index_color&         color_ref;
+  typedef pointer&                     parent_ref;
 
   ordered_index_color& color(){return color_;}
   ordered_index_color  color()const{return color_;}
@@ -117,13 +116,11 @@ private:
 #pragma warning(disable:4312 4311)
 #endif
 
-template<typename AugmentPolicy,typename Allocator>
+template<typename Allocator>
 struct ordered_index_node_compressed_base
 {
-  typedef ordered_index_node_impl<
-    AugmentPolicy,Allocator>*            pointer;
-  typedef const ordered_index_node_impl<
-    AugmentPolicy,Allocator>*            const_pointer;
+  typedef ordered_index_node_impl<Allocator>*       pointer;
+  typedef const ordered_index_node_impl<Allocator>* const_pointer;
 
   struct color_ref
   {
@@ -182,7 +179,7 @@ struct ordered_index_node_compressed_base
   color_ref           color(){return color_ref(&parentcolor_);}
   ordered_index_color color()const
   {
-    return ordered_index_color(parentcolor_&uintptr_type(1));
+    return ordered_index_color(parentcolor_&std::size_t(1ul));
   }
 
   parent_ref parent(){return parent_ref(&parentcolor_);}
@@ -206,46 +203,39 @@ private:
 #endif
 #endif
 
-template<typename AugmentPolicy,typename Allocator>
+template<typename Allocator>
 struct ordered_index_node_impl_base:
 
 #if !defined(BOOST_MULTI_INDEX_DISABLE_COMPRESSED_ORDERED_INDEX_NODES)
-  AugmentPolicy::template augmented_node<
-    typename mpl::if_c<
-      !(has_uintptr_type::value)||
-      (alignment_of<
-        ordered_index_node_compressed_base<AugmentPolicy,Allocator>
-       >::value%2)||
-      !(is_same<
-        typename boost::detail::allocator::rebind_to<
-          Allocator,
-          ordered_index_node_impl<AugmentPolicy,Allocator>
-        >::type::pointer,
-        ordered_index_node_impl<AugmentPolicy,Allocator>*>::value),
-      ordered_index_node_std_base<AugmentPolicy,Allocator>,
-      ordered_index_node_compressed_base<AugmentPolicy,Allocator>
-    >::type
+  mpl::if_c<
+    !(has_uintptr_type::value)||
+    (alignment_of<ordered_index_node_compressed_base<Allocator> >::value%2)||
+    !(is_same<
+      typename boost::detail::allocator::rebind_to<
+        Allocator,
+        ordered_index_node_impl<Allocator>
+      >::type::pointer,
+      ordered_index_node_impl<Allocator>*>::value),
+    ordered_index_node_std_base<Allocator>,
+    ordered_index_node_compressed_base<Allocator>
   >::type
 #else
-  AugmentPolicy::template augmented_node<
-    ordered_index_node_std_base<AugmentPolicy,Allocator>
-  >::type
+  ordered_index_node_std_base<Allocator>
 #endif
 
 {};
 
-template<typename AugmentPolicy,typename Allocator>
-struct ordered_index_node_impl:
-  ordered_index_node_impl_base<AugmentPolicy,Allocator>
+template<typename Allocator>
+struct ordered_index_node_impl:ordered_index_node_impl_base<Allocator>
 {
 private:
-  typedef ordered_index_node_impl_base<AugmentPolicy,Allocator> super;
+  typedef ordered_index_node_impl_base<Allocator> super;
 
 public:
-  typedef typename super::color_ref                             color_ref;
-  typedef typename super::parent_ref                            parent_ref;
-  typedef typename super::pointer                               pointer;
-  typedef typename super::const_pointer                         const_pointer;
+  typedef typename super::color_ref               color_ref;
+  typedef typename super::parent_ref              parent_ref;
+  typedef typename super::pointer                 pointer;
+  typedef typename super::const_pointer           const_pointer;
 
   /* interoperability with bidir_node_iterator */
 
@@ -298,7 +288,6 @@ public:
     else                           x->parent()->right()=y;
     y->left()=x;
     x->parent()=y;
-    AugmentPolicy::rotate_left(x,y);
   }
 
   static pointer minimum(pointer x)
@@ -325,7 +314,6 @@ public:
     else                            x->parent()->left()=y;
     y->right()=x;
     x->parent()=y;
-    AugmentPolicy::rotate_right(x,y);
   }
 
   static void rebalance(pointer x,parent_ref root)
@@ -394,7 +382,6 @@ public:
     x->parent()=position;
     x->left()=pointer(0);
     x->right()=pointer(0);
-    AugmentPolicy::add(x,pointer(header->parent()));
     ordered_index_node_impl::rebalance(x,header->parent());
   }
 
@@ -417,9 +404,7 @@ public:
         x=y->right();
       }
     }
-    AugmentPolicy::remove(y,pointer(root));
     if(y!=z){
-      AugmentPolicy::copy(z,y);
       z->left()->parent()=y;   /* relink y in place of z. y is z's successor */
       y->left()=z->left();
       if(y!=z->right()){
@@ -562,10 +547,9 @@ public:
 #endif
 };
 
-template<typename AugmentPolicy,typename Super>
+template<typename Super>
 struct ordered_index_node_trampoline:
   ordered_index_node_impl<
-    AugmentPolicy,
     typename boost::detail::allocator::rebind_to<
       typename Super::allocator_type,
       char
@@ -573,7 +557,6 @@ struct ordered_index_node_trampoline:
   >
 {
   typedef ordered_index_node_impl<
-    AugmentPolicy,
     typename boost::detail::allocator::rebind_to<
       typename Super::allocator_type,
       char
@@ -581,12 +564,11 @@ struct ordered_index_node_trampoline:
   > impl_type;
 };
 
-template<typename AugmentPolicy,typename Super>
-struct ordered_index_node:
-  Super,ordered_index_node_trampoline<AugmentPolicy,Super>
+template<typename Super>
+struct ordered_index_node:Super,ordered_index_node_trampoline<Super>
 {
 private:
-  typedef ordered_index_node_trampoline<AugmentPolicy,Super> trampoline;
+  typedef ordered_index_node_trampoline<Super> trampoline;
 
 public:
   typedef typename trampoline::impl_type     impl_type;
@@ -618,18 +600,14 @@ public:
 
   static ordered_index_node* from_impl(impl_pointer x)
   {
-    return
-      static_cast<ordered_index_node*>(
-        static_cast<trampoline*>(
-          raw_ptr<impl_type*>(x)));
+    return static_cast<ordered_index_node*>(
+      static_cast<trampoline*>(&*x));
   }
 
   static const ordered_index_node* from_impl(const_impl_pointer x)
   {
-    return
-      static_cast<const ordered_index_node*>(
-        static_cast<const trampoline*>(
-          raw_ptr<const impl_type*>(x)));
+    return static_cast<const ordered_index_node*>(
+      static_cast<const trampoline*>(&*x));
   }
 
   /* interoperability with bidir_node_iterator */

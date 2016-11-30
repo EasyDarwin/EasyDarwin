@@ -112,7 +112,7 @@ void RTPMetaInfoPacket::ConstructFieldIDArrayFromHeader(StrPtrLen* inHeader, Fie
 }
 
 
-bool RTPMetaInfoPacket::ParsePacket(UInt8* inPacketBuffer, UInt32 inPacketLen, FieldID* inFieldIDArray)
+Bool16 RTPMetaInfoPacket::ParsePacket(UInt8* inPacketBuffer, UInt32 inPacketLen, FieldID* inFieldIDArray)
 {
 	UInt8* theFieldP = inPacketBuffer + 12; // skip RTP header
 	UInt8* theEndP = inPacketBuffer + inPacketLen;

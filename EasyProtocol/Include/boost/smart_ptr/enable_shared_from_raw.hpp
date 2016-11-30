@@ -53,18 +53,9 @@ protected:
 
 private:
 
-    void init_if_expired() const
+    void init_weak_once() const
     {
         if( weak_this_.expired() )
-        {
-            shared_this_.reset( static_cast<void*>(0), detail::esft2_deleter_wrapper() );
-            weak_this_ = shared_this_;
-        }
-    }
-
-    void init_if_empty() const
-    {
-        if( weak_this_._empty() )
         {
             shared_this_.reset( static_cast<void*>(0), detail::esft2_deleter_wrapper() );
             weak_this_ = shared_this_;
@@ -83,24 +74,13 @@ private:
 
     shared_ptr<void const volatile> shared_from_this() const
     {
-        init_if_expired();
+        init_weak_once();
         return shared_ptr<void const volatile>( weak_this_ );
     }
 
     shared_ptr<void const volatile> shared_from_this() const volatile
     {
         return const_cast< enable_shared_from_raw const * >( this )->shared_from_this();
-    }
-
-    weak_ptr<void const volatile> weak_from_this() const
-    {
-        init_if_empty();
-        return weak_this_;
-    }
-
-    weak_ptr<void const volatile> weak_from_this() const volatile
-    {
-        return const_cast< enable_shared_from_raw const * >( this )->weak_from_this();
     }
 
     // Note: invoked automatically by shared_ptr; do not call
@@ -145,7 +125,7 @@ boost::weak_ptr<T> weak_from_raw(T *p)
 {
     BOOST_ASSERT(p != 0);
     boost::weak_ptr<T> result;
-    result._internal_aliasing_assign(p->enable_shared_from_raw::weak_from_this(), p);
+    result._internal_aliasing_assign(p->enable_shared_from_raw::weak_this_, p);
     return result;
 }
 

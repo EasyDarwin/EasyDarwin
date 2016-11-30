@@ -433,13 +433,8 @@ namespace chrono {
         rep rep_;
     public:
 
-#if  defined   BOOST_NO_CXX11_DEFAULTED_FUNCTIONS || \
-     defined   BOOST_CHRONO_DURATION_DEFAULTS_TO_ZERO
         BOOST_FORCEINLINE BOOST_CONSTEXPR
         duration() : rep_(duration_values<rep>::zero()) { }
-#else
-        BOOST_CONSTEXPR duration() BOOST_NOEXCEPT {};
-#endif
         template <class Rep2>
         BOOST_SYMBOL_VISIBLE BOOST_FORCEINLINE BOOST_CONSTEXPR
         explicit duration(const Rep2& r
@@ -456,15 +451,14 @@ namespace chrono {
                     >
                 >::type* = 0
             ) : rep_(r) { }
-#if  defined   BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
-        duration& operator=(const duration& rhs)
+        //~duration() {} //= default;
+//        BOOST_CONSTEXPR        duration(const duration& rhs) : rep_(rhs.rep_) {} // = default;
+        duration& operator=(const duration& rhs) // = default;
         {
             if (&rhs != this) rep_= rhs.rep_;
             return *this;
         }
-#else
-        duration& operator=(const duration& rhs) = default;
-#endif
+
         // conversions
         template <class Rep2, class Period2>
         BOOST_FORCEINLINE BOOST_CONSTEXPR

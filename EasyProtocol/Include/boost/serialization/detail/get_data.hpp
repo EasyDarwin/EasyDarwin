@@ -54,6 +54,8 @@ const T* get_data(STD::valarray<T> const& v)
 } // serialization
 } // boost
 
+#if defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION)
 #undef STD
+#endif
 
 #endif // BOOST_SERIALIZATION_DETAIL_GET_DATA_HPP

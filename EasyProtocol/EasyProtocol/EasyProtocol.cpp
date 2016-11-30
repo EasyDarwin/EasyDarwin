@@ -608,16 +608,16 @@ namespace EasyDarwin { namespace Protocol
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 	}
 
-	EasyMsgSCRTSPLiveSessionsACK::EasyMsgSCRTSPLiveSessionsACK()
-		: EasyProtocol(MSG_SC_RTSP_LIVE_SESSIONS_ACK)
+	EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK()
+		: EasyProtocol(MSG_SC_RTSP_PUSH_SESSION_LIST_ACK)
 	{
 	}
 
-	EasyMsgSCRTSPLiveSessionsACK::EasyMsgSCRTSPLiveSessionsACK(const string& msg)
-		: EasyProtocol(msg, MSG_SC_RTSP_LIVE_SESSIONS_ACK)
+	EasyMsgSCRTSPPushSessionListACK::EasyMsgSCRTSPPushSessionListACK(const string& msg)
+		: EasyProtocol(msg, MSG_SC_RTSP_PUSH_SESSION_LIST_ACK)
 	{
 	}
-	bool EasyMsgSCRTSPLiveSessionsACK::AddSession(EasyDarwinRTSPSession &session)
+	bool EasyMsgSCRTSPPushSessionListACK::AddSession(EasyDarwinRTSPSession &session)
 	{
 		Json::Value value;
 		value[EASY_TAG_L_INDEX] = session.index;
@@ -673,21 +673,6 @@ namespace EasyDarwin { namespace Protocol
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
 	}
 
-	void EasyMsgSCRecordListACK::AddRecord(int day_of_month)
-	{
-		Json::Value value;
-		value[EASY_TAG_DATE] = day_of_month;
-		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
-	}
-
-	void EasyMsgSCRecordListACK::AddRecord(const string & starttime, const string & endtime)
-	{
-		Json::Value value;
-		value[EASY_TAG_START_TIME] = starttime;
-		value[EASY_TAG_END_TIME] = endtime;
-		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
-	}
-
 	//add,紫光，start
 	strDevice::strDevice() : eDeviceType(), eAppType()
 	{
@@ -733,20 +718,17 @@ namespace EasyDarwin { namespace Protocol
 					camera.channel_ = json_camera[EASY_TAG_CHANNEL].asString();
 					camera.status_ = json_camera[EASY_TAG_STATUS].asString();
 
-					//update channels enable true to false
-					channels_[camera.channel_] = camera;
-
-					////channels_.push_back(camera);
-					////如果已经存在，则只修改status_属性，否则插入到map中。这样对于1个线程写，多个线程读不用加锁，因为不会出现不可预知的中间值。  
-					////注意NVR包含摄像头的信息除了状态外不应该发生变化，否则多线程操作可能会出bug.
-					//if (channels_.find(camera.channel_) != channels_.end())//Already exist
-					//{
-					//	channels_[camera.channel_].status_ = camera.status_;//change status_
-					//}
-					//else//insert
-					//{
-					//	channels_[camera.channel_] = camera;
-					//}
+					//channels_.push_back(camera);
+					//如果已经存在，则只修改status_属性，否则插入到map中。这样对于1个线程写，多个线程读不用加锁，因为不会出现不可预知的中间值。  
+					//注意NVR包含摄像头的信息除了状态外不应该发生变化，否则多线程操作可能会出bug.
+					if (channels_.find(camera.channel_) != channels_.end())//Already exist
+					{
+						channels_[camera.channel_].status_ = camera.status_;//change status_
+					}
+					else//insert
+					{
+						channels_[camera.channel_] = camera;
+					}
 				}
 			}
 			return true;

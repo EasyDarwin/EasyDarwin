@@ -32,8 +32,7 @@
 #define _SVECTOR_H_
 
 #include"OSHeaders.h"
-//#include"OSMemory.h"
-#include <new>
+#include"OSMemory.h"
  
 //T must be default and copy constructable; does not have to be assignable
 template<class T>
@@ -52,7 +51,7 @@ class SVector
 			reserve(rhs.size());
 			fSize = rhs.size();
 			for(UInt32 i = 0; i < rhs.size(); ++i)
-				new(fData + i) T(rhs[i]);
+				NEW(fData + i) T(rhs[i]);
 		}
 
 		~SVector()
@@ -67,7 +66,7 @@ class SVector
 			reserve(rhs.size());
 			fSize = rhs.size();
 			for(UInt32 i = 0; i < rhs.size(); ++i)
-				new(fData + i) T(rhs[i]);
+				NEW(fData + i) T(rhs[i]);
 			return *this;
 		}
 
@@ -101,7 +100,7 @@ class SVector
 		void push_back(const T &newItem)
 		{
 			reserve(fSize + 1);
-			new (fData + fSize) T(newItem);
+			NEW (fData + fSize) T(newItem);
 			fSize++;
 		}
 
@@ -127,11 +126,11 @@ class SVector
 			reserve(fSize + count);
 			for(UInt32 i = fSize; i > position; --i)
 			{
-				new (fData + i - 1 + count) T(fData[i - 1]);
+				NEW (fData + i - 1 + count) T(fData[i - 1]);
 				fData[i - 1].~T();
 			}
 			for(UInt32 i = position; i < position + count; ++i)
-				new (fData + i) T(newItem);
+				NEW (fData + i) T(newItem);
 			fSize += count;
 		}
 
@@ -144,7 +143,7 @@ class SVector
 				fData[i].~T();
 			for(UInt32 i = position + count; i < fSize; ++i)
 			{
-				new (fData + i - count) T(fData[i]);
+				NEW (fData + i - count) T(fData[i]);
 				fData[i].~T();
 			}
 			fSize -= count;
@@ -156,12 +155,12 @@ class SVector
 			fData[position].~T();
 			if (position < --fSize)
 			{
-				new(fData + position) T(fData[fSize]);
+				NEW(fData + position) T(fData[fSize]);
 				fData[fSize].~T();
 			}
 		}
 
-		bool empty() const 							{ return fSize == 0; }
+		Bool16 empty() const 							{ return fSize == 0; }
 		UInt32 capacity() const 						{ return fCapacity; }
 		UInt32 size() const 							{ return fSize; }
 		
@@ -193,7 +192,7 @@ class SVector
 			{
 				reserve(newSize);
 				for(UInt32 i = fSize; i < newSize; ++i)
-					new(fData + i) T(newItem);
+					NEW(fData + i) T(newItem);
 			}
 			else if (newSize < fSize)
 			{
@@ -209,7 +208,7 @@ class SVector
 			T *newData = static_cast<T *>(operator new[](sizeof(T) * newCapacity));
 			fCapacity = newCapacity;
 			for(UInt32 i = 0; i < fSize; ++i)
-				new (newData + i) T(fData[i]);
+				NEW (newData + i) T(fData[i]);
 			operator delete[](fData);
 			fData = newData;
 		}

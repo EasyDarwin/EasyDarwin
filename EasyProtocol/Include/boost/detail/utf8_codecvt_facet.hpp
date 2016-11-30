@@ -14,7 +14,7 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
 // utf8_codecvt_facet.hpp
 
-// This header defines class utf8_codecvt_facet, derived from 
+// This header defines class utf8_codecvt_facet, derived fro 
 // std::codecvt<wchar_t, char>, which can be used to convert utf8 data in
 // files into wchar_t strings in the application.
 //
@@ -28,13 +28,12 @@
 //   This seems inconvenient, and asking a user to link to an unrevieved 
 //   library is strange. 
 // Until the above points are fixed, a library which wants to use utf8 must:
-// - include this header in one of it's headers or sources
-// - include the corresponding boost/detail/utf8_codecvt_facet.ipp file in one
-//   of its sources
+// - include this header from one of it's headers or sources
+// - include the corresponding .cpp file from one of the sources
 // - before including either file, the library must define
 //   - BOOST_UTF8_BEGIN_NAMESPACE to the namespace declaration that must be used
 //   - BOOST_UTF8_END_NAMESPACE to the code to close the previous namespace
-//     declaration.
+//   - declaration.
 //   - BOOST_UTF8_DECL -- to the code which must be used for all 'exportable'
 //     symbols.
 //
@@ -43,7 +42,7 @@
 //             namespace boost { namespace program_options {
 //    #define BOOST_UTF8_END_NAMESPACE }}
 //    #define BOOST_UTF8_DECL BOOST_PROGRAM_OPTIONS_DECL
-//    #include <boost/detail/utf8_codecvt_facet.ipp>
+//    #include "../../detail/utf8/utf8_codecvt.cpp"
 //
 // Essentially, each library will have its own copy of utf8 code, in
 // different namespaces. 
@@ -93,32 +92,26 @@ namespace std {
 }
 #endif
 
+#if !defined(__MSL_CPP__) && !defined(__LIBCOMO__)
+    #define BOOST_CODECVT_DO_LENGTH_CONST const
+#else
+    #define BOOST_CODECVT_DO_LENGTH_CONST
+#endif
+
 // maximum lenght of a multibyte string
 #define MB_LENGTH_MAX 8
 
 BOOST_UTF8_BEGIN_NAMESPACE
 
-//----------------------------------------------------------------------------//
-//                                                                            //
-//                          utf8_codecvt_facet                                //
-//                                                                            //
-//            See utf8_codecvt_facet.ipp for the implementation.              //
-//----------------------------------------------------------------------------//
-
-#ifndef BOOST_UTF8_DECL
-#define BOOST_UTF8_DECL
-#endif
-
-struct BOOST_SYMBOL_VISIBLE utf8_codecvt_facet :
+struct BOOST_UTF8_DECL utf8_codecvt_facet :
     public std::codecvt<wchar_t, char, std::mbstate_t>  
 {
 public:
-    BOOST_UTF8_DECL explicit utf8_codecvt_facet(std::size_t no_locale_manage=0)
+    explicit utf8_codecvt_facet(std::size_t no_locale_manage=0)
         : std::codecvt<wchar_t, char, std::mbstate_t>(no_locale_manage) 
     {}
-    virtual  ~utf8_codecvt_facet(){}
 protected:
-    BOOST_UTF8_DECL virtual std::codecvt_base::result do_in(
+    virtual std::codecvt_base::result do_in(
         std::mbstate_t& state, 
         const char * from,
         const char * from_end, 
@@ -128,7 +121,7 @@ protected:
         wchar_t*& to_next
     ) const;
 
-    BOOST_UTF8_DECL virtual std::codecvt_base::result do_out(
+    virtual std::codecvt_base::result do_out(
         std::mbstate_t & state,
         const wchar_t * from,
         const wchar_t * from_end,
@@ -152,11 +145,11 @@ protected:
         return get_octet_count(lead_octet) - 1;
     }
 
-    BOOST_UTF8_DECL static unsigned int get_octet_count(unsigned char lead_octet);
+    static unsigned int get_octet_count(unsigned char lead_octet);
 
     // How many "continuing octets" will be needed for this word
     // ==   total octets - 1.
-    BOOST_UTF8_DECL int get_cont_octet_out_count(wchar_t word) const ;
+    int get_cont_octet_out_count(wchar_t word) const ;
 
     virtual bool do_always_noconv() const BOOST_NOEXCEPT_OR_NOTHROW {
         return false;
@@ -180,33 +173,13 @@ protected:
 
     // How many char objects can I process to get <= max_limit
     // wchar_t objects?
-    BOOST_UTF8_DECL virtual int do_length(
-        const std::mbstate_t &,
-        const char * from,
-        const char * from_end, 
-        std::size_t max_limit
-    ) const
-#if BOOST_WORKAROUND(__IBMCPP__, BOOST_TESTED_AT(600))
-    throw()
-#endif
-    ;
     virtual int do_length(
-        std::mbstate_t & s,
+        BOOST_CODECVT_DO_LENGTH_CONST std::mbstate_t &,
         const char * from,
         const char * from_end, 
         std::size_t max_limit
-    ) const
-#if BOOST_WORKAROUND(__IBMCPP__, BOOST_TESTED_AT(600))
-    throw()
-#endif
-    {
-        return do_length(
-            const_cast<const std::mbstate_t &>(s),
-            from,
-            from_end,
-            max_limit
-        );
-    }
+    ) const;
+
     // Largest possible value do_length(state,from,from_end,1) could return.
     virtual int do_max_length() const BOOST_NOEXCEPT_OR_NOTHROW {
         return 6; // largest UTF-8 encoding of a UCS-4 character

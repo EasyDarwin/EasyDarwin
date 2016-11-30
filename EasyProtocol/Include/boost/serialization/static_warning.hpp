@@ -57,7 +57,13 @@
 
 //------------------Enable selected warnings----------------------------------//
 
-// Enable the warnings relied on by BOOST_STATIC_WARNING, where possible.
+// Enable the warnings relied on by BOOST_STATIC_WARNING, where possible. The 
+// only pragma which is absolutely necessary here is for Borland 5.x, since 
+// W8073 is disabled by default. If enabling selected warnings is considered 
+// unacceptable, this section can be replaced with:
+//   #if defined(__BORLANDC__) && (__BORLANDC__ <= 0x600)
+//    pragma warn +st
+//   #endif
 
 // 6. replaced implementation with one which depends solely on
 //    mpl::print<>.  The previous one was found to fail for functions
@@ -66,7 +72,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/print.hpp>
 #include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/bool_fwd.hpp>
 #include <boost/static_assert.hpp>
 
 namespace boost {
@@ -97,7 +102,7 @@ struct BOOST_SERIALIZATION_SS {};
 #define BOOST_SERIALIZATION_BSW(B, L) \
     typedef boost::serialization::BOOST_SERIALIZATION_SS< \
         sizeof( boost::serialization::static_warning_test< B, L > ) \
-    > BOOST_JOIN(STATIC_WARNING_LINE, L) BOOST_ATTRIBUTE_UNUSED; 
+    > BOOST_JOIN(STATIC_WARNING_LINE, L) BOOST_STATIC_ASSERT_UNUSED_ATTRIBUTE; 
 #define BOOST_STATIC_WARNING(B) BOOST_SERIALIZATION_BSW(B, __LINE__)
 
 #endif // BOOST_SERIALIZATION_STATIC_WARNING_HPP

@@ -61,7 +61,7 @@
 
 QTSServer* sServer = NULL;
 int sStatusUpdateInterval = 0;
-bool sHasPID = false;
+Bool16 sHasPID = false;
 UInt64 sLastStatusPackets = 0;
 UInt64 sLastDebugPackets = 0;
 SInt64 sLastDebugTotalQuality = 0;
@@ -70,12 +70,12 @@ SInt64 sLastDebugTotalQuality = 0;
 #endif
 
 //启动服务
-QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, int statsUpdateInterval, QTSS_ServerState inInitialState, bool inDontFork, UInt32 debugLevel, UInt32 debugOptions)
+QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, int statsUpdateInterval, QTSS_ServerState inInitialState, Bool16 inDontFork, UInt32 debugLevel, UInt32 debugOptions)
 {
 	//Mark when we are done starting up. If auto-restart is enabled, we want to make sure
 	//to always exit with a status of 0 if we encountered a problem WHILE STARTING UP. This
 	//will prevent infinite-auto-restart-loop type problems
-	bool doneStartingUp = false;
+	Bool16 doneStartingUp = false;
 	QTSS_ServerState theServerState = qtssStartingUpState;
 
 	//服务单元状态更新间隔
@@ -114,7 +114,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 	inPrefsSource->Parse();
 
 	//准备开启监听，接收并处理相关事务
-	bool createListeners = true;
+	Bool16 createListeners = true;
 	if (qtssShuttingDownState == inInitialState)
 		createListeners = false;
 
@@ -224,7 +224,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 	return theServerState;
 }
 
-void WritePid(bool forked)
+void WritePid(Bool16 forked)
 {
 #ifndef __Win32__
 	// WRITE PID TO FILE
@@ -245,7 +245,7 @@ void WritePid(bool forked)
 #endif
 }
 
-void CleanPid(bool force)
+void CleanPid(Bool16 force)
 {
 #ifndef __Win32__
 	if (sHasPID || force)
@@ -418,7 +418,7 @@ void print_status(FILE* file, FILE* console, char* format, char* theStr)
 
 }
 
-void DebugLevel_1(FILE*   statusFile, FILE*   stdOut, bool printHeader)
+void DebugLevel_1(FILE*   statusFile, FILE*   stdOut, Bool16 printHeader)
 {
 	char*  thePrefStr = NULL;
 	static char numStr[12] = "";
@@ -469,7 +469,7 @@ FILE* DisplayDebugEnabled()
 	return (DebugDisplayOn(sServer)) ? stdout : NULL;
 }
 
-void DebugStatus(UInt32 debugLevel, bool printHeader)
+void DebugStatus(UInt32 debugLevel, Bool16 printHeader)
 {
 
 	FILE*   statusFile = LogDebugEnabled();
@@ -517,7 +517,7 @@ void FormattedTotalBytesBuffer(char *outBuffer, int outBufferLen, UInt64 totalBy
 	qtss_snprintf(outBuffer, outBufferLen - 1, format, displayBytes, sizeStr);
 }
 
-void PrintStatus(bool printHeader)
+void PrintStatus(Bool16 printHeader)
 {
 	char* thePrefStr = NULL;
 	UInt32 theLen = 0;
@@ -534,23 +534,23 @@ void PrintStatus(bool printHeader)
 	qtss_printf("\n");
 }
 
-bool PrintHeader(UInt32 loopCount)
+Bool16 PrintHeader(UInt32 loopCount)
 {
 	return ((loopCount % (sStatusUpdateInterval * 10)) == 0) ? true : false;
 }
 
-bool PrintLine(UInt32 loopCount)
+Bool16 PrintLine(UInt32 loopCount)
 {
 	return ((loopCount % sStatusUpdateInterval) == 0) ? true : false;
 }
 
 void RunServer()
 {
-	bool restartServer = false;
+	Bool16 restartServer = false;
 	UInt32 loopCount = 0;
 	UInt32 debugLevel = 0;
-	bool printHeader = false;
-	bool printStatus = false;
+	Bool16 printHeader = false;
+	Bool16 printStatus = false;
 
 	UInt32 num = 0;//add
 	//just wait until someone stops the server or a fatal error occurs.

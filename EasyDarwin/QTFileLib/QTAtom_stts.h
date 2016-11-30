@@ -75,19 +75,19 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_stts(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		bool Debug = false, bool DeepDebug = false);
+		Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTAtom_stts(void);
 
 
 	//
 	// Initialization functions.
-	virtual bool      Initialize(void);
+	virtual Bool16      Initialize(void);
 
 	//
 	// Accessors.
-	bool      MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber,
+	Bool16      MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber,
 		QTAtom_stts_SampleTableControlBlock * STCB);
-	bool      SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaTime,
+	Bool16      SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaTime,
 		QTAtom_stts_SampleTableControlBlock * STCB);
 
 
@@ -146,19 +146,19 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_ctts(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		bool Debug = false, bool DeepDebug = false);
+		Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTAtom_ctts(void);
 
 
 	//
 	// Initialization functions.
-	virtual bool      Initialize(void);
+	virtual Bool16      Initialize(void);
 
 	//
 	// Accessors.
-	bool      MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber,
+	Bool16      MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber,
 		QTAtom_ctts_SampleTableControlBlock * STCB);
-	bool      SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * MediaTimeOffset,
+	Bool16      SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * MediaTimeOffset,
 		QTAtom_ctts_SampleTableControlBlock * STCB);
 
 

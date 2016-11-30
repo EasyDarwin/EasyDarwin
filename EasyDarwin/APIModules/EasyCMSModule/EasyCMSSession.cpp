@@ -32,6 +32,7 @@ EasyCMSSession::EasyCMSSession()
 	fTimeoutTask.SetTask(this);
 	fTimeoutTask.SetTimeout(30 * 1000);
 	fTimeoutTask.RefreshTimeout();
+
 }
 
 EasyCMSSession::~EasyCMSSession()

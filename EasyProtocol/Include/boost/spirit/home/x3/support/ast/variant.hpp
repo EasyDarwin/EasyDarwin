@@ -7,10 +7,13 @@
 #if !defined(BOOST_SPIRIT_X3_VARIANT_AUGUST_6_2011_0859AM)
 #define BOOST_SPIRIT_X3_VARIANT_AUGUST_6_2011_0859AM
 
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
 #include <boost/variant.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <type_traits>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit { namespace x3
@@ -123,25 +126,17 @@ namespace boost { namespace spirit { namespace x3
         // tell spirit that this is an adapted variant
         struct adapted_variant_tag;
 
-        using variant_type = boost::variant<Types...>;
-        using types        = mpl::list<typename detail::remove_forward<Types>::type...>;
-        using base_type    = variant; // The current instantiation
-
-        template<typename T>
-        using non_self_t // used only for SFINAE checks below
-            = std::enable_if_t<!(std::is_base_of<base_type
-                                                ,std::remove_reference_t<T>
-                                                >
-                                                ::value)
-                              >;
+        typedef boost::variant<Types...> variant_type;
+        typedef mpl::list<typename detail::remove_forward<Types>::type...> types;
+        typedef variant<Types...> base_type;
 
         variant() : var() {}
 
-        template <typename T, class = non_self_t<T>>
+        template <typename T, typename disable_if<is_base_of<base_type, T>>::type>
         explicit variant(T const& rhs)
             : var(rhs) {}
 
-        template <typename T, class = non_self_t<T>>
+        template <typename T, typename disable_if<is_base_of<base_type, T>>::type>
         explicit variant(T&& rhs)
             : var(std::forward<T>(rhs)) {}
 
@@ -166,14 +161,16 @@ namespace boost { namespace spirit { namespace x3
             return *this;
         }
 
-        template <typename T, class = non_self_t<T>>
+        template <typename T>
+        //typename disable_if<is_base_of<base_type, T>, variant&>::type
         variant& operator=(T const& rhs)
         {
             var = rhs;
             return *this;
         }
 
-        template <typename T, class = non_self_t<T>>
+        template <typename T>
+        //typename disable_if<is_base_of<base_type, T>, variant&>::type
         variant& operator=(T&& rhs)
         {
             var = std::forward<T>(rhs);
@@ -212,11 +209,6 @@ namespace boost { namespace spirit { namespace x3
         variant_type& get()
         {
             return var;
-        }
-
-        void swap(variant& rhs) BOOST_NOEXCEPT
-        {
-            var.swap(rhs.var);
         }
 
         variant_type var;

@@ -12,37 +12,37 @@
 namespace boost{ namespace math{ namespace tools{ namespace detail{
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T*, const V&, const mpl::int_<0>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T*, const V&, const mpl::int_<0>*)
 {
    return static_cast<V>(0);
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V&, const mpl::int_<1>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V&, const mpl::int_<1>*)
 {
    return static_cast<V>(a[0]);
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<2>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<2>*)
 {
    return static_cast<V>(a[1] * x + a[0]);
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<3>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<3>*)
 {
    return static_cast<V>((a[2] * x + a[1]) * x + a[0]);
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<4>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<4>*)
 {
    return static_cast<V>(((a[3] * x + a[2]) * x + a[1]) * x + a[0]);
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<5>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<5>*)
 {
    V x2 = x * x;
    V t[2];
@@ -55,7 +55,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<5>*) 
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<6>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<6>*)
 {
    V x2 = x * x;
    V t[2];
@@ -70,7 +70,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<6>*) 
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<7>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<7>*)
 {
    V x2 = x * x;
    V t[2];
@@ -87,7 +87,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<7>*) 
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<8>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<8>*)
 {
    V x2 = x * x;
    V t[2];
@@ -106,7 +106,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<8>*) 
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<9>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<9>*)
 {
    V x2 = x * x;
    V t[2];
@@ -127,7 +127,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<9>*) 
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<10>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<10>*)
 {
    V x2 = x * x;
    V t[2];
@@ -150,7 +150,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<10>*)
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<11>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<11>*)
 {
    V x2 = x * x;
    V t[2];
@@ -175,7 +175,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<11>*)
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<12>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<12>*)
 {
    V x2 = x * x;
    V t[2];
@@ -202,7 +202,7 @@ inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<12>*)
 }
 
 template <class T, class V>
-inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<13>*) BOOST_MATH_NOEXCEPT(V)
+inline V evaluate_polynomial_c_imp(const T* a, const V& x, const mpl::int_<13>*)
 {
    V x2 = x * x;
    V t[2];

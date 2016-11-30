@@ -1,4 +1,4 @@
-/* Copyright 2003-2015 Joaquin M Lopez Munoz.
+/* Copyright 2003-2013 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -14,7 +14,6 @@
 #endif
 
 #include <boost/config.hpp>
-#include <boost/detail/workaround.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/multi_index/identity_fwd.hpp>
 #include <boost/type_traits/is_const.hpp>
@@ -40,7 +39,7 @@ namespace detail{
  * mean a  type  P such that, given a p of type P
  *   *...n...*x is convertible to Type&, for some n>=1.
  * Examples of chained pointers are raw and smart pointers, iterators and
- * arbitrary combinations of these (vg. Type** or unique_ptr<Type*>.)
+ * arbitrary combinations of these (vg. Type** or auto_ptr<Type*>.)
  */
 
 template<typename Type>
@@ -72,14 +71,7 @@ struct const_identity_base
   }
 
   Type& operator()(
-    const reference_wrapper<typename remove_const<Type>::type>& x
-
-#if BOOST_WORKAROUND(BOOST_MSVC,==1310)
-/* http://lists.boost.org/Archives/boost/2015/10/226135.php */
-    ,int=0
-#endif
-
-  )const
+    const reference_wrapper<typename remove_const<Type>::type>& x)const
   { 
     return x.get();
   }

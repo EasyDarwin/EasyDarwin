@@ -12,7 +12,7 @@
 #include <boost/thread/detail/config.hpp>
 #include <boost/thread/detail/delete.hpp>
 #include <boost/thread/detail/move.hpp>
-#include <boost/thread/concurrent_queues/sync_queue.hpp>
+#include <boost/thread/sync_queue.hpp>
 #include <boost/thread/executors/work.hpp>
 #include <boost/thread/executors/generic_executor_ref.hpp>
 #include <boost/thread/future.hpp>
@@ -33,7 +33,7 @@ namespace executors
     typedef  scoped_thread<> thread_t;
 
     /// the thread safe work queue
-    concurrent::sync_queue<work > work_queue;
+    sync_queue<work > work_queue;
     generic_executor_ref ex;
     thread_t thr;
 
@@ -43,13 +43,8 @@ namespace executors
       try_executing_one_task(work& task, boost::promise<void> &p)
       : task(task), p(p) {}
       void operator()() {
-        try {
-          task();
-          p.set_value();
-        } catch (...)
-        {
-          p.set_exception(current_exception());
-        }
+        task(); // if task() throws promise is not set but as the the program terminates and should terminate there is no need to use try-catch here.
+        p.set_value();
       }
     };
   public:
@@ -57,7 +52,7 @@ namespace executors
      * \par Returns
      * The underlying executor wrapped on a generic executor reference.
      */
-    generic_executor_ref& underlying_executor() BOOST_NOEXCEPT { return ex; }
+    generic_executor_ref underlying_executor() BOOST_NOEXCEPT { return ex; }
 
     /**
      * Effects: try to execute one task.
@@ -69,20 +64,28 @@ namespace executors
       work task;
       try
       {
-        if (work_queue.try_pull(task) == queue_op_status::success)
+        if (work_queue.try_pull_front(task) == queue_op_status::success)
         {
           boost::promise<void> p;
           try_executing_one_task tmp(task,p);
           ex.submit(tmp);
+//          ex.submit([&task, &p]()
+//          {
+//            task(); // if task() throws promise is not set but as the the program terminates and should terminate there is no need to use try-catch here.
+//            p.set_value();
+//          });
           p.get_future().wait();
           return true;
         }
         return false;
       }
+      catch (std::exception& )
+      {
+        return false;
+      }
       catch (...)
       {
-        std::terminate();
-        //return false;
+        return false;
       }
     }
   private:
@@ -133,7 +136,7 @@ namespace executors
      */
     ~serial_executor()
     {
-      // signal to the worker thread that there will be no more submissions.
+      // signal to all the worker thread that there will be no more submissions.
       close();
     }
 
@@ -165,28 +168,23 @@ namespace executors
      * \b Throws: \c sync_queue_is_closed if the thread pool is closed.
      * Whatever exception that can be throw while storing the closure.
      */
-    void submit(BOOST_THREAD_RV_REF(work) closure)
-    {
-      work_queue.push(boost::move(closure));
-    }
 
 #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
     template <typename Closure>
     void submit(Closure & closure)
     {
-      submit(work(closure));
+      work_queue.push_back(work(closure));
     }
 #endif
     void submit(void (*closure)())
     {
-      submit(work(closure));
+      work_queue.push_back(work(closure));
     }
 
     template <typename Closure>
-    void submit(BOOST_THREAD_FWD_REF(Closure) closure)
+    void submit(BOOST_THREAD_RV_REF(Closure) closure)
     {
-      work w((boost::forward<Closure>(closure)));
-      submit(boost::move(w));
+      work_queue.push_back(work(boost::forward<Closure>(closure)));
     }
 
     /**

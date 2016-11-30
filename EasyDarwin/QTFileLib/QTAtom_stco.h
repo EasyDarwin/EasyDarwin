@@ -47,18 +47,18 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_stco(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		UInt16 offSetSize = 4, bool Debug = false, bool DeepDebug = false);
+		UInt16 offSetSize = 4, Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTAtom_stco();
 
 
 	//
 	// Initialization functions.
-	virtual bool      Initialize();
+	virtual Bool16      Initialize();
 
 	//
 	// Accessors.
 
-	inline  bool      ChunkOffset(UInt32 ChunkNumber, UInt64 *Offset = NULL)
+	inline  Bool16      ChunkOffset(UInt32 ChunkNumber, UInt64 *Offset = NULL)
 	{
 		if (Offset && ChunkNumber && (ChunkNumber <= fNumEntries))
 		{

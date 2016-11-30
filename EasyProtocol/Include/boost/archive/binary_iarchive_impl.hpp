@@ -17,6 +17,7 @@
 //  See http://www.boost.org for updates, documentation, and revision history.
 
 #include <istream>
+#include <boost/serialization/pfto.hpp>
 #include <boost/archive/basic_binary_iprimitive.hpp>
 #include <boost/archive/basic_binary_iarchive.hpp>
 
@@ -33,7 +34,7 @@ namespace detail {
 } // namespace detail
 
 template<class Archive, class Elem, class Tr>
-class BOOST_SYMBOL_VISIBLE binary_iarchive_impl : 
+class binary_iarchive_impl : 
     public basic_binary_iprimitive<Archive, Elem, Tr>,
     public basic_binary_iarchive<Archive>
 {
@@ -53,14 +54,16 @@ protected:
         friend class load_access;
     #endif
 #endif
+    // note: the following should not needed - but one compiler (vc 7.1)
+    // fails to compile one test (test_shared_ptr) without it !!!
+    // make this protected so it can be called from a derived archive
     template<class T>
-    void load_override(T & t){
-        this->basic_binary_iarchive<Archive>::load_override(t);
+    void load_override(T & t, BOOST_PFTO int){
+        this->basic_binary_iarchive<Archive>::load_override(t, 0L);
     }
     void init(unsigned int flags){
-        if(0 != (flags & no_header)){
+        if(0 != (flags & no_header))
             return;
-        }
         #if ! defined(__MWERKS__)
             this->basic_binary_iarchive<Archive>::init();
             this->basic_binary_iprimitive<Archive, Elem, Tr>::init();

@@ -11,7 +11,12 @@
 
 #include <boost/type_traits/remove_reference.hpp>
 
+// should be the last #include
+#include <boost/type_traits/detail/type_trait_def.hpp>
+
 namespace boost {
+
+namespace detail {
 
 #if defined(__BORLANDC__) && (__BORLANDC__ < 0x5A0)
 //
@@ -20,27 +25,27 @@ namespace boost {
 // to arrays for some reason though (shrug...) (JM 20021104)
 //
 template <typename T>
-struct add_pointer
+struct add_pointer_impl
 {
     typedef T* type;
 };
 template <typename T>
-struct add_pointer<T&>
+struct add_pointer_impl<T&>
 {
     typedef T* type;
 };
 template <typename T>
-struct add_pointer<T&const>
+struct add_pointer_impl<T&const>
 {
     typedef T* type;
 };
 template <typename T>
-struct add_pointer<T&volatile>
+struct add_pointer_impl<T&volatile>
 {
     typedef T* type;
 };
 template <typename T>
-struct add_pointer<T&const volatile>
+struct add_pointer_impl<T&const volatile>
 {
     typedef T* type;
 };
@@ -48,7 +53,7 @@ struct add_pointer<T&const volatile>
 #else
 
 template <typename T>
-struct add_pointer
+struct add_pointer_impl
 {
     typedef typename remove_reference<T>::type no_ref_type;
     typedef no_ref_type* type;
@@ -56,6 +61,12 @@ struct add_pointer
 
 #endif
 
+} // namespace detail
+
+BOOST_TT_AUX_TYPE_TRAIT_DEF1(add_pointer,T,typename boost::detail::add_pointer_impl<T>::type)
+
 } // namespace boost
+
+#include <boost/type_traits/detail/type_trait_undef.hpp>
 
 #endif // BOOST_TT_ADD_POINTER_HPP_INCLUDED

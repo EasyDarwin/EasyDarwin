@@ -44,7 +44,7 @@ class TCPListenerSocket : public TCPSocket, public IdleTask
 {
 public:
 
-	TCPListenerSocket() : TCPSocket(nullptr, Socket::kNonBlockingSocketType), IdleTask(),
+	TCPListenerSocket() : TCPSocket(NULL, Socket::kNonBlockingSocketType), IdleTask(),
 		fAddr(0), fPort(0), fOutOfDescriptors(false), fSleepBetweenAccepts(false) {
 		this->SetTaskName("TCPListenerSocket");
 	}
@@ -59,7 +59,7 @@ public:
 
 	//You can query the listener to see if it is failing to accept
 	//connections because the OS is out of descriptors.
-	bool      IsOutOfDescriptors() { return fOutOfDescriptors; }
+	Bool16      IsOutOfDescriptors() { return fOutOfDescriptors; }
 
 	void        SlowDown() { fSleepBetweenAccepts = true; }
 	void        RunNormal() { fSleepBetweenAccepts = false; }
@@ -82,8 +82,8 @@ private:
 	UInt32          fAddr;
 	UInt16          fPort;
 
-	bool          fOutOfDescriptors;
-	bool          fSleepBetweenAccepts;
+	Bool16          fOutOfDescriptors;
+	Bool16          fSleepBetweenAccepts;
 };
 #endif // __TCPLISTENERSOCKET_H__
 

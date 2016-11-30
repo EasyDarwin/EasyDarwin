@@ -44,7 +44,7 @@
 #include <time.h>
 
 
-bool  QTSSExpirationDate::sIsExpirationEnabled = false;
+Bool16  QTSSExpirationDate::sIsExpirationEnabled = false;
 //must be in "5/12/1998" format, "m/d/4digityear"
 char*   QTSSExpirationDate::sExpirationDate = "3/15/2002";
 
@@ -61,7 +61,7 @@ void QTSSExpirationDate::sPrintExpirationDate(char* ioExpireMessage)
 }
 
 
-bool QTSSExpirationDate::IsSoftwareExpired()
+Bool16 QTSSExpirationDate::IsSoftwareExpired()
 {
 	if (!sIsExpirationEnabled)
 		return false;

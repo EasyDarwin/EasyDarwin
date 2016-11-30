@@ -19,7 +19,9 @@
 #include <boost/config/no_tr1/cmath.hpp>
 #include <boost/integer/integer_mask.hpp>
 #include <boost/integer/static_log2.hpp>
-#include <boost/random/traits.hpp>
+#include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/make_unsigned.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/int.hpp>
@@ -53,8 +55,8 @@ struct const_pow_impl
     template<class T>
     static T call(T arg, int n, T result)
     {
-        return const_pow_impl<N / 2>::call(T(arg * arg), n / 2,
-            n%2 == 0? result : T(result * arg));
+        return const_pow_impl<N / 2>::call(arg * arg, n / 2,
+            n%2 == 0? result : result * arg);
     }
 };
 
@@ -133,7 +135,7 @@ template<class Engine, class Iter>
 void generate_from_int(Engine& eng, Iter begin, Iter end)
 {
     typedef typename Engine::result_type IntType;
-    typedef typename boost::random::traits::make_unsigned<IntType>::type unsigned_type;
+    typedef typename boost::make_unsigned<IntType>::type unsigned_type;
     int remaining_bits = 0;
     boost::uint_least32_t saved_bits = 0;
     unsigned_type range = boost::random::detail::subtract<IntType>()((eng.max)(), (eng.min)());
@@ -168,9 +170,9 @@ void generate_from_int(Engine& eng, Iter begin, Iter end)
         } else if(available_bits % 32 == 0) {
             for(int i = 0; i < available_bits / 32; ++i) {
                 boost::uint_least32_t word = boost::uint_least32_t(val) & 0xFFFFFFFFu;
-                int suppress_warning = (bits >= 32);
-                BOOST_ASSERT(suppress_warning == 1);
-                val >>= (32 * suppress_warning);
+                int supress_warning = (bits >= 32);
+                BOOST_ASSERT(supress_warning == 1);
+                val >>= (32 * supress_warning);
                 *begin++ = word;
                 if(begin == end) return;
             }
@@ -189,9 +191,9 @@ void generate_from_int(Engine& eng, Iter begin, Iter end)
             if(bits >= 32) {
                 for(; available_bits >= 32; available_bits -= 32) {
                     boost::uint_least32_t word = boost::uint_least32_t(val) & 0xFFFFFFFFu;
-                    int suppress_warning = (bits >= 32);
-                    BOOST_ASSERT(suppress_warning == 1);
-                    val >>= (32 * suppress_warning);
+                    int supress_warning = (bits >= 32);
+                    BOOST_ASSERT(supress_warning == 1);
+                    val >>= (32 * supress_warning);
                     *begin++ = word;
                     if(begin == end) return;
                 }
@@ -217,7 +219,7 @@ void generate_impl(Engine& eng, Iter first, Iter last, boost::mpl::false_)
 template<class Engine, class Iter>
 void generate(Engine& eng, Iter first, Iter last)
 {
-    return detail::generate_impl(eng, first, last, boost::random::traits::is_integral<typename Engine::result_type>());
+    return detail::generate_impl(eng, first, last, boost::is_integral<typename Engine::result_type>());
 }
 
 
@@ -279,7 +281,6 @@ void seed_array_int_impl(SeedSeq& seq, UIntType (&x)[n])
 template<int w, std::size_t n, class SeedSeq, class IntType>
 inline void seed_array_int_impl(SeedSeq& seq, IntType (&x)[n], boost::mpl::true_)
 {
-    BOOST_STATIC_ASSERT_MSG(boost::is_integral<IntType>::value, "Sorry but this routine has not been ported to non built-in integers as it relies on a reinterpret_cast.");
     typedef typename boost::make_unsigned<IntType>::type unsigned_array[n];
     seed_array_int_impl<w>(seq, reinterpret_cast<unsigned_array&>(x));
 }
@@ -293,7 +294,7 @@ inline void seed_array_int_impl(SeedSeq& seq, IntType (&x)[n], boost::mpl::false
 template<int w, std::size_t n, class SeedSeq, class IntType>
 inline void seed_array_int(SeedSeq& seq, IntType (&x)[n])
 {
-    seed_array_int_impl<w>(seq, x, boost::random::traits::is_signed<IntType>());
+    seed_array_int_impl<w>(seq, x, boost::is_signed<IntType>());
 }
 
 template<int w, std::size_t n, class Iter, class UIntType>
@@ -314,7 +315,6 @@ void fill_array_int_impl(Iter& first, Iter last, UIntType (&x)[n])
 template<int w, std::size_t n, class Iter, class IntType>
 inline void fill_array_int_impl(Iter& first, Iter last, IntType (&x)[n], boost::mpl::true_)
 {
-    BOOST_STATIC_ASSERT_MSG(boost::is_integral<IntType>::value, "Sorry but this routine has not been ported to non built-in integers as it relies on a reinterpret_cast.");
     typedef typename boost::make_unsigned<IntType>::type unsigned_array[n];
     fill_array_int_impl<w>(first, last, reinterpret_cast<unsigned_array&>(x));
 }
@@ -328,7 +328,7 @@ inline void fill_array_int_impl(Iter& first, Iter last, IntType (&x)[n], boost::
 template<int w, std::size_t n, class Iter, class IntType>
 inline void fill_array_int(Iter& first, Iter last, IntType (&x)[n])
 {
-    fill_array_int_impl<w>(first, last, x, boost::random::traits::is_signed<IntType>());
+    fill_array_int_impl<w>(first, last, x, boost::is_signed<IntType>());
 }
 
 template<int w, std::size_t n, class RealType>

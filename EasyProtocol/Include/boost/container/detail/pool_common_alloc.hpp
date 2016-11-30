@@ -11,11 +11,7 @@
 #ifndef BOOST_CONTAINER_DETAIL_POOL_COMMON_ALLOC_HPP
 #define BOOST_CONTAINER_DETAIL_POOL_COMMON_ALLOC_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
@@ -25,7 +21,7 @@
 
 #include <boost/intrusive/slist.hpp>
 #include <boost/container/detail/pool_common.hpp>
-#include <boost/container/detail/dlmalloc.hpp>
+#include <boost/container/detail/alloc_lib.h>
 #include <cstddef>
 
 namespace boost{
@@ -44,15 +40,15 @@ struct fake_segment_manager
    typedef boost::container::container_detail::
       basic_multiallocation_chain<void*>              multiallocation_chain;
    static void deallocate(void_pointer p)
-   { dlmalloc_free(p); }
+   { boost_cont_free(p); }
 
    static void deallocate_many(multiallocation_chain &chain)
    {
       std::size_t size = chain.size();
       std::pair<void*, void*> ptrs = chain.extract_data();
-      dlmalloc_memchain dlchain;
+      boost_cont_memchain dlchain;
       BOOST_CONTAINER_MEMCHAIN_INIT_FROM(&dlchain, ptrs.first, ptrs.second, size);
-      dlmalloc_multidealloc(&dlchain);
+      boost_cont_multidealloc(&dlchain);
    }
 
    typedef std::ptrdiff_t  difference_type;
@@ -60,7 +56,7 @@ struct fake_segment_manager
 
    static void *allocate_aligned(std::size_t nbytes, std::size_t alignment)
    {
-      void *ret = dlmalloc_memalign(nbytes, alignment);
+      void *ret = boost_cont_memalign(nbytes, alignment);
       if(!ret)
          boost::container::throw_bad_alloc();
       return ret;
@@ -68,7 +64,7 @@ struct fake_segment_manager
 
    static void *allocate(std::size_t nbytes)
    {
-      void *ret = dlmalloc_malloc(nbytes);
+      void *ret = boost_cont_malloc(nbytes);
       if(!ret)
          boost::container::throw_bad_alloc();
       return ret;

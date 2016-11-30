@@ -1,13 +1,12 @@
 #ifndef BOOST_THREAD_PTHREAD_MUTEX_HPP
 #define BOOST_THREAD_PTHREAD_MUTEX_HPP
 // (C) Copyright 2007-8 Anthony Williams
-// (C) Copyright 2011,2012,2015 Vicente J. Botet Escriba
+// (C) Copyright 2011-2012 Vicente J. Botet Escriba
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/thread/detail/config.hpp>
-#include <boost/assert.hpp>
 #include <pthread.h>
 #include <boost/throw_exception.hpp>
 #include <boost/core/ignore_unused.hpp>
@@ -27,10 +26,11 @@
 #endif
 #include <boost/thread/detail/delete.hpp>
 
-#if (defined(_POSIX_TIMEOUTS) && (_POSIX_TIMEOUTS-0)>=200112L) \
- || (defined(__ANDROID__) && defined(__ANDROID_API__) && __ANDROID_API__ >= 21)
+#ifdef _POSIX_TIMEOUTS
+#if _POSIX_TIMEOUTS >= 0 && _POSIX_TIMEOUTS>=200112L
 #ifndef BOOST_PTHREAD_HAS_TIMEDLOCK
 #define BOOST_PTHREAD_HAS_TIMEDLOCK
+#endif
 #endif
 #endif
 
@@ -123,12 +123,10 @@ namespace boost
         void unlock()
         {
             int res = posix::pthread_mutex_unlock(&m);
-            (void)res;
-            BOOST_ASSERT(res == 0);
-//            if (res)
-//            {
-//                boost::throw_exception(lock_error(res,"boost: mutex unlock failed in pthread_mutex_unlock"));
-//            }
+            if (res)
+            {
+                boost::throw_exception(lock_error(res,"boost: mutex unlock failed in pthread_mutex_unlock"));
+            }
         }
 
         bool try_lock()
@@ -221,12 +219,10 @@ namespace boost
         void unlock()
         {
             int res = posix::pthread_mutex_unlock(&m);
-            (void)res;
-            BOOST_ASSERT(res == 0);
-//            if (res)
-//            {
-//                boost::throw_exception(lock_error(res,"boost: mutex unlock failed in pthread_mutex_unlock"));
-//            }
+            if (res)
+            {
+                boost::throw_exception(lock_error(res,"boost: mutex unlock failed in pthread_mutex_unlock"));
+            }
         }
 
         bool try_lock()

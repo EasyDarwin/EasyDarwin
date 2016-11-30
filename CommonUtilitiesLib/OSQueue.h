@@ -45,12 +45,12 @@ class OSQueue;
 
 class OSQueueElem {
 public:
-	OSQueueElem(void* enclosingObject = nullptr) : fNext(nullptr), fPrev(nullptr), fQueue(nullptr),
+	OSQueueElem(void* enclosingObject = NULL) : fNext(NULL), fPrev(NULL), fQueue(NULL),
 		fEnclosingObject(enclosingObject) {}
-	virtual ~OSQueueElem() { Assert(fQueue == nullptr); }
+	virtual ~OSQueueElem() { Assert(fQueue == NULL); }
 
-	bool IsMember(const OSQueue& queue) { return (&queue == fQueue); }
-	bool IsMemberOfAnyQueue() { return fQueue != nullptr; }
+	Bool16 IsMember(const OSQueue& queue) { return (&queue == fQueue); }
+	Bool16 IsMemberOfAnyQueue() { return fQueue != NULL; }
 	void* GetEnclosingObject() { return fEnclosingObject; }
 	void SetEnclosingObject(void* obj) { fEnclosingObject = obj; }
 
@@ -77,14 +77,14 @@ public:
 	void            EnQueue(OSQueueElem* object);
 	OSQueueElem*    DeQueue();
 
-	OSQueueElem*    GetHead() { if (fLength > 0) return fSentinel.fPrev; return nullptr; }
-	OSQueueElem*    GetTail() { if (fLength > 0) return fSentinel.fNext; return nullptr; }
+	OSQueueElem*    GetHead() { if (fLength > 0) return fSentinel.fPrev; return NULL; }
+	OSQueueElem*    GetTail() { if (fLength > 0) return fSentinel.fNext; return NULL; }
 	UInt32          GetLength() { return fLength; }
 
 	void            Remove(OSQueueElem* object);
 
 #if OSQUEUETESTING
-	static bool       Test();
+	static Bool16       Test();
 #endif
 
 protected:
@@ -107,7 +107,7 @@ public:
 
 		}
 		else
-			fCurrentElemP = nullptr;
+			fCurrentElemP = NULL;
 	}
 	~OSQueueIter() {}
 
@@ -116,7 +116,7 @@ public:
 	OSQueueElem*    GetCurrent() { return fCurrentElemP; }
 	void            Next();
 
-	bool          IsDone() { return fCurrentElemP == nullptr; }
+	Bool16          IsDone() { return fCurrentElemP == NULL; }
 
 private:
 
@@ -147,7 +147,7 @@ private:
 
 void OSQueueElem::Remove()
 {
-	if (fQueue != nullptr)
+	if (fQueue != NULL)
 		fQueue->Remove(this);
 }
 #endif //_OSQUEUE_H_

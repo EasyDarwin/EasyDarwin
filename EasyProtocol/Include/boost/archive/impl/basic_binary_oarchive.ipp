@@ -28,7 +28,11 @@ namespace archive {
 // implementation of binary_binary_oarchive
 
 template<class Archive>
-BOOST_ARCHIVE_OR_WARCHIVE_DECL void
+#if !defined(__BORLANDC__)
+BOOST_ARCHIVE_OR_WARCHIVE_DECL(void)
+#else
+void
+#endif
 basic_binary_oarchive<Archive>::init(){
     // write signature in an archive version independent manner
     const std::string file_signature(BOOST_ARCHIVE_SIGNATURE());

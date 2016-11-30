@@ -45,17 +45,17 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_stsz(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		bool Debug = false, bool DeepDebug = false);
+		Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTAtom_stsz();
 
 
 	//
 	// Initialization functions.
-	virtual bool      Initialize();
+	virtual Bool16      Initialize();
 
 	//
 	// Accessors.
-	inline  bool      SampleSize(UInt32 SampleNumber, UInt32 *Size = NULL) \
+	inline  Bool16      SampleSize(UInt32 SampleNumber, UInt32 *Size = NULL) \
 	{   if (fCommonSampleSize) {
 		\
 			if (Size != NULL) \
@@ -72,7 +72,7 @@ public:
 		return false; \
 	};
 
-	bool      SampleRangeSize(UInt32 firstSampleNumber, UInt32 lastSampleNumber, UInt32 *sizePtr);
+	Bool16      SampleRangeSize(UInt32 firstSampleNumber, UInt32 lastSampleNumber, UInt32 *sizePtr);
 
 	//
 	// Debugging functions.
