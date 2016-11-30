@@ -107,20 +107,17 @@ public:
 	//total rtp bytes sent by the server
 	void            IncrementTotalRTPBytes(UInt32 bytes)
 	{
-		//(void)atomic_add(&fPeriodicRTPBytes, bytes);
-		fPeriodicRTPBytes.fetch_add(bytes);
+		(void)atomic_add(&fPeriodicRTPBytes, bytes);
 	}
 	//total rtp packets sent by the server
 	void            IncrementTotalPackets()
 	{
-		//(void)atomic_add(&fPeriodicRTPPackets, 1);
-		++fPeriodicRTPPackets;
+		(void)atomic_add(&fPeriodicRTPPackets, 1);
 	}
 	//total rtp bytes reported as lost by the clients
 	void            IncrementTotalRTPPacketsLost(UInt32 packets)
 	{
-		//(void)atomic_add(&fPeriodicRTPPacketsLost, packets);
-		fPeriodicRTPPacketsLost.fetch_add(packets);
+		(void)atomic_add(&fPeriodicRTPPacketsLost, packets);
 	}
 
 	// Also increments current RTP session count
@@ -205,8 +202,12 @@ public:
 	UInt64              GetTotalRTPPacketsLost() { return fTotalRTPPacketsLost; }
 	UInt64              GetTotalRTPPackets() { return fTotalRTPPackets; }
 	Float32             GetCPUPercent() { return fCPUPercent; }
-	bool              SigIntSet() { return fSigInt; }
-	bool				SigTermSet() { return fSigTerm; }
+	Bool16              SigIntSet() { return fSigInt; }
+	Bool16				SigTermSet() { return fSigTerm; }
+
+	UInt32              GetNumMP3Sessions() { return fNumMP3Sessions; }
+	UInt32              GetTotalMP3Sessions() { return fTotalMP3Sessions; }
+	UInt64              GetTotalMP3Bytes() { return fTotalMP3Bytes; }
 
 	UInt32              GetDebugLevel() { return fDebugLevel; }
 	UInt32              GetDebugOptions() { return fDebugOptions; }
@@ -400,17 +401,9 @@ private:
 	//because there is no 64 bit atomic add (for obvious reasons), we efficiently
 	//implement total byte counting by atomic adding to this variable, then every
 	//once in awhile updating the sTotalBytes.
-	//unsigned int        fPeriodicRTPBytes;
-
-	std::atomic_uint	fPeriodicRTPBytes;
-
-	//unsigned int        fPeriodicRTPPacketsLost;
-
-	std::atomic_uint	fPeriodicRTPPacketsLost;
-
-	//unsigned int        fPeriodicRTPPackets;
-
-	std::atomic_uint	fPeriodicRTPPackets;
+	unsigned int        fPeriodicRTPBytes;
+	unsigned int        fPeriodicRTPPacketsLost;
+	unsigned int        fPeriodicRTPPackets;
 
 	//stores the current served bandwidth in BITS per second
 	UInt32              fCurrentRTPBandwidthInBits;
@@ -425,7 +418,7 @@ private:
 	UInt32              fTotalUDPSockets;
 
 	// are we out of descriptors?
-	bool              fIsOutOfDescriptors;
+	Bool16              fIsOutOfDescriptors;
 
 	// Storage for current time attribute
 	SInt64              fCurrentTime_UnixMilli;
@@ -434,8 +427,15 @@ private:
 	UInt32              fUDPWastageInBytes;
 	UInt32              fNumUDPBuffers;
 
-	bool              fSigInt;
-	bool              fSigTerm;
+	// MP3 Client Session params
+	UInt32              fNumMP3Sessions;
+	UInt32              fTotalMP3Sessions;
+	UInt32              fCurrentMP3BandwidthInBits;
+	UInt64              fTotalMP3Bytes;
+	UInt32              fAvgMP3BandwidthInBits;
+
+	Bool16              fSigInt;
+	Bool16              fSigTerm;
 
 	UInt32              fDebugLevel;
 	UInt32              fDebugOptions;
@@ -481,6 +481,7 @@ private:
 	SInt64 fLastBandwidthTime;
 	SInt64 fLastBandwidthAvg;
 	SInt64 fLastBytesSent;
+	SInt64 fLastTotalMP3Bytes;
 };
 
 #endif // __QTSSERVERINTERFACE_H__

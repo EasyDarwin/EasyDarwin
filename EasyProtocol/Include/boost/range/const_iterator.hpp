@@ -36,7 +36,7 @@ namespace boost
 BOOST_RANGE_EXTRACT_OPTIONAL_TYPE( const_iterator )
 
 template< typename C >
-struct range_const_iterator_helper
+struct range_const_iterator
         : extract_const_iterator<C>
 {};
 
@@ -45,7 +45,7 @@ struct range_const_iterator_helper
 //////////////////////////////////////////////////////////////////////////
 
 template< typename Iterator >
-struct range_const_iterator_helper<std::pair<Iterator,Iterator> >
+struct range_const_iterator<std::pair<Iterator,Iterator> >
 {
     typedef Iterator type;
 };
@@ -55,7 +55,7 @@ struct range_const_iterator_helper<std::pair<Iterator,Iterator> >
 //////////////////////////////////////////////////////////////////////////
 
 template< typename T, std::size_t sz >
-struct range_const_iterator_helper< T[sz] >
+struct range_const_iterator< T[sz] >
 {
     typedef const T* type;
 };
@@ -64,7 +64,7 @@ struct range_const_iterator_helper< T[sz] >
 
 template<typename C, typename Enabler=void>
 struct range_const_iterator
-        : range_detail::range_const_iterator_helper<
+        : range_detail::range_const_iterator<
             BOOST_DEDUCED_TYPENAME remove_reference<C>::type
         >
 {

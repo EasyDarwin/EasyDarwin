@@ -194,7 +194,7 @@ T cyl_bessel_i_imp(T v, T x, const Policy& pol)
    }
    if(x == 0)
    {
-      return (v == 0) ? static_cast<T>(1) : static_cast<T>(0);
+      return (v == 0) ? 1 : 0;
    }
    if(v == 0.5f)
    {
@@ -302,9 +302,20 @@ inline T cyl_neumann_imp(T v, T x, const bessel_maybe_int_tag&, const Policy& po
 
    if(floor(v) == v)
    {
-      T r = bessel_yn(itrunc(v, pol), x, pol);
-      BOOST_MATH_INSTRUMENT_VARIABLE(r);
-      return r;
+      if(asymptotic_bessel_large_x_limit(v, x))
+      {
+         T r = asymptotic_bessel_y_large_x_2(static_cast<T>(abs(v)), x);
+         if((v < 0) && (itrunc(v, pol) & 1))
+            r = -r;
+         BOOST_MATH_INSTRUMENT_VARIABLE(r);
+         return r;
+      }
+      else
+      {
+         T r = bessel_yn(itrunc(v, pol), x, pol);
+         BOOST_MATH_INSTRUMENT_VARIABLE(r);
+         return r;
+      }
    }
    T r = cyl_neumann_imp<T>(v, x, bessel_no_int_tag(), pol);
    BOOST_MATH_INSTRUMENT_VARIABLE(r);
@@ -314,7 +325,20 @@ inline T cyl_neumann_imp(T v, T x, const bessel_maybe_int_tag&, const Policy& po
 template <class T, class Policy>
 inline T cyl_neumann_imp(int v, T x, const bessel_int_tag&, const Policy& pol)
 {
-   return bessel_yn(v, x, pol);
+   BOOST_MATH_STD_USING
+
+   BOOST_MATH_INSTRUMENT_VARIABLE(v);
+   BOOST_MATH_INSTRUMENT_VARIABLE(x);
+
+   if(asymptotic_bessel_large_x_limit(T(v), x))
+   {
+      T r = asymptotic_bessel_y_large_x_2(static_cast<T>(abs(v)), x);
+      if((v < 0) && (v & 1))
+         r = -r;
+      return r;
+   }
+   else
+      return bessel_yn(v, x, pol);
 }
 
 template <class T, class Policy>
@@ -362,7 +386,7 @@ inline T cyl_bessel_j_zero_imp(T v, int m, const Policy& pol)
    if(m < 0)
    {
       // Zeros of Jv(x) with negative rank are not defined and requesting one raises a domain error.
-      return policies::raise_domain_error<T>(function, "Requested the %1%'th zero, but the rank must be positive !", static_cast<T>(m), pol);
+      return policies::raise_domain_error<T>(function, "Requested the %1%'th zero, but the rank must be positive !", m, pol);
    }
 
    // Get the absolute value of the order.
@@ -378,7 +402,7 @@ inline T cyl_bessel_j_zero_imp(T v, int m, const Policy& pol)
       if(order_is_zero)
       {
          // The zero'th zero of J0(x) is not defined and requesting it raises a domain error.
-         return policies::raise_domain_error<T>(function, "Requested the %1%'th zero of J0, but the rank must be > 0 !", static_cast<T>(m), pol);
+         return policies::raise_domain_error<T>(function, "Requested the %1%'th zero of J0, but the rank must be > 0 !", m, pol);
       }
 
       // The zero'th zero of Jv(x) for v < 0 is not defined
@@ -386,7 +410,7 @@ inline T cyl_bessel_j_zero_imp(T v, int m, const Policy& pol)
       if(order_is_negative && (!order_is_integer))
       {
          // For non-integer, negative order, requesting the zero'th zero raises a domain error.
-         return policies::raise_domain_error<T>(function, "Requested the %1%'th zero of Jv for negative, non-integer order, but the rank must be > 0 !", static_cast<T>(m), pol);
+         return policies::raise_domain_error<T>(function, "Requested the %1%'th zero of Jv for negative, non-integer order, but the rank must be > 0 !", m, pol);
       }
 
       // The zero'th zero does exist and its value is zero.
@@ -438,7 +462,7 @@ inline T cyl_neumann_zero_imp(T v, int m, const Policy& pol)
    // Handle negative rank.
    if(m < 0)
    {
-      return policies::raise_domain_error<T>(function, "Requested the %1%'th zero, but the rank must be positive !", static_cast<T>(m), pol);
+      return policies::raise_domain_error<T>(function, "Requested the %1%'th zero, but the rank must be positive !", m, pol);
    }
 
    const T half_epsilon(boost::math::tools::epsilon<T>() / 2U);
@@ -464,7 +488,7 @@ inline T cyl_neumann_zero_imp(T v, int m, const Policy& pol)
    if((m == 0) && (!order_is_negative_half_integer))
    {
       // For non-integer, negative order, requesting the zero'th zero raises a domain error.
-      return policies::raise_domain_error<T>(function, "Requested the %1%'th zero of Yv for negative, non-half-integer order, but the rank must be > 0 !", static_cast<T>(m), pol);
+      return policies::raise_domain_error<T>(function, "Requested the %1%'th zero of Yv for negative, non-half-integer order, but the rank must be > 0 !", m, pol);
    }
 
    // For negative half-integers, use the corresponding
@@ -558,7 +582,7 @@ inline typename detail::bessel_traits<T1, T2, Policy>::result_type cyl_bessel_i(
       policies::promote_double<false>, 
       policies::discrete_quantile<>,
       policies::assert_undefined<> >::type forwarding_policy;
-   return policies::checked_narrowing_cast<result_type, Policy>(detail::cyl_bessel_i_imp<value_type>(static_cast<value_type>(v), static_cast<value_type>(x), forwarding_policy()), "boost::math::cyl_bessel_i<%1%>(%1%,%1%)");
+   return policies::checked_narrowing_cast<result_type, Policy>(detail::cyl_bessel_i_imp<value_type>(v, static_cast<value_type>(x), forwarding_policy()), "boost::math::cyl_bessel_i<%1%>(%1%,%1%)");
 }
 
 template <class T1, class T2>

@@ -42,10 +42,10 @@ void OSQueue::EnQueue(OSQueueElem* elem)
 {
 	OSMutexLocker theLocker(&fMutex);
 
-	Assert(elem != nullptr);
+	Assert(elem != NULL);
 	if (elem->fQueue == this)
 		return;
-	Assert(elem->fQueue == nullptr);
+	Assert(elem->fQueue == NULL);
 	elem->fNext = fSentinel.fNext;
 	elem->fPrev = &fSentinel;
 	elem->fQueue = this;
@@ -64,32 +64,32 @@ OSQueueElem* OSQueue::DeQueue()
 		Assert(fSentinel.fPrev != &fSentinel);
 		elem->fPrev->fNext = &fSentinel;
 		fSentinel.fPrev = elem->fPrev;
-		elem->fQueue = nullptr;
+		elem->fQueue = NULL;
 		fLength--;
 		return elem;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 void OSQueue::Remove(OSQueueElem* elem)
 {
 	OSMutexLocker theLocker(&fMutex);
 
-	Assert(elem != nullptr);
+	Assert(elem != NULL);
 	Assert(elem != &fSentinel);
 
 	if (elem->fQueue == this)
 	{
 		elem->fNext->fPrev = elem->fPrev;
 		elem->fPrev->fNext = elem->fNext;
-		elem->fQueue = nullptr;
+		elem->fQueue = NULL;
 		fLength--;
 	}
 }
 
 #if OSQUEUETESTING
-bool OSQueue::Test()
+Bool16 OSQueue::Test()
 {
 	OSQueue theVictim;
 	void *x = (void*)1;
@@ -99,9 +99,9 @@ bool OSQueue::Test()
 	x = (void*)3;
 	OSQueueElem theElem3(x);
 
-	if (theVictim.GetHead() != nullptr)
+	if (theVictim.GetHead() != NULL)
 		return false;
-	if (theVictim.GetTail() != nullptr)
+	if (theVictim.GetTail() != NULL)
 		return false;
 
 	theVictim.EnQueue(&theElem1);
@@ -114,9 +114,9 @@ bool OSQueue::Test()
 	if (theElem != &theElem1)
 		return false;
 
-	if (theVictim.GetHead() != nullptr)
+	if (theVictim.GetHead() != NULL)
 		return false;
-	if (theVictim.GetTail() != nullptr)
+	if (theVictim.GetTail() != NULL)
 		return false;
 
 	theVictim.EnQueue(&theElem1);
@@ -193,7 +193,7 @@ bool OSQueue::Test()
 	theIterVictim.Next();
 	if (!theIterVictim.IsDone())
 		return false;
-	if (theIterVictim.GetCurrent() != nullptr)
+	if (theIterVictim.GetCurrent() != NULL)
 		return false;
 
 	theVictim.Remove(&theElem1);
@@ -226,7 +226,7 @@ bool OSQueue::Test()
 void OSQueueIter::Next()
 {
 	if (fCurrentElemP == fQueueP->GetTail())
-		fCurrentElemP = nullptr;
+		fCurrentElemP = NULL;
 	else
 		fCurrentElemP = fCurrentElemP->Prev();
 }
@@ -239,7 +239,7 @@ OSQueueElem* OSQueue_Blocking::DeQueueBlocking(OSThread* inCurThread, SInt32 inT
 	if (fQueue.GetLength() == 0)
 	{
 		fCond.Wait(&fMutex, inTimeoutInMilSecs);
-		return nullptr;
+		return NULL;
 	}
 #else
 	if (fQueue.GetLength() == 0)

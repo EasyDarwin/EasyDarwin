@@ -53,7 +53,7 @@ static char* kDataTypeStrings[] =
 {
     "Unknown",
     "CharArray",
-    "bool",
+    "Bool16",
     "SInt16",
     "UInt16",
     "SInt32",
@@ -152,20 +152,20 @@ QTSS_Error QTSSDataConverter::StringToValue(char* inValueAsString,
     {
         //
         // The text "enabled" means true, anything else means false
-        if (*ioBufSize < sizeof(bool))
+        if (*ioBufSize < sizeof(Bool16))
         {
-            *ioBufSize = sizeof(bool);
+            *ioBufSize = sizeof(Bool16);
             return QTSS_NotEnoughSpace;
         }
 
-        bool* it = (bool*)ioBuffer;
+        Bool16* it = (Bool16*)ioBuffer;
         StrPtrLen theValuePtr(inValueAsString);
         if (kEnabledStr.EqualIgnoreCase(inValueAsString, ::strlen(inValueAsString)))
             *it = true;
         else
             *it = false;
 
-        *ioBufSize = sizeof(bool);
+        *ioBufSize = sizeof(Bool16);
         return QTSS_NoErr;
     }
 
@@ -318,7 +318,7 @@ char* QTSSDataConverter::ValueToString(void* inValue,
     }
     if (inType == qtssAttrDataTypeBool16)
     {
-        bool* theBoolPtr = (bool*)inValue;
+        Bool16* theBoolPtr = (Bool16*)inValue;
         if (*theBoolPtr)
             return kEnabledStr.GetAsCString();
         else

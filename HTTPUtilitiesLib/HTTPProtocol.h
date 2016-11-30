@@ -133,10 +133,9 @@ enum
 
 	httpAccessControlAllowOriginHeader = 49,
 
-	httpCookieHeader = 50,
 
-	httpNumHeaders = 51,
-	httpIllegalHeader = 51
+	httpNumHeaders = 50,
+	httpIllegalHeader = 50
 };
 typedef UInt32 HTTPHeader;
 

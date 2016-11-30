@@ -72,7 +72,7 @@ public:
 	int                 fNextPacketLen;
 	SInt64              fLastQualityCheck;
 	SDPSourceInfo       fSDPSource;
-	bool              fAllowNegativeTTs;
+	Bool16              fAllowNegativeTTs;
 	Float32             fSpeed;
 	Float64             fStartTime;
 	Float64             fStopTime;
@@ -83,8 +83,8 @@ public:
 	UInt32              fLastRTPTime;
 	UInt64              fLastPauseTime;
 	SInt64              fTotalPauseTime;
-	bool              fPaused;
-	bool              fAdjustPauseTime;
+	Bool16              fPaused;
+	Bool16              fAdjustPauseTime;
 };
 
 // ref to the prefs dictionary object
@@ -131,8 +131,8 @@ static Float32              sMaxAllowedSpeed = 4;
 static Float32              sDefaultMaxAllowedSpeed = 4;
 
 // File Caching Prefs
-static bool               sEnableSharedBuffers = false;
-static bool               sEnablePrivateBuffers = false;
+static Bool16               sEnableSharedBuffers = false;
+static Bool16               sEnablePrivateBuffers = false;
 
 static UInt32               sSharedBufferUnitKSize = 0;
 static UInt32               sSharedBufferInc = 0;
@@ -145,25 +145,25 @@ static UInt32               sPrivateBufferMaxUnits = 0;
 
 static Float32              sAddClientBufferDelaySecs = 0;
 
-static bool               sRecordMovieFileSDP = false;
-static bool               sEnableMovieFileSDP = false;
+static Bool16               sRecordMovieFileSDP = false;
+static Bool16               sEnableMovieFileSDP = false;
 
-static bool               sPlayerCompatibility = true;
+static Bool16               sPlayerCompatibility = true;
 static UInt32               sAdjustMediaBandwidthPercent = 50;
 static SInt64               sAdjustRTPStartTimeMilli = 500;
 
-static bool               sAllowInvalidHintRefs = false;
+static Bool16               sAllowInvalidHintRefs = false;
 
 // Server preference we respect
-static bool               sDisableThinning = false;
+static Bool16               sDisableThinning = false;
 static UInt16               sDefaultStreamingQuality = 0;
 
 static const StrPtrLen              kCacheControlHeader("must-revalidate");
 static const QTSS_RTSPStatusCode    kNotModifiedStatus = qtssRedirectNotModified;
 
 
-const bool				kAddPauseTimeToRTPTime = true;
-const bool				kDontAddPauseTimeToRTPTime = false;
+const Bool16				kAddPauseTimeToRTPTime = true;
+const Bool16				kDontAddPauseTimeToRTPTime = false;
 
 
 // FUNCTIONS
@@ -582,9 +582,9 @@ QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParamBlock)
 	return QTSS_NoErr;
 }
 
-bool isSDP(QTSS_StandardRTSP_Params* inParamBlock)
+Bool16 isSDP(QTSS_StandardRTSP_Params* inParamBlock)
 {
-	bool sdpSuffix = false;
+	Bool16 sdpSuffix = false;
 
 	char* path = NULL;
 	UInt32 len = 0;
@@ -620,7 +620,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParamBlock)
 	UInt32 theLen = sizeof(FileSession*);
 	FileSession*    theFile = NULL;
 	QTSS_Error      theErr = QTSS_NoErr;
-	bool          pathEndsWithSDP = false;
+	Bool16          pathEndsWithSDP = false;
 	static StrPtrLen sSDPSuffix(".sdp");
 	SInt16 vectorIndex = 1;
 	ResizeableStringFormatter theFullSDPBuffer(NULL, 0);
@@ -878,7 +878,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParamBlock)
 
 		// ------------ reorder the sdp headers to make them proper.
 		Float32 adjustMediaBandwidthPercent = 1.0;
-		bool adjustMediaBandwidth = false;
+		Bool16 adjustMediaBandwidth = false;
 		if (sPlayerCompatibility)
 			adjustMediaBandwidth = QTSSModuleUtils::HavePlayerProfile(sServerPrefs, inParamBlock, QTSSModuleUtils::kAdjustBandwidth);
 
@@ -1136,7 +1136,7 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParamBlock)
 
 		//
 		// This returns QTSS_NoErr only if there are some valid, useful fields
-		bool isVideo = false;
+		Bool16 isVideo = false;
 		if (thePayloadType == qtssVideoPayloadType)
 			isVideo = true;
 		if (theErr == QTSS_NoErr)
@@ -1293,10 +1293,10 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParamBlock)
 			// If client specifies that it can do extra buffering (new client), use the first
 			// packet transmit time as the start time for this play burst. We don't need to
 			// burst any packets because the client can do the extra buffering
-			bool* overBufferEnabledPtr = NULL;
+			Bool16* overBufferEnabledPtr = NULL;
 			theLen = 0;
 			theErr = QTSS_GetValuePtr(inParamBlock->inClientSession, qtssCliSesOverBufferEnabled, 0, (void**)&overBufferEnabledPtr, &theLen);
-			if ((theErr == QTSS_NoErr) && (theLen == sizeof(bool)) && *overBufferEnabledPtr)
+			if ((theErr == QTSS_NoErr) && (theLen == sizeof(Bool16)) && *overBufferEnabledPtr)
 				(*theFile)->fStartTime = *theStartTimeP;
 			else
 				(*theFile)->fStartTime = *theStartTimeP - theBackupTime;
@@ -1333,7 +1333,7 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParamBlock)
 	UInt32 bitsPerSecond = (*theFile)->fFile.GetBytesPerSecond() * 8;
 	(void)QTSS_SetValue(inParamBlock->inClientSession, qtssCliSesMovieAverageBitRate, 0, &bitsPerSecond, sizeof(bitsPerSecond));
 
-	bool adjustPauseTime = kAddPauseTimeToRTPTime; //keep rtp time stamps monotonically increasing
+	Bool16 adjustPauseTime = kAddPauseTimeToRTPTime; //keep rtp time stamps monotonically increasing
 	if (true == QTSSModuleUtils::HavePlayerProfile(sServerPrefs, inParamBlock, QTSSModuleUtils::kDisablePauseAdjustedRTPTime))
 		adjustPauseTime = kDontAddPauseTimeToRTPTime;
 
@@ -1346,7 +1346,7 @@ QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParamBlock)
 	//
 	// For the purposes of the speed header, check to make sure all tracks are
 	// over a reliable transport
-	bool allTracksReliable = true;
+	Bool16 allTracksReliable = true;
 
 	// Set the timestamp & sequence number parameters for each track.
 	QTSS_RTPStreamObject* theRef = NULL;

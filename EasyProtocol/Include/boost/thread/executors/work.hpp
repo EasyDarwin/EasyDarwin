@@ -8,23 +8,36 @@
 #define BOOST_THREAD_EXECUTORS_WORK_HPP
 
 #include <boost/thread/detail/config.hpp>
+
+#if ! defined BOOST_THREAD_EXECUTORS_WORK_ACCEPTS_MOVABLE \
+ && ! defined BOOST_THREAD_EXECUTORS_WORK_DONT_ACCEPT_MOVABLE
+#define BOOST_THREAD_EXECUTORS_WORK_ACCEPTS_MOVABLE
+//#define BOOST_THREAD_EXECUTORS_WORK_DONT_ACCEPT_MOVABLE
+#endif
+
+#if defined BOOST_THREAD_EXECUTORS_WORK_ACCEPTS_MOVABLE
+
 #include <boost/thread/detail/nullary_function.hpp>
-#include <boost/thread/csbl/functional.hpp>
 
 namespace boost
 {
   namespace executors
   {
     typedef detail::nullary_function<void()> work;
-
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    typedef detail::nullary_function<void()> work_pq;
-    //typedef csbl::function<void()> work_pq;
-#else
-    typedef csbl::function<void()> work_pq;
-#endif
   }
 } // namespace boost
 
+#else
+#include <boost/thread/csbl/functional.hpp>
+
+namespace boost
+{
+  namespace executors
+  {
+    typedef csbl::function<void()> work;
+  }
+} // namespace boost
+
+#endif
 
 #endif //  BOOST_THREAD_EXECUTORS_WORK_HPP

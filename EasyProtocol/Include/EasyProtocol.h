@@ -8,7 +8,7 @@
 #define	EASY_PROTOCOL_H
 
 #include <EasyProtocolBase.h>
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <boost/variant.hpp>
 #include <boost/lexical_cast.hpp>
@@ -39,12 +39,12 @@ public:
 //typedef vector<EasyDevice> EasyDevices;		//摄像头数组
 //typedef EasyDevices::iterator EasyDevicesIterator;
 
-typedef unordered_map<string,EasyDevice> EasyDevices;		//摄像头表，改为map.方便查找。key为channel_，value为EasyDevice
+typedef map<string,EasyDevice> EasyDevices;		//摄像头表，改为map.方便查找。key为channel_，value为EasyDevice
 typedef EasyDevices::iterator EasyDevicesIterator;
 
 
 typedef boost::variant<int, float, string> value_t;
-typedef unordered_map<string, value_t> EasyJsonValue;	//key为string,value可以是int、float、string的一种
+typedef map<string, value_t> EasyJsonValue;	//key为string,value可以是int、float、string的一种
 typedef void* EasyObject;
 
 
@@ -390,13 +390,13 @@ private:
 	list<EasyDarwinHLSession> sessions;
 };
 
-// MSG_SC_RTSP_LIVE_SESSIONS_ACK
-class Easy_API EasyMsgSCRTSPLiveSessionsACK : public EasyProtocol
+// MSG_SC_RTSP_PUSH_SESSION_LIST_ACK
+class Easy_API EasyMsgSCRTSPPushSessionListACK : public EasyProtocol
 {
 public:
-	EasyMsgSCRTSPLiveSessionsACK();
-	EasyMsgSCRTSPLiveSessionsACK(const string& msg);
-	virtual ~EasyMsgSCRTSPLiveSessionsACK() {}
+	EasyMsgSCRTSPPushSessionListACK();
+	EasyMsgSCRTSPPushSessionListACK(const string& msg);
+	virtual ~EasyMsgSCRTSPPushSessionListACK() {}
 
 public:
 	bool AddSession(EasyDarwinRTSPSession& session);
@@ -435,8 +435,6 @@ class Easy_API EasyMsgSCRecordListACK : public EasyProtocolACK//封装录像列表回应
 public:
 	EasyMsgSCRecordListACK(int iMsgType) :EasyProtocolACK(iMsgType) {}
 	void AddRecord(const string& record);
-	void AddRecord(int day_of_month/*1~31*/);
-	void AddRecord(const string& starttime, const string &endtime);//format-HH:MM:SS
 };
 
 //add,Unisiot，start

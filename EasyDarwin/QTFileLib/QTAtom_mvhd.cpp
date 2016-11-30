@@ -104,7 +104,7 @@ const int       mvhdPosV1_NextTrackID = 96 + 12;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_mvhd::QTAtom_mvhd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_mvhd::QTAtom_mvhd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug)
 {
 }
@@ -118,7 +118,7 @@ QTAtom_mvhd::~QTAtom_mvhd()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_mvhd::Initialize()
+Bool16 QTAtom_mvhd::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;

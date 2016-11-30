@@ -47,7 +47,7 @@
 #include "OSArrayObjectDeleter.h"
 #include "ResizeableStringFormatter.h"
 
-static bool sCloseOnWrite = true;
+static Bool16 sCloseOnWrite = true;
 
  QTSSRollingLog::QTSSRollingLog() :     
     fLog(NULL), 
@@ -68,17 +68,17 @@ QTSSRollingLog::~QTSSRollingLog()
 }
 
 // Set this to true to get the log to close the file between writes.
-void QTSSRollingLog::SetCloseOnWrite(bool closeOnWrite) 
+void QTSSRollingLog::SetCloseOnWrite(Bool16 closeOnWrite) 
 { 
     sCloseOnWrite = closeOnWrite; 
 }
 
-bool  QTSSRollingLog::IsLogEnabled() 
+Bool16  QTSSRollingLog::IsLogEnabled() 
 { 
     return sCloseOnWrite || (fLog != NULL); 
 }
 
-void QTSSRollingLog::WriteToLog(char* inLogData, bool allowLogToRoll)
+void QTSSRollingLog::WriteToLog(char* inLogData, Bool16 allowLogToRoll)
 {
     OSMutexLocker locker(&fMutex);
     
@@ -101,7 +101,7 @@ void QTSSRollingLog::WriteToLog(char* inLogData, bool allowLogToRoll)
         this->CloseLog( false );
 }
 
-bool QTSSRollingLog::RollLog()
+Bool16 QTSSRollingLog::RollLog()
 {
     OSMutexLocker locker(&fMutex);
     
@@ -115,7 +115,7 @@ bool QTSSRollingLog::RollLog()
         return false;
  
     //rename the old file
-    bool result = this->RenameLogFile(fLogFullPath);
+    Bool16 result = this->RenameLogFile(fLogFullPath);
     if (result)
         this->EnableLog(fAppendDotLog);//re-opens log file
 
@@ -143,7 +143,7 @@ char* QTSSRollingLog::GetLogPath(char *extension)
     return thePath;
 }
 
-void QTSSRollingLog::EnableLog( bool appendDotLog )
+void QTSSRollingLog::EnableLog( Bool16 appendDotLog )
 {
    //
     // Start this object running!
@@ -165,7 +165,7 @@ void QTSSRollingLog::EnableLog( bool appendDotLog )
 
     //we need to make sure that when we create a new log file, we write the
     //log header at the top
-    bool logExists = this->DoesFileExist(fLogFullPath);
+    Bool16 logExists = this->DoesFileExist(fLogFullPath);
     
     //create the log directory if it doesn't already exist
     if (!logExists)
@@ -188,7 +188,7 @@ void QTSSRollingLog::EnableLog( bool appendDotLog )
     }
 }
 
-void QTSSRollingLog::CloseLog( bool leaveEnabled )
+void QTSSRollingLog::CloseLog( Bool16 leaveEnabled )
 {
     OSMutexLocker locker(&fMutex);
     
@@ -203,7 +203,7 @@ void QTSSRollingLog::CloseLog( bool leaveEnabled )
 }
 
 //returns false if some error has occurred
-bool QTSSRollingLog::FormatDate(char *ioDateBuffer, bool logTimeInGMT)
+Bool16 QTSSRollingLog::FormatDate(char *ioDateBuffer, Bool16 logTimeInGMT)
 {
     Assert(NULL != ioDateBuffer);
     
@@ -236,7 +236,7 @@ bool QTSSRollingLog::FormatDate(char *ioDateBuffer, bool logTimeInGMT)
     return true;
 }
 
-bool QTSSRollingLog::CheckRollLog()
+Bool16 QTSSRollingLog::CheckRollLog()
 {
     //returns false if an error occurred, true otherwise
     if (fLog == NULL)
@@ -283,7 +283,7 @@ bool QTSSRollingLog::CheckRollLog()
     return true;
 }
 
-bool QTSSRollingLog::RenameLogFile(const char* inFileName)
+Bool16 QTSSRollingLog::RenameLogFile(const char* inFileName)
 {
     //returns false if an error occurred, true otherwise
 
@@ -364,7 +364,7 @@ bool QTSSRollingLog::RenameLogFile(const char* inFileName)
         return true;    
 }
 
-bool QTSSRollingLog::DoesFileExist(const char *inPath)
+Bool16 QTSSRollingLog::DoesFileExist(const char *inPath)
 {
     struct stat theStat;
     int theErr = ::stat(inPath, &theStat);

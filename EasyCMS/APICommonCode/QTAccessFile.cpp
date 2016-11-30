@@ -91,7 +91,7 @@ UInt8 QTAccessFile::sWhitespaceAndGreaterThanMask[] =
 };
 
 char*       QTAccessFile::sQTAccessFileName = "qtaccess";
-bool      QTAccessFile::sAllocatedName = false;
+Bool16      QTAccessFile::sAllocatedName = false;
 OSMutex*    QTAccessFile::sAccessFileMutex = NULL;//QTAccessFile isn't reentrant
 const int kBuffLen = 512;
 
@@ -124,9 +124,9 @@ void QTAccessFile::SetAccessFileName(const char* inQTAccessFileName)
 }
 
 
-bool QTAccessFile::HaveUser(char* userName, void* extraDataPtr)
+Bool16 QTAccessFile::HaveUser(char* userName, void* extraDataPtr)
 {
-	bool result = false;
+	Bool16 result = false;
 
 	if (NULL != userName && 0 != userName[0])
 		result = true;
@@ -134,9 +134,9 @@ bool QTAccessFile::HaveUser(char* userName, void* extraDataPtr)
 	return result;
 }
 
-bool QTAccessFile::HaveGroups(char** groupArray, UInt32 numGroups, void* extraDataPtr)
+Bool16 QTAccessFile::HaveGroups(char** groupArray, UInt32 numGroups, void* extraDataPtr)
 {
-	bool result = false;
+	Bool16 result = false;
 
 	if (numGroups > 0 && groupArray != NULL)
 		result = true;
@@ -144,9 +144,9 @@ bool QTAccessFile::HaveGroups(char** groupArray, UInt32 numGroups, void* extraDa
 	return result;
 }
 
-bool QTAccessFile::HaveRealm(char* userName, StrPtrLen* ioRealmNameStr, void* extraData)
+Bool16 QTAccessFile::HaveRealm(char* userName, StrPtrLen* ioRealmNameStr, void* extraData)
 {
-	bool result = false;
+	Bool16 result = false;
 
 	if (ioRealmNameStr != NULL && ioRealmNameStr->Ptr != NULL && ioRealmNameStr->Len > 0)
 		result = true;
@@ -164,9 +164,9 @@ void QTAccessFile::GetRealm(StrPtrLen* accessRealm, StrPtrLen* ioRealmNameStr, c
 
 }
 
-bool QTAccessFile::TestUser(StrPtrLen* accessUser, char* userName, void* extraDataPtr)
+Bool16 QTAccessFile::TestUser(StrPtrLen* accessUser, char* userName, void* extraDataPtr)
 {
-	bool result = false;
+	Bool16 result = false;
 
 	if (accessUser->Equal(userName))
 		result = true;
@@ -174,7 +174,7 @@ bool QTAccessFile::TestUser(StrPtrLen* accessUser, char* userName, void* extraDa
 	return result;
 }
 
-bool QTAccessFile::TestGroup(StrPtrLen* accessGroup, char* userName, char** groupArray, UInt32 numGroups, void* extraDataPtr)
+Bool16 QTAccessFile::TestGroup(StrPtrLen* accessGroup, char* userName, char** groupArray, UInt32 numGroups, void* extraDataPtr)
 {
 
 	for (UInt32 index = 0; index < numGroups; index++)
@@ -187,7 +187,7 @@ bool QTAccessFile::TestGroup(StrPtrLen* accessGroup, char* userName, char** grou
 
 }
 
-bool QTAccessFile::TestExtraData(StrPtrLen* wordPtr, StringParser* lineParserPtr, void* extraDataPtr)
+Bool16 QTAccessFile::TestExtraData(StrPtrLen* wordPtr, StringParser* lineParserPtr, void* extraDataPtr)
 {
 	return false;
 }
@@ -292,11 +292,11 @@ bool DSAccessFile::CheckGroupMembership(const char* inUsername, const char* inGr
 #endif
 }
 
-bool DSAccessFile::ValidUser(char* userName, void* extraDataPtr)
+Bool16 DSAccessFile::ValidUser(char* userName, void* extraDataPtr)
 {
 #ifndef __Win32__
 	struct passwd	*user = getpwnam(userName);
-	bool result = true;
+	Bool16 result = true;
 	if (user == NULL)
 	{
 		return result;

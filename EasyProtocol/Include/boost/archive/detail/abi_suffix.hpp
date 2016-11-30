@@ -13,3 +13,7 @@
 #endif
 #include <boost/config/abi_suffix.hpp> // pops abi_suffix.hpp pragmas
 
+#if defined( __BORLANDC__ )
+#pragma nopushoptwarn
+#endif
+

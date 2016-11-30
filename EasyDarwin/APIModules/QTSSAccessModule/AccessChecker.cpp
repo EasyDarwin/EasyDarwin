@@ -174,8 +174,8 @@ UInt32 AccessChecker::UpdateUserProfiles() {
 	UInt32 index = 0;
 	UInt32 i = 0, j = 0;
 	UInt32 resultErr = kNoErr;
-	bool groupFileErrors = true;
-	bool userFileErrors = true;
+	Bool16 groupFileErrors = true;
+	Bool16 userFileErrors = true;
 
 	StrPtrLen line;
 
@@ -400,9 +400,9 @@ UInt32 AccessChecker::UpdateUserProfiles() {
 }
 
 // No memory is allocated
-bool AccessChecker::HaveFilePathsChanged(const char* inUsersFilePath, const char* inGroupsFilePath)
+Bool16 AccessChecker::HaveFilePathsChanged(const char* inUsersFilePath, const char* inGroupsFilePath)
 {
-	bool changed = true;
+	Bool16 changed = true;
 	if ((inUsersFilePath != NULL) && (inGroupsFilePath != NULL) && (fUsersFilePath != NULL) && (fGroupsFilePath != NULL)) {
 		if ((strcmp(inUsersFilePath, fUsersFilePath) == 0) && (strcmp(inGroupsFilePath, fGroupsFilePath) == 0))
 			changed = false;

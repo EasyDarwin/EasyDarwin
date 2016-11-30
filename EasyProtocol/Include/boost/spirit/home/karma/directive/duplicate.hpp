@@ -68,7 +68,7 @@ namespace boost { namespace spirit { namespace karma
         template <typename T
           , bool IsSequence = fusion::traits::is_sequence<T>::value>
         struct first_attribute_of_subject
-          : remove_reference<typename fusion::result_of::at_c<T, 0>::type>
+          : fusion::result_of::at_c<T, 0>
         {};
 
         template <typename T>

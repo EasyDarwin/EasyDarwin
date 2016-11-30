@@ -71,7 +71,7 @@ const int       stsdDescPos_Index = 14;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_stsd::QTAtom_stsd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_stsd::QTAtom_stsd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEntries(0), fSampleDescriptionTable(NULL), fTable(NULL)
 {
@@ -92,7 +92,7 @@ QTAtom_stsd::~QTAtom_stsd()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_stsd::Initialize()
+Bool16 QTAtom_stsd::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;
@@ -159,7 +159,7 @@ bool QTAtom_stsd::Initialize()
 // -------------------------------------
 // Accessors
 //
-bool QTAtom_stsd::FindSampleDescription(OSType DataFormat, char ** Buffer, UInt32 * Length)
+Bool16 QTAtom_stsd::FindSampleDescription(OSType DataFormat, char ** Buffer, UInt32 * Length)
 {
 	// Temporary vars
 	UInt32      tempInt32;

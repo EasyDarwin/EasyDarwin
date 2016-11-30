@@ -11,6 +11,7 @@
 #ifndef BOOST_NUMERIC_INTERVAL_LIMITS_HPP
 #define BOOST_NUMERIC_INTERVAL_LIMITS_HPP
 
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 #include <boost/config.hpp>
 #include <boost/limits.hpp>
@@ -45,5 +46,6 @@ private:
 
 } // namespace std
 
+#endif
 
 #endif // BOOST_NUMERIC_INTERVAL_LIMITS_HPP

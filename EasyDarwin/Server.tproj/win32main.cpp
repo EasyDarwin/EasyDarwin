@@ -65,9 +65,9 @@ int main(int argc, char * argv[])
 
 	char* theConfigFilePath = "./easydarwin.cfg";
 	char* theXMLFilePath = "./easydarwin.xml";
-	bool notAService = false;
-	bool theXMLPrefsExist = true;
-	bool dontFork = false;
+	Bool16 notAService = false;
+	Bool16 theXMLPrefsExist = true;
+	Bool16 dontFork = false;
 
 #if _DEBUG
 	char* compileType = "Compile_Flags/_DEBUG; ";
@@ -409,7 +409,7 @@ void WINAPI ServiceControl(DWORD inControlCode)
 
 void ReportStatus(DWORD inCurrentState, DWORD inExitCode)
 {
-	static bool sFirstTime = 1;
+	static Bool16 sFirstTime = 1;
 	static UInt32 sCheckpoint = 0;
 	static SERVICE_STATUS sStatus;
 
@@ -466,11 +466,11 @@ void RunAsService(char* inServiceName)
 	if (theService)
 	{
 		const SInt32 kNotRunning = 1062;
-		bool stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, &lpServiceStatus);
+		Bool16 stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, &lpServiceStatus);
 		if (!stopped && ((SInt32) ::GetLastError() != kNotRunning))
 			qtss_printf("Stopping Service Error: %d\n", ::GetLastError());
 
-		bool started = ::StartService(theService, 0, NULL);
+		Bool16 started = ::StartService(theService, 0, NULL);
 		if (!started)
 			qtss_printf("Starting Service Error: %d\n", ::GetLastError());
 
@@ -551,7 +551,7 @@ void RemoveService(char *inServiceName)
 	theService = ::OpenService(theSCManager, inServiceName, SERVICE_ALL_ACCESS);
 	if (theService != NULL)
 	{
-		bool stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, NULL);
+		Bool16 stopped = ::ControlService(theService, SERVICE_CONTROL_STOP, NULL);
 		if (!stopped)
 			qtss_printf("Stopping Service Error: %d\n", ::GetLastError());
 

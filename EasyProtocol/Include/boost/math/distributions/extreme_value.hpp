@@ -100,18 +100,15 @@ inline RealType pdf(const extreme_value_distribution<RealType, Policy>& dist, co
    RealType a = dist.location();
    RealType b = dist.scale();
    RealType result = 0;
+   if((boost::math::isinf)(x))
+      return 0.0f;
    if(0 == detail::verify_scale_b(function, b, &result, Policy()))
       return result;
    if(0 == detail::check_finite(function, a, &result, Policy()))
       return result;
-   if((boost::math::isinf)(x))
-      return 0.0f;
    if(0 == detail::check_x(function, x, &result, Policy()))
       return result;
-   RealType e = (a - x) / b;
-   if(e < tools::log_max_value<RealType>())
-      result = exp(e) * exp(-exp(e)) / b;
-   // else.... result *must* be zero since exp(e) is infinite...
+   result = exp((a-x)/b) * exp(-exp((a-x)/b)) / b;
    return result;
 } // pdf
 

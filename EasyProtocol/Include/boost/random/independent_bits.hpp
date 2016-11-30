@@ -21,7 +21,7 @@
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/integer/integer_mask.hpp>
-#include <boost/random/traits.hpp>
+#include <boost/type_traits/make_unsigned.hpp>
 #include <boost/random/detail/config.hpp>
 #include <boost/random/detail/integer_log2.hpp>
 #include <boost/random/detail/operators.hpp>
@@ -46,7 +46,6 @@ class independent_bits_engine
 public:
     typedef Engine base_type;
     typedef UIntType result_type;
-    typedef typename Engine::result_type base_result_type;
 
     // Required by old Boost.Random concept
     BOOST_STATIC_CONSTANT(bool, has_fixed_range = false);
@@ -56,7 +55,7 @@ public:
     { return 0; }
     /** Returns the largest value that the generator can produce. */
     static result_type max BOOST_PREVENT_MACRO_SUBSTITUTION ()
-    { return max_imp(boost::is_integral<UIntType>()); }
+    { return boost::low_bits_mask_t<w>::sig_bits; }
 
     /**
      * Constructs an @c independent_bits_engine using the
@@ -69,7 +68,7 @@ public:
      * the constructor argument for both base generators.
      */
     BOOST_RANDOM_DETAIL_ARITHMETIC_CONSTRUCTOR(independent_bits_engine,
-        base_result_type, seed_arg)
+        result_type, seed_arg)
     {
         _base.seed(seed_arg);
     }
@@ -109,7 +108,7 @@ public:
      * seed for the base generator.
      */
     BOOST_RANDOM_DETAIL_ARITHMETIC_SEED(independent_bits_engine,
-        base_result_type, seed_arg)
+        result_type, seed_arg)
     { _base.seed(seed_arg); }
 
     /**
@@ -140,7 +139,7 @@ public:
         // every time, both msvc and gcc can propagate
         // constants, resolving this at compile time.
         base_unsigned range =
-            detail::subtract<base_result_type>()((_base.max)(), (_base.min)());
+            detail::subtract<base_result>()((_base.max)(), (_base.min)());
         std::size_t m =
             (range == (std::numeric_limits<base_unsigned>::max)()) ?
                 std::numeric_limits<base_unsigned>::digits :
@@ -162,14 +161,14 @@ public:
         for(std::size_t k = 0; k < n0; ++k) {
             base_unsigned u;
             do {
-                u = detail::subtract<base_result_type>()(_base(), (_base.min)());
+                u = detail::subtract<base_result>()(_base(), (_base.min)());
             } while(u > base_unsigned(y0 - 1));
             S = (S << w0) + (u & y0_mask);
         }
         for(std::size_t k = 0; k < (n - n0); ++k) {
             base_unsigned u;
             do {
-                u = detail::subtract<base_result_type>()(_base(), (_base.min)());
+                u = detail::subtract<base_result>()(_base(), (_base.min)());
             } while(u > base_unsigned(y1 - 1));
             S = (S << (w0 + 1)) + (u & y1_mask);
         }
@@ -227,18 +226,8 @@ public:
 private:
 
     /// \cond show_private
-    typedef typename boost::random::traits::make_unsigned<base_result_type>::type base_unsigned;
-
-    static UIntType max_imp(const boost::true_type&)
-    {
-       return boost::low_bits_mask_t<w>::sig_bits;
-    }
-    static UIntType max_imp(const boost::false_type&)
-    {
-       // We have a multiprecision integer type:
-       BOOST_STATIC_ASSERT(std::numeric_limits<UIntType>::is_specialized);
-       return w < std::numeric_limits<UIntType>::digits ? UIntType((UIntType(1) << w) - 1) : UIntType((((UIntType(1) << (w - 1)) - 1) << 1) | 1u);
-    }
+    typedef typename base_type::result_type base_result;
+    typedef typename make_unsigned<base_result>::type base_unsigned;
 
     void calc_params(
         std::size_t n, base_unsigned range,

@@ -72,7 +72,7 @@ class ReflectorOutput
 	//add by fantasy		
 	private:
 		UInt64			fU64Seq;
-		bool			fNewOutput;
+		Bool16			fNewOutput;
 	public:
 		UInt64 outPutSeq()
 		{
@@ -89,12 +89,12 @@ class ReflectorOutput
 			return true;
 		}
 		
-		bool getNewFlag()
+		Bool16 getNewFlag()
 		{
 			return fNewOutput;
 		}
 
-		void setNewFlag(bool flag)
+		void setNewFlag(Bool16 flag)
 		{
 			fNewOutput = flag;
 		}
@@ -102,7 +102,7 @@ class ReflectorOutput
 
 
 inline  OSQueueElem*    GetBookMarkedPacket(OSQueue *thePacketQueue);
-inline  bool          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
+inline  Bool16          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
         
         // WritePacket
         //
@@ -111,11 +111,11 @@ inline  bool          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
         // packetLateness is how many MSec's late this packet is in being delivered ( will be < 0 if its early )
         // If this function returns QTSS_WouldBlock, timeToSendThisPacketAgain will
         // be set to # of msec in which the packet can be sent, or -1 if unknown
-        virtual QTSS_Error  WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTimeMSec, bool firstPacket ) = 0;
+        virtual QTSS_Error  WritePacket(StrPtrLen* inPacket, void* inStreamCookie, UInt32 inFlags, SInt64 packetLatenessInMSec, SInt64* timeToSendThisPacketAgain, UInt64* packetIDPtr, SInt64* arrivalTimeMSec, Bool16 firstPacket ) = 0;
     
         virtual void        TearDown() = 0;
-        virtual bool      IsUDP() = 0;
-        virtual bool      IsPlaying() = 0;
+        virtual Bool16      IsUDP() = 0;
+        virtual Bool16      IsPlaying() = 0;
         
         enum { kWaitMilliSec = 5, kMaxWaitMilliSec = 1000 };
         
@@ -134,7 +134,7 @@ inline  bool          SetBookMarkPacket(OSQueueElem* thePacketElemPtr);
 
 };
 
-bool  ReflectorOutput::SetBookMarkPacket(OSQueueElem* thePacketElemPtr)
+Bool16  ReflectorOutput::SetBookMarkPacket(OSQueueElem* thePacketElemPtr)
 {
     if (fAvailPosition != -1 && thePacketElemPtr)
     {    

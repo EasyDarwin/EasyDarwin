@@ -3,10 +3,8 @@
 
 //因为darwin的引用表不允许相同的key，但他的字符串hash函数又不能做到这一点。因此考虑使用STL中的map进行代替。
 //注意这个类是后来加上的，不是Darwin自带的
-
-#include <unordered_map>
-#include <string>
-
+#include<map>
+#include<string>
 using namespace std;
 
 #include "OSCond.h"
@@ -19,7 +17,7 @@ public:
 	{
 
 	public:
-		OSRefEx() : mp_Object(nullptr), m_Count(0) {}
+		OSRefEx() : mp_Object(NULL), m_Count(0) {}
 		OSRefEx(void* pobject) : mp_Object(pobject), m_Count(0) {}
 		void* GetObjectPtr() const { return mp_Object; }
 		int GetRefNum() const { return m_Count; }
@@ -40,14 +38,14 @@ public:
 	OS_Error TryUnRegister(const string& key);//尝试移除，如果引用为0,则移除并返回true，否则返回false
 	int GetEleNumInMap() const { return m_Map.size(); }//获得map中的元素个数
 	OSMutex *GetMutex() { return &m_Mutex; }//给外面提供互斥接口
-	unordered_map<string, OSRefEx*> *GetMap() { return &m_Map; }
+	map<string, OSRefEx*> *GetMap() { return &m_Map; }
 
 private:
-	unordered_map<string, OSRefEx*> m_Map;//以string为key，以OSRefEx为value
+	map<string, OSRefEx*> m_Map;//以string为key，以OSRefEx为value
 	OSMutex         m_Mutex;//提供对map的互斥操作
 };
-typedef unordered_map<string, OSRefTableEx::OSRefEx*> OSHashMap;
-typedef unordered_map<string, OSRefTableEx::OSRefEx*>::iterator OSRefIt;
+typedef map<string, OSRefTableEx::OSRefEx*> OSHashMap;
+typedef map<string, OSRefTableEx::OSRefEx*>::iterator OSRefIt;
 
 class OSRefReleaserEx
 {

@@ -70,7 +70,7 @@ SourceInfo::~SourceInfo()
         
 }
 
-bool  SourceInfo::IsReflectable()
+Bool16  SourceInfo::IsReflectable()
 {
     if (fStreamArray == NULL)
         return false;
@@ -90,14 +90,14 @@ bool  SourceInfo::IsReflectable()
     return true;
 }
 
-bool  SourceInfo::IsReflectableIPAddr(UInt32 inIPAddr)
+Bool16  SourceInfo::IsReflectableIPAddr(UInt32 inIPAddr)
 {
     if (SocketUtils::IsMulticastIPAddr(inIPAddr) || SocketUtils::IsLocalIPAddr(inIPAddr))
         return true;
     return false;
 }
 
-bool  SourceInfo::HasTCPStreams()
+Bool16  SourceInfo::HasTCPStreams()
 {   
     //each stream's info must meet certain criteria
     for (UInt32 x = 0; x < fNumStreams; x++)
@@ -108,7 +108,7 @@ bool  SourceInfo::HasTCPStreams()
     return false;
 }
 
-bool  SourceInfo::HasIncomingBroacast()
+Bool16  SourceInfo::HasIncomingBroacast()
 {   
     //each stream's info must meet certain criteria
     for (UInt32 x = 0; x < fNumStreams; x++)
@@ -163,11 +163,11 @@ UInt32 SourceInfo::GetNumNewOutputs()
     return theNumNewOutputs;
 }
 
-bool  SourceInfo::SetActiveNTPTimes(UInt32 startTimeNTP,UInt32 endTimeNTP)
+Bool16  SourceInfo::SetActiveNTPTimes(UInt32 startTimeNTP,UInt32 endTimeNTP)
 {   // right now only handles earliest start and latest end time.
 
     //qtss_printf("SourceInfo::SetActiveNTPTimes start=%"   _U32BITARG_   " end=%"   _U32BITARG_   "\n",startTimeNTP,endTimeNTP);
-    bool accepted = false;
+    Bool16 accepted = false;
     do 
     {
         if ((startTimeNTP > 0) && (endTimeNTP > 0) && (endTimeNTP < startTimeNTP)) break; // not valid NTP time
@@ -198,7 +198,7 @@ bool  SourceInfo::SetActiveNTPTimes(UInt32 startTimeNTP,UInt32 endTimeNTP)
     return accepted;
 }
 
-bool  SourceInfo::IsActiveTime(time_t unixTimeSecs)
+Bool16  SourceInfo::IsActiveTime(time_t unixTimeSecs)
 { 
     // order of tests are important here
     // we do it this way because of the special case time value of 0 for end time
@@ -244,7 +244,7 @@ UInt32 SourceInfo::GetDurationSecs()
 
 }
 
-bool SourceInfo::Equal(SourceInfo* inInfo)
+Bool16 SourceInfo::Equal(SourceInfo* inInfo)
 {
     // Check to make sure the # of streams matches up
     if (this->GetNumStreams() != inInfo->GetNumStreams())
@@ -320,7 +320,7 @@ SourceInfo::OutputInfo::~OutputInfo()
         delete [] fPortArray;
 }
 
-bool SourceInfo::OutputInfo::Equal(const OutputInfo& info)
+Bool16 SourceInfo::OutputInfo::Equal(const OutputInfo& info)
 {
     if ((fDestAddr == info.fDestAddr) && (fLocalAddr == info.fLocalAddr) && (fTimeToLive == info.fTimeToLive))
     {

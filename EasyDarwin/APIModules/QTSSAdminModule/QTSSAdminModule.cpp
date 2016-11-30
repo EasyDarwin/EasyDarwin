@@ -59,6 +59,8 @@
 #include "md5digest.h"
 #include "OS.h"
 
+#include "mongoose.h"
+
 #include "QTSServer.h"
 #if __MacOSX__
 #include <Security/Authorization.h>
@@ -71,6 +73,8 @@
 
 #define DEBUG_ADMIN_MODULE 0
 
+class mongooseThread;
+
 //**************************************************
 #define kAuthNameAndPasswordBuffSize 512
 #define kPasswordBuffSize kAuthNameAndPasswordBuffSize/2
@@ -81,6 +85,7 @@
 static UInt32	sRequestCount = 0;
 #endif
 
+static mongooseThread*		sMongooseThread = NULL;
 static QTSS_Initialize_Params sQTSSparams;
 
 //static char* sResponseHeader = "HTTP/1.0 200 OK\r\nServer: QTSS\r\nConnection: Close\r\nContent-Type: text/plain\r\n\r\n";
@@ -134,14 +139,14 @@ enum
 static UInt32 sDefaultRequestTimeIntervalMilli = kDefaultRequestTimeIntervalMilli;
 static UInt32 sRequestTimeIntervalMilli = kDefaultRequestTimeIntervalMilli;
 
-static bool sAuthenticationEnabled = true;
-static bool sDefaultAuthenticationEnabled = true;
+static Bool16 sAuthenticationEnabled = true;
+static Bool16 sDefaultAuthenticationEnabled = true;
 
-static bool sLocalLoopBackOnlyEnabled = true;
-static bool sDefaultLocalLoopBackOnlyEnabled = true;
+static Bool16 sLocalLoopBackOnlyEnabled = true;
+static Bool16 sDefaultLocalLoopBackOnlyEnabled = true;
 
-static bool sEnableRemoteAdmin = true;
-static bool sDefaultEnableRemoteAdmin = true;
+static Bool16 sEnableRemoteAdmin = true;
+static Bool16 sDefaultEnableRemoteAdmin = true;
 
 static QTSS_AttributeID sIPAccessListID = qtssIllegalAttrID;
 static char*            sIPAccessList = NULL;
@@ -150,7 +155,7 @@ static char*            sLocalLoopBackAddress = "127.0.0.*";
 static char*            sAdministratorGroup = NULL;
 static char*            sDefaultAdministratorGroup = "admin";
 
-static bool           sFlushing = false;
+static Bool16           sFlushing = false;
 static QTSS_AttributeID sFlushingID = qtssIllegalAttrID;
 static char*            sFlushingName = "QTSSAdminModuleFlushingState";
 static UInt32           sFlushingLen = sizeof(sFlushing);
@@ -158,13 +163,459 @@ static UInt32           sFlushingLen = sizeof(sFlushing);
 static QTSS_AttributeID sAuthenticatedID = qtssIllegalAttrID;
 static char*            sAuthenticatedName = "QTSSAdminModuleAuthenticatedState";
 
+//**************************************************
+//web管理监听端口，默认80
+static UInt16			sHttpPort = 8080;
+static UInt16			sDefaultHttpPort = 80;
+
+//web管理静态页加载路径
+static char*			sDocumentRoot = NULL;
+static char*			sDefaultDocumentRoot = "./html/";
+
+//**************************************************
+
 static QTSS_Error QTSSAdminModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error FilterRequest(QTSS_Filter_Params* inParams);
 static QTSS_Error RereadPrefs();
 static QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request);
-static bool AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
+static Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession);
+
+
+//***********************EasyDarwin WEB管理***********************
+
+//用户认证
+static	Bool16	EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword);
+
+//获取服务累计运行时间(单位毫秒ms)
+static	SInt64	EasyAdmin_GetServiceRunTime();
+
+//===============系统栏S===============
+
+	//---------------------------全局配置S---------------------------
+	//获取RTSP端口
+static  UInt16	EasyAdmin_GetRTSPort();
+//设置RTSP端口
+static	void	EasyAdmin_SetRTSPort(UInt16 uPort);
+//获取HTTP服务端口
+static	UInt16	EasyAdmin_GetHTTPServicePort();
+//设置HTTP服务端口
+static	void	EasyAdmin_SetHTTPServicePort(UInt16 uPort);
+//获取流媒体文件目录
+static	char*	EasyAdmin_GetMoviesFolder();
+//设置流媒体文件目录
+static	void	EasyAdmin_SetMoviesFolder(char* folder);
+//获取日志文件目录
+static	char*	EasyAdmin_GetErrorLogFolder();
+//设置日志文件目录
+static	void	EasyAdmin_SetErrorLogFolder(char* folder);
+//获取WEB Admin端口
+static	UInt16	EasyAdmin_GetMongoosePort();
+//设置WEB Admin端口
+static	void	EasyAdmin_SetMongoosePort(UInt16 uPort);
+//获取Server版本信息
+static	char*	EasyAdmin_GetServerHeader();
+//---------------------------全局配置E---------------------------
+
+//---------------------------全局控制S---------------------------
+//重启EasyDarwin服务
+static	void	EasyAdmin_Restart();
+//---------------------------全局控制S---------------------------
+
+//===============系统栏E===============
+
+
+//===============RTSP直播栏S===============
+
+	//---------------------------RTSP转发配置S---------------------------
+	//转发缓冲时间获取
+static	UInt32	EasyAdmin_GetReflectBufferSecs();
+//设置缓冲时间
+static	void	EasyAdmin_SetReflectBufferSecs(UInt32 secs);
+//是否同步输出HLS
+static	bool	EasyAdmin_GetReflectHLSOutput();
+//设置是否同步输出HLS
+static	void	EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput);
+//---------------------------RTSP转发配置E---------------------------
+
+//===============RTSP直播栏E===============
+
+
+//===============HLS直播栏S===============
+
+//---------------------------HLS配置S---------------------------
+
+	//获取HLS分发的http服务地址
+static	char*	EasyAdmin_GetHlsHttpRoot();
+//设置HLS分发的http服务地址
+static	void	EasyAdmin_SetHlsHttpRoot(char* httpRoot);
+//获取HLS单个ts切片的时长
+static	UInt32	EasyAdmin_GetHlsTsDuration();
+//设置HLS单个ts切片的时长
+static	void	EasyAdmin_SetHlsTsDuration(UInt32 secs);
+//获取HLS ts切片数
+static	UInt32	EasyAdmin_GetHlsTsCapacity();
+//设置HLS ts切片数
+static	void	EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity);
+//---------------------------HLS配置E---------------------------
+
+//---------------------------HLS列表S---------------------------
+//新增一路HLS直播
+static	bool	EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout);
+//结束一路HLS直播
+static	bool	EasyAdmin_StopHLSession(char* inSessionName);
+//获取HLS直播列表(json)
+static	char*	EasyAdmin_GetHLSessions();
+//获取RTSP推送列表(json)
+static	char*	EasyAdmin_GetRTSPSessions();
+//---------------------------HLS列表E---------------------------
+
+//===============HLS直播栏E===============
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++add arno
+static const char *s_secret = ":-)";
+static void generate_ssid(const char *user_name, const char *expiration_date,
+	char *ssid, size_t ssid_size) {
+	char hash[33];
+	mg_md5(hash, user_name, ":", expiration_date, ":", s_secret, NULL);
+	qtss_snprintf(ssid, ssid_size, "%s|%s|%s", user_name, expiration_date, hash);
+}
+static int check_auth(struct mg_connection *conn) {
+	char name[100], password[100], ssid[100], expire[100], expire_epoch[100];
+	mg_get_var(conn, "name", name, sizeof(name));
+	mg_get_var(conn, "password", password, sizeof(password));
+	if (EasyAdmin_UserAuthentication(name, password)) {
+		time_t t = time(NULL) + 300;
+		qtss_snprintf(expire_epoch, sizeof(expire_epoch), "%lu", (unsigned long)t);
+		strftime(expire, sizeof(expire), "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
+		generate_ssid(name, expire_epoch, ssid, sizeof(ssid));
+		mg_printf(conn,
+			"HTTP/1.1 302 Moved\r\n"
+			"Set-Cookie: ssid=%s; expire=\"%s\"; http-only; HttpOnly;\r\n"
+			"Content-Length: 0\r\n"
+			"Location: /\r\n\r\n",
+			ssid, expire);
+		return MG_TRUE;
+	}
+	else
+	{
+		mg_printf(conn, "HTTP/1.1 302 Moved\r\nLocation: %s\r\n\r\n", "loginerror.html");
+		return MG_FALSE;
+	}
+}
+static int cookie_auth(struct mg_connection *conn) {
+	char ssid[100], calculated_ssid[100], name[100], expire[100];
+	if (strcmp(conn->uri, "/login.html") == 0 ||
+		strcmp(conn->uri, "/loginerror.html") == 0 ||
+		strstr(conn->uri, ".js") != NULL ||
+		strstr(conn->uri, ".css") != NULL ||
+		strstr(conn->uri, "images") != NULL
+		) {
+		return MG_TRUE;
+	}
+	mg_parse_header(mg_get_header(conn, "Cookie"), "ssid", ssid, sizeof(ssid));
+	if (sscanf(ssid, "%[^|]|%[^|]|", name, expire) == 2) {
+		generate_ssid(name, expire, calculated_ssid, sizeof(calculated_ssid));
+		if (strcmp(ssid, calculated_ssid) == 0) {
+			return MG_TRUE;
+		}
+	}
+	mg_printf(conn, "HTTP/1.1 302 Moved\r\nLocation: %s\r\n\r\n", "login.html");
+	return MG_FALSE;
+}
+void transform_msec(SInt64 msec, char *output, size_t size)
+{
+
+	SInt64 sec = msec / 1000;
+	SInt64 day = sec / (60 * 60 * 24);
+	sec -= day * 60 * 60 * 24;
+	SInt64 hour = sec / (60 * 60);
+	sec -= hour * 60 * 60;
+	SInt64 min = sec / 60;
+	sec -= min * 60;
+	qtss_snprintf(output, size, "%lld|%lld|%lld|%lld", day, hour, min, sec);
+
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+static int serve_request(struct mg_connection *conn)
+{
+	if ((strcmp(conn->uri, "/login.html") == 0 && strcmp(conn->request_method, "POST") == 0) || (strcmp(conn->uri, "/loginerror.html") == 0 && strcmp(conn->request_method, "POST") == 0)) {
+		return  check_auth(conn);
+	}
+	if (strcmp(conn->uri, "/api/getServiceRunTime") == 0)
+	{
+		char output[128] = { 0 };
+		char sAjax[1024] = { 0 };
+		char* serverHeader = EasyAdmin_GetServerHeader();
+
+
+		transform_msec(EasyAdmin_GetServiceRunTime(), output, sizeof(output));
+		sprintf(sAjax, "{ \"RunTime\": \"%s\", \"version\": \"%s\"}", output, serverHeader);
+		mg_printf_data(conn, sAjax);
+		delete serverHeader;
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/setPort") == 0)
+	{
+		char n1[100], n2[100], n3[100], n4[100], n5[100], n6[100];
+		int re = 0;
+		mg_get_var(conn, "n1", n1, sizeof(n1));
+		mg_get_var(conn, "n2", n2, sizeof(n2));
+		mg_get_var(conn, "n3", n3, sizeof(n3));
+		mg_get_var(conn, "n4", n4, sizeof(n4));
+		mg_get_var(conn, "n5", n5, sizeof(n5));
+		mg_get_var(conn, "n6", n6, sizeof(n6));
+		EasyAdmin_SetMongoosePort(atoi(n1));
+		EasyAdmin_SetRTSPort(atoi(n2));
+		EasyAdmin_SetHTTPServicePort(atoi(n3));
+		EasyAdmin_SetReflectBufferSecs(atoi(n4));
+		EasyAdmin_SetMoviesFolder(n5);
+		EasyAdmin_SetErrorLogFolder(n6);
+		mg_printf_data(conn, "{\"result\": %d}", re);
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/getPort") == 0)
+	{
+		char sAjax[1024] = { 0 };
+		char* moviesFolder = EasyAdmin_GetMoviesFolder();
+		char* logFolder = EasyAdmin_GetErrorLogFolder();
+		sprintf(sAjax, "{ \"MongoosePort\": %d , \"RTSPPort\": %d , \"HTTPPort\": %d,\"reflectbuffer\":%d,\"moviesfolder\":\"%s\",\"logfolder\":\"%s\"}",
+			EasyAdmin_GetMongoosePort(),
+			EasyAdmin_GetRTSPort(),
+			EasyAdmin_GetHTTPServicePort(),
+			EasyAdmin_GetReflectBufferSecs(),
+			moviesFolder,
+			logFolder);
+		mg_printf_data(conn, sAjax);
+		delete moviesFolder;
+		delete logFolder;
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/restart") == 0)
+	{
+
+		int re = 0;
+		EasyAdmin_Restart();
+		mg_printf_data(conn, "{\"result\": %d}", re);
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/setHLS") == 0)
+	{
+		char n1[100], n2[100], n3[100];
+		int re = 0;
+		mg_get_var(conn, "n1", n1, sizeof(n1));
+		mg_get_var(conn, "n2", n2, sizeof(n2));
+		mg_get_var(conn, "n3", n3, sizeof(n3));
+		EasyAdmin_SetHlsHttpRoot(n1);
+		EasyAdmin_SetHlsTsDuration(atoi(n2));
+		EasyAdmin_SetHlsTsCapacity(atoi(n3));
+		mg_printf_data(conn, "{\"result\": %d}", re);
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/getHLS") == 0)
+	{
+		char sAjax[1024] = { 0 };
+		char* hlsHttpRoot = EasyAdmin_GetHlsHttpRoot();
+		sprintf(sAjax, "{ \"httproot\":\"%s\" , \"tsd\": %d , \"tsc\": %d}",
+			hlsHttpRoot,
+			EasyAdmin_GetHlsTsDuration(),
+			EasyAdmin_GetHlsTsCapacity());
+		mg_printf_data(conn, sAjax);
+		delete hlsHttpRoot;
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/setRTSP") == 0)
+	{
+		char n1[100], n2[100];
+		int re = 0;
+		mg_get_var(conn, "n1", n1, sizeof(n1));
+		mg_get_var(conn, "n2", n2, sizeof(n2));
+
+		EasyAdmin_SetReflectBufferSecs(atoi(n1));
+		EasyAdmin_SetReflectHLSOutput(atoi(n2));
+
+		mg_printf_data(conn, "{\"result\": %d}", re);
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/getRTSP") == 0)
+	{
+		char sAjax[1024] = { 0 };
+		sprintf(sAjax, "{ \"buffersecs\":%d , \"out\": %d }",
+			EasyAdmin_GetReflectBufferSecs(),
+			EasyAdmin_GetReflectHLSOutput());
+		mg_printf_data(conn, sAjax);
+		return MG_TRUE;
+	}
+
+	if (strcmp(conn->uri, "/api/getHLSList") == 0)
+	{
+		char* sessionsJSON = EasyAdmin_GetHLSessions();
+		if (sessionsJSON)
+		{
+			mg_printf_data(conn, sessionsJSON);
+			delete sessionsJSON;
+			return MG_TRUE;
+		}
+		return MG_FALSE;
+	}
+	if (strcmp(conn->uri, "/api/getRTSPList") == 0)
+	{
+		char* sessionsJSON = EasyAdmin_GetRTSPSessions();
+		mg_printf_data(conn, sessionsJSON);
+		delete sessionsJSON;
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/addHLSList") == 0)
+	{
+		char n1[100], n2[100], n3[100];
+		int re = 0;
+		mg_get_var(conn, "n1", n1, sizeof(n1));
+		mg_get_var(conn, "n2", n2, sizeof(n2));
+		mg_get_var(conn, "n3", n3, sizeof(n3));
+		if (EasyAdmin_StartHLSession(n1, n2, atoi(n3)))
+		{
+			re = 1;
+		}
+		mg_printf_data(conn, "{\"result\": %d}", re);
+		return MG_TRUE;
+	}
+	if (strcmp(conn->uri, "/api/StopHLS") == 0)
+	{
+		char n1[100], n2[100], n3[100];
+		int re = 0;
+		mg_get_var(conn, "n1", n1, sizeof(n1));
+		if (EasyAdmin_StopHLSession(n1))
+		{
+			re = 1;
+		}
+		mg_printf_data(conn, "{\"result\": %d}", re);
+		return MG_TRUE;
+	}
+	return MG_FALSE;
+}
+static int ev_handler(struct mg_connection *conn, enum mg_event ev) {
+	switch (ev) {
+	case MG_AUTH:
+		return cookie_auth(conn);
+	case MG_REQUEST:
+		return serve_request(conn);
+	default: return MG_FALSE;
+	}
+}
+//mongoose线程
+class mongooseThread : public OSThread
+{
+public:
+	mongooseThread() : OSThread() {}
+	virtual ~mongooseThread() {}
+
+private:
+	void Entry();
+};
+
+
+//Mongoose
+void mongooseThread::Entry()
+{
+	char sPath[MAX_PATH];
+	strcpy(sPath, ((QTSServer*)sServer)->sAbsolutePath);
+	if ((strlen(sPath) + strlen(sDocumentRoot)) >= (MAX_PATH + 1))
+	{
+		return;
+	}
+	::strncat(sPath, sDocumentRoot, strlen(sDocumentRoot));
+	//printf("%s\n",sPath);
+
+	struct mg_server *mongooseserver;
+	// Create and configure the server
+	mongooseserver = mg_create_server((void *) "1", ::ev_handler);
+
+	//WEB监听端口
+	char listening_port[6];
+	sprintf(listening_port, "%d", sHttpPort);
+
+	mg_set_option(mongooseserver, "listening_port", listening_port);
+	mg_set_option(mongooseserver, "document_root", sPath); //donot use it
+
+	//printf("mongoose listen on port:%s document path:%s \n", listening_port , sDocumentRoot);
+
+//**********************************************************
+	////获取RTSP端口
+	//printf("RTSP Port:%d !!!!!!!!! \n", EasyAdmin_GetRTSPort());
+	//EasyAdmin_SetRTSPort(888);
+
+	////获取HTTP Service端口
+	//printf("HTTP Service Port:%d !!!!!!!!! \n", EasyAdmin_GetHTTPServicePort());
+	//EasyAdmin_SetHTTPServicePort(999);
+
+	////获取Movies目录 
+	//char* moviesFolder = EasyAdmin_GetMoviesFolder();
+	//printf("Movies Folder:%s !!!!!!!!! \n", moviesFolder);
+	//delete moviesFolder;
+	//EasyAdmin_SetMoviesFolder("/etc/streaming/movies/");
+
+	////获取日志目录 
+	//char* logFolder = EasyAdmin_GetErrorLogFolder();
+	//printf("Log Folder:%s !!!!!!!!! \n", logFolder);
+	//delete logFolder;
+
+	//char* serverHeader = EasyAdmin_GetServerHeader();
+	//printf("%s \n", serverHeader);
+	//delete serverHeader;
+
+	//EasyAdmin_SetErrorLogFolder("/etc/streaming/Logs/");
+
+	////获取转发缓冲时间
+	//printf("Reflector Buffer Secs:%d \n", EasyAdmin_GetReflectBufferSecs());
+	//EasyAdmin_SetReflectBufferSecs(8);
+
+	////获取Mongoose端口
+	//printf("Mongoose Port:%d \n", EasyAdmin_GetMongoosePort());
+	//EasyAdmin_SetMongoosePort(818);
+
+	////修改配置后重启
+	//EasyAdmin_Restart();
+
+	//printf("EasyAdmin RunTime:%ld \n", EasyAdmin_GetServiceRunTime());
+
+	//printf("Get Reflector HLS Output Enable:%d \n", EasyAdmin_GetReflectHLSOutput());
+	//EasyAdmin_SetReflectHLSOutput(true);
+
+	////获取HLS分发的http服务地址
+	//char* hlsHttpRoot = EasyAdmin_GetHlsHttpRoot();
+	//printf("HLS HTTP Root:%s \n", hlsHttpRoot);
+	//delete hlsHttpRoot;
+
+	////设置HLS分发的http服务地址
+	//EasyAdmin_SetHlsHttpRoot("http://8.8.8.8/888");
+
+	////获取HLS单个ts切片的时长
+	//printf("HLS TS Duration: %d \n",EasyAdmin_GetHlsTsDuration());
+	////设置HLS单个ts切片的时长
+	//EasyAdmin_SetHlsTsDuration(8);
+
+	////获取HLS ts切片数
+	//printf("HLS TS Capacity: %d \n",EasyAdmin_GetHlsTsCapacity());
+	////设置HLS ts切片数
+	//EasyAdmin_SetHlsTsCapacity(9);
+
+	////启动一路HLS直播
+	//EasyAdmin_StartHLSession("test", "rtsp://admin:admin@192.168.66.186/", 0);
+
+	////获取HLS直播列表
+	//char* sessionsJSON = EasyAdmin_GetHLSessions();
+	//printf(sessionsJSON);
+	//delete[] sessionsJSON;
+
+	////停止一路HLS直播
+	//EasyAdmin_StopHLSession("test");
+//**********************************************************
+
+	//run server
+	for (;;) mg_poll_server((struct mg_server *) mongooseserver, 1000);
+	mg_destroy_server(&mongooseserver);
+}
 
 #if !DEBUG_ADMIN_MODULE
 #define APITests_DEBUG() 
@@ -346,7 +797,7 @@ void APITests_DEBUG()
 
 #endif
 
-inline void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep)
+inline void KeepSession(QTSS_RTSPRequestObject theRequest, Bool16 keep)
 {
 	(void)QTSS_SetValue(theRequest, qtssRTSPReqRespKeepAlive, 0, &keep, sizeof(keep));
 }
@@ -417,6 +868,11 @@ QTSS_Error RereadPrefs()
 	QTSSModuleUtils::GetAttribute(sAdminPrefs, "RequestTimeIntervalMilli", qtssAttrDataTypeUInt32, &sRequestTimeIntervalMilli, &sDefaultRequestTimeIntervalMilli, sizeof(sRequestTimeIntervalMilli));
 	QTSSModuleUtils::GetAttribute(sAdminPrefs, "enable_remote_admin", qtssAttrDataTypeBool16, &sEnableRemoteAdmin, &sDefaultEnableRemoteAdmin, sizeof(sDefaultEnableRemoteAdmin));
 
+	QTSSModuleUtils::GetAttribute(sAdminPrefs, "http_port", qtssAttrDataTypeUInt16, &sHttpPort, &sDefaultHttpPort, sizeof(sHttpPort));
+
+	delete[] sDocumentRoot;
+	sDocumentRoot = QTSSModuleUtils::GetStringAttribute(sAdminPrefs, "document_root", sDefaultDocumentRoot);
+
 	delete[] sAdministratorGroup;
 	sAdministratorGroup = QTSSModuleUtils::GetStringAttribute(sAdminPrefs, "AdministratorGroup", sDefaultAdministratorGroup);
 
@@ -451,6 +907,10 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	RereadPrefs();
 
+	//create Mongoose thread,start
+	sMongooseThread = NEW mongooseThread();
+	sMongooseThread->Start();
+
 	return QTSS_NoErr;
 }
 
@@ -480,11 +940,11 @@ void ReportErr(QTSS_Filter_Params* inParams, UInt32 err)
 }
 
 
-inline bool AcceptAddress(StrPtrLen *theAddressPtr)
+inline Bool16 AcceptAddress(StrPtrLen *theAddressPtr)
 {
 	IPComponentStr ipComponentStr(theAddressPtr);
 
-	bool isLocalRequest = ipComponentStr.IsLocal();
+	Bool16 isLocalRequest = ipComponentStr.IsLocal();
 	if (sLocalLoopBackOnlyEnabled && isLocalRequest)
 		return true;
 
@@ -497,9 +957,9 @@ inline bool AcceptAddress(StrPtrLen *theAddressPtr)
 	return false;
 }
 
-inline bool IsAdminRequest(StringParser *theFullRequestPtr)
+inline Bool16 IsAdminRequest(StringParser *theFullRequestPtr)
 {
-	bool handleRequest = false;
+	Bool16 handleRequest = false;
 	if (theFullRequestPtr != NULL) do
 	{
 		StrPtrLen   strPtr;
@@ -558,11 +1018,11 @@ inline void ParseAuthNameAndPassword(StrPtrLen *codedStrPtr, StrPtrLen* namePtr,
 };
 
 
-inline bool OSXAuthenticate(StrPtrLen *keyStrPtr)
+inline Bool16 OSXAuthenticate(StrPtrLen *keyStrPtr)
 {
 #if __MacOSX__
 	//  Authorization: AuthRef QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-	bool result = false;
+	Bool16 result = false;
 
 	if (keyStrPtr == NULL || keyStrPtr->Len == 0)
 		return result;
@@ -600,10 +1060,10 @@ inline bool OSXAuthenticate(StrPtrLen *keyStrPtr)
 
 }
 
-inline bool HasAuthentication(StringParser *theFullRequestPtr, StrPtrLen* namePtr, StrPtrLen* passwordPtr, StrPtrLen* outAuthTypePtr)
+inline Bool16 HasAuthentication(StringParser *theFullRequestPtr, StrPtrLen* namePtr, StrPtrLen* passwordPtr, StrPtrLen* outAuthTypePtr)
 {
 	//  Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-	bool hasAuthentication = false;
+	Bool16 hasAuthentication = false;
 	StrPtrLen   strPtr;
 	StrPtrLen   authType;
 	StrPtrLen   authString;
@@ -648,9 +1108,9 @@ inline bool HasAuthentication(StringParser *theFullRequestPtr, StrPtrLen* namePt
 	return hasAuthentication;
 }
 
-bool  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrLen* passwordPtr)
+Bool16  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrLen* passwordPtr)
 {
-	bool authenticated = true;
+	Bool16 authenticated = true;
 
 	char* authName = namePtr->GetAsCString();
 	OSCharArrayDeleter authNameDeleter(authName);
@@ -696,7 +1156,7 @@ bool  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrLen
 	}
 
 	char* realm = NULL;
-	bool allowed = true;
+	Bool16 allowed = true;
 	//authorize callback to check authorization
 	// allocates memory for realm
 	err = QTSS_Authorize(request, &realm, &allowed);
@@ -720,7 +1180,7 @@ bool  Authenticate(QTSS_RTSPRequestObject request, StrPtrLen* namePtr, StrPtrLen
 
 QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request)
 {
-	bool allowed = false;
+	Bool16 allowed = false;
 
 	// get the resource path
 	// if the path does not match the admin path, don't handle the request
@@ -771,7 +1231,7 @@ QTSS_Error AuthorizeAdminRequest(QTSS_RTSPRequestObject request)
 }
 
 
-bool AcceptSession(QTSS_RTSPSessionObject inRTSPSession)
+Bool16 AcceptSession(QTSS_RTSPSessionObject inRTSPSession)
 {
 	char remoteAddress[20] = { 0 };
 	StrPtrLen theClientIPAddressStr(remoteAddress, sizeof(remoteAddress));
@@ -781,7 +1241,7 @@ bool AcceptSession(QTSS_RTSPSessionObject inRTSPSession)
 	return AcceptAddress(&theClientIPAddressStr);
 }
 
-bool StillFlushing(QTSS_Filter_Params* inParams, bool flushing)
+Bool16 StillFlushing(QTSS_Filter_Params* inParams, Bool16 flushing)
 {
 
 	QTSS_Error err = QTSS_NoErr;
@@ -815,9 +1275,9 @@ bool StillFlushing(QTSS_Filter_Params* inParams, bool flushing)
 	return sFlushing;
 }
 
-bool IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
+Bool16 IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
 {
-	bool isAuthentic = false;
+	Bool16 isAuthentic = false;
 
 	if (!sAuthenticationEnabled) // no authentication
 	{
@@ -827,12 +1287,12 @@ bool IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
 	{
 		StrPtrLen theClientIPAddressStr;
 		(void)QTSS_GetValuePtr(inParams->inRTSPSession, qtssRTSPSesRemoteAddrStr, 0, (void**)&theClientIPAddressStr.Ptr, &theClientIPAddressStr.Len);
-		bool isLocal = IPComponentStr(&theClientIPAddressStr).IsLocal();
+		Bool16 isLocal = IPComponentStr(&theClientIPAddressStr).IsLocal();
 
 		StrPtrLen authenticateName;
 		StrPtrLen authenticatePassword;
 		StrPtrLen authType;
-		bool hasAuthentication = HasAuthentication(fullRequestPtr, &authenticateName, &authenticatePassword, &authType);
+		Bool16 hasAuthentication = HasAuthentication(fullRequestPtr, &authenticateName, &authenticatePassword, &authType);
 		if (hasAuthentication)
 		{
 			if (authType.Equal(sAuthRef))
@@ -851,7 +1311,7 @@ bool IsAuthentic(QTSS_Filter_Params* inParams, StringParser *fullRequestPtr)
 	return isAuthentic;
 }
 
-inline bool InWaitInterval(QTSS_Filter_Params* inParams)
+inline Bool16 InWaitInterval(QTSS_Filter_Params* inParams)
 {
 	QTSS_TimeVal nextExecuteTime = sLastRequestTime + sRequestTimeIntervalMilli;
 	QTSS_TimeVal currentTime = QTSS_Milliseconds();
@@ -904,9 +1364,9 @@ inline void SendResult(QTSS_StreamRef inStream)
 
 }
 
-inline bool GetRequestAuthenticatedState(QTSS_Filter_Params* inParams)
+inline Bool16 GetRequestAuthenticatedState(QTSS_Filter_Params* inParams)
 {
-	bool result = false;
+	Bool16 result = false;
 	UInt32 paramLen = sizeof(result);
 	QTSS_Error err = QTSS_GetValue(inParams->inRTSPRequest, sAuthenticatedID, 0, (void*)&result, &paramLen);
 	if (err != QTSS_NoErr)
@@ -918,9 +1378,9 @@ inline bool GetRequestAuthenticatedState(QTSS_Filter_Params* inParams)
 	return result;
 }
 
-inline bool GetRequestFlushState(QTSS_Filter_Params* inParams)
+inline Bool16 GetRequestFlushState(QTSS_Filter_Params* inParams)
 {
-	bool result = false;
+	Bool16 result = false;
 	UInt32 paramLen = sizeof(result);
 	QTSS_Error err = QTSS_GetValue(inParams->inRTSPRequest, sFlushingID, 0, (void*)&result, &paramLen);
 	if (err != QTSS_NoErr)
@@ -1072,4 +1532,203 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
 	(void)StillFlushing(inParams, true);
 	return QTSS_NoErr;
 
+}
+
+//*****************************************
+
+Bool16 EasyAdmin_UserAuthentication(const char* inUserName, const char* inPassword)
+{
+	qtss_printf("User:%s Password:%s Authenticated!\n", inUserName, inPassword);
+	return true;
+}
+
+UInt16 EasyAdmin_GetRTSPort()
+{
+	UInt16 port;
+	UInt32 len = sizeof(UInt16);
+	(void)QTSS_GetValue(sServerPrefs, qtssPrefsRTSPPorts, 0, (void*)&port, &len);
+
+	return port;
+}
+
+void EasyAdmin_SetRTSPort(UInt16 uPort)
+{
+	//(void) QTSS_RemoveValue(sServerPrefs, qtssPrefsRTSPPorts, 0);
+	(void)QTSS_SetValue(sServerPrefs, qtssPrefsRTSPPorts, 0, &uPort, sizeof(uPort));
+}
+
+void EasyAdmin_Restart()
+{
+	exit(-2);
+}
+
+UInt16 EasyAdmin_GetHTTPServicePort()
+{
+	UInt16 port;
+	UInt32 len = sizeof(UInt16);
+	(void)QTSS_GetValue(sServerPrefs, easyPrefsHTTPServicePort, 0, (void*)&port, &len);
+
+	return port;
+}
+
+void EasyAdmin_SetHTTPServicePort(UInt16 uPort)
+{
+	(void)QTSS_SetValue(sServerPrefs, easyPrefsHTTPServicePort, 0, &uPort, sizeof(uPort));
+}
+
+char* EasyAdmin_GetMoviesFolder()
+{
+	char* movieFolderString = NULL;
+	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsMovieFolder, 0, &movieFolderString);
+
+	return movieFolderString;
+}
+
+void EasyAdmin_SetMoviesFolder(char* folder)
+{
+	(void)QTSS_SetValue(sServerPrefs, qtssPrefsMovieFolder, 0, (void*)folder, strlen(folder));
+}
+
+char* EasyAdmin_GetErrorLogFolder()
+{
+	char* logFolderString = NULL;
+	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsErrorLogDir, 0, &logFolderString);
+
+	return logFolderString;
+}
+
+void EasyAdmin_SetErrorLogFolder(char* folder)
+{
+	(void)QTSS_SetValue(sServerPrefs, qtssPrefsErrorLogDir, 0, (void*)folder, strlen(folder));
+}
+
+UInt32 EasyAdmin_GetReflectBufferSecs()
+{
+	if (sReflectorPrefs == NULL)
+		return 0;
+
+	UInt32 reflectBufferSecs = 0;
+	QTSSModuleUtils::GetAttribute(sReflectorPrefs, "reflector_buffer_size_sec", qtssAttrDataTypeUInt32, &reflectBufferSecs, NULL, sizeof(reflectBufferSecs));
+	return reflectBufferSecs;
+}
+
+void EasyAdmin_SetReflectBufferSecs(UInt32 secs)
+{
+	if (sReflectorPrefs == NULL)
+		return;
+	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "reflector_buffer_size_sec", qtssAttrDataTypeUInt32, &secs, sizeof(UInt32));
+}
+
+UInt16 EasyAdmin_GetMongoosePort()
+{
+	return sHttpPort;
+}
+
+void EasyAdmin_SetMongoosePort(UInt16 port)
+{
+	QTSSModuleUtils::CreateAttribute(sAdminPrefs, "http_port", qtssAttrDataTypeUInt16, &port, sizeof(UInt16));
+}
+
+char* EasyAdmin_GetServerHeader()
+{
+	char* serverHeader = NULL;
+	(void)QTSS_GetValueAsString(sServer, qtssSvrRTSPServerHeader, 0, &serverHeader);
+
+	return serverHeader;
+}
+
+SInt64 EasyAdmin_GetServiceRunTime()
+{
+	SInt64 timeNow = OS::Milliseconds();
+
+	SInt64 startupTime = 0;
+	UInt32 startupTimeSize = sizeof(startupTime);
+	(void)QTSS_GetValue(sServer, qtssSvrStartupTime, 0, &startupTime, &startupTimeSize);
+
+	return (timeNow - startupTime);
+}
+
+bool EasyAdmin_GetReflectHLSOutput()
+{
+	if (sReflectorPrefs == NULL)
+		return false;
+
+	Bool16 hlsOutputEnabled = false;
+	QTSSModuleUtils::GetAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutputEnabled, NULL, sizeof(hlsOutputEnabled));
+	return hlsOutputEnabled;
+}
+
+void EasyAdmin_SetReflectHLSOutput(Bool16 hlsOutput)
+{
+	QTSSModuleUtils::CreateAttribute(sReflectorPrefs, "hls_output_enabled", qtssAttrDataTypeBool16, &hlsOutput, sizeof(Bool16));
+}
+
+char* EasyAdmin_GetHlsHttpRoot()
+{
+	if (sHLSModulePrefs == NULL)
+		return NULL;
+
+	char* hlsHTTPRoot = QTSSModuleUtils::GetStringAttribute(sHLSModulePrefs, "HTTP_ROOT_DIR", NULL);
+
+	return hlsHTTPRoot;
+}
+
+void EasyAdmin_SetHlsHttpRoot(char* httpRoot)
+{
+	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "HTTP_ROOT_DIR", qtssAttrDataTypeCharArray, httpRoot, strlen(httpRoot));
+}
+
+UInt32 EasyAdmin_GetHlsTsDuration()
+{
+	if (sHLSModulePrefs == NULL)
+		return 0;
+
+	UInt32 hlsDurationSec = 0;
+	QTSSModuleUtils::GetAttribute(sHLSModulePrefs, "TARGET_DURATION", qtssAttrDataTypeUInt32, &hlsDurationSec, NULL, sizeof(hlsDurationSec));
+	return hlsDurationSec;
+}
+
+void EasyAdmin_SetHlsTsDuration(UInt32 secs)
+{
+	if (sHLSModulePrefs == NULL)
+		return;
+	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "TARGET_DURATION", qtssAttrDataTypeUInt32, &secs, sizeof(UInt32));
+}
+
+UInt32 EasyAdmin_GetHlsTsCapacity()
+{
+	if (sHLSModulePrefs == NULL)
+		return 0;
+
+	UInt32 hlsCapacity = 0;
+	QTSSModuleUtils::GetAttribute(sHLSModulePrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32, &hlsCapacity, NULL, sizeof(hlsCapacity));
+	return hlsCapacity;
+}
+
+void EasyAdmin_SetHlsTsCapacity(UInt32 uCapacity)
+{
+	if (sHLSModulePrefs == NULL)
+		return;
+	QTSSModuleUtils::CreateAttribute(sHLSModulePrefs, "PLAYLIST_CAPACITY", qtssAttrDataTypeUInt32, &uCapacity, sizeof(UInt32));
+}
+
+bool EasyAdmin_StartHLSession(char* inSessionName, const char* inRTSPUrl, UInt32 inTimeout)
+{
+	Easy_StartHLSession(inSessionName, inRTSPUrl, inTimeout, NULL);
+	return true;
+}
+
+bool EasyAdmin_StopHLSession(char* inSessionName)
+{
+	Easy_StopHLSession(inSessionName);
+	return true;
+}
+
+char* EasyAdmin_GetHLSessions()
+{
+	return (char*)Easy_GetHLSessions();
+}
+char* EasyAdmin_GetRTSPSessions()
+{
+	return (char*)Easy_GetRTSPPushSessions();
 }

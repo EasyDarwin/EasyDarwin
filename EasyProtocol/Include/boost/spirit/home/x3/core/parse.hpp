@@ -7,6 +7,10 @@
 #if !defined(BOOST_SPIRIT_X3_PARSE_APRIL_16_2006_0442PM)
 #define BOOST_SPIRIT_X3_PARSE_APRIL_16_2006_0442PM
 
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
 #include <boost/spirit/home/x3/support/context.hpp>
 #include <boost/spirit/home/x3/core/parser.hpp>
 #include <boost/spirit/home/x3/core/skip_over.hpp>
@@ -106,9 +110,6 @@ namespace boost { namespace spirit { namespace x3
         // calling this function. You need to supply at least a forward_iterator
         // instead.
         BOOST_CONCEPT_ASSERT((ForwardIterator<Iterator>));
-        
-        static_assert(!std::is_same<Skipper, unused_type>::value,
-            "Error! Skipper cannot be unused_type.");
 
         // If you get an error no matching function for call to 'as_parser'
         // here, for either p or s, then p or s is not a parser or there is

@@ -9,10 +9,12 @@
 #define BOOST_TT_IS_POLYMORPHIC_HPP
 
 #include <boost/type_traits/intrinsics.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 #ifndef BOOST_IS_POLYMORPHIC
 #include <boost/type_traits/is_class.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #endif
+// should be the last #include
+#include <boost/type_traits/detail/bool_trait_def.hpp>
 #include <boost/detail/workaround.hpp>
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC >= 1700)
@@ -32,7 +34,8 @@ struct is_polymorphic_imp1
 # if BOOST_WORKAROUND(__MWERKS__, <= 0x2407) // CWPro7 should return false always.
     typedef char d1, (&d2)[2];
 # else 
-   struct d1 : public T
+   typedef typename remove_cv<T>::type ncvT;
+   struct d1 : public ncvT
    {
       d1();
 #  if !defined(__GNUC__) // this raises warnings with some classes, and buys nothing with GCC
@@ -44,7 +47,7 @@ struct is_polymorphic_imp1
       d1(const d1&);
       d1& operator=(const d1&);
    };
-   struct d2 : public T
+   struct d2 : public ncvT
    {
       d2();
       virtual ~d2()throw();
@@ -63,10 +66,6 @@ struct is_polymorphic_imp1
 # endif 
    BOOST_STATIC_CONSTANT(bool, value = (sizeof(d2) == sizeof(d1)));
 };
-
-template <class T> struct is_polymorphic_imp1<T const> : public is_polymorphic_imp1<T>{};
-template <class T> struct is_polymorphic_imp1<T const volatile> : public is_polymorphic_imp1<T>{};
-template <class T> struct is_polymorphic_imp1<T volatile> : public is_polymorphic_imp1<T>{};
 
 template <class T>
 struct is_polymorphic_imp2
@@ -105,15 +104,17 @@ struct is_polymorphic_imp
 
 } // namespace detail
 
-template <class T> struct is_polymorphic : public integral_constant<bool, ::boost::detail::is_polymorphic_imp<T>::value> {};
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_polymorphic,T,::boost::detail::is_polymorphic_imp<T>::value)
 
 #else // BOOST_IS_POLYMORPHIC
 
-template <class T> struct is_polymorphic : public integral_constant<bool, BOOST_IS_POLYMORPHIC(T)> {};
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_polymorphic,T,BOOST_IS_POLYMORPHIC(T))
 
 #endif
 
 } // namespace boost
+
+#include <boost/type_traits/detail/bool_trait_undef.hpp>
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC >= 1700)
 #pragma warning(pop)

@@ -49,9 +49,6 @@
 #include "OSHeap.h"
 #include "OSThread.h"
 #include "OSMutexRW.h"
-#include <atomic>
-
-using namespace std;
 
 #define TASK_DEBUG 0
 
@@ -99,7 +96,7 @@ public:
 	//Send an event to this task.
 	void                    Signal(EventFlags eventFlags);
 	void                    GlobalUnlock();
-	bool                  Valid(); // for debugging
+	Bool16                  Valid(); // for debugging
 	char            fTaskName[48];
 	void            SetTaskName(char* name);
 
@@ -119,15 +116,13 @@ protected:
 	// a mutex between calls to run. By calling this function, the task ensures that the
 	// same task thread will be used for the next call to Run(). It only applies to the
 	// next call to run.
-	void                    ForceSameThread()
-	{
+	void                    ForceSameThread() {
 		fUseThisThread = (TaskThread*)OSThread::GetCurrent();
-		Assert(fUseThisThread != nullptr);
+		Assert(fUseThisThread != NULL);
 		if (TASK_DEBUG) if (fTaskName[0] == 0) ::strcpy(fTaskName, " corrupt task");
 		if (TASK_DEBUG) qtss_printf("Task::ForceSameThread fUseThisThread %p task %s enque elem=%p enclosing %p\n", (void*)fUseThisThread, fTaskName, (void *)&fTaskQueueElem, (void *)this);
 	}
-	SInt64                  CallLocked()
-	{
+	SInt64                  CallLocked() {
 		ForceSameThread();
 		fWriteLock = true;
 		return (SInt64)10; // minimum of 10 milliseconds between locks
@@ -143,13 +138,10 @@ private:
 
 	void            SetTaskThread(TaskThread *thread);
 
-	//EventFlags      fEvents;
-
-	atomic<EventFlags> fEvents;
-
+	EventFlags      fEvents;
 	TaskThread*     fUseThisThread;
 	TaskThread*     fDefaultThread;
-	bool          fWriteLock;
+	Bool16          fWriteLock;
 
 #if DEBUG
 	//The whole premise of a task is that the Run function cannot be re-entered.
@@ -163,9 +155,6 @@ private:
 	OSQueueElem     fTaskQueueElem;
 
 	unsigned int *pickerToUse;
-
-	OSMutex fAtomicMutex;
-
 	//Variable used for assigning tasks to threads in a round-robin fashion
 	static unsigned int sShortTaskThreadPicker; //default picker
 	static unsigned int sBlockingTaskThreadPicker;
@@ -208,13 +197,12 @@ private:
 //Because task threads share a global queue of tasks to execute,
 //there can only be one pool of task threads. That is why this object
 //is static.
-class TaskThreadPool
-{
+class TaskThreadPool {
 public:
 
 	//Adds some threads to the pool
-	static bool		AddThreads(UInt32 numToAdd); // creates the threads: takes NumShortTaskThreads + NumBLockingThreads,  sets num short task threads.
-	static void     SwitchPersonality(char *user = nullptr, char *group = nullptr);
+	static Bool16   AddThreads(UInt32 numToAdd); // creates the threads: takes NumShortTaskThreads + NumBLockingThreads,  sets num short task threads.
+	static void     SwitchPersonality(char *user = NULL, char *group = NULL);
 	static void     RemoveThreads();
 	static TaskThread* GetThread(UInt32 index);
 	static UInt32  GetNumThreads() { return sNumTaskThreads; }

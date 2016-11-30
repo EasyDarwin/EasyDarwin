@@ -17,19 +17,9 @@
 #include <boost/config.hpp>
 
 #if defined(BOOST_TT_PREPROCESSING_MODE)
-//
-// Maintenance mode, hide include dependencies
-// from trackers:
-//
-#define PPI <boost/preprocessor/iterate.hpp>
-#include PPI
-#undef PPI
-#define PPI <boost/preprocessor/enum_params.hpp>
-#include PPI
-#undef PPI
-#define PPI <boost/preprocessor/comma_if.hpp>
-#include PPI
-#undef PPI
+#   include <boost/preprocessor/iterate.hpp>
+#   include <boost/preprocessor/enum_params.hpp>
+#   include <boost/preprocessor/comma_if.hpp>
 #endif
 
 namespace boost {

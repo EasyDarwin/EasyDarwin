@@ -17,7 +17,6 @@
 #include <EasyProtocolDef.h>
 #include <string>
 #include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -69,60 +68,6 @@ public:
 
 	static unsigned char* Urldecode(unsigned char* encd, unsigned char* decd);
 	static std::string Urldecode(const std::string& encd);
-
-	static string ToLower(const string& inStr)
-	{
-		auto result = inStr;
-		boost::to_lower(result);
-		return result;
-	}
-
-	static string ToUpper(const string& inStr)
-	{
-		auto result = inStr;
-		boost::to_upper(result);
-		return result;
-	}
-
-
-	static string& ReplaceInPlace(string& str, const string& from, const string& to, string::size_type start = 0)
-	{
-		string result;
-		string::size_type pos = 0;
-		result.append(str, 0, start);
-		do
-		{
-			pos = str.find(from, start);
-			if (pos != string::npos)
-			{
-				result.append(str, start, pos - start);
-				result.append(to);
-				start = pos + from.length();
-			}
-			else result.append(str, start, str.size() - start);
-		} while (pos != string::npos);
-		str.swap(result);
-		return str;
-	}
-
-	static string Replace(const string& str, const string& from, const string& to, string::size_type start = 0)
-	{
-		string result(str);
-		ReplaceInPlace(result, from, to);
-		return result;
-	}
-
-	template <class S, class It>
-	static S Cat(const S& delim, const It& begin, const It& end)
-	{
-		S result;
-		for (It it = begin; it != end; ++it)
-		{
-			if (!result.empty()) result.append(delim);
-			result += *it;
-		}
-		return result;
-	}
 
 };
 

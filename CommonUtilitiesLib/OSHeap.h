@@ -49,11 +49,11 @@ public:
 	};
 
 	OSHeap(UInt32 inStartSize = kDefaultStartSize);
-	~OSHeap() { if (fHeap != nullptr) delete fHeap; }
+	~OSHeap() { if (fHeap != NULL) delete fHeap; }
 
 	//ACCESSORS
 	UInt32      CurrentHeapSize() { return fFreeIndex - 1; }
-	OSHeapElem* PeekMin() { if (CurrentHeapSize() > 0) return fHeap[1]; return nullptr; }
+	OSHeapElem* PeekMin() { if (CurrentHeapSize() > 0) return fHeap[1]; return NULL; }
 
 	//MODIFIERS
 
@@ -66,7 +66,7 @@ public:
 
 #if _OSHEAP_TESTING_
 	//returns true if it passed the test, false otherwise
-	static bool       Test();
+	static Bool16       Test();
 #endif
 
 private:
@@ -86,8 +86,8 @@ private:
 class OSHeapElem
 {
 public:
-	OSHeapElem(void* enclosingObject = nullptr)
-		: fValue(0), fEnclosingObject(enclosingObject), fCurrentHeap(nullptr) {}
+	OSHeapElem(void* enclosingObject = NULL)
+		: fValue(0), fEnclosingObject(enclosingObject), fCurrentHeap(NULL) {}
 	~OSHeapElem() {}
 
 	//This data structure emphasizes performance over extensibility
@@ -99,7 +99,7 @@ public:
 	SInt64  GetValue() { return fValue; }
 	void*   GetEnclosingObject() { return fEnclosingObject; }
 	void	SetEnclosingObject(void* obj) { fEnclosingObject = obj; }
-	bool  IsMemberOfAnyHeap() { return fCurrentHeap != nullptr; }
+	Bool16  IsMemberOfAnyHeap() { return fCurrentHeap != NULL; }
 
 private:
 

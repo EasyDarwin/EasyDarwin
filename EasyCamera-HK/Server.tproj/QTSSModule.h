@@ -84,7 +84,7 @@ public:
 	// ACCESSORS
 
 	OSQueueElem*    GetQueueElem() { return &fQueueElem; }
-	bool          IsInitialized() { return fDispatchFunc != NULL; }
+	Bool16          IsInitialized() { return fDispatchFunc != NULL; }
 	QTSSPrefs*      GetPrefsDict() { return fPrefs; }
 	QTSSDictionary* GetAttributesDict() { return fAttributes; }
 	OSMutex*        GetAttributesMutex() { return &fAttributesMutex; }
@@ -154,7 +154,7 @@ public:
 	QTSS_Error  AddRole(QTSS_Role inRole);
 
 	// This returns true if this module is supposed to run in the specified role.
-	bool  RunsInRole(RoleIndex inIndex) { Assert(inIndex < kNumRoles); return fRoleArray[inIndex]; }
+	Bool16  RunsInRole(RoleIndex inIndex) { Assert(inIndex < kNumRoles); return fRoleArray[inIndex]; }
 
 	SInt64 Run();
 
@@ -168,12 +168,12 @@ private:
 	char*                       fPath;
 	OSCodeFragment*             fFragment;
 	QTSS_DispatchFuncPtr        fDispatchFunc;
-	bool                      fRoleArray[kNumRoles];
+	Bool16                      fRoleArray[kNumRoles];
 	QTSSPrefs*                  fPrefs;
 	QTSSDictionary*             fAttributes;
 	OSMutex                     fAttributesMutex;
 
-	static bool       sHasOpenFileModule;
+	static Bool16       sHasOpenFileModule;
 
 	static QTSSAttrInfoDict::AttrInfo   sAttributes[];
 	static char* sRoleNames[];

@@ -36,7 +36,7 @@ namespace boost
     template <typename Target, typename Source>
     inline Target lexical_cast(const Source &arg)
     {
-        Target result = Target();
+        Target result;
 
         if (!boost::conversion::detail::try_lexical_convert(arg, result)) {
             boost::conversion::detail::throw_bad_cast<Source, Target>();

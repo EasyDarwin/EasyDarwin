@@ -11,37 +11,15 @@
 
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
-#if !defined(BOOST_NO_CXX11_NOEXCEPT) && !defined(__SUNPRO_CC) && !defined(BOOST_MSVC)
-
-#include <boost/type_traits/declval.hpp>
-#include <boost/type_traits/is_destructible.hpp>
-
-namespace boost{
-
-   namespace detail{
-
-      template <class T, bool b>
-      struct has_nothrow_destructor_imp : public boost::integral_constant<bool, false>{};
-      template <class T>
-      struct has_nothrow_destructor_imp<T, true> : public boost::integral_constant<bool, noexcept(boost::declval<T*&>()->~T())>{};
-
-   }
-
-   template <class T> struct has_nothrow_destructor : public detail::has_nothrow_destructor_imp<T, boost::is_destructible<T>::value>{};
-   template <class T, std::size_t N> struct has_nothrow_destructor<T[N]> : public has_nothrow_destructor<T>{};
-   template <class T> struct has_nothrow_destructor<T&> : public integral_constant<bool, false>{};
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) 
-   template <class T> struct has_nothrow_destructor<T&&> : public integral_constant<bool, false>{};
-#endif
-}
-#else
+// should be the last #include
+#include <boost/type_traits/detail/bool_trait_def.hpp>
 
 namespace boost {
 
-template <class T> struct has_nothrow_destructor : public ::boost::has_trivial_destructor<T> {};
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(has_nothrow_destructor,T,::boost::has_trivial_destructor<T>::value)
 
 } // namespace boost
 
-#endif
+#include <boost/type_traits/detail/bool_trait_undef.hpp>
 
 #endif // BOOST_TT_HAS_NOTHROW_DESTRUCTOR_HPP_INCLUDED

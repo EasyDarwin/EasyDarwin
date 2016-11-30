@@ -72,7 +72,7 @@ public:
 		this->fPacketPtr.Len = len;
 	}
 
-	bool  IsData() { return fIsData; }
+	Bool16  IsData() { return fIsData; }
 	inline  UInt16  GetPacketSeqNum();
 
 private:
@@ -86,7 +86,7 @@ private:
 	OSQueueElem fQueueElem;
 	char        fPacketData[kMaxRTSPMsgLen];
 	StrPtrLen   fPacketPtr;
-	bool      fIsData;
+	Bool16      fIsData;
 	UInt64      fMsgCountID;
 
 	friend class RTSPSession;
@@ -102,14 +102,13 @@ class RTSPSession : public RTSPSessionInterface
 {
 public:
 
-	RTSPSession(bool doReportHTTPConnectionAddress);
+	RTSPSession(Bool16 doReportHTTPConnectionAddress);
 	virtual ~RTSPSession();
 
 	// Call this before using this object
 	static void Initialize();
 
-	bool IsPlaying() { if (fRTPSession == NULL) return false; if (fRTPSession->GetSessionState() == qtssPlayingState) return true; return false; }
-
+	Bool16 IsPlaying() { if (fRTPSession == NULL) return false; if (fRTPSession->GetSessionState() == qtssPlayingState) return true; return false; }
 
 private:
 
@@ -124,7 +123,7 @@ private:
 	void SetupRequest();
 	void CleanupRequest();
 
-	bool ParseOptionsResponse();
+	Bool16 ParseOptionsResponse();
 
 	// Fancy random number generator
 	UInt32 GenerateNewSessionID(char* ioBuffer);
@@ -136,7 +135,10 @@ private:
 	void CheckAuthentication();
 
 	// test current connections handled by this object against server pref connection limit
-	bool OverMaxConnections(UInt32 buffer);
+	Bool16 OverMaxConnections(UInt32 buffer);
+
+	// Process the 3GPP Request Data for the session
+	void Process3GPPData();
 
 	char                fLastRTPSessionID[QTSS_MAX_SESSION_ID_LENGTH];
 	StrPtrLen           fLastRTPSessionIDPtr;
@@ -155,7 +157,7 @@ private:
 
 	OSRef*              RegisterRTSPSessionIntoHTTPProxyTunnelMap(QTSS_RTSPSessionType inSessionType);
 	QTSS_Error          PreFilterForHTTPProxyTunnel();              // prefilter for HTTP proxies
-	bool              ParseProxyTunnelHTTP();                     // use by PreFilterForHTTPProxyTunnel
+	Bool16              ParseProxyTunnelHTTP();                     // use by PreFilterForHTTPProxyTunnel
 	void                HandleIncomingDataPacket();
 
 	static              OSRefTable* sHTTPProxyTunnelMap;    // a map of available partners.
@@ -186,9 +188,9 @@ private:
 	};
 
 	UInt16      fHTTPMethod;
-	bool      fWasHTTPRequest;
-	bool      fFoundValidAccept;
-	bool      fDoReportHTTPConnectionAddress; // true if we need to report our IP adress in reponse to the clients GET request (necessary for servers behind DNS round robin)
+	Bool16      fWasHTTPRequest;
+	Bool16      fFoundValidAccept;
+	Bool16      fDoReportHTTPConnectionAddress; // true if we need to report our IP adress in reponse to the clients GET request (necessary for servers behind DNS round robin)
 	/* -- end adds for HTTP ProxyTunnel -- */
 
 
@@ -261,11 +263,11 @@ private:
     OSMutex fQueueMutex;
     OSMutex fFreeQueueMutex;
 
-    bool  fLiveHandler;
+    Bool16  fLiveHandler;
 
 public:
     RTSPMsg* GetMsg();
-	bool  ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg);
+	Bool16  ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg);
     void HandleDataPacket(RTSPMsg* msg);
 
     friend class RTSPSession;

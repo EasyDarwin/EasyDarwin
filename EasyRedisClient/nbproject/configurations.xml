@@ -104,7 +104,6 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <architecture>1</architecture>
-          <standard>8</standard>
           <incDir>
             <pElem>../EasyProtocol/Include</pElem>
           </incDir>
@@ -165,7 +164,6 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <architecture>2</architecture>
-          <standard>8</standard>
           <incDir>
             <pElem>../EasyProtocol/Include</pElem>
           </incDir>

@@ -28,6 +28,7 @@
 	 Contains:   Implements QTSS Callback functions.
  */
 
+#undef COMMON_UTILITIES_LIB
 #include "QTSSCallbacks.h"
 #include "QTSSDictionary.h"
 #include "QTSSStream.h"
@@ -740,7 +741,7 @@ QTSS_Error  QTSSCallbacks::QTSS_RequestLockedCallback()
 	return QTSS_NoErr;
 }
 
-bool      QTSSCallbacks::QTSS_IsGlobalLocked()
+Bool16      QTSSCallbacks::QTSS_IsGlobalLocked()
 {
 	QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
 	if (OSThread::GetCurrent() != NULL)
@@ -820,10 +821,10 @@ QTSS_Error  QTSSCallbacks::QTSS_Authenticate(const char* inAuthUserName, const c
 	UInt32 x = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPAthnRole);
 	QTSSModule* theModulePtr = NULL;
-	bool allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
-	bool allowed = allowedDefault; //server pref?
-	bool hasUser = false;
-	bool handled = false;
+	Bool16 allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
+	Bool16 allowed = allowedDefault; //server pref?
+	Bool16 hasUser = false;
+	Bool16 handled = false;
 
 
 	// Call all the modules that are registered for the RTSP Authorize Role 
@@ -867,7 +868,7 @@ QTSS_Error  QTSSCallbacks::QTSS_Authenticate(const char* inAuthUserName, const c
 	return theErr;
 }
 
-QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, bool* outAuthUserAllowed)
+QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
 {
 	RTSPRequestInterface* request = (RTSPRequestInterface *)inAuthRequestObject;
 	if (request == NULL)
@@ -892,11 +893,11 @@ QTSS_Error	QTSSCallbacks::QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObj
 	UInt32 x = 0;
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPAuthRole);
 	QTSSModule* theModulePtr = NULL;
-	bool 		allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
+	Bool16 		allowedDefault = QTSServerInterface::GetServer()->GetPrefs()->GetAllowGuestDefault();
 	*outAuthUserAllowed = allowedDefault;
-	bool      allowed = allowedDefault; //server pref?
-	bool      hasUser = false;
-	bool      handled = false;
+	Bool16      allowed = allowedDefault; //server pref?
+	Bool16      hasUser = false;
+	Bool16      handled = false;
 
 
 	// Call all the modules that are registered for the RTSP Authorize Role 
@@ -1005,7 +1006,7 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 {
 	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 
-	EasyMsgSCRTSPLiveSessionsACK ack;
+	EasyMsgSCRTSPPushSessionListACK ack;
 	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
 	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");
 

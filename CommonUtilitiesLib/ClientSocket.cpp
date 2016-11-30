@@ -51,11 +51,10 @@ ClientSocket::ClientSocket()
 	: fHostAddr(0),
 	fHostPort(0),
 	fEventMask(0),
-	fSocketP(nullptr),
+	fSocketP(NULL),
 	fSendBuffer(fSendBuf, 0),
 	fSentLength(0)
-{
-}
+{}
 
 OS_Error ClientSocket::Open(TCPSocket* inSocket)
 {
@@ -142,7 +141,7 @@ OS_Error ClientSocket::SendSendBuffer(TCPSocket* inSocket)
 
 
 TCPClientSocket::TCPClientSocket(UInt32 inSocketType)
-	: fSocket(nullptr, inSocketType)
+	: fSocket(NULL, inSocketType)
 {
 	//
 	// It is necessary to open the socket right when we construct the
@@ -211,10 +210,10 @@ HTTPClientSocket::HTTPClientSocket(const StrPtrLen& inURL, UInt32 inCookie, UInt
 	fSocketType(inSocketType),
 	fGetReceived(0),
 
-	fGetSocket(nullptr, inSocketType),
-	fPostSocket(nullptr)
+	fGetSocket(NULL, inSocketType),
+	fPostSocket(NULL)
 {
-	fURL.Ptr = new char[inURL.Len + 1];
+	fURL.Ptr = NEW char[inURL.Len + 1];
 	fURL.Len = inURL.Len;
 	::memcpy(fURL.Ptr, inURL.Ptr, inURL.Len);
 	fURL.Ptr[fURL.Len] = '\0';
@@ -267,7 +266,7 @@ OS_Error HTTPClientSocket::Read(void* inBuffer, const UInt32 inLength, UInt32* o
 			fSendBuffer.Ptr[fGetReceived] = '\0';
 			char* theGetEnd = ::strstr(fSendBuffer.Ptr, "\r\n\r\n");
 
-			if (theGetEnd != nullptr)
+			if (theGetEnd != NULL)
 			{
 				// We got the entire GET response, so we are ready to move onto
 				// real RTSP response data. First skip past the \r\n\r\n
@@ -318,8 +317,8 @@ OS_Error HTTPClientSocket::SendV(iovec* inVec, UInt32 inNumVecs)
 {
 	//
 	// Bring up the POST connection if we need to
-	if (fPostSocket == nullptr)
-		fPostSocket = new TCPSocket(nullptr, fSocketType);
+	if (fPostSocket == NULL)
+		fPostSocket = NEW TCPSocket(NULL, fSocketType);
 
 	if (!fPostSocket->IsConnected())
 	{

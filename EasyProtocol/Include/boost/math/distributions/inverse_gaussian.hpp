@@ -82,7 +82,6 @@ public:
      RealType result;
      detail::check_scale(function, l_scale, &result, Policy());
      detail::check_location(function, l_mean, &result, Policy());
-     detail::check_x_gt0(function, l_mean, &result, Policy());
    }
 
    RealType mean()const
@@ -147,10 +146,6 @@ inline RealType pdf(const inverse_gaussian_distribution<RealType, Policy>& dist,
    {
       return result;
    }
-   if(false == detail::check_x_gt0(function, mean, &result, Policy()))
-   {
-      return result;
-   }
    if(false == detail::check_positive_x(function, x, &result, Policy()))
    {
       return result;
@@ -181,10 +176,6 @@ inline RealType cdf(const inverse_gaussian_distribution<RealType, Policy>& dist,
       return result;
    }
    if(false == detail::check_location(function, mean, &result, Policy()))
-   {
-      return result;
-   }
-   if (false == detail::check_x_gt0(function, mean, &result, Policy()))
    {
       return result;
    }
@@ -331,8 +322,6 @@ inline RealType quantile(const inverse_gaussian_distribution<RealType, Policy>& 
       return result;
    if(false == detail::check_location(function, mean, &result, Policy()))
       return result;
-   if (false == detail::check_x_gt0(function, mean, &result, Policy()))
-      return result;
    if(false == detail::check_probability(function, p, &result, Policy()))
       return result;
    if (p == 0)
@@ -391,8 +380,6 @@ inline RealType cdf(const complemented2_type<inverse_gaussian_distribution<RealT
       return result;
    if(false == detail::check_location(function, mean, &result, Policy()))
       return result;
-   if (false == detail::check_x_gt0(function, mean, &result, Policy()))
-      return result;
    if(false == detail::check_positive_x(function, x, &result, Policy()))
       return result;
 
@@ -424,8 +411,6 @@ inline RealType quantile(const complemented2_type<inverse_gaussian_distribution<
    if(false == detail::check_scale(function, scale, &result, Policy()))
       return result;
    if(false == detail::check_location(function, mean, &result, Policy()))
-      return result;
-   if (false == detail::check_x_gt0(function, mean, &result, Policy()))
       return result;
    RealType q = c.param;
    if(false == detail::check_probability(function, q, &result, Policy()))

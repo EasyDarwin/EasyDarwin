@@ -215,17 +215,10 @@ inline real_concept floor(real_concept a)
 { return std::floor(a.value()); }
 inline real_concept modf(real_concept a, real_concept* ipart)
 {
-#ifdef __MINGW32__
-   real_concept_base_type ip;
-   real_concept_base_type result = boost::math::modf(a.value(), &ip);
-   *ipart = ip;
-   return result;
-#else
    real_concept_base_type ip;
    real_concept_base_type result = std::modf(a.value(), &ip);
    *ipart = ip;
    return result;
-#endif
 }
 inline real_concept frexp(real_concept a, int* expon)
 { return std::frexp(a.value(), expon); }
@@ -335,7 +328,7 @@ namespace tools
 {
 
 template <>
-inline concepts::real_concept make_big_value<concepts::real_concept>(boost::math::tools::largest_float val, const char* , mpl::false_ const&, mpl::false_ const&)
+inline concepts::real_concept make_big_value<concepts::real_concept>(boost::floatmax_t val, const char* , mpl::false_ const&, mpl::false_ const&)
 {
    return val;  // Can't use lexical_cast here, sometimes it fails....
 }
@@ -375,7 +368,7 @@ inline concepts::real_concept epsilon<concepts::real_concept>(BOOST_MATH_EXPLICI
 }
 
 template <>
-inline BOOST_MATH_CONSTEXPR int digits<concepts::real_concept>(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept)) BOOST_NOEXCEPT
+inline int digits<concepts::real_concept>(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
 {
    // Assume number of significand bits is same as real_concept_base_type,
    // unless std::numeric_limits<T>::is_specialized to provide digits.
@@ -388,26 +381,6 @@ inline BOOST_MATH_CONSTEXPR int digits<concepts::real_concept>(BOOST_MATH_EXPLIC
 }
 
 } // namespace tools
-/*
-namespace policies {
-   namespace detail {
-
-      template <class T>
-      inline concepts::real_concept raise_rounding_error(
-         const char*,
-         const char*,
-         const T& val,
-         const concepts::real_concept&,
-         const  ::boost::math::policies::rounding_error< ::boost::math::policies::errno_on_error>&) BOOST_MATH_NOEXCEPT(T)
-      {
-         errno = ERANGE;
-         // This may or may not do the right thing, but the user asked for the error
-         // to be silent so here we go anyway:
-         return  val > 0 ? boost::math::tools::max_value<concepts::real_concept>() : -boost::math::tools::max_value<concepts::real_concept>();
-      }
-
-   }
-}*/
 
 #if defined(__SGI_STL_PORT) || defined(BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS)
 //

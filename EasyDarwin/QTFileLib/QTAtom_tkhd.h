@@ -56,13 +56,13 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_tkhd(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		bool Debug = false, bool DeepDebug = false);
+		Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTAtom_tkhd();
 
 
 	//
 	// Initialization functions.
-	virtual bool      Initialize();
+	virtual Bool16      Initialize();
 
 	//
 	// Accessors.

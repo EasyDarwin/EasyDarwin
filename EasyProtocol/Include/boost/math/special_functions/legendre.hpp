@@ -71,7 +71,7 @@ T legendre_imp(unsigned l, T x, const Policy& pol, bool second = false)
 } // namespace detail
 
 template <class T, class Policy>
-inline typename boost::enable_if_c<policies::is_policy<Policy>::value, typename tools::promote_args<T>::type>::type
+inline typename tools::promote_args<T>::type 
    legendre_p(int l, T x, const Policy& pol)
 {
    typedef typename tools::promote_args<T>::type result_type;
@@ -90,7 +90,7 @@ inline typename tools::promote_args<T>::type
 }
 
 template <class T, class Policy>
-inline typename boost::enable_if_c<policies::is_policy<Policy>::value, typename tools::promote_args<T>::type>::type
+inline typename tools::promote_args<T>::type 
    legendre_q(unsigned l, T x, const Policy& pol)
 {
    typedef typename tools::promote_args<T>::type result_type;

@@ -48,7 +48,7 @@ public:
 	HTTPSession();
 	virtual ~HTTPSession();
 
-	QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement);
+	QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
 
 	//char* GetDeviceSnap() { return fDeviceSnap; };
 	char* GetDeviceSerial() { return (char*)fDevice.serial_.c_str(); };
@@ -94,10 +94,10 @@ private:
 	QTSS_Error dumpRequestData();//清空请求报文
 
 	// test current connections handled by this object against server pref connection limit
-	static bool overMaxConnections(UInt32 buffer);
+	static Bool16 overMaxConnections(UInt32 buffer);
 
 	QTSS_Error rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height);
-	static int	yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
+	int	yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
 
 	HTTPRequest*        fRequest;
 	OSMutex             fReadMutex;

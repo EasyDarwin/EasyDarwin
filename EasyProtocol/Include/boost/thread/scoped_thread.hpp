@@ -197,9 +197,6 @@ namespace boost
      */
     scoped_thread& operator=(BOOST_RV_REF(scoped_thread) x)
     {
-      CallableThread on_destructor;
-
-      on_destructor(t_);
       t_ = boost::move(BOOST_THREAD_RV(x).t_);
       return *this;
     }

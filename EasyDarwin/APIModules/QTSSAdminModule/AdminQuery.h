@@ -144,19 +144,19 @@ public:
 	UInt32      GetAccessFlags() { return    fAccessFlags; };
 	UInt32      GetSnapshotID() { return    fSnapshotID; };
 	UInt32      GetParamBits() { return    fParamBits; };
-	bool      IsAdminQuery() { return    fIsAdminQuery; };
-	bool      UseSnapShot() { return    fUseSnapShot; };
+	Bool16      IsAdminQuery() { return    fIsAdminQuery; };
+	Bool16      UseSnapShot() { return    fUseSnapShot; };
 
-	bool      RecurseParam() { return    (bool)((fParamBits & kRecurseParam) != 0); };
-	bool      VerboseParam() { return    (bool)((fParamBits & kVerboseParam) != 0); };
-	bool      AccessParam() { return    (bool)((fParamBits & kAccessParam) != 0); };
-	bool      TypeParam() { return    (bool)((fParamBits & kTypeParam) != 0); };
-	bool      FilterParam() { return    (bool)((fParamBits & kFilterParam) != 0); };
-	bool      PathParam() { return    (bool)((fParamBits & kPathParam) != 0); };
-	bool      DebugParam() { return    (bool)((fParamBits & kDebugParam) != 0); };
-	bool      IndexParam() { return    (bool)((fParamBits & kIndexParam) != 0); };
+	Bool16      RecurseParam() { return    (Bool16)((fParamBits & kRecurseParam) != 0); };
+	Bool16      VerboseParam() { return    (Bool16)((fParamBits & kVerboseParam) != 0); };
+	Bool16      AccessParam() { return    (Bool16)((fParamBits & kAccessParam) != 0); };
+	Bool16      TypeParam() { return    (Bool16)((fParamBits & kTypeParam) != 0); };
+	Bool16      FilterParam() { return    (Bool16)((fParamBits & kFilterParam) != 0); };
+	Bool16      PathParam() { return    (Bool16)((fParamBits & kPathParam) != 0); };
+	Bool16      DebugParam() { return    (Bool16)((fParamBits & kDebugParam) != 0); };
+	Bool16      IndexParam() { return    (Bool16)((fParamBits & kIndexParam) != 0); };
 	void        SetQueryHasResponse() { fQueryHasResponse = true; };
-	bool      QueryHasReponse() { if (fQueryEvalResult > 0) return true; else return fQueryHasResponse; };
+	Bool16      QueryHasReponse() { if (fQueryEvalResult > 0) return true; else return fQueryHasResponse; };
 	UInt32      GetEvaluResult() { return fQueryEvalResult; };
 	StrPtrLen*  NextSegment(StrPtrLen *currentPathPtr, StrPtrLen *outNextPtr);
 	void        SetAccessFlags();
@@ -170,9 +170,9 @@ public:
 	UInt32      EvalQuery(UInt32 *forceResultPtr, char *forceMessagePtr);
 
 	char        fQueryMessageBuff[1024];
-	bool      fIsPref;
+	Bool16      fIsPref;
 	SInt16      fNumFilters;
-	bool      fHasQuery;
+	Bool16      fHasQuery;
 private:
 	char        fURIBuffer[QueryURI::eMaxBufferSize];
 	char        fQueryBuffer[QueryURI::eMaxBufferSize];
@@ -181,11 +181,11 @@ private:
 	UInt32      fParamBits;
 	UInt32      fSnapshotID;
 	UInt32      fAccessFlags;
-	bool      fIsAdminQuery;
-	bool      fUseSnapShot;
+	Bool16      fIsAdminQuery;
+	Bool16      fUseSnapShot;
 	StrPtrLen   fCurrentPath;
 	StrPtrLen   fNext;
-	bool      fQueryHasResponse;
+	Bool16      fQueryHasResponse;
 	UInt32      fQueryEvalResult;
 	StrPtrLen   fQueryEvalMessage;
 	SInt32      fTheCommand;

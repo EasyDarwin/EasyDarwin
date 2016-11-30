@@ -202,13 +202,9 @@ struct bernoulli_initializer
          // initialize our dymanic table:
          //
          boost::math::bernoulli_b2n<T>(2, Policy());
-#ifndef BOOST_NO_EXCEPTIONS
          try{
-#endif
             boost::math::bernoulli_b2n<T>(max_bernoulli_b2n<T>::value + 1, Policy());
-#ifndef BOOST_NO_EXCEPTIONS
          } catch(const std::overflow_error&){}
-#endif
          boost::math::tangent_t2n<T>(2, Policy());
       }
       void force_instantiate()const{}
@@ -258,9 +254,7 @@ struct fixed_vector : private std::allocator<T>
    void resize(unsigned n, const T& val)
    {
       if(n > m_capacity)
-      {
-         BOOST_THROW_EXCEPTION(std::runtime_error("Exhausted storage for Bernoulli numbers."));
-      }
+         throw std::runtime_error("Exhausted storage for Bernoulli numbers.");
       for(unsigned i = m_used; i < n; ++i)
          new (m_data + i) T(val);
       m_used = n;
@@ -438,11 +432,11 @@ public:
       //
       if(start + n >= bn.size())
       {
-         std::size_t new_size = (std::min)((std::max)((std::max)(std::size_t(start + n), std::size_t(bn.size() + 20)), std::size_t(50)), std::size_t(bn.capacity()));
+         std::size_t new_size = (std::min)((std::max)((std::max)(start + n, std::size_t(bn.size() + 20)), std::size_t(50)), std::size_t(bn.capacity()));
          tangent_numbers_series(new_size);
       }
 
-      for(std::size_t i = (std::max)(std::size_t(max_bernoulli_b2n<T>::value + 1), start); i < start + n; ++i)
+      for(std::size_t i = (std::max)(max_bernoulli_b2n<T>::value + 1, start); i < start + n; ++i)
       {
          *out = (i >= m_overflow_limit) ? policies::raise_overflow_error<T>("boost::math::bernoulli_b2n<%1%>(std::size_t)", 0, T(i), pol) : bn[i];
          ++out;
@@ -454,11 +448,11 @@ public:
       boost::detail::lightweight_mutex::scoped_lock l(m_mutex);
       if(start + n >= bn.size())
       {
-         std::size_t new_size = (std::min)((std::max)((std::max)(std::size_t(start + n), std::size_t(bn.size() + 20)), std::size_t(50)), std::size_t(bn.capacity()));
+         std::size_t new_size = (std::min)((std::max)((std::max)(start + n, std::size_t(bn.size() + 20)), std::size_t(50)), std::size_t(bn.capacity()));
          tangent_numbers_series(new_size);
       }
 
-      for(std::size_t i = (std::max)(std::size_t(max_bernoulli_b2n<T>::value + 1), start); i < start + n; ++i)
+      for(std::size_t i = (std::max)(max_bernoulli_b2n<T>::value + 1, start); i < start + n; ++i)
       {
          *out = (i >= m_overflow_limit) ? policies::raise_overflow_error<T>("boost::math::bernoulli_b2n<%1%>(std::size_t)", 0, T(i), pol) : bn[i];
          ++out;
@@ -479,7 +473,7 @@ public:
          {
             if(start + n >= bn.size())
             {
-               std::size_t new_size = (std::min)((std::max)((std::max)(std::size_t(start + n), std::size_t(bn.size() + 20)), std::size_t(50)), std::size_t(bn.capacity()));
+               std::size_t new_size = (std::min)((std::max)((std::max)(start + n, std::size_t(bn.size() + 20)), std::size_t(50)), std::size_t(bn.capacity()));
                tangent_numbers_series(new_size);
             }
             m_counter.store(static_cast<atomic_integer_type>(bn.size()), BOOST_MATH_ATOMIC_NS::memory_order_release);
@@ -631,7 +625,7 @@ private:
    //
    fixed_vector<T> bn, tn;
    std::vector<T> m_intermediates;
-   // The value at which we know overflow has already occurred for the Bn:
+   // The value at which we know overflow has already occured for the Bn:
    std::size_t m_overflow_limit;
 #if !defined(BOOST_HAS_THREADS)
 #elif defined(BOOST_MATH_NO_ATOMIC_INT)

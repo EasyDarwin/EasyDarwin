@@ -25,7 +25,10 @@
  /*
 	 File:       QTSServerInterface.cpp
 
-	 Contains:   Implementation of object defined in QTSServerInterface.h
+	 Contains:   Implementation of object defined in QTSServerInterface.h.
+
+
+
  */
 
  //INCLUDES:
@@ -126,11 +129,18 @@ QTSSAttrInfoDict::AttrInfo  QTSServerInterface::sAttributes[] =
 	/* 30 */ { "qtssSvrNumReliableUDPBuffers",  GetNumUDPBuffers,   qtssAttrDataTypeUInt32,     qtssAttrModeRead },
 	/* 31 */ { "qtssSvrReliableUDPWastageInBytes",GetNumWastedBytes, qtssAttrDataTypeUInt32,        qtssAttrModeRead },
 	/* 32 */ { "qtssSvrConnectedUsers",         NULL, qtssAttrDataTypeQTSS_Object,      qtssAttrModeRead | qtssAttrModeWrite },
-	/* 33  */ { "qtssSvrServerBuild",           NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 34  */ { "qtssSvrServerPlatform",        NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 35  */ { "qtssSvrRTSPServerComment",     NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 36  */ { "qtssSvrNumThinned",            NULL,   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 37  */ { "qtssSvrNumThreads",            NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe }
+	/* 33 */ { "qtssMP3SvrCurConn",             NULL, qtssAttrDataTypeUInt32,       qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
+	/* 34 */ { "qtssMP3SvrTotalConn",           NULL, qtssAttrDataTypeUInt32,       qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
+	/* 35 */ { "qtssMP3SvrCurBandwidth",        NULL, qtssAttrDataTypeUInt32,       qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
+	/* 36 */ { "qtssMP3SvrTotalBytes",          NULL, qtssAttrDataTypeUInt64,       qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
+	/* 37 */ { "qtssMP3SvrAvgBandwidth",        NULL, qtssAttrDataTypeUInt32,       qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
+
+	/* 38  */ { "qtssSvrServerBuild",           NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 39  */ { "qtssSvrServerPlatform",        NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 40  */ { "qtssSvrRTSPServerComment",     NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 41  */ { "qtssSvrNumThinned",            NULL,   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 42  */ { "qtssSvrNumThreads",            NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe }
+
 };
 
 void    QTSServerInterface::Initialize()
@@ -206,6 +216,11 @@ QTSServerInterface::QTSServerInterface()
 	fCPUTimeUsedInSec(0),
 	fUDPWastageInBytes(0),
 	fNumUDPBuffers(0),
+	fNumMP3Sessions(0),
+	fTotalMP3Sessions(0),
+	fCurrentMP3BandwidthInBits(0),
+	fTotalMP3Bytes(0),
+	fAvgMP3BandwidthInBits(0),
 	fSigInt(false),
 	fSigTerm(false),
 	fDebugLevel(0),
@@ -242,6 +257,11 @@ QTSServerInterface::QTSServerInterface()
 	this->SetVal(qtssSvrStartupTime, &fStartupTime_UnixMilli, sizeof(fStartupTime_UnixMilli));
 	this->SetVal(qtssSvrGMTOffsetInHrs, &fGMTOffset, sizeof(fGMTOffset));
 	this->SetVal(qtssSvrCPULoadPercent, &fCPUPercent, sizeof(fCPUPercent));
+	this->SetVal(qtssMP3SvrCurConn, &fNumMP3Sessions, sizeof(fNumMP3Sessions));
+	this->SetVal(qtssMP3SvrTotalConn, &fTotalMP3Sessions, sizeof(fTotalMP3Sessions));
+	this->SetVal(qtssMP3SvrCurBandwidth, &fCurrentMP3BandwidthInBits, sizeof(fCurrentMP3BandwidthInBits));
+	this->SetVal(qtssMP3SvrTotalBytes, &fTotalMP3Bytes, sizeof(fTotalMP3Bytes));
+	this->SetVal(qtssMP3SvrAvgBandwidth, &fAvgMP3BandwidthInBits, sizeof(fAvgMP3BandwidthInBits));
 
 	this->SetVal(qtssSvrServerBuild, sServerBuildStr.Ptr, sServerBuildStr.Len);
 	this->SetVal(qtssSvrRTSPServerComment, sServerCommentStr.Ptr, sServerCommentStr.Len);
@@ -321,7 +341,7 @@ void QTSServerInterface::SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap*
 
 
 RTPStatsUpdaterTask::RTPStatsUpdaterTask()
-	: Task(), fLastBandwidthTime(0), fLastBandwidthAvg(0), fLastBytesSent(0)
+	: Task(), fLastBandwidthTime(0), fLastBandwidthAvg(0), fLastBytesSent(0), fLastTotalMP3Bytes(0)
 {
 	this->SetTaskName("RTPStatsUpdaterTask");
 	this->Signal(Task::kStartEvent);
@@ -372,24 +392,19 @@ SInt64 RTPStatsUpdaterTask::Run()
 	// because the fPeriodicRTPBytes variable is being manipulated from within an
 	// atomic_add. On PowerPC, assignments are atomic, so the assignment below is ok.
 	// On a non-PowerPC platform, the following would be thread safe:
-	//unsigned int periodicBytes = atomic_add(&theServer->fPeriodicRTPBytes, 0);-----------
+	//unsigned int periodicBytes = atomic_add(&theServer->fPeriodicRTPBytes, 0);
 	unsigned int periodicBytes = theServer->fPeriodicRTPBytes;
-	//(void)atomic_sub(&theServer->fPeriodicRTPBytes, periodicBytes);
-
-	theServer->fPeriodicRTPBytes.fetch_sub(periodicBytes);
+	(void)atomic_sub(&theServer->fPeriodicRTPBytes, periodicBytes);
 	theServer->fTotalRTPBytes += periodicBytes;
 
 	// Same deal for packet totals
 	unsigned int periodicPackets = theServer->fPeriodicRTPPackets;
-	//(void)atomic_sub(&theServer->fPeriodicRTPPackets, periodicPackets);
-	theServer->fPeriodicRTPPackets.fetch_sub(periodicPackets);
+	(void)atomic_sub(&theServer->fPeriodicRTPPackets, periodicPackets);
 	theServer->fTotalRTPPackets += periodicPackets;
 
 	// ..and for lost packet totals
 	unsigned int periodicPacketsLost = theServer->fPeriodicRTPPacketsLost;
-	//(void)atomic_sub(&theServer->fPeriodicRTPPacketsLost, periodicPacketsLost);
-	theServer->fPeriodicRTPPacketsLost.fetch_sub(periodicPacketsLost);
-
+	(void)atomic_sub(&theServer->fPeriodicRTPPacketsLost, periodicPacketsLost);
 	theServer->fTotalRTPPacketsLost += periodicPacketsLost;
 
 	SInt64 curTime = OS::Milliseconds();
@@ -423,6 +438,12 @@ SInt64 RTPStatsUpdaterTask::Run()
 		bits /= theTime;
 		theServer->fCurrentRTPBandwidthInBits = (UInt32)(bits + headerBits);
 
+		// okay let's do it for MP3 bytes now
+		bits = (Float32)(((SInt64)theServer->fTotalMP3Bytes - fLastTotalMP3Bytes) * 8);
+		bits /= theTime;
+		theServer->fCurrentMP3BandwidthInBits = (UInt32)bits;
+
+
 		//do the computation for cpu percent
 		Float32 diffTime = cpuTimeInSec - theServer->fCPUTimeUsedInSec;
 		theServer->fCPUPercent = (diffTime / theTime) * 100;
@@ -432,6 +453,12 @@ SInt64 RTPStatsUpdaterTask::Run()
 		if (numProcessors > 1)
 			theServer->fCPUPercent /= numProcessors;
 	}
+
+	fLastTotalMP3Bytes = (SInt64)theServer->fTotalMP3Bytes;
+	fLastBandwidthTime = curTime;
+	// We use a running average for avg. bandwidth calculations
+	theServer->fAvgMP3BandwidthInBits = (theServer->fAvgMP3BandwidthInBits
+		+ theServer->fCurrentMP3BandwidthInBits) / 2;
 
 	//for cpu percent
 	theServer->fCPUTimeUsedInSec = cpuTimeInSec;

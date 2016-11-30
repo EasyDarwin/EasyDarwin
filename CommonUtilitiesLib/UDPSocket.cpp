@@ -57,10 +57,10 @@
 #endif
 
 UDPSocket::UDPSocket(Task* inTask, UInt32 inSocketType)
-	: Socket(inTask, inSocketType), fDemuxer(nullptr)
+	: Socket(inTask, inSocketType), fDemuxer(NULL)
 {
 	if (inSocketType & kWantsDemuxer)
-		fDemuxer = new UDPDemuxer();
+		fDemuxer = NEW UDPDemuxer();
 
 	//setup msghdr
 	::memset(&fMsgAddr, 0, sizeof(fMsgAddr));
@@ -70,7 +70,7 @@ UDPSocket::UDPSocket(Task* inTask, UInt32 inSocketType)
 OS_Error
 UDPSocket::SendTo(UInt32 inRemoteAddr, UInt16 inRemotePort, void* inBuffer, UInt32 inLength)
 {
-	Assert(inBuffer != nullptr);
+	Assert(inBuffer != NULL);
 
 	struct sockaddr_in  theRemoteAddr;
 	theRemoteAddr.sin_family = AF_INET;
@@ -92,9 +92,9 @@ UDPSocket::SendTo(UInt32 inRemoteAddr, UInt16 inRemotePort, void* inBuffer, UInt
 OS_Error UDPSocket::RecvFrom(UInt32* outRemoteAddr, UInt16* outRemotePort,
 	void* ioBuffer, UInt32 inBufLen, UInt32* outRecvLen)
 {
-	Assert(outRecvLen != nullptr);
-	Assert(outRemoteAddr != nullptr);
-	Assert(outRemotePort != nullptr);
+	Assert(outRecvLen != NULL);
+	Assert(outRemoteAddr != NULL);
+	Assert(outRemotePort != NULL);
 
 #if __Win32__ || __osf__  || __sgi__ || __hpux__
 	int addrLen = sizeof(fMsgAddr);

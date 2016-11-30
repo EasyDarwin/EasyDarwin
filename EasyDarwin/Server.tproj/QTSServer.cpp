@@ -57,17 +57,17 @@
 
  //Compile time modules
 #include "QTSSErrorLogModule.h"
+#include "QTSSFileModule.h"
 #include "QTSSAccessLogModule.h"
 #include "QTSSFlowControlModule.h"
 #include "QTSSReflectorModule.h"
-//#include "EasyHLSModule.h"
 #include "EasyCMSModule.h"
 #include "EasyRedisModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
 #include "QTSSPosixFileSysModule.h"
-//#include "QTSSAdminModule.h"
+#include "QTSSAdminModule.h"
 #include "QTSSAccessModule.h"
 //#include "QTSSDSAuthModule.h"
 #if MEMORY_DEBUGGING
@@ -78,11 +78,15 @@
 #include "RTSPSessionInterface.h"
 #include "RTPSessionInterface.h"
 #include "RTSPSession.h"
+
 #include "HTTPSession.h"
 
 #include "RTPStream.h"
 #include "RTCPTask.h"
 #include "QTSSFile.h"
+
+#include "RTPStream3gpp.h"
+#include "RTSPRequest3GPP.h"
 
 // CLASS DEFINITIONS
 
@@ -97,7 +101,7 @@ public:
 	virtual Task*   GetSessionTask(TCPSocket** outSocket);
 
 	//check whether the Listener should be idling
-	bool OverMaxConnections(UInt32 buffer);
+	Bool16 OverMaxConnections(UInt32 buffer);
 
 };
 
@@ -112,7 +116,7 @@ public:
 	virtual Task*   GetSessionTask(TCPSocket** outSocket);
 
 	//check whether the Listener should be idling
-	bool OverMaxConnections(UInt32 buffer);
+	Bool16 OverMaxConnections(UInt32 buffer);
 
 };
 
@@ -172,7 +176,7 @@ QTSServer::~QTSServer()
 	delete fSrvrPrefs;
 }
 
-bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, bool createListeners, const char*inAbsolutePath)
+Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, Bool16 createListeners, const char*inAbsolutePath)
 {
 	static const UInt32 kRTPSessionMapSize = 5000;
 	static const UInt32 kHLSSessionMapSize = 5000;
@@ -199,6 +203,11 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 	RTSPSession::Initialize();
 	QTSSFile::Initialize();
 	QTSSUserProfile::Initialize();
+
+	RTSPRequest3GPP::Initialize();
+	RTPStream3GPP::Initialize();
+	RTPSession3GPP::Initialize();
+	RTSPSession3GPP::Initialize();
 
 	//
 	// STUB SERVER INITIALIZATION
@@ -324,7 +333,7 @@ void QTSServer::StartTasks()
 		fListeners[x]->RequestEvent(EV_RE);
 }
 
-bool QTSServer::SetDefaultIPAddr()
+Bool16 QTSServer::SetDefaultIPAddr()
 {
 	//check to make sure there is an available ip interface
 	if (SocketUtils::GetNumIPAddrs() == 0)
@@ -370,7 +379,7 @@ bool QTSServer::SetDefaultIPAddr()
 *	Date:		2015/11/22
 *
 */
-bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride)
+Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride)
 {
 	struct PortTracking
 	{
@@ -378,7 +387,7 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
 
 		UInt16 fPort;
 		UInt32 fIPAddr;
-		bool fNeedsCreating;
+		Bool16 fNeedsCreating;
 	};
 
 	PortTracking* theRTSPPortTrackers = NULL;
@@ -431,7 +440,7 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
 		theTotalHTTPPortTrackers = theNumAddrs;
 		theHTTPPortTrackers = NEW PortTracking[theTotalHTTPPortTrackers];
 
-		UInt16 theHTTPPort = inPrefs->GetServiceLanPort();
+		UInt16 theHTTPPort = inPrefs->GetHTTPServicePort();
 		UInt32 currentIndex = 0;
 
 		for (index = 0; index < theNumAddrs; index++)
@@ -551,7 +560,7 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
 	// Kill any listeners that we no longer need
 	for (UInt32 count4 = 0; count4 < fNumListeners; count4++)
 	{
-		bool deleteThisOne = true;
+		Bool16 deleteThisOne = true;
 
 		for (UInt32 count5 = 0; count5 < curPortIndex; count5++)
 		{
@@ -658,7 +667,7 @@ UInt16* QTSServer::GetRTSPPorts(QTSServerPrefs* inPrefs, UInt32* outNumPortsPtr)
 	return thePortArray;
 }
 
-bool  QTSServer::SetupUDPSockets()
+Bool16  QTSServer::SetupUDPSockets()
 {
 	//function finds all IP addresses on this machine, and binds 1 RTP / RTCP
 	//socket pair to a port pair on each address.
@@ -683,7 +692,7 @@ bool  QTSServer::SetupUDPSockets()
 	return true;
 }
 
-bool  QTSServer::SwitchPersonality()
+Bool16  QTSServer::SwitchPersonality()
 {
 #ifndef __Win32__  //not supported
 	OSCharArrayDeleter runGroupName(fSrvrPrefs->GetRunGroupName());
@@ -735,14 +744,22 @@ void    QTSServer::LoadCompiledInModules()
 	// QTSSModule* myModule = new QTSSModule("__MODULE_NAME__");
 	// (void)myModule->Initialize(&sCallbacks, &__MODULE_MAIN_ROUTINE__);
 	// (void)AddModule(myModule);
+	//
+	// The following modules are all compiled into the server. 
+	QTSSModule* theFileModule = new QTSSModule("QTSSFileModule");
+	(void)theFileModule->SetupModule(&sCallbacks, &QTSSFileModule_Main);
+	(void)AddModule(theFileModule);
 
 	QTSSModule* theReflectorModule = new QTSSModule("QTSSReflectorModule");
 	(void)theReflectorModule->SetupModule(&sCallbacks, &QTSSReflectorModule_Main);
 	(void)AddModule(theReflectorModule);
 
-	//QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
-	//(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
-	//(void)AddModule(theHLSModule);
+	//we not used QTSSRelayModule
+	/*
+	QTSSModule* theRelayModule = new QTSSModule("QTSSRelayModule");
+	(void)theRelayModule->SetupModule(&sCallbacks, &QTSSRelayModule_Main);
+	(void)AddModule(theRelayModule);
+	*/
 
 	QTSSModule* theAccessLog = new QTSSModule("QTSSAccessLogModule");
 	(void)theAccessLog->SetupModule(&sCallbacks, &QTSSAccessLogModule_Main);
@@ -756,6 +773,10 @@ void    QTSServer::LoadCompiledInModules()
 	(void)theFileSysModule->SetupModule(&sCallbacks, &QTSSPosixFileSysModule_Main);
 	(void)AddModule(theFileSysModule);
 
+	QTSSModule* theAdminModule = new QTSSModule("QTSSAdminModule");
+	(void)theAdminModule->SetupModule(&sCallbacks, &QTSSAdminModule_Main);
+	(void)AddModule(theAdminModule);
+
 	if (this->GetPrefs()->CloudPlatformEnabled())
 	{
 		QTSSModule* theCMSModule = new QTSSModule("EasyCMSModule");
@@ -766,6 +787,10 @@ void    QTSServer::LoadCompiledInModules()
 		(void)theRedisModule->SetupModule(&sCallbacks, &EasyRedisModule_Main);
 		(void)AddModule(theRedisModule);
 	}
+
+	//QTSSModule* theMP3StreamingModule = new QTSSModule("QTSSMP3StreamingModule");
+	//(void)theMP3StreamingModule->SetupModule(&sCallbacks, &QTSSMP3StreamingModule_Main);
+	//(void)AddModule(theMP3StreamingModule);
 
 #if MEMORY_DEBUGGING
 	QTSSModule* theWebDebug = new QTSSModule("QTSSWebDebugModule");
@@ -783,6 +808,7 @@ void    QTSServer::LoadCompiledInModules()
 	(void)theQTACCESSmodule->SetupModule(&sCallbacks, &QTSSAccessModule_Main);
 	(void)AddModule(theQTACCESSmodule);
 
+
 #endif //DSS_DYNAMIC_MODULES_ONLY
 
 #ifdef PROXYSERVER
@@ -792,6 +818,8 @@ void    QTSServer::LoadCompiledInModules()
 #endif
 
 }
+
+
 
 void    QTSServer::InitCallbacks()
 {
@@ -981,7 +1009,7 @@ void    QTSServer::CreateModule(char* inModuleFolderPath, char* inModuleName)
 	}
 }
 
-bool QTSServer::AddModule(QTSSModule* inModule)
+Bool16 QTSServer::AddModule(QTSSModule* inModule)
 {
 	Assert(inModule->IsInitialized());
 
@@ -1144,7 +1172,7 @@ void QTSServer::SetupPublicHeader()
 	QTSS_RTSPMethod* theMethod = NULL;
 	UInt32 theLen = 0;
 
-	bool theUniqueMethods[qtssNumMethods + 1];
+	Bool16 theUniqueMethods[qtssNumMethods + 1];
 	::memset(theUniqueMethods, 0, sizeof(theUniqueMethods));
 
 	for (UInt32 y = 0; this->GetValuePtr(qtssSvrHandledMethods, y, (void**)&theMethod, &theLen) == QTSS_NoErr; y++)
@@ -1178,7 +1206,7 @@ Task*   RTSPListenerSocket::GetSessionTask(TCPSocket** outSocket)
 
 	// when the server is behing a round robin DNS, the client needs to knwo the IP address ot the server
 	// so that it can direct the "POST" half of the connection to the same machine when tunnelling RTSP thru HTTP
-	bool  doReportHTTPConnectionAddress = QTSServerInterface::GetServer()->GetPrefs()->GetDoReportHTTPConnectionAddress();
+	Bool16  doReportHTTPConnectionAddress = QTSServerInterface::GetServer()->GetPrefs()->GetDoReportHTTPConnectionAddress();
 
 	RTSPSession* theTask = NEW RTSPSession(doReportHTTPConnectionAddress);
 	*outSocket = theTask->GetSocket();  // out socket is not attached to a unix socket yet.
@@ -1192,11 +1220,11 @@ Task*   RTSPListenerSocket::GetSessionTask(TCPSocket** outSocket)
 }
 
 
-bool RTSPListenerSocket::OverMaxConnections(UInt32 buffer)
+Bool16 RTSPListenerSocket::OverMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
 	SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
-	bool overLimit = false;
+	Bool16 overLimit = false;
 
 	if (maxConns > -1) // limit connections
 	{
@@ -1229,11 +1257,11 @@ Task*   HTTPListenerSocket::GetSessionTask(TCPSocket** outSocket)
 }
 
 
-bool HTTPListenerSocket::OverMaxConnections(UInt32 buffer)
+Bool16 HTTPListenerSocket::OverMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
 	SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
-	bool overLimit = false;
+	Bool16 overLimit = false;
 
 	if (maxConns > -1) // limit connections
 	{

@@ -192,7 +192,6 @@ void FormatOne(std::string& result, std::string::const_iterator& itFmt, const st
 	result.append(str.str());
 }
 
-#if 0
 std::string Format(const std::string& fmt, const boost::any& value)
 {
 	std::string result;
@@ -271,6 +270,7 @@ std::string Format(const std::string& fmt, const boost::any& value1, const boost
 	Format(result, fmt, value1, value2, value3, value4, value5, value6, value7, value8, value9, value10);
 	return result;
 }
+
 
 void Format(std::string& result, const std::string& fmt, const boost::any& value)
 {
@@ -396,12 +396,12 @@ void Format(std::string& result, const std::string& fmt, const boost::any& value
 	Format(result, fmt, args);
 }
 
-#endif
 
 void Format(std::string& result, const char *fmt, const std::vector<boost::any>& values)
 {
 	Format(result, std::string(fmt), values);
 }
+
 
 void Format(std::string& result, const std::string& fmt, const std::vector<boost::any>& values)
 {

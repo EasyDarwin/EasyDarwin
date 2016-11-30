@@ -22,7 +22,7 @@ public:
 
 		if (deque_.empty())
 		{
-			return nullptr;
+			return NULL;
 		}
 
 		T val = deque_.front();
@@ -38,7 +38,7 @@ public:
 		if (deque_.empty())
 		{
 			cond_.Wait(&mtx_, inTimeoutInMilSecs);
-			return nullptr;
+			return NULL;
 		}
 
 		T val = deque_.front();
@@ -52,13 +52,13 @@ public:
 	{
 		if (!mtx_.TryLock())
 		{
-			return nullptr;
+			return NULL;
 		}
 
 		if (deque_.empty())
 		{
 			mtx_.Unlock();
-			return nullptr;
+			return NULL;
 		}
 
 		T val = deque_.back();
@@ -73,14 +73,14 @@ public:
 	{
 		if (!mtx_.TryLock())
 		{
-			return nullptr;
+			return NULL;
 		}
 
 		if (deque_.empty())
 		{
 			cond_.Wait(&mtx_, inTimeoutInMilSecs);
 			mtx_.Unlock();
-			return nullptr;
+			return NULL;
 		}
 
 		T val = deque_.back();

@@ -57,13 +57,13 @@ typedef int socklen_t; // missing from some platform includes
 #endif
 
 
-EventThread* Socket::sEventThread = nullptr;
+EventThread* Socket::sEventThread = NULL;
 
 Socket::Socket(Task *notifytask, UInt32 inSocketType)
 	: EventContext(EventContext::kInvalidFileDesc, sEventThread),
 	fState(inSocketType),
-	fLocalAddrStrPtr(nullptr),
-	fLocalDNSStrPtr(nullptr),
+	fLocalAddrStrPtr(NULL),
+	fLocalDNSStrPtr(NULL),
 	fPortStr(fPortBuffer, kPortBufSizeInBytes)
 {
 	fLocalAddr.sin_addr.s_addr = 0;
@@ -135,9 +135,9 @@ void    Socket::SetSocketBufSize(UInt32 inNewSize)
 	qtss_printf("Socket::SetSocketBufSize ");
 	if (fState & kBound)
 	{
-		if (nullptr != this->GetLocalAddrStr())
+		if (NULL != this->GetLocalAddrStr())
 			this->GetLocalAddrStr()->PrintStr(":");
-		if (nullptr != this->GetLocalPortStr())
+		if (NULL != this->GetLocalPortStr())
 			this->GetLocalPortStr()->PrintStr(" ");
 	}
 	else
@@ -164,9 +164,9 @@ OS_Error    Socket::SetSocketRcvBufSize(UInt32 inNewSize)
 	qtss_printf("Socket::SetSocketRcvBufSize ");
 	if (fState & kBound)
 	{
-		if (nullptr != this->GetLocalAddrStr())
+		if (NULL != this->GetLocalAddrStr())
 			this->GetLocalAddrStr()->PrintStr(":");
-		if (nullptr != this->GetLocalPortStr())
+		if (NULL != this->GetLocalPortStr())
 			this->GetLocalPortStr()->PrintStr(" ");
 	}
 	else
@@ -182,7 +182,7 @@ OS_Error    Socket::SetSocketRcvBufSize(UInt32 inNewSize)
 }
 
 
-OS_Error Socket::Bind(UInt32 addr, UInt16 port, bool test)
+OS_Error Socket::Bind(UInt32 addr, UInt16 port, UInt16 test)
 {
 	socklen_t len = sizeof(fLocalAddr);
 	::memset(&fLocalAddr, 0, sizeof(fLocalAddr));
@@ -226,7 +226,7 @@ StrPtrLen*  Socket::GetLocalAddrStr()
 {
 	//Use the array of IP addr strings to locate the string formatted version
 	//of this IP address.
-	if (fLocalAddrStrPtr == nullptr)
+	if (fLocalAddrStrPtr == NULL)
 	{
 		for (UInt32 x = 0; x < SocketUtils::GetNumIPAddrs(); x++)
 		{
@@ -239,7 +239,7 @@ StrPtrLen*  Socket::GetLocalAddrStr()
 	}
 
 #if SOCKET_DEBUG    
-	if (fLocalAddrStrPtr == nullptr)
+	if (fLocalAddrStrPtr == NULL)
 	{   // shouldn't happen but no match so it was probably a failed socket connection or accept. addr is probably 0.
 
 		fLocalAddrBuffer[0] = 0;
@@ -256,11 +256,11 @@ StrPtrLen*  Socket::GetLocalAddrStr()
 		printf("this ip = %d = ", theAddr.s_addr); fLocalAddrStrPtr->PrintStr("\n");
 
 		if (theAddr.s_addr == 0 || fLocalAddrBuffer[0] == 0)
-			fLocalAddrStrPtr = nullptr; // so the caller can test for failure
+			fLocalAddrStrPtr = NULL; // so the caller can test for failure
 	}
 #endif 
 
-	Assert(fLocalAddrStrPtr != nullptr);
+	Assert(fLocalAddrStrPtr != NULL);
 	return fLocalAddrStrPtr;
 }
 
@@ -268,7 +268,7 @@ StrPtrLen*  Socket::GetLocalDNSStr()
 {
 	//Do the same thing as the above function, but for DNS names
 	Assert(fLocalAddr.sin_addr.s_addr != INADDR_ANY);
-	if (fLocalDNSStrPtr == nullptr)
+	if (fLocalDNSStrPtr == NULL)
 	{
 		for (UInt32 x = 0; x < SocketUtils::GetNumIPAddrs(); x++)
 		{
@@ -281,10 +281,10 @@ StrPtrLen*  Socket::GetLocalDNSStr()
 	}
 
 	//if we weren't able to get this DNS name, make the DNS name the same as the IP addr str.
-	if (fLocalDNSStrPtr == nullptr)
+	if (fLocalDNSStrPtr == NULL)
 		fLocalDNSStrPtr = this->GetLocalAddrStr();
 
-	Assert(fLocalDNSStrPtr != nullptr);
+	Assert(fLocalDNSStrPtr != NULL);
 	return fLocalDNSStrPtr;
 }
 
@@ -301,7 +301,7 @@ StrPtrLen*  Socket::GetLocalPortStr()
 
 OS_Error Socket::Send(const char* inData, const UInt32 inLength, UInt32* outLengthSent)
 {
-	Assert(inData != nullptr);
+	Assert(inData != NULL);
 
 	if (!(fState & kConnected))
 		return (OS_Error)ENOTCONN;
@@ -326,7 +326,7 @@ OS_Error Socket::Send(const char* inData, const UInt32 inLength, UInt32* outLeng
 
 OS_Error Socket::WriteV(const struct iovec* iov, const UInt32 numIOvecs, UInt32* outLenSent)
 {
-	Assert(iov != nullptr);
+	Assert(iov != NULL);
 
 	if (!(fState & kConnected))
 		return (OS_Error)ENOTCONN;
@@ -335,7 +335,7 @@ OS_Error Socket::WriteV(const struct iovec* iov, const UInt32 numIOvecs, UInt32*
 	do {
 #ifdef __Win32__
 		DWORD theBytesSent = 0;
-		err = ::WSASend(fFileDesc, (LPWSABUF)iov, numIOvecs, &theBytesSent, 0, nullptr, nullptr);
+		err = ::WSASend(fFileDesc, (LPWSABUF)iov, numIOvecs, &theBytesSent, 0, NULL, NULL);
 		if (err == 0)
 			err = theBytesSent;
 #else
@@ -351,7 +351,7 @@ OS_Error Socket::WriteV(const struct iovec* iov, const UInt32 numIOvecs, UInt32*
 			fState ^= kConnected;//turn off connected state flag
 		return (OS_Error)theErr;
 	}
-	if (outLenSent != nullptr)
+	if (outLenSent != NULL)
 		*outLenSent = (UInt32)err;
 
 	return OS_NoErr;
@@ -359,8 +359,8 @@ OS_Error Socket::WriteV(const struct iovec* iov, const UInt32 numIOvecs, UInt32*
 
 OS_Error Socket::Read(void *buffer, const UInt32 length, UInt32 *outRecvLenP)
 {
-	Assert(outRecvLenP != nullptr);
-	Assert(buffer != nullptr);
+	Assert(outRecvLenP != NULL);
+	Assert(buffer != NULL);
 
 	if (!(fState & kConnected))
 		return (OS_Error)ENOTCONN;

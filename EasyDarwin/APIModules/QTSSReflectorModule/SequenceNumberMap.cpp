@@ -50,15 +50,15 @@ SequenceNumberMap::SequenceNumberMap(UInt32 inSlidingWindowSize)
 
 }
 
-bool SequenceNumberMap::AddSequenceNumber(UInt16 inSeqNumber)
+Bool16 SequenceNumberMap::AddSequenceNumber(UInt16 inSeqNumber)
 {
 	// Returns whether sequence number has already been added.
 
 	//Check to see if object has been initialized
 	if (fSlidingWindow == NULL)
 	{
-		fSlidingWindow = NEW bool[fWindowSize + 1];
-		::memset(fSlidingWindow, 0, fWindowSize * sizeof(bool));
+		fSlidingWindow = NEW Bool16[fWindowSize + 1];
+		::memset(fSlidingWindow, 0, fWindowSize * sizeof(Bool16));
 		fHighestSeqIndex = 0;
 		fHighestSeqNumber = inSeqNumber;
 	}
@@ -97,7 +97,7 @@ bool SequenceNumberMap::AddSequenceNumber(UInt16 inSeqNumber)
 	Assert(theWindowIndex < fWindowSize);
 
 	// Turn this index on, return whether it was already turned on.
-	bool alreadyAdded = fSlidingWindow[theWindowIndex];
+	Bool16 alreadyAdded = fSlidingWindow[theWindowIndex];
 	fSlidingWindow[theWindowIndex] = true;
 #if SEQUENCENUMBERMAPTESTING
 	//if (alreadyAdded)
@@ -110,7 +110,7 @@ bool SequenceNumberMap::AddSequenceNumber(UInt16 inSeqNumber)
 void SequenceNumberMap::Test()
 {
 	SequenceNumberMap theMap1;
-	bool retval = theMap1.AddSequenceNumber(64674);
+	Bool16 retval = theMap1.AddSequenceNumber(64674);
 	Assert(retval == false);
 
 	retval = theMap1.AddSequenceNumber(64582);

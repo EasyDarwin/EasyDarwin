@@ -104,20 +104,20 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_stsc(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		bool Debug = false, bool DeepDebug = false);
+		Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTAtom_stsc();
 
 
 	//
 	// Initialization functions.
-	virtual bool      Initialize();
+	virtual Bool16      Initialize();
 
 	//
 	// Accessors.
 
-	bool             GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSample, UInt32 *lastSample, QTAtom_stsc_SampleTableControlBlock *STCB);
+	Bool16             GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSample, UInt32 *lastSample, QTAtom_stsc_SampleTableControlBlock *STCB);
 
-	bool             SampleToChunkInfo(UInt32 SampleNumber,
+	Bool16             SampleToChunkInfo(UInt32 SampleNumber,
 		UInt32 *samplesPerChunk = NULL,
 		UInt32 *ChunkNumber = NULL,
 		UInt32 *SampleDescriptionIndex = NULL,
@@ -125,7 +125,7 @@ public:
 		QTAtom_stsc_SampleTableControlBlock * STCB = NULL);
 
 
-	inline  bool      SampleNumberToChunkNumber(UInt32 SampleNumber, UInt32 *ChunkNumber = NULL, UInt32 *SampleDescriptionIndex = NULL, UInt32 *SampleOffsetInChunk = NULL,
+	inline  Bool16      SampleNumberToChunkNumber(UInt32 SampleNumber, UInt32 *ChunkNumber = NULL, UInt32 *SampleDescriptionIndex = NULL, UInt32 *SampleOffsetInChunk = NULL,
 		QTAtom_stsc_SampleTableControlBlock * STCB = NULL)
 	{
 		return SampleToChunkInfo(SampleNumber, NULL /*samplesPerChunk*/, ChunkNumber, SampleDescriptionIndex, SampleOffsetInChunk, STCB);

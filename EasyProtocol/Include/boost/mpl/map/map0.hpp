@@ -19,7 +19,6 @@
 #include <boost/mpl/map/aux_/at_impl.hpp>
 //#include <boost/mpl/map/aux_/O1_size.hpp>
 #include <boost/mpl/map/aux_/insert_impl.hpp>
-#include <boost/mpl/map/aux_/insert_range_impl.hpp>
 #include <boost/mpl/map/aux_/erase_impl.hpp>
 #include <boost/mpl/map/aux_/erase_key_impl.hpp>
 #include <boost/mpl/map/aux_/has_key_impl.hpp>

@@ -28,7 +28,6 @@
 
 namespace boost
 {
-  typedef shared_mutex shared_timed_mutex;
   namespace sync
   {
 #ifdef BOOST_THREAD_NO_AUTO_DETECT_MUTEX_TYPES

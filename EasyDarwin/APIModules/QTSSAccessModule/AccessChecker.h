@@ -78,7 +78,7 @@ public:
 	void UpdateFilePaths(const char* inUsersFilePath, const char* inGroupsFilePath);
 	UInt32 UpdateUserProfiles();
 
-	bool  HaveFilePathsChanged(const char* inUsersFilePath, const char* inGroupsFilePath);
+	Bool16  HaveFilePathsChanged(const char* inUsersFilePath, const char* inGroupsFilePath);
 	UserProfile* RetrieveUserProfile(const StrPtrLen* inUserName);
 	inline StrPtrLen* GetAuthRealm() { return &fAuthRealm; }
 	inline char* GetUsersFilePathPtr() { return fUsersFilePath; }

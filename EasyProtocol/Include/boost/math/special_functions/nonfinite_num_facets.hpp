@@ -24,7 +24,6 @@
 #include <locale>
 
 #include <boost/version.hpp>
-#include <boost/throw_exception.hpp>
 
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/math/special_functions/sign.hpp>
@@ -104,7 +103,7 @@ namespace boost {
         case FP_INFINITE:
           if(flags_ & trap_infinity)
           {
-            BOOST_THROW_EXCEPTION(std::ios_base::failure("Infinity"));
+            throw std::ios_base::failure("Infinity");
           }
           else if((boost::math::signbit)(val))
           { // negative infinity.
@@ -123,7 +122,7 @@ namespace boost {
         case FP_NAN:
           if(flags_ & trap_nan)
           {
-            BOOST_THROW_EXCEPTION(std::ios_base::failure("NaN"));
+            throw std::ios_base::failure("NaN");
           }
           else if((boost::math::signbit)(val))
           { // negative so "-nan".

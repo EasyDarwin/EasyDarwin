@@ -96,7 +96,7 @@ void QTAtom_stts_SampleTableControlBlock::Reset()
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_stts::QTAtom_stts(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_stts::QTAtom_stts(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEntries(0), fTimeToSampleTable(NULL), fTableSize(0)
 {
@@ -122,7 +122,7 @@ QTAtom_stts::~QTAtom_stts()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_stts::Initialize()
+Bool16 QTAtom_stts::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;
@@ -167,12 +167,12 @@ bool QTAtom_stts::Initialize()
 // -------------------------------------
 // Accessors
 //
-bool QTAtom_stts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber, QTAtom_stts_SampleTableControlBlock * STCB)
+Bool16 QTAtom_stts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber, QTAtom_stts_SampleTableControlBlock * STCB)
 {
 	// General vars
 	UInt32      SampleCount, SampleDuration;
 	QTAtom_stts_SampleTableControlBlock *tempSTCB = NULL;
-	bool      result = false;
+	Bool16      result = false;
 	//
 	// Use the default STCB if one was not passed in to us.
 	if (STCB == NULL)
@@ -225,7 +225,7 @@ bool QTAtom_stts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumbe
 	return result;
 }
 
-bool QTAtom_stts::SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaTime, QTAtom_stts_SampleTableControlBlock * STCB)
+Bool16 QTAtom_stts::SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaTime, QTAtom_stts_SampleTableControlBlock * STCB)
 {
 	// General vars
 	UInt32      SampleCount, SampleDuration;
@@ -370,7 +370,7 @@ void QTAtom_ctts_SampleTableControlBlock::Reset()
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_ctts::QTAtom_ctts(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_ctts::QTAtom_ctts(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEntries(0), fTimeToSampleTable(NULL)
 {
@@ -389,7 +389,7 @@ QTAtom_ctts::~QTAtom_ctts()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_ctts::Initialize()
+Bool16 QTAtom_ctts::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;
@@ -426,12 +426,12 @@ bool QTAtom_ctts::Initialize()
 // -------------------------------------
 // Accessors
 //
-bool QTAtom_ctts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber, QTAtom_ctts_SampleTableControlBlock * STCB)
+Bool16 QTAtom_ctts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumber, QTAtom_ctts_SampleTableControlBlock * STCB)
 {
 	// General vars
 	UInt32      SampleCount, SampleDuration;
 	QTAtom_ctts_SampleTableControlBlock *tempSTCB = NULL;
-	bool      result = false;
+	Bool16      result = false;
 	//
 	// Use the default STCB if one was not passed in to us.
 	if (STCB == NULL)
@@ -484,7 +484,7 @@ bool QTAtom_ctts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumbe
 	return result;
 }
 
-bool QTAtom_ctts::SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * MediaTimeOffset, QTAtom_ctts_SampleTableControlBlock * STCB)
+Bool16 QTAtom_ctts::SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * MediaTimeOffset, QTAtom_ctts_SampleTableControlBlock * STCB)
 {
 	// General vars
 	UInt32      SampleCount, SampleOffset;

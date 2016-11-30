@@ -80,14 +80,6 @@ is used.
 #if defined(_MSC_VER) || defined(__BORLANDC__)
 #include <float.h>
 #endif
-#ifdef BOOST_MATH_USE_FLOAT128
-#ifdef __has_include
-#if  __has_include("quadmath.h")
-#include "quadmath.h"
-#define BOOST_MATH_HAS_QUADMATH_H
-#endif
-#endif
-#endif
 
 #ifdef BOOST_NO_STDC_NAMESPACE
   namespace std{ using ::abs; using ::fabs; }
@@ -129,19 +121,7 @@ inline bool is_nan_helper(T, const boost::false_type&)
 {
    return false;
 }
-#if defined(BOOST_MATH_USE_FLOAT128) 
-#if defined(BOOST_MATH_HAS_QUADMATH_H)
-inline bool is_nan_helper(__float128 f, const boost::true_type&) { return ::isnanq(f); }
-inline bool is_nan_helper(__float128 f, const boost::false_type&) { return ::isnanq(f); }
-#elif defined(BOOST_GNU_STDLIB) && BOOST_GNU_STDLIB && \
-      _GLIBCXX_USE_C99_MATH && !_GLIBCXX_USE_C99_FP_MACROS_DYNAMIC
-inline bool is_nan_helper(__float128 f, const boost::true_type&) { return std::isnan(static_cast<double>(f)); }
-inline bool is_nan_helper(__float128 f, const boost::false_type&) { return std::isnan(static_cast<double>(f)); }
-#else
-inline bool is_nan_helper(__float128 f, const boost::true_type&) { return ::isnan(static_cast<double>(f)); }
-inline bool is_nan_helper(__float128 f, const boost::false_type&) { return ::isnan(static_cast<double>(f)); }
-#endif
-#endif
+
 }
 
 namespace math{
@@ -329,7 +309,7 @@ namespace detail {
       if(std::numeric_limits<T>::is_specialized)
          return isfinite_impl(x, generic_tag<true>());
 #endif
-       (void)x; // warning suppression.
+       (void)x; // warning supression.
        return true;
     }
 
@@ -473,7 +453,7 @@ namespace detail {
       if(std::numeric_limits<T>::is_specialized)
          return isinf_impl(x, generic_tag<true>());
 #endif
-        (void)x; // warning suppression.
+        (void)x; // warning supression.
         return false;
     }
 
@@ -533,13 +513,6 @@ inline bool (isinf)(long double x)
    return detail::isinf_impl(static_cast<value_type>(x), method());
 }
 #endif
-#if defined(BOOST_MATH_USE_FLOAT128) && defined(BOOST_MATH_HAS_QUADMATH_H)
-template<>
-inline bool (isinf)(__float128 x)
-{
-   return ::isinfq(x);
-}
-#endif
 
 //------------------------------------------------------------------------------
 
@@ -568,7 +541,7 @@ namespace detail {
       if(std::numeric_limits<T>::is_specialized)
          return isnan_impl(x, generic_tag<true>());
 #endif
-        (void)x; // warning suppression
+        (void)x; // warning supression
         return false;
     }
 
@@ -623,13 +596,6 @@ inline bool (isnan)(long double x)
    typedef traits::method method;
    //typedef boost::is_floating_point<long double>::type fp_tag;
    return detail::isnan_impl(x, method());
-}
-#endif
-#if defined(BOOST_MATH_USE_FLOAT128) && defined(BOOST_MATH_HAS_QUADMATH_H)
-template<>
-inline bool (isnan)(__float128 x)
-{
-   return ::isnanq(x);
 }
 #endif
 

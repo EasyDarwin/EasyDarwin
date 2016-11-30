@@ -58,10 +58,13 @@
 
 #if DEBUG
 #define RTP_TCP_STREAM_DEBUG 1
+#define RTP_3GPP_DEBUG 1
 #define RTP_RTCP_DEBUG 1
 #else
 #define RTP_TCP_STREAM_DEBUG 0
+#define RTP_3GPP_DEBUG 0
 #define RTP_RTCP_DEBUG 0
+
 #endif
 
 
@@ -70,6 +73,13 @@
 #else
 #define DEBUG_RTCP_PRINTF(s) {}
 #endif
+
+#if RTP_3GPP_DEBUG
+#define DEBUG_3GPP_PRINTF(s) qtss_printf s
+#else
+#define DEBUG_3GPP_PRINTF(s) {}
+#endif
+
 
 #define RTCP_TESTING 0
 
@@ -116,7 +126,8 @@ QTSSAttrInfoDict::AttrInfo  RTPStream::sAttributes[] =
 	/* 36 */ { "qtssRTPStrSvrRTPPort",              NULL,   qtssAttrDataTypeUInt16, qtssAttrModeRead | qtssAttrModePreempSafe  },
 	/* 37 */ { "qtssRTPStrClientRTPPort",           NULL,   qtssAttrDataTypeUInt16, qtssAttrModeRead | qtssAttrModePreempSafe  },
 	/* 38 */ { "qtssRTPStrNetworkMode",             NULL,   qtssAttrDataTypeUInt32, qtssAttrModeRead | qtssAttrModePreempSafe  },
-	/* 39 */ { "qtssRTPStrThinningDisabled",        NULL,   qtssAttrDataTypeBool16, qtssAttrModeRead | qtssAttrModePreempSafe  }
+	/* 39 */ { "qtssRTPStr3gppObject",              NULL,   qtssAttrDataTypeQTSS_Object, qtssAttrModeRead | qtssAttrModePreempSafe  },
+	/* 40 */ { "qtssRTPStrThinningDisabled",        NULL,   qtssAttrDataTypeBool16, qtssAttrModeRead | qtssAttrModePreempSafe  }
 
 };
 
@@ -244,6 +255,21 @@ RTPStream::RTPStream(UInt32 inSSRC, RTPSessionInterface* inSession)
 	fMonitorVideoDestPort(QTSServerInterface::GetServer()->GetPrefs()->GetUDPMonitorVideoPort()),
 	fMonitorAudioDestPort(QTSServerInterface::GetServer()->GetPrefs()->GetUDPMonitorAudioPort())
 {
+	Bool16 doRateAdaptation = QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled() && QTSServerInterface::GetServer()->GetPrefs()->Get3GPPRateAdaptationEnabled();
+
+	QTSS_StandardRTSP_Params inParamBlock;
+	inParamBlock.inClientSession = inSession;
+	Bool16 disableRateAdaptForPlayer = !QTSSModuleUtils::HavePlayerProfile((void *)QTSServerInterface::GetServer()->GetPrefs(), &inParamBlock, QTSSModuleUtils::kDisable3gppRateAdaptation);
+	if (doRateAdaptation)
+		doRateAdaptation = disableRateAdaptForPlayer;
+
+	// Set the whether thinning is enabled.
+	Bool16 thinningDisabledForUserAgent = QTSSModuleUtils::HavePlayerProfile((void *)QTSServerInterface::GetServer()->GetPrefs(), &inParamBlock, QTSSModuleUtils::kDisableThinning);
+	if (thinningDisabledForUserAgent)
+		fDisableThinning = thinningDisabledForUserAgent;
+
+
+	fStream3GPP = NEW RTPStream3GPP(*this, doRateAdaptation);
 	fStreamRef = this;
 	if (fUDPMonitorEnabled)
 	{
@@ -316,6 +342,7 @@ RTPStream::RTPStream(UInt32 inSSRC, RTPSessionInterface* inSession)
 	this->SetVal(qtssRTPStrClientRTPPort, &fRemoteRTPPort, sizeof(fRemoteRTPPort));
 	this->SetVal(qtssRTPStrNetworkMode, &fNetworkMode, sizeof(fNetworkMode));
 
+	this->SetVal(qtssRTPStr3gppObject, &fStream3GPP, sizeof(fStream3GPP));
 	this->SetVal(qtssRTPStrThinningDisabled, &fDisableThinning, sizeof(fDisableThinning));
 
 
@@ -344,6 +371,7 @@ RTPStream::~RTPStream()
 	if (fIsTCP)
 		qtss_printf("DEBUG: ~RTPStream %li sends got EAGAIN'd.\n", (SInt32)fNumPacketsDroppedOnTCPFlowControl);
 #endif
+	delete fStream3GPP;
 
 	if (fMonitorSocket != 0)
 	{
@@ -389,7 +417,7 @@ void RTPStream::SetQualityLevel(SInt32 level)
 void  RTPStream::SetOverBufferState(RTSPRequestInterface* request)
 {
 	SInt32 requestedOverBufferState = request->GetDynamicRateState();
-	bool enableOverBuffer = false;
+	Bool16 enableOverBuffer = false;
 
 	switch (fTransportType)
 	{
@@ -557,7 +585,7 @@ QTSS_Error RTPStream::Setup(RTSPRequestInterface* request, QTSS_AddStreamFlags i
 	{
 		//
 		// FIXME - we probably want to get rid of this slow start flag in the API
-		bool useSlowStart = !(inFlags & qtssASFlagsDontUseSlowStart);
+		Bool16 useSlowStart = !(inFlags & qtssASFlagsDontUseSlowStart);
 		if (!QTSServerInterface::GetServer()->GetPrefs()->IsSlowStartEnabled())
 			useSlowStart = false;
 
@@ -699,7 +727,7 @@ void RTPStream::AppendTransport(RTSPRequestInterface* request)
 	}
 }
 
-void    RTPStream::AppendRTPInfo(QTSS_RTSPHeader inHeader, RTSPRequestInterface* request, UInt32 inFlags, bool lastInfo)
+void    RTPStream::AppendRTPInfo(QTSS_RTSPHeader inHeader, RTSPRequestInterface* request, UInt32 inFlags, Bool16 lastInfo)
 {
 	//format strings for the various numbers we need to send back to the client
 	char rtpTimeBuf[20];
@@ -727,7 +755,7 @@ void    RTPStream::AppendRTPInfo(QTSS_RTSPHeader inHeader, RTSPRequestInterface*
 
 
 //UDP Monitor reflected  write
-void RTPStream::UDPMonitorWrite(void* thePacketData, UInt32 inLen, bool isRTCP)
+void RTPStream::UDPMonitorWrite(void* thePacketData, UInt32 inLen, Bool16 isRTCP)
 {
 	if (FALSE == fUDPMonitorEnabled || 0 == fMonitorSocket || NULL == thePacketData)
 		return;
@@ -895,6 +923,21 @@ QTSS_Error RTPStream::ReliableRTPWrite(void* inBuffer, UInt32 inLen, const SInt6
 	return err;
 }
 
+void RTPStream::SetRateAdaptData(RateAdapationStreamDataFields *rateAdaptStreamData)
+{
+	if (NULL == rateAdaptStreamData)
+		return;
+
+	fStream3GPP->SetRateAdaptationData(rateAdaptStreamData);
+
+	QTSS_StandardRTSP_Params inParamBlock;
+	inParamBlock.inClientSession = fSession;
+	Bool16 setTargetTimeForPlayer = QTSSModuleUtils::HavePlayerProfile((void *)QTSServerInterface::GetServer()->GetPrefs(), &inParamBlock, QTSSModuleUtils::kAdjust3gppTargetTime);
+	if (setTargetTimeForPlayer)
+		fStream3GPP->SetBufferTime(QTSServerInterface::GetServer()->GetPrefs()->Get3GPPForcedTargetTime());
+
+}
+
 void RTPStream::SetThinningParams()
 {
 	SInt32 toleranceAdjust = 1500 - (SInt32(fLateToleranceInSec * 1000));
@@ -930,11 +973,26 @@ void RTPStream::SetInitialMaxQualityLevel()
 		//interpolate between ratio and fNumQualityLevels such that 0.90 maps to 0 and 3.0 maps to fNumQualityLevels
 		SetMaxQualityLevelLimit(static_cast<SInt32>(fNumQualityLevels * (ratio / 2.1 - 0.43)));
 		SetQualityLevel(GetQualityLevel());
+		DEBUG_3GPP_PRINTF(("RTPStream::SetInitialMaxQualityLevel movieBitRate=%"   _U32BITARG_   ", bandwidth=%"   _U32BITARG_   ", ratio=%f, fMaxQualityLevel=%" _S32BITARG_ "\n",
+			movieBitRate, bandwidth, ratio, fMaxQualityLevel));
 	}
 }
 
 
-bool RTPStream::UpdateQualityLevel(const SInt64& inTransmitTime, const SInt64& inCurrentPacketDelay,
+Bool16 RTPStream::Supports3GPPQualityLevels()
+{
+
+	if (fStream3GPP->RateAdaptationEnabled() && !fDisableThinning)
+	{
+		return true;
+	}
+
+	return false;
+
+}
+
+
+Bool16 RTPStream::UpdateQualityLevel(const SInt64& inTransmitTime, const SInt64& inCurrentPacketDelay,
 	const SInt64& inCurrentTime, UInt32 inPacketSize)
 {
 	Assert(fNumQualityLevels > 0);
@@ -946,6 +1004,9 @@ bool RTPStream::UpdateQualityLevel(const SInt64& inTransmitTime, const SInt64& i
 	//---视频流不进行thinning 算法丢帧
 	//<- 
 	if (fPayloadType == qtssVideoPayloadType)
+		return true;
+
+	if (this->Supports3GPPQualityLevels())
 		return true;
 
 	if (fTransportType == qtssRTPTransportTypeUDP)
@@ -1063,7 +1124,7 @@ QTSS_Error  RTPStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten
 	SInt64 theCurrentPacketDelay = theTime - thePacket->packetTransmitTime;
 
 	//If we are doing rate-adaptation, set the maximum quality level if the bandwidth header is received
-	if (!fInitialMaxQualityLevelIsSet && !fDisableThinning)
+	if (!fInitialMaxQualityLevelIsSet && fStream3GPP->RateAdaptationEnabled() && !fDisableThinning)
 	{
 		fInitialMaxQualityLevelIsSet = true;
 		SetInitialMaxQualityLevel();
@@ -1115,10 +1176,16 @@ QTSS_Error  RTPStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten
 	}
 	else if (inFlags & qtssWriteFlagsIsRTP)
 	{
+
+		if (fStream3GPP->RateAdaptationEnabled())
+			thePacket->suggestedWakeupTime = fStream3GPP->GetAdjustedTransmitTime(thePacket->packetTransmitTime, theTime);
+		else
 		{   //
 			// Check to see if this packet fits in the overbuffer window
 			thePacket->suggestedWakeupTime = fSession->GetOverbufferWindow()->CheckTransmitTime(thePacket->packetTransmitTime, theTime, inLen);
 		}
+		DEBUG_3GPP_PRINTF(("RTPStream::Write time: %"_S64BITARG_" -> %"_S64BITARG_" (%"_S64BITARG_")\n",
+			thePacket->packetTransmitTime, thePacket->suggestedWakeupTime, thePacket->suggestedWakeupTime - thePacket->packetTransmitTime));
 
 		if (thePacket->suggestedWakeupTime > theTime)
 		{
@@ -1153,6 +1220,9 @@ QTSS_Error  RTPStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten
 
 			UInt16* theSeqNumP = (UInt16*)thePacket->packetData;
 			UInt16 theSeqNum = ntohs(theSeqNumP[1]);
+
+			//Add the packet sequence number and the timestamp to the list of mappings if doing 3GPP-rate-adaptation.
+			fStream3GPP->AddSeqNumTimeMapping(theSeqNum, thePacket->packetTransmitTime);
 
 #if 0 // testing
 			{
@@ -1230,7 +1300,7 @@ QTSS_Error  RTPStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten
 			// Send an RTCP sender report if it's time. Again, we only want to send an
 			// RTCP if the RTP packet was sent sucessfully
 			// If doing rate-adaptation, then send an RTCP SR every seconds so that we get faster RTT feedback.
-			UInt32 senderReportInterval = kSenderReportIntervalInSecs;
+			UInt32 senderReportInterval = fStream3GPP->RateAdaptationEnabled() ? kSenderReportInterval3GPPInSecs : kSenderReportIntervalInSecs;
 			if ((fSession->GetPlayFlags() & qtssPlayFlagsSendRTCP) &&
 				(theTime > (fLastSenderReportTime + (senderReportInterval * 1000))))
 			{
@@ -1263,7 +1333,7 @@ QTSS_Error  RTPStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLenWritten
 
 // SendRTCPSR is called by the session as well as the strem
 // SendRTCPSR must be called from a fSession mutex protected caller
-void RTPStream::SendRTCPSR(const SInt64& inTime, bool inAppendBye)
+void RTPStream::SendRTCPSR(const SInt64& inTime, Bool16 inAppendBye)
 {
 	// This will roll over, after which payloadByteCount will be all messed up.
 	// But because it is a 32 bit number, that is bound to happen eventually,
@@ -1321,7 +1391,7 @@ void RTPStream::ProcessIncomingInterleavedData(UInt8 inChannelNum, RTSPSessionIn
 }
 
 
-bool RTPStream::ProcessNADUPacket(RTCPPacket &rtcpPacket, SInt64 &curTime, StrPtrLen &currentPtr, UInt32 highestSeqNum)
+Bool16 RTPStream::ProcessNADUPacket(RTCPPacket &rtcpPacket, SInt64 &curTime, StrPtrLen &currentPtr, UInt32 highestSeqNum)
 {
 	RTCPNaduPacket naduPacket(false);
 	UInt8* packetBuffer = rtcpPacket.GetPacketBuffer();
@@ -1332,10 +1402,17 @@ bool RTPStream::ProcessNADUPacket(RTCPPacket &rtcpPacket, SInt64 &curTime, StrPt
 	if (!naduPacket.ParseAPPData((UInt8*)currentPtr.Ptr, currentPtr.Len))
 		return false;//abort if we discover a malformed app packet
 
+	fStream3GPP->AddNadu((UInt8*)currentPtr.Ptr, currentPtr.Len, highestSeqNum);
+
+	if (RTCP_TESTING) // testing
+	{
+		fStream3GPP->fNaduList.DumpList();
+	}
+
 	return true;
 }
 
-bool RTPStream::ProcessCompressedQTSSPacket(RTCPPacket &rtcpPacket, SInt64 &curTime, StrPtrLen &currentPtr)
+Bool16 RTPStream::ProcessCompressedQTSSPacket(RTCPPacket &rtcpPacket, SInt64 &curTime, StrPtrLen &currentPtr)
 {
 	RTCPCompressedQTSSPacket compressedQTSSPacket;
 	UInt8* packetBuffer = rtcpPacket.GetPacketBuffer();
@@ -1382,7 +1459,7 @@ bool RTPStream::ProcessCompressedQTSSPacket(RTCPPacket &rtcpPacket, SInt64 &curT
 }
 
 
-bool RTPStream::ProcessAckPacket(RTCPPacket &rtcpPacket, SInt64 &curTime)
+Bool16 RTPStream::ProcessAckPacket(RTCPPacket &rtcpPacket, SInt64 &curTime)
 {
 	RTCPAckPacket theAckPacket;
 	UInt8* packetBuffer = rtcpPacket.GetPacketBuffer();
@@ -1420,7 +1497,7 @@ bool RTPStream::ProcessAckPacket(RTCPPacket &rtcpPacket, SInt64 &curTime)
 
 }
 
-bool RTPStream::TestRTCPPackets(StrPtrLen* inPacketPtr, UInt32 itemName)
+Bool16 RTPStream::TestRTCPPackets(StrPtrLen* inPacketPtr, UInt32 itemName)
 {
 	// Testing?
 	if (!RTCP_TESTING)
@@ -1471,9 +1548,9 @@ void RTPStream::ProcessIncomingRTCPPacket(StrPtrLen* inPacket)
 {
 	StrPtrLen currentPtr(*inPacket);
 	SInt64 curTime = OS::Milliseconds();
-	bool hasPacketLoss = false;
+	Bool16 hasPacketLoss = false;
 	UInt32 highestSeqNum = 0;
-	bool hasNADU = false;
+	Bool16 hasNADU = false;
 
 	// Modules are guarenteed atomic access to the session. Also, the RTSP Session accessed
 	// below could go away at any time. So we need to lock the RTP session mutex.
@@ -1575,7 +1652,9 @@ void RTPStream::ProcessIncomingRTCPPacket(StrPtrLen* inPacket)
 					if (measuredRTT < 60000) //make sure that the RTT is not some ridiculously large value
 					{
 						fEstRTT = fEstRTT == 0 ? measuredRTT : MIN(measuredRTT, fEstRTT);
+						fStream3GPP->SetRTT(fEstRTT, measuredRTT);
 					}
+					DEBUG_3GPP_PRINTF(("RTPStream::ProcessIncomingRTCPPacket measuredRTT=%"   _U32BITARG_   ", fEstRTT=%"   _U32BITARG_   "\n", measuredRTT, fEstRTT));
 				}
 			}
 
@@ -1588,7 +1667,7 @@ void RTPStream::ProcessIncomingRTCPPacket(StrPtrLen* inPacket)
 		case RTCPPacket::kAPPPacketType:
 			{
 				DEBUG_RTCP_PRINTF(("RTPStream::ProcessIncomingRTCPPacket kAPPPacketType\n"));
-				bool packetOK = false;
+				Bool16 packetOK = false;
 				RTCPAPPPacket theAPPPacket;
 				if (!theAPPPacket.ParseAPPPacket((UInt8*)currentPtr.Ptr, currentPtr.Len))
 				{
@@ -1665,6 +1744,18 @@ void RTPStream::ProcessIncomingRTCPPacket(StrPtrLen* inPacket)
 
 		DEBUG_RTCP_PRINTF(("RTPStream::ProcessIncomingRTCPPacket end parse rtcp currentPtr.Len = %"   _U32BITARG_   "\n", currentPtr.Len));
 	}
+
+	Float32 packetLostPercent = ((Float32)fCurPacketsLostInRTCPInterval / (Float32)fPacketCountInRTCPInterval);
+	if (hasPacketLoss)
+	{
+		DEBUG_3GPP_PRINTF(("RTPStream::ProcessIncomingRTCPPacket fCurPacketsLostInRTCPInterval=%"   _U32BITARG_   " packetLostPercent=%.0f%%\n",
+			fCurPacketsLostInRTCPInterval, packetLostPercent * 100));
+		fStream3GPP->SetPacketLoss(packetLostPercent);
+
+	}
+
+	if (hasNADU && fStream3GPP->RateAdaptationEnabled())
+		fStream3GPP->UpdateTimeAndQuality(curTime);
 
 	// Invoke the RTCP modules, allowing them to process this packet
 	QTSS_RoleParams theParams;
@@ -1825,7 +1916,7 @@ void RTPStream::PrintPacket(char *inBuffer, UInt32 inLen, SInt32 inType)
 	case RTPStream::rtcpAPP:
 		if (QTSServerInterface::GetServer()->GetPrefs()->PrintAPPHeaders())
 		{
-			bool debug = true;
+			Bool16 debug = true;
 
 			RTCPAPPPacket appPacket;
 			if (!appPacket.ParseAPPPacket((UInt8*)inBuffer, inLen))

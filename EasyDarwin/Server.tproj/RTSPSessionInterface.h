@@ -40,6 +40,7 @@
 #include "QTSS.h"
 #include "QTSSDictionary.h"
 #include "atomic.h"
+#include "RTSPSession3GPP.h"
 
 class RTSPSessionInterface : public QTSSDictionary, public Task
 {
@@ -47,14 +48,14 @@ public:
 
 	//Initialize must be called right off the bat to initialize dictionary resources
 	static void     Initialize();
-	static void     SetBase64Decoding(bool newVal) { sDoBase64Decoding = newVal; }
+	static void     SetBase64Decoding(Bool16 newVal) { sDoBase64Decoding = newVal; }
 
 	RTSPSessionInterface();
 	virtual ~RTSPSessionInterface();
 
 	//Is this session alive? If this returns false, clean up and begone as
 	//fast as possible
-	bool IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
+	Bool16 IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
 
 	// Allows clients to refresh the timeout
 	void RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
@@ -65,7 +66,7 @@ public:
 	// object holders is > 0, the RTSPSession will NEVER go away. However,
 	// the object managing the session should be aware that if IsLiveSession returns
 	// false it may be wise to relinquish control of the session
-	void IncrementObjectHolderCount() { /*(void)atomic_add(&fObjectHolders, 1);*/ ++fObjectHolders; }
+	void IncrementObjectHolderCount() { (void)atomic_add(&fObjectHolders, 1); }
 	void DecrementObjectHolderCount();
 
 	// If RTP data is interleaved into the RTSP connection, we need to associate
@@ -117,7 +118,7 @@ public:
 	void		RevertOutputStream();
 	void		ResetOutputStream() { fOutputStream.Reset(); fOutputStream.ResetBytesWritten(); }
 	void		SendOptionsRequest();
-	bool		SentOptionsRequest() { return fSentOptionsRequest; }
+	Bool16		SentOptionsRequest() { return fSentOptionsRequest; }
 	SInt32		RoundTripTime() { return fRoundTripTime; }
 
 	enum
@@ -181,9 +182,8 @@ protected:
 
 	// What session type are we?
 	QTSS_RTSPSessionType    fSessionType;
-	bool              fLiveSession;
-	//unsigned int        fObjectHolders;
-	std::atomic_uint	fObjectHolders;
+	Bool16              fLiveSession;
+	unsigned int        fObjectHolders;
 	UInt8               fCurChannelNum;
 	StrPtrLen*          fChNumToSessIDMap;
 
@@ -199,15 +199,16 @@ protected:
 
 	// For OPTIONS request
 	StrPtrLen				fOldOutputStreamBuffer;
-	bool					fSentOptionsRequest;
+	Bool16					fSentOptionsRequest;
 	SInt64					fOptionsRequestSendTime;
 	SInt32					fRoundTripTime;
-	bool					fRoundTripTimeCalculation;
+	Bool16					fRoundTripTimeCalculation;
 
-	//static unsigned int sSessionIDCounter;
-	static std::atomic_uint sSessionIDCounter;
+	RTSPSession3GPP         fRTSPSession3GPP;
+	RTSPSession3GPP*        fRTSPSession3GPPPtr;
 
-	static bool           sDoBase64Decoding;
+	static unsigned int sSessionIDCounter;
+	static Bool16           sDoBase64Decoding;
 
 	static 	UInt32			sOptionsRequestBody[kMaxRandomDataSize / sizeof(UInt32)];
 

@@ -7,7 +7,7 @@
  [end_description]
 
  Copyright 2011-2013 Karsten Ahnert
- Copyright 2011-2015 Mario Mulansky
+ Copyright 2011-2012 Mario Mulansky
  Copyright 2012 Christoph Koke
 
  Distributed under the Boost Software License, Version 1.0.
@@ -25,7 +25,6 @@
 
 #include <boost/numeric/odeint/stepper/stepper_categories.hpp>
 #include <boost/numeric/odeint/stepper/controlled_step_result.hpp>
-#include <boost/numeric/odeint/integrate/max_step_checker.hpp>
 #include <boost/numeric/odeint/integrate/detail/integrate_const.hpp>
 #include <boost/numeric/odeint/util/bind.hpp>
 #include <boost/numeric/odeint/util/unwrap_reference.hpp>
@@ -42,7 +41,7 @@ namespace odeint {
 namespace detail {
 
 // forward declaration
-template< class Stepper , class System , class State , class Time , class Observer >
+template< class Stepper , class System , class State , class Time , class Observer>
 size_t integrate_const(
         Stepper stepper , System system , State &start_state ,
         Time start_time , Time end_time , Time dt ,
@@ -75,7 +74,7 @@ size_t integrate_adaptive(
 
 
 /*
- * integrate adaptive for controlled stepper
+ * classical integrate adaptive
  */
 template< class Stepper , class System , class State , class Time , class Observer >
 size_t integrate_adaptive(
@@ -87,7 +86,8 @@ size_t integrate_adaptive(
     typename odeint::unwrap_reference< Observer >::type &obs = observer;
     typename odeint::unwrap_reference< Stepper >::type &st = stepper;
 
-    failed_step_checker fail_checker;  // to throw a runtime_error if step size adjustment fails
+    const size_t max_attempts = 1000;
+    const char *error_string = "Integrate adaptive : Maximal number of iterations reached. A step size could not be found.";
     size_t count = 0;
     while( less_with_sign( start_time , end_time , dt ) )
     {
@@ -97,14 +97,15 @@ size_t integrate_adaptive(
             dt = end_time - start_time;
         }
 
-        controlled_step_result res;
+        size_t trials = 0;
+        controlled_step_result res = success;
         do
         {
             res = st.try_step( system , start_state , start_time , dt );
-            fail_checker();  // check number of failed steps
+            ++trials;
         }
-        while( res == fail );
-        fail_checker.reset();  // if we reach here, the step was successful -> reset fail checker
+        while( ( res == fail ) && ( trials < max_attempts ) );
+        if( trials == max_attempts ) BOOST_THROW_EXCEPTION( std::overflow_error( error_string ) );
 
         ++count;
     }

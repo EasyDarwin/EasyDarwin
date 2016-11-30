@@ -127,8 +127,8 @@ public:
 	QTSS_ServerState    GetServerState() { return fServerState; }
 
 	Float32             GetCPUPercent() { return fCPUPercent; }
-	bool              SigIntSet() { return fSigInt; }
-	bool				SigTermSet() { return fSigTerm; }
+	Bool16              SigIntSet() { return fSigInt; }
+	Bool16				SigTermSet() { return fSigTerm; }
 
 	UInt32              GetDebugLevel() { return fDebugLevel; }
 	UInt32              GetDebugOptions() { return fDebugOptions; }
@@ -284,13 +284,13 @@ private:
 	UInt32              fTotalUDPSockets;
 
 	// are we out of descriptors?
-	bool              fIsOutOfDescriptors;
+	Bool16              fIsOutOfDescriptors;
 
 	// Storage for current time attribute
 	SInt64              fCurrentTime_UnixMilli;
 
-	bool              fSigInt;
-	bool              fSigTerm;
+	Bool16              fSigInt;
+	Bool16              fSigTerm;
 
 	UInt32              fDebugLevel;
 	UInt32              fDebugOptions;

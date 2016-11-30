@@ -55,19 +55,19 @@
 
 QTSServer* sServer = NULL;
 int sStatusUpdateInterval = 0;
-bool sHasPID = false;
+Bool16 sHasPID = false;
 UInt64 sLastDebugPackets = 0;
 SInt64 sLastDebugTotalQuality = 0;
 #ifdef __sgi__ 
 #include <sched.h>
 #endif
 
-QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, int statsUpdateInterval, QTSS_ServerState inInitialState, bool inDontFork, UInt32 debugLevel, UInt32 debugOptions)
+QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, int statsUpdateInterval, QTSS_ServerState inInitialState, Bool16 inDontFork, UInt32 debugLevel, UInt32 debugOptions)
 {
 	//Mark when we are done starting up. If auto-restart is enabled, we want to make sure
 	//to always exit with a status of 0 if we encountered a problem WHILE STARTING UP. This
 	//will prevent infinite-auto-restart-loop type problems
-	bool doneStartingUp = false;
+	Bool16 doneStartingUp = false;
 	QTSS_ServerState theServerState = qtssStartingUpState;
 
 	sStatusUpdateInterval = statsUpdateInterval;
@@ -188,7 +188,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 	return theServerState;
 }
 
-void WritePid(bool forked)
+void WritePid(Bool16 forked)
 {
 #ifndef __Win32__
 	// WRITE PID TO FILE
@@ -209,7 +209,7 @@ void WritePid(bool forked)
 #endif
 }
 
-void CleanPid(bool force)
+void CleanPid(Bool16 force)
 {
 #ifndef __Win32__
 	if (sHasPID || force)
@@ -222,11 +222,11 @@ void CleanPid(bool force)
 
 void RunServer()
 {
-	bool restartServer = false;
+	Bool16 restartServer = false;
 	UInt32 loopCount = 0;
 	UInt32 debugLevel = 0;
-	bool printHeader = false;
-	bool printStatus = false;
+	Bool16 printHeader = false;
+	Bool16 printStatus = false;
 
 
 	//just wait until someone stops the server or a fatal error occurs.

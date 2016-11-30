@@ -42,17 +42,17 @@ struct PrefConversionInfo
 
 static const PrefConversionInfo kPrefs[] =
 {
-	{ "rtsp_timeout",							NULL,	qtssAttrDataTypeUInt32 },
-	{ "rtsp_session_timeout",					NULL,	qtssAttrDataTypeUInt32 },
-	{ "rtp_session_timeout",					NULL,	qtssAttrDataTypeUInt32 },
-	{ "maximum_connections",					NULL,	qtssAttrDataTypeSInt32 },
-	{ "maximum_bandwidth",						NULL,	qtssAttrDataTypeSInt32 },
-	{ "nginx_root_folder",						NULL,	qtssAttrDataTypeCharArray },
-	{ "bind_ip_addr",							NULL,	qtssAttrDataTypeCharArray },
-	{ "break_on_assert",						NULL,	qtssAttrDataTypeBool16 },
-	{ "auto_restart",							NULL,	qtssAttrDataTypeBool16 },
-	{ "total_bytes_update",						NULL,	qtssAttrDataTypeUInt32 },
-	{ "average_bandwidth_update",				NULL,	qtssAttrDataTypeUInt32 },
+	{ "rtsp_timeout",                   NULL,           qtssAttrDataTypeUInt32 },
+	{ "real_rtsp_timeout",              NULL,           qtssAttrDataTypeUInt32 },
+	{ "rtp_timeout",                    NULL,           qtssAttrDataTypeUInt32 },
+	{ "maximum_connections",            NULL,           qtssAttrDataTypeSInt32 },
+	{ "maximum_bandwidth",              NULL,           qtssAttrDataTypeSInt32 },
+	{ "movie_folder",                   NULL,           qtssAttrDataTypeCharArray },
+	{ "bind_ip_addr",                   NULL,           qtssAttrDataTypeCharArray },
+	{ "break_on_assert",                NULL,           qtssAttrDataTypeBool16 },
+	{ "auto_restart",                   NULL,           qtssAttrDataTypeBool16 },
+	{ "total_bytes_update",             NULL,           qtssAttrDataTypeUInt32 },
+	{ "average_bandwidth_update",       NULL,           qtssAttrDataTypeUInt32 },
 	{ "safe_play_duration",                     NULL,   qtssAttrDataTypeUInt32 },
 	{ "module_folder",                          NULL,   qtssAttrDataTypeCharArray },
 	{ "error_logfile_name",                     NULL,   qtssAttrDataTypeCharArray },
@@ -76,9 +76,43 @@ static const PrefConversionInfo kPrefs[] =
 	{ "append_source_addr_in_transport",        NULL,   qtssAttrDataTypeBool16 },
 	{ "rtsp_port",                              NULL,   qtssAttrDataTypeUInt16 },
 
+	{ "request_logging",                        "QTSSAccessLogModule",  qtssAttrDataTypeBool16 },
+	{ "request_logfile_name",                   "QTSSAccessLogModule",  qtssAttrDataTypeCharArray },
+	{ "request_logfile_dir",                    "QTSSAccessLogModule",  qtssAttrDataTypeCharArray },
+	{ "request_logfile_size",                   "QTSSAccessLogModule",  qtssAttrDataTypeUInt32 },
+	{ "request_logfile_interval",               "QTSSAccessLogModule",  qtssAttrDataTypeUInt32 },
+
+	{ "history_update_interval",                "QTSSSvrControlModule", qtssAttrDataTypeUInt32 },
+
+	{ "buffer_seconds",                         "QTSSFileModule",   qtssAttrDataTypeUInt32 },
+	{ "sdp_url",                                "QTSSFileModule",   qtssAttrDataTypeCharArray },
+	{ "admin_email",                            "QTSSFileModule",   qtssAttrDataTypeCharArray },
+	{ "max_advance_send_time",                  "QTSSFileModule",   qtssAttrDataTypeUInt32 },
+
+	{ "reflector_delay",                        "QTSSReflectorModule",  qtssAttrDataTypeUInt32 },
+	{ "reflector_bucket_size",                  "QTSSReflectorModule",  qtssAttrDataTypeUInt32 },
+
+	{ "web_stats_url",                          "QTSSWebStatsModule",   qtssAttrDataTypeCharArray },
+
+	{ "loss_thin_tolerance",                    "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
+	{ "num_losses_to_thin",                     "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
+	{ "loss_thick_tolerance",                   "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
+	{ "num_losses_to_thick",                    "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
+	{ "num_worses_to_thin",                     "QTSSFlowControlModule",    qtssAttrDataTypeUInt32 },
+
+	{ "relay_stats_url",                        "QTSSRelayModule",  qtssAttrDataTypeCharArray },
+	{ "relay_prefs_file",                       "QTSSRelayModule",  qtssAttrDataTypeCharArray },
+
+	{ "num_conns_per_ip_addr",                  "QTSSSpamDefenseModule",    qtssAttrDataTypeUInt32 },
+
+	{ "modAccess_usersfilepath",                "QTSSAccessModule", qtssAttrDataTypeCharArray },
+	{ "modAccess_groupsfilepath",               "QTSSAccessModule", qtssAttrDataTypeCharArray },
+	{ "modAccess_qtaccessfilename",             "QTSSAccessModule", qtssAttrDataTypeCharArray },
+
+	//
 	// This element will be used if the pref is something we don't know about.
 	// Just have unknown prefs default to be server prefs with a type of char
-	{ NULL,                                     NULL,	qtssAttrDataTypeCharArray }
+	{ NULL,                                     NULL,               qtssAttrDataTypeCharArray }
 };
 
 int GenerateAllXMLPrefs(FilePrefsSource* inPrefsSource, XMLPrefsParser* inXMLPrefs)
@@ -106,7 +140,7 @@ int GenerateAllXMLPrefs(FilePrefsSource* inPrefsSource, XMLPrefsParser* inXMLPre
 		static char* kFalse = "false";
 
 		//
-		// If the pref is a bool, the new pref format uses "true" & "false",
+		// If the pref is a Bool16, the new pref format uses "true" & "false",
 		// the old one uses "enabled" and "disabled", so we have to explicitly convert.
 		if (kPrefs[y].fPrefType == qtssAttrDataTypeBool16)
 		{
@@ -137,7 +171,7 @@ int GenerateStandardXMLPrefs(PrefsSource* inPrefsSource, XMLPrefsParser* inXMLPr
 				break;
 
 			//
-			// If the pref is a bool, the new pref format uses "true" & "false",
+			// If the pref is a Bool16, the new pref format uses "true" & "false",
 			// the old one uses "enabled" and "disabled", so we have to explicitly convert.
 			if (kPrefs[x].fPrefType == qtssAttrDataTypeBool16)
 			{

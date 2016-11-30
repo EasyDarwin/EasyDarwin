@@ -98,9 +98,9 @@
 #include <sys/time.h>
 
 
-static bool timerStarted = false;
-static bool doneMediaCount = false;
-static bool doneHintCount = false;
+static Bool16 timerStarted = false;
+static Bool16 doneMediaCount = false;
+static Bool16 doneHintCount = false;
 static SInt64 totalMediaSampleReadTime = 0;
 static SInt64 totalHintSampleReadTime = 0;
 enum { eMicro = 1000000, eMilli = 1000 };
@@ -165,7 +165,7 @@ void QTHintTrack_HintTrackControlBlock::Reset()
 // -------------------------------------
 // Constructors and destructors
 //
-QTHintTrack::QTHintTrack(QTFile * File, QTFile::AtomTOCEntry * Atom, bool Debug, bool DeepDebug)
+QTHintTrack::QTHintTrack(QTFile * File, QTFile::AtomTOCEntry * Atom, Bool16 Debug, Bool16 DeepDebug)
 	: QTTrack(File, Atom, Debug, DeepDebug),
 	fHintInfoAtom(NULL), fHintTrackReferenceAtom(NULL),
 	fTrackRefs(NULL),
@@ -438,7 +438,7 @@ void QTHintTrack::GetSamplePacketHeaderVars(char *samplePacketPtr, char *maxBuff
 
 	hdrData.tlvTimestampOffset = 0;
 
-	bool tlvOK = false; // reset tlvSize to 0 if the size value or the tlv flag is invalid
+	Bool16 tlvOK = false; // reset tlvSize to 0 if the size value or the tlv flag is invalid
 	if (hdrData.hintFlags & 0x4) do // Extra Information TLV is present
 	{
 		hdrData.tlvSize = ntohl(*(UInt32*)(samplePacketPtr + 12));
@@ -579,7 +579,7 @@ QTTrack::ErrorCode QTHintTrack::GetSamplePacketPtr(char ** samplePacketPtr, UInt
 }
 
 
-bool QTHintTrack::GetSamplePtr(UInt32 sampleNumber, char ** samplePtr, UInt32 * length, QTHintTrack_HintTrackControlBlock * htcb)
+Bool16 QTHintTrack::GetSamplePtr(UInt32 sampleNumber, char ** samplePtr, UInt32 * length, QTHintTrack_HintTrackControlBlock * htcb)
 {
 	// General vars
 	UInt32      newSampleLength;
@@ -706,14 +706,14 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData(QTHintTrack_HintTrackControlBlock 
 	SInt64      endOfSampleInChunk = 0;
 	SInt64      sampleFirstPartLength = 0;
 	SInt64      remainingLength = 0;
-	bool      isOneForOne = false;
-	bool      isCompressed = false;
+	Bool16      isOneForOne = false;
+	Bool16      isCompressed = false;
 
 	QTAtom_stsc_SampleTableControlBlock * mediaTrackSTSC_STCBPtr = NULL;
 
 #if TESTTIME
-	bool isMediaSample = false;
-	bool isHintSample = false;
+	Bool16 isMediaSample = false;
+	Bool16 isHintSample = false;
 	SInt64 startTime = GetMicroseconds();
 	SInt64 readStart = 0;
 #endif
@@ -1156,7 +1156,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData(QTHintTrack_HintTrackControlBlock 
 
 
 QTTrack::ErrorCode QTHintTrack::GetPacket(UInt32 sampleNumber, UInt16 packetNumber, char * buffer, UInt32 * length
-	, Float64 * transmitTime, bool dropBFrames, bool dropRepeatPackets, UInt32 ssrc, QTHintTrack_HintTrackControlBlock * htcb)
+	, Float64 * transmitTime, Bool16 dropBFrames, Bool16 dropRepeatPackets, UInt32 ssrc, QTHintTrack_HintTrackControlBlock * htcb)
 {
 	// Temporary vars
 	UInt16      tempInt16;

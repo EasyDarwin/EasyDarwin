@@ -15,9 +15,6 @@
 #include <boost/thread/executors/work.hpp>
 #include <boost/thread/executors/executor.hpp>
 #include <boost/thread/thread_only.hpp>
-#include <boost/thread/scoped_thread.hpp>
-#include <boost/thread/csbl/vector.hpp>
-#include <boost/thread/concurrent_queues/queue_op_status.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -31,11 +28,6 @@ namespace executors
     /// type-erasure to store the works to do
     typedef  executors::work work;
     bool closed_;
-    typedef scoped_thread<> thread_t;
-    typedef csbl::vector<thread_t> threads_type;
-    threads_type threads_;
-    mutable mutex mtx_;
-
     /**
      * Effects: try to execute one task.
      * Returns: whether a task has been executed.
@@ -60,7 +52,7 @@ namespace executors
     {
     }
     /**
-     * \b Effects: Waits for closures (if any) to complete, then joins and destroys the threads.
+     * \b Effects: Destroys the inline executor.
      *
      * \b Synchronization: The completion of all the closures happen before the completion of the \c thread_executor destructor.
      */
@@ -68,7 +60,6 @@ namespace executors
     {
       // signal to all the worker thread that there will be no more submissions.
       close();
-      // all the scoped threads will join before destroying
     }
 
     /**
@@ -77,21 +68,15 @@ namespace executors
      */
     void close()
     {
-      lock_guard<mutex> lk(mtx_);
       closed_ = true;
     }
 
     /**
      * \b Returns: whether the pool is closed for submissions.
      */
-    bool closed(lock_guard<mutex>& )
-    {
-      return closed_;
-    }
     bool closed()
     {
-      lock_guard<mutex> lk(mtx_);
-      return closed(lk);
+      return closed_;
     }
 
     /**
@@ -110,30 +95,24 @@ namespace executors
     template <typename Closure>
     void submit(Closure & closure)
     {
-      lock_guard<mutex> lk(mtx_);
-      if (closed(lk))  BOOST_THROW_EXCEPTION( sync_queue_is_closed() );
-      threads_.reserve(threads_.size() + 1);
+      if (closed()) return;
       thread th(closure);
-      threads_.push_back(thread_t(boost::move(th)));
+      th.detach();
     }
 #endif
     void submit(void (*closure)())
     {
-      lock_guard<mutex> lk(mtx_);
-      if (closed(lk))  BOOST_THROW_EXCEPTION( sync_queue_is_closed() );
-      threads_.reserve(threads_.size() + 1);
+      if (closed()) return;
       thread th(closure);
-      threads_.push_back(thread_t(boost::move(th)));
+      th.detach();
     }
 
     template <typename Closure>
     void submit(BOOST_THREAD_FWD_REF(Closure) closure)
     {
-      lock_guard<mutex> lk(mtx_);
-      if (closed(lk))  BOOST_THROW_EXCEPTION( sync_queue_is_closed() );
-      threads_.reserve(threads_.size() + 1);
+      if (closed()) return;
       thread th(boost::forward<Closure>(closure));
-      threads_.push_back(thread_t(boost::move(th)));
+      th.detach();
     }
 
     /**

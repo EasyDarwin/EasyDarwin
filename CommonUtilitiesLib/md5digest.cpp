@@ -44,7 +44,7 @@ void HashToString(unsigned char aHash[kHashLen], StrPtrLen* hashStr) {
 	UInt16 i;
 	UInt8 hexDigit;
 	// Allocating memory
-	char* str = new char[kHashHexLen + 1];
+	char* str = NEW char[kHashHexLen + 1];
 	str[kHashHexLen] = 0;
 
 	for (i = 0; i < kHashLen; i++) {
@@ -74,7 +74,7 @@ void CalcMD5HA1(StrPtrLen* userName,
 	Assert(hashA1Hex16Bit->Ptr == NULL); //This is the result. A Ptr here will be replaced. Value should be NULL.
 
 	MD5_CTX context;
-	unsigned char* aHash = new unsigned char[kHashLen];
+	unsigned char* aHash = NEW unsigned char[kHashLen];
 
 	// Calculate H(A1) for MD5
 	// where A1 for algorithm = "md5" or if nothing is specified is

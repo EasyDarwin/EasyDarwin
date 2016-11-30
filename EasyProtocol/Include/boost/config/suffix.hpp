@@ -444,12 +444,10 @@ namespace std {
 // is defined, in which case it evaluates to return x; Use when you have a return
 // statement that can never be reached.
 
-#ifndef BOOST_UNREACHABLE_RETURN
-#  ifdef BOOST_NO_UNREACHABLE_RETURN_DETECTION
-#     define BOOST_UNREACHABLE_RETURN(x) return x;
-#  else
-#     define BOOST_UNREACHABLE_RETURN(x)
-#  endif
+#ifdef BOOST_NO_UNREACHABLE_RETURN_DETECTION
+#  define BOOST_UNREACHABLE_RETURN(x) return x;
+#else
+#  define BOOST_UNREACHABLE_RETURN(x)
 #endif
 
 // BOOST_DEDUCED_TYPENAME workaround ------------------------------------------//
@@ -500,16 +498,6 @@ namespace boost{
 #  else
    typedef __int128 int128_type;
    typedef unsigned __int128 uint128_type;
-#  endif
-}
-#endif
-// same again for __float128:
-#if defined(BOOST_HAS_FLOAT128) && defined(__cplusplus)
-namespace boost {
-#  ifdef __GNUC__
-   __extension__ typedef __float128 float128_type;
-#  else
-   typedef __float128 float128_type;
 #  endif
 }
 #endif

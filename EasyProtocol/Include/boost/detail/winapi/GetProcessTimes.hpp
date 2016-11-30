@@ -9,16 +9,31 @@
 #ifndef BOOST_DETAIL_WINAPI_GETPROCESSTIMES_HPP
 #define BOOST_DETAIL_WINAPI_GETPROCESSTIMES_HPP
 
-#include <boost/detail/winapi/get_process_times.hpp>
+#include <boost/detail/winapi/time.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 #pragma once
 #endif
 
-#if defined(__GNUC__)
-#pragma message "This header is deprecated, use boost/detail/winapi/get_process_times.hpp instead."
-#elif defined(_MSC_VER)
-#pragma message("This header is deprecated, use boost/detail/winapi/get_process_times.hpp instead.")
+namespace boost {
+namespace detail {
+namespace winapi {
+#if !defined(UNDER_CE)  // Windows CE does not define GetProcessTimes
+#if defined( BOOST_USE_WINDOWS_H )
+    using ::GetProcessTimes;
+#else
+    extern "C" __declspec(dllimport) BOOL_ WINAPI
+        GetProcessTimes(
+            HANDLE_ hProcess,
+            LPFILETIME_ lpCreationTime,
+            LPFILETIME_ lpExitTime,
+            LPFILETIME_ lpKernelTime,
+            LPFILETIME_ lpUserTime
+        );
 #endif
+#endif
+}
+}
+}
 
 #endif // BOOST_DETAIL_WINAPI_GETPROCESSTIMES_HPP

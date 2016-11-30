@@ -11,23 +11,12 @@
 #ifndef BOOST_MOVE_MAKE_UNIQUE_HPP_INCLUDED
 #define BOOST_MOVE_MAKE_UNIQUE_HPP_INCLUDED
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
-#  pragma once
-#endif
-
 #include <boost/move/detail/config_begin.hpp>
 #include <boost/move/detail/workaround.hpp>
 #include <boost/move/utility_core.hpp>
 #include <boost/move/unique_ptr.hpp>
 #include <cstddef>   //for std::size_t
 #include <boost/move/detail/unique_ptr_meta_utils.hpp>
-#ifdef BOOST_NO_CXX11_VARIADIC_TEMPLATES
-#  include <boost/move/detail/fwd_macros.hpp>
-#endif
 
 //!\file
 //! Defines "make_unique" functions, which are factories to create instances
@@ -68,14 +57,7 @@ struct unique_ptr_if<T[N]>
    typedef void t_is_array_of_known_bound;
 };
 
-template <int Dummy = 0>
-struct nothrow_holder
-{
-   static std::nothrow_t *pnothrow;   
-};
-
-template <int Dummy>
-std::nothrow_t *nothrow_holder<Dummy>::pnothrow;
+static std::nothrow_t *pnothrow;
 
 }  //namespace move_upmu {
 }  //namespace boost{
@@ -103,22 +85,422 @@ template<class T, class... Args>
 inline BOOST_MOVE_DOC1ST(unique_ptr<T>, 
    typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array)
       make_unique_nothrow(BOOST_FWD_REF(Args)... args)
-{  return unique_ptr<T>(new (*boost::move_upmu::nothrow_holder<>::pnothrow)T(::boost::forward<Args>(args)...));  }
+{  return unique_ptr<T>(new (*boost::move_upmu::pnothrow)T(::boost::forward<Args>(args)...));  }
 
 #else
-   #define BOOST_MOVE_MAKE_UNIQUE_CODE(N)\
-      template<class T BOOST_MOVE_I##N BOOST_MOVE_CLASS##N>\
-      typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array\
-         make_unique( BOOST_MOVE_UREF##N)\
-      {  return unique_ptr<T>( new T( BOOST_MOVE_FWD##N ) );  }\
-      \
-      template<class T BOOST_MOVE_I##N BOOST_MOVE_CLASS##N>\
-      typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array\
-         make_unique_nothrow( BOOST_MOVE_UREF##N)\
-      {  return unique_ptr<T>( new (*boost::move_upmu::nothrow_holder<>::pnothrow)T ( BOOST_MOVE_FWD##N ) );  }\
-      //
-   BOOST_MOVE_ITERATE_0TO9(BOOST_MOVE_MAKE_UNIQUE_CODE)
-   #undef BOOST_MOVE_MAKE_UNIQUE_CODE
+
+   //0 arg
+   template<class T>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique()
+   {  return unique_ptr<T>(new T());  }
+
+   template<class T>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow()
+   {  return unique_ptr<T>(new (*boost::move_upmu::pnothrow)T());  }
+
+   //1 arg
+   template<class T, class P0>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 )
+         );
+   }
+
+   template<class T, class P0>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow( BOOST_FWD_REF(P0) p0
+                 )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              )
+         );
+   }
+   //2 arg
+   template<class T, class P0, class P1>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow( BOOST_FWD_REF(P0) p0
+                         , BOOST_FWD_REF(P1) p1
+                         )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              )
+         );
+   }
+   //3 arg
+   template<class T, class P0, class P1, class P2>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              )
+         );
+   }
+   //4 arg
+   template<class T, class P0, class P1, class P2, class P3>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 , BOOST_FWD_REF(P3) p3
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 , ::boost::forward<P3>(p3)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2, class P3>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           , BOOST_FWD_REF(P3) p3
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              , ::boost::forward<P3>(p3)
+                              )
+         );
+   }
+   //5 arg
+   template<class T, class P0, class P1, class P2, class P3, class P4>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 , BOOST_FWD_REF(P3) p3
+                 , BOOST_FWD_REF(P4) p4
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 , ::boost::forward<P3>(p3)
+                 , ::boost::forward<P4>(p4)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2, class P3, class P4>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           , BOOST_FWD_REF(P3) p3
+                           , BOOST_FWD_REF(P4) p4
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              , ::boost::forward<P3>(p3)
+                              , ::boost::forward<P4>(p4)
+                              )
+         );
+   }
+   //6 arg
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 , BOOST_FWD_REF(P3) p3
+                 , BOOST_FWD_REF(P4) p4
+                 , BOOST_FWD_REF(P5) p5
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 , ::boost::forward<P3>(p3)
+                 , ::boost::forward<P4>(p4)
+                 , ::boost::forward<P5>(p5)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           , BOOST_FWD_REF(P3) p3
+                           , BOOST_FWD_REF(P4) p4
+                           , BOOST_FWD_REF(P5) p5
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              , ::boost::forward<P3>(p3)
+                              , ::boost::forward<P4>(p4)
+                              , ::boost::forward<P5>(p5)
+                              )
+         );
+   }
+   //7 arg
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 , BOOST_FWD_REF(P3) p3
+                 , BOOST_FWD_REF(P4) p4
+                 , BOOST_FWD_REF(P5) p5
+                 , BOOST_FWD_REF(P6) p6
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 , ::boost::forward<P3>(p3)
+                 , ::boost::forward<P4>(p4)
+                 , ::boost::forward<P5>(p5)
+                 , ::boost::forward<P6>(p6)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           , BOOST_FWD_REF(P3) p3
+                           , BOOST_FWD_REF(P4) p4
+                           , BOOST_FWD_REF(P5) p5
+                           , BOOST_FWD_REF(P6) p6
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              , ::boost::forward<P3>(p3)
+                              , ::boost::forward<P4>(p4)
+                              , ::boost::forward<P5>(p5)
+                              , ::boost::forward<P6>(p6)
+                              )
+         );
+   }
+
+   //8 arg
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 , BOOST_FWD_REF(P3) p3
+                 , BOOST_FWD_REF(P4) p4
+                 , BOOST_FWD_REF(P5) p5
+                 , BOOST_FWD_REF(P6) p6
+                 , BOOST_FWD_REF(P7) p7
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 , ::boost::forward<P3>(p3)
+                 , ::boost::forward<P4>(p4)
+                 , ::boost::forward<P5>(p5)
+                 , ::boost::forward<P6>(p6)
+                 , ::boost::forward<P7>(p7)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           , BOOST_FWD_REF(P3) p3
+                           , BOOST_FWD_REF(P4) p4
+                           , BOOST_FWD_REF(P5) p5
+                           , BOOST_FWD_REF(P6) p6
+                           , BOOST_FWD_REF(P7) p7
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              , ::boost::forward<P3>(p3)
+                              , ::boost::forward<P4>(p4)
+                              , ::boost::forward<P5>(p5)
+                              , ::boost::forward<P6>(p6)
+                              , ::boost::forward<P7>(p7)
+                              )
+         );
+   }
+   //9 arg
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 , BOOST_FWD_REF(P3) p3
+                 , BOOST_FWD_REF(P4) p4
+                 , BOOST_FWD_REF(P5) p5
+                 , BOOST_FWD_REF(P6) p6
+                 , BOOST_FWD_REF(P7) p7
+                 , BOOST_FWD_REF(P8) p8
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 , ::boost::forward<P3>(p3)
+                 , ::boost::forward<P4>(p4)
+                 , ::boost::forward<P5>(p5)
+                 , ::boost::forward<P6>(p6)
+                 , ::boost::forward<P7>(p7)
+                 , ::boost::forward<P8>(p8)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           , BOOST_FWD_REF(P3) p3
+                           , BOOST_FWD_REF(P4) p4
+                           , BOOST_FWD_REF(P5) p5
+                           , BOOST_FWD_REF(P6) p6
+                           , BOOST_FWD_REF(P7) p7
+                           , BOOST_FWD_REF(P8) p8
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              , ::boost::forward<P3>(p3)
+                              , ::boost::forward<P4>(p4)
+                              , ::boost::forward<P5>(p5)
+                              , ::boost::forward<P6>(p6)
+                              , ::boost::forward<P7>(p7)
+                              , ::boost::forward<P8>(p8)
+                              )
+         );
+   }
+   //10 arg
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique( BOOST_FWD_REF(P0) p0
+                 , BOOST_FWD_REF(P1) p1
+                 , BOOST_FWD_REF(P2) p2
+                 , BOOST_FWD_REF(P3) p3
+                 , BOOST_FWD_REF(P4) p4
+                 , BOOST_FWD_REF(P5) p5
+                 , BOOST_FWD_REF(P6) p6
+                 , BOOST_FWD_REF(P7) p7
+                 , BOOST_FWD_REF(P8) p8
+                 , BOOST_FWD_REF(P9) p9
+                 )
+   {
+      return unique_ptr<T>
+         (  new T( ::boost::forward<P0>(p0)
+                 , ::boost::forward<P1>(p1)
+                 , ::boost::forward<P2>(p2)
+                 , ::boost::forward<P3>(p3)
+                 , ::boost::forward<P4>(p4)
+                 , ::boost::forward<P5>(p5)
+                 , ::boost::forward<P6>(p6)
+                 , ::boost::forward<P7>(p7)
+                 , ::boost::forward<P8>(p8)
+                 , ::boost::forward<P9>(p9)
+                 )
+         );
+   }
+
+   template<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
+   typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array
+      make_unique_nothrow  ( BOOST_FWD_REF(P0) p0
+                           , BOOST_FWD_REF(P1) p1
+                           , BOOST_FWD_REF(P2) p2
+                           , BOOST_FWD_REF(P3) p3
+                           , BOOST_FWD_REF(P4) p4
+                           , BOOST_FWD_REF(P5) p5
+                           , BOOST_FWD_REF(P6) p6
+                           , BOOST_FWD_REF(P7) p7
+                           , BOOST_FWD_REF(P8) p8
+                           , BOOST_FWD_REF(P9) p9
+                           )
+   {
+      return unique_ptr<T>
+         (  new (*boost::move_upmu::pnothrow)T ( ::boost::forward<P0>(p0)
+                              , ::boost::forward<P1>(p1)
+                              , ::boost::forward<P2>(p2)
+                              , ::boost::forward<P3>(p3)
+                              , ::boost::forward<P4>(p4)
+                              , ::boost::forward<P5>(p5)
+                              , ::boost::forward<P6>(p6)
+                              , ::boost::forward<P7>(p7)
+                              , ::boost::forward<P8>(p8)
+                              , ::boost::forward<P9>(p9)
+                              )
+         );
+   }
 
 #endif
 
@@ -141,7 +523,7 @@ inline BOOST_MOVE_DOC1ST(unique_ptr<T>,
    typename ::boost::move_upmu::unique_ptr_if<T>::t_is_not_array)
       make_unique_nothrow_definit()
 {
-    return unique_ptr<T>(new (*boost::move_upmu::nothrow_holder<>::pnothrow)T);
+    return unique_ptr<T>(new (*boost::move_upmu::pnothrow)T);
 }
 
 //! <b>Remarks</b>: This function shall not participate in overload resolution unless T is an array of 
@@ -167,7 +549,7 @@ inline BOOST_MOVE_DOC1ST(unique_ptr<T>,
       make_unique_nothrow(std::size_t n)
 {
     typedef typename ::boost::move_upmu::remove_extent<T>::type U;
-    return unique_ptr<T>(new (*boost::move_upmu::nothrow_holder<>::pnothrow)U[n]());
+    return unique_ptr<T>(new (*boost::move_upmu::pnothrow)U[n]());
 }
 
 //! <b>Remarks</b>: This function shall not participate in overload resolution unless T is an array of 
@@ -193,7 +575,7 @@ inline BOOST_MOVE_DOC1ST(unique_ptr<T>,
       make_unique_nothrow_definit(std::size_t n)
 {
     typedef typename ::boost::move_upmu::remove_extent<T>::type U;
-    return unique_ptr<T>(new (*boost::move_upmu::nothrow_holder<>::pnothrow) U[n]);
+    return unique_ptr<T>(new (*boost::move_upmu::pnothrow) U[n]);
 }
 
 #if !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS)

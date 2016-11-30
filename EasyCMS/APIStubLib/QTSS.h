@@ -283,7 +283,7 @@ enum
     // via. QTSS_GetValuePtr. Some exceptions noted below
     
     qtssSvrState                    = 8,    //r/w   //QTSS_ServerState  //The current state of the server. If a module sets the server state, the server will respond in the appropriate fashion. Setting to qtssRefusingConnectionsState causes the server to refuse connections, setting to qtssFatalErrorState or qtssShuttingDownState causes the server to quit.
-    qtssSvrIsOutOfDescriptors       = 9,    //read  //bool            //true if the server has run out of file descriptors, false otherwise
+    qtssSvrIsOutOfDescriptors       = 9,    //read  //Bool16            //true if the server has run out of file descriptors, false otherwise
     qtssCurrentSessionCount			= 10,   //read  //UInt32            //Current number of connected clients over standard RTSP
     
     qtssSvrHandledMethods           = 11,   //r/w       //QTSS_RTSPMethod   //The methods that the server supports. Modules should append the methods they support to this attribute in their QTSS_Initialize_Role.
@@ -316,27 +316,27 @@ enum
     qtssPrefsSessionTimeout					= 0,	//"session_timeout"				//UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
 	qtssPrefsMaximumConnections				= 1,    //"maximum_connections"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
 	qtssPrefsBindIPAddr						= 2,    //"bind_ip_addr"                //char array    //IP address the server should accept RTSP connections on. 0.0.0.0 means all addresses on the machine.
-    qtssPrefsBreakOnAssert					= 3,    //"break_on_assert"             //bool        //If true, the server will break in the debugger when an assert fails.
-    qtssPrefsAutoRestart					= 4,    //"auto_restart"                //bool        //If true, the server will automatically restart itself if it crashes.
+    qtssPrefsBreakOnAssert					= 3,    //"break_on_assert"             //Bool16        //If true, the server will break in the debugger when an assert fails.
+    qtssPrefsAutoRestart					= 4,    //"auto_restart"                //Bool16        //If true, the server will automatically restart itself if it crashes.
     qtssPrefsModuleFolder					= 5,   //"module_folder"               //char array    //Path to the module folder
     qtssPrefsErrorLogName					= 6,   //"error_logfile_name"          //char array        //Name of error log file
     qtssPrefsErrorLogDir					= 7,   //"error_logfile_dir"           //char array        //Path to error log file directory
     qtssPrefsErrorRollInterval				= 8,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
     qtssPrefsMaxErrorLogSize				= 9,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
     qtssPrefsErrorLogVerbosity				= 10,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
-    qtssPrefsScreenLogging					= 11,   //"screen_logging"              //bool        //Should the error logger echo messages to the screen?
-    qtssPrefsErrorLogEnabled				= 12,   //"error_logging"               //bool        //Is error logging enabled?
+    qtssPrefsScreenLogging					= 11,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
+    qtssPrefsErrorLogEnabled				= 12,   //"error_logging"               //Bool16        //Is error logging enabled?
     qtssPrefsServiceID						= 13,   //"service_id"    //SInt32 // Don't send video packets later than this
 	qtssPrefsSnapLocalPath					= 14,   //"snap_local_path"		// char array   //snap local path
     qtssPrefsSnapWebPath			        = 15,   //"snap_web_path"		// char array   //snap web path
-	qtssPrefsAutoStart                      = 16,   //"auto_start" //bool //If true, streaming server likes to be started at system startup
+	qtssPrefsAutoStart                      = 16,   //"auto_start" //Bool16 //If true, streaming server likes to be started at system startup
 	qtssPrefsEnableMSGDebugPrintfs			= 17,	//"MSG_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
-    qtssPrefsEnableMonitorStatsFile         = 18,   //"enable_monitor_stats_file" //bool //write server stats to the monitor file
+    qtssPrefsEnableMonitorStatsFile         = 18,   //"enable_monitor_stats_file" //Bool16 //write server stats to the monitor file
     qtssPrefsMonitorStatsFileIntervalSec    = 19,   //"monitor_stats_file_interval_seconds" // private
     qtssPrefsMonitorStatsFileName           = 20,   //"monitor_stats_file_name" // private
     qtssPrefsRunNumThreads                  = 21,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
     qtssPrefsPidFile                        = 22,    //"pid_file" //Char Array //path to pid file
-    qtssPrefsCloseLogsOnWrite               = 23,   // "force_logs_close_on_write" //bool // force log files to close after each write.
+    qtssPrefsCloseLogsOnWrite               = 23,   // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
 	qtssPrefsMonitorLANPort					= 24,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
     qtssPrefsMonitorWANPort					= 25,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
     qtssPrefsMonitorLANIPAddr				= 26,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
@@ -1214,14 +1214,14 @@ QTSS_Error  QTSS_SetIdleTimer(SInt64 inIdleMsec);
 QTSS_Error  QTSS_SetIntervalRoleTimer(SInt64 inIdleMsec);
 
 QTSS_Error  QTSS_RequestGlobalLock();
-bool      QTSS_IsGlobalLocked();
+Bool16      QTSS_IsGlobalLocked();
 QTSS_Error  QTSS_GlobalUnLock();
 
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 
 //EasyCMS
-QTSS_Error	Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, bool connectionClose = false, bool decrement = true);
+QTSS_Error	Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose = false, Bool16 decrement = true);
 
 #ifdef __cplusplus
 }

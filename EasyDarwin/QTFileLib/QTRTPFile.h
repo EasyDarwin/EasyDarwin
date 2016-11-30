@@ -100,7 +100,7 @@ public:
 		UInt32          TrackID;
 		QTHintTrack     *HintTrack;
 		QTHintTrack_HintTrackControlBlock   *HTCB;
-		bool          IsTrackActive, IsPacketAvailable;
+		Bool16          IsTrackActive, IsPacketAvailable;
 		UInt32          QualityLevel;
 
 		//
@@ -145,7 +145,7 @@ public:
 
 	//
 	// Constructors and destructor.
-	QTRTPFile(bool Debug = false, bool DeepDebug = false);
+	QTRTPFile(Bool16 Debug = false, Bool16 DeepDebug = false);
 
 	virtual             ~QTRTPFile();
 
@@ -179,7 +179,7 @@ public:
 			//
 			// If you would like this track to be an RTP-Meta-Info stream, pass in
 			// the field names you would like to see
-	ErrorCode   AddTrack(UInt32 TrackID, bool UseRandomOffset = true);
+	ErrorCode   AddTrack(UInt32 TrackID, Bool16 UseRandomOffset = true);
 
 
 	Float64     GetTrackDuration(UInt32 TrackID);
@@ -187,7 +187,7 @@ public:
 
 	void        SetTrackSSRC(UInt32 TrackID, UInt32 SSRC);
 	void        SetTrackCookies(UInt32 TrackID, void * Cookie1, UInt32 Cookie2);
-	void        SetAllowInvalidHintRefs(bool inAllowInvalidHintRefs) { fAllowInvalidHintRefs = inAllowInvalidHintRefs; }
+	void        SetAllowInvalidHintRefs(Bool16 inAllowInvalidHintRefs) { fAllowInvalidHintRefs = inAllowInvalidHintRefs; }
 
 	//
 	// If you want QTRTPFile to output an RTP-Meta-Info packet instead
@@ -195,7 +195,7 @@ public:
 	// pass in a proper Field ID array (see RTPMetaInfoPacket.h) to
 	// tell QTRTPFile which fields to include and which IDs to use with the fields.
 	// You have to let this function know whether this is a video track or not.
-	void        SetTrackRTPMetaInfo(UInt32 TrackID, RTPMetaInfoPacket::FieldID* inFieldArray, bool isVideo);
+	void        SetTrackRTPMetaInfo(UInt32 TrackID, RTPMetaInfoPacket::FieldID* inFieldArray, Bool16 isVideo);
 
 	//
 	// What sort of packets do you want?
@@ -227,33 +227,33 @@ public:
 	Float64     GetNextPacket(char ** Packet, int * PacketLength);
 
 	SInt32      GetMovieHintType();
-	bool      DropRepeatPackets() { return fDropRepeatPackets; }
-	bool      SetDropRepeatPackets(bool allowRepeatPackets) { (!fHasRTPMetaInfoFieldArray) ? fDropRepeatPackets = allowRepeatPackets : fDropRepeatPackets = false; return fDropRepeatPackets; }
+	Bool16      DropRepeatPackets() { return fDropRepeatPackets; }
+	Bool16      SetDropRepeatPackets(Bool16 allowRepeatPackets) { (!fHasRTPMetaInfoFieldArray) ? fDropRepeatPackets = allowRepeatPackets : fDropRepeatPackets = false; return fDropRepeatPackets; }
 
 	ErrorCode   Error() { return fErr; };
 
-	bool      FindTrackEntry(UInt32 TrackID, RTPTrackListEntry **TrackEntry);
+	Bool16      FindTrackEntry(UInt32 TrackID, RTPTrackListEntry **TrackEntry);
 protected:
 	//
 	// Protected cache functions and variables.
 	static  OSMutex             *gFileCacheMutex, *gFileCacheAddMutex;
 	static  RTPFileCacheEntry   *gFirstFileCacheEntry;
 
-	static  ErrorCode   new_QTFile(const char * FilePath, QTFile ** File, bool Debug = false, bool DeepDebug = false);
+	static  ErrorCode   new_QTFile(const char * FilePath, QTFile ** File, Bool16 Debug = false, Bool16 DeepDebug = false);
 	static  void        delete_QTFile(QTFile * File);
 
 	static  void        AddFileToCache(const char *inFilename, QTRTPFile::RTPFileCacheEntry ** NewListEntry);
-	static  bool      FindAndRefcountFileCacheEntry(const char *inFilename, QTRTPFile::RTPFileCacheEntry **CacheEntry);
+	static  Bool16      FindAndRefcountFileCacheEntry(const char *inFilename, QTRTPFile::RTPFileCacheEntry **CacheEntry);
 
 	//
 	// Protected member functions.
-	bool      PrefetchNextPacket(RTPTrackListEntry * TrackEntry, bool doSeek = false);
+	Bool16      PrefetchNextPacket(RTPTrackListEntry * TrackEntry, Bool16 doSeek = false);
 	ErrorCode   ScanToCorrectSample();
 	ErrorCode   ScanToCorrectPacketNumber(UInt32 inTrackID, UInt64 inPacketNumber);
 
 	//
 	// Protected member variables.
-	bool              fDebug, fDeepDebug;
+	Bool16              fDebug, fDeepDebug;
 
 	QTFile              *fFile;
 	QTFile_FileControlBlock *fFCB;
@@ -271,10 +271,10 @@ protected:
 
 	UInt32              fBytesPerSecond;
 
-	bool              fHasRTPMetaInfoFieldArray;
-	bool              fWasLastSeekASeekToPacketNumber;
-	bool              fDropRepeatPackets;
-	bool              fAllowInvalidHintRefs;
+	Bool16              fHasRTPMetaInfoFieldArray;
+	Bool16              fWasLastSeekASeekToPacketNumber;
+	Bool16              fDropRepeatPackets;
+	Bool16              fAllowInvalidHintRefs;
 	ErrorCode           fErr;
 
 	static const RTPMetaInfoPacket::FieldID kMetaInfoFields[];

@@ -27,7 +27,7 @@ namespace boost
     /// Effect: Decrement the count. Unlocks the lock and notify anyone waiting if we reached zero.
     /// Returns: true if count_ reached the value 0.
     /// @ThreadSafe ensured by the @c lk parameter
-    bool count_down(unique_lock<mutex> &)
+    bool count_down(unique_lock<mutex> &lk)
     /// pre_condition (count_ > 0)
     {
       BOOST_ASSERT(count_ > 0);
@@ -72,7 +72,6 @@ namespace boost
     void wait()
     {
       boost::unique_lock<boost::mutex> lk(mutex_);
-      if (count_ == 0) return;
       std::size_t generation(generation_);
       cond_.wait(lk, detail::not_equal(generation, generation_));
     }
@@ -90,7 +89,6 @@ namespace boost
     cv_status wait_for(const chrono::duration<Rep, Period>& rel_time)
     {
       boost::unique_lock<boost::mutex> lk(mutex_);
-      if (count_ == 0) return cv_status::no_timeout;
       std::size_t generation(generation_);
       return cond_.wait_for(lk, rel_time, detail::not_equal(generation, generation_))
               ? cv_status::no_timeout
@@ -103,7 +101,6 @@ namespace boost
     cv_status wait_until(const chrono::time_point<Clock, Duration>& abs_time)
     {
       boost::unique_lock<boost::mutex> lk(mutex_);
-      if (count_ == 0) return cv_status::no_timeout;
       std::size_t generation(generation_);
       return cond_.wait_until(lk, abs_time, detail::not_equal(generation, generation_))
           ? cv_status::no_timeout

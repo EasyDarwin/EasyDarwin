@@ -82,7 +82,7 @@ public:
                     bol_index == rhs_.bol_index &&
                     eol_index == rhs_.eol_index &&
                     token == rhs_.token &&
-                    goto_state == rhs_.goto_state;
+                    transition == rhs_.transition;
             }
         };
 

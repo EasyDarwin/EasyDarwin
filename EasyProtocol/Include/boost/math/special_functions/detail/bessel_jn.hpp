@@ -35,7 +35,7 @@ T bessel_jn(int n, T x, const Policy& pol)
     //
     if (n < 0)
     {
-        factor = static_cast<T>((n & 0x1) ? -1 : 1);  // J_{-n}(z) = (-1)^n J_n(z)
+        factor = (n & 0x1) ? -1 : 1;  // J_{-n}(z) = (-1)^n J_n(z)
         n = -n;
     }
     else
@@ -50,8 +50,6 @@ T bessel_jn(int n, T x, const Policy& pol)
     //
     // Special cases:
     //
-    if(asymptotic_bessel_large_x_limit(T(n), x))
-       return factor * asymptotic_bessel_j_large_x_2<T>(T(n), x);
     if (n == 0)
     {
         return factor * bessel_j0(x);
@@ -65,6 +63,9 @@ T bessel_jn(int n, T x, const Policy& pol)
     {
         return static_cast<T>(0);
     }
+
+    if(asymptotic_bessel_large_x_limit(T(n), x))
+      return factor * asymptotic_bessel_j_large_x_2<T>(n, x);
 
     BOOST_ASSERT(n > 1);
     T scale = 1;

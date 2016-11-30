@@ -125,7 +125,7 @@ void QTAtom_stsc_SampleTableControlBlock::Reset()
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_stsc::QTAtom_stsc(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_stsc::QTAtom_stsc(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEntries(0), fSampleToChunkTable(NULL), fTableSize(0)
 {
@@ -149,7 +149,7 @@ QTAtom_stsc::~QTAtom_stsc()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_stsc::Initialize()
+Bool16 QTAtom_stsc::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;
@@ -193,7 +193,7 @@ bool QTAtom_stsc::Initialize()
 // Accessors
 //
 
-bool QTAtom_stsc::GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSample, UInt32 *lastSample, QTAtom_stsc_SampleTableControlBlock *STCB)
+Bool16 QTAtom_stsc::GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSample, UInt32 *lastSample, QTAtom_stsc_SampleTableControlBlock *STCB)
 {
 	// Temporary state var
 	QTAtom_stsc_SampleTableControlBlock *tempSTCB = NULL;
@@ -386,7 +386,7 @@ UInt32 QTAtom_stsc::GetChunkFirstSample(UInt32 chunkNumber)
 //UInt32 gstscCallCount = 0;
 
 
-bool QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber, UInt32 *samplesPerChunk, UInt32 *ChunkNumber, UInt32 *SampleDescriptionIndex, UInt32 *SampleOffsetInChunk, QTAtom_stsc_SampleTableControlBlock * STCB)
+Bool16 QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber, UInt32 *samplesPerChunk, UInt32 *ChunkNumber, UInt32 *SampleDescriptionIndex, UInt32 *SampleOffsetInChunk, QTAtom_stsc_SampleTableControlBlock * STCB)
 {
 	// Temporary state var
 	QTAtom_stsc_SampleTableControlBlock *tempSTCB = NULL;
@@ -395,7 +395,7 @@ bool QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber, UInt32 *samplesPerChunk
 	UInt32      NewCurSample;
 	UInt32      FirstChunk = 0, SamplesPerChunk = 0, SampleDescription = 0;
 
-	bool      missedCache = false;
+	Bool16      missedCache = false;
 
 	if (STCB == NULL)
 	{

@@ -36,7 +36,7 @@
 QueryParamList::QueryParamList(StrPtrLen* querySPL)
 {
 	// ctor from StrPtrLen
-	fNameValueQueryParamlist = new PLDoubleLinkedList<QueryParamListElement>;
+	fNameValueQueryParamlist = NEW PLDoubleLinkedList<QueryParamListElement>;
 
 	this->BulidList(querySPL);
 }
@@ -47,7 +47,7 @@ QueryParamList::QueryParamList(char* queryString)
 	// ctor from char*
 	StrPtrLen       querySPL(queryString);
 
-	fNameValueQueryParamlist = new PLDoubleLinkedList<QueryParamListElement>;
+	fNameValueQueryParamlist = NEW PLDoubleLinkedList<QueryParamListElement>;
 
 	this->BulidList(&querySPL);
 }
@@ -59,7 +59,7 @@ void QueryParamList::BulidList(StrPtrLen* querySPL)
 	// the string is a 'form' encoded query string ( see rfc - 1808 )
 
 	StringParser    queryParser(querySPL);
-	char* stopCharPtr = nullptr;
+	char* stopCharPtr = NULL;
 
 	while (queryParser.GetDataRemaining() > 0)
 	{
@@ -76,10 +76,10 @@ void QueryParamList::BulidList(StrPtrLen* querySPL)
 			stopCharPtr = queryParser.GetCurrentPosition();
 			if (*stopCharPtr == '"') // if quote read to next quote
 			{
-				queryParser.ConsumeLength(nullptr, 1);
+				queryParser.ConsumeLength(NULL, 1);
 				queryParser.ConsumeUntil(&theCGIParamValue, '"');
-				queryParser.ConsumeLength(nullptr, 1);
-				queryParser.ConsumeUntil(nullptr, '&');   // our value will end by here...
+				queryParser.ConsumeLength(NULL, 1);
+				queryParser.ConsumeUntil(NULL, '&');   // our value will end by here...
 			}
 			else
 			{
@@ -137,14 +137,14 @@ const char* QueryParamList::DoFindCGIValueForParam(char* name)
 
 	node = fNameValueQueryParamlist->ForEachUntil(CompareStrToName, name);
 
-	if (node != nullptr)
+	if (node != NULL)
 	{
 		QueryParamListElement* nvPair = (QueryParamListElement*)node->fElement;
 
 		return  nvPair->mValue;
 	}
 
-	return nullptr;
+	return NULL;
 
 }
 
@@ -160,11 +160,11 @@ void QueryParamList::AddNameValuePairToList(char* name, char* value)
 	this->DecodeArg(name);
 	this->DecodeArg(value);
 
-	nvPair = new  QueryParamListElement(name, value);
+	nvPair = NEW  QueryParamListElement(name, value);
 
 
 	// create a node to hold the pair
-	nvNode = new PLDoubleLinkedListNode<QueryParamListElement>(nvPair);
+	nvNode = NEW PLDoubleLinkedListNode<QueryParamListElement>(nvPair);
 
 	// add it to the list
 	fNameValueQueryParamlist->AddNode(nvNode);
@@ -196,7 +196,7 @@ void QueryParamList::DecodeArg(char* ioCodedPtr)
 				hexBuff[3] = *curChar;
 				hexBuff[4] = 0;
 
-				*destPtr++ = (char)::strtoul(hexBuff, nullptr, 0);
+				*destPtr++ = (char)::strtoul(hexBuff, NULL, 0);
 			}
 			else
 			{   // not a valid encoding
@@ -253,7 +253,7 @@ void QueryParamList::DecodeArg(char* ioCodedPtr)
 	*destPtr = *curChar;
 }
 
-bool QueryParamList::IsHex(char c)
+Bool16 QueryParamList::IsHex(char c)
 {
 	// return true if char c is a valid hexidecimal digit
 	// false otherwise.

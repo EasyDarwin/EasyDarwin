@@ -25,9 +25,7 @@
 #include <utility>
 
 #if defined(__ANDROID__)
-# ifndef PAGE_SIZE
-#  define PAGE_SIZE 4096
-# endif
+#include <asm/page.h> // http://code.google.com/p/android/issues/detail?id=39983
 #endif
 
 #include <pthread.h>
@@ -115,13 +113,8 @@ namespace boost
             boost::detail::thread_exit_callback_node* thread_exit_callbacks;
             std::map<void const*,boost::detail::tss_data_node> tss_data;
 
-//#if defined BOOST_THREAD_PROVIDES_INTERRUPTIONS
-            // These data must be at the end so that the access to the other fields doesn't change
-            // when BOOST_THREAD_PROVIDES_INTERRUPTIONS is defined.
-            // Another option is to have them always
             pthread_mutex_t* cond_mutex;
             pthread_cond_t* current_cond;
-//#endif
             typedef std::vector<std::pair<condition_variable*, mutex*>
             //, hidden_allocator<std::pair<condition_variable*, mutex*> >
             > notify_list_t;
@@ -141,10 +134,8 @@ namespace boost
                 thread_handle(0),
                 done(false),join_started(false),joined(false),
                 thread_exit_callbacks(0),
-//#if defined BOOST_THREAD_PROVIDES_INTERRUPTIONS
                 cond_mutex(0),
                 current_cond(0),
-//#endif
                 notify(),
                 async_states_()
 //#if defined BOOST_THREAD_PROVIDES_INTERRUPTIONS
@@ -259,7 +250,7 @@ namespace boost
           inline
           void BOOST_SYMBOL_VISIBLE sleep_for(const chrono::nanoseconds& ns)
           {
-              return boost::this_thread::no_interruption_point::hiden::sleep_for(boost::detail::to_timespec(ns));
+              return boost::this_thread::hiden::sleep_for(boost::detail::to_timespec(ns));
           }
     #endif
     #endif // BOOST_THREAD_USES_CHRONO

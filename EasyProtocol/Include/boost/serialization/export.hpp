@@ -32,7 +32,7 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/mpl/bool_fwd.hpp>
+#include <boost/mpl/bool.hpp>
 
 #include <boost/serialization/extended_type_info.hpp> // for guid_defined only
 #include <boost/serialization/static_warning.hpp>
@@ -86,6 +86,9 @@ struct ptr_serialization_support
 {
 # if defined(BOOST_MSVC) || defined(__SUNPRO_CC)
     virtual BOOST_DLLEXPORT void instantiate() BOOST_USED;
+# elif defined(__BORLANDC__)   
+    static BOOST_DLLEXPORT void instantiate() BOOST_USED;
+    enum { x = sizeof(instantiate(),3) };
 # else
     static BOOST_DLLEXPORT void instantiate() BOOST_USED;
     typedef instantiate_function<
@@ -99,11 +102,17 @@ BOOST_DLLEXPORT void
 ptr_serialization_support<Archive,Serializable>::instantiate()
 {
     export_impl<Archive,Serializable>::enable_save(
-        typename Archive::is_saving()
+        #if ! defined(__BORLANDC__)
+        typename 
+        #endif
+        Archive::is_saving()
     );
 
     export_impl<Archive,Serializable>::enable_load(
-        typename Archive::is_loading()
+        #if ! defined(__BORLANDC__)
+        typename 
+        #endif
+        Archive::is_loading()
     );
 }
 

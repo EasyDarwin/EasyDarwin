@@ -3,7 +3,7 @@
 EasyCMS做为EasyDarwin开源流媒体平台解决方案的一部分，主要进行的是EasyCamera/EasyNVR设备的接入和管理，同时用户也可以复用做为其他类型项目设备接入与管理的框架，EasyCMS也源于EasyDarwin服务架构，具备一套完整的网络I/O框架以及Utility，开发者很容易在EasyDarwin的基础上开发跨平台服务程序，例如Windows、Linux、Mac、Solaris等系统平台，只要一次熟悉，将会受用终身；
 
 ## 编译EasyCMS ##
-Windows版本编译：可以直接用Visual Studio 2015打开源码文件中的：**/EasyDarwin-master/EasyCMS/WinNTSupport/EasyCMS.sln** 解决方案文件，编译出exe可执行文件EasyCMS.exe；
+Windows版本编译：可以直接用Visual Studio 2008打开源码文件中的：**/EasyDarwin-master/EasyCMS/WinNTSupport/EasyCMS.sln** 解决方案文件，编译出exe可执行文件EasyCMS.exe；
 
 Linux版本编译：
 

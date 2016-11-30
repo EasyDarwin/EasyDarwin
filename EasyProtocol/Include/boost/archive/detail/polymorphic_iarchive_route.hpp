@@ -39,8 +39,8 @@ namespace serialization {
 namespace archive {
 namespace detail{
 
-class basic_iserializer;
-class basic_pointer_iserializer;
+class BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY()) basic_iserializer;
+class BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY()) basic_pointer_iserializer;
 
 #ifdef BOOST_MSVC
 #  pragma warning(push)
@@ -166,12 +166,9 @@ private:
     virtual void load_end(const char * name){
         ArchiveImplementation::load_end(name);
     }
+
     virtual void register_basic_serializer(const basic_iserializer & bis){
         ArchiveImplementation::register_basic_serializer(bis);
-    }
-    virtual helper_collection &
-    get_helper_collection(){
-        return ArchiveImplementation::get_helper_collection();
     }
 public:
     // this can't be inheriteded because they appear in mulitple

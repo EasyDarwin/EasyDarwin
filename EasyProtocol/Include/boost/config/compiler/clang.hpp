@@ -23,10 +23,6 @@
 #define __has_extension __has_feature
 #endif
 
-#ifndef __has_attribute
-#define __has_attribute(x) 0
-#endif
-
 #if !__has_feature(cxx_exceptions) && !defined(BOOST_NO_EXCEPTIONS)
 #  define BOOST_NO_EXCEPTIONS
 #endif
@@ -57,25 +53,14 @@
 #define BOOST_HAS_LONG_LONG
 
 //
-// We disable this if the compiler is really nvcc with C++03 as it
-// doesn't actually support __int128 as of CUDA_VERSION=7500
+// We disable this if the compiler is really nvcc as it
+// doesn't actually support __int128 as of CUDA_VERSION=5000
 // even though it defines __SIZEOF_INT128__.
 // See https://svn.boost.org/trac/boost/ticket/10418
-//     https://svn.boost.org/trac/boost/ticket/11852
 // Only re-enable this for nvcc if you're absolutely sure
-// of the circumstances under which it's supported.
-// Similarly __SIZEOF_INT128__ is defined when targetting msvc
-// compatibility even though the required support functions are absent.
+// of the circumstances under which it's supported:
 //
-#if defined(__CUDACC__)
-#  if defined(BOOST_GCC_CXX11)
-#    define BOOST_NVCC_CXX11
-#  else
-#    define BOOST_NVCC_CXX03
-#  endif
-#endif
-
-#if defined(__SIZEOF_INT128__) && !defined(BOOST_NVCC_CXX03) && !defined(_MSC_VER)
+#if defined(__SIZEOF_INT128__) && !defined(__CUDACC__)
 #  define BOOST_HAS_INT128
 #endif
 
@@ -204,7 +189,7 @@
 #  define BOOST_NO_CXX11_USER_DEFINED_LITERALS
 #endif
 
-#if !__has_feature(cxx_alignas)
+#if !(__has_feature(cxx_alignas) || __has_extension(cxx_alignas))
 #  define BOOST_NO_CXX11_ALIGNAS
 #endif
 
@@ -220,23 +205,23 @@
 #  define BOOST_NO_CXX11_FINAL
 #endif
 
-#if !(__has_feature(__cxx_binary_literals__) || __has_extension(__cxx_binary_literals__))
+#if !(__has_feature(cxx_binary_literals) || __has_extension(cxx_binary_literals))
 #  define BOOST_NO_CXX14_BINARY_LITERALS
 #endif
 
-#if !__has_feature(__cxx_decltype_auto__)
+#if !(__has_feature(cxx_decltype_auto) || __has_extension(cxx_decltype_auto))
 #  define BOOST_NO_CXX14_DECLTYPE_AUTO
 #endif
 
-#if !__has_feature(__cxx_aggregate_nsdmi__)
+#if !(__has_feature(cxx_aggregate_nsdmi) || __has_extension(cxx_aggregate_nsdmi))
 #  define BOOST_NO_CXX14_AGGREGATE_NSDMI
 #endif
 
-#if !__has_feature(__cxx_init_captures__)
+#if !(__has_feature(cxx_init_captures) || __has_extension(cxx_init_captures))
 #  define BOOST_NO_CXX14_INITIALIZED_LAMBDA_CAPTURES
 #endif
 
-#if !__has_feature(__cxx_generic_lambdas__)
+#if !(__has_feature(cxx_generic_lambdas) || __has_extension(cxx_generic_lambdas))
 #  define BOOST_NO_CXX14_GENERIC_LAMBDAS
 #endif
 
@@ -254,15 +239,16 @@
 // so instead verify that we have a feature that was introduced at the same time as working C++14
 // constexpr (generic lambda's in this case):
 //
-#if !__has_feature(__cxx_generic_lambdas__) || !__has_feature(__cxx_relaxed_constexpr__)
+#if !__has_feature(cxx_generic_lambdas) \
+  || !(__has_feature(cxx_relaxed_constexpr) || __has_extension(cxx_relaxed_constexpr))
 #  define BOOST_NO_CXX14_CONSTEXPR
 #endif
 
-#if !__has_feature(__cxx_return_type_deduction__)
+#if !(__has_feature(cxx_return_type_deduction) || __has_extension(cxx_return_type_deduction))
 #  define BOOST_NO_CXX14_RETURN_TYPE_DEDUCTION
 #endif
 
-#if !__has_feature(__cxx_variable_templates__)
+#if !(__has_feature(cxx_variable_templates) || __has_extension(cxx_variable_templates))
 #  define BOOST_NO_CXX14_VARIABLE_TEMPLATES
 #endif
 
@@ -270,14 +256,12 @@
 // All versions with __cplusplus above this value seem to support this:
 #  define BOOST_NO_CXX14_DIGIT_SEPARATORS
 #endif
-//
-// __builtin_unreachable:
-#if defined(__has_builtin) && __has_builtin(__builtin_unreachable)
-#define BOOST_UNREACHABLE_RETURN(x) __builtin_unreachable();
-#endif
 
-// Clang has supported the 'unused' attribute since the first release.
-#define BOOST_ATTRIBUTE_UNUSED __attribute__((__unused__))
+
+// Unused attribute:
+#if defined(__GNUC__) && (__GNUC__ >= 4)
+#  define BOOST_ATTRIBUTE_UNUSED __attribute__((unused))
+#endif
 
 #ifndef BOOST_COMPILER
 #  define BOOST_COMPILER "Clang version " __clang_version__

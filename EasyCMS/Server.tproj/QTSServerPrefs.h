@@ -48,13 +48,13 @@ public:
     // This function sets up the dictionary map. Must be called before instantiating   
     static void Initialize();
 
-    QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs);
+    QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs);
     virtual ~QTSServerPrefs() {}
 
     //This is callable at any time, and is thread safe wrt to the accessors.
     //Pass in true if you want this function to update the prefs file if
     //any defaults need to be used. False otherwise
-    void RereadServerPreferences(bool inWriteMissingPrefs);
+    void RereadServerPreferences(Bool16 inWriteMissingPrefs);
 
     //Individual accessor methods for preferences.
 
@@ -65,24 +65,24 @@ public:
     SInt32  GetMaxConnections() { return fMaximumConnections; }
 
     //for debugging, mainly
-    bool      ShouldServerBreakOnAssert() { return fBreakOnAssert; }
-    bool      IsAutoRestartEnabled() { return fAutoRestart; }
+    Bool16      ShouldServerBreakOnAssert() { return fBreakOnAssert; }
+    Bool16      IsAutoRestartEnabled() { return fAutoRestart; }
 
     // For the compiled-in error logging module
 
-    bool  IsErrorLogEnabled() { return fErrorLogEnabled; }
-    bool  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
+    Bool16  IsErrorLogEnabled() { return fErrorLogEnabled; }
+    Bool16  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
 
     UInt32  GetMaxErrorLogBytes() { return fErrorLogBytes; }
     UInt32  GetErrorRollIntervalInDays() { return fErrorRollIntervalInDays; }
     UInt32  GetErrorLogVerbosity() { return fErrorLogVerbosity; }
     void    SetErrorLogVerbosity(UInt32 verbosity) { fErrorLogVerbosity = verbosity; }
 
-    bool  GetMSGDebugPrintfs() { return fEnableMSGDebugPrintfs; }
+    Bool16  GetMSGDebugPrintfs() { return fEnableMSGDebugPrintfs; }
 
     // force logs to close after each write (true or false)
-    bool  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
-    void    SetCloseLogsOnWrite(bool closeLogsOnWrite);
+    Bool16  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
+    void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
 
     // String preferences. Note that the pointers returned here is allocated
     // memory that you must delete!
@@ -116,7 +116,7 @@ public:
         return this->getStringPref(qtssPrefsMonitorStatsFileName);
     }
 
-    bool ServerStatFileEnabled() { return fEnableMonitorStatsFile; }
+    Bool16 ServerStatFileEnabled() { return fEnableMonitorStatsFile; }
     UInt32 GetStatFileIntervalSec() { return fStatsFileIntervalSeconds; }
 
     UInt32  GetNumThreads() { return fNumThreads; }
@@ -141,25 +141,25 @@ private:
 
     SInt32  fMaximumConnections;
 
-    bool  fBreakOnAssert;
-    bool  fAutoRestart;
+    Bool16  fBreakOnAssert;
+    Bool16  fAutoRestart;
 
     UInt32  fErrorRollIntervalInDays;
     UInt32  fErrorLogBytes;
     UInt32  fErrorLogVerbosity;
-    bool  fScreenLoggingEnabled;
-    bool  fErrorLogEnabled;
+    Bool16  fScreenLoggingEnabled;
+    Bool16  fErrorLogEnabled;
 
-    bool  fAutoStart;
-    bool  fEnableMSGDebugPrintfs;
+    Bool16  fAutoStart;
+    Bool16  fEnableMSGDebugPrintfs;
 
     UInt32  fNumThreads;
     UInt32  fNumMsgThreads;
 
-    bool  fEnableMonitorStatsFile;
+    Bool16  fEnableMonitorStatsFile;
     UInt32  fStatsFileIntervalSeconds;
 
-    bool  fCloseLogsOnWrite;
+    Bool16  fCloseLogsOnWrite;
 
     UInt16 fMonitorLANPort;
     UInt16 fMonitorWANPort;

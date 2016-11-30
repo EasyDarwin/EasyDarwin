@@ -7,43 +7,31 @@
 // See http://www.boost.org/libs/container for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
+
 #ifndef BOOST_CONTAINER_FLAT_SET_HPP
 #define BOOST_CONTAINER_FLAT_SET_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
 
-// container
-#include <boost/container/allocator_traits.hpp>
 #include <boost/container/container_fwd.hpp>
-#include <boost/container/new_allocator.hpp> //new_allocator
-// container/detail
+#include <utility>
+#include <functional>
+#include <memory>
 #include <boost/container/detail/flat_tree.hpp>
 #include <boost/container/detail/mpl.hpp>
-// move
-#include <boost/move/traits.hpp>
+#include <boost/container/allocator_traits.hpp>
 #include <boost/move/utility_core.hpp>
-// move/detail
-#if defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
-#include <boost/move/detail/fwd_macros.hpp>
-#endif
 #include <boost/move/detail/move_helpers.hpp>
-// intrusive/detail
-#include <boost/intrusive/detail/minimal_pair_header.hpp>      //pair
-#include <boost/intrusive/detail/minimal_less_equal_header.hpp>//less, equal
-// std
+#include <boost/move/traits.hpp>
+
 #if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
 #include <initializer_list>
 #endif
-
 namespace boost {
 namespace container {
 
@@ -63,7 +51,7 @@ namespace container {
 //! \tparam Compare is the comparison functor used to order keys
 //! \tparam Allocator is the allocator to be used to allocate memory for this container
 #ifdef BOOST_CONTAINER_DOXYGEN_INVOKED
-template <class Key, class Compare = std::less<Key>, class Allocator = new_allocator<Key> >
+template <class Key, class Compare = std::less<Key>, class Allocator = std::allocator<Key> >
 #else
 template <class Key, class Compare, class Allocator>
 #endif
@@ -144,16 +132,6 @@ class flat_set
       : base_t(true, first, last, comp, a)
    {}
 
-   //! <b>Effects</b>: Constructs an empty container using the specified
-   //! allocator, and inserts elements from the range [first ,last ).
-   //!
-   //! <b>Complexity</b>: Linear in N if the range [first ,last ) is already sorted using
-   //! comp and otherwise N logN, where N is last - first.
-   template <class InputIterator>
-   flat_set(InputIterator first, InputIterator last, const allocator_type& a)
-      : base_t(true, first, last, Compare(), a)
-   {}
-
    //! <b>Effects</b>: Constructs an empty container using the specified comparison object and
    //! allocator, and inserts elements from the ordered unique range [first ,last). This function
    //! is more efficient than the normal range creation for ordered ranges.
@@ -180,16 +158,9 @@ class flat_set
    flat_set(std::initializer_list<value_type> il, const Compare& comp = Compare(),
             const allocator_type& a = allocator_type())
       : base_t(true, il.begin(), il.end(), comp, a)
-   {}
+   {
 
-   //! <b>Effects</b>: Constructs an empty container using the specified
-   //! allocator, and inserts elements from the range [il.begin(), il.end()).
-   //!
-   //! <b>Complexity</b>: Linear in N if the range [il.begin(), il.end()) is already sorted using
-   //! comp and otherwise N logN, where N is il.begin() - il.end().
-   flat_set(std::initializer_list<value_type> il, const allocator_type& a)
-      : base_t(true, il.begin(), il.end(), Compare(), a)
-   {}
+   }
 
    //! <b>Effects</b>: Constructs an empty container using the specified comparison object and
    //! allocator, and inserts elements from the ordered unique range [il.begin(), il.end()). This function
@@ -204,7 +175,9 @@ class flat_set
    flat_set(ordered_unique_range_t, std::initializer_list<value_type> il,
             const Compare& comp = Compare(), const allocator_type& a = allocator_type())
       : base_t(ordered_range, il.begin(), il.end(), comp, a)
-   {}
+   {
+
+   }
 #endif
 
    //! <b>Effects</b>: Copy constructs the container.
@@ -214,13 +187,13 @@ class flat_set
       : base_t(static_cast<const base_t&>(x))
    {}
 
-   //! <b>Effects</b>: Move constructs thecontainer. Constructs *this using x's resources.
+   //! <b>Effects</b>: Move constructs thecontainer. Constructs *this using mx's resources.
    //!
    //! <b>Complexity</b>: Constant.
    //!
-   //! <b>Postcondition</b>: x is emptied.
-   flat_set(BOOST_RV_REF(flat_set) x)
-      : base_t(BOOST_MOVE_BASE(base_t, x))
+   //! <b>Postcondition</b>: mx is emptied.
+   flat_set(BOOST_RV_REF(flat_set) mx)
+      : base_t(boost::move(static_cast<base_t&>(mx)))
    {}
 
    //! <b>Effects</b>: Copy constructs a container using the specified allocator.
@@ -231,11 +204,11 @@ class flat_set
    {}
 
    //! <b>Effects</b>: Move constructs a container using the specified allocator.
-   //!                 Constructs *this using x's resources.
+   //!                 Constructs *this using mx's resources.
    //!
-   //! <b>Complexity</b>: Constant if a == x.get_allocator(), linear otherwise
-   flat_set(BOOST_RV_REF(flat_set) x, const allocator_type &a)
-      : base_t(BOOST_MOVE_BASE(base_t, x), a)
+   //! <b>Complexity</b>: Constant if a == mx.get_allocator(), linear otherwise
+   flat_set(BOOST_RV_REF(flat_set) mx, const allocator_type &a)
+      : base_t(boost::move(static_cast<base_t&>(mx)), a)
    {}
 
    //! <b>Effects</b>: Makes *this a copy of x.
@@ -251,9 +224,8 @@ class flat_set
    //!   propagate_on_container_move_assignment is true or
    //!   this->get>allocator() == x.get_allocator(). Linear otherwise.
    flat_set& operator=(BOOST_RV_REF(flat_set) x)
-      BOOST_NOEXCEPT_IF(  allocator_traits_type::is_always_equal::value
-                                 && boost::container::container_detail::is_nothrow_move_assignable<Compare>::value )
-   {  return static_cast<flat_set&>(this->base_t::operator=(BOOST_MOVE_BASE(base_t, x)));  }
+      BOOST_CONTAINER_NOEXCEPT_IF(allocator_traits_type::propagate_on_container_move_assignment::value)
+   {  return static_cast<flat_set&>(this->base_t::operator=(boost::move(static_cast<base_t&>(x))));  }
 
 #if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
    //! <b>Effects</b>: Copy all elements from il to *this.
@@ -268,11 +240,11 @@ class flat_set
 #endif
 
    #ifdef BOOST_CONTAINER_DOXYGEN_INVOKED
-   //! <b>Effects</b>: Returns a copy of the allocator that
+   //! <b>Effects</b>: Returns a copy of the Allocator that
    //!   was passed to the object's constructor.
    //!
    //! <b>Complexity</b>: Constant.
-   allocator_type get_allocator() const BOOST_NOEXCEPT_OR_NOTHROW;
+   allocator_type get_allocator() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a reference to the internal allocator.
    //!
@@ -281,7 +253,7 @@ class flat_set
    //! <b>Complexity</b>: Constant.
    //!
    //! <b>Note</b>: Non-standard extension.
-   stored_allocator_type &get_stored_allocator() BOOST_NOEXCEPT_OR_NOTHROW;
+   stored_allocator_type &get_stored_allocator() BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a reference to the internal allocator.
    //!
@@ -290,35 +262,35 @@ class flat_set
    //! <b>Complexity</b>: Constant.
    //!
    //! <b>Note</b>: Non-standard extension.
-   const stored_allocator_type &get_stored_allocator() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const stored_allocator_type &get_stored_allocator() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns an iterator to the first element contained in the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   iterator begin() BOOST_NOEXCEPT_OR_NOTHROW;
+   iterator begin() BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_iterator to the first element contained in the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_iterator begin() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_iterator begin() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns an iterator to the end of the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   iterator end() BOOST_NOEXCEPT_OR_NOTHROW;
+   iterator end() BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_iterator to the end of the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_iterator end() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_iterator end() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a reverse_iterator pointing to the beginning
    //! of the reversed container.
@@ -326,7 +298,7 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   reverse_iterator rbegin() BOOST_NOEXCEPT_OR_NOTHROW;
+   reverse_iterator rbegin() BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the beginning
    //! of the reversed container.
@@ -334,7 +306,7 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_reverse_iterator rbegin() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator rbegin() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a reverse_iterator pointing to the end
    //! of the reversed container.
@@ -342,7 +314,7 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   reverse_iterator rend() BOOST_NOEXCEPT_OR_NOTHROW;
+   reverse_iterator rend() BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the end
    //! of the reversed container.
@@ -350,21 +322,21 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_reverse_iterator rend() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator rend() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_iterator to the first element contained in the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_iterator cbegin() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_iterator cbegin() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_iterator to the end of the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_iterator cend() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_iterator cend() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the beginning
    //! of the reversed container.
@@ -372,7 +344,7 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_reverse_iterator crbegin() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator crbegin() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns a const_reverse_iterator pointing to the end
    //! of the reversed container.
@@ -380,28 +352,28 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   const_reverse_iterator crend() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator crend() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns true if the container contains no elements.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   bool empty() const BOOST_NOEXCEPT_OR_NOTHROW;
+   bool empty() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns the number of the elements contained in the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   size_type size() const BOOST_NOEXCEPT_OR_NOTHROW;
+   size_type size() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns the largest possible size of the container.
    //!
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   size_type max_size() const BOOST_NOEXCEPT_OR_NOTHROW;
+   size_type max_size() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Number of elements for which memory has been allocated.
    //!   capacity() is always greater than or equal to size().
@@ -409,7 +381,7 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   size_type capacity() const BOOST_NOEXCEPT_OR_NOTHROW;
+   size_type capacity() const BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: If n is less than or equal to capacity(), this call has no
    //!   effect. Otherwise, it is a request for allocation of additional memory.
@@ -438,7 +410,7 @@ class flat_set
    //
    //////////////////////////////////////////////
 
-   #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
+   #if defined(BOOST_CONTAINER_PERFECT_FORWARDING) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
 
    //! <b>Effects</b>: Inserts an object x of type Key constructed with
    //!   std::forward<Args>(args)... if and only if there is no element in the container
@@ -453,7 +425,7 @@ class flat_set
    //!
    //! <b>Note</b>: If an element is inserted it might invalidate elements.
    template <class... Args>
-   std::pair<iterator,bool> emplace(BOOST_FWD_REF(Args)... args)
+   std::pair<iterator,bool> emplace(Args&&... args)
    {  return this->base_t::emplace_unique(boost::forward<Args>(args)...); }
 
    //! <b>Effects</b>: Inserts an object of type Key constructed with
@@ -469,24 +441,26 @@ class flat_set
    //!
    //! <b>Note</b>: If an element is inserted it might invalidate elements.
    template <class... Args>
-   iterator emplace_hint(const_iterator p, BOOST_FWD_REF(Args)... args)
+   iterator emplace_hint(const_iterator p, Args&&... args)
    {  return this->base_t::emplace_hint_unique(p, boost::forward<Args>(args)...); }
 
-   #else // !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+   #else //#ifdef BOOST_CONTAINER_PERFECT_FORWARDING
 
-   #define BOOST_CONTAINER_FLAT_SET_EMPLACE_CODE(N) \
-   BOOST_MOVE_TMPL_LT##N BOOST_MOVE_CLASS##N BOOST_MOVE_GT##N \
-   std::pair<iterator,bool> emplace(BOOST_MOVE_UREF##N)\
-   {  return this->base_t::emplace_unique(BOOST_MOVE_FWD##N);  }\
-   \
-   BOOST_MOVE_TMPL_LT##N BOOST_MOVE_CLASS##N BOOST_MOVE_GT##N \
-   iterator emplace_hint(const_iterator hint BOOST_MOVE_I##N BOOST_MOVE_UREF##N)\
-   {  return this->base_t::emplace_hint_unique(hint BOOST_MOVE_I##N BOOST_MOVE_FWD##N); }\
-   //
-   BOOST_MOVE_ITERATE_0TO9(BOOST_CONTAINER_FLAT_SET_EMPLACE_CODE)
-   #undef BOOST_CONTAINER_FLAT_SET_EMPLACE_CODE
+   #define BOOST_PP_LOCAL_MACRO(n)                                                                 \
+   BOOST_PP_EXPR_IF(n, template<) BOOST_PP_ENUM_PARAMS(n, class P) BOOST_PP_EXPR_IF(n, >)          \
+   std::pair<iterator,bool> emplace(BOOST_PP_ENUM(n, BOOST_CONTAINER_PP_PARAM_LIST, _))            \
+   {  return this->base_t::emplace_unique(BOOST_PP_ENUM(n, BOOST_CONTAINER_PP_PARAM_FORWARD, _)); }\
+                                                                                                   \
+   BOOST_PP_EXPR_IF(n, template<) BOOST_PP_ENUM_PARAMS(n, class P) BOOST_PP_EXPR_IF(n, >)          \
+   iterator emplace_hint(const_iterator p                                                          \
+                         BOOST_PP_ENUM_TRAILING(n, BOOST_CONTAINER_PP_PARAM_LIST, _))              \
+   {  return this->base_t::emplace_hint_unique                                                     \
+            (p BOOST_PP_ENUM_TRAILING(n, BOOST_CONTAINER_PP_PARAM_FORWARD, _)); }                  \
+   //!
+   #define BOOST_PP_LOCAL_LIMITS (0, BOOST_CONTAINER_MAX_CONSTRUCTOR_PARAMETERS)
+   #include BOOST_PP_LOCAL_ITERATE()
 
-   #endif   // !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+   #endif   //#ifdef BOOST_CONTAINER_PERFECT_FORWARDING
 
    #if defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
    //! <b>Effects</b>: Inserts x if and only if there is no element in the container
@@ -639,16 +613,14 @@ class flat_set
    //! <b>Throws</b>: Nothing.
    //!
    //! <b>Complexity</b>: Constant.
-   void swap(flat_set& x)
-      BOOST_NOEXCEPT_IF(  allocator_traits_type::is_always_equal::value
-                                 && boost::container::container_detail::is_nothrow_swappable<Compare>::value );
+   void swap(flat_set& x);
 
    //! <b>Effects</b>: erase(a.begin(),a.end()).
    //!
    //! <b>Postcondition</b>: size() == 0.
    //!
    //! <b>Complexity</b>: linear in size().
-   void clear() BOOST_NOEXCEPT_OR_NOTHROW;
+   void clear() BOOST_CONTAINER_NOEXCEPT;
 
    //! <b>Effects</b>: Returns the comparison object out
    //!   of which a was constructed.
@@ -668,62 +640,11 @@ class flat_set
    //! <b>Complexity</b>: Logarithmic.
    iterator find(const key_type& x);
 
-   //! <b>Returns</b>: A const_iterator pointing to an element with the key
+   //! <b>Returns</b>: Allocator const_iterator pointing to an element with the key
    //!   equivalent to x, or end() if such an element is not found.
    //!
    //! <b>Complexity</b>: Logarithmic.
    const_iterator find(const key_type& x) const;
-
-   //! <b>Requires</b>: size() >= n.
-   //!
-   //! <b>Effects</b>: Returns an iterator to the nth element
-   //!   from the beginning of the container. Returns end()
-   //!   if n == size().
-   //!
-   //! <b>Throws</b>: Nothing.
-   //!
-   //! <b>Complexity</b>: Constant.
-   //!
-   //! <b>Note</b>: Non-standard extension
-   iterator nth(size_type n) BOOST_NOEXCEPT_OR_NOTHROW;
-
-   //! <b>Requires</b>: size() >= n.
-   //!
-   //! <b>Effects</b>: Returns a const_iterator to the nth element
-   //!   from the beginning of the container. Returns end()
-   //!   if n == size().
-   //!
-   //! <b>Throws</b>: Nothing.
-   //!
-   //! <b>Complexity</b>: Constant.
-   //!
-   //! <b>Note</b>: Non-standard extension
-   const_iterator nth(size_type n) const BOOST_NOEXCEPT_OR_NOTHROW;
-
-   //! <b>Requires</b>: size() >= n.
-   //!
-   //! <b>Effects</b>: Returns an iterator to the nth element
-   //!   from the beginning of the container. Returns end()
-   //!   if n == size().
-   //!
-   //! <b>Throws</b>: Nothing.
-   //!
-   //! <b>Complexity</b>: Constant.
-   //!
-   //! <b>Note</b>: Non-standard extension
-   size_type index_of(iterator p) BOOST_NOEXCEPT_OR_NOTHROW;
-
-   //! <b>Requires</b>: begin() <= p <= end().
-   //!
-   //! <b>Effects</b>: Returns the index of the element pointed by p
-   //!   and size() if p == end().
-   //!
-   //! <b>Throws</b>: Nothing.
-   //!
-   //! <b>Complexity</b>: Constant.
-   //!
-   //! <b>Note</b>: Non-standard extension
-   size_type index_of(const_iterator p) const BOOST_NOEXCEPT_OR_NOTHROW;
 
    #endif   //   #if defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
 
@@ -740,7 +661,7 @@ class flat_set
    //! <b>Complexity</b>: Logarithmic
    iterator lower_bound(const key_type& x);
 
-   //! <b>Returns</b>: A const iterator pointing to the first element with key not
+   //! <b>Returns</b>: Allocator const iterator pointing to the first element with key not
    //!   less than k, or a.end() if such an element is not found.
    //!
    //! <b>Complexity</b>: Logarithmic
@@ -752,7 +673,7 @@ class flat_set
    //! <b>Complexity</b>: Logarithmic
    iterator upper_bound(const key_type& x);
 
-   //! <b>Returns</b>: A const iterator pointing to the first element with key not
+   //! <b>Returns</b>: Allocator const iterator pointing to the first element with key not
    //!   less than x, or end() if such an element is not found.
    //!
    //! <b>Complexity</b>: Logarithmic
@@ -829,13 +750,10 @@ class flat_set
 
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
-template <class Key, class Compare, class Allocator>
-struct has_trivial_destructor_after_move<boost::container::flat_set<Key, Compare, Allocator> >
+template <class Key, class C, class Allocator>
+struct has_trivial_destructor_after_move<boost::container::flat_set<Key, C, Allocator> >
 {
-   typedef typename ::boost::container::allocator_traits<Allocator>::pointer pointer;
-   static const bool value = ::boost::has_trivial_destructor_after_move<Allocator>::value &&
-                             ::boost::has_trivial_destructor_after_move<pointer>::value &&
-                             ::boost::has_trivial_destructor_after_move<Compare>::value;
+   static const bool value = has_trivial_destructor_after_move<Allocator>::value &&has_trivial_destructor_after_move<C>::value;
 };
 
 namespace container {
@@ -859,7 +777,7 @@ namespace container {
 //! \tparam Compare is the comparison functor used to order keys
 //! \tparam Allocator is the allocator to be used to allocate memory for this container
 #ifdef BOOST_CONTAINER_DOXYGEN_INVOKED
-template <class Key, class Compare = std::less<Key>, class Allocator = new_allocator<Key> >
+template <class Key, class Compare = std::less<Key>, class Allocator = std::allocator<Key> >
 #else
 template <class Key, class Compare, class Allocator>
 #endif
@@ -922,12 +840,6 @@ class flat_multiset
       : base_t(false, first, last, comp, a)
    {}
 
-   //! @copydoc ::boost::container::flat_set::flat_set(InputIterator, InputIterator, const allocator_type&)
-   template <class InputIterator>
-   flat_multiset(InputIterator first, InputIterator last, const allocator_type& a)
-      : base_t(false, first, last, Compare(), a)
-   {}
-
    //! <b>Effects</b>: Constructs an empty flat_multiset using the specified comparison object and
    //! allocator, and inserts elements from the ordered range [first ,last ). This function
    //! is more efficient than the normal range creation for ordered ranges.
@@ -951,11 +863,6 @@ class flat_multiset
       : base_t(false, il.begin(), il.end(), comp, a)
    {}
 
-   //! @copydoc ::boost::container::flat_set::flat_set(std::initializer_list<value_type>, const allocator_type&)
-   flat_multiset(std::initializer_list<value_type> il, const allocator_type& a)
-      : base_t(false, il.begin(), il.end(), Compare(), a)
-   {}
-
    //! @copydoc ::boost::container::flat_set::flat_set(ordered_unique_range_t, std::initializer_list<value_type>, const Compare& comp, const allocator_type&)
    flat_multiset(ordered_unique_range_t, std::initializer_list<value_type> il,
             const Compare& comp = Compare(), const allocator_type& a = allocator_type())
@@ -968,19 +875,19 @@ class flat_multiset
       : base_t(static_cast<const base_t&>(x))
    {}
 
-   //! @copydoc ::boost::container::flat_set::flat_set(flat_set &&)
-   flat_multiset(BOOST_RV_REF(flat_multiset) x)
-      : base_t(boost::move(static_cast<base_t&>(x)))
+   //! @copydoc ::boost::container::flat_set(flat_set &&)
+   flat_multiset(BOOST_RV_REF(flat_multiset) mx)
+      : base_t(boost::move(static_cast<base_t&>(mx)))
    {}
 
-   //! @copydoc ::boost::container::flat_set::flat_set(const flat_set &, const allocator_type &)
+   //! @copydoc ::boost::container::flat_set(const flat_set &, const allocator_type &)
    flat_multiset(const flat_multiset& x, const allocator_type &a)
       : base_t(static_cast<const base_t&>(x), a)
    {}
 
-   //! @copydoc ::boost::container::flat_set::flat_set(flat_set &&, const allocator_type &)
-   flat_multiset(BOOST_RV_REF(flat_multiset) x, const allocator_type &a)
-      : base_t(BOOST_MOVE_BASE(base_t, x), a)
+   //! @copydoc ::boost::container::flat_set(flat_set &&, const allocator_type &)
+   flat_multiset(BOOST_RV_REF(flat_multiset) mx, const allocator_type &a)
+      : base_t(boost::move(static_cast<base_t&>(mx)), a)
    {}
 
    //! @copydoc ::boost::container::flat_set::operator=(const flat_set &)
@@ -988,10 +895,9 @@ class flat_multiset
    {  return static_cast<flat_multiset&>(this->base_t::operator=(static_cast<const base_t&>(x)));  }
 
    //! @copydoc ::boost::container::flat_set::operator=(flat_set &&)
-   flat_multiset& operator=(BOOST_RV_REF(flat_multiset) x)
-      BOOST_NOEXCEPT_IF(  allocator_traits_type::is_always_equal::value
-                                 && boost::container::container_detail::is_nothrow_move_assignable<Compare>::value )
-   {  return static_cast<flat_multiset&>(this->base_t::operator=(BOOST_MOVE_BASE(base_t, x)));  }
+   flat_multiset& operator=(BOOST_RV_REF(flat_multiset) mx)
+      BOOST_CONTAINER_NOEXCEPT_IF(allocator_traits_type::propagate_on_container_move_assignment::value)
+   {  return static_cast<flat_multiset&>(this->base_t::operator=(boost::move(static_cast<base_t&>(mx))));  }
 
 #if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
    //! @copydoc ::boost::container::flat_set::operator=(std::initializer_list<value_type>)
@@ -1006,61 +912,61 @@ class flat_multiset
    #if defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
 
    //! @copydoc ::boost::container::flat_set::get_allocator()
-   allocator_type get_allocator() const BOOST_NOEXCEPT_OR_NOTHROW;
+   allocator_type get_allocator() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::get_stored_allocator()
-   stored_allocator_type &get_stored_allocator() BOOST_NOEXCEPT_OR_NOTHROW;
+   stored_allocator_type &get_stored_allocator() BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::get_stored_allocator() const
-   const stored_allocator_type &get_stored_allocator() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const stored_allocator_type &get_stored_allocator() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::begin()
-   iterator begin() BOOST_NOEXCEPT_OR_NOTHROW;
+   iterator begin() BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::begin() const
    const_iterator begin() const;
 
    //! @copydoc ::boost::container::flat_set::cbegin() const
-   const_iterator cbegin() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_iterator cbegin() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::end()
-   iterator end() BOOST_NOEXCEPT_OR_NOTHROW;
+   iterator end() BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::end() const
-   const_iterator end() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_iterator end() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::cend() const
-   const_iterator cend() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_iterator cend() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::rbegin()
-   reverse_iterator rbegin() BOOST_NOEXCEPT_OR_NOTHROW;
+   reverse_iterator rbegin() BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::rbegin() const
-   const_reverse_iterator rbegin() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator rbegin() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::crbegin() const
-   const_reverse_iterator crbegin() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator crbegin() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::rend()
-   reverse_iterator rend() BOOST_NOEXCEPT_OR_NOTHROW;
+   reverse_iterator rend() BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::rend() const
-   const_reverse_iterator rend() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator rend() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::crend() const
-   const_reverse_iterator crend() const BOOST_NOEXCEPT_OR_NOTHROW;
+   const_reverse_iterator crend() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::empty() const
-   bool empty() const BOOST_NOEXCEPT_OR_NOTHROW;
+   bool empty() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::size() const
-   size_type size() const BOOST_NOEXCEPT_OR_NOTHROW;
+   size_type size() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::max_size() const
-   size_type max_size() const BOOST_NOEXCEPT_OR_NOTHROW;
+   size_type max_size() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::capacity() const
-   size_type capacity() const BOOST_NOEXCEPT_OR_NOTHROW;
+   size_type capacity() const BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::reserve(size_type)
    void reserve(size_type cnt);
@@ -1076,7 +982,7 @@ class flat_multiset
    //
    //////////////////////////////////////////////
 
-   #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
+   #if defined(BOOST_CONTAINER_PERFECT_FORWARDING) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
 
    //! <b>Effects</b>: Inserts an object of type Key constructed with
    //!   std::forward<Args>(args)... and returns the iterator pointing to the
@@ -1087,7 +993,7 @@ class flat_multiset
    //!
    //! <b>Note</b>: If an element is inserted it might invalidate elements.
    template <class... Args>
-   iterator emplace(BOOST_FWD_REF(Args)... args)
+   iterator emplace(Args&&... args)
    {  return this->base_t::emplace_equal(boost::forward<Args>(args)...); }
 
    //! <b>Effects</b>: Inserts an object of type Key constructed with
@@ -1102,24 +1008,26 @@ class flat_multiset
    //!
    //! <b>Note</b>: If an element is inserted it might invalidate elements.
    template <class... Args>
-   iterator emplace_hint(const_iterator p, BOOST_FWD_REF(Args)... args)
+   iterator emplace_hint(const_iterator p, Args&&... args)
    {  return this->base_t::emplace_hint_equal(p, boost::forward<Args>(args)...); }
 
-   #else // !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+   #else //#ifdef BOOST_CONTAINER_PERFECT_FORWARDING
 
-   #define BOOST_CONTAINER_FLAT_MULTISET_EMPLACE_CODE(N) \
-   BOOST_MOVE_TMPL_LT##N BOOST_MOVE_CLASS##N BOOST_MOVE_GT##N \
-   iterator emplace(BOOST_MOVE_UREF##N)\
-   {  return this->base_t::emplace_equal(BOOST_MOVE_FWD##N);  }\
-   \
-   BOOST_MOVE_TMPL_LT##N BOOST_MOVE_CLASS##N BOOST_MOVE_GT##N \
-   iterator emplace_hint(const_iterator hint BOOST_MOVE_I##N BOOST_MOVE_UREF##N)\
-   {  return this->base_t::emplace_hint_equal(hint BOOST_MOVE_I##N BOOST_MOVE_FWD##N); }\
-   //
-   BOOST_MOVE_ITERATE_0TO9(BOOST_CONTAINER_FLAT_MULTISET_EMPLACE_CODE)
-   #undef BOOST_CONTAINER_FLAT_MULTISET_EMPLACE_CODE
+   #define BOOST_PP_LOCAL_MACRO(n)                                                                 \
+   BOOST_PP_EXPR_IF(n, template<) BOOST_PP_ENUM_PARAMS(n, class P) BOOST_PP_EXPR_IF(n, >)          \
+   iterator emplace(BOOST_PP_ENUM(n, BOOST_CONTAINER_PP_PARAM_LIST, _))                            \
+   {  return this->base_t::emplace_equal(BOOST_PP_ENUM(n, BOOST_CONTAINER_PP_PARAM_FORWARD, _)); } \
+                                                                                                   \
+   BOOST_PP_EXPR_IF(n, template<) BOOST_PP_ENUM_PARAMS(n, class P) BOOST_PP_EXPR_IF(n, >)          \
+   iterator emplace_hint(const_iterator p                                                          \
+                         BOOST_PP_ENUM_TRAILING(n, BOOST_CONTAINER_PP_PARAM_LIST, _))              \
+   {  return this->base_t::emplace_hint_equal                                                      \
+            (p BOOST_PP_ENUM_TRAILING(n, BOOST_CONTAINER_PP_PARAM_FORWARD, _)); }                  \
+   //!
+   #define BOOST_PP_LOCAL_LIMITS (0, BOOST_CONTAINER_MAX_CONSTRUCTOR_PARAMETERS)
+   #include BOOST_PP_LOCAL_ITERATE()
 
-   #endif   // !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+   #endif   //#ifdef BOOST_CONTAINER_PERFECT_FORWARDING
 
    #if defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
    //! <b>Effects</b>: Inserts x and returns the iterator pointing to the
@@ -1232,12 +1140,10 @@ class flat_multiset
    iterator erase(const_iterator first, const_iterator last);
 
    //! @copydoc ::boost::container::flat_set::swap
-   void swap(flat_multiset& x)
-      BOOST_NOEXCEPT_IF(  allocator_traits_type::is_always_equal::value
-                                 && boost::container::container_detail::is_nothrow_swappable<Compare>::value );
+   void swap(flat_multiset& x);
 
    //! @copydoc ::boost::container::flat_set::clear
-   void clear() BOOST_NOEXCEPT_OR_NOTHROW;
+   void clear() BOOST_CONTAINER_NOEXCEPT;
 
    //! @copydoc ::boost::container::flat_set::key_comp
    key_compare key_comp() const;
@@ -1250,18 +1156,6 @@ class flat_multiset
 
    //! @copydoc ::boost::container::flat_set::find(const key_type& ) const
    const_iterator find(const key_type& x) const;
-
-   //! @copydoc ::boost::container::flat_set::nth(size_type)
-   iterator nth(size_type n) BOOST_NOEXCEPT_OR_NOTHROW;
-
-   //! @copydoc ::boost::container::flat_set::nth(size_type) const
-   const_iterator nth(size_type n) const BOOST_NOEXCEPT_OR_NOTHROW;
-
-   //! @copydoc ::boost::container::flat_set::index_of(iterator)
-   size_type index_of(iterator p) BOOST_NOEXCEPT_OR_NOTHROW;
-
-   //! @copydoc ::boost::container::flat_set::index_of(const_iterator) const
-   size_type index_of(const_iterator p) const BOOST_NOEXCEPT_OR_NOTHROW;
 
    //! @copydoc ::boost::container::flat_set::count(const key_type& ) const
    size_type count(const key_type& x) const;
@@ -1339,13 +1233,10 @@ class flat_multiset
 
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
-template <class Key, class Compare, class Allocator>
-struct has_trivial_destructor_after_move<boost::container::flat_multiset<Key, Compare, Allocator> >
+template <class Key, class C, class Allocator>
+struct has_trivial_destructor_after_move<boost::container::flat_multiset<Key, C, Allocator> >
 {
-   typedef typename ::boost::container::allocator_traits<Allocator>::pointer pointer;
-   static const bool value = ::boost::has_trivial_destructor_after_move<Allocator>::value &&
-                             ::boost::has_trivial_destructor_after_move<pointer>::value &&
-                             ::boost::has_trivial_destructor_after_move<Compare>::value;
+   static const bool value = has_trivial_destructor_after_move<Allocator>::value && has_trivial_destructor_after_move<C>::value;
 };
 
 namespace container {
@@ -1356,4 +1247,4 @@ namespace container {
 
 #include <boost/container/detail/config_end.hpp>
 
-#endif   // BOOST_CONTAINER_FLAT_SET_HPP
+#endif /* BOOST_CONTAINER_FLAT_SET_HPP */

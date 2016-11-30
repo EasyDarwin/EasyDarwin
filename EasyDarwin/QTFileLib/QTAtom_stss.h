@@ -46,19 +46,19 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_stss(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		bool Debug = false, bool DeepDebug = false);
+		Bool16 Debug = false, Bool16 DeepDebug = false);
 	virtual             ~QTAtom_stss();
 
 
 	//
 	// Initialization functions.
-	virtual bool      Initialize();
+	virtual Bool16      Initialize();
 
 	//
 	// Accessors.
 	void        PreviousSyncSample(UInt32 SampleNumber, UInt32 *SyncSampleNumber);
 	void        NextSyncSample(UInt32 SampleNumber, UInt32 *SyncSampleNumber);
-	inline bool       IsSyncSample(UInt32 SampleNumber, UInt32 inCursor)
+	inline Bool16       IsSyncSample(UInt32 SampleNumber, UInt32 inCursor)
 	{
 		Assert(inCursor <= fNumEntries);
 		for (UInt32 curEntry = inCursor; curEntry < fNumEntries; curEntry++)

@@ -112,7 +112,7 @@ void    OSMemory::Delete(void* inMemory)
 }
 
 #if MEMORY_DEBUGGING
-void* OSMemory::DebugNew(size_t s, char* inFile, int inLine, bool sizeCheck)
+void* OSMemory::DebugNew(size_t s, char* inFile, int inLine, Bool16 sizeCheck)
 {
 	//also allocate enough space for a Q elem and a long to store the length of this
 	//allocation block
@@ -186,7 +186,7 @@ void OSMemory::DebugDelete(void *mem)
 	memInfo--;//get a pointer to the MemoryDebugging structure
 	Assert(memInfo->elem.IsMemberOfAnyQueue());//must be on the memory Queue
 	//double check it's on the memory queue
-	bool found = false;
+	Bool16 found = false;
 	for (OSQueueIter iter(&sMemoryQueue); !iter.IsDone(); iter.Next())
 	{
 		MemoryDebugging* check = (MemoryDebugging*)iter.GetCurrent()->GetEnclosingObject();
@@ -245,7 +245,7 @@ void OSMemory::ValidateMemoryQueue()
 }
 
 #if 0
-bool OSMemory::MemoryDebuggingTest()
+Bool16 OSMemory::MemoryDebuggingTest()
 {
 	static char* s20 = "this is 20 characte";
 	static char* s30 = "this is 30 characters long, o";

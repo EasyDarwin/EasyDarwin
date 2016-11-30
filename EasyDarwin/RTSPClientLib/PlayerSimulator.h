@@ -183,7 +183,7 @@ class PlayerSimulator
 						curTrack.fNextSeqNum = curTrack.fPlayBuffer.front().fSeqNum;
 						
 						if(fVerboseLevel >= 1)
-							qtss_printf("Track %"  _U32BITARG_  " is now playing; initial seq=%"  _U32BITARG_  ", initial time stamp=%"  _U32BITARG_  "\n",
+							qtss_printf("Track %"_U32BITARG_" is now playing; initial seq=%"_U32BITARG_", initial time stamp=%"_U32BITARG_"\n",
 								index, curTrack.fNextSeqNum, curTrack.fRTPTimeStampBase);
 					}
 					AdvanceTime();
@@ -193,13 +193,13 @@ class PlayerSimulator
 			if(fVerboseLevel >= 2)
 			{
 				if (fIsPlaying)
-					qtss_printf("Processed packet: track=%" _U32BITARG_ ", len=%" _U32BITARG_ ", seq=%" _U32BITARG_ ", time=%" _U32BITARG_ "(%" _U32BITARG_ "); "
-						"bufferingDelay=%" _U32BITARG_ ", FBS=%" _U32BITARG_ ", media time=%" _U32BITARG_ "\n",
+					qtss_printf("Processed packet: track=%"_U32BITARG_", len=%"_U32BITARG_", seq=%"_U32BITARG_", time=%"_U32BITARG_"(%"_U32BITARG_"); "
+						"bufferingDelay=%"_U32BITARG_", FBS=%"_U32BITARG_", media time=%"_U32BITARG_"\n",
 						trackIndex, packetLen, seqNum, timeStamp, RTPTime2MediaTime(trackIndex, timeStamp), 
 						GetBufferingDelay(trackIndex), GetFreeBufferSpace(trackIndex), fCurrentMediaTime);
 				else
-					qtss_printf("Processed packet: track=%" _U32BITARG_ ", len=%" _U32BITARG_ ", seq=%" _U32BITARG_ ", time=%" _U32BITARG_ "(%" _U32BITARG_ "); "
-						"bufferingDelay=%" _U32BITARG_ ", FBS=%" _U32BITARG_ "\n",
+					qtss_printf("Processed packet: track=%"_U32BITARG_", len=%"_U32BITARG_", seq=%"_U32BITARG_", time=%"_U32BITARG_"(%"_U32BITARG_"); "
+						"bufferingDelay=%"_U32BITARG_", FBS=%"_U32BITARG_"\n",
 						trackIndex, packetLen, seqNum, timeStamp, RTPTime2MediaTime(trackIndex, timeStamp),
 						GetBufferingDelay(trackIndex), GetFreeBufferSpace(trackIndex));
 			}
@@ -311,7 +311,7 @@ class PlayerSimulator
 				{
 					if(prevTimeStamp > playBuffer[i].fTimeStamp)
 					{   if(fVerboseLevel >= 2) //this can happen from out of order packets from udp network routing or retransmits from rudp. It should never happen over tcp or http.
-						    qtss_printf("WARNING: RTP timestamp is not monotonic! seq=%" _U32BITARG_ " timestamp=%" _U32BITARG_ "\n", playBuffer[i].fSeqNum, playBuffer[i].fTimeStamp);
+						    qtss_printf("WARNING: RTP timestamp is not monotonic! seq=%"_U32BITARG_" timestamp=%"_U32BITARG_"\n", playBuffer[i].fSeqNum, playBuffer[i].fTimeStamp);
 				    }
 					else
 						prevTimeStamp = playBuffer[i].fTimeStamp;

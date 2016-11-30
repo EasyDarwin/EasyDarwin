@@ -64,16 +64,16 @@ public:
 	char*					GetQueryString() { return fQueryString; }
 	HTTPVersion             GetVersion() { return fVersion; }
 	HTTPStatusCode          GetStatusCode() { return fStatusCode; }
-	bool                  IsRequestKeepAlive() { return fRequestKeepAlive; }
+	Bool16                  IsRequestKeepAlive() { return fRequestKeepAlive; }
 
 	// If header field exists in the request, it will be found in the dictionary
 	// and the value returned. Otherwise, NULL is returned.
 	StrPtrLen*              GetHeaderValue(HTTPHeader inHeader);
 
 	// Creates a header with the corresponding version and status code
-	bool                  CreateResponseHeader(HTTPStatusCode statusCode = httpOK, HTTPVersion version = http11Version);
+	Bool16                  CreateResponseHeader(HTTPStatusCode statusCode = httpOK, HTTPVersion version = http11Version);
 	// Creates a header with the
-	bool					CreateRequestHeader(HTTPMethod method = httpPostMethod, HTTPVersion version = http11Version);
+	Bool16					CreateRequestHeader(HTTPMethod method = httpPostMethod, HTTPVersion version = http11Version);
 
 	// To append response header fields as appropriate
 	void                    AppendResponseHeader(HTTPHeader inHeader, StrPtrLen* inValue);
@@ -137,7 +137,7 @@ private:
 	char*				fQueryString;
 
 	HTTPStatusCode      fStatusCode;
-	bool              fRequestKeepAlive;              // Keep-alive information in the client request
+	Bool16              fRequestKeepAlive;              // Keep-alive information in the client request
 	StrPtrLen           fFieldValues[httpNumHeaders];   // Array of header field values parsed from the request
 	StrPtrLen           fSvrHeader;                     // Server header set up at initialization
 	static StrPtrLen    sColonSpace;

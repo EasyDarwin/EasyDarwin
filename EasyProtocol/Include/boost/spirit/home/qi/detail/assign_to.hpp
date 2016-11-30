@@ -18,7 +18,6 @@
 #include <boost/spirit/home/qi/detail/attributes.hpp>
 #include <boost/spirit/home/support/container.hpp>
 #include <boost/fusion/include/copy.hpp>
-#include <boost/fusion/adapted/struct/detail/extension.hpp>
 #include <boost/ref.hpp>
 #include <boost/range/iterator_range.hpp>
 
@@ -201,16 +200,6 @@ namespace boost { namespace spirit { namespace traits
         call(boost::optional<T> const& val, Attribute& attr)
         {
             assign_to(val.get(), attr);
-        }
-    };
-
-    template <typename Attribute, int N, bool Const, typename T>
-    struct assign_to_attribute_from_value<fusion::extension::adt_attribute_proxy<Attribute, N, Const>, T>
-    {
-        static void
-        call(T const& val, typename fusion::extension::adt_attribute_proxy<Attribute, N, Const>& attr)
-        {
-            attr = val;
         }
     };
 

@@ -413,7 +413,7 @@ QTSS_AttributeID QTSSModuleUtils::CreateAttribute(QTSS_Object inObject, char* in
 }
 
 
-bool QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inAddressPtr)
+Bool16 QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inAddressPtr)
 {
 	StrPtrLenDel strDeleter;
 	char*   theAttributeString = NULL;
@@ -440,7 +440,7 @@ bool QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID listI
 	return false;
 }
 
-bool QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr)
+Bool16 QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr)
 {
 	StrPtrLenDel tempString;
 
@@ -482,7 +482,7 @@ IPComponentStr::IPComponentStr(StrPtrLen* sourceStrPtr)
 	(void) this->Set(sourceStrPtr);
 }
 
-bool IPComponentStr::Set(StrPtrLen* theAddressStrPtr)
+Bool16 IPComponentStr::Set(StrPtrLen* theAddressStrPtr)
 {
 	fIsValid = false;
 
@@ -508,7 +508,7 @@ bool IPComponentStr::Set(StrPtrLen* theAddressStrPtr)
 	return fIsValid;
 }
 
-bool IPComponentStr::Equal(IPComponentStr* testAddressPtr)
+Bool16 IPComponentStr::Equal(IPComponentStr* testAddressPtr)
 {
 	if (testAddressPtr == NULL)
 		return false;

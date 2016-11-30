@@ -305,9 +305,9 @@ QTSS_Error QTSS_RequestGlobalLock()
 
 // SYNCH GLOBAL MULTIPLE READERS/SINGLE WRITER ROUTINES
 
-bool QTSS_IsGlobalLocked()
+Bool16 QTSS_IsGlobalLocked()
 {
-	return (bool)(sCallbacks->addr[kIsGlobalLockedCallback])  ();
+	return (Bool16)(sCallbacks->addr[kIsGlobalLockedCallback])  ();
 }
 
 QTSS_Error QTSS_GlobalUnLock()

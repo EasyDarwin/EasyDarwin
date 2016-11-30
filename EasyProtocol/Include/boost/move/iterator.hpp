@@ -14,18 +14,9 @@
 #ifndef BOOST_MOVE_ITERATOR_HPP
 #define BOOST_MOVE_ITERATOR_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
-#  pragma once
-#endif
-
 #include <boost/move/detail/config_begin.hpp>
-#include <boost/move/detail/workaround.hpp>  //forceinline
-#include <boost/move/detail/iterator_traits.hpp>
 #include <boost/move/utility_core.hpp>
+#include <iterator>  //std::iterator
 
 namespace boost {
 
@@ -45,7 +36,7 @@ class move_iterator
 {
    public:
    typedef It                                                              iterator_type;
-   typedef typename boost::movelib::iterator_traits<iterator_type>::value_type        value_type;
+   typedef typename std::iterator_traits<iterator_type>::value_type        value_type;
    #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || defined(BOOST_MOVE_DOXYGEN_INVOKED)
    typedef value_type &&                                                   reference;
    #else
@@ -55,23 +46,25 @@ class move_iterator
       , value_type & >::type                                               reference;
    #endif
    typedef It                                                              pointer;
-   typedef typename boost::movelib::iterator_traits<iterator_type>::difference_type   difference_type;
-   typedef typename boost::movelib::iterator_traits<iterator_type>::iterator_category iterator_category;
+   typedef typename std::iterator_traits<iterator_type>::difference_type   difference_type;
+   typedef typename std::iterator_traits<iterator_type>::iterator_category iterator_category;
 
-   BOOST_MOVE_FORCEINLINE move_iterator()
-      : m_it()
+   move_iterator()
    {}
 
-   BOOST_MOVE_FORCEINLINE explicit move_iterator(const It &i)
+   explicit move_iterator(It i)
       :  m_it(i)
    {}
 
    template <class U>
-   BOOST_MOVE_FORCEINLINE move_iterator(const move_iterator<U>& u)
-      :  m_it(u.m_it)
+   move_iterator(const move_iterator<U>& u)
+      :  m_it(u.base())
    {}
 
-   BOOST_MOVE_FORCEINLINE reference operator*() const
+   iterator_type base() const
+   {  return m_it;   }
+
+   reference operator*() const
    {
       #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || defined(BOOST_MOVE_OLD_RVALUE_REF_BINDING_RULES)
       return *m_it;
@@ -80,34 +73,34 @@ class move_iterator
       #endif
    }
 
-   BOOST_MOVE_FORCEINLINE pointer   operator->() const
+   pointer   operator->() const
    {  return m_it;   }
 
-   BOOST_MOVE_FORCEINLINE move_iterator& operator++()
+   move_iterator& operator++()
    {  ++m_it; return *this;   }
 
-   BOOST_MOVE_FORCEINLINE move_iterator<iterator_type>  operator++(int)
+   move_iterator<iterator_type>  operator++(int)
    {  move_iterator<iterator_type> tmp(*this); ++(*this); return tmp;   }
 
-   BOOST_MOVE_FORCEINLINE move_iterator& operator--()
+   move_iterator& operator--()
    {  --m_it; return *this;   }
 
-   BOOST_MOVE_FORCEINLINE move_iterator<iterator_type>  operator--(int)
+   move_iterator<iterator_type>  operator--(int)
    {  move_iterator<iterator_type> tmp(*this); --(*this); return tmp;   }
 
    move_iterator<iterator_type>  operator+ (difference_type n) const
    {  return move_iterator<iterator_type>(m_it + n);  }
 
-   BOOST_MOVE_FORCEINLINE move_iterator& operator+=(difference_type n)
+   move_iterator& operator+=(difference_type n)
    {  m_it += n; return *this;   }
 
-   BOOST_MOVE_FORCEINLINE move_iterator<iterator_type>  operator- (difference_type n) const
+   move_iterator<iterator_type>  operator- (difference_type n) const
    {  return move_iterator<iterator_type>(m_it - n);  }
 
-   BOOST_MOVE_FORCEINLINE move_iterator& operator-=(difference_type n)
+   move_iterator& operator-=(difference_type n)
    {  m_it -= n; return *this;   }
 
-   BOOST_MOVE_FORCEINLINE reference operator[](difference_type n) const
+   reference operator[](difference_type n) const
    {
       #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || defined(BOOST_MOVE_OLD_RVALUE_REF_BINDING_RULES)
       return m_it[n];
@@ -116,29 +109,29 @@ class move_iterator
       #endif
    }
 
-   BOOST_MOVE_FORCEINLINE friend bool operator==(const move_iterator& x, const move_iterator& y)
-   {  return x.m_it == y.m_it;  }
+   friend bool operator==(const move_iterator& x, const move_iterator& y)
+   {  return x.base() == y.base();  }
 
-   BOOST_MOVE_FORCEINLINE friend bool operator!=(const move_iterator& x, const move_iterator& y)
-   {  return x.m_it != y.m_it;  }
+   friend bool operator!=(const move_iterator& x, const move_iterator& y)
+   {  return x.base() != y.base();  }
 
-   BOOST_MOVE_FORCEINLINE friend bool operator< (const move_iterator& x, const move_iterator& y)
-   {  return x.m_it < y.m_it;   }
+   friend bool operator< (const move_iterator& x, const move_iterator& y)
+   {  return x.base() < y.base();   }
 
-   BOOST_MOVE_FORCEINLINE friend bool operator<=(const move_iterator& x, const move_iterator& y)
-   {  return x.m_it <= y.m_it;  }
+   friend bool operator<=(const move_iterator& x, const move_iterator& y)
+   {  return x.base() <= y.base();  }
 
-   BOOST_MOVE_FORCEINLINE friend bool operator> (const move_iterator& x, const move_iterator& y)
-   {  return x.m_it > y.m_it;  }
+   friend bool operator> (const move_iterator& x, const move_iterator& y)
+   {  return x.base() > y.base();  }
 
-   BOOST_MOVE_FORCEINLINE friend bool operator>=(const move_iterator& x, const move_iterator& y)
-   {  return x.m_it >= y.m_it;  }
+   friend bool operator>=(const move_iterator& x, const move_iterator& y)
+   {  return x.base() >= y.base();  }
 
-   BOOST_MOVE_FORCEINLINE friend difference_type operator-(const move_iterator& x, const move_iterator& y)
-   {  return x.m_it - y.m_it;   }
+   friend difference_type operator-(const move_iterator& x, const move_iterator& y)
+   {  return x.base() - y.base();   }
 
-   BOOST_MOVE_FORCEINLINE friend move_iterator operator+(difference_type n, const move_iterator& x)
-   {  return move_iterator(x.m_it + n);   }
+   friend move_iterator operator+(difference_type n, const move_iterator& x)
+   {  return move_iterator(x.base() + n);   }
 
    private:
    It m_it;

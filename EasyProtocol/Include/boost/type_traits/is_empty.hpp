@@ -10,12 +10,16 @@
 #define BOOST_TT_IS_EMPTY_HPP_INCLUDED
 
 #include <boost/type_traits/is_convertible.hpp>
-#include <boost/type_traits/detail/config.hpp>
+#include <boost/type_traits/detail/ice_or.hpp>
+#include <boost/type_traits/config.hpp>
 #include <boost/type_traits/intrinsics.hpp>
 
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/type_traits/is_class.hpp>
-#include <boost/type_traits/add_reference.hpp>
+#   include <boost/type_traits/remove_cv.hpp>
+#   include <boost/type_traits/is_class.hpp>
+#   include <boost/type_traits/add_reference.hpp>
+
+// should be always the last #include directive
+#include <boost/type_traits/detail/bool_trait_def.hpp>
 
 #ifndef BOOST_INTERNAL_IS_EMPTY
 #define BOOST_INTERNAL_IS_EMPTY(T) false
@@ -71,8 +75,12 @@ struct is_empty_impl
 {
     typedef typename remove_cv<T>::type cvt;
     BOOST_STATIC_CONSTANT(
-        bool, 
-        value = ( ::boost::detail::empty_helper<cvt,::boost::is_class<T>::value>::value || BOOST_INTERNAL_IS_EMPTY(cvt)));
+        bool, value = (
+            ::boost::type_traits::ice_or<
+              ::boost::detail::empty_helper<cvt,::boost::is_class<T>::value>::value
+              , BOOST_INTERNAL_IS_EMPTY(cvt)
+            >::value
+            ));
 };
 
 #else // __BORLANDC__
@@ -99,20 +107,34 @@ struct is_empty_impl
 
    BOOST_STATIC_CONSTANT(
        bool, value = (
+           ::boost::type_traits::ice_or<
               ::boost::detail::empty_helper<
                   cvt
                 , ::boost::is_class<T>::value
                 , ::boost::is_convertible< r_type,int>::value
-              >::value || BOOST_INTERNAL_IS_EMPTY(cvt));
+              >::value
+              , BOOST_INTERNAL_IS_EMPTY(cvt)
+           >::value));
 };
 
 #endif // __BORLANDC__
 
+
+// these help when the compiler has no partial specialization support:
+BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_empty,void,false)
+#ifndef BOOST_NO_CV_VOID_SPECIALIZATIONS
+BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_empty,void const,false)
+BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_empty,void volatile,false)
+BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_empty,void const volatile,false)
+#endif
+
 } // namespace detail
 
-template <class T> struct is_empty : integral_constant<bool, ::boost::detail::is_empty_impl<T>::value> {};
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_empty,T,::boost::detail::is_empty_impl<T>::value)
 
 } // namespace boost
+
+#include <boost/type_traits/detail/bool_trait_undef.hpp>
 
 #undef BOOST_INTERNAL_IS_EMPTY
 

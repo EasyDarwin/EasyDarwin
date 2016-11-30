@@ -25,6 +25,7 @@
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/serialization/pfto.hpp>
 
 #include <boost/archive/basic_archive.hpp>
 #include <boost/archive/detail/common_iarchive.hpp>
@@ -50,7 +51,7 @@ namespace detail {
 /////////////////////////////////////////////////////////////////////////
 // class basic_binary_iarchive - read serialized objects from a input binary stream
 template<class Archive>
-class BOOST_SYMBOL_VISIBLE basic_binary_iarchive : 
+class basic_binary_iarchive : 
     public detail::common_iarchive<Archive>
 {
 #ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
@@ -71,8 +72,8 @@ protected:
     // note extra nonsense to sneak it pass the borland compiers
     typedef detail::common_iarchive<Archive> detail_common_iarchive;
     template<class T>
-    void load_override(T & t){
-      this->detail_common_iarchive::load_override(t);
+    void load_override(T & t, BOOST_PFTO int version){
+      this->detail_common_iarchive::load_override(t, static_cast<int>(version));
     }
 
     // include these to trap a change in binary format which
@@ -85,7 +86,7 @@ protected:
     BOOST_STATIC_ASSERT(sizeof(object_reference_type) == sizeof(uint_least32_t));
 
     // binary files don't include the optional information 
-    void load_override(class_id_optional_type & /* t */){}
+    void load_override(class_id_optional_type & /* t */, int){}
 
     void load_override(tracking_type & t, int /*version*/){
         library_version_type lvt = this->get_library_version();
@@ -100,10 +101,10 @@ protected:
             t = boost::archive::tracking_type(x);
         }
     }
-    void load_override(class_id_type & t){
+    void load_override(class_id_type & t, int version){
         library_version_type lvt = this->get_library_version();
         if(boost::archive::library_version_type(7) < lvt){
-            this->detail_common_iarchive::load_override(t);
+            this->detail_common_iarchive::load_override(t, version);
         }
         else
         if(boost::archive::library_version_type(6) < lvt){
@@ -117,14 +118,37 @@ protected:
             t = boost::archive::class_id_type(x);
         }
     }
-    void load_override(class_id_reference_type & t){
-        load_override(static_cast<class_id_type &>(t));
+    void load_override(class_id_reference_type & t, int version){
+        load_override(static_cast<class_id_type &>(t), version);
     }
-
-    void load_override(version_type & t){
+#if 0
+    void load_override(class_id_reference_type & t, int version){
         library_version_type lvt = this->get_library_version();
         if(boost::archive::library_version_type(7) < lvt){
-            this->detail_common_iarchive::load_override(t);
+            this->detail_common_iarchive::load_override(t, version);
+        }
+        else
+        if(boost::archive::library_version_type(6) < lvt){
+            int_least16_t x=0;
+            * this->This() >> x;
+            t = boost::archive::class_id_reference_type(
+                boost::archive::class_id_type(x)
+            );
+        }
+        else{
+            int x=0;
+            * this->This() >> x;
+            t = boost::archive::class_id_reference_type(
+                boost::archive::class_id_type(x)
+            );
+        }
+    }
+#endif
+
+    void load_override(version_type & t, int version){
+        library_version_type lvt = this->get_library_version();
+        if(boost::archive::library_version_type(7) < lvt){
+            this->detail_common_iarchive::load_override(t, version);
         }
         else
         if(boost::archive::library_version_type(6) < lvt){
@@ -152,11 +176,11 @@ protected:
         }
     }
 
-    void load_override(boost::serialization::item_version_type & t){
+    void load_override(boost::serialization::item_version_type & t, int version){
         library_version_type lvt = this->get_library_version();
 //        if(boost::archive::library_version_type(7) < lvt){
         if(boost::archive::library_version_type(6) < lvt){
-            this->detail_common_iarchive::load_override(t);
+            this->detail_common_iarchive::load_override(t, version);
         }
         else
         if(boost::archive::library_version_type(6) < lvt){
@@ -171,9 +195,9 @@ protected:
         }
     }
 
-    void load_override(serialization::collection_size_type & t){
+    void load_override(serialization::collection_size_type & t, int version){
         if(boost::archive::library_version_type(5) < this->get_library_version()){
-            this->detail_common_iarchive::load_override(t);
+            this->detail_common_iarchive::load_override(t, version);
         }
         else{
             unsigned int x=0;
@@ -182,9 +206,9 @@ protected:
         } 
     }
 
-    BOOST_ARCHIVE_OR_WARCHIVE_DECL void
-    load_override(class_name_type & t);
-    BOOST_ARCHIVE_OR_WARCHIVE_DECL void
+    BOOST_ARCHIVE_OR_WARCHIVE_DECL(void)
+    load_override(class_name_type & t, int);
+    BOOST_ARCHIVE_OR_WARCHIVE_DECL(void)
     init();
    
     basic_binary_iarchive(unsigned int flags) :

@@ -123,16 +123,16 @@ void UserAgentParser::Parse(StrPtrLen *inStream)
 	while (startFields.Len != 0)
 	{
 		//stop when we reach an empty line.
-		tempID.Set(nullptr, 0);
-		tempData.Set(nullptr, 0);
+		tempID.Set(NULL, 0);
+		tempData.Set(NULL, 0);
 
-		parser.ConsumeLength(nullptr, 1); // step past '(' or ';' if not found or at end of line does nothing
+		parser.ConsumeLength(NULL, 1); // step past '(' or ';' if not found or at end of line does nothing
 		parser.ConsumeWhitespace(); // search for non-white space if not found does nothing
 		parser.ConsumeUntil(&tempID, sEOLWhitespaceEqualMask); // search for end of id (whitespace or =)if not found does nothing
 		if (tempID.Len == 0) break;
 
-		parser.ConsumeUntil(nullptr, '='); // find the '='
-		parser.ConsumeLength(nullptr, 1); // step past if not found or at end of line does nothing
+		parser.ConsumeUntil(NULL, '='); // find the '='
+		parser.ConsumeLength(NULL, 1); // step past if not found or at end of line does nothing
 		parser.ConsumeUntil(&tempData, sEOLSemicolonCloseParenMask); // search for end of data if not found does nothing
 		if (tempData.Len == 0) break;
 

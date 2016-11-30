@@ -1,6 +1,5 @@
 // ----------------------------------------------------------------------------
 // Copyright (C) 2002-2006 Marcin Kalicinski
-// Copyright (C) 2015 Sebastian Redl
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -12,9 +11,9 @@
 #define BOOST_PROPERTY_TREE_JSON_PARSER_HPP_INCLUDED
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser/error.hpp>
-#include <boost/property_tree/json_parser/detail/read.hpp>
-#include <boost/property_tree/json_parser/detail/write.hpp>
+#include <boost/property_tree/detail/json_parser_read.hpp>
+#include <boost/property_tree/detail/json_parser_write.hpp>
+#include <boost/property_tree/detail/json_parser_error.hpp>
 
 #include <fstream>
 #include <string>
@@ -43,7 +42,7 @@ namespace boost { namespace property_tree { namespace json_parser
                    > &stream,
                    Ptree &pt)
     {
-        detail::read_json_internal(stream, pt, std::string());
+        read_json_internal(stream, pt, std::string());
     }
 
     /**
@@ -72,7 +71,7 @@ namespace boost { namespace property_tree { namespace json_parser
             BOOST_PROPERTY_TREE_THROW(json_parser_error(
                 "cannot open file", filename, 0));
         stream.imbue(loc);
-        detail::read_json_internal(stream, pt, filename);
+        read_json_internal(stream, pt, filename);
     }
 
     /**

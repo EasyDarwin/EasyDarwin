@@ -61,7 +61,7 @@
 // -------------------------------------
 // Constructors and destructors
 //
-QTTrack::QTTrack(QTFile * File, QTFile::AtomTOCEntry * Atom, bool Debug, bool DeepDebug)
+QTTrack::QTTrack(QTFile * File, QTFile::AtomTOCEntry * Atom, Bool16 Debug, Bool16 DeepDebug)
 	: fDebug(Debug), fDeepDebug(DeepDebug),
 	fFile(File),
 	fIsInitialized(false),
@@ -240,7 +240,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 
 
 	UInt16 offSetSize = 0;
-	bool coFound = false;
+	Bool16 coFound = false;
 
 	if (fFile->FindTOCEntry(":mdia:minf:stbl:stco", &tempTOCEntry, &fTOCEntry))
 	{
@@ -295,7 +295,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 // -------------------------------------
 // Sample functions
 //
-bool QTTrack::GetSampleInfo(UInt32 SampleNumber, UInt32 * const Length, UInt64 * const Offset, UInt32 * const SampleDescriptionIndex, QTAtom_stsc_SampleTableControlBlock * STCB)
+Bool16 QTTrack::GetSampleInfo(UInt32 SampleNumber, UInt32 * const Length, UInt64 * const Offset, UInt32 * const SampleDescriptionIndex, QTAtom_stsc_SampleTableControlBlock * STCB)
 {
 
 	Assert(STCB != NULL);
@@ -390,7 +390,7 @@ bool QTTrack::GetSampleInfo(UInt32 SampleNumber, UInt32 * const Length, UInt64 *
 }
 
 
-bool QTTrack::GetSizeOfSamplesInChunk(UInt32 chunkNumber, UInt32 * const sizePtr, UInt32 * const firstSampleNumPtr, UInt32 * const lastSampleNumPtr, QTAtom_stsc_SampleTableControlBlock * stcbPtr)
+Bool16 QTTrack::GetSizeOfSamplesInChunk(UInt32 chunkNumber, UInt32 * const sizePtr, UInt32 * const firstSampleNumPtr, UInt32 * const lastSampleNumPtr, QTAtom_stsc_SampleTableControlBlock * stcbPtr)
 {
 	UInt32 firstSample = 0;
 	UInt32 lastSample = 0;
@@ -405,7 +405,7 @@ bool QTTrack::GetSizeOfSamplesInChunk(UInt32 chunkNumber, UInt32 * const sizePtr
 		return true;
 	}
 
-	bool result = GetChunkFirstLastSample(chunkNumber, &firstSample, &lastSample, stcbPtr);
+	Bool16 result = GetChunkFirstLastSample(chunkNumber, &firstSample, &lastSample, stcbPtr);
 
 	if (result && (sizePtr != NULL))
 	{
@@ -428,7 +428,7 @@ bool QTTrack::GetSizeOfSamplesInChunk(UInt32 chunkNumber, UInt32 * const sizePtr
 }
 
 
-bool QTTrack::GetSample(UInt32 SampleNumber, char * Buffer, UInt32 * Length, QTFile_FileControlBlock * FCB, QTAtom_stsc_SampleTableControlBlock * STCB)
+Bool16 QTTrack::GetSample(UInt32 SampleNumber, char * Buffer, UInt32 * Length, QTFile_FileControlBlock * FCB, QTAtom_stsc_SampleTableControlBlock * STCB)
 {
 	// General vars
 	UInt32      SampleDescriptionIndex;

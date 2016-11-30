@@ -43,7 +43,7 @@
 #include "md5digest.h"
 #include "base64.h"
 
-std::atomic_uint RTPSessionInterface::sRTPSessionIDCounter{ 0 };
+unsigned int            RTPSessionInterface::sRTPSessionIDCounter = 0;
 
 
 QTSSAttrInfoDict::AttrInfo  RTPSessionInterface::sAttributes[] =
@@ -87,7 +87,11 @@ QTSSAttrInfoDict::AttrInfo  RTPSessionInterface::sAttributes[] =
 	/* 34 */ { "qtssCliSesRTCPPacketsRecv",         NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModePreempSafe },
 	/* 35 */ { "qtssCliSesRTCPBytesRecv",           NULL,   qtssAttrDataTypeUInt32,         qtssAttrModeRead | qtssAttrModePreempSafe },
 	/* 36 */ { "qtssCliSesStartedThinning",         NULL, 	qtssAttrDataTypeBool16,		qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe },
-	/* 37 */ { "qtssCliSessLastRTSPBandwidth",      NULL, 	qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModePreempSafe }
+	/* 37 */ { "qtssCliSes3GPPObject",              NULL, 	qtssAttrDataTypeQTSS_Object,		qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 38 */ { "qtssCliSessLastRTSPBandwidth",      NULL, 	qtssAttrDataTypeUInt32,		qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 39 */ { "qtssCliSessIs3GPPSession",          NULL, 	qtssAttrDataTypeBool16,		qtssAttrModeRead | qtssAttrModePreempSafe }
+
+
 };
 
 void    RTPSessionInterface::Initialize()
@@ -119,7 +123,7 @@ RTPSessionInterface::RTPSessionInterface()
 	fMovieCurrentBitRate(0),
 	fRTSPSession(NULL),
 	fLastRTSPReqRealStatusCode(200),
-	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs() * 1000),
+	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTPTimeoutInSecs() * 1000),
 	fNumQualityLevels(0),
 	fBytesSent(0),
 	fPacketsSent(0),
@@ -139,15 +143,17 @@ RTPSessionInterface::RTPSessionInterface()
 	fAuthQop(RTSPSessionInterface::kNoQop),
 	fAuthNonceCount(0),
 	fFramesSkipped(0),
-	fLastRTSPBandwidthHeaderBits(0)
+	fRTPSession3GPP(QTSServerInterface::GetServer()->GetPrefs()->Get3GPPEnabled()),
+	fRTPSession3GPPPtr(&fRTPSession3GPP),
+	fLastRTSPBandwidthHeaderBits(0),
+	fIs3GPPSession(false)
 {
 	//don't actually setup the fTimeoutTask until the session has been bound!
 	//(we don't want to get timeouts before the session gets bound)
 
 	fTimeoutTask.SetTask(this);
-	fTimeout = QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs() * 1000;
-	//fUniqueID = (UInt32)atomic_add(&sRTPSessionIDCounter, 1);
-	fUniqueID = ++sRTPSessionIDCounter;
+	fTimeout = QTSServerInterface::GetServer()->GetPrefs()->GetRTPTimeoutInSecs() * 1000;
+	fUniqueID = (UInt32)atomic_add(&sRTPSessionIDCounter, 1);
 
 	// fQualityUpdate is a counter the starting value is the unique ID so every session starts at a different position
 	fQualityUpdate = fUniqueID;
@@ -195,10 +201,14 @@ RTPSessionInterface::RTPSessionInterface()
 
 	this->SetVal(qtssCliSesTimeoutMsec, &fTimeout, sizeof(fTimeout));
 
-	this->SetVal(qtssCliSesOverBufferEnabled, this->GetOverbufferWindow()->OverbufferingEnabledPtr(), sizeof(bool));
-	this->SetVal(qtssCliSesStartedThinning, &fStartedThinning, sizeof(bool));
+	this->SetVal(qtssCliSesOverBufferEnabled, this->GetOverbufferWindow()->OverbufferingEnabledPtr(), sizeof(Bool16));
+	this->SetVal(qtssCliSesStartedThinning, &fStartedThinning, sizeof(Bool16));
+	this->SetVal(qtssCliSes3GPPObject, &fRTPSession3GPPPtr, sizeof(fRTPSession3GPPPtr));
 
 	this->SetVal(qtssCliSessLastRTSPBandwidth, &fLastRTSPBandwidthHeaderBits, sizeof(fLastRTSPBandwidthHeaderBits));
+	this->SetVal(qtssCliSessIs3GPPSession, &fIs3GPPSession, sizeof(fIs3GPPSession));
+
+
 }
 
 void RTPSessionInterface::SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap* inMap,
@@ -231,7 +241,7 @@ char* RTPSessionInterface::GetSRBuffer(UInt32 inSRLen)
 	if (fSRBuffer.Len < inSRLen)
 	{
 		delete[] fSRBuffer.Ptr;
-		fSRBuffer.Set(new char[2 * inSRLen], 2 * inSRLen);
+		fSRBuffer.Set(NEW char[2 * inSRLen], 2 * inSRLen);
 	}
 	return fSRBuffer.Ptr;
 }
@@ -350,7 +360,7 @@ void RTPSessionInterface::CreateDigestAuthenticationNonce() {
 
 	// Calculate nonce: MD5 of sessionid:timestamp
 	SInt64 curTime = OS::Milliseconds();
-	char* curTimeStr = new char[128];
+	char* curTimeStr = NEW char[128];
 	qtss_sprintf(curTimeStr, "%" _64BITARG_ "d", curTime);
 
 	// Delete old nonce before creating a new one
@@ -376,7 +386,7 @@ void RTPSessionInterface::CreateDigestAuthenticationNonce() {
 
 }
 
-void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop, bool newNonce, bool createOpaque)
+void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop, Bool16 newNonce, Bool16 createOpaque)
 {
 	// Set challenge params 
 	// Set authentication scheme
@@ -396,11 +406,11 @@ void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop,
 			SInt64 theMicroseconds = OS::Microseconds();
 			::srand((unsigned int)theMicroseconds);
 			UInt32 randomNum = ::rand();
-			char* randomNumStr = new char[128];
+			char* randomNumStr = NEW char[128];
 			qtss_sprintf(randomNumStr, "%"   _U32BITARG_   "", randomNum);
 			int len = ::strlen(randomNumStr);
 			fAuthOpaque.Len = Base64encode_len(len);
-			char *opaqueStr = new char[fAuthOpaque.Len];
+			char *opaqueStr = NEW char[fAuthOpaque.Len];
 			(void)Base64encode(opaqueStr, randomNumStr, len);
 			delete[] randomNumStr;                 // Don't need this anymore
 			if (fAuthOpaque.Ptr != NULL)             // Delete existing pointer before assigning new
@@ -421,7 +431,7 @@ void RTPSessionInterface::SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop,
 	}
 }
 
-void RTPSessionInterface::UpdateDigestAuthChallengeParams(bool newNonce, bool createOpaque, UInt32 qop) {
+void RTPSessionInterface::UpdateDigestAuthChallengeParams(Bool16 newNonce, Bool16 createOpaque, UInt32 qop) {
 	if (newNonce || (fAuthNonce.Ptr == NULL))
 		this->CreateDigestAuthenticationNonce();
 
@@ -432,11 +442,11 @@ void RTPSessionInterface::UpdateDigestAuthChallengeParams(bool newNonce, bool cr
 		SInt64 theMicroseconds = OS::Microseconds();
 		::srand((unsigned int)theMicroseconds);
 		UInt32 randomNum = ::rand();
-		char* randomNumStr = new char[128];
+		char* randomNumStr = NEW char[128];
 		qtss_sprintf(randomNumStr, "%"   _U32BITARG_   "", randomNum);
 		int len = ::strlen(randomNumStr);
 		fAuthOpaque.Len = Base64encode_len(len);
-		char *opaqueStr = new char[fAuthOpaque.Len];
+		char *opaqueStr = NEW char[fAuthOpaque.Len];
 		(void)Base64encode(opaqueStr, randomNumStr, len);
 		delete[] randomNumStr;                 // Don't need this anymore
 		if (fAuthOpaque.Ptr != NULL)             // Delete existing pointer before assigning new

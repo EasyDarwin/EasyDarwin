@@ -19,8 +19,8 @@
 #include "boost/mpl/if.hpp"
 #include "boost/type_traits/is_base_and_derived.hpp"
 
-#include <boost/type_traits/integral_constant.hpp>
-#include <boost/mpl/aux_/lambda_support.hpp>
+// should be the last #include
+#include "boost/type_traits/detail/bool_trait_def.hpp"
 
 namespace boost {
 
@@ -83,13 +83,14 @@ struct is_static_visitor_impl
 
 } // namespace detail
 
-template< typename T > struct is_static_visitor
-	: public ::boost::integral_constant<bool,(::boost::detail::is_static_visitor_impl<T>::value)>
-{
-public:
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_static_visitor,(T))
-};
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(
+      is_static_visitor
+    , T
+    , (::boost::detail::is_static_visitor_impl<T>::value)
+    )
 
 } // namespace boost
+
+#include "boost/type_traits/detail/bool_trait_undef.hpp"
 
 #endif // BOOST_VARIANT_STATIC_VISITOR_HPP

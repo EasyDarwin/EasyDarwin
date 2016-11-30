@@ -48,7 +48,7 @@
 
 char* QTSServerPrefs::sAdditionalDefaultPorts[] =
 {
-	"554",
+	"8554",
 	NULL
 };
 
@@ -86,14 +86,19 @@ char* QTSServerPrefs::sFixed_Target_Time_Players[] =
 	NULL
 };
 
+char* QTSServerPrefs::sDisable_Thinning_Players[] =
+{
+	NULL
+};
+
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
 	{ kDontAllowMultipleValues, "0",        NULL                    },  //rtsp_timeout
-	{ kDontAllowMultipleValues, "180",      NULL                    },  //rtsp_session_timeout
-	{ kDontAllowMultipleValues,	"120",		NULL					},	//rtp_session_timeout
+	{ kDontAllowMultipleValues, "180",      NULL                    },  //real_rtsp_timeout
+	{ kDontAllowMultipleValues,	"120",		NULL					},	//rtp_timeout
 	{ kDontAllowMultipleValues, "1000",     NULL                    },  //maximum_connections
 	{ kDontAllowMultipleValues, "102400",   NULL                    },  //maximum_bandwidth
-	{ kDontAllowMultipleValues,	NONE_CONFIG_NGINX_LOCAL_PATH, NULL  },	//nginx_root_folder
+	{ kDontAllowMultipleValues,	DEFAULTPATHS_MOVIES_DIR, NULL       },	//movie_folder
 	{ kAllowMultipleValues,     "0",        NULL                    },  //bind_ip_addr
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //break_on_assert
 	{ kDontAllowMultipleValues, "true",     NULL                    },  //auto_restart
@@ -116,7 +121,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues,	"200000",	NULL					},	//max_tcp_buffer_size
 	{ kDontAllowMultipleValues, ".5",       NULL                    },  //tcp_seconds_to_buffer
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //do_report_http_connection_ip_address
-	{ kDontAllowMultipleValues, "EasyDarwin", NULL					},  //default_authorization_realm
+	{ kDontAllowMultipleValues, "Streaming Server", NULL            },  //default_authorization_realm
 #ifndef __Win32__
 	{ kDontAllowMultipleValues, "qtss",     NULL                    },  //run_user_name
 	{ kDontAllowMultipleValues, "qtss",     NULL                    },  //run_group_name
@@ -125,7 +130,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "",         NULL                    },  //run_group_name
 #endif
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //append_source_addr_in_transport
-	{ kAllowMultipleValues,     "10554",    sAdditionalDefaultPorts },  //rtsp_ports
+	{ kAllowMultipleValues,     "554",      sAdditionalDefaultPorts },  //rtsp_ports
 	{ kDontAllowMultipleValues, "500",      NULL                    },  //max_retransmit_delay
 	{ kDontAllowMultipleValues, "24",       NULL                    },  //small_window_size
 	{ kDontAllowMultipleValues, "false",    NULL                    },  //ack_logging_enabled
@@ -163,41 +168,43 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues,	"48",		NULL					},	//medium_window_size
 	{ kDontAllowMultipleValues,	"1000",		NULL					},	//window_size_max_threshold
 	{ kDontAllowMultipleValues, "true",     NULL                    },  //RTSP_server_info
-	{ kDontAllowMultipleValues, "4",        NULL                    },  //run_num_threads
+	{ kDontAllowMultipleValues, "0",        NULL                    },  //run_num_threads
 	{ kDontAllowMultipleValues, DEFAULTPATHS_PID_DIR PLATFORM_SERVER_BIN_NAME ".pid",	NULL	},	//pid_file
 	{ kDontAllowMultipleValues, "false",    NULL                    },   //force_logs_close_on_write
 	{ kDontAllowMultipleValues, "false",    NULL                    },   //disable_thinning
 	{ kAllowMultipleValues,     "Android",    sRTP_Header_Players     },  //player_requires_rtp_header_info
 	{ kAllowMultipleValues,     "Android",    sAdjust_Bandwidth_Players     },  //player_requires_bandwidth_adjustment
 	{ kAllowMultipleValues,     "Android",    sNo_Pause_Time_Adjustment_Players     },  //player_requires_no_pause_time_adjustment
+	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_3gpp_protocol
+	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_3gpp_protocol_rate_adaptation
+	{ kDontAllowMultipleValues, "1",        NULL                     }, //3gpp_protocol_rate_adaptation_report_frequency
 	{ kDontAllowMultipleValues, "0",        NULL                     }, //default_stream_quality
 	{ kAllowMultipleValues,     "Real",     sRTP_Start_Time_Players  }, //player_requires_rtp_start_time_adjust
+	{ kDontAllowMultipleValues, "false",    NULL                     }, //enable_3gpp_debug_printfs
 	{ kDontAllowMultipleValues, "false",    NULL                     }, //enable_udp_monitor_stream
 	{ kDontAllowMultipleValues, "5002",     NULL                     }, //udp_monitor_video_stream
 	{ kDontAllowMultipleValues, "5004",     NULL                     }, //udp_monitor_audio_stream
 	{ kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //udp_monitor_dest_ip
 	{ kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //udp_monitor_src_ip
 	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_allow_guest_default
-	{ kDontAllowMultipleValues, "4",        NULL                     },  //run_num_rtsp_threads
+	{ kDontAllowMultipleValues, "1",        NULL                     },  //run_num_rtsp_threads
+	{ kAllowMultipleValues,     "",         sDisable_Rate_Adapt_Players }, //player_requires_disable_3gpp_rate_adapt
+	{ kAllowMultipleValues,     "",         sFixed_Target_Time_Players  }, //player_requires_3gpp_target_time
+	{ kDontAllowMultipleValues, "3000",     NULL                        }, //3gpp_target_time_milliseconds
+	{ kAllowMultipleValues,     "",         sDisable_Thinning_Players   }, //player_requires_disable_thinning
 
-	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_lan_port
-	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_wan_port
-
-	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //service_wan_ip
-	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_port
-	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL },  //nginx_web_path
-	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }   //nginx_rtmp_path
+	{ kDontAllowMultipleValues, "8080",     NULL                        }  //http_service_port   
 
 };
 
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
 	/* 0 */ { "rtsp_timeout",                           NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 1 */ { "rtsp_session_timeout",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 2 */ { "rtp_session_timeout",                    NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 1 */ { "real_rtsp_timeout",                      NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 2 */ { "rtp_timeout",                            NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 3 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 4 */ { "maximum_bandwidth",                      NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 5 */ { "nginx_root_folder",                       NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 5 */ { "movie_folder",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 6 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 7 */ { "break_on_assert",                        NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 8 */ { "auto_restart",                           NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
@@ -265,34 +272,35 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 	/* 70 */ { "player_requires_rtp_header_info",		NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
 	/* 71 */ { "player_requires_bandwidth_adjustment",	NULL,					qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
 	/* 72 */ { "player_requires_no_pause_time_adjustment",	NULL,				qtssAttrDataTypeCharArray,	qtssAttrModeRead | qtssAttrModeWrite },
-	/* 73 */ { "default_stream_quality",                NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 74 */ { "player_requires_rtp_start_time_adjust", NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 75 */ { "enable_udp_monitor_stream",				NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 76 */ { "udp_monitor_video_port",				NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 77 */ { "udp_monitor_audio_port",				NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 78 */ { "udp_monitor_dest_ip",					NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 79 */ { "udp_monitor_src_ip",					NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 80 */ { "enable_allow_guest_default",			NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 81 */ { "run_num_rtsp_threads",					NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 73 */ { "enable_3gpp_protocol",                  NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 74 */ { "enable_3gpp_protocol_rate_adaptation",  NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 75 */ { "3gpp_protocol_rate_adaptation_report_frequency",  NULL,         qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 76 */ { "default_stream_quality",                NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 77 */ { "player_requires_rtp_start_time_adjust", NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 78 */ { "enable_3gpp_debug_printfs",  NULL,                              qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 79 */ { "enable_udp_monitor_stream",  NULL,                              qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 80 */ { "udp_monitor_video_port",  NULL,                                 qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 81 */ { "udp_monitor_audio_port",  NULL,                                 qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 82 */ { "udp_monitor_dest_ip",  NULL,                                    qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 83 */ { "udp_monitor_src_ip",  NULL,                                     qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 84 */ { "enable_allow_guest_default",  NULL,                             qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 85 */ { "run_num_rtsp_threads",  NULL,                                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 86 */ { "player_requires_disable_3gpp_rate_adapt",   NULL,               qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 87 */ { "player_requires_3gpp_target_time",   NULL,                      qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+	/* 88 */ { "3gpp_target_time_milliseconds",   NULL,                         qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+	/* 89 */ { "player_requires_disable_thinning", NULL,                        qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 82 */ { "service_lan_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-	/* 83 */ { "service_wan_port",						NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-
-	/* 84 */ { "service_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 85 */ { "rtsp_wan_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-
-	/* 86 */{ "nginx_web_path",							NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 87 */{ "nginx_rtmp_path",						NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite }
+	/* 90 */ { "http_service_port",					NULL,                       qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite }
 
 };
 
 
-QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs)
+QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs)
 	: QTSSPrefs(inPrefsSource, NULL, QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex), false),
 	fRTSPTimeoutInSecs(0),
 	fRTSPTimeoutString(fRTSPTimeoutBuf, 0),
-	fRTSPSessionTimeoutInSecs(0),
-	fRTPSessionTimeoutInSecs(0),
+	fRealRTSPTimeoutInSecs(0),
+	fRTPTimeoutInSecs(0),
 	fMaximumConnections(0),
 	fMaxBandwidthInKBits(0),
 	fBreakOnAssert(false),
@@ -352,14 +360,18 @@ QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissin
 	fPacketHeaderPrintfOptions(kRTPALL | kRTCPSR | kRTCPRR | kRTCPAPP | kRTCPACK),
 	fCloseLogsOnWrite(false),
 	fDisableThinning(false),
+	//
+	f3gppProtocolEnabled(true),
+	f3gppProtocolRateAdaptationEnabled(true),
+	f3gppProtocolRateAdaptationReportFrequency(1),
 	fDefaultStreamQuality(0),
+	f3gppDebugPrintfsEnabled(false),
 	fUDPMonitorEnabled(false),
 	fUDPMonitorVideoPort(0),
 	fUDPMonitorAudioPort(0),
 	fAllowGuestAuthorizeDefault(true),
-	fServiceLANPort(10008),
-	fServiceWANPort(10008),
-	fRTSPWANPort(10554)
+	f3GPPRateAdaptTargetTime(0),
+	fHTTPServicePort(8080)
 {
 	SetupAttributes();
 	RereadServerPreferences(inWriteMissingPrefs);
@@ -377,8 +389,8 @@ void QTSServerPrefs::Initialize()
 void QTSServerPrefs::SetupAttributes()
 {
 	this->SetVal(qtssPrefsRTSPTimeout, &fRTSPTimeoutInSecs, sizeof(fRTSPTimeoutInSecs));
-	this->SetVal(qtssPrefsRTSPSessionTimeout, &fRTSPSessionTimeoutInSecs, sizeof(fRTSPSessionTimeoutInSecs));
-	this->SetVal(qtssPrefsRTPSessionTimeout, &fRTPSessionTimeoutInSecs, sizeof(fRTPSessionTimeoutInSecs));
+	this->SetVal(qtssPrefsRealRTSPTimeout, &fRealRTSPTimeoutInSecs, sizeof(fRealRTSPTimeoutInSecs));
+	this->SetVal(qtssPrefsRTPTimeout, &fRTPTimeoutInSecs, sizeof(fRTPTimeoutInSecs));
 	this->SetVal(qtssPrefsMaximumConnections, &fMaximumConnections, sizeof(fMaximumConnections));
 	this->SetVal(qtssPrefsMaximumBandwidth, &fMaxBandwidthInKBits, sizeof(fMaxBandwidthInKBits));
 	this->SetVal(qtssPrefsBreakOnAssert, &fBreakOnAssert, sizeof(fBreakOnAssert));
@@ -439,7 +451,11 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(qtssPrefsOverbufferRate, &fOverbufferRate, sizeof(fOverbufferRate));
 	this->SetVal(qtssPrefsDisableThinning, &fDisableThinning, sizeof(fDisableThinning));
 
+	this->SetVal(qtssPrefsEnable3gppProtocol, &f3gppProtocolEnabled, sizeof(f3gppProtocolEnabled));
+	this->SetVal(qtssPrefsEnable3gppProtocolRateAdapt, &f3gppProtocolRateAdaptationEnabled, sizeof(f3gppProtocolRateAdaptationEnabled));
+	this->SetVal(qtssPrefs3gppRateAdaptReportFrequency, &f3gppProtocolRateAdaptationReportFrequency, sizeof(f3gppProtocolRateAdaptationReportFrequency)); //3gpp_protocol_rate_adaptation_report_frequency
 	this->SetVal(qtssPrefsDefaultStreamQuality, &fDefaultStreamQuality, sizeof(fDefaultStreamQuality)); //default_stream_quality
+	this->SetVal(qtssPrefsEnable3gppDebugPrintfs, &f3gppDebugPrintfsEnabled, sizeof(f3gppDebugPrintfsEnabled));
 	this->SetVal(qtssPrefsEnableUDPMonitor, &fUDPMonitorEnabled, sizeof(fUDPMonitorEnabled));
 	this->SetVal(qtssPrefsUDPMonitorAudioPort, &fUDPMonitorVideoPort, sizeof(fUDPMonitorVideoPort));
 	this->SetVal(qtssPrefsUDPMonitorVideoPort, &fUDPMonitorAudioPort, sizeof(fUDPMonitorAudioPort));
@@ -447,17 +463,14 @@ void QTSServerPrefs::SetupAttributes()
 	this->SetVal(qtssPrefsUDPMonitorSourceIPAddr, &fUDPMonitorSrcAddr, sizeof(fUDPMonitorSrcAddr));
 	this->SetVal(qtssPrefsEnableAllowGuestDefault, &fAllowGuestAuthorizeDefault, sizeof(fAllowGuestAuthorizeDefault)); //enable_allow_guest_authorize_default
 	this->SetVal(qtssPrefsNumRTSPThreads, &fNumRTSPThreads, sizeof(fNumRTSPThreads));
+	this->SetVal(qtssPrefs3GPPTargetTime, &f3GPPRateAdaptTargetTime, sizeof(f3GPPRateAdaptTargetTime));
 
-	this->SetVal(easyPrefsHTTPServiceLanPort, &fServiceLANPort, sizeof(fServiceLANPort));
-	this->SetVal(easyPrefsHTTPServiceWanPort, &fServiceWANPort, sizeof(fServiceWANPort));
-
-	this->SetVal(easyPrefsServiceWANIPAddr, &fRTSPWANAddr, sizeof(fRTSPWANAddr));
-	this->SetVal(easyPrefsRTSPWANPort, &fRTSPWANPort, sizeof(fRTSPWANPort));
+	this->SetVal(easyPrefsHTTPServicePort, &fHTTPServicePort, sizeof(fHTTPServicePort));
 }
 
 
 
-void QTSServerPrefs::RereadServerPreferences(bool inWriteMissingPrefs)
+void QTSServerPrefs::RereadServerPreferences(Bool16 inWriteMissingPrefs)
 {
 	OSMutexLocker locker(&fPrefsMutex);
 	QTSSDictionaryMap* theMap = QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kPrefsDictIndex);
@@ -599,28 +612,28 @@ void    QTSServerPrefs::UpdateAuthScheme()
 		fAuthScheme = qtssAuthDigest;
 }
 
-//char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
-//{
-//	OSMutexLocker locker(&fPrefsMutex);
-//
-//	// Get the movie folder attribute
-//	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsNginxRootFolder);
-//
-//	// If the movie folder path fits inside the provided buffer, copy it there
-//	if (theMovieFolder->Len < *ioLen)
-//		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
-//	else
-//	{
-//		// Otherwise, allocate a buffer to store the path
-//		inBuffer = NEW char[theMovieFolder->Len + 2];
-//		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
-//	}
-//	inBuffer[theMovieFolder->Len] = 0;
-//	*ioLen = theMovieFolder->Len;
-//	return inBuffer;
-//}
+char*   QTSServerPrefs::GetMovieFolder(char* inBuffer, UInt32* ioLen)
+{
+	OSMutexLocker locker(&fPrefsMutex);
 
-bool QTSServerPrefs::IsPathInsideReliableUDPDir(StrPtrLen* inPath)
+	// Get the movie folder attribute
+	StrPtrLen* theMovieFolder = this->GetValue(qtssPrefsMovieFolder);
+
+	// If the movie folder path fits inside the provided buffer, copy it there
+	if (theMovieFolder->Len < *ioLen)
+		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
+	else
+	{
+		// Otherwise, allocate a buffer to store the path
+		inBuffer = NEW char[theMovieFolder->Len + 2];
+		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
+	}
+	inBuffer[theMovieFolder->Len] = 0;
+	*ioLen = theMovieFolder->Len;
+	return inBuffer;
+}
+
+Bool16 QTSServerPrefs::IsPathInsideReliableUDPDir(StrPtrLen* inPath)
 {
 	OSMutexLocker locker(&fPrefsMutex);
 
@@ -693,7 +706,7 @@ char* QTSServerPrefs::GetStringPref(QTSS_AttributeID inAttrID)
 	return theBuffer.Ptr;
 }
 
-void QTSServerPrefs::SetCloseLogsOnWrite(bool closeLogsOnWrite)
+void QTSServerPrefs::SetCloseLogsOnWrite(Bool16 closeLogsOnWrite)
 {
 	QTSSRollingLog::SetCloseOnWrite(closeLogsOnWrite);
 	fCloseLogsOnWrite = closeLogsOnWrite;

@@ -11,11 +11,7 @@
 #ifndef BOOST_CONTAINER_DETAIL_STD_FWD_HPP
 #define BOOST_CONTAINER_DETAIL_STD_FWD_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
@@ -23,8 +19,18 @@
 //                        Standard predeclarations
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/move/detail/std_ns_begin.hpp>
-BOOST_MOVE_STD_NS_BEG
+#if defined(__clang__) && defined(_LIBCPP_VERSION)
+   #define BOOST_CONTAINER_CLANG_INLINE_STD_NS
+   #pragma GCC diagnostic push
+   #pragma GCC diagnostic ignored "-Wc++11-extensions"
+   #define BOOST_CONTAINER_STD_NS_BEG _LIBCPP_BEGIN_NAMESPACE_STD
+   #define BOOST_CONTAINER_STD_NS_END _LIBCPP_END_NAMESPACE_STD
+#else
+   #define BOOST_CONTAINER_STD_NS_BEG namespace std{
+   #define BOOST_CONTAINER_STD_NS_END }
+#endif
+
+BOOST_CONTAINER_STD_NS_BEG
 
 template<class T>
 class allocator;
@@ -43,14 +49,11 @@ struct forward_iterator_tag;
 struct bidirectional_iterator_tag;
 struct random_access_iterator_tag;
 
-template<class Container>
-class insert_iterator;
+BOOST_CONTAINER_STD_NS_END
 
-struct allocator_arg_t;
-
-struct piecewise_construct_t;
-
-BOOST_MOVE_STD_NS_END
-#include <boost/move/detail/std_ns_end.hpp>
+#ifdef BOOST_CONTAINER_CLANG_INLINE_STD_NS
+   #pragma GCC diagnostic pop
+   #undef BOOST_CONTAINER_CLANG_INLINE_STD_NS
+#endif   //BOOST_CONTAINER_CLANG_INLINE_STD_NS
 
 #endif //#ifndef BOOST_CONTAINER_DETAIL_STD_FWD_HPP

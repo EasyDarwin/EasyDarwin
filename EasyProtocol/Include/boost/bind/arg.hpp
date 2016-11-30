@@ -28,17 +28,17 @@ namespace boost
 
 template< int I > struct arg
 {
-    BOOST_CONSTEXPR arg()
+    arg()
     {
     }
 
-    template< class T > BOOST_CONSTEXPR arg( T const & /* t */ )
+    template< class T > arg( T const & /* t */ )
     {
         BOOST_STATIC_ASSERT( I == is_placeholder<T>::value );
     }
 };
 
-template< int I > BOOST_CONSTEXPR bool operator==( arg<I> const &, arg<I> const & )
+template< int I > bool operator==( arg<I> const &, arg<I> const & )
 {
     return true;
 }

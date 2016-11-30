@@ -49,6 +49,9 @@ class QTSSModuleUtils
                     kAdjustBandwidth            = 1,
                     kDisablePauseAdjustedRTPTime= 2,
                     kDelayRTPStreamsUntilAfterRTSPResponse = 3,
+                    kDisable3gppRateAdaptation =4,
+                    kAdjust3gppTargetTime = 5,
+                    kDisableThinning =6,
                 };
     
       
@@ -125,7 +128,7 @@ class QTSSModuleUtils
 		// It always returns QTSS_RequestFailed
         static QTSS_Error	SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequest,
 													QTSS_SessionStatusCode inStatusCode,
-                                                    bool inKillSession,
+                                                    Bool16 inKillSession,
                                                     char *errorMessage);
 
         //Modules most certainly don't NEED to use this function, but it is awfully handy
@@ -213,22 +216,22 @@ class QTSSModuleUtils
        
         static char*  GetUserName_Copy(QTSS_UserProfileObject inUserProfile);
         static char** GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfile, UInt32 *outNumGroupsPtr);
-        static bool UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroupName, UInt32 inGroupNameLen);
+        static Bool16 UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroupName, UInt32 inGroupNameLen);
 
-        static void SetEnableRTSPErrorMsg(bool enable) {QTSSModuleUtils::sEnableRTSPErrorMsg = enable; }
+        static void SetEnableRTSPErrorMsg(Bool16 enable) {QTSSModuleUtils::sEnableRTSPErrorMsg = enable; }
         
         static QTSS_AttributeID CreateAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType, void* inDefaultValue, UInt32 inBufferLen);
   
-        static bool AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *theAddressPtr);
+        static Bool16 AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *theAddressPtr);
   
         static void SetMisingPrefLogVerbosity(QTSS_ErrorVerbosity verbosityLevel) { QTSSModuleUtils::sMissingPrefVerbosity = verbosityLevel;}
         static QTSS_ErrorVerbosity GetMisingPrefLogVerbosity() { return QTSSModuleUtils::sMissingPrefVerbosity;}
   
-        static bool FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);
+        static Bool16 FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);
 
-        static bool HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QTSS_StandardRTSP_Params* inParams, UInt32 feature);
+        static Bool16 HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QTSS_StandardRTSP_Params* inParams, UInt32 feature);
         
-        static QTSS_Error AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, bool* allowed, bool*haveUser,bool *authContinue);
+        static QTSS_Error AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*haveUser,Bool16 *authContinue);
         
          
     private:
@@ -240,7 +243,7 @@ class QTSSModuleUtils
         static QTSS_TextMessagesObject  sMessages;
         static QTSS_ServerObject        sServer;
         static QTSS_StreamRef           sErrorLog;
-        static bool                   sEnableRTSPErrorMsg;
+        static Bool16                   sEnableRTSPErrorMsg;
         static QTSS_ErrorVerbosity      sMissingPrefVerbosity;
 };
 
@@ -251,7 +254,7 @@ class IPComponentStr
     enum { kNumComponents = 4 };
     
     StrPtrLen   fAddressComponent[kNumComponents];
-    bool      fIsValid;
+    Bool16      fIsValid;
     static IPComponentStr sLocalIPCompStr;
 
     IPComponentStr() : fIsValid(false) {}
@@ -259,15 +262,15 @@ class IPComponentStr
     IPComponentStr(StrPtrLen *sourceStrPtr);
     
 inline  StrPtrLen*  GetComponent(UInt16 which);
-        bool      Equal(IPComponentStr *testAddressPtr);
-        bool      Set(StrPtrLen *theAddressStrPtr);
-        bool      Valid() { return fIsValid; }
-inline  bool      IsLocal();
+        Bool16      Equal(IPComponentStr *testAddressPtr);
+        Bool16      Set(StrPtrLen *theAddressStrPtr);
+        Bool16      Valid() { return fIsValid; }
+inline  Bool16      IsLocal();
 
 };
 
 
-bool  IPComponentStr::IsLocal()
+Bool16  IPComponentStr::IsLocal()
 {
     if (this->Equal(&sLocalIPCompStr))
         return true;

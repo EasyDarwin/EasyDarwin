@@ -264,7 +264,7 @@ enum
     // via. QTSS_GetValuePtr. Some exceptions noted below
     
     qtssSvrState                    = 7,    //r/w   //QTSS_ServerState  //The current state of the server. If a module sets the server state, the server will respond in the appropriate fashion. Setting to qtssRefusingConnectionsState causes the server to refuse connections, setting to qtssFatalErrorState or qtssShuttingDownState causes the server to quit.
-    qtssSvrIsOutOfDescriptors       = 8,    //read  //bool            //true if the server has run out of file descriptors, false otherwise
+    qtssSvrIsOutOfDescriptors       = 8,    //read  //Bool16            //true if the server has run out of file descriptors, false otherwise
    
     qtssSvrHandledMethods           = 9,   //r/w       //QTSS_RTSPMethod   //The methods that the server supports. Modules should append the methods they support to this attribute in their QTSS_Initialize_Role.
     qtssSvrModuleObjects            = 10,   //read  // this IS PREMPTIVE SAFE!  //QTSS_ModuleObject // A module object representing each module
@@ -303,12 +303,12 @@ enum
     qtssPrefsErrorRollInterval			= 3,   //"error_logfile_interval"      //UInt32    //Interval in days between error logfile rolls
     qtssPrefsMaxErrorLogSize			= 4,   //"error_logfile_size"          //UInt32    //Max size in bytes of the error log
     qtssPrefsErrorLogVerbosity			= 5,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
-    qtssPrefsScreenLogging				= 6,   //"screen_logging"              //bool        //Should the error logger echo messages to the screen?
-    qtssPrefsErrorLogEnabled			= 7,   //"error_logging"               //bool        //Is error logging enabled?
+    qtssPrefsScreenLogging				= 6,   //"screen_logging"              //Bool16        //Should the error logger echo messages to the screen?
+    qtssPrefsErrorLogEnabled			= 7,   //"error_logging"               //Bool16        //Is error logging enabled?
     
 	qtssPrefsRunNumThreads				= 8,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
     qtssPrefsPidFile					= 9,   //"pid_file" //Char Array //path to pid file
-    qtssPrefsCloseLogsOnWrite			= 10,  // "force_logs_close_on_write" //bool // force log files to close after each write.
+    qtssPrefsCloseLogsOnWrite			= 10,  // "force_logs_close_on_write" //Bool16 // force log files to close after each write.
 
 	qtssPrefsNumBlockingThreads			= 11,  // "run_num_blocking_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 	
@@ -1203,7 +1203,7 @@ QTSS_Error  QTSS_SetIdleTimer(SInt64 inIdleMsec);
 QTSS_Error  QTSS_SetIntervalRoleTimer(SInt64 inIdleMsec);
 
 QTSS_Error  QTSS_RequestGlobalLock();
-bool      QTSS_IsGlobalLocked();
+Bool16      QTSS_IsGlobalLocked();
 QTSS_Error  QTSS_GlobalUnLock();
 
 void        QTSS_LockStdLib();

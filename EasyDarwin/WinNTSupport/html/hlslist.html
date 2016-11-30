@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>EasyDarwin</title>
+    <link href="css/bootstrap.min.css?v=3.4.0" rel="stylesheet">
+    <link href="css/font-awesome.min.css?v=4.3.0" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/style.min.css?v=3.2.0" rel="stylesheet">
+    <script type="text/javascript" src="js/ajaxhandle.js"></script>
+    <script type="text/javascript" src="js/language.js"></script>
+    <script type="text/javascript" src="js/verify.js"></script>
+    <script type="text/javascript" src="js/hlslisttable.js"></script>
+    <script type="text/javascript" src="js/test.js"></script>
+
+</head>
+
+<body class="gray-bg" onload="fLoad();getHLSList()">
+<div class="wrapper wrapper-content animated fadeInRight">
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>HLS&nbsp;直播列表</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="">
+                    <a  data-toggle="modal"  href="hlslist.html#modal-form" class="btn btn-primary ">添加源</a>
+                </div>
+                <div id="divload"></div>
+                <div  id="pagelist"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">添加&nbsp;HLS&nbsp;直播源</h3>
+
+                        <form role="form">
+                            <div class="form-group">
+                                <label>名称：</label>
+                                <input type="text" placeholder="请输入直播流名称" class="form-control" id="txtname">
+                            </div>
+                            <div class="form-group">
+                                <label>RTSP URL：</label>
+                                <input type="text" placeholder="请输入RTSP URL" class="form-control" id="txturl">
+                            </div>
+                            <div class="form-group">
+                                <label>超时时间：</label>
+                                <input type="text" placeholder="请输入超时时间" class="form-control" id="txttimeout">
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="button" data-dismiss="modal" aria-label="Close" onclick="return addHLSList()">
+                                    <strong>保存</strong>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 全局js -->
+<script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/bootstrap.min.js?v=3.4.0"></script>
+
+
+<script src="js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+
+</body>
+
+</html>

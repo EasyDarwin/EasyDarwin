@@ -611,7 +611,7 @@ QTSS_Error  QTSSCallbacks::QTSS_RequestLockedCallback()
 	return QTSS_NoErr;
 }
 
-bool      QTSSCallbacks::QTSS_IsGlobalLocked()
+Bool16      QTSSCallbacks::QTSS_IsGlobalLocked()
 {
 	QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
 	if (OSThread::GetCurrent() != NULL)

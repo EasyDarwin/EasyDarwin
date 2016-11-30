@@ -16,11 +16,7 @@
 #ifndef BOOST_CONTAINER_DETAIL_VERSION_TYPE_HPP
 #define BOOST_CONTAINER_DETAIL_VERSION_TYPE_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
@@ -33,6 +29,8 @@
 namespace boost{
 namespace container {
 namespace container_detail {
+
+//using namespace boost;
 
 template <class T, unsigned V>
 struct version_type
@@ -97,11 +95,6 @@ struct is_version
 };
 
 }  //namespace container_detail {
-
-typedef container_detail::integral_constant<unsigned, 0> version_0;
-typedef container_detail::integral_constant<unsigned, 1> version_1;
-typedef container_detail::integral_constant<unsigned, 2> version_2;
-
 }  //namespace container {
 }  //namespace boost{
 

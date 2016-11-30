@@ -11,11 +11,7 @@
 #ifndef BOOST_CONTAINER_DETAIL_ALLOCATOR_VERSION_TRAITS_HPP
 #define BOOST_CONTAINER_DETAIL_ALLOCATOR_VERSION_TRAITS_HPP
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-
-#if defined(BOOST_HAS_PRAGMA_ONCE)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
@@ -29,6 +25,7 @@
 #include <boost/container/detail/allocation_type.hpp>       //allocation_type
 #include <boost/container/detail/mpl.hpp>                   //integral_constant
 #include <boost/intrusive/pointer_traits.hpp>               //pointer_traits
+#include <utility>                                          //pair
 #include <boost/core/no_exceptions_support.hpp>             //BOOST_TRY
 
 namespace boost {
@@ -59,9 +56,14 @@ struct allocator_version_traits
    static void deallocate_individual(Allocator &a, multiallocation_chain &holder)
    {  a.deallocate_individual(holder);   }
 
-   static pointer allocation_command(Allocator &a, allocation_type command,
-                         size_type limit_size, size_type &prefer_in_recvd_out_size, pointer &reuse)
-   {  return a.allocation_command(command, limit_size, prefer_in_recvd_out_size, reuse);  }
+   static std::pair<pointer, bool>
+      allocation_command(Allocator &a, allocation_type command,
+                         size_type limit_size, size_type preferred_size,
+                         size_type &received_size, const pointer &reuse)
+   {
+      return a.allocation_command
+         (command, limit_size, preferred_size, received_size, reuse);
+   }
 };
 
 template<class Allocator>
@@ -130,16 +132,21 @@ struct allocator_version_traits<Allocator, 1>
       rollback.release();
    }
 
-   static pointer allocation_command(Allocator &a, allocation_type command,
-                         size_type, size_type &prefer_in_recvd_out_size, pointer &reuse)
+   static std::pair<pointer, bool>
+      allocation_command(Allocator &a, allocation_type command,
+                         size_type, size_type preferred_size,
+                         size_type &received_size, const pointer &)
    {
-      pointer ret = pointer();
-      if(BOOST_UNLIKELY(!(command & allocate_new) && !(command & nothrow_allocation))){
-         throw_logic_error("version 1 allocator without allocate_new flag");
+      std::pair<pointer, bool> ret(pointer(), false);
+      if(!(command & allocate_new)){
+         if(!(command & nothrow_allocation)){
+            throw_logic_error("version 1 allocator without allocate_new flag");
+         }
       }
       else{
+         received_size = preferred_size;
          BOOST_TRY{
-            ret = a.allocate(prefer_in_recvd_out_size);
+            ret.first = a.allocate(received_size);
          }
          BOOST_CATCH(...){
             if(!(command & nothrow_allocation)){
@@ -147,7 +154,6 @@ struct allocator_version_traits<Allocator, 1>
             }
          }
          BOOST_CATCH_END
-         reuse = pointer();
       }
       return ret;
    }

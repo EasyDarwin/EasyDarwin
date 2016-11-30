@@ -14,7 +14,7 @@
 #include <boost/thread/detail/config.hpp>
 #include <boost/thread/detail/delete.hpp>
 #include <boost/thread/detail/move.hpp>
-#include <boost/thread/concurrent_queues/sync_queue.hpp>
+#include <boost/thread/sync_queue.hpp>
 #include <boost/thread/executors/work.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -31,7 +31,7 @@ namespace executors
     typedef  executors::work work;
   private:
     /// the thread safe work queue
-    concurrent::sync_queue<work > work_queue;
+    sync_queue<work > work_queue;
 
   public:
     /**
@@ -44,17 +44,20 @@ namespace executors
       work task;
       try
       {
-        if (work_queue.try_pull(task) == queue_op_status::success)
+        if (work_queue.try_pull_front(task) == queue_op_status::success)
         {
           task();
           return true;
         }
         return false;
       }
+      catch (std::exception& )
+      {
+        return false;
+      }
       catch (...)
       {
-        std::terminate();
-        //return false;
+        return false;
       }
     }
   private:
@@ -71,7 +74,19 @@ namespace executors
     }
 
 
-
+    /**
+     * The main loop of the worker thread
+     */
+    void worker_thread()
+    {
+      while (!closed())
+      {
+        schedule_one_or_yield();
+      }
+      while (try_executing_one())
+      {
+      }
+    }
 
   public:
     /// loop_executor is not copyable.
@@ -97,19 +112,9 @@ namespace executors
     }
 
     /**
-     * The main loop of the worker thread
+     * loop
      */
-    void loop()
-    {
-      while (!closed())
-      {
-        schedule_one_or_yield();
-      }
-      while (try_executing_one())
-      {
-      }
-    }
-
+    void loop() { worker_thread(); }
     /**
      * \b Effects: close the \c loop_executor for submissions.
      * The loop will work until there is no more closures to run.
@@ -138,29 +143,23 @@ namespace executors
      * \b Throws: \c sync_queue_is_closed if the thread pool is closed.
      * Whatever exception that can be throw while storing the closure.
      */
-    void submit(BOOST_THREAD_RV_REF(work) closure)  {
-      work_queue.push(boost::move(closure));
-    }
 
 #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
     template <typename Closure>
     void submit(Closure & closure)
     {
-      submit(work(closure));
-   }
+      work_queue.push_back(work(closure));
+    }
 #endif
-
     void submit(void (*closure)())
     {
-      submit(work(closure));
+      work_queue.push_back(work(closure));
     }
 
     template <typename Closure>
-    void submit(BOOST_THREAD_FWD_REF(Closure) closure)
+    void submit(BOOST_THREAD_RV_REF(Closure) closure)
     {
-      //work_queue.push(work(boost::forward<Closure>(closure)));
-      work w((boost::forward<Closure>(closure)));
-      submit(boost::move(w));
+      work_queue.push_back(work(boost::forward<Closure>(closure)));
     }
 
     /**

@@ -100,7 +100,7 @@ typedef struct
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_dref::QTAtom_dref(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
+QTAtom_dref::QTAtom_dref(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumRefs(0), fRefs(NULL)
 {
@@ -126,7 +126,7 @@ QTAtom_dref::~QTAtom_dref()
 // -------------------------------------
 // Initialization functions
 //
-bool QTAtom_dref::Initialize()
+Bool16 QTAtom_dref::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;
@@ -227,7 +227,7 @@ bool QTAtom_dref::Initialize()
 // -------------------------------------
 // Read functions.
 //
-bool QTAtom_dref::Read(UInt32 RefID, UInt64 Offset, char * const Buffer, UInt32 Length, QTFile_FileControlBlock * FCB)
+Bool16 QTAtom_dref::Read(UInt32 RefID, UInt64 Offset, char * const Buffer, UInt32 Length, QTFile_FileControlBlock * FCB)
 {
 	// General vars
 	DataRefEntry        *Entry;

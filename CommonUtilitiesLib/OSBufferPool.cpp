@@ -32,7 +32,10 @@
  */
 
 #include "OSBufferPool.h"
+#include "OSMemory.h"
+#ifdef _WIN32
 #include <new>
+#endif
 
 void*   OSBufferPool::Get()
 {
@@ -40,7 +43,7 @@ void*   OSBufferPool::Get()
 	if (fQueue.GetLength() == 0)
 	{
 		fTotNumBuffers++;
-		char* theNewBuf = new char[fBufSize + sizeof(OSQueueElem)];
+		char* theNewBuf = NEW char[fBufSize + sizeof(OSQueueElem)];
 
 		//
 		// We need to construct a Queue Element, but we don't actually need

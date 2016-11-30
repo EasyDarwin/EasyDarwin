@@ -72,21 +72,13 @@ namespace boost
       BOOST_SYMBOL_VISIBLE
       invoker& operator=(BOOST_THREAD_RV_REF(invoker) f)
       {
-        if (this != &f)
-        {
-          f_ = boost::move(BOOST_THREAD_RV(f).f_);
-        }
-        return *this;
+        f_ = boost::move(BOOST_THREAD_RV(f).f_);
       }
 
       BOOST_SYMBOL_VISIBLE
       invoker& operator=( BOOST_THREAD_COPY_ASSIGN_REF(invoker) f)
       {
-        if (this != &f)
-        {
-          f_ = f.f_;
-        }
-        return *this;
+        f_ = f.f_;
       }
 
       result_type operator()()
@@ -99,7 +91,7 @@ namespace boost
       result_type
       execute(tuple_indices<Indices...>)
       {
-        return detail::invoke(boost::move(csbl::get<0>(f_)), boost::move(csbl::get<Indices>(f_))...);
+        return invoke(boost::move(csbl::get<0>(f_)), boost::move(csbl::get<Indices>(f_))...);
       }
     };
 
@@ -136,13 +128,13 @@ namespace boost
       result_type
       execute(tuple_indices<Indices...>)
       {
-        return detail::invoke<R>(boost::move(csbl::get<0>(f_)), boost::move(csbl::get<Indices>(f_))...);
+        return invoke<R>(boost::move(csbl::get<0>(f_)), boost::move(csbl::get<Indices>(f_))...);
       }
     };
   //BOOST_THREAD_DCL_MOVABLE_BEG(X) invoker<Fp> BOOST_THREAD_DCL_MOVABLE_END
 #else
 
-#if ! defined BOOST_MSVC && defined(BOOST_THREAD_PROVIDES_INVOKE)
+#if ! defined BOOST_MSVC
 
 #define BOOST_THREAD_RV_REF_ARG_T(z, n, unused) BOOST_PP_COMMA_IF(n) BOOST_THREAD_RV_REF(Arg##n)
 #define BOOST_THREAD_RV_REF_A_T(z, n, unused) BOOST_PP_COMMA_IF(n) BOOST_THREAD_RV_REF(A##n)
@@ -190,7 +182,7 @@ namespace boost
       {} \
       \
       result_type operator()() { \
-        return detail::invoke(boost::move(fp_) \
+        return invoke(boost::move(fp_) \
             BOOST_PP_REPEAT(n, BOOST_THREAD_MOVE_DCL, ~) \
         ); \
       } \
@@ -315,7 +307,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
             , boost::move(v2_)
@@ -381,7 +373,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
             , boost::move(v2_)
@@ -442,7 +434,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
             , boost::move(v2_)
@@ -498,7 +490,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
             , boost::move(v2_)
@@ -549,7 +541,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
             , boost::move(v2_)
@@ -595,7 +587,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
             , boost::move(v2_)
@@ -636,7 +628,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
             , boost::move(v2_)
@@ -672,7 +664,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
             , boost::move(v1_)
         );
@@ -703,7 +695,7 @@ namespace boost
 
       result_type operator()()
       {
-        return detail::invoke(boost::move(fp_)
+        return invoke(boost::move(fp_)
             , boost::move(v0_)
         );
       }

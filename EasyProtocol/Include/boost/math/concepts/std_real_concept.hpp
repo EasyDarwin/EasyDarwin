@@ -342,7 +342,7 @@ namespace tools
 {
 
 template <>
-inline concepts::std_real_concept make_big_value<concepts::std_real_concept>(boost::math::tools::largest_float val, const char*, mpl::false_ const&, mpl::false_ const&)
+inline concepts::std_real_concept make_big_value<concepts::std_real_concept>(boost::floatmax_t val, const char*, mpl::false_ const&, mpl::false_ const&)
 {
    return val;  // Can't use lexical_cast here, sometimes it fails....
 }
@@ -378,7 +378,7 @@ inline concepts::std_real_concept epsilon(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC
 }
 
 template <>
-inline BOOST_MATH_CONSTEXPR int digits<concepts::std_real_concept>(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::std_real_concept)) BOOST_NOEXCEPT
+inline int digits<concepts::std_real_concept>(BOOST_MATH_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::std_real_concept))
 { // Assume number of significand bits is same as std_real_concept_base_type,
   // unless std::numeric_limits<T>::is_specialized to provide digits.
    return digits<concepts::std_real_concept_base_type>();

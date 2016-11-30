@@ -100,7 +100,7 @@ QTSS_Error Filter(QTSS_Filter_Params* inParams)
 	(void)QTSS_GetValuePtr(inParams->inRTSPRequest, sStateAttr, 0, (void**)&theStateVal, &theLen);
 	//if ((theStateVal == NULL) || (theLen != sizeof(UInt32)))
 	//{
-	bool theFalse = false;
+	Bool16 theFalse = false;
 	(void)QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqRespKeepAlive, 0, &theFalse, sizeof(theFalse));
 
 	// Begin writing the HTTP response. We don't need to worry about flow control

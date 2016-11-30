@@ -25,6 +25,7 @@
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/identity.hpp>
 
 #include <boost/type_traits/is_base_and_derived.hpp>
@@ -83,6 +84,16 @@ namespace detail
     };
 
 } // namespace detail
+#if defined(__BORLANDC__) && __BORLANDC__ < 0x610
+template<class Base, class Derived>
+const Base & 
+base_object(const Derived & d)
+{
+    BOOST_STATIC_ASSERT(! is_pointer<Derived>::value);
+    detail::base_register<Base, Derived>::invoke();
+    return access::cast_reference<const Base, Derived>(d);
+}
+#else
 template<class Base, class Derived>
 typename detail::base_cast<Base, Derived>::type & 
 base_object(Derived &d)
@@ -93,6 +104,7 @@ base_object(Derived &d)
     detail::base_register<type, Derived>::invoke();
     return access::cast_reference<type, Derived>(d);
 }
+#endif
 
 } // namespace serialization
 } // namespace boost

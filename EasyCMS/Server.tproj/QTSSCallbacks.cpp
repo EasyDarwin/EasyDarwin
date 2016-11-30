@@ -607,7 +607,7 @@ QTSS_Error QTSSCallbacks::QTSS_RequestLockedCallback()
     return QTSS_NoErr;
 }
 
-bool QTSSCallbacks::QTSS_IsGlobalLocked()
+Bool16 QTSSCallbacks::QTSS_IsGlobalLocked()
 {
     QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
     if (OSThread::GetCurrent() != NULL)
@@ -654,7 +654,7 @@ void QTSSCallbacks::QTSS_UnlockStdLib()
     OS::GetStdLibMutex()->Unlock();
 }
 
-QTSS_Error QTSSCallbacks::Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, bool connectionClose, bool decrement)
+QTSS_Error QTSSCallbacks::Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, char* inMsg, UInt32 inMsgLen, Bool16 connectionClose, Bool16 decrement)
 {
     if (inHTTPSession == NULL)
         return QTSS_BadArgument;

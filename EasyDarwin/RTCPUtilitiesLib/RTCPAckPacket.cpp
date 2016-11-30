@@ -40,7 +40,7 @@
 
 
  // use if you don't know what kind of packet this is
-bool RTCPAckPacket::ParseAckPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
+Bool16 RTCPAckPacket::ParseAckPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 
 	if (!this->ParseAPPPacket(inPacketBuffer, inPacketLength))
@@ -57,7 +57,7 @@ bool RTCPAckPacket::ParseAckPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
 }
 
 
-bool RTCPAckPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength)
+Bool16 RTCPAckPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 	if (!this->ParseAckPacket(inPacketBuffer, inPacketLength))
 		return false;
@@ -76,7 +76,7 @@ bool RTCPAckPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength)
 	return true;
 }
 
-bool RTCPAckPacket::IsAckPacketType()
+Bool16 RTCPAckPacket::IsAckPacketType()
 {
 	// While we are moving to a new type, check for both
 	UInt32 theAppType = this->GetAppPacketName();

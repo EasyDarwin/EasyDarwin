@@ -53,7 +53,7 @@ public:
 	~SequenceNumberMap() { delete[] fSlidingWindow; }
 
 	// Returns whether this sequence number was already added or not.
-	bool  AddSequenceNumber(UInt16 inSeqNumber);
+	Bool16  AddSequenceNumber(UInt16 inSeqNumber);
 
 #if SEQUENCENUMBERMAPTESTING
 	static void Test();
@@ -61,7 +61,7 @@ public:
 
 private:
 
-	bool*         fSlidingWindow;
+	Bool16*         fSlidingWindow;
 
 	const SInt32    fWindowSize;
 	const SInt32    fNegativeWindowSize;
