@@ -190,7 +190,7 @@
 #define EASY_TAG_ONLINE									"Online"
 #define EASY_TAG_RTSP									"RTSP"
 #define EASY_TAG_L_RTSP									"rtsp"
-#define EASY_TAG_ONVIF									"Onvif"
+#define EASY_TAG_ONVIF									"ONVIF"
 #define EASY_TAG_L_ONVIF								"onvif"
 #define EASY_TAG_CDN									"CDN"
 #define EASY_TAG_L_CDN									"cdn"
