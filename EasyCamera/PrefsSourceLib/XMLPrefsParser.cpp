@@ -83,7 +83,7 @@ ContainerRef XMLPrefsParser::GetConfigurationTag()
 	return result;
 }
 
-ContainerRef XMLPrefsParser::GetRefForModule(char* inModuleName, Bool16 create)
+ContainerRef XMLPrefsParser::GetRefForModule(char* inModuleName, bool create)
 {
 	if (inModuleName == NULL)
 		return GetRefForServer();

@@ -17,7 +17,7 @@
 #include "Task.h"
 #include "QTSS.h"
 #include "QTSSDictionary.h"
-#include "atomic.h"
+#include <atomic>
 
 class HTTPSessionInterface : public QTSSDictionary, public Task
 {
@@ -28,11 +28,11 @@ public:
 	HTTPSessionInterface();
 	virtual ~HTTPSessionInterface();
 
-	Bool16 IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
+	bool IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
 
 	void RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
 
-	void IncrementObjectHolderCount() { (void)atomic_add(&fObjectHolders, 1); }
+	void IncrementObjectHolderCount() { ++fObjectHolders; }
 	void DecrementObjectHolderCount();
 
 	RTSPRequestStream*  GetInputStream() { return &fInputStream; }
@@ -55,7 +55,7 @@ public:
 	virtual QTSS_Error Read(void* ioBuffer, UInt32 inLength, UInt32* outLenRead);
 	virtual QTSS_Error RequestEvent(QTSS_EventType inEventMask);
 
-	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement);
+	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement);
 
 	enum
 	{
@@ -91,8 +91,8 @@ protected:
 
 	void        SnarfInputSocket(HTTPSessionInterface* fromHTTPSession);
 
-	Bool16              fLiveSession;
-	unsigned int        fObjectHolders;
+	bool              fLiveSession;
+	atomic_int			fObjectHolders;
 
 	UInt32              fSessionIndex;
 	UInt32              fLocalAddr;
@@ -102,9 +102,10 @@ protected:
 	UInt16              fLocalPort;
 	UInt16              fRemotePort;
 
-	Bool16				fAuthenticated;
+	bool				fAuthenticated;
 
-	static unsigned int	sSessionIndexCounter;
+	//static unsigned int	sSessionIndexCounter;
+	static std::atomic_uint sSessionIndexCounter;
 
 	// Dictionary support Param retrieval function
 	static void*        SetupParams(QTSSDictionary* inSession, UInt32* outLen);

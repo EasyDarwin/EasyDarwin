@@ -124,7 +124,7 @@ public:
 	static Float32  StartTimeMilli_Float() { return (Float32)((Float64)((SInt64)OS::Milliseconds() - (SInt64)OS::InitialMSec()) / (Float64) 1000.0); }
 	static SInt64   StartTimeMilli_Int() { return (OS::Milliseconds() - OS::InitialMSec()); }
 
-	static Bool16 	ThreadSafe();
+	static bool 	ThreadSafe();
 
 private:
 	static void setDivisor();

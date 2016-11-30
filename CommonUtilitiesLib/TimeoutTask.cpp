@@ -33,13 +33,14 @@
 #include "TimeoutTask.h"
 #include "OSMemory.h"
 
-TimeoutTaskThread* TimeoutTask::sThread = NULL;
+shared_ptr<TimeoutTaskThread> TimeoutTask::sThread = nullptr;
 
 void TimeoutTask::Initialize()
 {
-	if (sThread == NULL)
+	if (sThread == nullptr)
 	{
-		sThread = NEW TimeoutTaskThread();
+		//sThread = new TimeoutTaskThread();
+		sThread = make_shared<TimeoutTaskThread>();
 		sThread->Signal(Task::kStartEvent);
 	}
 
@@ -51,9 +52,9 @@ TimeoutTask::TimeoutTask(Task* inTask, SInt64 inTimeoutInMilSecs)
 {
 	fQueueElem.SetEnclosingObject(this);
 	this->SetTimeout(inTimeoutInMilSecs);
-	if (NULL == inTask)
+	if (nullptr == inTask)
 		fTask = (Task *) this;
-	Assert(sThread != NULL); // this can happen if RunServer intializes tasks in the wrong order
+	Assert(sThread != nullptr); // this can happen if RunServer intializes tasks in the wrong order
 
 	OSMutexLocker locker(&sThread->fMutex);
 	sThread->fQueue.EnQueue(&fQueueElem);

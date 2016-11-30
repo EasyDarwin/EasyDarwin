@@ -40,7 +40,7 @@
 #include "OS.h"
 
  //IDLETASKTHREAD IMPLEMENTATION:
-IdleTaskThread*     IdleTask::sIdleThread = NULL;
+std::shared_ptr<IdleTaskThread>     IdleTask::sIdleThread = nullptr;
 
 void IdleTaskThread::SetIdleTimer(IdleTask* activeObj, SInt64 msec)
 {
@@ -59,7 +59,7 @@ void IdleTaskThread::SetIdleTimer(IdleTask* activeObj, SInt64 msec)
 
 void IdleTaskThread::CancelTimeout(IdleTask* idleObj)
 {
-	Assert(idleObj != NULL);
+	Assert(idleObj != nullptr);
 	OSMutexLocker locker(&fHeapMutex);
 	fIdleHeap.Remove(&idleObj->fIdleElem);
 }
@@ -80,7 +80,7 @@ IdleTaskThread::Entry()
 		while ((fIdleHeap.CurrentHeapSize() > 0) && (fIdleHeap.PeekMin()->GetValue() <= msec))
 		{
 			IdleTask* elem = (IdleTask*)fIdleHeap.ExtractMin()->GetEnclosingObject();
-			Assert(elem != NULL);
+			Assert(elem != nullptr);
 			elem->Signal(Task::kIdleEvent);
 		}
 
@@ -100,9 +100,10 @@ IdleTaskThread::Entry()
 
 void IdleTask::Initialize()
 {
-	if (sIdleThread == NULL)
+	if (!sIdleThread)
 	{
-		sIdleThread = NEW IdleTaskThread();
+		//sIdleThread = new IdleTaskThread();
+		sIdleThread = std::shared_ptr<IdleTaskThread>(new IdleTaskThread(), [&](IdleTaskThread* idle) { delete idle; idle = nullptr; });
 		sIdleThread->Start();
 	}
 }
@@ -110,7 +111,7 @@ void IdleTask::Initialize()
 IdleTask::~IdleTask()
 {
 	//clean up stuff used by idle thread routines
-	Assert(sIdleThread != NULL);
+	Assert(sIdleThread);
 
 	OSMutexLocker locker(&sIdleThread->fHeapMutex);
 

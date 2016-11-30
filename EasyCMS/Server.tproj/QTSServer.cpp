@@ -77,7 +77,7 @@ public:
     virtual Task* GetSessionTask(TCPSocket** outSocket);
 
     //检测是否超过了最大处理负荷
-    Bool16 OverMaxConnections(UInt32 buffer);
+    bool OverMaxConnections(UInt32 buffer);
 };
 
 QTSS_Callbacks  QTSServer::sCallbacks;
@@ -112,7 +112,7 @@ QTSServer::~QTSServer()
 
 }
 
-Bool16 QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, Bool16 createListeners)
+bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, bool createListeners)
 {
     fServerState = qtssFatalErrorState;
     sPrefsSource = inPrefsSource;
@@ -236,7 +236,7 @@ void QTSServer::StartTasks()
         fListeners[x]->RequestEvent(EV_RE);
 }
 
-Bool16 QTSServer::SetDefaultIPAddr()
+bool QTSServer::SetDefaultIPAddr()
 {
     //check to make sure there is an available ip interface
     if (SocketUtils::GetNumIPAddrs() == 0)
@@ -276,7 +276,7 @@ Bool16 QTSServer::SetDefaultIPAddr()
 }
 
 
-Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride)
+bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride)
 {
     struct PortTracking
     {
@@ -284,7 +284,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
 
         UInt16 fPort;
         UInt32 fIPAddr;
-        Bool16 fNeedsCreating;
+        bool fNeedsCreating;
     };
 
     // Get the IP addresses from the pref
@@ -376,7 +376,7 @@ Bool16 QTSServer::CreateListeners(Bool16 startListeningNow, QTSServerPrefs* inPr
     // Kill any listeners that we no longer need
     for (UInt32 count4 = 0; count4 < fNumListeners; count4++)
     {
-        Bool16 deleteThisOne = true;
+        bool deleteThisOne = true;
 
         for (UInt32 count5 = 0; count5 < curPortIndex; count5++)
         {
@@ -468,7 +468,7 @@ UInt16 QTSServer::getServicePorts(QTSServerPrefs* inPrefs)
     return thePort;
 }
 
-Bool16  QTSServer::SwitchPersonality()
+bool  QTSServer::SwitchPersonality()
 {
 #if 0
 #ifndef __Win32__  //not supported
@@ -710,7 +710,7 @@ void QTSServer::createModule(char* inModuleFolderPath, char* inModuleName)
     }
 }
 
-Bool16 QTSServer::addModule(QTSSModule* inModule)
+bool QTSServer::addModule(QTSSModule* inModule)
 {
     Assert(inModule->IsInitialized());
 
@@ -866,11 +866,11 @@ Task*   HTTPListenerSocket::GetSessionTask(TCPSocket** outSocket)
 }
 
 
-Bool16 HTTPListenerSocket::OverMaxConnections(UInt32 buffer)
+bool HTTPListenerSocket::OverMaxConnections(UInt32 buffer)
 {
     QTSServerInterface* theServer = QTSServerInterface::GetServer();
     SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
-    Bool16 overLimit = false;
+    bool overLimit = false;
 
     if (maxConns > -1) // limit connections
     {

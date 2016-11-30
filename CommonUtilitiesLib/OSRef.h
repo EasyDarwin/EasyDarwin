@@ -62,7 +62,7 @@ class OSRef
 {
 public:
 
-	OSRef() : fObjectP(NULL), fRefCount(0), fNextHashEntry(NULL)
+	OSRef() : fObjectP(nullptr), fRefCount(0), fHashValue(0), fNextHashEntry(nullptr)
 	{
 #if DEBUG
 		fInATable = false;
@@ -70,7 +70,7 @@ public:
 #endif          
 	}
 	OSRef(const StrPtrLen& inString, void* inObjectP)
-		: fRefCount(0), fNextHashEntry(NULL)
+		: fRefCount(0), fNextHashEntry(nullptr)
 	{
 		Set(inString, inObjectP);
 	}
@@ -87,7 +87,7 @@ public:
 	}
 
 #if DEBUG
-	Bool16  IsInTable() { return fInATable; }
+	bool  IsInTable() { return fInATable; }
 #endif
 	void**  GetObjectPtr() { return &fObjectP; }
 	void*   GetObject() { return fObjectP; }
@@ -103,8 +103,8 @@ private:
 	//refcounting
 	UInt32  fRefCount;
 #if DEBUG
-	Bool16  fInATable;
-	Bool16  fSwapCalled;
+	bool  fInATable;
+	bool  fSwapCalled;
 #endif
 	OSCond  fCond;//to block threads waiting for this ref.
 
@@ -145,7 +145,9 @@ private:
 	//these functions are only used by the hash table itself. This constructor
 	//will break the "Set" functions.
 	OSRefKey(OSRef* elem) : fStringP(&elem->fString),
-		fHashValue(elem->fHashValue) {}
+		fHashValue(elem->fHashValue)
+	{
+	}
 
 	friend int operator ==(const OSRefKey& key1, const OSRefKey& key2)
 	{
@@ -193,7 +195,7 @@ public:
 
 	// RegisterOrResolve
 	// If the ID of the input ref is unique, this function is equivalent to
-	// Register, and returns NULL.
+	// Register, and returns nullptr.
 	// If there is a duplicate ID already in the map, this funcion
 	// leave it, resolves it, and returns it.
 	OSRef*              RegisterOrResolve(OSRef* inRef);
@@ -207,7 +209,7 @@ public:
 
 	// Same as UnRegister, but guarenteed not to block. Will return
 	// true if ref was sucessfully unregistered, false otherwise
-	Bool16      TryUnRegister(OSRef* ref, UInt32 refCount = 0);
+	bool      TryUnRegister(OSRef* ref, UInt32 refCount = 0);
 
 	//Resolve. This function uses the provided key string to identify and grab
 	//the Ref keyed by that string. Once the Ref is resolved, it is safe to use

@@ -123,7 +123,7 @@ public:
     // Utility routine used by the two external flavors of GetValue
     QTSS_Error GetValuePtr(QTSS_AttributeID inAttrID, UInt32 inIndex,
         void** outValueBuffer, UInt32* outValueLen,
-        Bool16 isInternal);
+        bool isInternal);
 
     //
     // ACCESSORS
@@ -147,8 +147,8 @@ public:
 
     OSMutex*    GetMutex() { return fMutexP; }
 
-    void		SetLocked(Bool16 inLocked) { fLocked = inLocked; }
-    Bool16		IsLocked() { return fLocked; }
+    void		SetLocked(bool inLocked) { fLocked = inLocked; }
+    bool		IsLocked() { return fLocked; }
 
     //
     // GETTING ATTRIBUTE INFO
@@ -212,8 +212,8 @@ private:
         StrPtrLen   fAttributeData; // The data
         UInt32      fAllocatedLen;  // How much space do we have allocated?
         UInt32      fNumAttributes; // If this is an iterated attribute, how many?
-        Bool16      fAllocatedInternally; //Should we delete this memory?
-        Bool16      fIsDynamicDictionary; //is this a dictionary object?
+        bool      fAllocatedInternally; //Should we delete this memory?
+        bool      fIsDynamicDictionary; //is this a dictionary object?
     };
 
     DictValueElement*   fAttributes;
@@ -222,8 +222,8 @@ private:
     QTSSDictionaryMap*  fMap;
     QTSSDictionaryMap*  fInstanceMap;
     OSMutex*            fMutexP;
-    Bool16				fMyMutex;
-    Bool16				fLocked;
+    bool				fMyMutex;
+    bool				fLocked;
 
     void deleteAttributeData(DictValueElement* inDictValues, UInt32 inNumValues, QTSSDictionaryMap* theMap);
 };
@@ -304,7 +304,7 @@ public:
 
     //
     // Searching / Iteration. These never return removed attributes
-    QTSS_Error  GetAttrInfoByName(const char* inAttrName, QTSSAttrInfoDict** outAttrInfoDict, Bool16 returnRemovedAttr = false);
+    QTSS_Error  GetAttrInfoByName(const char* inAttrName, QTSSAttrInfoDict** outAttrInfoDict, bool returnRemovedAttr = false);
     QTSS_Error  GetAttrInfoByID(QTSS_AttributeID inID, QTSSAttrInfoDict** outAttrInfoDict);
     QTSS_Error  GetAttrInfoByIndex(UInt32 inIndex, QTSSAttrInfoDict** outAttrInfoDict);
     QTSS_Error  GetAttrID(const char* inAttrName, QTSS_AttributeID* outID);
@@ -320,7 +320,7 @@ public:
     // CONVERTING attribute IDs to array indexes. Returns -1 if inAttrID doesn't exist
     inline SInt32                   ConvertAttrIDToArrayIndex(QTSS_AttributeID inAttrID);
 
-    static Bool16           IsInstanceAttrID(QTSS_AttributeID inAttrID)
+    static bool           IsInstanceAttrID(QTSS_AttributeID inAttrID)
     {
         return (inAttrID & 0x80000000) != 0;
     }
@@ -333,24 +333,24 @@ public:
     UInt32          GetNumAttrs() { return fNextAvailableID; }
     UInt32          GetNumNonRemovedAttrs() { return fNumValidAttrs; }
 
-    Bool16                  IsPreemptiveSafe(UInt32 inIndex)
+    bool                  IsPreemptiveSafe(UInt32 inIndex)
     {
-        Assert(inIndex < fNextAvailableID); return (Bool16)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssAttrModePreempSafe);
+        Assert(inIndex < fNextAvailableID); return (bool)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssAttrModePreempSafe);
     }
 
-    Bool16                  IsWriteable(UInt32 inIndex)
+    bool                  IsWriteable(UInt32 inIndex)
     {
-        Assert(inIndex < fNextAvailableID); return (Bool16)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssAttrModeWrite);
+        Assert(inIndex < fNextAvailableID); return (bool)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssAttrModeWrite);
     }
 
-    Bool16                  IsCacheable(UInt32 inIndex)
+    bool                  IsCacheable(UInt32 inIndex)
     {
-        Assert(inIndex < fNextAvailableID); return (Bool16)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssAttrModeCacheable);
+        Assert(inIndex < fNextAvailableID); return (bool)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssAttrModeCacheable);
     }
 
-    Bool16                  IsRemoved(UInt32 inIndex)
+    bool                  IsRemoved(UInt32 inIndex)
     {
-        Assert(inIndex < fNextAvailableID); return (Bool16)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssPrivateAttrModeRemoved);
+        Assert(inIndex < fNextAvailableID); return (bool)(fAttrArray[inIndex]->fAttrInfo.fAttrPermission & qtssPrivateAttrModeRemoved);
     }
 
     QTSS_AttrFunctionPtr    GetAttrFunction(UInt32 inIndex)
@@ -373,8 +373,8 @@ public:
         Assert(inIndex < fNextAvailableID); return fAttrArray[inIndex]->fAttrInfo.fAttrDataType;
     }
 
-    Bool16                  InstanceAttrsAllowed() { return (Bool16)(fFlags & kInstanceAttrsAllowed); }
-    Bool16                  CompleteFunctionsAllowed() { return (Bool16)(fFlags & kCompleteFunctionsAllowed); }
+    bool                  InstanceAttrsAllowed() { return (bool)(fFlags & kInstanceAttrsAllowed); }
+    bool                  CompleteFunctionsAllowed() { return (bool)(fFlags & kCompleteFunctionsAllowed); }
 
     // MODIFIERS
 
@@ -394,18 +394,18 @@ public:
     // This enum allows all QTSSDictionaryMaps to be stored in an array 
     enum
     {
-        kServerDictIndex = 0,
-        kPrefsDictIndex = 1,
-        kTextMessagesDictIndex = 2,
-        kServiceDictIndex = 3,
+        kServerDictIndex		= 0,
+        kPrefsDictIndex			= 1,
+        kTextMessagesDictIndex	= 2,
+        kServiceDictIndex		= 3,
 
-        kHTTPSessionDictIndex = 4,
-        kFileDictIndex = 5,
-        kModuleDictIndex = 6,
-        kModulePrefsDictIndex = 7,
-        kAttrInfoDictIndex = 8,
+        kHTTPSessionDictIndex	= 4,
+        kFileDictIndex			= 5,
+        kModuleDictIndex		= 6,
+        kModulePrefsDictIndex	= 7,
+        kAttrInfoDictIndex		= 8,
 
-        kNumDictionaries = 9,
+        kNumDictionaries		= 9,
 
         kNumDynamicDictionaryTypes = 500,
         kIllegalDictionary = kNumDynamicDictionaryTypes + kNumDictionaries

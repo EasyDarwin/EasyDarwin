@@ -10,7 +10,6 @@
 
 #include <string>
 #include <boost/config.hpp>
-#include <locale>
 #include <cstddef> // size_t
 
 #include <boost/config.hpp>
@@ -27,7 +26,6 @@ namespace std{ using ::wcslen; }
 #endif
 #endif
 
-#include <boost/archive/add_facet.hpp>
 #include <boost/archive/text_oarchive.hpp>
 
 namespace boost { 
@@ -38,7 +36,7 @@ namespace archive {
 // of template parameters used to create a text_oprimitive
 
 template<class Archive>
-BOOST_ARCHIVE_DECL(void)
+BOOST_ARCHIVE_DECL void
 text_oarchive_impl<Archive>::save(const char * s)
 {
     const std::size_t len = std::ostream::traits_type::length(s);
@@ -48,7 +46,7 @@ text_oarchive_impl<Archive>::save(const char * s)
 }
 
 template<class Archive>
-BOOST_ARCHIVE_DECL(void)
+BOOST_ARCHIVE_DECL void
 text_oarchive_impl<Archive>::save(const std::string &s)
 {
     const std::size_t size = s.size();
@@ -60,7 +58,7 @@ text_oarchive_impl<Archive>::save(const std::string &s)
 #ifndef BOOST_NO_CWCHAR
 #ifndef BOOST_NO_INTRINSIC_WCHAR_T
 template<class Archive>
-BOOST_ARCHIVE_DECL(void)
+BOOST_ARCHIVE_DECL void
 text_oarchive_impl<Archive>::save(const wchar_t * ws)
 {
     const std::size_t l = std::wcslen(ws);
@@ -72,7 +70,7 @@ text_oarchive_impl<Archive>::save(const wchar_t * ws)
 
 #ifndef BOOST_NO_STD_WSTRING
 template<class Archive>
-BOOST_ARCHIVE_DECL(void)
+BOOST_ARCHIVE_DECL void
 text_oarchive_impl<Archive>::save(const std::wstring &ws)
 {
     const std::size_t l = ws.size();
@@ -84,7 +82,7 @@ text_oarchive_impl<Archive>::save(const std::wstring &ws)
 #endif // BOOST_NO_CWCHAR
 
 template<class Archive>
-BOOST_ARCHIVE_DECL(BOOST_PP_EMPTY()) 
+BOOST_ARCHIVE_DECL 
 text_oarchive_impl<Archive>::text_oarchive_impl(
     std::ostream & os, 
     unsigned int flags
@@ -104,7 +102,7 @@ text_oarchive_impl<Archive>::text_oarchive_impl(
 }
 
 template<class Archive>
-BOOST_ARCHIVE_DECL(void)
+BOOST_ARCHIVE_DECL void
 text_oarchive_impl<Archive>::save_binary(const void *address, std::size_t count){
     put('\n');
     this->end_preamble();

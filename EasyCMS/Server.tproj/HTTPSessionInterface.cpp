@@ -9,14 +9,13 @@
     Contains:   Implementation of HTTPSessionInterface object.
 */
 
-#include "atomic.h"
 #include "HTTPSessionInterface.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
 #include <errno.h>
 #include "EasyUtil.h"
 
-unsigned int HTTPSessionInterface::sSessionIndexCounter = kFirstHTTPSessionID;
+std::atomic_uint HTTPSessionInterface::sSessionIndexCounter{ kFirstHTTPSessionID };
 
 QTSSAttrInfoDict::AttrInfo HTTPSessionInterface::sAttributes[] =
 {
@@ -71,7 +70,7 @@ HTTPSessionInterface::HTTPSessionInterface()
     fTimeoutTask.SetTask(this);
     fSocket.SetTask(this);
 
-    fSessionIndex = static_cast<UInt32>(atomic_add(&sSessionIndexCounter, 1));
+    fSessionIndex = ++sSessionIndexCounter;
     this->SetVal(EasyHTTPSesIndex, &fSessionIndex, sizeof(fSessionIndex));
 
     this->SetVal(EasyHTTPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));
@@ -122,7 +121,8 @@ void HTTPSessionInterface::DecrementObjectHolderCount()
     //#if __Win32__
     //maybe don't need this special case but for now on Win32 we do it the old way since the killEvent code hasn't been verified on Windows.
     this->Signal(Task::kReadEvent);//have the object wakeup in case it can go away.
-    atomic_sub(&fObjectHolders, 1);
+    //atomic_sub(&fObjectHolders, 1);
+	--fObjectHolders;
     //#else
     //    if (0 == atomic_sub(&fObjectHolders, 1))
     //        this->Signal(Task::kKillEvent);

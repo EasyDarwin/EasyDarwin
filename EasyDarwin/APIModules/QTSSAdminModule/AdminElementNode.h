@@ -136,10 +136,10 @@ public:
 		return fSelfPtr->fAPISource;
 	};
 
-	Bool16  IsNodeElement() { Assert(this); return (this->GetMyFieldType() == eNode || this->GetMyFieldType() == eArrayNode); }
+	bool  IsNodeElement() { Assert(this); return (this->GetMyFieldType() == eNode || this->GetMyFieldType() == eArrayNode); }
 
 
-	Bool16  IsStopItem(SInt32 index) { return index == GetMyStopItem(); };
+	bool  IsStopItem(SInt32 index) { return index == GetMyStopItem(); };
 	UInt32  GetKey(SInt32 index) { return fFieldIDs[index].fKey; };
 	char*   GetName(SInt32 index) { return fFieldIDs[index].fFieldName; };
 	UInt32  GetNameLen(SInt32 index) { return fFieldIDs[index].fFieldLen; };
@@ -154,7 +154,7 @@ public:
 	void    GetNameSPL(SInt32 index, StrPtrLen* str) { if (str != NULL) str->Set(fFieldIDs[index].fFieldName, fFieldIDs[index].fFieldLen); };
 	void    GetAccess(SInt32 index, StrPtrLen* str) { if (str != NULL) str->Set(fFieldIDs[index].fAccessData, fFieldIDs[index].fAccessLen); };
 	QTSS_Object GetAPISource(SInt32 index) { return fFieldIDs[index].fAPISource; };
-	Bool16  IsNodeElement(SInt32 index) { return (GetFieldType(index) == eNode || GetFieldType(index) == eArrayNode); }
+	bool  IsNodeElement(SInt32 index) { return (GetFieldType(index) == eNode || GetFieldType(index) == eArrayNode); }
 
 	enum
 	{
@@ -182,14 +182,14 @@ public:
 	OSRef*  GetOSRef(SInt32 index);
 	void    SetOSRef(SInt32 index, OSRef* refPtr);
 	SInt32  ResolveSPLKeyToIndex(StrPtrLen *keyPtr);
-	virtual Bool16  SetUpOneDataField(UInt32 index);
+	virtual bool  SetUpOneDataField(UInt32 index);
 
 	ElementDataFields   *GetElementFieldPtr(SInt32 index);
 	char                *GetElementDataPtr(SInt32 index);
-	void                SetElementDataPtr(SInt32 index, char * data, Bool16 isNode);
+	void                SetElementDataPtr(SInt32 index, char * data, bool isNode);
 	void                SetMyElementDataPtr(char * data) { fSelfDataPtr = data; }
 	char*               GetMyElementDataPtr() { return fSelfDataPtr; }
-	Bool16              IsFiltered(SInt32 index, QueryURI *queryPtr);
+	bool              IsFiltered(SInt32 index, QueryURI *queryPtr);
 
 	ElementDataFields   *GetNodeInfoPtr(SInt32 index);
 
@@ -217,7 +217,7 @@ public:
 	void    RespondToAdd(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr);
 	void    RespondToSet(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr);
 	void    RespondToGet(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr);
-	void    RespondToDel(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr, Bool16 delAttribute);
+	void    RespondToDel(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr, bool delAttribute);
 	void    RespondToKey(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr);
 
 	void    RespondWithNodeName(QTSS_StreamRef inStream, QueryURI *queryPtr);
@@ -231,7 +231,7 @@ public:
 	UInt32  CountValues(QTSS_Object source, UInt32 apiID);
 
 	QTSS_Error      AllocateFields(UInt32 numFields);
-	void            InitializeAllFields(Bool16 allocateFields, QTSS_Object defaultAttributeInfo, QTSS_Object source, QueryURI *queryPtr, StrPtrLen *currentSegmentPtr, Bool16 forceAll);
+	void            InitializeAllFields(bool allocateFields, QTSS_Object defaultAttributeInfo, QTSS_Object source, QueryURI *queryPtr, StrPtrLen *currentSegmentPtr, bool forceAll);
 	void            InitializeSingleField(StrPtrLen *currentSegmentPtr);
 	void            SetFields(UInt32 i, QTSS_Object attrInfoObject);
 	ElementNode*    CreateArrayAttributeNode(UInt32 index, QTSS_Object source, QTSS_Object attributeInfo, UInt32 arraySize);
@@ -246,8 +246,8 @@ public:
 	void                SetFieldsType(DataFieldsType fDataFieldsType) { this->fDataFieldsType = fDataFieldsType; };
 
 	static void GetFilteredAttributeName(ElementDataFields* fieldPtr, QTSS_AttributeID theID);
-	static Bool16 GetFilteredAttributeID(char *parentName, char *nodeName, QTSS_AttributeID* foundID);
-	static Bool16 IsPreferenceContainer(char *nodeName, QTSS_AttributeID* foundID);
+	static bool GetFilteredAttributeID(char *parentName, char *nodeName, QTSS_AttributeID* foundID);
+	static bool IsPreferenceContainer(char *nodeName, QTSS_AttributeID* foundID);
 
 	enum { kmaxPathlen = 1048 };
 	char                fPathBuffer[kmaxPathlen];
@@ -257,7 +257,7 @@ public:
 	QTSS_Object         fDataSource;
 	SInt32              fNumFields;
 	SInt32              fPathLen;
-	Bool16              fInitialized;
+	bool              fInitialized;
 
 	ElementDataFields*  fFieldIDs;
 	ElementDataFields*  fSelfPtr;
@@ -270,7 +270,7 @@ public:
 	ElementNode*        fParentNodePtr;
 	OSRefTable*         fElementMap;
 
-	Bool16              fIsTop;
+	bool              fIsTop;
 
 private:
 

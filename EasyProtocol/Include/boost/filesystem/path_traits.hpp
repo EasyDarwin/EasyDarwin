@@ -318,8 +318,8 @@ namespace path_traits {
   {
     if (c.size())
     {
-      std::basic_string<typename Container::value_type> s(c.begin(), c.end());
-      convert(s.c_str(), s.c_str()+s.size(), to);
+      std::basic_string<typename Container::value_type> seq(c.begin(), c.end());
+      convert(seq.c_str(), seq.c_str()+seq.size(), to);
     }
   }
 

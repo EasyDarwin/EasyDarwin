@@ -46,7 +46,8 @@
 #include "RTPOverbufferWindow.h"
 #include "QTSServerInterface.h"
 #include "OSMutex.h"
-#include "RTPSession3GPP.h"
+
+#include <atomic>
 
 class RTSPRequestInterface;
 
@@ -83,7 +84,7 @@ public:
 	//
 	// ACCESSORS
 
-	Bool16  IsFirstPlay() { return fIsFirstPlay; }
+	bool  IsFirstPlay() { return fIsFirstPlay; }
 	SInt64  GetFirstPlayTime() { return fFirstPlayTime; }
 	//Time (msec) most recent play was issued
 	SInt64  GetPlayTime() { return fPlayTime; }
@@ -134,7 +135,7 @@ public:
 		if (curTime > (fLastBitRateUpdateTime + 3000)) this->UpdateBitRateInternal(curTime);
 	}
 
-	void            SetAllTracksInterleaved(Bool16 newValue) { fAllTracksInterleaved = newValue; }
+	void            SetAllTracksInterleaved(bool newValue) { fAllTracksInterleaved = newValue; }
 	//
 	// RTSP RESPONSES
 
@@ -165,12 +166,12 @@ public:
 	void            SetAuthScheme(QTSS_AuthScheme scheme) { fAuthScheme = scheme; }
 	// Use this if the auth scheme or the qop has to be changed from the defaults 
 	// of scheme = Digest, and qop = auth
-	void            SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop, Bool16 newNonce, Bool16 createOpaque);
+	void            SetChallengeParams(QTSS_AuthScheme scheme, UInt32 qop, bool newNonce, bool createOpaque);
 	// Use this otherwise...if newNonce == true, it will create a new nonce
 	// and reset nonce count. If newNonce == false but nonce was never created earlier
 	// a nonce will be created. If newNonce == false, and there is an existing nonce,
 	// the nounce count will be incremented.
-	void            UpdateDigestAuthChallengeParams(Bool16 newNonce, Bool16 createOpaque, UInt32 qop);
+	void            UpdateDigestAuthChallengeParams(bool newNonce, bool createOpaque, UInt32 qop);
 
 	Float32* GetPacketLossPercent() { UInt32 outLen; return  (Float32*) this->PacketLossPercent(this, &outLen); }
 
@@ -185,7 +186,7 @@ public:
 	}
 	SInt64          fLastQualityCheckTime;
 	SInt64			fLastQualityCheckMediaTime;
-	Bool16			fStartedThinning;
+	bool			fStartedThinning;
 
 	// Used by RTPStream to increment the RTCP packet and byte counts.
 	void            IncrTotalRTCPPacketsRecv() { fTotalRTCPPacketsRecv++; }
@@ -196,20 +197,15 @@ public:
 	UInt32          GetLastRTSPBandwithBits() { return fLastRTSPBandwidthHeaderBits; }
 	UInt32          GetCurrentMovieBitRate() { return fMovieCurrentBitRate; }
 
-	UInt32          GetMaxBandwidthBits() { UInt32 maxRTSP = GetLastRTSPBandwithBits(); UInt32 maxLink = fRTPSession3GPP.GetLinkCharMaxKBits() * 1000;  return (maxRTSP > maxLink) ? maxRTSP : maxLink; }
-
-	void            SetIs3GPPSession(Bool16 is3GPP) { fIs3GPPSession = is3GPP; }
+	UInt32          GetMaxBandwidthBits() { UInt32 maxRTSP = GetLastRTSPBandwithBits();  return  maxRTSP; }
 
 protected:
-
-	RTPSession3GPP* Get3GPPSessPtr() { return fRTPSession3GPPPtr; }
-
 	// These variables are setup by the derived RTPSession object when
 	// Play and Pause get called
 
 	//Some stream related information that is shared amongst all streams
-	Bool16      fIsFirstPlay;
-	Bool16      fAllTracksInterleaved;
+	bool      fIsFirstPlay;
+	bool      fAllTracksInterleaved;
 	SInt64      fFirstPlayTime;//in milliseconds
 	SInt64      fPlayTime;
 	SInt64      fAdjustedPlayTime;
@@ -332,7 +328,8 @@ private:
 
 	// Built in dictionary attributes
 	static QTSSAttrInfoDict::AttrInfo   sAttributes[];
-	static unsigned int sRTPSessionIDCounter;
+	//static unsigned int sRTPSessionIDCounter;
+	static std::atomic_uint sRTPSessionIDCounter;
 
 	// Authentication information that needs to be kept around
 	// for the duration of the session      
@@ -345,11 +342,7 @@ private:
 
 	UInt32                      fFramesSkipped;
 
-	RTPSession3GPP			fRTPSession3GPP;
-	RTPSession3GPP*			fRTPSession3GPPPtr;
 	UInt32                  fLastRTSPBandwidthHeaderBits;
-	Bool16                  fIs3GPPSession;
-
 };
 
 #endif //_RTPSESSIONINTERFACE_H_

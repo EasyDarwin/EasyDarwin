@@ -74,7 +74,7 @@ public:
 	inline void Unlock();
 
 	// Returns true on successful grab of the lock, false on failure
-	inline Bool16 TryLock();
+	inline bool TryLock();
 
 private:
 
@@ -97,7 +97,7 @@ private:
 #if __PTHREADS_MUTEXES__ || __Win32__       
 	void        RecursiveLock();
 	void        RecursiveUnlock();
-	Bool16      RecursiveTryLock();
+	bool      RecursiveTryLock();
 #endif
 	friend class OSCond;
 };
@@ -106,11 +106,11 @@ class OSMutexLocker
 {
 public:
 
-	OSMutexLocker(OSMutex* inMutexP) : fMutex(inMutexP) { if (fMutex != NULL) fMutex->Lock(); }
-	~OSMutexLocker() { if (fMutex != NULL) fMutex->Unlock(); }
+	OSMutexLocker(OSMutex* inMutexP) : fMutex(inMutexP) { if (fMutex != nullptr) fMutex->Lock(); }
+	~OSMutexLocker() { if (fMutex != nullptr) fMutex->Unlock(); }
 
-	void Lock() { if (fMutex != NULL) fMutex->Lock(); }
-	void Unlock() { if (fMutex != NULL) fMutex->Unlock(); }
+	void Lock() { if (fMutex != nullptr) fMutex->Lock(); }
+	void Unlock() { if (fMutex != nullptr) fMutex->Unlock(); }
 
 private:
 	OSMutex*    fMutex;
@@ -135,12 +135,12 @@ void OSMutex::Unlock()
 #endif //!__PTHREADS__
 }
 
-Bool16 OSMutex::TryLock()
+bool OSMutex::TryLock()
 {
 #if __PTHREADS_MUTEXES__ || __Win32__
 	return this->RecursiveTryLock();
 #else
-	return (Bool16)mymutex_try_lock(fMutex);
+	return (bool)mymutex_try_lock(fMutex);
 #endif //!__PTHREADS__
 }
 

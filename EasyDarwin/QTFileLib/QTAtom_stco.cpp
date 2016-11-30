@@ -60,7 +60,7 @@ const int       stcoPos_SampleTable = 8;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_stco::QTAtom_stco(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, UInt16 offSetSize, Bool16 Debug, Bool16 DeepDebug)
+QTAtom_stco::QTAtom_stco(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, UInt16 offSetSize, bool Debug, bool DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEntries(0), fOffSetSize(offSetSize), fChunkOffsetTable(NULL), fTable(NULL)
 {
@@ -79,7 +79,7 @@ QTAtom_stco::~QTAtom_stco()
 // -------------------------------------
 // Initialization functions
 //
-Bool16 QTAtom_stco::Initialize()
+bool QTAtom_stco::Initialize()
 {
 	// Temporary vars
 	UInt32      tempInt32;

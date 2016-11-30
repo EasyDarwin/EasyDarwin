@@ -50,27 +50,27 @@ static const PrefConversionInfo kPrefs[] =
 	/* 0 */ { "session_timeout",						NULL,                   qtssAttrDataTypeUInt32 },
 	/* 1 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32 },
 	/* 2 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray },
-    /* 3 */ { "break_on_assert",                        NULL,                   qtssAttrDataTypeBool16 },
-    /* 4 */ { "auto_restart",                           NULL,                   qtssAttrDataTypeBool16 },
+    /* 3 */ { "break_on_assert",                        false,                   qtssAttrDataTypeBool16 },
+    /* 4 */ { "auto_restart",                           false,                   qtssAttrDataTypeBool16 },
 	/* 5 */ { "module_folder",                          NULL,                   qtssAttrDataTypeCharArray },
     /* 6 */ { "error_logfile_name",                     NULL,                   qtssAttrDataTypeCharArray },
     /* 7 */ { "error_logfile_dir",                      NULL,                   qtssAttrDataTypeCharArray },
     /* 8 */ { "error_logfile_interval",                NULL,                   qtssAttrDataTypeUInt32 },
     /* 9 */ { "error_logfile_size",                    NULL,                   qtssAttrDataTypeUInt32 },
     /* 10 */ { "error_logfile_verbosity",               NULL,                   qtssAttrDataTypeUInt32 },
-    /* 11 */ { "screen_logging",                        NULL,                   qtssAttrDataTypeBool16 },
-    /* 12 */ { "error_logging",                         NULL,                   qtssAttrDataTypeBool16 },
+    /* 11 */ { "screen_logging",                        false,                   qtssAttrDataTypeBool16 },
+    /* 12 */ { "error_logging",                         false,                   qtssAttrDataTypeBool16 },
     /* 13 */ { "service_id",							NULL,                   qtssAttrDataTypeCharArray },
 	/* 14 */ { "snap_local_path",						NULL,                   qtssAttrDataTypeCharArray },
     /* 15 */ { "snap_web_path",							NULL,                   qtssAttrDataTypeCharArray },
-    /* 16 */ { "auto_start",                            NULL,                   qtssAttrDataTypeBool16 },
-    /* 17 */ { "MSG_debug_printfs",						NULL,                   qtssAttrDataTypeBool16 },
-    /* 18 */ { "enable_monitor_stats_file",             NULL,                   qtssAttrDataTypeBool16 },
+    /* 16 */ { "auto_start",                            false,                   qtssAttrDataTypeBool16 },
+    /* 17 */ { "MSG_debug_printfs",						false,                   qtssAttrDataTypeBool16 },
+    /* 18 */ { "enable_monitor_stats_file",             false,                   qtssAttrDataTypeBool16 },
     /* 19 */ { "monitor_stats_file_interval_seconds",   NULL,                   qtssAttrDataTypeUInt32 },
     /* 20 */ { "monitor_stats_file_name",               NULL,                   qtssAttrDataTypeCharArray },
 	/* 21 */ { "run_num_threads",                       NULL,                   qtssAttrDataTypeUInt32 },
 	/* 22 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray },
-    /* 23 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16 },
+    /* 23 */ { "force_logs_close_on_write",             false,                   qtssAttrDataTypeBool16 },
 	/* 24 */ { "monitor_lan_port",						NULL,					qtssAttrDataTypeUInt16 },
     /* 25 */ { "monitor_wan_port",						NULL,					qtssAttrDataTypeUInt16 },
     /* 26 */ { "monitor_lan_ip",						NULL,                   qtssAttrDataTypeCharArray },
@@ -107,7 +107,7 @@ int GenerateAllXMLPrefs(FilePrefsSource* inPrefsSource, XMLPrefsParser* inXMLPre
         static char* kFalse = "false";
         
         //
-        // If the pref is a Bool16, the new pref format uses "true" & "false",
+        // If the pref is a bool, the new pref format uses "true" & "false",
         // the old one uses "enabled" and "disabled", so we have to explicitly convert.
         if (kPrefs[y].fPrefType == qtssAttrDataTypeBool16)
         {
@@ -138,7 +138,7 @@ int GenerateStandardXMLPrefs(PrefsSource* inPrefsSource, XMLPrefsParser* inXMLPr
                 break;
                 
             //
-            // If the pref is a Bool16, the new pref format uses "true" & "false",
+            // If the pref is a bool, the new pref format uses "true" & "false",
             // the old one uses "enabled" and "disabled", so we have to explicitly convert.
             if (kPrefs[x].fPrefType == qtssAttrDataTypeBool16)
             {

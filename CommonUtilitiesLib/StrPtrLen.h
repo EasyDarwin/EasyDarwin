@@ -53,45 +53,49 @@ public:
 
 	//CONSTRUCTORS/DESTRUCTOR
 	//These are so tiny they can all be inlined
-	StrPtrLen() : Ptr(NULL), Len(0) {}
-	StrPtrLen(char* sp) : Ptr(sp), Len(sp != NULL ? strlen(sp) : 0) {}
+	StrPtrLen() : Ptr(nullptr), Len(0) {}
+	StrPtrLen(char* sp) : Ptr(sp), Len(sp != nullptr ? strlen(sp) : 0) {}
 	StrPtrLen(char* sp, UInt32 len) : Ptr(sp), Len(len) {}
 	virtual ~StrPtrLen() {}
 
 	//OPERATORS:
-	Bool16 Equal(const StrPtrLen &compare) const;
-	Bool16 EqualIgnoreCase(const char* compare, const UInt32 len) const;
-	Bool16 EqualIgnoreCase(const StrPtrLen &compare) const { return EqualIgnoreCase(compare.Ptr, compare.Len); }
-	Bool16 Equal(const char* compare) const;
-	Bool16 NumEqualIgnoreCase(const char* compare, const UInt32 len) const;
+	bool Equal(const StrPtrLen &compare) const;
+	bool EqualIgnoreCase(const char* compare, const UInt32 len) const;
+	bool EqualIgnoreCase(const StrPtrLen &compare) const { return EqualIgnoreCase(compare.Ptr, compare.Len); }
+	bool Equal(const char* compare) const;
+	bool NumEqualIgnoreCase(const char* compare, const UInt32 len) const;
 
-	void Delete() { delete[] Ptr; Ptr = NULL; Len = 0; }
+	void Delete() { delete[] Ptr; Ptr = nullptr; Len = 0; }
 	char* ToUpper() { for (UInt32 x = 0; x < Len; x++) Ptr[x] = toupper(Ptr[x]); return Ptr; }
 
-	char* FindStringCase(char* queryCharStr, StrPtrLen* resultStr, Bool16 caseSensitive) const;
+	char* FindStringCase(char* queryCharStr, StrPtrLen* resultStr, bool caseSensitive) const;
 
-	char* FindString(StrPtrLen* queryStr, StrPtrLen* outResultStr) {
-		Assert(queryStr != NULL);   Assert(queryStr->Ptr != NULL); Assert(0 == queryStr->Ptr[queryStr->Len]);
+	char* FindString(StrPtrLen* queryStr, StrPtrLen* outResultStr)
+	{
+		Assert(queryStr != nullptr);   Assert(queryStr->Ptr != nullptr); Assert(0 == queryStr->Ptr[queryStr->Len]);
 		return FindStringCase(queryStr->Ptr, outResultStr, true);
 	}
 
-	char* FindStringIgnoreCase(StrPtrLen* queryStr, StrPtrLen* outResultStr) {
-		Assert(queryStr != NULL);   Assert(queryStr->Ptr != NULL); Assert(0 == queryStr->Ptr[queryStr->Len]);
+	char* FindStringIgnoreCase(StrPtrLen* queryStr, StrPtrLen* outResultStr)
+	{
+		Assert(queryStr != nullptr);   Assert(queryStr->Ptr != nullptr); Assert(0 == queryStr->Ptr[queryStr->Len]);
 		return FindStringCase(queryStr->Ptr, outResultStr, false);
 	}
 
-	char* FindString(StrPtrLen* queryStr) {
-		Assert(queryStr != NULL);   Assert(queryStr->Ptr != NULL); Assert(0 == queryStr->Ptr[queryStr->Len]);
-		return FindStringCase(queryStr->Ptr, NULL, true);
+	char* FindString(StrPtrLen* queryStr)
+	{
+		Assert(queryStr != nullptr);   Assert(queryStr->Ptr != nullptr); Assert(0 == queryStr->Ptr[queryStr->Len]);
+		return FindStringCase(queryStr->Ptr, nullptr, true);
 	}
 
-	char* FindStringIgnoreCase(StrPtrLen* queryStr) {
-		Assert(queryStr != NULL);   Assert(queryStr->Ptr != NULL); Assert(0 == queryStr->Ptr[queryStr->Len]);
-		return FindStringCase(queryStr->Ptr, NULL, false);
+	char* FindStringIgnoreCase(StrPtrLen* queryStr)
+	{
+		Assert(queryStr != nullptr);   Assert(queryStr->Ptr != nullptr); Assert(0 == queryStr->Ptr[queryStr->Len]);
+		return FindStringCase(queryStr->Ptr, nullptr, false);
 	}
 
-	char* FindString(char* queryCharStr) { return FindStringCase(queryCharStr, NULL, true); }
-	char* FindStringIgnoreCase(char* queryCharStr) { return FindStringCase(queryCharStr, NULL, false); }
+	char* FindString(char* queryCharStr) { return FindStringCase(queryCharStr, nullptr, true); }
+	char* FindStringIgnoreCase(char* queryCharStr) { return FindStringCase(queryCharStr, nullptr, false); }
 	char* FindString(char* queryCharStr, StrPtrLen* outResultStr) { return FindStringCase(queryCharStr, outResultStr, true); }
 	char* FindStringIgnoreCase(char* queryCharStr, StrPtrLen* outResultStr) { return FindStringCase(queryCharStr, outResultStr, false); }
 
@@ -100,7 +104,8 @@ public:
 	char* FindString(StrPtrLen& query) { return FindString(&query); }
 	char* FindStringIgnoreCase(StrPtrLen& query) { return FindStringIgnoreCase(&query); }
 
-	StrPtrLen& operator=(const StrPtrLen& newStr) {
+	StrPtrLen& operator=(const StrPtrLen& newStr)
+	{
 		Ptr = newStr.Ptr; Len = newStr.Len;
 		return *this;
 	}
@@ -120,7 +125,7 @@ public:
 	void    PrintStr(char *appendStr);
 	void    PrintStr(char* prependStr, char *appendStr);
 
-	void    PrintStrEOL(char* stopStr = NULL, char *appendStr = NULL); //replace chars x0A and x0D with \r and \n
+	void    PrintStrEOL(char* stopStr = nullptr, char *appendStr = nullptr); //replace chars x0A and x0D with \r and \n
 
 	//Utility function
 	UInt32    TrimTrailingWhitespace();
@@ -130,7 +135,7 @@ public:
 	void  TrimWhitespace() { TrimLeadingWhitespace(); TrimTrailingWhitespace(); }
 
 #if STRPTRLENTESTING
-	static Bool16   Test();
+	static bool   Test();
 #endif
 
 private:

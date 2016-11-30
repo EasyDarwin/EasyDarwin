@@ -45,17 +45,17 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_stsd(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		Bool16 Debug = false, Bool16 DeepDebug = false);
+		bool Debug = false, bool DeepDebug = false);
 	virtual             ~QTAtom_stsd();
 
 
 	//
 	// Initialization functions.
-	virtual Bool16      Initialize();
+	virtual bool      Initialize();
 
 	//
 	// Accessors.
-	Bool16      FindSampleDescription(OSType DataFormat, char ** Buffer, UInt32 * Length);
+	bool      FindSampleDescription(OSType DataFormat, char ** Buffer, UInt32 * Length);
 	UInt16      SampleDescriptionToDataReference(UInt32 SampleDescriptionID);
 
 

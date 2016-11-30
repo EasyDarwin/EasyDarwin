@@ -79,7 +79,7 @@
 ///     std::string s1 = Format("The answer to life, the universe, and everything is %d", 42);
 ///     std::string s2 = Format("second: %[1]d, first: %[0]d", 1, 2);
 
-
+#if 0
 std::string Format(const std::string& fmt, const boost::any& value);
 std::string Format(const std::string& fmt, const boost::any& value1, const boost::any& value2);
 std::string Format(const std::string& fmt, const boost::any& value1, const boost::any& value2, const boost::any& value3);
@@ -105,6 +105,8 @@ void Format(std::string& result, const std::string& fmt, const boost::any& value
 void Format(std::string& result, const std::string& fmt, const boost::any& value1, const boost::any& value2, const boost::any& value3, const boost::any& value4, const boost::any& value5, const boost::any& value6, const boost::any& value7, const boost::any& value8, const boost::any& value9);
 void Format(std::string& result, const std::string& fmt, const boost::any& value1, const boost::any& value2, const boost::any& value3, const boost::any& value4, const boost::any& value5, const boost::any& value6, const boost::any& value7, const boost::any& value8, const boost::any& value9, const boost::any& value10);
 
+#endif
+
 
 void Format(std::string& result, const char *fmt, const std::vector<boost::any>& values);
 /// Supports a variable number of arguments and is used by
@@ -113,3 +115,27 @@ void Format(std::string& result, const char *fmt, const std::vector<boost::any>&
 void Format(std::string& result, const std::string& fmt, const std::vector<boost::any>& values);
 /// Supports a variable number of arguments and is used by
 /// all other variants of format().
+
+template <typename T, typename... Args>
+void Format(std::string &result, const std::string &fmt, T arg1, Args... args)
+/// Appends the formatted string to result.
+{
+	std::vector<boost::any> values;
+	values.push_back(arg1);
+	values.insert(values.end(), { args... });
+	Format(result, fmt, values);
+}
+
+
+template <typename FMT, typename T, typename... Args,
+	typename std::enable_if< std::is_const< typename std::remove_reference<FMT>::type >::value, int >::type = 0>
+	std::string Format(FMT &fmt, T arg1, Args... args)
+	/// Returns the formatted string.
+{
+	std::vector<boost::any> values;
+	values.push_back(arg1);
+	values.insert(values.end(), { args... });
+	std::string result;
+	Format(result, fmt, values);
+	return result;
+}

@@ -38,7 +38,7 @@
 #include "StringParser.h"
 #include "QTSServerInterface.h"
 
-Bool16  QTSSModule::sHasOpenFileModule = false;
+bool  QTSSModule::sHasOpenFileModule = false;
 
 QTSSAttrInfoDict::AttrInfo  QTSSModule::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */

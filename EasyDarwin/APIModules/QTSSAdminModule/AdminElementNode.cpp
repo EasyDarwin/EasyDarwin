@@ -62,10 +62,10 @@ static void * sPtrArray[10000];
 static char * sSourceArray[10000];
 #endif
 
-Bool16  ElementNode_DoAll(StrPtrLen* str)
+bool  ElementNode_DoAll(StrPtrLen* str)
 {
 	Assert(str);
-	Bool16 isIterator = false;
+	bool isIterator = false;
 
 	if (str->Equal(sDoAllSPL) || str->Equal(sDoAllIndexIteratorSPL))
 		isIterator = true;
@@ -103,7 +103,7 @@ void ElementNode_InsertPtr(void *ptr, char * src)
 #endif
 }
 
-Bool16 ElementNode_FindPtr(void *ptr, char * src)
+bool ElementNode_FindPtr(void *ptr, char * src)
 {   // use for validating duplicates at some point
 #if MEMORYDEBUGGING
 	if (ptr == NULL)
@@ -252,7 +252,7 @@ void ElementNode::Initialize(SInt32 index, ElementNode *parentPtr, QueryURI *que
 		StrPtrLen nextnextSegment;
 		(void)queryPtr->NextSegment(currentSegmentPtr, &nextSegment);
 		(void)queryPtr->NextSegment(&nextSegment, &nextnextSegment);
-		Bool16 forceAll = nextSegment.Equal(sDoAllIndexIteratorSPL) | nextnextSegment.Equal(sDoAllIndexIteratorSPL);
+		bool forceAll = nextSegment.Equal(sDoAllIndexIteratorSPL) | nextnextSegment.Equal(sDoAllIndexIteratorSPL);
 
 		if (GetFields() == NULL)
 			InitializeAllFields(true, NULL, nodeSource, queryPtr, currentSegmentPtr, forceAll);
@@ -491,7 +491,7 @@ ElementNode* ElementNode::CreateArrayAttributeNode(UInt32 index, QTSS_Object sou
 			}
 
 			QTSS_AttributeID id;
-			Bool16 foundFilteredAttribute = GetFilteredAttributeID(GetMyName(), nodePtr->GetMyName(), &id);
+			bool foundFilteredAttribute = GetFilteredAttributeID(GetMyName(), nodePtr->GetMyName(), &id);
 			if (foundFilteredAttribute)
 			{
 				GetFilteredAttributeName(fieldPtr, id);
@@ -511,7 +511,7 @@ ElementNode* ElementNode::CreateArrayAttributeNode(UInt32 index, QTSS_Object sou
 
 }
 
-void ElementNode::InitializeAllFields(Bool16 allocateFields, QTSS_Object defaultAttributeInfo, QTSS_Object source, QueryURI *queryPtr, StrPtrLen *currentSegmentPtr, Bool16 forceAll = false)
+void ElementNode::InitializeAllFields(bool allocateFields, QTSS_Object defaultAttributeInfo, QTSS_Object source, QueryURI *queryPtr, StrPtrLen *currentSegmentPtr, bool forceAll = false)
 {
 	//qtss_printf("------- ElementNode::InitializeAllFields -------- \n");
 
@@ -553,7 +553,7 @@ void ElementNode::InitializeAllFields(Bool16 allocateFields, QTSS_Object default
 			//qtss_printf("ElementNode::InitializeAllFields name = %s index = %"   _U32BITARG_   " numValues =%"   _U32BITARG_   " \n",fFieldIDs[i].fFieldName, fFieldIDs[i].fAPI_ID,numValues);
 
 			QTSS_AttributeID id;
-			Bool16 foundFilteredAttribute = GetFilteredAttributeID(GetMyName(), GetName(i), &id);
+			bool foundFilteredAttribute = GetFilteredAttributeID(GetMyName(), GetName(i), &id);
 
 			StrPtrLen nextSegment;
 			(void)queryPtr->NextSegment(currentSegmentPtr, &nextSegment);
@@ -644,7 +644,7 @@ char *ElementNode::GetElementDataPtr(SInt32 index)
 	return resultPtr;
 }
 
-void ElementNode::SetElementDataPtr(SInt32 index, char *data, Bool16 isNode)
+void ElementNode::SetElementDataPtr(SInt32 index, char *data, bool isNode)
 {
 	//qtss_printf("------ElementNode::SetElementDataPtr----- \n");
 	//qtss_printf("ElementNode::SetElementDataPtr index = %" _S32BITARG_ " fNumFields = %" _S32BITARG_ " \n", index,fNumFields);
@@ -780,13 +780,13 @@ void ElementNode::SetUpSingleNode(QueryURI *queryPtr, StrPtrLen *currentSegmentP
 	return;
 }
 
-Bool16 ElementNode::SetUpOneDataField(UInt32 index)
+bool ElementNode::SetUpOneDataField(UInt32 index)
 {
 	//qtss_printf("----ElementNode::SetUpOneDataField----\n");       
 	//qtss_printf(" ElementNode::SetUpOneDataField parent = %s field name=%s\n",GetNodeName(), GetName(index));  
 
 	QTSS_AttributeID inID = GetAPI_ID(index);
-	Bool16 isNodeResult = IsNodeElement(index);
+	bool isNodeResult = IsNodeElement(index);
 	char *testPtr = GetElementDataPtr(index);
 	//Warn(NULL == testPtr);
 	if (NULL != testPtr)
@@ -835,7 +835,7 @@ void ElementNode::SetUpSingleElement(QueryURI *queryPtr, StrPtrLen *currentSegme
 		) // filter unnecessary elements        
 	{
 
-		Bool16 isNode = SetUpOneDataField((UInt32)index);
+		bool isNode = SetUpOneDataField((UInt32)index);
 		if (isNode)
 		{
 			//qtss_printf("ElementNode::SetUpSingleElement isNode=true calling SetUpSingleNode \n");
@@ -1033,7 +1033,7 @@ void ElementNode::RespondWithSelfAdd(QTSS_StreamRef inStream, QueryURI *queryPtr
 	}
 
 	char *dataPtr = GetMyElementDataPtr();
-	Bool16 nullData = false;
+	bool nullData = false;
 	static char *nullErr = "(null)";
 	if (NULL == dataPtr)
 	{   //qtss_printf("ElementNode::RespondWithSelfAdd NULL == dataPtr EXIT\n");
@@ -1218,7 +1218,7 @@ void ElementNode::RespondWithSelf(QTSS_StreamRef inStream, QueryURI *queryPtr)
 
 	if (queryPtr->fNumFilters > 0)
 	{
-		Bool16 foundFilter = false;
+		bool foundFilter = false;
 		StrPtrLen*  theFilterPtr;
 		for (SInt32 count = 0; count < queryPtr->fNumFilters; count++)
 		{
@@ -1241,7 +1241,7 @@ void ElementNode::RespondWithSelf(QTSS_StreamRef inStream, QueryURI *queryPtr)
 	parameters &= ~QueryURI::kIndexParam; // clear index flag
 
 
-	Bool16 isVerbosePath = 0 != (parameters & QueryURI::kVerboseParam);
+	bool isVerbosePath = 0 != (parameters & QueryURI::kVerboseParam);
 	if (isVerbosePath)
 	{
 		parameters &= ~QueryURI::kVerboseParam; // clear verbose flag
@@ -1349,7 +1349,7 @@ void    ElementNode::RespondToAdd(QTSS_StreamRef inStream, SInt32 index, QueryUR
 	}
 
 	static char *nullErr = "(null)";
-	Bool16 nullData = false;
+	bool nullData = false;
 	QTSS_Error err = QTSS_NoErr;
 	StrPtrLen bufferSPL(messageBuffer);
 
@@ -1468,7 +1468,7 @@ void    ElementNode::RespondToAdd(QTSS_StreamRef inStream, SInt32 index, QueryUR
 void    ElementNode::RespondToSet(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr)
 {
 	static char *nullErr = "(null)";
-	Bool16 nullData = false;
+	bool nullData = false;
 	QTSS_Error err = QTSS_NoErr;
 	char messageBuffer[1024] = "";
 	StrPtrLen bufferSPL(messageBuffer);
@@ -1567,10 +1567,10 @@ void    ElementNode::RespondToSet(QTSS_StreamRef inStream, SInt32 index, QueryUR
 
 }
 
-void    ElementNode::RespondToDel(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr, Bool16 delAttribute)
+void    ElementNode::RespondToDel(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr, bool delAttribute)
 {
 	static char *nullErr = "(null)";
-	Bool16 nullData = false;
+	bool nullData = false;
 	QTSS_Error err = QTSS_NoErr;
 	char messageBuffer[1024] = "";
 	StrPtrLen bufferSPL(messageBuffer);
@@ -1656,9 +1656,9 @@ void    ElementNode::RespondToDel(QTSS_StreamRef inStream, SInt32 index, QueryUR
 
 }
 
-Bool16 ElementNode::IsFiltered(SInt32 index, QueryURI *queryPtr)
+bool ElementNode::IsFiltered(SInt32 index, QueryURI *queryPtr)
 {
-	Bool16 foundFilter = false;
+	bool foundFilter = false;
 	StrPtrLen*  theFilterPtr;
 	for (SInt32 count = 0; count < queryPtr->fNumFilters; count++)
 	{
@@ -1675,7 +1675,7 @@ Bool16 ElementNode::IsFiltered(SInt32 index, QueryURI *queryPtr)
 void ElementNode::RespondToGet(QTSS_StreamRef inStream, SInt32 index, QueryURI *queryPtr)
 {
 	static char *nullErr = "(null)";
-	Bool16 nullData = false;
+	bool nullData = false;
 
 	//qtss_printf("ElementNode::RespondToGet NODE = %s index = %" _S32BITARG_ " \n",GetNodeName(), (SInt32) index);
 
@@ -2083,9 +2083,9 @@ void ElementNode::RespondToQuery(QTSS_StreamRef inStream, QueryURI *queryPtr, St
 	}
 
 
-	Bool16 recurse = queryPtr->RecurseParam();
-	Bool16 doAllNext = false;
-	Bool16 doAllNextNext = false;
+	bool recurse = queryPtr->RecurseParam();
+	bool doAllNext = false;
+	bool doAllNextNext = false;
 	StrPtrLen nextSegment;
 	StrPtrLen nextnextSegment;
 	StrPtrLen nextnextnextSegment;
@@ -2173,7 +2173,7 @@ void ElementNode::SetupNodes(QueryURI *queryPtr, StrPtrLen *currentPathPtr, QTSS
 
 	if (queryPtr && currentPathPtr) do
 	{
-		Bool16 doAll = false;
+		bool doAll = false;
 		StrPtrLen nextSegment;
 
 		(void)queryPtr->NextSegment(currentPathPtr, &nextSegment);
@@ -2227,9 +2227,9 @@ void ElementNode::GetFilteredAttributeName(ElementDataFields* fieldPtr, QTSS_Att
 	}
 }
 
-Bool16 ElementNode::GetFilteredAttributeID(char *parentName, char *nodeName, QTSS_AttributeID* foundID)
+bool ElementNode::GetFilteredAttributeID(char *parentName, char *nodeName, QTSS_AttributeID* foundID)
 {
-	Bool16 found = false;
+	bool found = false;
 
 	if (0 == strcmp("server", parentName))
 	{
@@ -2250,9 +2250,9 @@ Bool16 ElementNode::GetFilteredAttributeID(char *parentName, char *nodeName, QTS
 	return found;
 };
 
-Bool16 ElementNode::IsPreferenceContainer(char *nodeName, QTSS_AttributeID* foundID)
+bool ElementNode::IsPreferenceContainer(char *nodeName, QTSS_AttributeID* foundID)
 {
-	Bool16 found = false;
+	bool found = false;
 	if (foundID) *foundID = 0;
 	//qtss_printf(" ElementNode::IsPreferenceContainer name = %s \n",nodeName);
 	if (0 == strcmp("qtssSvrPreferences", nodeName))

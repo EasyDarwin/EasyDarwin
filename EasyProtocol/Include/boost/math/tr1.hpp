@@ -105,7 +105,10 @@ namespace boost{ namespace math{ namespace tr1{ extern "C"{
 #endif
 
 #if !(defined(BOOST_INTEL) && defined(__APPLE__)) && !(defined(__FLT_EVAL_METHOD__) && !defined(__cplusplus))
-#ifndef FLT_EVAL_METHOD
+#if !defined(FLT_EVAL_METHOD)
+typedef float float_t;
+typedef double double_t;
+#elif FLT_EVAL_METHOD == -1
 typedef float float_t;
 typedef double double_t;
 #elif FLT_EVAL_METHOD == 0

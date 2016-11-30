@@ -32,8 +32,8 @@
 #include <OSThread.h>
 
 StrPtrLen HTTPRequest::sColonSpace(": ", 2);
-static Bool16 sFalse = false;
-static Bool16 sTrue = true;
+static bool sFalse = false;
+static bool sTrue = true;
 static StrPtrLen sCloseString("close", 5);
 static StrPtrLen sAllString("*", 1);
 static StrPtrLen sKeepAliveString("keep-alive", 10);
@@ -274,7 +274,7 @@ QTSS_Error HTTPRequest::parseURI(StringParser* parser)
 					fQueryString = NULL;
 				}
 
-				fQueryString = NEW char[queryString.Len + 1];
+				fQueryString = new char[queryString.Len + 1];
 				::memcpy(fQueryString, queryString.Ptr, queryString.Len);
 				fQueryString[queryString.Len] = '\0';
 			}
@@ -289,7 +289,7 @@ QTSS_Error HTTPRequest::parseURI(StringParser* parser)
 	// Allocate memory for fRequestPath
 	UInt32 len = fRelativeURI.Len;
 	len++;
-	//char* relativeURIDecoded = NEW char[len];
+	//char* relativeURIDecoded = new char[len];
 	char relativeURIDecoded[512] = { 0 };
 
 	SInt32 theBytesWritten = StringTranslator::DecodeURL(fRelativeURI.Ptr, fRelativeURI.Len,
@@ -308,7 +308,7 @@ QTSS_Error HTTPRequest::parseURI(StringParser* parser)
 
 	fRequestPath = NULL;
 
-	fRequestPath = NEW char[theBytesWritten + 1];
+	fRequestPath = new char[theBytesWritten + 1];
 	::memcpy(fRequestPath, relativeURIDecoded + 1, theBytesWritten);
 	//delete relativeURIDecoded;
 	fRequestPath[theBytesWritten] = '\0';
@@ -320,7 +320,7 @@ QTSS_Error HTTPRequest::parseURI(StringParser* parser)
 QTSS_Error HTTPRequest::parseHeaders(StringParser* parser)
 {
 	StrPtrLen theKeyWord;
-	Bool16 isStreamOK;
+	bool isStreamOK;
 
 	//Repeat until we get a \r\n\r\n, which signals the end of the headers
 	while ((parser->PeekFast() != '\r') && (parser->PeekFast() != '\n'))
@@ -411,7 +411,7 @@ StrPtrLen* HTTPRequest::GetHeaderValue(HTTPHeader inHeader)
 	return NULL;
 }
 
-Bool16 HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion version)
+bool HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion version)
 {
 	if (fHTTPType != httpResponseType) return false;
 
@@ -426,9 +426,9 @@ Bool16 HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion 
 	}
 
 	// Allocate memory for the response when you first create it
-	char* responseString = NEW char[kMinHeaderSizeInBytes];
-	fHTTPHeader = NEW StrPtrLen(responseString, kMinHeaderSizeInBytes);
-	fHTTPHeaderFormatter = NEW ResizeableStringFormatter(fHTTPHeader->Ptr, fHTTPHeader->Len);
+	char* responseString = new char[kMinHeaderSizeInBytes];
+	fHTTPHeader = new StrPtrLen(responseString, kMinHeaderSizeInBytes);
+	fHTTPHeaderFormatter = new ResizeableStringFormatter(fHTTPHeader->Ptr, fHTTPHeader->Len);
 
 	//make a partial header for the given version and status code
 	putStatusLine(fHTTPHeaderFormatter, statusCode, version);
@@ -443,7 +443,7 @@ Bool16 HTTPRequest::CreateResponseHeader(HTTPStatusCode statusCode, HTTPVersion 
 	return true;
 }
 
-Bool16 HTTPRequest::CreateRequestHeader(HTTPMethod method, HTTPVersion version)
+bool HTTPRequest::CreateRequestHeader(HTTPMethod method, HTTPVersion version)
 {
 	if (fHTTPType != httpRequestType) return false;
 
@@ -458,9 +458,9 @@ Bool16 HTTPRequest::CreateRequestHeader(HTTPMethod method, HTTPVersion version)
 	}
 
 	// Allocate memory for the response when you first create it
-	char* responseString = NEW char[kMinHeaderSizeInBytes];
-	fHTTPHeader = NEW StrPtrLen(responseString, kMinHeaderSizeInBytes);
-	fHTTPHeaderFormatter = NEW ResizeableStringFormatter(fHTTPHeader->Ptr, fHTTPHeader->Len);
+	char* responseString = new char[kMinHeaderSizeInBytes];
+	fHTTPHeader = new StrPtrLen(responseString, kMinHeaderSizeInBytes);
+	fHTTPHeaderFormatter = new ResizeableStringFormatter(fHTTPHeader->Ptr, fHTTPHeader->Len);
 
 	//make a partial header for the given version and status code
 	putMethedLine(fHTTPHeaderFormatter, method, version);
@@ -489,7 +489,7 @@ void HTTPRequest::AppendResponseHeader(HTTPHeader inHeader, StrPtrLen* inValue)
 
 void HTTPRequest::AppendContentLengthHeader(UInt64 length_64bit)
 {
-	//char* contentLength = NEW char[256];
+	//char* contentLength = new char[256];
 	char contentLength[256] = { 0 };
 	qtss_sprintf(contentLength, "%" _64BITARG_ "d", length_64bit);
 	StrPtrLen contentLengthPtr(contentLength);
@@ -498,7 +498,7 @@ void HTTPRequest::AppendContentLengthHeader(UInt64 length_64bit)
 
 void HTTPRequest::AppendContentLengthHeader(UInt32 length_32bit)
 {
-	//char* contentLength = NEW char[256];
+	//char* contentLength = new char[256];
 	char contentLength[256] = { 0 };
 	qtss_sprintf(contentLength, "%"   _U32BITARG_   "", length_32bit);
 	StrPtrLen contentLengthPtr(contentLength);

@@ -62,7 +62,7 @@
 char RTCPNaduPacket::sRTCPTestBuffer[];
 
 
-RTCPNaduPacket::RTCPNaduPacket(Bool16 debug = false) :
+RTCPNaduPacket::RTCPNaduPacket(bool debug = false) :
 	RTCPAPPPacket(debug),
 	fNaduDataBuffer(NULL),
 	fNumBlocks(0)
@@ -282,7 +282,7 @@ void RTCPNaduPacket::GetTestPacket(StrPtrLen* resultPtr)
 
 
 // use if you don't know what kind of packet this is
-Bool16 RTCPNaduPacket::ParseNaduPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
+bool RTCPNaduPacket::ParseNaduPacket(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 
 	if (!this->ParseAPPPacket(inPacketBuffer, inPacketLength))
@@ -295,7 +295,7 @@ Bool16 RTCPNaduPacket::ParseNaduPacket(UInt8* inPacketBuffer, UInt32 inPacketLen
 }
 
 
-Bool16 RTCPNaduPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength)
+bool RTCPNaduPacket::ParseAPPData(UInt8* inPacketBuffer, UInt32 inPacketLength)
 {
 
 	if (!this->ParseNaduPacket(inPacketBuffer, inPacketLength))
@@ -565,7 +565,7 @@ NaduReport* NaduList::GetEarliestReport()
 }
 
 
-Bool16 NaduList::AddReport(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 *outID)
+bool NaduList::AddReport(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 *outID)
 {
 	if (NULL == fNaduReportList)
 		return false;

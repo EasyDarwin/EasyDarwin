@@ -66,7 +66,7 @@ const int       stssPos_SampleTable = 8;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_stss::QTAtom_stss(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
+QTAtom_stss::QTAtom_stss(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
 	fNumEntries(0), fSyncSampleTable(NULL), fTable(NULL), fTableSize(0)
 {
@@ -90,9 +90,9 @@ QTAtom_stss::~QTAtom_stss()
 // -------------------------------------
 // Initialization functions
 //
-Bool16 QTAtom_stss::Initialize()
+bool QTAtom_stss::Initialize()
 {
-	Bool16      initSucceeds = false;
+	bool      initSucceeds = false;
 	UInt32      tempInt32;
 
 

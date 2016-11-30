@@ -40,7 +40,7 @@ SInt32 SDPContainer::AddHeaderLine(StrPtrLen *theLinePtr)
 	fNumUsedLines++;
 	if (fNumUsedLines == fNumSDPLines)
 	{
-		SDPLine* tempSDPLineArray = NEW SDPLine[fNumSDPLines * 2];
+		SDPLine* tempSDPLineArray = new SDPLine[fNumSDPLines * 2];
 		for (int i = 0; i < fNumSDPLines; i++)
 		{
 			tempSDPLineArray[i].Set(fSDPLineArray[i].Ptr, fSDPLineArray[i].Len);
@@ -81,7 +81,7 @@ SDPLine* SDPContainer::GetNextLine()
 		return &fSDPLineArray[fCurrentLine];
 	}
 
-	return NULL;
+	return nullptr;
 
 }
 
@@ -93,7 +93,7 @@ SDPLine* SDPContainer::GetLine(SInt32 lineIndex)
 		return &fSDPLineArray[lineIndex];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void SDPContainer::SetLine(SInt32 index)
@@ -112,13 +112,13 @@ void SDPContainer::Parse()
 	char*	    validChars = "vosiuepcbtrzkam";
 	char        nameValueSeparator = '=';
 
-	Bool16      valid = true;
+	bool      valid = true;
 
 	StringParser	sdpParser(&fSDPBuffer);
 	StrPtrLen		line;
 	StrPtrLen 		fieldName;
 	StrPtrLen		space;
-	Bool16          foundLine = false;
+	bool          foundLine = false;
 
 	while (sdpParser.GetDataRemaining() != 0)
 	{
@@ -155,7 +155,7 @@ void SDPContainer::Parse()
 		}
 
 		lineParser.ConsumeUntil(&fieldName, nameValueSeparator);
-		if ((fieldName.Len != 1) || (::strchr(validChars, fieldName.Ptr[0]) == NULL))
+		if ((fieldName.Len != 1) || (::strchr(validChars, fieldName.Ptr[0]) == nullptr))
 		{
 			valid = false; // line doesn't begin with one of the valid characters followed by an "="
 			break;
@@ -190,17 +190,17 @@ void SDPContainer::Initialize()
 	fCurrentLine = 0;
 	fNumUsedLines = 0;
 	delete[] fSDPLineArray;
-	fSDPLineArray = NEW SDPLine[fNumSDPLines];
+	fSDPLineArray = new SDPLine[fNumSDPLines];
 	fValid = false;
 	fReqLines = 0;
 	::memset(fFieldStr, sizeof(fFieldStr), 0);
 }
 
-Bool16 SDPContainer::SetSDPBuffer(char *sdpBuffer)
+bool SDPContainer::SetSDPBuffer(char *sdpBuffer)
 {
 
 	Initialize();
-	if (sdpBuffer != NULL)
+	if (sdpBuffer != nullptr)
 	{
 		fSDPBuffer.Set(sdpBuffer);
 		Parse();
@@ -209,10 +209,10 @@ Bool16 SDPContainer::SetSDPBuffer(char *sdpBuffer)
 	return IsSDPBufferValid();
 }
 
-Bool16 SDPContainer::SetSDPBuffer(StrPtrLen *sdpBufferPtr)
+bool SDPContainer::SetSDPBuffer(StrPtrLen *sdpBufferPtr)
 {
 	Initialize();
-	if (sdpBufferPtr != NULL)
+	if (sdpBufferPtr != nullptr)
 	{
 		fSDPBuffer.Set(sdpBufferPtr->Ptr, sdpBufferPtr->Len);
 		Parse();
@@ -244,9 +244,9 @@ void  SDPContainer::PrintAllLines()
 		qtss_printf("SDPContainer::PrintAllLines no lines\n");
 }
 
-Bool16 SDPLineSorter::ValidateSessionHeader(StrPtrLen *theHeaderLinePtr)
+bool SDPLineSorter::ValidateSessionHeader(StrPtrLen *theHeaderLinePtr)
 {
-	if (NULL == theHeaderLinePtr || 0 == theHeaderLinePtr->Len || NULL == theHeaderLinePtr->Ptr)
+	if (nullptr == theHeaderLinePtr || 0 == theHeaderLinePtr->Len || nullptr == theHeaderLinePtr->Ptr)
 		return false;
 
 	// check for a duplicate range line.
@@ -266,11 +266,11 @@ char SDPLineSorter::sessionSingleLines[] = "vtosiuepcbzk";    // return only 1 o
 StrPtrLen  SDPLineSorter::sEOL("\r\n");
 StrPtrLen  SDPLineSorter::sMaxBandwidthTag("b=AS:");
 
-SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMediaBandwidthPercent, SDPContainer *insertMediaLinesArray) : fSessionLineCount(0), fSDPSessionHeaders(NULL, 0), fSDPMediaHeaders(NULL, 0)
+SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMediaBandwidthPercent, SDPContainer *insertMediaLinesArray) : fSessionLineCount(0), fSDPSessionHeaders(nullptr, 0), fSDPMediaHeaders(nullptr, 0)
 {
 
-	Assert(rawSDPContainerPtr != NULL);
-	if (NULL == rawSDPContainerPtr)
+	Assert(rawSDPContainerPtr != nullptr);
+	if (nullptr == rawSDPContainerPtr)
 		return;
 
 	StrPtrLen theSDPData(rawSDPContainerPtr->fSDPBuffer.Ptr, rawSDPContainerPtr->fSDPBuffer.Len);
@@ -282,9 +282,9 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
 		fMediaHeaders.Set(mediaStartPtr, mediaLen);
 		StringParser sdpParser(&fMediaHeaders);
 		SDPLine sdpLine;
-		Bool16 foundLine = false;
-		Bool16 newMediaSection = true;
-		SDPLine* insertLine = NULL;
+		bool foundLine = false;
+		bool newMediaSection = true;
+		SDPLine* insertLine = nullptr;
 
 		while (sdpParser.GetDataRemaining() > 0)
 		{
@@ -338,13 +338,13 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
 	//qtss_printf("\nSession raw Lines:\n"); fSessionSDPContainer.PrintAllLines();
 
 	SInt16 numHeaderTypes = sizeof(SDPLineSorter::sSessionOrderedLines) - 1;
-	Bool16 addLine = true;
+	bool addLine = true;
 	for (SInt16 fieldTypeIndex = 0; fieldTypeIndex < numHeaderTypes; fieldTypeIndex++)
 	{
 		SInt32 lineIndex = fSessionSDPContainer.FindHeaderLineType(SDPLineSorter::sSessionOrderedLines[fieldTypeIndex], 0);
 		StrPtrLen *theHeaderLinePtr = fSessionSDPContainer.GetLine(lineIndex);
 
-		while (theHeaderLinePtr != NULL)
+		while (theHeaderLinePtr != nullptr)
 		{
 			addLine = this->ValidateSessionHeader(theHeaderLinePtr);
 			if (addLine)
@@ -353,7 +353,7 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
 				fSDPSessionHeaders.Put(SDPLineSorter::sEOL);
 			}
 
-			if (NULL != ::strchr(sessionSingleLines, theHeaderLinePtr->Ptr[0])) // allow 1 of this type: use first found
+			if (nullptr != ::strchr(sessionSingleLines, theHeaderLinePtr->Ptr[0])) // allow 1 of this type: use first found
 				break; // move on to next line type
 
 			lineIndex = fSessionSDPContainer.FindHeaderLineType(SDPLineSorter::sSessionOrderedLines[fieldTypeIndex], lineIndex + 1);
@@ -366,7 +366,7 @@ SDPLineSorter::SDPLineSorter(SDPContainer *rawSDPContainerPtr, Float32 adjustMed
 
 char* SDPLineSorter::GetSortedSDPCopy()
 {
-	char* fullbuffCopy = NEW char[fSessionHeaders.Len + fMediaHeaders.Len + 2];
+	char* fullbuffCopy = new char[fSessionHeaders.Len + fMediaHeaders.Len + 2];
 	SInt32 buffPos = 0;
 	memcpy(&fullbuffCopy[buffPos], fSessionHeaders.Ptr, fSessionHeaders.Len);
 	buffPos += fSessionHeaders.Len;

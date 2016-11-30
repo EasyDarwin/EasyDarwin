@@ -45,9 +45,9 @@ enum {
 	kRunServerDebugLogging_On = 1 << 1 // not implemented
 };
 
-inline Bool16 DebugOn(QTSServer* server) { return (server->GetDebugOptions() != kRunServerDebug_Off) ? true : false; }
-inline Bool16 DebugDisplayOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugDisplay_On) ? true : false; }
-inline Bool16 DebugLogOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugLogging_On) ? true : false; }
+inline bool DebugOn(QTSServer* server) { return (server->GetDebugOptions() != kRunServerDebug_Off) ? true : false; }
+inline bool DebugDisplayOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugDisplay_On) ? true : false; }
+inline bool DebugLogOn(QTSServer* server) { return (server->GetDebugOptions() & kRunServerDebugLogging_On) ? true : false; }
 
 //
 // This function starts the Streaming Server. Pass in a source
@@ -62,7 +62,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource,
 	UInt16 inPortOverride,
 	int statsUpdateInterval,
 	QTSS_ServerState inInitialState,
-	Bool16 inDontFork,
+	bool inDontFork,
 	UInt32 debugLevel,
 	UInt32 debugOptions);
 
@@ -72,10 +72,10 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource,
 void RunServer();
 
 // write pid to file
-void WritePid(Bool16 forked);
+void WritePid(bool forked);
 
 // clean the pid file
-void CleanPid(Bool16 force);
+void CleanPid(bool force);
 
 // make the status file
 void LogStatus(QTSS_ServerState theServerState);

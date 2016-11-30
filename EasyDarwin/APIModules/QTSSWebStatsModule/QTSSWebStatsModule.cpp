@@ -55,7 +55,7 @@ static QTSS_ModulePrefsObject   sSvrControlPrefs = NULL;
 static QTSS_ModulePrefsObject   sPrefs = NULL;
 static QTSS_PrefsObject         sServerPrefs = NULL;
 
-static Bool16                   sFalse = false;
+static bool                   sFalse = false;
 static time_t                   sStartupTime = 0;
 
 static char*	sDefaultURL = "";
@@ -67,7 +67,7 @@ static QTSS_Error   QTSSWebStatsModuleDispatch(QTSS_Role inRole, QTSS_RoleParamP
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error FilterRequest(QTSS_Filter_Params* inParams);
-static void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayHelp, StrPtrLen* fieldList);
+static void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, bool displayHelp, StrPtrLen* fieldList);
 static char*    GetPrefAsString(QTSS_ModulePrefsObject inPrefsObject, char* inPrefName);
 
 
@@ -186,7 +186,7 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
 		if (fullRequest.Expect('/'))
 		{
 			UInt32  refreshInterval = 0;
-			Bool16  displayHelp = false;
+			bool  displayHelp = false;
 
 
 			OSCharArrayDeleter theWebStatsURL(GetPrefAsString(sPrefs, sDefaultURLPrefName));
@@ -236,7 +236,7 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
 }
 
 
-void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayHelp, StrPtrLen* fieldList)
+void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, bool displayHelp, StrPtrLen* fieldList)
 {
 	struct FieldIndex {
 		char*   fieldName;
@@ -694,7 +694,7 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayH
 
 		case 28:
 			{
-				(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsRTPTimeout, 0, &thePrefStr);
+				(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsRTPSessionTimeout, 0, &thePrefStr);
 				qtss_sprintf(buffer, "<b>RTP Timeout: </b> %s<BR>\n", thePrefStr);
 				(void)QTSS_Write(inStream, buffer, ::strlen(buffer), NULL, 0);
 			}
@@ -886,7 +886,7 @@ void SendStats(QTSS_StreamRef inStream, UInt32  refreshInterval, Bool16 displayH
 
 		case 50:
 			{
-				Bool16 isOutOfDescriptors = false;
+				bool isOutOfDescriptors = false;
 				theLen = sizeof(isOutOfDescriptors);
 				(void)QTSS_GetValue(sServer, qtssSvrIsOutOfDescriptors, 0, &isOutOfDescriptors, &theLen);
 

@@ -72,7 +72,7 @@ namespace boost
           void run2(tuple_indices<Indices...>)
           {
 
-              invoke(std::move(std::get<0>(fp)), std::move(std::get<Indices>(fp))...);
+              detail::invoke(std::move(std::get<0>(fp)), std::move(std::get<Indices>(fp))...);
           }
           void run()
           {
@@ -173,7 +173,6 @@ namespace boost
     private:
         bool start_thread_noexcept();
         bool start_thread_noexcept(const attributes& attr);
-    //public:
         void start_thread()
         {
           if (!start_thread_noexcept())
@@ -355,6 +354,8 @@ namespace boost
 
 #if defined BOOST_THREAD_PROVIDES_THREAD_MOVE_ASSIGN_CALLS_TERMINATE_IF_JOINABLE
             if (joinable()) std::terminate();
+#else
+            detach();
 #endif
             thread_info=BOOST_THREAD_RV(other).thread_info;
             BOOST_THREAD_RV(other).thread_info.reset();
@@ -485,9 +486,9 @@ namespace boost
         bool try_join_until(const chrono::time_point<Clock, Duration>& t)
         {
           using namespace chrono;
-          system_clock::time_point     s_now = system_clock::now();
           bool joined= false;
           do {
+            system_clock::time_point     s_now = system_clock::now();
             typename Clock::duration   d = ceil<nanoseconds>(t-Clock::now());
             if (d <= Clock::duration::zero()) return false; // in case the Clock::time_point t is already reached
             joined = try_join_until(s_now + d);

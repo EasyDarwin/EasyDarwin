@@ -89,9 +89,9 @@ UInt8 StrPtrLen::sNonPrintChars[] =
 
 char* StrPtrLen::GetAsCString() const
 {
-	// convert to a "NEW'd" zero terminated char array
+	// convert to a "new'd" zero terminated char array
 	// caler is reponsible for the newly allocated memory
-	char *theString = NEW char[Len + 1];
+	char *theString = new char[Len + 1];
 
 	if (Ptr && Len > 0)
 		::memcpy(theString, Ptr, Len);
@@ -102,12 +102,12 @@ char* StrPtrLen::GetAsCString() const
 }
 
 
-Bool16 StrPtrLen::Equal(const StrPtrLen& compare) const
+bool StrPtrLen::Equal(const StrPtrLen& compare) const
 {
-	if (NULL == compare.Ptr && NULL == Ptr)
+	if (nullptr == compare.Ptr && nullptr == Ptr)
 		return true;
 
-	if ((NULL == compare.Ptr) || (NULL == Ptr))
+	if ((nullptr == compare.Ptr) || (nullptr == Ptr))
 		return false;
 
 	if ((compare.Len == Len) && (memcmp(compare.Ptr, Ptr, Len) == 0))
@@ -116,12 +116,12 @@ Bool16 StrPtrLen::Equal(const StrPtrLen& compare) const
 		return false;
 }
 
-Bool16 StrPtrLen::Equal(const char* compare) const
+bool StrPtrLen::Equal(const char* compare) const
 {
-	if (NULL == compare && NULL == Ptr)
+	if (nullptr == compare && nullptr == Ptr)
 		return true;
 
-	if ((NULL == compare) || (NULL == Ptr))
+	if ((nullptr == compare) || (nullptr == Ptr))
 		return false;
 
 	if ((::strlen(compare) == Len) && (memcmp(compare, Ptr, Len) == 0))
@@ -132,10 +132,10 @@ Bool16 StrPtrLen::Equal(const char* compare) const
 
 
 
-Bool16 StrPtrLen::NumEqualIgnoreCase(const char* compare, const UInt32 len) const
+bool StrPtrLen::NumEqualIgnoreCase(const char* compare, const UInt32 len) const
 {
 	// compare thru the first "len: bytes
-	Assert(compare != NULL);
+	Assert(compare != nullptr);
 
 	if (len <= Len)
 	{
@@ -147,9 +147,9 @@ Bool16 StrPtrLen::NumEqualIgnoreCase(const char* compare, const UInt32 len) cons
 	return false;
 }
 
-Bool16 StrPtrLen::EqualIgnoreCase(const char* compare, const UInt32 len) const
+bool StrPtrLen::EqualIgnoreCase(const char* compare, const UInt32 len) const
 {
-	Assert(compare != NULL);
+	Assert(compare != nullptr);
 	if (len == Len)
 	{
 		for (UInt32 x = 0; x < len; x++)
@@ -160,39 +160,39 @@ Bool16 StrPtrLen::EqualIgnoreCase(const char* compare, const UInt32 len) const
 	return false;
 }
 
-char* StrPtrLen::FindStringCase(char* queryCharStr, StrPtrLen* resultStr, Bool16 caseSensitive) const
+char* StrPtrLen::FindStringCase(char* queryCharStr, StrPtrLen* resultStr, bool caseSensitive) const
 {
 	// Be careful about exiting this method from the middle. This routine deletes allocated memory at the end.
 	// 
 
 	if (resultStr)
-		resultStr->Set(NULL, 0);
+		resultStr->Set(nullptr, 0);
 
-	Assert(NULL != queryCharStr);
-	if (NULL == queryCharStr) return NULL;
-	if (NULL == Ptr) return NULL;
-	if (0 == Len) return NULL;
+	Assert(nullptr != queryCharStr);
+	if (nullptr == queryCharStr) return nullptr;
+	if (nullptr == Ptr) return nullptr;
+	if (0 == Len) return nullptr;
 
 
 	StrPtrLen queryStr(queryCharStr);
-	char *editSource = NULL;
-	char *resultChar = NULL;
+	char *editSource = nullptr;
+	char *resultChar = nullptr;
 	char lastSourceChar = Ptr[Len - 1];
 
 	if (lastSourceChar != 0) // need to modify for termination. 
 	{
-		editSource = NEW char[Len + 1]; // Ptr could be a static string so make a copy
+		editSource = new char[Len + 1]; // Ptr could be a static string so make a copy
 		::memcpy(editSource, Ptr, Len);
 		editSource[Len] = 0; // this won't work on static strings so we are modifing a new string here
 	}
 
 	char *queryString = queryCharStr;
-	char *dupSourceString = NULL;
-	char *dupQueryString = NULL;
+	char *dupSourceString = nullptr;
+	char *dupQueryString = nullptr;
 	char *sourceString = Ptr;
 	UInt32 foundLen = 0;
 
-	if (editSource != NULL) // a copy of the source ptr and len 0 terminated
+	if (editSource != nullptr) // a copy of the source ptr and len 0 terminated
 		sourceString = editSource;
 
 	if (!caseSensitive)
@@ -214,18 +214,18 @@ char* StrPtrLen::FindStringCase(char* queryCharStr, StrPtrLen* resultStr, Bool16
 		resultChar = ::strstr(sourceString, queryString);
 	}
 
-	if (resultChar != NULL) // get the start offset
+	if (resultChar != nullptr) // get the start offset
 	{
 		foundLen = resultChar - sourceString;
 		resultChar = Ptr + foundLen;  // return a pointer in the source buffer
 		if (resultChar > (Ptr + Len)) // make sure it is in the buffer
-			resultChar = NULL;
+			resultChar = nullptr;
 	}
 
-	if (editSource != NULL)
+	if (editSource != nullptr)
 		delete[] editSource;
 
-	if (resultStr != NULL && resultChar != NULL)
+	if (resultStr != nullptr && resultChar != nullptr)
 		resultStr->Set(resultChar, queryStr.Len);
 
 #if STRPTRLENTESTING    
@@ -238,7 +238,7 @@ char* StrPtrLen::FindStringCase(char* queryCharStr, StrPtrLen* resultStr, Bool16
 
 UInt32 StrPtrLen::RemoveWhitespace()
 {
-	if (Ptr == NULL || Len == 0)
+	if (Ptr == nullptr || Len == 0)
 		return 0;
 
 	char *EndPtr = Ptr + Len; // one past last char
@@ -265,7 +265,7 @@ UInt32 StrPtrLen::RemoveWhitespace()
 
 UInt32 StrPtrLen::TrimLeadingWhitespace()
 {
-	if (Ptr == NULL || Len == 0)
+	if (Ptr == nullptr || Len == 0)
 		return 0;
 
 	char *EndPtr = Ptr + Len; //one past last char
@@ -284,7 +284,7 @@ UInt32 StrPtrLen::TrimLeadingWhitespace()
 
 UInt32 StrPtrLen::TrimTrailingWhitespace()
 {
-	if (Ptr == NULL || Len == 0)
+	if (Ptr == nullptr || Len == 0)
 		return 0;
 
 	char *theCharPtr = Ptr + (Len - 1); // last char
@@ -316,7 +316,7 @@ void StrPtrLen::PrintStr()
 
 	}
 
-	if (thestr != NULL)
+	if (thestr != nullptr)
 	{
 		qtss_printf(thestr);
 		delete[]thestr;
@@ -326,18 +326,18 @@ void StrPtrLen::PrintStr()
 void StrPtrLen::PrintStr(char* appendStr)
 {
 	StrPtrLen::PrintStr();
-	if (appendStr != NULL)
+	if (appendStr != nullptr)
 		qtss_printf(appendStr);
 }
 
 void StrPtrLen::PrintStr(char* prependStr, char* appendStr)
 {
-	if (prependStr != NULL)
+	if (prependStr != nullptr)
 		qtss_printf(prependStr);
 
 	StrPtrLen::PrintStr();
 
-	if (appendStr != NULL)
+	if (appendStr != nullptr)
 		qtss_printf(appendStr);
 }
 
@@ -368,13 +368,13 @@ void StrPtrLen::PrintStrEOL(char* stopStr, char* appendStr)
 	}
 
 	SInt32 stopLen = 0;
-	if (stopStr != NULL)
+	if (stopStr != nullptr)
 		stopLen = ::strlen(stopStr);
 
 	if (stopLen > 0 && stopLen <= i)
 	{
 		char* stopPtr = ::strstr(thestr, stopStr);
-		if (stopPtr != NULL)
+		if (stopPtr != nullptr)
 		{
 			stopPtr += stopLen;
 			*stopPtr = 0;
@@ -383,8 +383,8 @@ void StrPtrLen::PrintStrEOL(char* stopStr, char* appendStr)
 	}
 
 	char * theStrLine = thestr;
-	char * nextLine = NULL;
-	char * theChar = NULL;
+	char * nextLine = nullptr;
+	char * theChar = nullptr;
 	static char *cr = "\\r";
 	static char *lf = "\\n\n";
 	SInt32 tempLen = i;
@@ -403,13 +403,13 @@ void StrPtrLen::PrintStrEOL(char* stopStr, char* appendStr)
 			nextLine = &theStrLine[i + 1];
 		}
 
-		if (nextLine != NULL)
+		if (nextLine != nullptr)
 		{
 			qtss_printf(theStrLine);
 			qtss_printf(theChar);
 
 			theStrLine = nextLine;
-			nextLine = NULL;
+			nextLine = nullptr;
 			tempLen -= (i + 1);
 			i = -1;
 		}
@@ -417,7 +417,7 @@ void StrPtrLen::PrintStrEOL(char* stopStr, char* appendStr)
 	qtss_printf(theStrLine);
 	delete[]thestr;
 
-	if (appendStr != NULL)
+	if (appendStr != nullptr)
 		qtss_printf(appendStr);
 
 }
@@ -426,7 +426,7 @@ void StrPtrLen::PrintStrEOL(char* stopStr, char* appendStr)
 
 
 #if STRPTRLENTESTING
-Bool16  StrPtrLen::Test()
+bool  StrPtrLen::Test()
 {
 	static char* test1 = "2347.;.][';[;]abcdefghijklmnopqrstuvwxyz#%#$$#";
 	static char* test2 = "2347.;.][';[;]ABCDEFGHIJKLMNOPQRSTUVWXYZ#%#$$#";
@@ -506,7 +506,7 @@ Bool16  StrPtrLen::Test()
 		return false;
 	if (outResultStr.Len > 0)
 		return false;
-	if (outResultStr.Ptr != NULL)
+	if (outResultStr.Ptr != nullptr)
 		return false;
 
 	query.Set(test3);
@@ -514,7 +514,7 @@ Bool16  StrPtrLen::Test()
 		return false;
 	if (outResultStr.Len > 0)
 		return false;
-	if (outResultStr.Ptr != NULL)
+	if (outResultStr.Ptr != nullptr)
 		return false;
 
 	query.Set(test1);

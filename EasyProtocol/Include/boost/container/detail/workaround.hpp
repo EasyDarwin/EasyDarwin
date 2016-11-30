@@ -11,27 +11,17 @@
 #ifndef BOOST_CONTAINER_DETAIL_WORKAROUND_HPP
 #define BOOST_CONTAINER_DETAIL_WORKAROUND_HPP
 
-#if defined(_MSC_VER)
-#  pragma once
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
 #endif
 
-#include <boost/container/detail/config_begin.hpp>
+#if defined(BOOST_HAS_PRAGMA_ONCE)
+#  pragma once
+#endif
 
 #if    !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)\
     && !defined(BOOST_INTERPROCESS_DISABLE_VARIADIC_TMPL)
    #define BOOST_CONTAINER_PERFECT_FORWARDING
-#endif
-
-#if defined(BOOST_NO_CXX11_NOEXCEPT)
-   #if defined(BOOST_MSVC)
-      #define BOOST_CONTAINER_NOEXCEPT throw()
-   #else
-      #define BOOST_CONTAINER_NOEXCEPT
-   #endif
-   #define BOOST_CONTAINER_NOEXCEPT_IF(x)
-#else
-   #define BOOST_CONTAINER_NOEXCEPT    noexcept
-   #define BOOST_CONTAINER_NOEXCEPT_IF(x) noexcept(x)
 #endif
 
 #if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && defined(__GXX_EXPERIMENTAL_CXX0X__)\
@@ -67,6 +57,36 @@
 #define BOOST_CONTAINER_DOCIGN(T) T
 #define BOOST_CONTAINER_DOCONLY(T)
 
-#include <boost/container/detail/config_end.hpp>
+/*
+   we need to import/export our code only if the user has specifically
+   asked for it by defining either BOOST_ALL_DYN_LINK if they want all boost
+   libraries to be dynamically linked, or BOOST_CONTAINER_DYN_LINK
+   if they want just this one to be dynamically liked:
+*/
+#if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_CONTAINER_DYN_LINK)
+
+   /* export if this is our own source, otherwise import: */
+   #ifdef BOOST_CONTAINER_SOURCE
+   #  define BOOST_CONTAINER_DECL BOOST_SYMBOL_EXPORT
+   #else
+   #  define BOOST_CONTAINER_DECL BOOST_SYMBOL_IMPORT
+   
+   #endif  /* BOOST_CONTAINER_SOURCE */
+#else
+   #define BOOST_CONTAINER_DECL
+#endif  /* DYN_LINK */
+
+//#define BOOST_CONTAINER_DISABLE_FORCEINLINE
+
+#if defined(BOOST_CONTAINER_DISABLE_FORCEINLINE)
+   #define BOOST_CONTAINER_FORCEINLINE inline
+#elif defined(BOOST_CONTAINER_FORCEINLINE_IS_BOOST_FORCELINE)
+   #define BOOST_CONTAINER_FORCEINLINE BOOST_FORCEINLINE
+#elif defined(BOOST_MSVC) && defined(_DEBUG)
+   //"__forceinline" and MSVC seems to have some bugs in debug mode
+   #define BOOST_CONTAINER_FORCEINLINE inline
+#else
+   #define BOOST_CONTAINER_FORCEINLINE BOOST_FORCEINLINE
+#endif
 
 #endif   //#ifndef BOOST_CONTAINER_DETAIL_WORKAROUND_HPP

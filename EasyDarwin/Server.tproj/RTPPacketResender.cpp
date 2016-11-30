@@ -34,8 +34,8 @@
 
 #include "RTPPacketResender.h"
 #include "RTPStream.h"
-#include "atomic.h"
 #include "OSMutex.h"
+#include <new>
 
 #if RTP_PACKET_RESENDER_DEBUGGING
 #include "QTSSRollingLog.h"
@@ -50,7 +50,7 @@ public:
 
 	virtual char* GetLogName()
 	{
-		char *logFileNameStr = NEW char[80];
+		char *logFileNameStr = new char[80];
 
 		::strcpy(logFileNameStr, fLogFName);
 		return logFileNameStr;
@@ -58,7 +58,7 @@ public:
 
 	virtual char* GetLogDir()
 	{
-		char *logDirStr = NEW char[80];
+		char *logDirStr = new char[80];
 
 		::strcpy(logDirStr, DEFAULTPATHS_LOG_DIR);
 		return logDirStr;
@@ -78,7 +78,7 @@ static const UInt32 kInitialPacketArraySize = 64;// must be multiple of kPacketA
 
 static const UInt32 kMaxDataBufferSize = 1600;
 OSBufferPool RTPPacketResender::sBufferPool(kMaxDataBufferSize);
-unsigned int    RTPPacketResender::sNumWastedBytes = 0;
+std::atomic_uint RTPPacketResender::sNumWastedBytes{ 0 };
 
 RTPPacketResender::RTPPacketResender()
 	: fBandwidthTracker(NULL),
@@ -98,7 +98,7 @@ RTPPacketResender::RTPPacketResender()
 	fLastUsed(0),
 	fPacketQMutex()
 {
-	fPacketArray = (RTPResenderEntry*)NEW char[sizeof(RTPResenderEntry) * fPacketArraySize];
+	fPacketArray = (RTPResenderEntry*)new char[sizeof(RTPResenderEntry) * fPacketArraySize];
 	::memset(fPacketArray, 0, sizeof(RTPResenderEntry) * fPacketArraySize);
 
 }
@@ -108,7 +108,8 @@ RTPPacketResender::~RTPPacketResender()
 	for (UInt32 x = 0; x < fPacketArraySize; x++)
 	{
 		if (fPacketArray[x].fPacketSize > 0)
-			atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - fPacketArray[x].fPacketSize);
+			//atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - fPacketArray[x].fPacketSize);
+			sNumWastedBytes.fetch_sub(kMaxDataBufferSize - fPacketArray[x].fPacketSize);
 		if (fPacketArray[x].fPacketData != NULL)
 		{
 			if (fPacketArray[x].fIsSpecialBuffer)
@@ -242,7 +243,7 @@ RTPResenderEntry*   RTPPacketResender::GetEmptyEntry(UInt16 inSeqNum, UInt32 inP
 	if (fPacketsInList == fPacketArraySize) // allocate a new array
 	{
 		fPacketArraySize += kPacketArrayIncreaseInterval;
-		RTPResenderEntry* tempArray = (RTPResenderEntry*)NEW char[sizeof(RTPResenderEntry) * fPacketArraySize];
+		RTPResenderEntry* tempArray = (RTPResenderEntry*)new char[sizeof(RTPResenderEntry) * fPacketArraySize];
 		::memset(tempArray, 0, sizeof(RTPResenderEntry) * fPacketArraySize);
 		::memcpy(tempArray, fPacketArray, sizeof(RTPResenderEntry) * fPacketsInList);
 		delete[] fPacketArray;
@@ -280,7 +281,7 @@ RTPResenderEntry*   RTPPacketResender::GetEmptyEntry(UInt16 inSeqNum, UInt32 inP
 	{
 		//sBufferPool.Put(theEntry->fPacketData);
 		theEntry->fIsSpecialBuffer = true;
-		theEntry->fPacketData = NEW char[inPacketSize];
+		theEntry->fPacketData = new char[inPacketSize];
 	}
 	else// It is not special, it's from the buffer pool
 	{
@@ -343,9 +344,10 @@ void RTPPacketResender::AddPacket(void * inRTPPacket, UInt32 packetSize, SInt32 
 
 		//
 		// Track the number of wasted bytes we have
-		atomic_add(&sNumWastedBytes, kMaxDataBufferSize - packetSize);
+		//atomic_add(&sNumWastedBytes, kMaxDataBufferSize - packetSize);
+		sNumWastedBytes.fetch_add(kMaxDataBufferSize - packetSize);
 
-		//PLDoubleLinkedListNode<RTPResenderEntry> * listNode = NEW PLDoubleLinkedListNode<RTPResenderEntry>( new RTPResenderEntry(inRTPPacket, packetSize, ageLimit, fRTTEstimator.CurRetransmitTimeout() ) );
+		//PLDoubleLinkedListNode<RTPResenderEntry> * listNode = new PLDoubleLinkedListNode<RTPResenderEntry>( new RTPResenderEntry(inRTPPacket, packetSize, ageLimit, fRTTEstimator.CurRetransmitTimeout() ) );
 		//fAckList.AddNodeToTail(listNode);
 		fBandwidthTracker->FillWindow(packetSize);
 	}
@@ -439,7 +441,7 @@ void RTPPacketResender::AckPacket(UInt16 inSeqNum, SInt64& inCurTimeInMsec)
 	}
 }
 
-void RTPPacketResender::RemovePacket(UInt32 packetIndex, Bool16 reuseIndex)
+void RTPPacketResender::RemovePacket(UInt32 packetIndex, bool reuseIndex)
 {
 	//OSMutexLocker packetQLocker(&fPacketQMutex);
 
@@ -456,7 +458,9 @@ void RTPPacketResender::RemovePacket(UInt32 packetIndex, Bool16 reuseIndex)
 
 	//
 	// Track the number of wasted bytes we have
-	atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - theEntry->fPacketSize);
+	//atomic_sub(&sNumWastedBytes, kMaxDataBufferSize - theEntry->fPacketSize);
+	sNumWastedBytes.fetch_sub(kMaxDataBufferSize - theEntry->fPacketSize);
+
 	Assert(theEntry->fPacketSize > 0);
 
 	//

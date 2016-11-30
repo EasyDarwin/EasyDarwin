@@ -35,7 +35,6 @@
 #define __OSFILE_H_
 
 #include <stdio.h>
-#include <time.h>
 
 #include "OSHeaders.h"
 #include "StrPtrLen.h"
@@ -47,13 +46,15 @@ class FileBlockBuffer
 {
 
 public:
-	FileBlockBuffer() : fArrayIndex(-1), fBufferSize(0), fBufferFillSize(0), fDataBuffer(NULL), fDummy(0) {}
+	FileBlockBuffer() : fArrayIndex(-1), fBufferSize(0), fBufferFillSize(0), fDataBuffer(nullptr), fDummy(0) {}
 	~FileBlockBuffer();
 	void AllocateBuffer(UInt32 buffSize);
 	void TestBuffer();
-	void CleanBuffer() { ::memset(fDataBuffer, 0, fBufferSize); }
+	void CleanBuffer() const
+	{ ::memset(fDataBuffer, 0, fBufferSize); }
 	void SetFillSize(UInt32 fillSize) { fBufferFillSize = fillSize; }
-	UInt32 GetFillSize() { return fBufferFillSize; }
+	UInt32 GetFillSize() const
+	{ return fBufferFillSize; }
 	OSQueueElem* GetQElem() { return &fQElem; }
 	SInt64              fArrayIndex;
 	UInt32              fBufferSize;
@@ -65,13 +66,15 @@ public:
 
 class FileBlockPool
 {
-	enum {
+	enum
+	{
 		kDataBufferUnitSizeExp = 15,// base 2 exponent
 		kBufferUnitSize = (1 << kDataBufferUnitSizeExp) // 32Kbytes
 	};
 
 public:
-	FileBlockPool() : fMaxBuffers(1), fNumCurrentBuffers(0), fBufferUnitSizeBytes(kBufferUnitSize) {}
+	FileBlockPool() : fMaxBuffers(1), fNumCurrentBuffers(0), fBufferInc(0), fBufferUnitSizeBytes(kBufferUnitSize), fBufferDataSizeBytes(0)
+	{}
 	~FileBlockPool();
 
 	void SetMaxBuffers(UInt32 maxBuffers) { if (maxBuffers > 0) fMaxBuffers = maxBuffers; }
@@ -82,10 +85,14 @@ public:
 	void DecCurBuffers() { if (fNumCurrentBuffers > 0) fNumCurrentBuffers--; }
 
 	void SetBufferUnitSize(UInt32 inUnitSizeInK) { fBufferUnitSizeBytes = inUnitSizeInK * 1024; }
-	UInt32 GetBufferUnitSizeBytes() { return fBufferUnitSizeBytes; }
-	UInt32 GetMaxBuffers() { return fMaxBuffers; }
-	UInt32 GetIncBuffers() { return fBufferInc; }
-	UInt32 GetNumCurrentBuffers() { return fNumCurrentBuffers; }
+	UInt32 GetBufferUnitSizeBytes() const
+	{ return fBufferUnitSizeBytes; }
+	UInt32 GetMaxBuffers() const
+	{ return fMaxBuffers; }
+	UInt32 GetIncBuffers() const
+	{ return fBufferInc; }
+	UInt32 GetNumCurrentBuffers() const
+	{ return fNumCurrentBuffers; }
 	void DeleteBlockPool();
 	FileBlockBuffer* GetBufferElement(UInt32 bufferSizeBytes);
 	void MarkUsed(FileBlockBuffer* inBuffPtr);
@@ -104,24 +111,33 @@ class FileMap
 {
 
 public:
-	FileMap() :fFileMapArray(NULL), fDataBufferSize(0), fMapArraySize(0), fNumBuffSizeUnits(0) {}
-	~FileMap() { fFileMapArray = NULL; }
+	FileMap() :fFileMapArray(nullptr), fDataBufferSize(0), fMapArraySize(0), fNumBuffSizeUnits(0) {}
+	~FileMap() { fFileMapArray = nullptr; }
 	void    AllocateBufferMap(UInt32 inUnitSizeInK, UInt32 inNumBuffSizeUnits, UInt32 inBufferIncCount, UInt32 inMaxBitRateBuffSizeInBlocks, UInt64 fileLen, UInt32 inBitRate);
-	char*   GetBuffer(SInt64 bufIndex, Bool16* outIsEmptyBuff);
-	void    TestBuffer(SInt32 bufIndex) { Assert(bufIndex >= 0); fFileMapArray[bufIndex]->TestBuffer(); };
-	void    SetIndexBuffFillSize(SInt32 bufIndex, UInt32 fillSize) { Assert(bufIndex >= 0); fFileMapArray[bufIndex]->SetFillSize(fillSize); }
-	UInt32  GetMaxBufSize() { return fDataBufferSize; }
-	UInt32  GetBuffSize(SInt64 bufIndex) { Assert(bufIndex >= 0); return fFileMapArray[bufIndex]->GetFillSize(); }
-	UInt32  GetIncBuffers() { return fBlockPool.GetIncBuffers(); }
+	char*   GetBuffer(SInt64 bufIndex, bool* outIsEmptyBuff);
+	void    TestBuffer(SInt32 bufIndex) const
+	{ Assert(bufIndex >= 0); fFileMapArray[bufIndex]->TestBuffer(); };
+	void    SetIndexBuffFillSize(SInt32 bufIndex, UInt32 fillSize) const
+	{ Assert(bufIndex >= 0); fFileMapArray[bufIndex]->SetFillSize(fillSize); }
+	UInt32  GetMaxBufSize() const
+	{ return fDataBufferSize; }
+	UInt32  GetBuffSize(SInt64 bufIndex) const
+	{ Assert(bufIndex >= 0); return fFileMapArray[bufIndex]->GetFillSize(); }
+	UInt32  GetIncBuffers() const
+	{ return fBlockPool.GetIncBuffers(); }
 	void    IncMaxBuffers() { fBlockPool.IncMaxBuffers(); }
 	void    DecMaxBuffers() { fBlockPool.DecMaxBuffers(); }
-	Bool16  Initialized() { return fFileMapArray == NULL ? false : true; }
+	bool  Initialized() const
+	{ return fFileMapArray == nullptr ? false : true; }
 	void    Clean();
 	void    DeleteMap();
 	void    DeleteOldBuffs();
-	SInt64  GetBuffIndex(UInt64 inPosition) { return inPosition / this->GetMaxBufSize(); }
-	SInt64  GetMaxBuffIndex() { Assert(fMapArraySize > 0); return fMapArraySize - 1; }
-	UInt64  GetBuffOffset(SInt64 bufIndex) { return (UInt64)(bufIndex * this->GetMaxBufSize()); }
+	SInt64  GetBuffIndex(UInt64 inPosition) const
+	{ return inPosition / this->GetMaxBufSize(); }
+	SInt64  GetMaxBuffIndex() const
+	{ Assert(fMapArraySize > 0); return fMapArraySize - 1; }
+	UInt64  GetBuffOffset(SInt64 bufIndex) const
+	{ return static_cast<UInt64>(bufIndex * this->GetMaxBufSize()); }
 	FileBlockPool fBlockPool;
 
 	FileBlockBuffer**   fFileMapArray;
@@ -138,11 +154,11 @@ class OSFileSource
 {
 public:
 
-	OSFileSource() : fFile(-1), fLength(0), fPosition(0), fReadPos(0), fShouldClose(true), fIsDir(false), fCacheEnabled(false)
+	OSFileSource() : fFile(-1), fLength(0), fPosition(0), fReadPos(0), fShouldClose(true), fIsDir(false), fModDate(0), fCacheEnabled(false)
 	{
 
 #if READ_LOG 
-		fFileLog = NULL;
+		fFileLog = nullptr;
 		fTrackID = 0;
 		fFilePath[0] = 0;
 #endif
@@ -154,7 +170,7 @@ public:
 		Set(inPath);
 
 #if READ_LOG 
-		fFileLog = NULL;
+		fFileLog = nullptr;
 		fTrackID = 0;
 		fFilePath[0] = 0;
 #endif      
@@ -173,17 +189,18 @@ public:
 	//following position in the file
 	void            Advise(UInt64 advisePos, UInt32 adviseAmt);
 
-	OS_Error    Read(void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL)
+	OS_Error    Read(void* inBuffer, UInt32 inLength, UInt32* outRcvLen = nullptr)
 	{
 		return ReadFromDisk(inBuffer, inLength, outRcvLen);
 	}
 
-	OS_Error    Read(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL);
-	OS_Error    ReadFromDisk(void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL);
-	OS_Error    ReadFromCache(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL);
-	OS_Error    ReadFromPos(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = NULL);
-	void        EnableFileCache(Bool16 enabled) { OSMutexLocker locker(&fMutex); fCacheEnabled = enabled; }
-	Bool16      GetCacheEnabled() { return fCacheEnabled; }
+	OS_Error    Read(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = nullptr);
+	OS_Error    ReadFromDisk(void* inBuffer, UInt32 inLength, UInt32* outRcvLen = nullptr);
+	OS_Error    ReadFromCache(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = nullptr);
+	OS_Error    ReadFromPos(UInt64 inPosition, void* inBuffer, UInt32 inLength, UInt32* outRcvLen = nullptr);
+	void        EnableFileCache(bool enabled) { OSMutexLocker locker(&fMutex); fCacheEnabled = enabled; }
+	bool      GetCacheEnabled() const
+	{ return fCacheEnabled; }
 	void        AllocateFileCache(UInt32 inUnitSizeInK = 32, UInt32 bufferSizeUnits = 0, UInt32 incBuffers = 1, UInt32 inMaxBitRateBuffSizeInBlocks = 8, UInt32 inBitRate = 32768)
 	{
 		fFileMap.AllocateBufferMap(inUnitSizeInK, bufferSizeUnits, incBuffers, inMaxBitRateBuffSizeInBlocks, fLength, inBitRate);
@@ -194,15 +211,21 @@ public:
 	OS_Error    FillBuffer(char* ioBuffer, char* buffStart, SInt32 bufIndex);
 
 	void            Close();
-	time_t          GetModDate() { return fModDate; }
-	UInt64          GetLength() { return fLength; }
-	UInt64          GetCurOffset() { return fPosition; }
+	time_t          GetModDate() const
+	{ return fModDate; }
+	UInt64          GetLength() const
+	{ return fLength; }
+	UInt64          GetCurOffset() const
+	{ return fPosition; }
 	void            Seek(SInt64 newPosition) { fPosition = newPosition; }
-	Bool16 IsValid() { return fFile != -1; }
-	Bool16 IsDir() { return fIsDir; }
+	bool IsValid() const
+	{ return fFile != -1; }
+	bool IsDir() const
+	{ return fIsDir; }
 
 	// For async I/O purposes
-	int             GetFD() { return fFile; }
+	int             GetFD() const
+	{ return fFile; }
 	void            SetTrackID(UInt32 trackID);
 	// So that close won't do anything
 	void ResetFD() { fFile = -1; }
@@ -215,14 +238,14 @@ private:
 	UInt64  fLength;
 	UInt64  fPosition;
 	UInt64  fReadPos;
-	Bool16  fShouldClose;
-	Bool16  fIsDir;
+	bool  fShouldClose;
+	bool  fIsDir;
 	time_t  fModDate;
 
 
 	OSMutex fMutex;
 	FileMap fFileMap;
-	Bool16  fCacheEnabled;
+	bool  fCacheEnabled;
 #if READ_LOG
 	FILE*               fFileLog;
 	char                fFilePath[1024];

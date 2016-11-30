@@ -11,7 +11,11 @@
 #ifndef BOOST_CONTAINER_CONTAINER_FWD_HPP
 #define BOOST_CONTAINER_CONTAINER_FWD_HPP
 
-#if defined(_MSC_VER)
+#ifndef BOOST_CONFIG_HPP
+#  include <boost/config.hpp>
+#endif
+
+#if defined(BOOST_HAS_PRAGMA_ONCE)
 #  pragma once
 #endif
 
@@ -20,6 +24,7 @@
 //!   - boost::container::vector
 //!   - boost::container::stable_vector
 //!   - boost::container::static_vector
+//!   - boost::container::small_vector
 //!   - boost::container::slist
 //!   - boost::container::list
 //!   - boost::container::set
@@ -34,10 +39,18 @@
 //!   - boost::container::string
 //!   - boost::container::wstring
 //!
-//! It forward declares the following allocators:
+//! Forward declares the following allocators:
 //!   - boost::container::allocator
 //!   - boost::container::node_allocator
 //!   - boost::container::adaptive_pool
+//!
+//! Forward declares the following polymorphic resource classes:
+//!   - boost::container::pmr::memory_resource
+//!   - boost::container::pmr::polymorphic_allocator
+//!   - boost::container::pmr::monotonic_buffer_resource
+//!   - boost::container::pmr::pool_options
+//!   - boost::container::pmr::unsynchronized_pool_resource
+//!   - boost::container::pmr::synchronized_pool_resource
 //!
 //! And finally it defines the following types
 
@@ -50,11 +63,18 @@
 
 namespace boost{
 namespace intrusive{
+namespace detail{
    //Create namespace to avoid compilation errors
-}}
+}}}
 
 namespace boost{ namespace container{ namespace container_detail{
    namespace bi = boost::intrusive;
+   namespace bid = boost::intrusive::detail;
+}}}
+
+namespace boost{ namespace container{ namespace pmr{
+   namespace bi = boost::intrusive;
+   namespace bid = boost::intrusive::detail;
 }}}
 
 #include <cstddef>
@@ -80,27 +100,34 @@ enum tree_type_enum
 
 #ifndef BOOST_CONTAINER_DOXYGEN_INVOKED
 
+template<class T>
+class new_allocator;
+
 template <class T
-         ,class Allocator = std::allocator<T> >
+         ,class Allocator = new_allocator<T> >
 class vector;
 
 template <class T
-         ,class Allocator = std::allocator<T> >
+         ,class Allocator = new_allocator<T> >
 class stable_vector;
 
 template <class T, std::size_t Capacity>
 class static_vector;
 
+template < class T, std::size_t N
+         , class Allocator= new_allocator<T> >
+class small_vector;
+
 template <class T
-         ,class Allocator = std::allocator<T> >
+         ,class Allocator = new_allocator<T> >
 class deque;
 
 template <class T
-         ,class Allocator = std::allocator<T> >
+         ,class Allocator = new_allocator<T> >
 class list;
 
 template <class T
-         ,class Allocator = std::allocator<T> >
+         ,class Allocator = new_allocator<T> >
 class slist;
 
 template<tree_type_enum TreeType, bool OptimizeSize>
@@ -110,67 +137,67 @@ typedef tree_opt<red_black_tree, true> tree_assoc_defaults;
 
 template <class Key
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<Key>
+         ,class Allocator = new_allocator<Key>
          ,class Options = tree_assoc_defaults >
 class set;
 
 template <class Key
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<Key>
+         ,class Allocator = new_allocator<Key>
          ,class Options = tree_assoc_defaults >
 class multiset;
 
 template <class Key
          ,class T
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<std::pair<const Key, T> >
+         ,class Allocator = new_allocator<std::pair<const Key, T> >
          ,class Options = tree_assoc_defaults >
 class map;
 
 template <class Key
          ,class T
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<std::pair<const Key, T> >
+         ,class Allocator = new_allocator<std::pair<const Key, T> >
          ,class Options = tree_assoc_defaults >
 class multimap;
 
 template <class Key
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<Key> >
+         ,class Allocator = new_allocator<Key> >
 class flat_set;
 
 template <class Key
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<Key> >
+         ,class Allocator = new_allocator<Key> >
 class flat_multiset;
 
 template <class Key
          ,class T
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<std::pair<Key, T> > >
+         ,class Allocator = new_allocator<std::pair<Key, T> > >
 class flat_map;
 
 template <class Key
          ,class T
          ,class Compare  = std::less<Key>
-         ,class Allocator = std::allocator<std::pair<Key, T> > >
+         ,class Allocator = new_allocator<std::pair<Key, T> > >
 class flat_multimap;
 
 template <class CharT
          ,class Traits = std::char_traits<CharT>
-         ,class Allocator  = std::allocator<CharT> >
+         ,class Allocator  = new_allocator<CharT> >
 class basic_string;
 
 typedef basic_string
    <char
    ,std::char_traits<char>
-   ,std::allocator<char> >
+   ,new_allocator<char> >
 string;
 
 typedef basic_string
    <wchar_t
    ,std::char_traits<wchar_t>
-   ,std::allocator<wchar_t> >
+   ,new_allocator<wchar_t> >
 wstring;
 
 static const std::size_t ADP_nodes_per_block    = 256u;
@@ -198,6 +225,26 @@ template
    , std::size_t NodesPerBlock = NodeAlloc_nodes_per_block
    , std::size_t Version = 2>
 class node_allocator;
+
+namespace pmr {
+
+class memory_resource;
+
+template<class T>
+class polymorphic_allocator;
+
+class monotonic_buffer_resource;
+
+struct pool_options;
+
+template <class Allocator>
+class resource_adaptor_imp;
+
+class unsynchronized_pool_resource;
+
+class synchronized_pool_resource;
+
+}  //namespace pmr {
 
 #else
 

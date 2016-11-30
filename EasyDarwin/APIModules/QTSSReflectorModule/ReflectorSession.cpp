@@ -32,7 +32,6 @@
 
 #include "OSMemory.h"
 #include "OS.h"
-#include "atomic.h"
 
 #include "QTSServerInterface.h"
 #include <errno.h>
@@ -153,15 +152,10 @@ QTSS_Error ReflectorSession::SetSessionName()
 {
 	if (fSourceID.Len > 0)
 	{
-		char movieFolder[256] = { 0 };
-		UInt32 thePathLen = 256;
-		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
 		StringParser parser(&fSourceID);
 		StrPtrLen strName;
 
-		parser.ConsumeLength(NULL, thePathLen);
-
-		parser.Expect('\\');
+		parser.Expect(kPathDelimiterChar);
 		parser.ConsumeUntil(&strName, '\.');
 		fSessionName = NEW char[strName.Len + 1];
 		::memcpy(fSessionName, strName.Ptr, strName.Len);
@@ -229,7 +223,7 @@ QTSS_Error ReflectorSession::StopHLSSession()
 	return theErr;
 }
 
-QTSS_Error ReflectorSession::SetupReflectorSession(SourceInfo* inInfo, QTSS_StandardRTSP_Params* inParams, UInt32 inFlags, Bool16 filterState, UInt32 filterTimeout)
+QTSS_Error ReflectorSession::SetupReflectorSession(SourceInfo* inInfo, QTSS_StandardRTSP_Params* inParams, UInt32 inFlags, bool filterState, UInt32 filterTimeout)
 {
 	// use the current SourceInfo
 	if (inInfo == NULL)
@@ -338,7 +332,7 @@ void    ReflectorSession::FormatHTML(StrPtrLen* inURL)
 }
 
 
-void    ReflectorSession::AddOutput(ReflectorOutput* inOutput, Bool16 isClient)
+void    ReflectorSession::AddOutput(ReflectorOutput* inOutput, bool isClient)
 {
 	Assert(fSourceInfo->GetNumStreams() > 0);
 
@@ -380,12 +374,14 @@ void    ReflectorSession::AddOutput(ReflectorOutput* inOutput, Bool16 isClient)
 		else
 			break;
 	}
-	(void)atomic_add(&fNumOutputs, 1);
+	//(void)atomic_add(&fNumOutputs, 1);
+	++fNumOutputs;
 }
 
-void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, Bool16 isClient)
+void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, bool isClient)
 {
-	(void)atomic_sub(&fNumOutputs, 1);
+	//(void)atomic_sub(&fNumOutputs, 1);
+	--fNumOutputs;
 	for (UInt32 y = 0; y < fSourceInfo->GetNumStreams(); y++)
 	{
 		fStreamArray[y]->RemoveOutput(inOutput);
@@ -434,7 +430,7 @@ UInt32  ReflectorSession::GetBitRate()
 	return retval;
 }
 
-Bool16 ReflectorSession::Equal(SourceInfo* inInfo)
+bool ReflectorSession::Equal(SourceInfo* inInfo)
 {
 	return fSourceInfo->Equal(inInfo);
 }

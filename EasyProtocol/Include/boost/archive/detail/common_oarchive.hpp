@@ -32,7 +32,8 @@ namespace detail {
 
 // note: referred to as Curiously Recurring Template Patter (CRTP)
 template<class Archive>
-class common_oarchive : 
+
+class BOOST_SYMBOL_VISIBLE common_oarchive :
     public basic_oarchive,
     public interface_oarchive<Archive>
 {
@@ -65,7 +66,7 @@ private:
 protected:
     // default processing - invoke serialization library
     template<class T>
-    void save_override(T & t, BOOST_PFTO int){
+    void save_override(T & t){
         archive::save(* this->This(), t);
     }
     void save_start(const char * /*name*/){}

@@ -82,7 +82,7 @@ static QTSSMP3AccessLog*    sMP3AccessLog = NULL;
 static QTSS_ServerObject    sServer = NULL;
 static OSMutex*         sLogMutex = NULL; // MP3 access log isn't reentrant
 static OSMutex*         sAtomicMutex = NULL;
-static Bool16           sServerIdle = true;
+static bool           sServerIdle = true;
 
 // Server global MP3 Session management classes.
 static MP3BroadcasterQueue  sMP3BroadcasterQueue;
@@ -93,26 +93,26 @@ static UInt32           sBroadcastBufferSize = 8192;
 static UInt32           sDefaultBroadcastBufferSize = 8192;
 static char*            sBroadcastPassword = NULL;
 static char*            sDefaultBroadcastPassword = " ";
-static Bool16           sMP3StreamingEnabled = true;
-static Bool16           sDefaultMP3StreamingEnabled = true;
+static bool           sMP3StreamingEnabled = true;
+static bool           sDefaultMP3StreamingEnabled = true;
 static SInt32           sMaximumConnections = 0;
 static SInt32           sMaximumBandwidth = 0;
 static UInt32           sDefaultRollInterval = 7;
-static Bool16           sDefaultLogTimeInGMT = true;
+static bool           sDefaultLogTimeInGMT = true;
 static UInt32           sDefaultMaxLogBytes = 10240000;
 static SInt32           sDefaultFlowControlTimeInMSec = 10000;
 static SInt32           sMaxFlowControlTimeInMSec = 10000;
 
-static Bool16   sDefaultLogEnabled = true;
+static bool   sDefaultLogEnabled = true;
 static char*    sDefaultLogName = "mp3_access";
 static char*    sDefaultLogDir = NULL;
 
 static char*    sLogName = NULL;
 static char*    sLogDir = NULL;
-static Bool16   sLogEnabled = true;
+static bool   sLogEnabled = true;
 static UInt32   sMaxLogBytes = 10240000;
 static UInt32   sRollInterval = 7;
-static Bool16   sLogTimeInGMT = true;
+static bool   sLogTimeInGMT = true;
 
 static char* sLogHeader = "#Software: %s\n"
 "#Version: %s\n"    //%s == version
@@ -138,7 +138,7 @@ static QTSS_Error Shutdown();
 static void IncrementMP3SessionCount();
 static void DecrementMP3SessionCount();
 static void IncrementTotalMP3Bytes(UInt32 bytes);
-static Bool16 CheckBandwidth(SInt32 bandwidth);
+static bool CheckBandwidth(SInt32 bandwidth);
 
 #if DEBUG_MP3STREAMING_MODULE
 static void PrintStringBuffer(StrPtrLen& stringBuffer);
@@ -146,27 +146,27 @@ static void PrintStringBuffer(StrPtrLen& stringBuffer);
 #define PrintStringBuffer(stringBuffer) ;
 #endif
 
-static void KeepSession(QTSS_RTSPRequestObject theRequest, Bool16 keep);
+static void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep);
 static UInt32 GetRTSPSessionID(QTSS_RTSPSessionObject session);
-static Bool16 IsActiveBroadcastSession(QTSS_RTSPSessionObject session);
+static bool IsActiveBroadcastSession(QTSS_RTSPSessionObject session);
 static MP3BroadcasterSession* FindBroadcastSession(QTSS_RTSPSessionObject session);
-static Bool16 IsBroadcastPassword(StrPtrLen& theRequest);
-static Bool16 IsShoutcastPassword(StrPtrLen& theRequest);
-static Bool16 IsHTTPGet(StrPtrLen& theRequest);
-static Bool16 IsA_m3u_URL(char* theURL);
-static Bool16 IsMetaDataURL(char* theURL);
+static bool IsBroadcastPassword(StrPtrLen& theRequest);
+static bool IsShoutcastPassword(StrPtrLen& theRequest);
+static bool IsHTTPGet(StrPtrLen& theRequest);
+static bool IsA_m3u_URL(char* theURL);
+static bool IsMetaDataURL(char* theURL);
 static void   ParseMetaDataURL(char* theURL);
-static Bool16 CheckPassword(QTSS_Filter_Params* inParams, StrPtrLen& theRequest, StrPtrLen& mountpoint);
-static Bool16 NeedsMetaData(StrPtrLen& theRequest);
-static Bool16 ParseURL(StrPtrLen& theRequest, char* outURL, UInt16 maxlen);
+static bool CheckPassword(QTSS_Filter_Params* inParams, StrPtrLen& theRequest, StrPtrLen& mountpoint);
+static bool NeedsMetaData(StrPtrLen& theRequest);
+static bool ParseURL(StrPtrLen& theRequest, char* outURL, UInt16 maxlen);
 static QTSS_Error LogRequest(QTSS_RTSPSessionObject inRTSPSession, MP3ClientSession* client);
 static void WriteStartupMessage();
 static void WriteShutdownMessage();
 static void url_strcpy(char* dest, const char* src);
 static QTSS_Error ReEnterFilterRequest(QTSS_Filter_Params* inParams, MP3Session* mp3Session);
 
-static Bool16 IsHTTP(StrPtrLen& theRequest);
-static Bool16 IsRTSP(StrPtrLen& theRequest);
+static bool IsHTTP(StrPtrLen& theRequest);
+static bool IsRTSP(StrPtrLen& theRequest);
 
 
 //**************************************************
@@ -223,7 +223,7 @@ time_t QTSSMP3AccessLog::WriteLogHeader(FILE *inFile)
 
 	//format a date for the startup time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes] = { 0 };
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	if (result)
 	{
@@ -418,14 +418,14 @@ void MP3BroadcasterSession::SetSongName(char* sn)
 }
 
 // See if a given mount point URL matches.
-Bool16 MP3BroadcasterSession::MountpointEqual(char* mp)
+bool MP3BroadcasterSession::MountpointEqual(char* mp)
 {
 	StrPtrLen mpStr(mp);
 	return MountpointEqual(mpStr);
 }
 
 // See if a given mount point URL matches.
-Bool16 MP3BroadcasterSession::MountpointEqual(StrPtrLen& mp)
+bool MP3BroadcasterSession::MountpointEqual(StrPtrLen& mp)
 {
 	if (0 == *fMountpoint)
 		return false;
@@ -445,7 +445,7 @@ QTSS_Error MP3BroadcasterSession::AddClient(QTSS_RTSPSessionObject sess, QTSS_St
 }
 
 // Is this RTSP session one of my clients?
-Bool16 MP3BroadcasterSession::IsMyClient(QTSS_RTSPSessionObject sess)
+bool MP3BroadcasterSession::IsMyClient(QTSS_RTSPSessionObject sess)
 {
 	if (fMP3ClientQueue == NULL)
 	{
@@ -1208,7 +1208,7 @@ MP3SessionTable::~MP3SessionTable()
 
 // Attempt to add a new MP3Session ref to the table's map.
 // returns true on success or false if it fails.
-Bool16 MP3SessionTable::RegisterSession(MP3Session* session)
+bool MP3SessionTable::RegisterSession(MP3Session* session)
 {
 	// sanity check
 	if (session == NULL)
@@ -1266,7 +1266,7 @@ MP3Session* MP3SessionTable::Resolve(QTSS_RTSPSessionObject rtspSession)
 
 // Attempt to remove a  MP3Session ref from the table's map.
 // returns true on success or false if it fails.
-Bool16 MP3SessionTable::UnRegisterSession(MP3Session* session)
+bool MP3SessionTable::UnRegisterSession(MP3Session* session)
 {
 	// sanity check
 	if (session == NULL)
@@ -1424,7 +1424,7 @@ QTSS_Error MP3BroadcasterQueue::RemoveClient(QTSS_RTSPSessionObject sess)
 
 
 // See if a particular Broadcaster RTSP session is in our queue.
-Bool16 MP3BroadcasterQueue::InQueue(QTSS_RTSPSessionObject sess)
+bool MP3BroadcasterQueue::InQueue(QTSS_RTSPSessionObject sess)
 {
 	if (sess == 0)
 	{
@@ -1447,7 +1447,7 @@ Bool16 MP3BroadcasterQueue::InQueue(QTSS_RTSPSessionObject sess)
 
 
 // See if a particular Client RTSP session is in any of our broadcasters' queues.
-Bool16 MP3BroadcasterQueue::IsActiveClient(QTSS_RTSPSessionObject sess)
+bool MP3BroadcasterQueue::IsActiveClient(QTSS_RTSPSessionObject sess)
 {
 	if (sess == 0)
 	{
@@ -1647,7 +1647,7 @@ QTSS_Error MP3ClientQueue::RemoveClient(QTSS_RTSPSessionObject sess)
 
 
 // See if a particular Client RTSP session is in our queue.
-Bool16 MP3ClientQueue::InQueue(QTSS_RTSPSessionObject sess)
+bool MP3ClientQueue::InQueue(QTSS_RTSPSessionObject sess)
 {
 	if (sess == 0)
 	{
@@ -1756,7 +1756,7 @@ void PrintStringBuffer(StrPtrLen& stringBuffer)
 }
 #endif
 
-inline void KeepSession(QTSS_RTSPRequestObject theRequest, Bool16 keep)
+inline void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep)
 {
 	(void)QTSS_SetValue(theRequest, qtssRTSPReqRespKeepAlive, 0, &keep, sizeof(keep));
 }
@@ -2043,7 +2043,7 @@ void IncrementTotalMP3Bytes(UInt32 bytes)
 }
 
 // CheckBandwidth - Check and see if we can handle any more bandwidth.
-Bool16 CheckBandwidth(SInt32 bandwidth)
+bool CheckBandwidth(SInt32 bandwidth)
 {
 	QTSS_Error err = QTSS_NoErr;
 
@@ -2083,7 +2083,7 @@ UInt32 GetRTSPSessionID(QTSS_RTSPSessionObject session)
 // IsActiveBroadcastSession - This is true when the specified session belongs to
 // a current broadcast session. We use this to let us know if we were called back
 // in our FilterRequest() role because a read or write was blocked previously.
-inline Bool16 IsActiveBroadcastSession(QTSS_RTSPSessionObject session)
+inline bool IsActiveBroadcastSession(QTSS_RTSPSessionObject session)
 {
 	return (FindBroadcastSession(session) != NULL);
 }
@@ -2102,7 +2102,7 @@ MP3BroadcasterSession* FindBroadcastSession(QTSS_RTSPSessionObject session)
 // This determines if an incoming request is an broadcaster sending
 // us his password. It will be in the format of:
 // "SOURCE <password> <mountpoint>\n".
-Bool16 IsBroadcastPassword(StrPtrLen& theRequest)
+bool IsBroadcastPassword(StrPtrLen& theRequest)
 {
 	if (IsShoutcastPassword(theRequest))
 		return true;
@@ -2114,7 +2114,7 @@ Bool16 IsBroadcastPassword(StrPtrLen& theRequest)
 // This determines if an incoming request is a Shoutcast broadcaster sending
 // us his password. It will be in the format of:
 // <password>\n".
-Bool16 IsShoutcastPassword(StrPtrLen& theRequest)
+bool IsShoutcastPassword(StrPtrLen& theRequest)
 {
 	char* bp = (char*)theRequest.Ptr;
 	int i;
@@ -2131,7 +2131,7 @@ Bool16 IsShoutcastPassword(StrPtrLen& theRequest)
 	return true;
 }
 
-Bool16 IsProtocolString(StrPtrLen& source, char *protocol)
+bool IsProtocolString(StrPtrLen& source, char *protocol)
 {
 
 	UInt32 protocolLen = ::strlen(protocol);
@@ -2146,7 +2146,7 @@ Bool16 IsProtocolString(StrPtrLen& source, char *protocol)
 
 }
 
-Bool16 IsProtocol(StrPtrLen& theRequest, char* protocol)
+bool IsProtocol(StrPtrLen& theRequest, char* protocol)
 {
 	StringParser reqParse(&theRequest);
 	StrPtrLen line;
@@ -2175,12 +2175,12 @@ Bool16 IsProtocol(StrPtrLen& theRequest, char* protocol)
 	return false;
 }
 
-Bool16 IsHTTP(StrPtrLen& theRequest)
+bool IsHTTP(StrPtrLen& theRequest)
 {
 	return IsProtocol(theRequest, "HTTP");
 }
 
-Bool16 IsRTSP(StrPtrLen& theRequest)
+bool IsRTSP(StrPtrLen& theRequest)
 {
 	return IsProtocol(theRequest, "RTSP");
 }
@@ -2188,18 +2188,18 @@ Bool16 IsRTSP(StrPtrLen& theRequest)
 
 // This determines if an incoming request is an HTTP GET
 // request.
-Bool16 IsHTTPGet(StrPtrLen& theRequest)
+bool IsHTTPGet(StrPtrLen& theRequest)
 {
 	StrPtrLen token = theRequest;
 	token.Len = 3;
-	Bool16 found = false;
+	bool found = false;
 	if (token.EqualIgnoreCase(StrPtrLen("GET")) && IsHTTP(theRequest))
 		found = true;
 	return found;
 }
 
 // Is this URL a *.m3u file request.
-Bool16 IsA_m3u_URL(char* theURL)
+bool IsA_m3u_URL(char* theURL)
 {
 	if (::strstr(theURL, ".m3u") != 0)
 		return true;
@@ -2207,7 +2207,7 @@ Bool16 IsA_m3u_URL(char* theURL)
 }
 
 // Is this URL a metdata xfer.
-Bool16 IsMetaDataURL(char* theURL)
+bool IsMetaDataURL(char* theURL)
 {
 	if (::strncmp(theURL, "/admin.cgi?mode=updinfo", 23) == 0)
 		return true;
@@ -2348,16 +2348,16 @@ void SendBroadcastAuthErr(QTSS_Filter_Params* inParams, char * errormessage)
 	QTSS_SessionStatusCode inStatusCode = qtssClientUnAuthorized;
 	(void)QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
 
-	const Bool16 sFalse = false;
+	const bool sFalse = false;
 	(void)QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqRespKeepAlive, 0, &sFalse, sizeof(sFalse));
 
 }
 
 // This parses and checks the password in the broadcaster's
 // incoming request.
-Bool16 CheckPassword(QTSS_Filter_Params* inParams, StrPtrLen& theRequest, StrPtrLen& mountpoint)
+bool CheckPassword(QTSS_Filter_Params* inParams, StrPtrLen& theRequest, StrPtrLen& mountpoint)
 {
-	Bool16 passwordOK = false;
+	bool passwordOK = false;
 	StrPtrLen strPtr;
 
 	mountpoint.Ptr = NULL;
@@ -2415,12 +2415,12 @@ Bool16 CheckPassword(QTSS_Filter_Params* inParams, StrPtrLen& theRequest, StrPtr
 }
 
 
-Bool16 GetHeaderAndValueFromeLine(StrPtrLen *line, StrPtrLen* header, char separator, StrPtrLen* value)
+bool GetHeaderAndValueFromeLine(StrPtrLen *line, StrPtrLen* header, char separator, StrPtrLen* value)
 {
 	StringParser lineParser(line);
 	lineParser.ConsumeWhitespace();
 
-	Bool16 foundHeader = lineParser.GetThru(header, separator);
+	bool foundHeader = lineParser.GetThru(header, separator);
 
 	lineParser.ConsumeWhitespace();
 	lineParser.GetThruEOL(value);
@@ -2430,7 +2430,7 @@ Bool16 GetHeaderAndValueFromeLine(StrPtrLen *line, StrPtrLen* header, char separ
 
 
 // Find out if the HTTP header wants meta-data.
-Bool16 NeedsMetaData(StrPtrLen& theRequest)
+bool NeedsMetaData(StrPtrLen& theRequest)
 {
 
 
@@ -2498,7 +2498,7 @@ temp.Set("\nIcy-metadatA: 1");
 
 
 // Parse out the URL from the HTTP GET line.
-Bool16 ParseURL(StrPtrLen& theRequest, char* outURL, UInt16 maxlen)
+bool ParseURL(StrPtrLen& theRequest, char* outURL, UInt16 maxlen)
 {
 	StringParser reqParse(&theRequest);
 	StrPtrLen strPtr;
@@ -2529,7 +2529,7 @@ void    WriteStartupMessage()
 
 	//format a date for the startup time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	char tempBuffer[1024];
 	if (result)
@@ -2549,7 +2549,7 @@ void    WriteShutdownMessage()
 	//log shutdown message
 	//format a date for the shutdown time
 	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
 	char tempBuffer[1024];
 	if (result)
@@ -2578,7 +2578,7 @@ QTSS_Error LogRequest(QTSS_RTSPSessionObject inRTSPSession, MP3ClientSession* cl
 	OSMutexLocker locker(sLogMutex);
 
 	// Construct the timestamp for the entry
-	Bool16 result = QTSSRollingLog::FormatDate(theDateBuffer, sLogTimeInGMT);
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, sLogTimeInGMT);
 	// this should never happen, but just in case...
 	if (!result)
 		theDateBuffer[0] = '\0';

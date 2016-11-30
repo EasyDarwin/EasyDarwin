@@ -2,7 +2,7 @@
     Copyright (c) 2001-2011 Joel de Guzman
     Copyright (c) 2001-2011 Hartmut Kaiser
     Copyright (c) 2011 Jan Frederick Eick
-    Copyright (c) 2011 Christopher Jefferson 
+    Copyright (c) 2011 Christopher Jefferson
     Copyright (c) 2006 Stephen Nutt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -31,6 +31,12 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/limits.hpp>
+#include <boost/integer_traits.hpp>
+
+#if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable: 4127) // conditional expression is constant
+#endif
 
 #if !defined(SPIRIT_NUMERICS_LOOP_UNROLL)
 # define SPIRIT_NUMERICS_LOOP_UNROLL 3
@@ -110,6 +116,12 @@ namespace boost { namespace spirit { namespace qi { namespace detail
             return spirit::char_encoding::ascii::tolower(ch) - 'a' + 10;
         }
     };
+    
+    template <typename T, T Val>
+    struct constexpr_int
+    {
+        BOOST_STATIC_CONSTEXPR T value = Val; 
+    };
 
     ///////////////////////////////////////////////////////////////////////////
     //  positive_accumulator/negative_accumulator: Accumulator policies for
@@ -130,16 +142,17 @@ namespace boost { namespace spirit { namespace qi { namespace detail
         inline static bool add(T& n, Char ch, mpl::true_) // checked add
         {
             // Ensure n *= Radix will not overflow
-            static T const max = (std::numeric_limits<T>::max)();
-            static T const val = max / Radix;
-            if (n > val)
+            typedef constexpr_int<T, boost::integer_traits<T>::const_max> max;
+            typedef constexpr_int<T, max::value / Radix> val;
+
+            if (n > val::value)
                 return false;
 
             n *= Radix;
 
             // Ensure n += digit will not overflow
             const int digit = radix_traits<Radix>::digit(ch);
-            if (n > max - digit)
+            if (n > max::value - digit)
                 return false;
 
             n += static_cast<T>(digit);
@@ -161,16 +174,17 @@ namespace boost { namespace spirit { namespace qi { namespace detail
         inline static bool add(T& n, Char ch, mpl::true_) // checked subtract
         {
             // Ensure n *= Radix will not underflow
-            static T const min = (std::numeric_limits<T>::min)();
-            static T const val = (min + 1) / T(Radix);
-            if (n < val)
+            typedef constexpr_int<T, boost::integer_traits<T>::const_min> min;
+            typedef constexpr_int<T, (min::value + 1) / T(Radix)> val;
+
+            if (n < val::value)
                 return false;
 
             n *= Radix;
 
             // Ensure n -= digit will not underflow
             int const digit = radix_traits<Radix>::digit(ch);
-            if (n < min + digit)
+            if (n < min::value + digit)
                 return false;
 
             n -= static_cast<T>(digit);
@@ -181,17 +195,16 @@ namespace boost { namespace spirit { namespace qi { namespace detail
     ///////////////////////////////////////////////////////////////////////////
     //  Common code for extract_int::parse specializations
     ///////////////////////////////////////////////////////////////////////////
-    template <unsigned Radix, typename Accumulator, int MaxDigits>
+    template <unsigned Radix, typename Accumulator, int MaxDigits, bool AlwaysCheckOverflow>
     struct int_extractor
     {
         template <typename Char, typename T>
         inline static bool
         call(Char ch, std::size_t count, T& n, mpl::true_)
         {
-            static std::size_t const
-                overflow_free = digits_traits<T, Radix>::value - 1;
+            typedef constexpr_int<std::size_t, digits_traits<T, Radix>::value - 1> overflow_free;
 
-            if (count < overflow_free)
+            if (!AlwaysCheckOverflow && (count < overflow_free::value))
             {
                 Accumulator::add(n, ch, mpl::false_());
             }
@@ -267,8 +280,15 @@ namespace boost { namespace spirit { namespace qi { namespace detail
             || it == last)                                                    \
             break;                                                            \
         ch = *it;                                                             \
-        if (!radix_check::is_valid(ch) || !extractor::call(ch, count, val))   \
+        if (!radix_check::is_valid(ch))                                       \
             break;                                                            \
+        if (!extractor::call(ch, count, val))                                 \
+        {                                                                     \
+            if (IgnoreOverflowDigits)                                         \
+                first = it;                                                   \
+            traits::assign_to(val, attr);                                     \
+            return IgnoreOverflowDigits;                                      \
+        }                                                                     \
         ++it;                                                                 \
         ++count;                                                              \
     /**/
@@ -277,6 +297,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
         typename T, unsigned Radix, unsigned MinDigits, int MaxDigits
       , typename Accumulator = positive_accumulator<Radix>
       , bool Accumulate = false
+      , bool IgnoreOverflowDigits = false
     >
     struct extract_int
     {
@@ -292,7 +313,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
           , Attribute& attr)
         {
             typedef radix_traits<Radix> radix_check;
-            typedef int_extractor<Radix, Accumulator, MaxDigits> extractor;
+            typedef int_extractor<Radix, Accumulator, MaxDigits, Accumulate> extractor;
             typedef typename
                 boost::detail::iterator_traits<Iterator>::value_type
             char_type;
@@ -302,7 +323,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
             if (!Accumulate)
             {
                 // skip leading zeros
-                while (it != last && *it == '0' && leading_zeros < MaxDigits)
+                while (it != last && *it == '0' && (MaxDigits < 0 || leading_zeros < static_cast< std::size_t >(MaxDigits)))
                 {
                     ++it;
                     ++leading_zeros;
@@ -370,7 +391,10 @@ namespace boost { namespace spirit { namespace qi { namespace detail
         if (!radix_check::is_valid(ch))                                       \
             break;                                                            \
         if (!extractor::call(ch, count, val))                                 \
+        {                                                                     \
+            traits::assign_to(val, attr);                                     \
             return false;                                                     \
+        }                                                                     \
         ++it;                                                                 \
         ++count;                                                              \
     /**/
@@ -390,7 +414,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
           , Attribute& attr)
         {
             typedef radix_traits<Radix> radix_check;
-            typedef int_extractor<Radix, Accumulator, -1> extractor;
+            typedef int_extractor<Radix, Accumulator, -1, Accumulate> extractor;
             typedef typename
                 boost::detail::iterator_traits<Iterator>::value_type
             char_type;
@@ -432,7 +456,7 @@ namespace boost { namespace spirit { namespace qi { namespace detail
                 return true;
             }
 
-            count = 0;
+            // count = 0; $$$ verify: I think this is wrong $$$
             ++it;
             while (true)
             {
@@ -502,5 +526,9 @@ namespace boost { namespace spirit { namespace qi { namespace detail
         }
     };
 }}}}
+
+#if defined(BOOST_MSVC)
+# pragma warning(pop)
+#endif
 
 #endif

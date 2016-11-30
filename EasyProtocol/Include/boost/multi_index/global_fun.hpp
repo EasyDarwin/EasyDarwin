@@ -1,4 +1,4 @@
-/* Copyright 2003-2013 Joaquin M Lopez Munoz.
+/* Copyright 2003-2015 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -14,6 +14,7 @@
 #endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
+#include <boost/detail/workaround.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_reference.hpp>
@@ -43,7 +44,7 @@ namespace detail{
  * pointer to T we  mean a type P such that, given a p of Type P
  *   *...n...*x is convertible to T&, for some n>=1.
  * Examples of chained pointers are raw and smart pointers, iterators and
- * arbitrary combinations of these (vg. T** or auto_ptr<T*>.)
+ * arbitrary combinations of these (vg. T** or unique_ptr<T*>.)
  */
 
 template<class Value,typename Type,Type (*PtrToFunction)(Value)>
@@ -80,7 +81,14 @@ struct const_ref_global_fun_base
   Type operator()(
     const reference_wrapper<
       typename remove_const<
-        typename remove_reference<Value>::type>::type>& x)const
+        typename remove_reference<Value>::type>::type>& x
+
+#if BOOST_WORKAROUND(BOOST_MSVC,==1310)
+/* http://lists.boost.org/Archives/boost/2015/10/226135.php */
+    ,int=0
+#endif
+
+  )const
   { 
     return operator()(x.get());
   }

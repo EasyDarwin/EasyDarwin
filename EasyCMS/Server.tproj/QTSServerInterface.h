@@ -113,8 +113,8 @@ public:
     UInt32              GetNumServiceSessions() { return fNumHTTPSessions; }
 
     Float32             GetCPUPercent() { return fCPUPercent; }
-    Bool16              SigIntSet() { return fSigInt; }
-    Bool16				SigTermSet() { return fSigTerm; }
+    bool              SigIntSet() { return fSigInt; }
+    bool				SigTermSet() { return fSigTerm; }
 
     UInt32              GetDebugLevel() { return fDebugLevel; }
     UInt32              GetDebugOptions() { return fDebugOptions; }
@@ -259,13 +259,13 @@ private:
     Float32             fCPUTimeUsedInSec;
 
     // are we out of descriptors?
-    Bool16              fIsOutOfDescriptors;
+    bool              fIsOutOfDescriptors;
 
     // Storage for current time attribute
     SInt64              fCurrentTime_UnixMilli;
 
-    Bool16              fSigInt;
-    Bool16              fSigTerm;
+    bool              fSigInt;
+    bool              fSigTerm;
 
     UInt32              fDebugLevel;
     UInt32              fDebugOptions;

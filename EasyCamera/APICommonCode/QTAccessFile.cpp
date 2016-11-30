@@ -90,7 +90,7 @@ UInt8 QTAccessFile::sWhitespaceAndGreaterThanMask[] =
 };
 
 char*       QTAccessFile::sQTAccessFileName = "qtaccess";
-Bool16      QTAccessFile::sAllocatedName = false;
+bool      QTAccessFile::sAllocatedName = false;
 OSMutex*    QTAccessFile::sAccessFileMutex = NULL;//QTAccessFile isn't reentrant
 const int kBuffLen = 512;
 
@@ -123,9 +123,9 @@ void QTAccessFile::SetAccessFileName(const char *inQTAccessFileName)
 }
 
 
-Bool16 QTAccessFile::HaveUser(char *userName, void* extraDataPtr)
+bool QTAccessFile::HaveUser(char *userName, void* extraDataPtr)
 {
-	Bool16 result = false;
+	bool result = false;
 
 	if (NULL != userName && 0 != userName[0])
 		result = true;
@@ -133,9 +133,9 @@ Bool16 QTAccessFile::HaveUser(char *userName, void* extraDataPtr)
 	return result;
 }
 
-Bool16 QTAccessFile::HaveGroups(char** groupArray, UInt32 numGroups, void* extraDataPtr)
+bool QTAccessFile::HaveGroups(char** groupArray, UInt32 numGroups, void* extraDataPtr)
 {
-	Bool16 result = false;
+	bool result = false;
 
 	if (numGroups > 0 && groupArray != NULL)
 		result = true;
@@ -143,9 +143,9 @@ Bool16 QTAccessFile::HaveGroups(char** groupArray, UInt32 numGroups, void* extra
 	return result;
 }
 
-Bool16 QTAccessFile::HaveRealm(char *userName, StrPtrLen* ioRealmNameStr, void *extraData)
+bool QTAccessFile::HaveRealm(char *userName, StrPtrLen* ioRealmNameStr, void *extraData)
 {
-	Bool16 result = false;
+	bool result = false;
 
 	if (ioRealmNameStr != NULL && ioRealmNameStr->Ptr != NULL && ioRealmNameStr->Len > 0)
 		result = true;
@@ -163,9 +163,9 @@ void QTAccessFile::GetRealm(StrPtrLen* accessRealm, StrPtrLen* ioRealmNameStr, c
 
 }
 
-Bool16 QTAccessFile::TestUser(StrPtrLen* accessUser, char *userName, void *extraDataPtr)
+bool QTAccessFile::TestUser(StrPtrLen* accessUser, char *userName, void *extraDataPtr)
 {
-	Bool16 result = false;
+	bool result = false;
 
 	if (accessUser->Equal(userName))
 		result = true;
@@ -173,7 +173,7 @@ Bool16 QTAccessFile::TestUser(StrPtrLen* accessUser, char *userName, void *extra
 	return result;
 }
 
-Bool16 QTAccessFile::TestGroup(StrPtrLen* accessGroup, char *userName, char**groupArray, UInt32 numGroups, void *extraDataPtr)
+bool QTAccessFile::TestGroup(StrPtrLen* accessGroup, char *userName, char**groupArray, UInt32 numGroups, void *extraDataPtr)
 {
 
 	for (UInt32 index = 0; index < numGroups; index++)
@@ -186,14 +186,14 @@ Bool16 QTAccessFile::TestGroup(StrPtrLen* accessGroup, char *userName, char**gro
 
 }
 
-Bool16 QTAccessFile::TestExtraData(StrPtrLen* wordPtr, StringParser* lineParserPtr, void* extraDataPtr)
+bool QTAccessFile::TestExtraData(StrPtrLen* wordPtr, StringParser* lineParserPtr, void* extraDataPtr)
 {
 	return false;
 }
 
 
-Bool16 QTAccessFile::AccessAllowed(char *userName, char**groupArray, UInt32 numGroups, StrPtrLen *accessFileBufPtr,
-	QTSS_ActionFlags inFlags, StrPtrLen* ioRealmNameStr, Bool16 *outAllowAnyUserPtr, void *extraDataPtr
+bool QTAccessFile::AccessAllowed(char *userName, char**groupArray, UInt32 numGroups, StrPtrLen *accessFileBufPtr,
+	QTSS_ActionFlags inFlags, StrPtrLen* ioRealmNameStr, bool *outAllowAnyUserPtr, void *extraDataPtr
 )
 {
 	if (NULL == accessFileBufPtr || NULL == accessFileBufPtr->Ptr || 0 == accessFileBufPtr->Len)
@@ -209,11 +209,11 @@ Bool16 QTAccessFile::AccessAllowed(char *userName, char**groupArray, UInt32 numG
 
 	*outAllowAnyUserPtr = false;
 
-	Bool16 haveUserName = HaveUser(userName, extraDataPtr);
+	bool haveUserName = HaveUser(userName, extraDataPtr);
 
-	Bool16 haveGroups = HaveGroups(groupArray, numGroups, extraDataPtr);
+	bool haveGroups = HaveGroups(groupArray, numGroups, extraDataPtr);
 
-	Bool16 haveRealmResultBuffer = HaveRealm(userName, ioRealmNameStr, extraDataPtr);
+	bool haveRealmResultBuffer = HaveRealm(userName, ioRealmNameStr, extraDataPtr);
 
 	while (accessFileParser.GetDataRemaining() != 0)
 	{
@@ -429,11 +429,11 @@ bool DSAccessFile::CheckGroupMembership(const char* inUsername, const char* inGr
 #endif
 }
 
-Bool16 DSAccessFile::ValidUser(char*userName, void* extraDataPtr)
+bool DSAccessFile::ValidUser(char*userName, void* extraDataPtr)
 {
 #ifndef __Win32__
 	struct passwd	*user = getpwnam(userName);
-	Bool16 result = true;
+	bool result = true;
 	if (user == NULL)
 	{
 		return result;

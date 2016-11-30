@@ -62,7 +62,7 @@ public:
 	//ACCESS FUNCTIONS
 
 	QTSSModule* GetPacketSendingModule() { return fModule; }
-	Bool16      HasAnRTPStream() { return fHasAnRTPStream; }
+	bool      HasAnRTPStream() { return fHasAnRTPStream; }
 
 	RTPStream*  FindRTPStreamForChannelNum(UInt8 inChannelNum);
 
@@ -88,12 +88,6 @@ public:
 
 	//Reset the thinning params for all streams using the late tolerance value
 	void SetStreamThinningParams(Float32 inLateTolerance);
-
-	//Find the appropriate stream and set the rate adaptation stream data
-	void Set3GPPRateAdaptionData(RateAdapationStreamDataFields *rateAdaptStreamData);
-
-	// Store the Session Interface's Link Char values
-	void Set3GPPLinkCharData(LinkCharDataFields *linkCharData);
 
 	//Begins playing all streams. Currently must be associated with an RTSP Play
 	//request, and the request interface must be provided.
@@ -121,8 +115,6 @@ public:
 	SInt32          GetQualityLevel();
 	void            SetQualityLevel(SInt32 level);
 
-	void            SetMovieBitRateData();
-
 private:
 
 	//where timeouts, deletion conditions get processed
@@ -141,7 +133,7 @@ private:
 	};
 
 	QTSSModule*         fModule;
-	Bool16              fHasAnRTPStream;
+	bool              fHasAnRTPStream;
 	SInt32              fSessionQualityLevel;
 
 	char        fRTPStreamArray[kRTPStreamArraySize];
@@ -164,10 +156,10 @@ private:
 	UInt32              fCurrentModule;
 	// This is here to give the ability to the ClientSessionClosing role to
 	// do asynchronous I/O
-	Bool16              fModuleDoingAsyncStuff;
+	bool              fModuleDoingAsyncStuff;
 
 #if DEBUG
-	Bool16 fActivateCalled;
+	bool fActivateCalled;
 #endif
 	SInt64              fLastBandwidthTrackerStatsUpdate;
 

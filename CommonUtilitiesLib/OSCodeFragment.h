@@ -51,7 +51,7 @@ public:
 	OSCodeFragment(const char* inPath);
 	~OSCodeFragment();
 
-	Bool16  IsValid() { return (fFragmentP != NULL); }
+	bool  IsValid() { return (fFragmentP != NULL); }
 	void*   GetSymbol(const char* inSymbolName);
 
 private:

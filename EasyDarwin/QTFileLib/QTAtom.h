@@ -45,13 +45,13 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		Bool16 Debug = false, Bool16 DeepDebug = false);
+		bool Debug = false, bool DeepDebug = false);
 	virtual             ~QTAtom();
 
 
 	//
 	// Initialization functions.
-	virtual Bool16      Initialize() { return true; }
+	virtual bool      Initialize() { return true; }
 
 	static SInt64   NTOH64(SInt64 networkOrdered)
 	{
@@ -67,22 +67,22 @@ public:
 
 	//
 	// Read functions.
-	Bool16      ReadBytes(UInt64 Offset, char* Buffer, UInt32 Length);
-	Bool16      ReadInt8(UInt64 Offset, UInt8* Datum);
-	Bool16      ReadInt16(UInt64 Offset, UInt16* Datum);
-	Bool16      ReadInt32(UInt64 Offset, UInt32* Datum);
-	Bool16      ReadInt64(UInt64 Offset, UInt64* Datum);
-	Bool16      ReadInt32To64(UInt64 Offset, UInt64* Datum);
-	Bool16		ReadInt32To64Signed(UInt64 Offset, SInt64* Datum);
+	bool      ReadBytes(UInt64 Offset, char* Buffer, UInt32 Length);
+	bool      ReadInt8(UInt64 Offset, UInt8* Datum);
+	bool      ReadInt16(UInt64 Offset, UInt16* Datum);
+	bool      ReadInt32(UInt64 Offset, UInt32* Datum);
+	bool      ReadInt64(UInt64 Offset, UInt64* Datum);
+	bool      ReadInt32To64(UInt64 Offset, UInt64* Datum);
+	bool		ReadInt32To64Signed(UInt64 Offset, SInt64* Datum);
 
-	Bool16      ReadSubAtomBytes(const char* AtomPath, char* Buffer, UInt32 Length);
-	Bool16      ReadSubAtomInt8(const char* AtomPath, UInt8* Datum);
-	Bool16      ReadSubAtomInt16(const char* AtomPath, UInt16* Datum);
-	Bool16      ReadSubAtomInt32(const char* AtomPath, UInt32* Datum);
-	Bool16      ReadSubAtomInt64(const char* AtomPath, UInt64* Datum);
+	bool      ReadSubAtomBytes(const char* AtomPath, char* Buffer, UInt32 Length);
+	bool      ReadSubAtomInt8(const char* AtomPath, UInt8* Datum);
+	bool      ReadSubAtomInt16(const char* AtomPath, UInt16* Datum);
+	bool      ReadSubAtomInt32(const char* AtomPath, UInt32* Datum);
+	bool      ReadSubAtomInt64(const char* AtomPath, UInt64* Datum);
 
 	char*       MemMap(UInt64 Offset, UInt32 Length);
-	Bool16      UnMap(char* memPtr, UInt32 Length);
+	bool      UnMap(char* memPtr, UInt32 Length);
 	//
 	// Debugging functions.
 	virtual void        DumpAtom() {}
@@ -91,8 +91,8 @@ public:
 protected:
 	//
 	// Protected member variables.
-	Bool16              fDebug;
-	Bool16				fDeepDebug;
+	bool              fDebug;
+	bool				fDeepDebug;
 	QTFile*				fFile;
 
 	QTFile::AtomTOCEntry fTOCEntry;

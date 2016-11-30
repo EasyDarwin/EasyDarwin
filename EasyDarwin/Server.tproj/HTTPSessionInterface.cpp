@@ -33,7 +33,6 @@
 	 Contains:   Implementation of HTTPSessionInterface object.
  */
 
-#include "atomic.h"
 #include "HTTPSessionInterface.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
@@ -46,7 +45,7 @@
 #define HTTP_SESSION_INTERFACE_DEBUGGING 0
 #endif
 
-unsigned int	HTTPSessionInterface::sSessionIndexCounter = kFirstHTTPSessionID;
+std::atomic_uint HTTPSessionInterface::sSessionIndexCounter{ kFirstHTTPSessionID };
 
 QTSSAttrInfoDict::AttrInfo  HTTPSessionInterface::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
@@ -78,7 +77,7 @@ void    HTTPSessionInterface::Initialize()
 HTTPSessionInterface::HTTPSessionInterface()
 	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kHTTPSessionDictIndex)),
 	Task(),
-	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTSPTimeoutInSecs() * 1000),
+	fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetRTSPSessionTimeoutInSecs() * 1000),
 	fInputStream(&fSocket),
 	fOutputStream(&fSocket, &fTimeoutTask),
 	fSessionMutex(),
@@ -94,7 +93,8 @@ HTTPSessionInterface::HTTPSessionInterface()
 	fTimeoutTask.SetTask(this);
 	fSocket.SetTask(this);
 
-	fSessionIndex = (UInt32)atomic_add(&sSessionIndexCounter, 1);
+	//fSessionIndex = (UInt32)atomic_add(&sSessionIndexCounter, 1);
+	fSessionIndex = ++sSessionIndexCounter;
 	this->SetVal(easyHTTPSesID, &fSessionIndex, sizeof(fSessionIndex));
 
 	this->SetVal(easyHTTPSesEventCntxt, &fOutputSocketP, sizeof(fOutputSocketP));
@@ -120,7 +120,8 @@ void HTTPSessionInterface::DecrementObjectHolderCount()
 	//#if __Win32__
 	//maybe don't need this special case but for now on Win32 we do it the old way since the killEvent code hasn't been verified on Windows.
 	this->Signal(Task::kReadEvent);//have the object wakeup in case it can go away.
-	atomic_sub(&fObjectHolders, 1);
+	//atomic_sub(&fObjectHolders, 1);
+	--fObjectHolders;
 	//#else
 	//    if (0 == atomic_sub(&fObjectHolders, 1))
 	//        this->Signal(Task::kKillEvent);
@@ -234,7 +235,7 @@ void* HTTPSessionInterface::SetupParams(QTSSDictionary* inSession, UInt32* /*out
 	return NULL;
 }
 
-QTSS_Error HTTPSessionInterface::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
+QTSS_Error HTTPSessionInterface::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement)
 {
 	return QTSS_NoErr;
 }

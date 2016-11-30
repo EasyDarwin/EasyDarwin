@@ -1,4 +1,4 @@
-/* Copyright 2003-2014 Joaquin M Lopez Munoz.
+/* Copyright 2003-2015 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -731,7 +731,7 @@ inline bool operator==(
     key_tuple>::result_type                          cons_key_tuple;
   
   BOOST_STATIC_ASSERT(
-    tuples::length<key_extractor_tuple>::value==
+    static_cast<std::size_t>(tuples::length<key_extractor_tuple>::value)==
     std::tuple_size<key_tuple>::value);
 
   return detail::equal_ckey_cval<
@@ -754,7 +754,7 @@ inline bool operator==(
     key_tuple>::result_type                          cons_key_tuple;
 
   BOOST_STATIC_ASSERT(
-    tuples::length<key_extractor_tuple>::value==
+    static_cast<std::size_t>(tuples::length<key_extractor_tuple>::value)==
     std::tuple_size<key_tuple>::value);
 
   return detail::equal_ckey_cval<
@@ -1049,7 +1049,7 @@ public:
     BOOST_STATIC_ASSERT(
       tuples::length<key_extractor_tuple>::value<=
       tuples::length<key_eq_tuple>::value&&
-      tuples::length<key_extractor_tuple>::value==
+      static_cast<std::size_t>(tuples::length<key_extractor_tuple>::value)==
       std::tuple_size<key_tuple>::value);
 
     return detail::equal_ckey_cval<
@@ -1073,9 +1073,9 @@ public:
 
     BOOST_STATIC_ASSERT(
       std::tuple_size<key_tuple>::value<=
-      tuples::length<key_eq_tuple>::value&&
+      static_cast<std::size_t>(tuples::length<key_eq_tuple>::value)&&
       std::tuple_size<key_tuple>::value==
-      tuples::length<key_extractor_tuple>::value);
+      static_cast<std::size_t>(tuples::length<key_extractor_tuple>::value));
 
     return detail::equal_ckey_cval<
       key_extractor_tuple,value_type,
@@ -1225,7 +1225,7 @@ public:
       tuples::length<key_extractor_tuple>::value<=
       tuples::length<key_comp_tuple>::value||
       std::tuple_size<key_tuple>::value<=
-      tuples::length<key_comp_tuple>::value);
+      static_cast<std::size_t>(tuples::length<key_comp_tuple>::value));
 
     return detail::compare_ckey_cval<
       key_extractor_tuple,value_type,
@@ -1248,7 +1248,7 @@ public:
 
     BOOST_STATIC_ASSERT(
       std::tuple_size<key_tuple>::value<=
-      tuples::length<key_comp_tuple>::value||
+      static_cast<std::size_t>(tuples::length<key_comp_tuple>::value)||
       tuples::length<key_extractor_tuple>::value<=
       tuples::length<key_comp_tuple>::value);
 
@@ -1329,7 +1329,7 @@ public:
 
     BOOST_STATIC_ASSERT(
       std::tuple_size<key_tuple>::value==
-      tuples::length<key_hasher_tuple>::value);
+      static_cast<std::size_t>(tuples::length<key_hasher_tuple>::value));
 
     return detail::hash_cval<
       cons_key_tuple,key_hasher_tuple

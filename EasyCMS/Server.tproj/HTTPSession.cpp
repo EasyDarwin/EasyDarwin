@@ -30,6 +30,30 @@
 
 #if __solaris__ || __linux__ || __sgi__	|| __hpux__
 #include <crypt.h>
+
+typedef struct BITMAPFILEHEADER
+{
+	u_int16_t bfType;
+	u_int32_t bfSize;
+	u_int16_t bfReserved1;
+	u_int16_t bfReserved2;
+	u_int32_t bfOffBits;
+} BITMAPFILEHEADER;
+
+typedef struct BITMAPINFOHEADER
+{
+	u_int32_t biSize;
+	u_int32_t biWidth;
+	u_int32_t biHeight;
+	u_int16_t biPlanes;
+	u_int16_t biBitCount;
+	u_int32_t biCompression;
+	u_int32_t biSizeImage;
+	u_int32_t biXPelsPerMeter;
+	u_int32_t biYPelsPerMeter;
+	u_int32_t biClrUsed;
+	u_int32_t biClrImportant;
+} BITMAPINFODEADER;
 #endif
 
 using namespace std;
@@ -47,7 +71,7 @@ static const int sPortSize = 6;
 
 HTTPSession::HTTPSession()
 	: HTTPSessionInterface(),
-	fRequest(NULL),
+	fRequest(nullptr),
 	fReadMutex(),
 	fSendMutex(),
 	//fCurrentModule(0),
@@ -58,7 +82,7 @@ HTTPSession::HTTPSession()
 	//All EasyCameraSession/EasyNVRSession/EasyHTTPSession
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(1);
 
-	fModuleState.curModule = NULL;
+	fModuleState.curModule = nullptr;
 	fModuleState.curTask = this;
 	fModuleState.curRole = 0;
 	fModuleState.globalLockRequested = false;
@@ -82,14 +106,12 @@ HTTPSession::~HTTPSession()
 	{
 		OSMutex* mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
 		OSHashMap* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
-		OSRefIt itRef;
 		{
 			OSMutexLocker lock(mutexMap);
-			int iDevNum = 0;
 
-			for (itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
+			for (auto& ref : *deviceMap)
 			{
-				HTTPSession* session = static_cast<HTTPSession*>(itRef->second->GetObjectPtr());
+				auto session = static_cast<HTTPSession*>(ref.second->GetObjectPtr());
 				if (session->GetTalkbackSession() == fSessionID)
 				{
 					session->SetTalkbackSession("");
@@ -101,7 +123,7 @@ HTTPSession::~HTTPSession()
 	if (decodeParam.imageData)
 	{
 		delete[]decodeParam.imageData;
-		decodeParam.imageData = NULL;
+		decodeParam.imageData = nullptr;
 	}
 
 	fLiveSession = false;
@@ -109,7 +131,7 @@ HTTPSession::~HTTPSession()
 
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(-1);
 
-	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
+	auto sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	sessionMap->UnRegister(fSessionID);
 
 	qtss_printf("Release HTTPSession:%s\n", fSessionID);
@@ -117,7 +139,7 @@ HTTPSession::~HTTPSession()
 	if (fRequestBody)
 	{
 		delete[]fRequestBody;
-		fRequestBody = NULL;
+		fRequestBody = nullptr;
 	}
 }
 
@@ -127,7 +149,7 @@ SInt64 HTTPSession::Run()
 	QTSS_Error err = QTSS_NoErr;
 
 	// Some callbacks look for this struct in the thread object
-	OSThreadDataSetter theSetter(&fModuleState, NULL);
+	OSThreadDataSetter theSetter(&fModuleState, nullptr);
 
 	if (events & kKillEvent)
 		fLiveSession = false;
@@ -203,7 +225,7 @@ SInt64 HTTPSession::Run()
 			{
 				Assert(fInputStream.GetRequestBuffer());
 
-				Assert(fRequest == NULL);
+				Assert(fRequest == nullptr);
 				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 				fReadMutex.Lock();
@@ -259,13 +281,13 @@ SInt64 HTTPSession::Run()
 				if (fOutputStream.GetBytesWritten() > 0)
 				{
 					delete[] fRequestBody;
-					fRequestBody = NULL;
+					fRequestBody = nullptr;
 					fState = kSendingResponse;
 					break;
 				}
 
 				delete[] fRequestBody;
-				fRequestBody = NULL;
+				fRequestBody = nullptr;
 				fState = kCleaningUp;
 				break;
 			}
@@ -283,7 +305,7 @@ SInt64 HTTPSession::Run()
 			}
 		case kSendingResponse:
 			{
-				Assert(fRequest != NULL);
+				Assert(fRequest != nullptr);
 
 				err = fOutputStream.Flush();
 
@@ -339,7 +361,7 @@ SInt64 HTTPSession::Run()
 	return 0;
 }
 
-QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, Bool16 connectionClose, Bool16 decrement)
+QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement)
 {
 	OSMutexLocker lock(&fSendMutex);
 
@@ -394,7 +416,7 @@ QTSS_Error HTTPSession::setupRequest()
 	if (theErr != QTSS_NoErr)
 		return QTSS_BadArgument;
 
-	if (fRequest->GetRequestPath() != NULL)
+	if (fRequest->GetRequestPath() != nullptr)
 	{
 		string sRequest(fRequest->GetRequestPath());
 
@@ -426,10 +448,10 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSFreeStreamReqRESTful(fRequest->GetQueryString());
 				}
-                if (path[0] == "api" && path[1] == "ptzcontrol")
-                {
-                    return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
-                }
+				if (path[0] == "api" && path[1] == "ptzcontrol")
+				{
+					return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
+				}
 				if (path[0] == "api" && path[1] == "presetcontrol")
 				{
 					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
@@ -452,7 +474,7 @@ QTSS_Error HTTPSession::setupRequest()
 
 	StringParser theContentLenParser(lengthPtr);
 	theContentLenParser.ConsumeWhitespace();
-	UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
+	UInt32 content_length = theContentLenParser.ConsumeInteger(nullptr);
 
 	//qtss_printf("HTTPSession read content-length:%d \n", content_length);
 
@@ -465,7 +487,7 @@ QTSS_Error HTTPSession::setupRequest()
 	// the request body, and the current offset in that buffer. If these attributes exist,
 	// then we've already been here for this request. If they don't exist, add them.
 	UInt32 theBufferOffset = 0;
-	char* theRequestBody = NULL;
+	char* theRequestBody = nullptr;
 	UInt32 theLen = sizeof(theRequestBody);
 	theErr = QTSS_GetValue(this, EasyHTTPSesContentBody, 0, &theRequestBody, &theLen);
 
@@ -533,7 +555,7 @@ QTSS_Error HTTPSession::setupRequest()
 
 	UInt32 offset = 0;
 	(void)QTSS_SetValue(this, EasyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
-	char* content = NULL;
+	char* content = nullptr;
 	(void)QTSS_SetValue(this, EasyHTTPSesContentBody, 0, &content, 0);
 
 	return theErr;
@@ -541,11 +563,11 @@ QTSS_Error HTTPSession::setupRequest()
 
 void HTTPSession::cleanupRequest()
 {
-	if (fRequest != NULL)
+	if (fRequest != nullptr)
 	{
-		// NULL out any references to the current request
+		// nullptr out any references to the current request
 		delete fRequest;
-		fRequest = NULL;
+		fRequest = nullptr;
 	}
 
 	fSessionMutex.Unlock();
@@ -555,11 +577,11 @@ void HTTPSession::cleanupRequest()
 	this->SetRequestBodyLength(-1);
 }
 
-Bool16 HTTPSession::overMaxConnections(UInt32 buffer)
+bool HTTPSession::overMaxConnections(UInt32 buffer)
 {
 	QTSServerInterface* theServer = QTSServerInterface::GetServer();
 	SInt32 maxConns = theServer->GetPrefs()->GetMaxConnections();
-	Bool16 overLimit = false;
+	bool overLimit = false;
 
 	if (maxConns > -1) // limit connections
 	{
@@ -578,7 +600,7 @@ QTSS_Error HTTPSession::dumpRequestData()
 
 	QTSS_Error theErr = QTSS_NoErr;
 	while (theErr == QTSS_NoErr)
-		theErr = this->Read(theDumpBuffer, EASY_REQUEST_BUFFER_SIZE_LEN, NULL);
+		theErr = this->Read(theDumpBuffer, EASY_REQUEST_BUFFER_SIZE_LEN, nullptr);
 
 	return theErr;
 }
@@ -620,7 +642,7 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 	string jpgPath = Format("%s/%s_%s_%s.%s", jpgDir, device_serial, channel, strTime, EasyProtocol::GetSnapTypeString(EASY_SNAP_TYPE_JPEG));
 
 	FILE* fSnap = ::fopen(jpgPath.c_str(), "wb");
-	if (fSnap == NULL)
+	if (fSnap == nullptr)
 	{
 		//DWORD e=GetLastError();
 		return QTSS_NoErr;
@@ -782,7 +804,7 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 			//…Ë±∏≥ÂÕªµƒ ±∫ÚΩ´«∞“ª∏ˆ…Ë±∏∏¯º∑µÙ,“ÚŒ™∂œµÁ°¢∂œÕ¯«Èøˆœ¬¡¨Ω” «≤ªª·∂œø™µƒ£¨»Áπ˚…Ë±∏¿¥µÁ°¢Õ¯¬ÁÕ®À≥÷Æ∫ÛæÕª·≤˙…˙≥ÂÕª£¨
 			//“ª∏ˆ¡¨Ω”µƒ≥¨ ± ±90√Î£¨“™µ»µΩ90√Î÷Æ∫Û…Ë±∏≤≈ƒ‹’˝≥£◊¢≤·…œœﬂ°£
 			OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(fDevice.serial_);////////////////////////////////++
-			if (theDevRef != NULL)//’“µΩ÷∏∂®…Ë±∏
+			if (theDevRef != nullptr)//’“µΩ÷∏∂®…Ë±∏
 			{
 				OSRefReleaserEx releaser(deviceMap, fDevice.serial_);
 				HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//ªÒµ√µ±«∞…Ë±∏ª·ª∞
@@ -854,7 +876,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//øÕªß∂ÀµƒÕ£÷
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);////////////////////////////////++
-	if (theDevRef == NULL)//’“≤ªµΩ÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//’“≤ªµΩ÷∏∂®…Ë±∏
 		return EASY_ERROR_DEVICE_NOT_FOUND;
 
 	OSRefReleaserEx releaser(deviceMap, strDeviceSerial);
@@ -921,7 +943,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	return httpUnAuthorized;
 	*/
 
-	if (queryString == NULL)
+	if (queryString == nullptr)
 	{
 		return QTSS_BadArgument;
 	}
@@ -937,10 +959,10 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	//Œ™ø…—°≤Œ ˝ÃÓ≥‰ƒ¨»œ÷µ
 	if (!isRightChannel(chChannel))
 		chChannel = "0";
-	if (chReserve == NULL)
+	if (chReserve == nullptr)
 		chReserve = "1";
 
-	if (chSerial == NULL || chProtocol == NULL)
+	if (chSerial == nullptr || chProtocol == nullptr)
 		return QTSS_BadArgument;
 
 	string strCSeq = EasyUtil::ToString(GetCSeq());
@@ -948,7 +970,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(chSerial);
-	if (theDevRef == NULL)//’“≤ªµΩ÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//’“≤ªµΩ÷∏∂®…Ë±∏
 		return EASY_ERROR_DEVICE_NOT_FOUND;
 
 	OSRefReleaserEx releaser(deviceMap, chSerial);
@@ -1102,7 +1124,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString
 	return httpUnAuthorized;
 	*/
 
-	if (queryString == NULL)
+	if (queryString == nullptr)
 	{
 		return QTSS_BadArgument;
 	}
@@ -1118,17 +1140,17 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString
 	//Œ™ø…—°≤Œ ˝ÃÓ≥‰ƒ¨»œ÷µ
 	if (!isRightChannel(strChannel))
 		strChannel = "0";
-	if (strReserve == NULL)
+	if (strReserve == nullptr)
 		strReserve = "1";
 
-	if (strDeviceSerial == NULL || strProtocol == NULL)
+	if (strDeviceSerial == nullptr || strProtocol == nullptr)
 		return QTSS_BadArgument;
 
-    string strCSeq = EasyUtil::ToString(GetCSeq());
+	string strCSeq = EasyUtil::ToString(GetCSeq());
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);////////////////////////////////++
-	if (theDevRef == NULL)//’“≤ªµΩ÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//’“≤ªµΩ÷∏∂®…Ë±∏
 		return EASY_ERROR_DEVICE_NOT_FOUND;
 
 	OSRefReleaserEx releaser(deviceMap, strDeviceSerial);
@@ -1209,7 +1231,7 @@ QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json)//…Ë±∏µƒø™ º¡
 
 	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
-	if (sessionRef == NULL)
+	if (sessionRef == nullptr)
 		return EASY_ERROR_SESSION_NOT_FOUND;
 
 	OSRefReleaserEx releaser(sessionMap, strTo);
@@ -1275,7 +1297,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	//	return httpUnAuthorized;
 
 	std::string queryTemp;
-	if (queryString != NULL)
+	if (queryString != nullptr)
 	{
 		queryTemp = EasyUtil::Urldecode(queryString);
 	}
@@ -1292,7 +1314,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
 	set<string> terminalSet;
-	if (chTerminalType != NULL)
+	if (chTerminalType != nullptr)
 	{
 		string terminalTemp(chTerminalType);
 
@@ -1315,12 +1337,12 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 		for (itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
 		{
 			strDevice* deviceInfo = static_cast<HTTPSession*>(itRef->second->GetObjectPtr())->GetDeviceInfo();
-			if (chAppType != NULL)// AppType fileter
+			if (chAppType != nullptr)// AppType fileter
 			{
 				if (EasyProtocol::GetAppTypeString(deviceInfo->eAppType) != string(chAppType))
 					continue;
 			}
-			if (chTerminalType != NULL)// TerminateType fileter
+			if (chTerminalType != nullptr)// TerminateType fileter
 			{
 				if (terminalSet.find(EasyProtocol::GetTerminalTypeString(deviceInfo->eDeviceType)) == terminalSet.end())
 					continue;
@@ -1350,7 +1372,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	string msg = rsp.GetMsg();
 	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
 	this->SendHTTPPacket(&theValue, false, false);
-	
+
 	return QTSS_NoErr;
 }
 
@@ -1412,7 +1434,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetCameraListReqRESTful(const char* queryStr
 		if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
 		return httpUnAuthorized;
 	*/
-	if (queryString == NULL)
+	if (queryString == nullptr)
 	{
 		return QTSS_BadArgument;
 	}
@@ -1423,7 +1445,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetCameraListReqRESTful(const char* queryStr
 
 	const char* device_serial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//ªÒ»°…Ë±∏–Ú¡–∫≈
 
-	if (device_serial == NULL)
+	if (device_serial == nullptr)
 		return QTSS_BadArgument;
 
 	EasyProtocolACK rsp(MSG_SC_DEVICE_INFO_ACK);
@@ -1436,7 +1458,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetCameraListReqRESTful(const char* queryStr
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(device_serial);////////////////////////////////++
-	if (theDevRef == NULL)//≤ª¥Ê‘⁄÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//≤ª¥Ê‘⁄÷∏∂®…Ë±∏
 	{
 		header[EASY_TAG_ERROR_NUM] = EASY_ERROR_DEVICE_NOT_FOUND;
 		header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_DEVICE_NOT_FOUND);
@@ -1502,7 +1524,7 @@ QTSS_Error HTTPSession::execNetMsgCSCameraListReq(const char* json)
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);////////////////////////////////++
-	if (theDevRef == NULL)//≤ª¥Ê‘⁄÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//≤ª¥Ê‘⁄÷∏∂®…Ë±∏
 	{
 		return EASY_ERROR_DEVICE_NOT_FOUND;//Ωª∏¯¥ÌŒÛ¥¶¿Ì÷––ƒ¥¶¿Ì
 	}
@@ -1544,7 +1566,7 @@ QTSS_Error HTTPSession::processRequest()//¥¶¿Ì«Î«Û
 {
 	//OSCharArrayDeleter charArrayPathDeleter(theRequestBody);//≤ª“™‘⁄’‚…æ≥˝£¨“ÚŒ™ø…ƒ‹÷¥––∂‡¥Œ£¨Ωˆµ±∂‘«Î«Ûµƒ¥¶¿ÌÕÍ±œ∫Û‘ŸΩ¯––…æ≥˝
 
-	if (fRequestBody == NULL)//±Ì æ√ª”–’˝»∑µƒΩ‚Œˆ«Î«Û£¨SetUpRequestª∑Ω⁄√ª”–Ω‚Œˆ≥ˆ ˝æ›≤ø∑÷
+	if (fRequestBody == nullptr)//±Ì æ√ª”–’˝»∑µƒΩ‚Œˆ«Î«Û£¨SetUpRequestª∑Ω⁄√ª”–Ω‚Œˆ≥ˆ ˝æ›≤ø∑÷
 		return QTSS_NoErr;
 
 	//œ˚œ¢¥¶¿Ì
@@ -1582,10 +1604,10 @@ QTSS_Error HTTPSession::processRequest()//¥¶¿Ì«Î«Û
 		theErr = execNetMsgDSPostSnapReq(fRequestBody);
 		nRspMsg = MSG_SD_POST_SNAP_ACK;
 		break;
-    case MSG_DS_CONTROL_PTZ_ACK:
-        theErr = execNetMsgDSPTZControlAck(fRequestBody);
-        nRspMsg = MSG_DS_CONTROL_PTZ_ACK;
-        break;
+	case MSG_DS_CONTROL_PTZ_ACK:
+		theErr = execNetMsgDSPTZControlAck(fRequestBody);
+		nRspMsg = MSG_DS_CONTROL_PTZ_ACK;
+		break;
 	case MSG_DS_CONTROL_PRESET_ACK:
 		theErr = execNetMsgDSPresetControlAck(fRequestBody);
 		nRspMsg = MSG_DS_CONTROL_PRESET_ACK;
@@ -1662,8 +1684,7 @@ QTSS_Error HTTPSession::processRequest()//¥¶¿Ì«Î«Û
 
 int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata)
 {
-#ifndef __linux__
-    int nBpp = 24;
+	int nBpp = 24;
 	int dwW, dwH, dwWB;
 
 	dwW = width;
@@ -1677,27 +1698,28 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 	bfh.bfReserved1 = 0;
 	bfh.bfReserved2 = 0;
 	bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-	if (nBpp == 16)
+	/*if (nBpp == 16)
 	{
 		bfh.bfOffBits += sizeof(RGBQUAD) * 3;
 	}
 	else
 	{
 		bfh.bfOffBits += sizeof(RGBQUAD) * 1;
-	}
+	}*/
 
-	DWORD dwWriteLength = sizeof(BITMAPFILEHEADER);
+	auto dwWriteLength = sizeof(BITMAPFILEHEADER);
 	int rgbOffset = 0;
-	memcpy(rgbdata + rgbOffset, (PVOID)&bfh, dwWriteLength);
+	memcpy(rgbdata + rgbOffset, static_cast<void*>(&bfh), dwWriteLength);
 	rgbOffset += dwWriteLength;
 
 	BITMAPINFOHEADER	bih = { 0, };
 	bih.biSize = sizeof(BITMAPINFOHEADER);
 	bih.biWidth = dwW;
-	bih.biHeight = -(INT)dwH;
+	bih.biHeight = -static_cast<int>(dwH);
 	bih.biPlanes = 1;
 	bih.biBitCount = nBpp;
-	bih.biCompression = (nBpp == 16) ? BI_BITFIELDS : BI_RGB;
+	//bih.biCompression = (nBpp == 16) ? BI_BITFIELDS : BI_RGB;
+	bih.biCompression = 0;
 	bih.biSizeImage = dwWB * height;
 	bih.biXPelsPerMeter = 0;
 	bih.biYPelsPerMeter = 0;
@@ -1706,23 +1728,23 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 
 	dwWriteLength = sizeof(BITMAPINFOHEADER);
 
-	memcpy(rgbdata + rgbOffset, (PVOID)&bih, dwWriteLength);
+	memcpy(rgbdata + rgbOffset, static_cast<void*>(&bih), dwWriteLength);
 	rgbOffset += dwWriteLength;
 
 	if (nBpp == 24)
 	{
-		DWORD rgbQuad = 0;
+		unsigned long rgbQuad = 0;
 		dwWriteLength = sizeof(rgbQuad);
-		memcpy(rgbdata + rgbOffset, (PVOID)&rgbQuad, dwWriteLength);
+		memcpy(rgbdata + rgbOffset, static_cast<void*>(&rgbQuad), dwWriteLength);
 		rgbOffset += dwWriteLength;
 	}
 
 	dwWriteLength = dwWB * height;
-	memcpy(rgbdata + rgbOffset, (PVOID)yuvpbuf, dwWriteLength);
+	memcpy(rgbdata + rgbOffset, static_cast<void*>(yuvpbuf), dwWriteLength);
 	rgbOffset += dwWriteLength;
 
-	if (NULL != rgbsize)	*rgbsize = rgbOffset;
-#endif
+	if (nullptr != rgbsize)	*rgbsize = rgbOffset;
+
 	return 0;
 }
 
@@ -1752,10 +1774,10 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 		yuv2BMPImage(snapWidth, snapHeight, (char*)yuvdata, &decodeParam.imageSize, (unsigned char*)decodeParam.imageData);
 	}
 
-	if (NULL != yuvdata)
+	if (nullptr != yuvdata)
 	{
 		delete[] yuvdata;
-		yuvdata = NULL;
+		yuvdata = nullptr;
 	}
 
 	return theErr;
@@ -1763,40 +1785,40 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 
 QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString)
 {
-    /*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
-    if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
-    return httpUnAuthorized;
-    */
+	/*//‘› ±◊¢ ÕµÙ£¨ µº …œ «–Ë“™»œ÷§µƒ
+	if(!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
+	return httpUnAuthorized;
+	*/
 
-    if (queryString == NULL)
-    {
-        return QTSS_BadArgument;
-    }
+	if (queryString == nullptr)
+	{
+		return QTSS_BadArgument;
+	}
 
 	string decQueryString = EasyUtil::Urldecode(queryString);
 
 	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
 
-    const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//ªÒ»°…Ë±∏–Ú¡–∫≈
-    const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//ªÒ»°Õ®µ¿
-    const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//ªÒ»°Õ®µ¿
-    const char* chReserve(parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE));//ªÒ»°Õ®µ¿
-    const char* chActionType = parList.DoFindCGIValueForParam(EASY_TAG_L_ACTION_TYPE);
-    const char* chCmd = parList.DoFindCGIValueForParam(EASY_TAG_L_CMD);
-    const char* chSpeed = parList.DoFindCGIValueForParam(EASY_TAG_L_SPEED);
+	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//ªÒ»°…Ë±∏–Ú¡–∫≈
+	const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//ªÒ»°Õ®µ¿
+	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//ªÒ»°Õ®µ¿
+	const char* chReserve(parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE));//ªÒ»°Õ®µ¿
+	const char* chActionType = parList.DoFindCGIValueForParam(EASY_TAG_L_ACTION_TYPE);
+	const char* chCmd = parList.DoFindCGIValueForParam(EASY_TAG_L_CMD);
+	const char* chSpeed = parList.DoFindCGIValueForParam(EASY_TAG_L_SPEED);
 
-    if (chSerial == NULL || chProtocol == NULL || chActionType == NULL || chCmd == NULL)
-        return QTSS_BadArgument;
+	if (chSerial == nullptr || chProtocol == nullptr || chActionType == nullptr || chCmd == nullptr)
+		return QTSS_BadArgument;
 
-    //Œ™ø…—°≤Œ ˝ÃÓ≥‰ƒ¨»œ÷µ
-    if (!isRightChannel(chChannel))
-        chChannel = "0";
-    if (chReserve == NULL)
-        chReserve = "1";
+	//Œ™ø…—°≤Œ ˝ÃÓ≥‰ƒ¨»œ÷µ
+	if (!isRightChannel(chChannel))
+		chChannel = "0";
+	if (chReserve == nullptr)
+		chReserve = "1";
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(chSerial);
-	if (theDevRef == NULL)//’“≤ªµΩ÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//’“≤ªµΩ÷∏∂®…Ë±∏
 		return EASY_ERROR_DEVICE_NOT_FOUND;
 
 	OSRefReleaserEx releaser(deviceMap, chSerial);
@@ -1852,64 +1874,64 @@ QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString
 	string msg = rsp.GetMsg();
 	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
 	this->SendHTTPPacket(&theValueAck, false, false);
-	
-    return QTSS_NoErr;
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error HTTPSession::execNetMsgDSPTZControlAck(const char* json)
 {
-  //  if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
-  //      return httpUnAuthorized;
+	//  if (!fAuthenticated)//√ª”–Ω¯––»œ÷§«Î«Û
+	//      return httpUnAuthorized;
 
-  //  //∂‘”⁄…Ë±∏µƒÕ∆¡˜ªÿ”¶ «≤ª–Ë“™‘⁄Ω¯––ªÿ”¶µƒ£¨÷±Ω”Ω‚Œˆ’“µΩ∂‘”¶µƒøÕªß∂ÀSession£¨∏≥÷µº¥ø…	
-  //  EasyProtocol req(json);
+	//  //∂‘”⁄…Ë±∏µƒÕ∆¡˜ªÿ”¶ «≤ª–Ë“™‘⁄Ω¯––ªÿ”¶µƒ£¨÷±Ω”Ω‚Œˆ’“µΩ∂‘”¶µƒøÕªß∂ÀSession£¨∏≥÷µº¥ø…	
+	//  EasyProtocol req(json);
 
-  //  string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//…Ë±∏–Ú¡–∫≈
-  //  string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//…„œÒÕ∑–Ú¡–∫≈
-  //  string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//–≠“È,÷’∂ÀΩˆ÷ß≥÷RTSPÕ∆ÀÕ
-  //  string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);//¡˜¿‡–Õ
-  //  string strFrom = req.GetBodyValue(EASY_TAG_FROM);
-  //  string strTo = req.GetBodyValue(EASY_TAG_TO);
-  //  string strVia = req.GetBodyValue(EASY_TAG_VIA);
+	//  string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);//…Ë±∏–Ú¡–∫≈
+	//  string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);//…„œÒÕ∑–Ú¡–∫≈
+	//  string strProtocol = req.GetBodyValue(EASY_TAG_PROTOCOL);//–≠“È,÷’∂ÀΩˆ÷ß≥÷RTSPÕ∆ÀÕ
+	//  string strReserve = req.GetBodyValue(EASY_TAG_RESERVE);//¡˜¿‡–Õ
+	//  string strFrom = req.GetBodyValue(EASY_TAG_FROM);
+	//  string strTo = req.GetBodyValue(EASY_TAG_TO);
+	//  string strVia = req.GetBodyValue(EASY_TAG_VIA);
 
-  //  string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//’‚∏ˆ «πÿº¸◊÷
-  //  string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//◊¥Ã¨¬Î
+	//  string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//’‚∏ˆ «πÿº¸◊÷
+	//  string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//◊¥Ã¨¬Î
 
-  //  if (strChannel.empty())
-  //      strChannel = "0";
-  //  if (strReserve.empty())
-  //      strReserve = "1";
+	//  if (strChannel.empty())
+	//      strChannel = "0";
+	//  if (strReserve.empty())
+	//      strReserve = "1";
 
-  //  OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
-  //  OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
-  //  if (sessionRef == NULL)
-  //      return EASY_ERROR_SESSION_NOT_FOUND;
+	//  OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
+	//  OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
+	//  if (sessionRef == nullptr)
+	//      return EASY_ERROR_SESSION_NOT_FOUND;
 
-  //  OSRefReleaserEx releaser(sessionMap, strTo);
-  //  HTTPSession* httpSession = static_cast<HTTPSession *>(sessionRef->GetObjectPtr());
+	//  OSRefReleaserEx releaser(sessionMap, strTo);
+	//  HTTPSession* httpSession = static_cast<HTTPSession *>(sessionRef->GetObjectPtr());
 
-  //  if (httpSession->IsLiveSession())
-  //  {
-  //      //◊ﬂµΩ’‚Àµ√˜∂‘øÕªß∂Àµƒ’˝»∑ªÿ”¶,“ÚŒ™¥ÌŒÛªÿ”¶÷±Ω”∑µªÿ°£
-  //      EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
-  //      EasyJsonValue header, body;
-  //      body[EASY_TAG_SERIAL] = strDeviceSerial;
-  //      body[EASY_TAG_CHANNEL] = strChannel;
-  //      body[EASY_TAG_PROTOCOL] = strProtocol;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
-  //      body[EASY_TAG_RESERVE] = strReserve;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
+	//  if (httpSession->IsLiveSession())
+	//  {
+	//      //◊ﬂµΩ’‚Àµ√˜∂‘øÕªß∂Àµƒ’˝»∑ªÿ”¶,“ÚŒ™¥ÌŒÛªÿ”¶÷±Ω”∑µªÿ°£
+	//      EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
+	//      EasyJsonValue header, body;
+	//      body[EASY_TAG_SERIAL] = strDeviceSerial;
+	//      body[EASY_TAG_CHANNEL] = strChannel;
+	//      body[EASY_TAG_PROTOCOL] = strProtocol;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
+	//      body[EASY_TAG_RESERVE] = strReserve;//»Áπ˚µ±«∞“—æ≠Õ∆¡˜£¨‘Ú∑µªÿ«Î«Ûµƒ£¨∑Ò‘Ú∑µªÿ µº Õ∆¡˜¿‡–Õ
 
-  //      header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
-  //      header[EASY_TAG_CSEQ] = strCSeq;
-  //      header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
-  //      header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+	//      header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	//      header[EASY_TAG_CSEQ] = strCSeq;
+	//      header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	//      header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
-  //      rsp.SetHead(header);
-  //      rsp.SetBody(body);
-  //      string msg = rsp.GetMsg();
-		//httpSession->ProcessEvent(msg, httpResponseType);
-  //  }
+	//      rsp.SetHead(header);
+	//      rsp.SetBody(body);
+	//      string msg = rsp.GetMsg();
+		  //httpSession->ProcessEvent(msg, httpResponseType);
+	//  }
 
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryString)
@@ -1919,7 +1941,7 @@ QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryStr
 	return httpUnAuthorized;
 	*/
 
-	if (queryString == NULL)
+	if (queryString == nullptr)
 	{
 		return QTSS_BadArgument;
 	}
@@ -1935,18 +1957,18 @@ QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryStr
 	const char* chCmd = parList.DoFindCGIValueForParam(EASY_TAG_L_CMD);
 	const char* chPreset = parList.DoFindCGIValueForParam(EASY_TAG_L_PRESET);
 
-	if (chSerial == NULL || chProtocol == NULL || chCmd == NULL)
+	if (chSerial == nullptr || chProtocol == nullptr || chCmd == nullptr)
 		return QTSS_BadArgument;
 
 	//Œ™ø…—°≤Œ ˝ÃÓ≥‰ƒ¨»œ÷µ
 	if (!isRightChannel(chChannel))
 		chChannel = "0";
-	if (chReserve == NULL)
+	if (chReserve == nullptr)
 		chReserve = "1";
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(chSerial);
-	if (theDevRef == NULL)//’“≤ªµΩ÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//’“≤ªµΩ÷∏∂®…Ë±∏
 		return EASY_ERROR_DEVICE_NOT_FOUND;
 
 	OSRefReleaserEx releaser(deviceMap, chSerial);
@@ -2007,7 +2029,7 @@ QTSS_Error HTTPSession::execNetMsgDSPresetControlAck(const char* json)
 
 	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	OSRefTableEx::OSRefEx* sessionRef = sessionMap->Resolve(strTo);
-	if (sessionRef == NULL)
+	if (sessionRef == nullptr)
 		return EASY_ERROR_SESSION_NOT_FOUND;
 
 	OSRefReleaserEx releaser(sessionMap, strTo);
@@ -2063,7 +2085,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);
-	if (theDevRef == NULL)//’“≤ªµΩ÷∏∂®…Ë±∏
+	if (theDevRef == nullptr)//’“≤ªµΩ÷∏∂®…Ë±∏
 		return EASY_ERROR_DEVICE_NOT_FOUND;
 
 	OSRefReleaserEx releaser(deviceMap, strDeviceSerial);
@@ -2147,7 +2169,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 			}
 		}
 
-			
+
 		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
 		EasyJsonValue headerheader, bodybody;
 
@@ -2204,7 +2226,7 @@ QTSS_Error HTTPSession::execNetMSGDSTalkbackControlAck(const char* json)
 
 bool HTTPSession::isRightChannel(const char* channel)
 {
-	if (channel == NULL)
+	if (channel == nullptr)
 	{
 		return false;
 	}
@@ -2217,7 +2239,7 @@ bool HTTPSession::isRightChannel(const char* channel)
 			return false;
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		return false;
 	}

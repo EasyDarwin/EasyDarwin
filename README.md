@@ -4,19 +4,28 @@
 
 - 使用EasyDarwin收费吗？
 
-	免费，EasyDarwin是在Apple开源项目Darwin Streaming Server的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体技术的迭代开发；
+	免费，EasyDarwin流媒体服务器是在Apple开源项目Darwin Streaming Server的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体技术的迭代开发；
 	
 	
-	> 注：即使EasyDarwin流媒体服务器调用到了开源团队其他非开源的、需要商业收费授权的SDK，使用EasyDarwin开源流媒体服务器的个人或者商业用户都无需再申请授权，可以直接用于个人或者商业项目，EasyDarwin调用到的非开源SDK License会长期保持更新有效；
+	> 注：即使EasyDarwin流媒体服务器可能会调用到一些第三方的收费或者授权SDK代码，请直接与第三方团队或者开发者联系获取商业授权，EasyDarwin开源流媒体服务器只做技术研究的先行者；
 
 - EasyDarwin开源吗？
 
-	EasyDarwin开源流媒体服务器完全开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧推送等优化，这些都是完全开源免费的；
+	EasyDarwin开源流媒体服务器完全开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧推送等优化，这些都是全代码完全开源的；
 
 	> EasyDarwin流媒体服务器原来带有非开源SDK的EasyRelayModule和EasyHLSModule已经移除，新版本的拉模式转发和HLS直播模块功能将全部采用开源live555/ffmpeg等开源项目结合实现，敬请期待！
 	> 
 	> Tip：原有版本可以在：https://github.com/babosa/EasyDarwin 获取源码功能；
 
+- EasyDarwin编译不过？
+
+	由于我们的EasyDarwin开发者各自熟悉的开发平台不一样，有的熟悉Windows开发，有的熟悉Linux开发，所以就会导致有的时候版本经常会出现Windows或者Linux编译不过的情况，那么这种情况下，我们可以通过下载https://github.com/EasyDarwin/EasyDarwin/releases里面已经归档的版本进行编译即可；	
+
+## 最新进展 ##
+
+### 2016.11.25
+1. EasyDarwin正在进行新架构模型的迭代，包括直播(RTSP/RTMP/HLS)，点播(ffmpeg+HLS)等方案；
+2. 移除Mongoose web管理功能，直接采用RESTful接口对外提供服务，届时会配套开发调用的html后台；
 
 ## 云平台结构 ##
 
@@ -31,11 +40,22 @@
 1. **EasyPlayer** RTSP流媒体播放客户端，目前只支持Windows桌面版本，后续将陆续支持Android、IOS版本，详细方案见[https://github.com/EasyDarwin/EasyPlayer](https://github.com/EasyDarwin/EasyPlayer)；
 
 ## 平台架构 ##
-![](http://www.easydarwin.org/skin/easydarwin/images/platform20160621.png)
+![](http://www.easydarwin.org/github/images/cloud_framework.png)
 
 ## 平台协议 ##
 
 [![EasyDarwin Protocol](http://www.easydarwin.org/github/images/EProtocol.jpg)](https://github.com/EasyDarwin/EasyDarwin/tree/master/Doc "EasyDarwin Protocol")
+
+## 默认端口 ##
+
+- EasyCMS：接口服务端口,10000
+- EasyDarwin：接口服务端口,10008
+- EasyDarwin：RTSP服务端口,10554
+- EasyDarwin：后台管理端口,10080
+- EasyNVR：接口服务端口,10010
+- EasyNVR：后台管理端口,10080
+
+
 
 ## 平台在线演示客户端 ##
 

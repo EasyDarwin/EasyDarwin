@@ -114,7 +114,7 @@ private:
 	void    ParseClientPortSubHeader(StrPtrLen* inClientPortSubHeader);
 	void    ParseTimeToLiveSubHeader(StrPtrLen* inTimeToLiveSubHeader);
 	void    ParseModeSubHeader(StrPtrLen* inModeSubHeader);
-	Bool16  ParseNetworkModeSubHeader(StrPtrLen* inSubHeader);
+	bool  ParseNetworkModeSubHeader(StrPtrLen* inSubHeader);
 	void 	ParseDynamicRateHeader();
 	void	ParseRandomDataSizeHeader();
 	void    ParseBandwidthHeader();

@@ -54,7 +54,7 @@
 QTSS_TextMessagesObject     QTSSModuleUtils::sMessages = NULL;
 QTSS_ServerObject           QTSSModuleUtils::sServer = NULL;
 QTSS_StreamRef              QTSSModuleUtils::sErrorLog = NULL;
-Bool16                      QTSSModuleUtils::sEnableRTSPErrorMsg = false;
+bool                      QTSSModuleUtils::sEnableRTSPErrorMsg = false;
 QTSS_ErrorVerbosity         QTSSModuleUtils::sMissingPrefVerbosity = qtssMessageVerbosity;
 
 void    QTSSModuleUtils::Initialize(QTSS_TextMessagesObject inMessages,
@@ -298,8 +298,8 @@ QTSS_Error  QTSSModuleUtils::AppendRTPMetaInfoHeader(   QTSS_RTSPRequestObject i
     
     //
     // For marking which fields were requested by the client
-    Bool16 foundFieldArray[RTPMetaInfoPacket::kNumFields];
-    ::memset(foundFieldArray, 0, sizeof(Bool16) * RTPMetaInfoPacket::kNumFields);
+    bool foundFieldArray[RTPMetaInfoPacket::kNumFields];
+    ::memset(foundFieldArray, 0, sizeof(bool) * RTPMetaInfoPacket::kNumFields);
     
     char* theEndP = theHeader.Ptr + theHeader.Len;
     UInt16 fieldNameValue = 0;
@@ -372,7 +372,7 @@ QTSS_Error  QTSSModuleUtils::SendErrorResponse( QTSS_RTSPRequestObject inRequest
                                                         QTSS_AttributeID inTextMessage,
                                                         StrPtrLen* inStringArg)
 {
-    static Bool16 sFalse = false;
+    static bool sFalse = false;
     
     //set RTSP headers necessary for this error response message
     (void)QTSS_SetValue(inRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
@@ -452,7 +452,7 @@ QTSS_Error	QTSSModuleUtils::SendErrorResponseWithMessage( QTSS_RTSPRequestObject
 														QTSS_RTSPStatusCode inStatusCode,
 														StrPtrLen* inErrorMessagePtr)
 {
-    static Bool16 sFalse = false;
+    static bool sFalse = false;
     
     //set RTSP headers necessary for this error response message
     (void)QTSS_SetValue(inRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
@@ -487,10 +487,10 @@ QTSS_Error	QTSSModuleUtils::SendErrorResponseWithMessage( QTSS_RTSPRequestObject
 
 QTSS_Error	QTSSModuleUtils::SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequest,
 													QTSS_SessionStatusCode inStatusCode,
-                                                    Bool16 inKillSession,
+                                                    bool inKillSession,
                                                     char *errorMessage)
 {
-    static Bool16 sFalse = false;
+    static bool sFalse = false;
     
     //set status code for access log
     (void)QTSS_SetValue(inRequest, qtssRTSPReqStatusCode, 0, &inStatusCode, sizeof(inStatusCode));
@@ -532,7 +532,7 @@ QTSS_Error	QTSSModuleUtils::SendHTTPErrorResponse( QTSS_RTSPRequestObject inRequ
     theErrorMessage.Put(messageLineBuffer,::strlen(messageLineBuffer));
     theErrorMessage.PutEOL();
  
-    Bool16 addBody =  (errorMessage != NULL && ::strlen(errorMessage) != 0); // body error message so add body headers
+    bool addBody =  (errorMessage != NULL && ::strlen(errorMessage) != 0); // body error message so add body headers
     if (addBody) // body error message so add body headers
     {
         // first create the html body
@@ -916,7 +916,7 @@ char**  QTSSModuleUtils::GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfil
     return outGroupCharPtrArray;
 }
 
-Bool16 QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroup, UInt32 inGroupLen)
+bool QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroup, UInt32 inGroupLen)
 {
 	if (NULL == inUserProfile || NULL == inGroup  ||  inGroupLen == 0) 
 		return false;
@@ -932,7 +932,7 @@ Bool16 QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* 
 	if (numGroups == 0) // no groups to check
 		return false;
 
-	Bool16 result = false;
+	bool result = false;
 	char* userGroup = NULL;
 	StrPtrLenDel userGroupStr; //deletes pointer in destructor
 	
@@ -954,7 +954,7 @@ Bool16 QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* 
 }
 
 
-Bool16 QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inAddressPtr)
+bool QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inAddressPtr)
 {
     StrPtrLenDel strDeleter;
     char*   theAttributeString = NULL;    
@@ -981,7 +981,7 @@ Bool16 QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID lis
     return false;
 }
 
-Bool16 QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr)
+bool QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr)
 {
     StrPtrLenDel tempString;
      
@@ -1010,7 +1010,7 @@ Bool16 QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_Att
     return false;
 }
 
-Bool16 QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QTSS_StandardRTSP_Params* inParams, UInt32 feature)
+bool QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, QTSS_StandardRTSP_Params* inParams, UInt32 feature)
 {
     StrPtrLenDel userAgentStr;    	
     (void)QTSS_GetValueAsString(inParams->inClientSession, qtssCliSesFirstUserAgent, 0, &userAgentStr.Ptr);
@@ -1021,7 +1021,6 @@ Bool16 QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, 
         case QTSSModuleUtils::kRequiresRTPInfoSeqAndTime:
         {        
             return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqRTPHeader, &userAgentStr);
-
         }
         break;
         
@@ -1041,50 +1040,30 @@ Bool16 QTSSModuleUtils::HavePlayerProfile(QTSS_PrefsObject inPrefObjectToCheck, 
         {
             return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqRTPStartTimeAdjust, &userAgentStr);
         }
-        break;
-        
-        case QTSSModuleUtils::kDisable3gppRateAdaptation:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqDisable3gppRateAdapt, &userAgentStr);
-        }
-        break;
-		
-        
-        case QTSSModuleUtils::kAdjust3gppTargetTime:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReq3GPPTargetTime, &userAgentStr);
-        }
-        break;
-        
-        case QTSSModuleUtils::kDisableThinning:
-        {
-            return QTSSModuleUtils::FindStringInAttributeList(inPrefObjectToCheck,  qtssPrefsPlayersReqDisableThinning, &userAgentStr);
-        }
-        break;
-        
+        break;        
     }
     
     return false;
 }
 
 
-QTSS_Error QTSSModuleUtils::AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, Bool16* allowed, Bool16*foundUser, Bool16 *authContinue)
+QTSS_Error QTSSModuleUtils::AuthorizeRequest(QTSS_RTSPRequestObject theRTSPRequest, bool* allowed, bool*foundUser, bool *authContinue)
 {
     QTSS_Error theErr = QTSS_NoErr;
     //printf("QTSSModuleUtils::AuthorizeRequest allowed=%d foundUser=%d authContinue=%d\n", *allowed, *foundUser, *authContinue);
     
     if (NULL != allowed)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserAllowed, 0, allowed, sizeof(Bool16));
+        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserAllowed, 0, allowed, sizeof(bool));
     if (QTSS_NoErr != theErr)
         return theErr;
     
     if (NULL != foundUser)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserFound, 0, foundUser, sizeof(Bool16));
+        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqUserFound, 0, foundUser, sizeof(bool));
     if (QTSS_NoErr != theErr)
         return theErr;  
     
     if (NULL != authContinue)
-        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqAuthHandled, 0, authContinue, sizeof(Bool16));
+        theErr = QTSS_SetValue(theRTSPRequest,qtssRTSPReqAuthHandled, 0, authContinue, sizeof(bool));
         
     return theErr;
 }
@@ -1106,7 +1085,7 @@ IPComponentStr::IPComponentStr(StrPtrLen *sourceStrPtr)
     (void) this->Set(sourceStrPtr);    
 }
 
-Bool16 IPComponentStr::Set(StrPtrLen *theAddressStrPtr)
+bool IPComponentStr::Set(StrPtrLen *theAddressStrPtr)
 {
     fIsValid = false;
    
@@ -1133,7 +1112,7 @@ Bool16 IPComponentStr::Set(StrPtrLen *theAddressStrPtr)
 }
 
 
-Bool16 IPComponentStr::Equal(IPComponentStr *testAddressPtr)
+bool IPComponentStr::Equal(IPComponentStr *testAddressPtr)
 {
     if (testAddressPtr == NULL) 
         return false;

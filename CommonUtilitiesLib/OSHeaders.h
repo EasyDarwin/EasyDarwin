@@ -280,8 +280,8 @@
     typedef ULONGLONG           UInt64;
     typedef float               Float32;
     typedef double              Float64;
-    typedef UInt16              Bool16;
-    typedef UInt8               Bool8;
+    //typedef UInt16              Bool16;
+    //typedef UInt8               Bool8;
     
     typedef unsigned long       FourCharCode;
     typedef FourCharCode        OSType;

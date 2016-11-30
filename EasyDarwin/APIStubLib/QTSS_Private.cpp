@@ -350,9 +350,9 @@ QTSS_Error  QTSS_RequestGlobalLock()
 
 // SYNCH GLOBAL MULTIPLE READERS/SINGLE WRITER ROUTINES
 
-Bool16  QTSS_IsGlobalLocked()
+bool  QTSS_IsGlobalLocked()
 {
-    return (Bool16) (sCallbacks->addr [kIsGlobalLockedCallback])  ();
+    return (bool) (sCallbacks->addr [kIsGlobalLockedCallback])  ();
 }
 
 QTSS_Error  QTSS_GlobalUnLock()
@@ -381,7 +381,7 @@ QTSS_Error  QTSS_Authenticate(  const char* inAuthUserName,
     return (sCallbacks->addr [kAuthenticateCallback]) (inAuthUserName, inAuthResourceLocalPath, inAuthMoviesDir, inAuthRequestAction, inAuthScheme, ioAuthRequestObject);
 }
 
-QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, Bool16* outAuthUserAllowed)
+QTSS_Error	QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** outAuthRealm, bool* outAuthUserAllowed)
 {
     return (sCallbacks->addr [kAuthorizeCallback]) (inAuthRequestObject, outAuthRealm, outAuthUserAllowed);
 }

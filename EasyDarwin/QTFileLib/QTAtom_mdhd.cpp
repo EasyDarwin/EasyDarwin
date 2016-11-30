@@ -71,7 +71,7 @@ const int       mdhdPosV1_Quality           = 22 + 12;
 // -------------------------------------
 // Constructors and destructors
 //
-QTAtom_mdhd::QTAtom_mdhd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, Bool16 Debug, Bool16 DeepDebug)
+QTAtom_mdhd::QTAtom_mdhd(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
     : QTAtom(File, TOCEntry, Debug, DeepDebug)
 {
 }
@@ -85,7 +85,7 @@ QTAtom_mdhd::~QTAtom_mdhd()
 // -------------------------------------
 // Initialization functions
 //
-Bool16 QTAtom_mdhd::Initialize()
+bool QTAtom_mdhd::Initialize()
 {
     // Temporary vars
     UInt32      tempInt32;

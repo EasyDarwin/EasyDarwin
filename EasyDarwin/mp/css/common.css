@@ -1,0 +1,47 @@
+.datagrid-row-selected {
+    background: #9dbdd6 !important;
+}
+
+.datagrid-body {
+    overflow-x: auto !important;
+}
+
+button {
+    outline: none !important;
+}
+/*always show sidebar second level menu*/
+
+.block,
+.treeview-menu.menu-open {
+    display: block;
+}
+/*help for display easyui until parse done*/
+
+.easyui-wrapper {
+    visibility: hidden;
+}
+/*fix sidebar menu top position*/
+
+.main-header {
+    max-height: none;
+}
+
+.input-group .input-group-addon {
+    background-color: #eee;
+}
+
+.btn-primary {
+  background-color: #00a65a !important;
+  border-color: #008d4c !important;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary.hover {
+  background-color: #008d4c !important;
+}
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #00a65a;
+}
+.content-header {
+    min-height: 40px;
+}

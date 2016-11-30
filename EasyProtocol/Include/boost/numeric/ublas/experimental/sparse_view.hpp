@@ -19,6 +19,7 @@
 
 #include <boost/next_prior.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/numeric/ublas/storage.hpp>
 
 namespace boost { namespace numeric { namespace ublas {
 

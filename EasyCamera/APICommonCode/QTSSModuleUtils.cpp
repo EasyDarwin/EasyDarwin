@@ -458,7 +458,7 @@ char**  QTSSModuleUtils::GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfil
 	return outGroupCharPtrArray;
 }
 
-Bool16 QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroup, UInt32 inGroupLen)
+bool QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* inGroup, UInt32 inGroupLen)
 {
 	if (NULL == inUserProfile || NULL == inGroup || inGroupLen == 0)
 		return false;
@@ -474,7 +474,7 @@ Bool16 QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* 
 	if (numGroups == 0) // no groups to check
 		return false;
 
-	Bool16 result = false;
+	bool result = false;
 	char* userGroup = NULL;
 	StrPtrLenDel userGroupStr; //deletes pointer in destructor
 
@@ -496,7 +496,7 @@ Bool16 QTSSModuleUtils::UserInGroup(QTSS_UserProfileObject inUserProfile, char* 
 }
 
 
-Bool16 QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inAddressPtr)
+bool QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inAddressPtr)
 {
 	StrPtrLenDel strDeleter;
 	char*   theAttributeString = NULL;
@@ -523,7 +523,7 @@ Bool16 QTSSModuleUtils::AddressInList(QTSS_Object inObject, QTSS_AttributeID lis
 	return false;
 }
 
-Bool16 QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr)
+bool QTSSModuleUtils::FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr)
 {
 	StrPtrLenDel tempString;
 
@@ -565,7 +565,7 @@ IPComponentStr::IPComponentStr(StrPtrLen *sourceStrPtr)
 	(void) this->Set(sourceStrPtr);
 }
 
-Bool16 IPComponentStr::Set(StrPtrLen *theAddressStrPtr)
+bool IPComponentStr::Set(StrPtrLen *theAddressStrPtr)
 {
 	fIsValid = false;
 
@@ -592,7 +592,7 @@ Bool16 IPComponentStr::Set(StrPtrLen *theAddressStrPtr)
 }
 
 
-Bool16 IPComponentStr::Equal(IPComponentStr *testAddressPtr)
+bool IPComponentStr::Equal(IPComponentStr *testAddressPtr)
 {
 	if (testAddressPtr == NULL)
 		return false;

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	@@include("./common.html")
+	<script src="./js/cyberplayer.js"></script>
+	<script src="./adminlte-2.3.6/plugins/moment/moment-with-locales.js"></script>
+	<style>
+		.channel-title {
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			color: #fff;
+			text-align: center;
+			padding: 0 15px;
+			font-size: 20px;
+			line-height: 50px;
+			font-weight: 700;
+		}
+		
+		#dvplay {
+			margin: 0 auto;
+			width: 80%;
+			height: 500px;
+		}
+		
+		#ruler {
+			border: 0;
+			border-top: 1px solid #333;
+			padding: 0;
+			margin: 0;
+			background-color: transparent;
+			height: 80px;
+			position: relative;
+		}
+		
+		#ruler .two-hour {
+			border: 0;
+			border-left: 1px solid #333;
+			padding: 0;
+			margin: 0;
+			height: 30px;
+		}
+		
+		#ruler .two-hour:first-child {
+			border-left: 0;
+		}
+		
+		#ruler .two-hour:last-child {
+			border-right: 1px solid #333;
+		}
+		
+		#ruler .ten-minute {
+			border: 0;
+			border-left: 1px solid #333;
+			padding: 0;
+			margin: 0;
+			height: 20px;
+		}
+		
+		#ruler .two-hour .ten-minute:first-child {
+			border-left: 0;
+		}
+		
+		#timer {
+			position: absolute;
+			width: 1px;
+			border: 0;
+			left: 0;
+			height: 40px;
+			overflow: visiable;
+			background-color: red;
+		}
+		
+		#timer #handle {
+			position: absolute;
+			width: 100px;
+			height: 30px;
+			line-height: 30px;
+			top: 40px;
+			left: -50px;
+			background-color: #00a65a;
+			text-align: center;
+			color: #fff;
+		}
+	</style>
+</head>
+
+<body class="hold-transition skin-green layout-top-nav">
+	<script>
+	    try {
+	        $(document).on("transitionend", ".content-wrapper", function () {
+	            localStorage["sidebar-collapse"] = $("body").hasClass("sidebar-collapse") ? "sidebar-collapse" : "";
+	        });
+	        $("body").addClass(localStorage["sidebar-collapse"]);
+	    } catch (e) {
+	    }
+	</script>
+	<div class="wrapper">
+
+		<header class="main-header">
+			<nav class="navbar navbar-static-top" role="navigation">
+				<div class="channel-title"></div>
+				<div class="navbar-custom-menu pull-left">
+					<ul class="nav navbar-nav">
+						<li>
+							<a id="btn-modify-pwd" href="javascript:top.history.go(-1);" data-toggle="modal"><i
+	                                class="fa fa-chevron-left"></i> 返回</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+
+		<div class="content-wrapper">
+			<section class="content easyui-wrapper">
+				<div id="dvplay"></div>
+				<br>
+				<div class="row" id="ruler">
+
+					<div id="timer" class="easyui-draggable" handle="#handle" axis="h" data-options="onDrag:onDrag">
+						<div id="handle">title</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<!-- content-wrapper -->
+
+		<footer class="main-footer">
+			<div class="pull-right hidden-xs">
+				EasyNVR
+			</div>
+			<strong>Copyright &copy; 2016 <a href="#">www.easydarwin.org</a>.</strong> All rights reserved.
+		</footer>
+	</div>
+	<!-- wrapper-->
+	<script>
+		var player = cyberplayer("dvplay").setup({
+			flashplayer: "cyberplayer.flash.swf",
+			stretching: "uniform",
+			file : $.cookie("videoUrl")||"rtmp://121.40.50.44/live/stream_1",
+			image : $.cookie("videoImg")||"/images/snap.png",
+			width : $("#dvplay").width(),
+			height: $("#dvplay").width() * 3/5,
+			autostart: false,
+			repeat: false,
+			volume: 100,
+			controls: true,
+			controlbar: {
+				barLogo: false
+			},
+			ak: '515d61b893134f40bd4297b75a03494b' // 公有云平台注册即可获得accessKey
+		});
+		moment.locale("zh-cn");
+		function onDrag(e){
+			var d = e.data;
+			var range = $(d.parent).innerWidth() - 1;
+			if (d.left < 0) {
+				d.left = 0;
+			}
+			if (d.left > range) {
+				d.left = range;
+			}
+			var left = parseInt(d.left);
+			var pos = left * 10000/range;
+			var m = moment().startOf("day");
+			var secs = 3600 * 24 * pos /10000;
+			m.add(secs,"seconds");
+			var title = m.format("HH:mm:ss");
+			$("#handle").text(title).attr("title",title);
+			$("#timer").data("pos",pos);
+		}
+
+		function posTimer(date){
+			var m = moment(date);
+			var secs = m.hours() * 3600 + m.minutes() * 60 + m.seconds();
+			var pos = (secs * 10000) / (3600 * 24);
+			var title = m.format("HH:mm:ss");
+			$("#handle").text(title).attr("title",title);
+			$("#timer").data("pos",pos).css("left",($("#ruler").innerWidth()-1) * pos /10000);
+		}
+
+		$(function () {
+			player.resize($(window).width() * 0.8, $(window).width() * 0.8 * 3 /5);
+			
+			for(var i=0;i<12;i++){
+				var $minute = $("<div class='col-xs-1 row two-hour'></div>");
+				$("#ruler").append($minute);
+				for(var j=0;j<12;j++){
+					var $second = $("<div class='col-xs-1 ten-minute'></div>");
+					$minute.append($second);
+				}
+			}
+
+			function onWindowResize(){
+				var w = $(window).width();
+				player.resize(w*0.8, w*0.8*3/5);
+				var pos = $("#timer").data("pos")||0;
+				$("#timer").css("left",($("#ruler").innerWidth()-1) * pos /10000);
+			}
+			var resizeEvt = "orientationchange" in window ? "orientationchange" : "resize";
+			window.addEventListener(resizeEvt,onWindowResize,false);
+			posTimer(new Date());
+			
+			setInterval(function(){
+				$.get(_url + "/touchchannelstream",{
+					Channel : $.cookie("channel"),
+					Protocol : isPC() ? "RTMP" : "HLS",
+					Line : "local",
+					From : "lan"
+				},function(data){
+					console.log(data);
+				})
+			},30000);
+
+			$(".channel-title").text($.cookie("channelName")||"通道直播");
+		});
+	</script>
+</body>
+
+</html>

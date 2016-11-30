@@ -44,26 +44,26 @@ OSHeap::OSHeap(UInt32 inStartSize)
 	else
 		fArraySize = inStartSize;
 
-	fHeap = NEW OSHeapElem*[fArraySize];
+	fHeap = new OSHeapElem*[fArraySize];
 }
 
 void OSHeap::Insert(OSHeapElem* inElem)
 {
-	Assert(inElem != NULL);
+	Assert(inElem != nullptr);
 
-	if ((fHeap == NULL) || (fFreeIndex == fArraySize))
+	if ((fHeap == nullptr) || (fFreeIndex == fArraySize))
 	{
 		fArraySize *= 2;
-		OSHeapElem** tempArray = NEW OSHeapElem*[fArraySize];
-		if ((fHeap != NULL) && (fFreeIndex > 1))
+		OSHeapElem** tempArray = new OSHeapElem*[fArraySize];
+		if ((fHeap != nullptr) && (fFreeIndex > 1))
 			memcpy(tempArray, fHeap, sizeof(OSHeapElem*) * fFreeIndex);
 
 		delete[] fHeap;
 		fHeap = tempArray;
 	}
 
-	Assert(fHeap != NULL);
-	Assert(inElem->fCurrentHeap == NULL);
+	Assert(fHeap != nullptr);
+	Assert(inElem->fCurrentHeap == nullptr);
 	Assert(fArraySize > fFreeIndex);
 
 #if _OSHEAP_TESTING_
@@ -103,8 +103,8 @@ void OSHeap::Insert(OSHeapElem* inElem)
 
 OSHeapElem* OSHeap::extract(UInt32 inIndex)
 {
-	if ((fHeap == NULL) || (fFreeIndex <= inIndex))
-		return NULL;
+	if ((fHeap == nullptr) || (fFreeIndex <= inIndex))
+		return nullptr;
 
 #if _OSHEAP_TESTING_
 	sanityCheck(1);
@@ -113,7 +113,7 @@ OSHeapElem* OSHeap::extract(UInt32 inIndex)
 	//store a reference to the element we want to extract
 	OSHeapElem* victim = fHeap[inIndex];
 	Assert(victim->fCurrentHeap == this);
-	victim->fCurrentHeap = NULL;
+	victim->fCurrentHeap = nullptr;
 
 	//but now we need to preserve this heuristic. We do this by taking
 	//the last leaf, putting it at the empty position, then heapifying that chain
@@ -158,8 +158,8 @@ OSHeapElem* OSHeap::extract(UInt32 inIndex)
 
 OSHeapElem* OSHeap::Remove(OSHeapElem* elem)
 {
-	if ((fHeap == NULL) || (fFreeIndex == 1))
-		return NULL;
+	if ((fHeap == nullptr) || (fFreeIndex == 1))
+		return nullptr;
 
 #if _OSHEAP_TESTING_
 	sanityCheck(1);
@@ -173,7 +173,7 @@ OSHeapElem* OSHeap::Remove(OSHeapElem* elem)
 
 	//either we've found it, or this is a bogus element
 	if (theIndex == fFreeIndex)
-		return NULL;
+		return nullptr;
 
 	return extract(theIndex);
 }
@@ -200,7 +200,7 @@ void OSHeap::sanityCheck(UInt32 root)
 }
 
 
-Bool16 OSHeap::Test()
+bool OSHeap::Test()
 {
 	OSHeap victim(2);
 	OSHeapElem elem1;
@@ -214,7 +214,7 @@ Bool16 OSHeap::Test()
 	OSHeapElem elem9;
 
 	OSHeapElem* max = victim.ExtractMin();
-	if (max != NULL)
+	if (max != nullptr)
 		return false;
 
 	elem1.SetValue(100);
@@ -224,7 +224,7 @@ Bool16 OSHeap::Test()
 	if (max != &elem1)
 		return false;
 	max = victim.ExtractMin();
-	if (max != NULL)
+	if (max != nullptr)
 		return false;
 
 	elem1.SetValue(100);
@@ -240,7 +240,7 @@ Bool16 OSHeap::Test()
 	if (max != &elem1)
 		return false;
 	max = victim.ExtractMin();
-	if (max != NULL)
+	if (max != nullptr)
 		return false;
 
 	victim.Insert(&elem2);
@@ -369,7 +369,7 @@ Bool16 OSHeap::Test()
 	if (max != &elem1)
 		return false;
 	max = victim.ExtractMin();
-	if (max != NULL)
+	if (max != nullptr)
 		return false;
 
 	victim.Insert(&elem1);
@@ -395,10 +395,10 @@ Bool16 OSHeap::Test()
 	if (max != &elem2)
 		return false;
 	max = victim.Remove(&elem2);
-	if (max != NULL)
+	if (max != nullptr)
 		return false;
 	max = victim.Remove(&elem8);
-	if (max != NULL)
+	if (max != nullptr)
 		return false;
 	max = victim.Remove(&elem5);
 	if (max != &elem5)
@@ -413,7 +413,7 @@ Bool16 OSHeap::Test()
 	if (max != &elem4)
 		return false;
 	max = victim.Remove(&elem1);
-	if (max != NULL)
+	if (max != nullptr)
 		return false;
 
 	return true;

@@ -16,7 +16,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 #define EASY_REDIS_ERR -1
 #define EASY_REDIS_OK 0
@@ -67,7 +67,7 @@ public:
 
 	//Sorted-Sets
 	typedef std::vector<std::string> ZSetsMembers_t;
-	typedef std::map<std::string, float> ZSetsMembersWithScore_t;
+	typedef std::unordered_map<std::string, float> ZSetsMembersWithScore_t;
 
 	int ZAdd(const char* key, float score, const char* member);
 	int ZRem(const char* key, ZSetsMembers_t& members);

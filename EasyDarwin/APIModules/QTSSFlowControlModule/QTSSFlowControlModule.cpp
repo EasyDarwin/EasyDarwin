@@ -60,7 +60,7 @@ static UInt32   sDefaultNumLossesToThin = 3;
 static UInt32   sDefaultLossThickTolerance = 5;
 static UInt32   sDefaultLossesToThick = 6;
 static UInt32   sDefaultWorsesToThin = 2;
-static Bool16   sDefaultModuleEnabled = true;
+static bool   sDefaultModuleEnabled = true;
 
 // Current values for preferences
 static UInt32   sLossThinTolerance = 30;
@@ -68,10 +68,10 @@ static UInt32   sNumLossesToThin = 3;
 static UInt32   sLossThickTolerance = 5;
 static UInt32   sLossesToThick = 6;
 static UInt32   sWorsesToThin = 2;
-static Bool16   sModuleEnabled = true;
+static bool   sModuleEnabled = true;
 
 // Server preference we respect
-static Bool16   sDisableThinning = false;
+static bool   sDisableThinning = false;
 
 
 // FUNCTION PROTOTYPES
@@ -170,24 +170,10 @@ QTSS_Error RereadPrefs()
 	return QTSS_NoErr;
 }
 
-
-
-Bool16 Is3GPPSession(QTSS_RTCPProcess_Params *inParams)
-{
-
-	Bool16 is3GPP = false;
-	UInt32 theLen = sizeof(is3GPP);
-	(void)QTSS_GetValue(inParams->inClientSession, qtssCliSessIs3GPPSession, 0, (void*)&is3GPP, &theLen);
-
-	return is3GPP;
-}
-
-
 QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
 {
-	if (!sModuleEnabled || sDisableThinning || Is3GPPSession(inParams))
+	if (!sModuleEnabled || sDisableThinning)
 	{
-		//qtss_printf("QTSSFlowControlModule.cpp:ProcessRTCPPacket processing disabled sModuleEnabled=%d sDisableThinning=%d Is3GPPSession(inParams)=%d\n", sModuleEnabled, sDisableThinning,Is3GPPSession(inParams));
 		return QTSS_NoErr;
 	}
 
@@ -239,11 +225,11 @@ QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
 
 	QTSS_RTPStreamObject theStream = inParams->inRTPStream;
 
-	Bool16 ratchetMore = false;
-	Bool16 ratchetLess = false;
+	bool ratchetMore = false;
+	bool ratchetLess = false;
 
-	Bool16 clearPercentLossThinCount = true;
-	Bool16 clearPercentLossThickCount = true;
+	bool clearPercentLossThinCount = true;
+	bool clearPercentLossThickCount = true;
 
 	UInt32* uint32Ptr = NULL;
 	UInt16* uint16Ptr = NULL;
@@ -389,7 +375,7 @@ QTSS_Error ProcessRTCPPacket(QTSS_RTCPProcess_Params* inParams)
 		}
 
 
-		Bool16 *startedThinningPtr = NULL;
+		bool *startedThinningPtr = NULL;
 		SInt32 numThinned = 0;
 		(void)QTSS_GetValuePtr(inParams->inClientSession, qtssCliSesStartedThinning, 0, (void**)&startedThinningPtr, &theLen);
 		if (false == *startedThinningPtr)

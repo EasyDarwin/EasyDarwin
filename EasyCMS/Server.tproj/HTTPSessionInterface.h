@@ -19,15 +19,12 @@
 #include "Task.h"
 #include "QTSS.h"
 #include "QTSSDictionary.h"
-#include "atomic.h"
-#include "base64.h"
+#include <atomic>
 #include <string>
-#include <boost/thread/condition.hpp>
 
 #include "OSRefTableEx.h"
 #include "EasyProtocolDef.h"
 #include "EasyProtocol.h"
-#include <map>
 
 using namespace EasyDarwin::Protocol;
 using namespace std;
@@ -44,7 +41,7 @@ public:
 
     //Is this session alive? If this returns false, clean up and begone as
     //fast as possible
-    Bool16 IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
+    bool IsLiveSession() { return fSocket.IsConnected() && fLiveSession; }
 
     // Allows clients to refresh the timeout
     void RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
@@ -55,7 +52,7 @@ public:
     // object holders is > 0, the RTSPSession will NEVER go away. However,
     // the object managing the session should be aware that if IsLiveSession returns
     // false it may be wise to relinquish control of the session
-    void IncrementObjectHolderCount() { (void)atomic_add(&fObjectHolders, 1); }
+	void IncrementObjectHolderCount() { /*(void)atomic_add(&fObjectHolders, 1);*/ ++fObjectHolders; }
     void DecrementObjectHolderCount();
 
     //Two main things are persistent through the course of a session, not
@@ -98,7 +95,7 @@ public:
         kMaxUserPasswordLen = 32
     };
 
-    void PushNVRMessage(EasyNVRMessage &msg) { fNVRMessageQueue.push_back(msg); }
+    //void PushNVRMessage(EasyNVRMessage &msg) { fNVRMessageQueue.push_back(msg); }
 
 	Easy_SessionType GetSessionType() { return fSessionType; }
 
@@ -120,7 +117,7 @@ protected:
     //boost::mutex		fNVROperatorMutex;
     //boost::mutex		fStreamReqCountMutex;
     //boost::condition_variable fCond;
-    EasyNVRMessageQueue fNVRMessageQueue;
+    //EasyNVRMessageQueue fNVRMessageQueue;
     //OSRef				fDevRef;
 
     TimeoutTask         fTimeoutTask;//allows the session to be timed out
@@ -139,8 +136,9 @@ protected:
     Easy_SessionType    fSessionType;	//普通socket,NVR,智能主机，摄像机
     //UInt32				fTerminalType;	//终端类型ARM、PC、Android、IOS
 
-    Bool16              fLiveSession;
-    unsigned int        fObjectHolders;
+    bool              fLiveSession;
+    //unsigned int        fObjectHolders;
+	std::atomic_int		fObjectHolders;
 
     UInt32              fSessionIndex;
     UInt32              fLocalAddr;
@@ -150,9 +148,10 @@ protected:
     UInt16              fLocalPort;
     UInt16              fRemotePort;
 
-    Bool16				fAuthenticated;
+    bool				fAuthenticated;
 
-    static unsigned int		sSessionIndexCounter;
+    //static unsigned int		sSessionIndexCounter;
+	static std::atomic_uint sSessionIndexCounter;
 
     static QTSSAttrInfoDict::AttrInfo   sAttributes[];
 

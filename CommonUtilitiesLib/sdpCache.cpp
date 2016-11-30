@@ -1,11 +1,11 @@
 #include "sdpCache.h"
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <time.h>
 
 using namespace std;
 
-CSdpCache* CSdpCache::cache = NULL;
+CSdpCache* CSdpCache::cache = nullptr;
 
 typedef struct sdpCache_Tag
 {
@@ -13,11 +13,11 @@ typedef struct sdpCache_Tag
 	string context;
 } SdpCache;
 
-static map<string, SdpCache> sdpmap;
+static unordered_map<string, SdpCache> sdpmap;
 
 CSdpCache* CSdpCache::GetInstance()
 {
-	if (cache == NULL)
+	if (cache == nullptr)
 	{
 		cache = new CSdpCache();
 	}
@@ -26,12 +26,12 @@ CSdpCache* CSdpCache::GetInstance()
 
 void CSdpCache::setSdpMap(char* path, char* context)
 {
-	if (path == NULL || context == NULL)
+	if (path == nullptr || context == nullptr)
 	{
 		return;
 	}
 	SdpCache cache = { 0 };
-	cache.date = time(NULL);
+	cache.date = time(nullptr);
 	cache.context = string(context);
 
 	sdpmap[string(path)] = cache;
@@ -39,10 +39,10 @@ void CSdpCache::setSdpMap(char* path, char* context)
 
 char* CSdpCache::getSdpMap(char* path)
 {
-	map<string, SdpCache>::iterator it = sdpmap.find(string(path));
+	auto it = sdpmap.find(string(path));
 	if (it == sdpmap.end())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	return (char*)it->second.context.c_str();
@@ -50,7 +50,7 @@ char* CSdpCache::getSdpMap(char* path)
 
 bool CSdpCache::eraseSdpMap(char* path)
 {
-	map<string, SdpCache>::iterator it = sdpmap.find(string(path));
+	auto it = sdpmap.find(string(path));
 	if (it == sdpmap.end())
 	{
 		return true;
@@ -63,10 +63,10 @@ unsigned long long CSdpCache::getSdpCacheDate(char *path)
 {
 	unsigned long long date = 0;
 	int length = 0;
-	map<string, SdpCache>::iterator it = sdpmap.find(string(path));
+	auto it = sdpmap.find(string(path));
 	if (it == sdpmap.end())
 	{
-		return NULL;
+		return 0;
 	}
 
 	date = it->second.date;
@@ -76,7 +76,7 @@ unsigned long long CSdpCache::getSdpCacheDate(char *path)
 int CSdpCache::getSdpCacheLen(char* path)
 {
 	int length = 0;
-	map<string, SdpCache>::iterator it = sdpmap.find(string(path));
+	auto it = sdpmap.find(string(path));
 	if (it == sdpmap.end())
 	{
 		return 0;

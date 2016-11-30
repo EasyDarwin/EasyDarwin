@@ -43,13 +43,13 @@ public:
 
 	static void Initialize();
 
-	QTSServerPrefs(XMLPrefsParser* inPrefsSource, Bool16 inWriteMissingPrefs);
+	QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs);
 	virtual ~QTSServerPrefs() {}
 
 	//This is callable at any time, and is thread safe wrt to the accessors.
 	//Pass in true if you want this function to update the prefs file if
 	//any defaults need to be used. False otherwise
-	void RereadServerPreferences(Bool16 inWriteMissingPrefs);
+	void RereadServerPreferences(bool inWriteMissingPrefs);
 
 	//Individual accessor methods for preferences.
 
@@ -61,8 +61,8 @@ public:
 
 	// For the compiled-in error logging module
 
-	Bool16  IsErrorLogEnabled() { return fErrorLogEnabled; }
-	Bool16  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
+	bool  IsErrorLogEnabled() { return fErrorLogEnabled; }
+	bool  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
 
 	UInt32  GetMaxErrorLogBytes() { return fErrorLogBytes; }
 	UInt32  GetErrorRollIntervalInDays() { return fErrorRollIntervalInDays; }
@@ -71,8 +71,8 @@ public:
 
 	//
 	// force logs to close after each write (true or false)
-	Bool16  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
-	void    SetCloseLogsOnWrite(Bool16 closeLogsOnWrite);
+	bool  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
+	void    SetCloseLogsOnWrite(bool closeLogsOnWrite);
 
 	// String preferences. Note that the pointers returned here is allocated
 	// memory that you must delete!
@@ -101,13 +101,13 @@ private:
 	UInt32  fErrorRollIntervalInDays;
 	UInt32  fErrorLogBytes;
 	UInt32  fErrorLogVerbosity;
-	Bool16  fScreenLoggingEnabled;
-	Bool16  fErrorLogEnabled;
+	bool  fScreenLoggingEnabled;
+	bool  fErrorLogEnabled;
 
 	UInt32  fNumThreads;
 	UInt32  fNumBlockingThreads;
 
-	Bool16  fCloseLogsOnWrite;
+	bool  fCloseLogsOnWrite;
 	enum
 	{
 		kAllowMultipleValues = 1,

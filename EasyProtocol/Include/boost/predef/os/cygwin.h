@@ -1,5 +1,5 @@
 /*
-Copyright Rene Rivera 2008-2013
+Copyright Rene Rivera 2008-2015
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
 http://www.boost.org/LICENSE_1_0.txt)
@@ -29,7 +29,7 @@ http://www.boost.org/LICENSE_1_0.txt)
     defined(__CYGWIN__) \
     )
 #   undef BOOST_OS_CYGWIN
-#   define BOOST_OS_CGYWIN BOOST_VERSION_NUMBER_AVAILABLE
+#   define BOOST_OS_CYGWIN BOOST_VERSION_NUMBER_AVAILABLE
 #endif
 
 #if BOOST_OS_CYGWIN
@@ -39,8 +39,7 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_OS_CYGWIN_NAME "Cygwin"
 
+#endif
+
 #include <boost/predef/detail/test.h>
 BOOST_PREDEF_DECLARE_TEST(BOOST_OS_CYGWIN,BOOST_OS_CYGWIN_NAME)
-
-
-#endif

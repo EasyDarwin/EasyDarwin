@@ -22,7 +22,7 @@ namespace concurrent
 {
 
   BOOST_SCOPED_ENUM_DECLARE_BEGIN(queue_op_status)
-  { success = 0, empty, full, closed, busy }
+  { success = 0, empty, full, closed, busy, timeout, not_ready }
   BOOST_SCOPED_ENUM_DECLARE_END(queue_op_status)
 
   struct sync_queue_is_closed : std::exception

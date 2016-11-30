@@ -41,8 +41,8 @@
 class ResizeableStringFormatter : public StringFormatter
 {
 public:
-	// Pass in inBuffer=NULL and inBufSize=0 to dynamically allocate the initial buffer.
-	ResizeableStringFormatter(char* inBuffer = NULL, UInt32 inBufSize = 0)
+	// Pass in inBuffer=nullptr and inBufSize=0 to dynamically allocate the initial buffer.
+	ResizeableStringFormatter(char* inBuffer = nullptr, UInt32 inBufSize = 0)
 		: StringFormatter(inBuffer, inBufSize), fOriginalBuffer(inBuffer) {}
 
 	//If we've been forced to increase the buffer size, fStartPut WILL be a dynamically allocated
@@ -54,7 +54,7 @@ private:
 	// This function will get called by StringFormatter if the current
 	// output buffer is full. This object allocates a buffer that's twice
 	// as big as the old one.
-	virtual Bool16    BufferIsFull(char* inBuffer, UInt32 inBufferLen);
+	virtual bool    BufferIsFull(char* inBuffer, UInt32 inBufferLen);
 
 	char*           fOriginalBuffer;
 

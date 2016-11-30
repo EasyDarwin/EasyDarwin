@@ -73,7 +73,7 @@ public:
 
 	void            Join();
 	void            SendStopRequest() { fStopRequested = true; }
-	Bool16          IsStopRequested() { return fStopRequested; }
+	bool          IsStopRequested() { return fStopRequested; }
 	void            StopAndWaitForThread();
 
 	void*           GetThreadData() { return fThreadData; }
@@ -87,7 +87,7 @@ public:
 	static void     SetUser(char* user) { ::strncpy(sUser, user, sizeof(sUser) - 1); sUser[sizeof(sUser) - 1] = 0; }
 	static void     SetGroup(char* group) { ::strncpy(sGroup, group, sizeof(sGroup) - 1); sGroup[sizeof(sGroup) - 1] = 0; }
 	static void     SetPersonality(char* user, char* group) { SetUser(user); SetGroup(group); };
-	Bool16          SwitchPersonality();
+	bool          SwitchPersonality();
 #if DEBUG
 	UInt32          GetNumLocksHeld() { return 0; }
 	void            IncrementLocksHeld() {}
@@ -95,7 +95,7 @@ public:
 #endif
 
 #if __linux__ ||  __MacOSX__
-	static void     WrapSleep(Bool16 wrapSleep) { sWrapSleep = wrapSleep; }
+	static void     WrapSleep(bool wrapSleep) { sWrapSleep = wrapSleep; }
 #endif
 
 #ifdef __Win32__
@@ -126,8 +126,8 @@ private:
 	static char sGroup[128];
 
 
-	Bool16 fStopRequested;
-	Bool16 fJoined;
+	bool fStopRequested;
+	bool fJoined;
 
 #ifdef __Win32__
 	HANDLE          fThreadID;
@@ -147,7 +147,7 @@ private:
 #endif
 
 #if __linux__ || __MacOSX__
-	static Bool16 sWrapSleep;
+	static bool sWrapSleep;
 #endif
 
 

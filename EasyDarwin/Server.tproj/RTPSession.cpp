@@ -37,8 +37,6 @@
 
 #include "QTSServerInterface.h"
 #include "QTSS.h"
-#include "RTSPRequest3GPP.h"
-
 #include "OS.h"
 #include "OSMemory.h"
 
@@ -265,44 +263,6 @@ void RTPSession::SetStreamThinningParams(Float32 inLateTolerance)
 	}
 }
 
-
-void RTPSession::Set3GPPRateAdaptionData(RateAdapationStreamDataFields *rateAdaptStreamData)
-{
-	RTPStream** theStream = NULL;
-	UInt32 theLen = 0;
-
-	for (int x = 0; this->GetValuePtr(qtssCliSesStreamObjects, x, (void**)&theStream, &theLen) == QTSS_NoErr; x++)
-	{
-		if ((*theStream)->GetSDPStreamID() == rateAdaptStreamData->GetSDPStreamID())
-		{
-			(*theStream)->SetRateAdaptData(rateAdaptStreamData);
-			break;
-		}
-	}
-}
-
-void RTPSession::SetMovieBitRateData()
-{
-	RTPStream** theStream = NULL;
-	UInt32 theLen = 0;
-
-	//should eventually set the stream rate too. Use some gross amount right now.
-	UInt32 movieBitRate = GetMovieAvgBitrate();
-
-	for (int x = 0; this->GetValuePtr(qtssCliSesStreamObjects, x, (void**)&theStream, &theLen) == QTSS_NoErr; x++)
-	{
-		(*theStream)->SetBitRateData(movieBitRate);
-	}
-}
-
-
-
-void RTPSession::Set3GPPLinkCharData(LinkCharDataFields *linkCharData)
-{
-	this->Get3GPPSessPtr()->SetLinkCharData(linkCharData);
-}
-
-
 QTSS_Error  RTPSession::Play(RTSPRequestInterface* request, QTSS_PlayFlags inFlags)
 {
 	//first setup the play associated session interface variables
@@ -397,7 +357,6 @@ QTSS_Error  RTPSession::Play(RTSPRequestInterface* request, QTSS_PlayFlags inFla
 		if (theBufferSize > thePrefs->GetMaxTCPBufferSizeInBytes())
 			theBufferSize = thePrefs->GetMaxTCPBufferSizeInBytes();
 
-		this->SetMovieBitRateData();
 	}
 
 	Assert(fRTSPSession != NULL); // can this ever happen?
@@ -423,7 +382,7 @@ void RTPSession::Pause()
 	{
 		Assert(theStream != NULL);
 		Assert(theLen == sizeof(RTPStream*));
-		(*theStream)->Pause();
+		//(*theStream)->Pause();
 	}
 }
 
@@ -462,7 +421,7 @@ void RTPSession::SendPlayResponse(RTSPRequestInterface* request, UInt32 inFlags)
 	RTPStream** theStream = NULL;
 	UInt32 theLen = 0;
 	UInt32 valueCount = this->GetNumValues(qtssCliSesStreamObjects);
-	Bool16 lastValue = false;
+	bool lastValue = false;
 	for (UInt32 x = 0; x < valueCount; x++)
 	{
 		this->GetValuePtr(qtssCliSesStreamObjects, x, (void**)&theStream, &theLen);

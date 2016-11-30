@@ -40,6 +40,8 @@
 #include "SourceInfo.h"
 #include "Task.h"//add
 
+#include <atomic>
+
 #ifndef _FILE_DELETER_
 #define _FILE_DELETER_
 
@@ -95,15 +97,15 @@ public:
 	};
 
 	QTSS_Error      SetupReflectorSession(SourceInfo* inInfo, QTSS_StandardRTSP_Params* inParams,
-		UInt32 inFlags = kMarkSetup, Bool16 filterState = true, UInt32 filterTimeout = 30);
+		UInt32 inFlags = kMarkSetup, bool filterState = true, UInt32 filterTimeout = 30);
 
 	QTSS_Error		SetSessionName();
 	QTSS_Error		StartHLSSession();
 	QTSS_Error		StopHLSSession();
 	// Packets get forwarded by attaching ReflectorOutput objects to a ReflectorSession.
 
-	void    AddOutput(ReflectorOutput* inOutput, Bool16 isClient);
-	void    RemoveOutput(ReflectorOutput* inOutput, Bool16 isClient);
+	void    AddOutput(ReflectorOutput* inOutput, bool isClient);
+	void    RemoveOutput(ReflectorOutput* inOutput, bool isClient);
 	void    TearDownAllOutputs();
 	void    RemoveSessionFromOutput(QTSS_ClientSessionObject inSession);
 	void    ManuallyMarkSetup() { fIsSetup = true; }
@@ -125,9 +127,9 @@ public:
 	SourceInfo*     GetSourceInfo() { return fSourceInfo; }
 	StrPtrLen*      GetLocalSDP() { return &fLocalSDP; }
 	StrPtrLen*      GetSourcePath() { return &fSourceID; }
-	Bool16          IsSetup() { return fIsSetup; }
+	bool          IsSetup() { return fIsSetup; }
 
-	Bool16			HasVideoKeyFrameUpdate() { return fHasVideoKeyFrameUpdate; }
+	bool			HasVideoKeyFrameUpdate() { return fHasVideoKeyFrameUpdate; }
 
 	char*			GetSessionName() { return fSessionName; }
 
@@ -146,7 +148,7 @@ public:
 
 	// Returns true if this SourceInfo structure is equivalent to this
 	// ReflectorSession.
-	Bool16 Equal(SourceInfo* inInfo);
+	bool Equal(SourceInfo* inInfo);
 
 	// Each stream has a cookie associated with it. When the stream writes a packet
 	// to an output, this cookie is used to identify which stream is writing the packet.
@@ -165,8 +167,8 @@ public:
 
 	SInt64  GetInitTimeMS() { return fInitTimeMS; }
 
-	void	SetHasBufferedStreams(Bool16 enableBuffer) { fHasBufferedStreams = enableBuffer; }
-	void	SetHasVideoKeyFrameUpdate(Bool16 indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
+	void	SetHasBufferedStreams(bool enableBuffer) { fHasBufferedStreams = enableBuffer; }
+	void	SetHasVideoKeyFrameUpdate(bool indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
 	char *   GetStreamName() { return fStreamName; }
 
 	QTSS_Object GetRTSPRelaySession() { return fRTSPRelaySession; }
@@ -175,7 +177,7 @@ public:
 private:
 
 	// Is this session setup?
-	Bool16      fIsSetup;
+	bool      fIsSetup;
 
 	// For storage in the session map       
 	OSRef       fRef;
@@ -184,11 +186,12 @@ private:
 	char*   fStreamName;
 
 	// HLS Session
-	Bool16		fHLSLive;
+	bool		fHLSLive;
 
 	OSQueueElem fQueueElem; // Relay uses this.
 
-	unsigned int        fNumOutputs;
+	//unsigned int        fNumOutputs;
+	std::atomic_uint fNumOutputs;
 
 	ReflectorStream**   fStreamArray;
 
@@ -206,9 +209,9 @@ private:
 	QTSS_ClientSessionObject fBroadcasterSession;
 	SInt64      fInitTimeMS;
 
-	Bool16      fHasBufferedStreams;
+	bool      fHasBufferedStreams;
 
-	Bool16		fHasVideoKeyFrameUpdate;
+	bool		fHasVideoKeyFrameUpdate;
 
 	QTSS_Object fRTSPRelaySession;
 

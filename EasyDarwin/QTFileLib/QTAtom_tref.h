@@ -48,18 +48,18 @@ public:
 	//
 	// Constructors and destructor.
 	QTAtom_tref(QTFile * File, QTFile::AtomTOCEntry * Atom,
-		Bool16 Debug = false, Bool16 DeepDebug = false);
+		bool Debug = false, bool DeepDebug = false);
 	virtual             ~QTAtom_tref();
 
 
 	//
 	// Initialization functions.
-	virtual Bool16      Initialize();
+	virtual bool      Initialize();
 
 	//
 	// Accessors.
 	inline  UInt32      GetNumReferences() { return (UInt32)fNumEntries; }
-	inline  Bool16      TrackReferenceToTrackID(UInt32 TrackReference, UInt32 * TrackID = NULL) \
+	inline  bool      TrackReferenceToTrackID(UInt32 TrackReference, UInt32 * TrackID = NULL) \
 	{   if (TrackReference < fNumEntries) {
 		\
 			if (TrackID != NULL) \

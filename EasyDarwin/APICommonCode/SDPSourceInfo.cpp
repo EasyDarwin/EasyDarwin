@@ -71,7 +71,7 @@ char* SDPSourceInfo::GetLocalSDP(UInt32* newSDPLen)
 {
     Assert(fSDPData.Ptr != NULL);
 
-    Bool16 appendCLine = true;
+    bool appendCLine = true;
     UInt32 trackIndex = 0;
     
     char *localSDP = NEW char[fSDPData.Len * 2];
@@ -85,7 +85,7 @@ char* SDPSourceInfo::GetLocalSDP(UInt32* newSDPLen)
     // Only generate our own trackIDs if this file doesn't have 'em.
     // Our assumption here is that either the file has them, or it doesn't.
     // A file with some trackIDs, and some not, won't work.
-    Bool16 hasControlLine = false;
+    bool hasControlLine = false;
 
     while (sdpParser.GetDataRemaining() > 0)
     {
@@ -203,7 +203,7 @@ void SDPSourceInfo::Parse(char* sdpData, UInt32 sdpLen)
     // at 1 -> N
     UInt32 currentTrack = 1;
     
-    Bool16 hasGlobalStreamInfo = false;
+    bool hasGlobalStreamInfo = false;
     StreamInfo theGlobalStreamInfo; //needed if there is one c= header independent of
                                     //individual streams
 

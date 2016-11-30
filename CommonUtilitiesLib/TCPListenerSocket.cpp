@@ -78,7 +78,7 @@ OS_Error TCPListenerSocket::Initialize(UInt32 addr, UInt16 port)
 		// Unfortunately we need to advertise a big buffer because our TCP sockets
 		// can be used for incoming broadcast data. This could force the server
 		// to run out of memory faster if it gets bogged down, but it is unavoidable.
-		this->SetSocketRcvBufSize(96 * 1024);
+		this->SetSocketRcvBufSize(512 * 1024);
 		err = this->listen(kListenQueueLength);
 		AssertV(err == 0, OSThread::GetErrno());
 		if (err != 0) break;
@@ -99,8 +99,8 @@ void TCPListenerSocket::ProcessEvent(int /*eventBits*/)
 #else
 	socklen_t size = sizeof(addr);
 #endif
-	Task* theTask = NULL;
-	TCPSocket* theSocket = NULL;
+	Task* theTask = nullptr;
+	TCPSocket* theSocket = nullptr;
 
 	//fSocket data member of TCPSocket.
 	int osSocket = accept(fFileDesc, (struct sockaddr*)&addr, &size);
@@ -141,7 +141,7 @@ void TCPListenerSocket::ProcessEvent(int /*eventBits*/)
 			WarnV((acceptError == 0), errStr);
 
 			theTask = this->GetSessionTask(&theSocket);
-			if (theTask == NULL)
+			if (theTask == nullptr)
 			{
 				close(osSocket);
 			}
@@ -158,7 +158,7 @@ void TCPListenerSocket::ProcessEvent(int /*eventBits*/)
 	}
 
 	theTask = this->GetSessionTask(&theSocket);
-	if (theTask == NULL)
+	if (theTask == nullptr)
 	{    //this should be a disconnect. do an ioctl call?
 		close(osSocket);
 		if (theSocket)

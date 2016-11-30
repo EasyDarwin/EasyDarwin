@@ -123,12 +123,12 @@ public:
 
 	static QTSS_AttributeID CreateAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType, void* inDefaultValue, UInt32 inBufferLen);
 
-	static Bool16 AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *theAddressPtr);
+	static bool AddressInList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *theAddressPtr);
 
 	static void SetMisingPrefLogVerbosity(QTSS_ErrorVerbosity verbosityLevel) { QTSSModuleUtils::sMissingPrefVerbosity = verbosityLevel; }
 	static QTSS_ErrorVerbosity GetMisingPrefLogVerbosity() { return QTSSModuleUtils::sMissingPrefVerbosity; }
 
-	static Bool16 FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);
+	static bool FindStringInAttributeList(QTSS_Object inObject, QTSS_AttributeID listID, StrPtrLen *inStrPtr);
 
 private:
 
@@ -151,21 +151,21 @@ public:
 	IPComponentStr(StrPtrLen* sourceStrPtr);
 
 	inline  StrPtrLen* GetComponent(UInt16 which);
-	Bool16      Equal(IPComponentStr* testAddressPtr);
-	Bool16      Set(StrPtrLen* theAddressStrPtr);
-	Bool16      Valid() { return fIsValid; }
-	inline  Bool16      IsLocal();
+	bool      Equal(IPComponentStr* testAddressPtr);
+	bool      Set(StrPtrLen* theAddressStrPtr);
+	bool      Valid() { return fIsValid; }
+	inline  bool      IsLocal();
 
 	enum { kNumComponents = 4 };
 
 	StrPtrLen   fAddressComponent[kNumComponents];
-	Bool16      fIsValid;
+	bool      fIsValid;
 	static IPComponentStr sLocalIPCompStr;
 
 };
 
 
-Bool16  IPComponentStr::IsLocal()
+bool  IPComponentStr::IsLocal()
 {
 	if (this->Equal(&sLocalIPCompStr))
 		return true;

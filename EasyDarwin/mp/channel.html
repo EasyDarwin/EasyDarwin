@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    @@include("./common.html")
+    <script src="./adminlte-2.3.6/plugins/nicescroll/jquery.nicescroll.min.js"></script>
+    <script src="./adminlte-2.3.6/plugins/typeahead/bootstrap3-typeahead.min.js"></script>
+    <style>
+        .channel-info table td{
+            word-break: keep-all;
+            white-space:nowrap;
+        }
+    </style>
+</head>
+@@include("./header.html")
+<script>
+	$(".breadcrumb").append("<li class='active'><i class='fa fa-road'></i> 通道配置</li>");
+</script>
+<div class="container-fluid no-padding">
+	<div class="channel-template hide">
+		<div class="col-sm-6 channel-info">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="panel-title">
+						<span field="Name" class="text-green"></span>
+						<div class="pull-right">
+							<div class="btn-group btn-toggle enable-toggle">
+								<button class="btn btn-xs btn-primary">启用</button>
+								<button class="btn btn-xs btn-default active">禁用</button>
+							</div>&nbsp;
+							<button class="btn btn-xs btn-primary btn-config" title="配置">
+                                <i class="fa fa-cog"></i>
+                            </button>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body table-responsive no-padding no-margin">
+					<table class="table table-striped table-condensed">
+						<tr>
+							<td>通道号</td>
+							<td field="Channel"></td>
+						</tr>
+						<tr>
+							<td>摄像机接入类型</td>
+							<td field="Protocol"></td>
+						</tr>
+						<tr>
+							<td>摄像机IP</td>
+							<td field="IP"></td>
+						</tr>
+						<tr>
+							<td>摄像机端口</td>
+							<td field="Port"></td>
+						</tr>
+						<tr>
+							<td>摄像机接入RTSP地址</td>
+							<td field="Rtsp"></td>
+						</tr>
+						<tr>
+							<td>摄像机接入ONVIF地址</td>
+							<td field="Onvif"></td>
+						</tr>
+						<tr>
+							<td>摄像机用户名</td>
+							<td field="UserName"></td>
+						</tr>
+						<tr>
+							<td>摄像机密码</td>
+							<td field="Password"></td>
+						</tr>
+						<tr>
+							<td>接入CDN地址</td>
+							<td field="Cdn"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div class="modal fade" id="channel-dlg">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+				<h4 class="modal-title">通道配置</h4>
+			</div>
+			<form id="channel-form" class="form-horizontal" data-toggle="validator">
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="input-name" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            通道名称
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-name" type="text" name="Name" class="form-control" required>
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-channel" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            通道号
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-channel" type="text" name="Channel" class="form-control" pattern="^\d+$" readonly="readonly" required>
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="checkbox-enable" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            是否启用
+                        </label>
+						<div class="col-sm-7">
+							<div class="btn-group btn-toggle enable-toggle">
+								<button type="button" class="btn btn-sm btn-primary">启用</button>
+								<input type="hidden" id="input-enable" name="Enable" value="0" />
+								<button type="button" class="btn btn-sm btn-default active">禁用</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-protocol" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            摄像机接入类型
+                        </label>
+						<div class="col-sm-7">
+                            <div class="input-group">
+                                <select name="Protocol" id="input-protocol" class="form-control">
+                                    <option value="RTSP" selected="selected">RTSP</option>
+                                    <option value="ONVIF">ONVIF</option>
+                                </select>
+                                <span class="input-group-addon">
+                                    <div class="checkbox" style="min-height:0;padding:0;">
+                                        <label style="line-height:20px;">
+                                            <input id="checkbox-probe" type="checkbox" style="margin-top:4px;"> ONVIF 探测
+                                        </label>
+                                    </div>
+                                </span>
+
+                            </div>
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group probe">
+						<label for="input-protocol" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            探测ONVIF IP
+                        </label>
+						<div class="col-sm-7">
+							<input type="text" id="probe-ip" class="form-control" data-provide="typeahead">
+						</div>
+					</div>
+					<div class="form-group probe">
+						<label for="input-protocol" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            探测ONVIF用户名
+                        </label>
+						<div class="col-sm-7">
+							<input type="text" id="probe-username" class="form-control">
+						</div>
+					</div>
+					<div class="form-group probe">
+						<label for="input-protocol" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            探测ONVIF密码
+                        </label>
+						<div class="col-sm-7">
+							<input type="password" id="probe-password" class="form-control">
+						</div>
+					</div>
+					<div class="form-group probe">
+						<div class="col-sm-7 col-sm-offset-4">
+							<button class="btn btn-primary" type="button" id="probe-btn">探测</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-ip" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            摄像机IP
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-ip" type="text" class="form-control" name="IP" required>
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-port" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            摄像机端口
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-port" type="text" class="form-control" name="Port" pattern="^[0-9]+$" required>
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-rtsp" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            摄像机接入RTSP地址
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-rtsp" type="text" class="form-control" name="Rtsp">
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-onvif" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            摄像机接入ONVIF地址
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-onvif" type="text" class="form-control" name="Onvif">
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-username" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            摄像机用户名
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-username" type="text" class="form-control" name="UserName">
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-password" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            摄像机密码
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-password" type="text" class="form-control" name="Password">
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input-cdn" class="col-sm-4 control-label">
+                            <!--<span class="text-red">*</span>-->
+                            接入CDN地址
+                        </label>
+						<div class="col-sm-7">
+							<input id="input-cdn" type="text" class="form-control" name="Cdn">
+							<span class="help-block with-errors"></span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-primary">确定</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<script>
+	$(function(){
+        $("#checkbox-probe").change(function(){
+            if($(this).prop("checked")){
+                $("#channel-form .form-group.probe").show("fast");
+            }else{
+                $("#channel-form .form-group.probe").hide("fast");
+            }
+        })
+        $("#probe-ip").typeahead({
+            showHintOnFocus : 'all',
+            minLength : 0,
+            delay : 300,
+            source : function(query,process){
+                var ips = [];
+                $.ajax({
+                    type : "GET",
+                    url : _url + "/discoverdevices",
+                    async : false,
+                    success : function(data){
+                        try{
+                            var ret = JSON.parse(data);
+                            $.each(ret.EasyDarwin.Body.Channels,function(i,a){
+                                ips.push(a["IP"]);
+                            })
+                        }catch(e){
+                            console.log(e);
+                        }
+                    }
+                })
+                process(ips);
+            },
+            items : 'all',
+            fitToElement : true
+        })
+        function renderChannel($channel){
+            $channel.find(".panel-body").niceScroll();
+            var channel = $channel.data("channel");
+            for(var p in channel){
+                $channel.find("[field={0}]".format(p)).text(channel[p]);
+            }
+            if(channel["Enable"] == '1'){
+                if(!$channel.find(".enable-toggle .btn:first").hasClass("active")){
+                    $channel.find(".enable-toggle").find(".btn").toggleClass("active").toggleClass("btn-primary").toggleClass("btn-default");
+                }
+            }else {
+                if($channel.find(".enable-toggle .btn:first").hasClass("active")){
+                    $channel.find(".enable-toggle").find(".btn").toggleClass("active").toggleClass("btn-primary").toggleClass("btn-default");
+                }
+            }            
+        }
+        function validateChannel(channel){
+            var allowEmptys = ["Cdn"];
+            if(channel["Protocol"] == "RTSP"){
+                allowEmptys.push("Onvif");
+            } else {
+                allowEmptys.push("Rtsp");
+            }
+            for(var key in channel){
+                if(!(new String(channel[key]).trim()) && $.inArray(key,allowEmptys) < 0){
+                    var fieldName = $(".channel-template table td[field={0}]".format(key)).prev().text()||key;
+                    $.gritter.add({
+                        text : '请完善信息 : ' + fieldName,
+                        class_name : 'gritter-error'
+                    })
+                    return key;
+                }
+            }
+            return "";
+        }    
+        $.get(_url + "/getchannelsconfig",function(data){
+            try{
+                var ret = JSON.parse(data);
+                var html = $(".channel-template").html();
+                ret.EasyDarwin.Body.Channels.sort(function(a,b){
+                    return parseInt(a["Channel"]) - parseInt(b["Channel"]);
+                })
+                $.each(ret.EasyDarwin.Body.Channels,function(i,channel){
+                    var $channel = $(html);
+                    $(".container-fluid").append($channel);
+                    $channel.data("channel",channel);
+                    renderChannel($channel);
+                })
+            }catch(e){}
+        })
+        $(document).on("click",".channel-info .btn-config",function(e){
+            var $channel = $(this).closest(".channel-info");
+            var channel = $channel.data("channel");
+            var _channel = $.extend({},channel);
+            _channel["Protocol"] = _channel["Protocol"] || "RTSP";
+            $("#channel-form").form("load",_channel).data("$channel",$channel);
+            if($("#channel-form [name=Enable]").val() == '1'){
+                if(!$("#channel-form .enable-toggle .btn:first").hasClass("active")){
+                    $("#channel-form .enable-toggle").find(".btn").toggleClass("active").toggleClass("btn-primary").toggleClass("btn-default");
+                }
+            }else {
+                if($("#channel-form .enable-toggle .btn:first").hasClass("active")){
+                    $("#channel-form .enable-toggle").find(".btn").toggleClass("active").toggleClass("btn-primary").toggleClass("btn-default");
+                }
+            }
+            $("#checkbox-probe").trigger("change");
+            $("#channel-dlg").modal("show");
+        });
+        $(document).on("click",".channel-info .enable-toggle",function(){
+            var $this = $(this);
+            var $channel = $this.closest(".channel-info");
+            var channel = $channel.data("channel");
+            if(validateChannel(channel)) return;
+            channel["Enable"] = channel["Enable"] == '1' ? '0' : '1';
+            $.get(_url + "/setchannelconfig", channel, function(data) {
+                try{
+                    var ret = JSON.parse(data);
+                    if(ret.EasyDarwin.Header.ErrorNum != "200"){
+                        $.gritter.add({
+                            text : '配置失败!',
+                            class_name : 'gritter-error'
+                        })
+                        channel["Enable"] = channel["Enable"] == '1' ? '0' : '1';
+                        return;
+                    }
+                }catch(e){}
+                $.gritter.add({
+                    text : '配置成功, 即时生效!',
+                    class_name : 'gritter-info'
+                });
+                $channel.data("channel",channel);
+                renderChannel($channel);
+            });
+        })
+        $(document).on("click","#channel-form .enable-toggle",function(){
+            $(this).find(".btn").toggleClass("active").toggleClass("btn-primary").toggleClass("btn-default");
+            $(this).find("[name=Enable]").val($(this).find(".btn:first").hasClass("active") ? "1" : "0");
+        })
+        //点击探测
+        $(document).on("click","#probe-btn",function(){
+            var ip = $("#probe-ip").val();
+            var username = $("#probe-username").val();
+            var password = $("#probe-password").val();
+            if(!ip){
+                $.gritter.add("请填写探测ONVIF IP");
+                $("#probe-ip").focus();
+                return;
+            }
+            if(!username){
+                $.gritter.add("请填写探测ONVIF用户名");
+                $("#probe-username").focus();
+                return;
+            }
+            if(!password){
+                $.gritter.add("请填写探测ONVIF密码");
+                $("#probe-password").focus();
+                return;
+            }
+            $.get(_url + "/probedevice",{
+                ip : ip,
+                username : username,
+                password : password
+            },function(data){
+                try{
+                    var ret = JSON.parse(data);
+                    if(!ret.EasyDarwin.Body){
+                        $.gritter.add("没有探测到结果");
+                        return;
+                    }
+                    $("#channel-form").form("load",ret.EasyDarwin.Body);
+                    $.gritter.add({
+                        text : "探测成功!",
+                        class_name : 'gritter-info'
+                    });
+                }catch(e){
+                    console.log(e);
+                }
+            })
+        })
+        $('#channel-form').validator().on('submit', function(e) {
+            if (!e.isDefaultPrevented()) {
+                e.preventDefault();
+                var formArray = $("#channel-form").serializeArray();
+                var channel = {};
+                $.map(formArray,function(n){
+                    channel[n['name']] = n['value'];
+                })
+                if(validateChannel(channel)) return;
+                $.get(_url + "/setchannelconfig", channel, function(data) {
+                    try{
+                        var ret = JSON.parse(data);
+                        if(ret.EasyDarwin.Header.ErrorNum != "200"){
+                            $.gritter.add({
+                                text : '配置失败!',
+                                class_name : 'gritter-error'
+                            })
+                            return;
+                        }
+                    }catch(e){}
+                    $.gritter.add({
+                        text : '配置成功, 即时生效!',
+                        class_name : 'gritter-info'
+                    });
+                    $("#channel-dlg").modal("hide");
+                    var $channel = $("#channel-form").data("$channel");
+                    $channel.data("channel",channel);
+                    renderChannel($channel);
+                });
+            }
+        });        
+    })
+</script>
+@@include("./footer.html")

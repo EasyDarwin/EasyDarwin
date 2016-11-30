@@ -43,7 +43,7 @@
 
 void TestParseConfigFile();
 
-int ParseConfigFile(Bool16 allowNullValues, const char* fname,
-	Bool16(*ConfigSetter)(const char* paramName, const char* paramValue[], void* userData),
+int ParseConfigFile(bool allowNullValues, const char* fname,
+	bool(*ConfigSetter)(const char* paramName, const char* paramValue[], void* userData),
 	void* userData);
 #endif
