@@ -79,7 +79,7 @@ private:
 
 	enum
 	{
-		kOutputBufferSizeInBytes = 1024 * 1024  //64k Buffer UInt32
+		kOutputBufferSizeInBytes = 64 * 1024 -1  //64k Buffer UInt32
 	};
 
 	//The default buffer size is allocated inline as part of the object. Because this size

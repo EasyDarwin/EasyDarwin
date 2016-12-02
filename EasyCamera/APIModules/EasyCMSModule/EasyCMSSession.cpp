@@ -17,7 +17,7 @@
 
 // EasyCMS IP
 static char*            sEasyCMS_IP = NULL;
-static char*            sDefaultEasyCMS_IP_Addr = "www.easydss.com";
+static char*            sDefaultEasyCMS_IP_Addr = "121.40.50.44";
 // EasyCMS Port
 static UInt16			sEasyCMSPort = 10000;
 static UInt16			sDefaultEasyCMSPort = 10000;
