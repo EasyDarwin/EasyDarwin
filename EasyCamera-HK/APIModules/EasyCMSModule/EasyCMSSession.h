@@ -74,8 +74,7 @@ private:
 	QTSS_Error processControlPresetReq() const;
 	QTSS_Error processControlTalkbackReq() const;
 
-	// 重置客户端参数
-	void				resetClientSocket();
+	int resetClientSocket();
 
 private:
 	enum

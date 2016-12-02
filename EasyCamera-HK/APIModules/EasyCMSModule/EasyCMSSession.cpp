@@ -180,9 +180,7 @@ SInt64 EasyCMSSession::Run()
 					if (fNoneACKMsgCount > 3)
 					{
 						printf("ackmsgcount > 3 \n");
-						this->resetClientSocket();
-
-						return 0;
+						return resetClientSocket();
 					}
 
 					// TCPSocket已连接的情况下先区分具体事件类型
@@ -269,9 +267,7 @@ SInt64 EasyCMSSession::Run()
 					// needlessly lingering around, taking up space.
 					Assert(!fSocket->GetSocket()->IsConnected());
 					printf("reading message theErr == %d \n", theErr);
-					this->resetClientSocket();
-
-					return 0;
+					return resetClientSocket();
 				}
 
 				// 网络请求超过了缓冲区，返回Bad Request
@@ -339,8 +335,7 @@ SInt64 EasyCMSSession::Run()
 					// Any other error means that the client has disconnected, right?
 					printf("sending message != noerr errno %d \n", theErr);
 					Assert(!this->isConnected());
-					resetClientSocket();
-					return 0;
+					return resetClientSocket();
 				}
 
 				++fNoneACKMsgCount;
@@ -701,12 +696,7 @@ size_t EasyCMSSession::getStatusNo(QTSS_Error inError)
 	return error;
 }
 
-//
-// 清除原有ClientSocket,NEW出新的ClientSocket
-// 赋值Socket连接的服务器地址和端口
-// 更新fInputSocket和fOutputSocket的fSocket对象
-// 重置状态机状态
-void EasyCMSSession::resetClientSocket()
+int EasyCMSSession::resetClientSocket()
 {
 	qtss_printf("EasyCMSSession::ResetClientSocket()\n");
 
@@ -730,6 +720,8 @@ void EasyCMSSession::resetClientSocket()
 	fState = kIdle;
 
 	fNoneACKMsgCount = 0;
+    
+    return 1000;
 }
 
 QTSS_Error EasyCMSSession::doDSRegister()
