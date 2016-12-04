@@ -643,6 +643,8 @@ RTSPRequestInterface::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLe
 void* RTSPRequestInterface::GetAbsTruncatedPath(QTSSDictionary* inRequest, UInt32* /*outLen*/)
 {
 	// This function gets called only once
+	// if qtssRTSPReqAbsoluteURL = rtsp://www.easydarwin.org:554/live.sdp?channel=1&token=888888/trackID=1 
+	// then qtssRTSPReqTruncAbsoluteURL = rtsp://www.easydarwin.org:554/live.sdp?channel=1&token=888888
 
 	RTSPRequestInterface* theRequest = (RTSPRequestInterface*)inRequest;
 	theRequest->SetVal(qtssRTSPReqTruncAbsoluteURL, theRequest->GetValue(qtssRTSPReqAbsoluteURL));
@@ -690,18 +692,21 @@ void* RTSPRequestInterface::GetFileName(QTSSDictionary* inRequest, UInt32* /*out
 	if (theFileNameParam->Len == 0)
 		return theFileNameParam;
 
+	if (theFileNameParam->Ptr[0] == kPathDelimiterChar)
+	{
+		theFileNameParam->Ptr++;
+		theFileNameParam->Len--;
+	}
+
 	//walk back in the file name until we hit a /
-	SInt32 x = theFileNameParam->Len - 1;
-	for (; x > 0; x--)
+	SInt32 x = 0;
+	int i = 0;
+	for (; x < theFileNameParam->Len; x++ )
 		if (theFileNameParam->Ptr[x] == kPathDelimiterChar)
 			break;
 	//once we do, make the tempPtr point to the next character after the slash,
 	//and adjust the length accordingly
-	if (theFileNameParam->Ptr[x] == kPathDelimiterChar)
-	{
-		theFileNameParam->Ptr = (&theFileNameParam->Ptr[x]) + 1;
-		theFileNameParam->Len -= (x + 1);
-	}
+	theFileNameParam->Len = x;
 
 	return NULL;
 }
@@ -712,15 +717,19 @@ void* RTSPRequestInterface::GetFileDigit(QTSSDictionary* inRequest, UInt32* /*ou
 	// This function always gets called
 
 	RTSPRequestInterface* theRequest = (RTSPRequestInterface*)inRequest;
-	theRequest->SetVal(qtssRTSPReqFileDigit, theRequest->GetValue(qtssRTSPReqFilePath));
+	theRequest->SetVal(qtssRTSPReqFileDigit, theRequest->GetValue(qtssRTSPReqAbsoluteURL));
+
 
 	StrPtrLen* theFileDigit = theRequest->GetValue(qtssRTSPReqFileDigit);
 
-	UInt32  theFilePathLen = theRequest->GetValue(qtssRTSPReqFilePath)->Len;
-	theFileDigit->Ptr += theFilePathLen - 1;
+	StrPtrLen theFilePath;
+	(void)QTSS_GetValuePtr(inRequest, qtssRTSPReqTruncAbsoluteURL, 0, (void**)&theFilePath.Ptr, &theFilePath.Len);
+
+	//UInt32  theFilePathLen = theRequest->GetValue(qtssRTSPReqTruncAbsoluteURL)->Len;
+	theFileDigit->Ptr += theFileDigit->Len -1;
 	theFileDigit->Len = 0;
 	while ((StringParser::sDigitMask[(unsigned int) *(*theFileDigit).Ptr] != '\0') &&
-		(theFileDigit->Len <= theFilePathLen))
+		(theFileDigit->Len <= theFilePath.Len))
 	{
 		theFileDigit->Ptr--;
 		theFileDigit->Len++;
