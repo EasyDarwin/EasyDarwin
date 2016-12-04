@@ -744,7 +744,7 @@ QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_AttributeID inPathType, bool isPush, bool *foundSessionPtr, char** resultFilePath)
 {
 	char* theFullPathStr = NULL;
-	QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqLocalPath, 0, &theFullPathStr);
+	QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFullPathStr);
 	Assert(theErr == QTSS_NoErr);
 	QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
 
@@ -908,7 +908,7 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 	//
 	// Get the full path to this file
 	char* theFullPathStr = NULL;
-	(void)QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqLocalPath, 0, &theFullPathStr);
+	(void)QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFullPathStr);
 	QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
 	StrPtrLen theFullPath(theFullPathStr);
 
@@ -1151,7 +1151,7 @@ void DoDescribeAddRequiredSDPLines(QTSS_StandardRTSP_Params* inParams, Reflector
 QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 {
 	char *theFilepath = NULL;
-	ReflectorSession* theSession = DoSessionSetup(inParams, qtssRTSPReqFilePath, false, NULL, &theFilepath);
+	ReflectorSession* theSession = DoSessionSetup(inParams, qtssRTSPReqFileName, false, NULL, &theFilepath);
 	OSCharArrayDeleter tempFilePath(theFilepath);
 
 	if (theSession == NULL)
@@ -1566,7 +1566,7 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 		if (theErr != QTSS_NoErr && !isPush)
 		{
 			// 如果为客户端,那么NEW RTPSessionOutput,并进行属性设置
-			theSession = DoSessionSetup(inParams, qtssRTSPReqFilePathTrunc);
+			theSession = DoSessionSetup(inParams, qtssRTSPReqFileName);
 			if (theSession == NULL)
 				return QTSS_RequestFailed;
 
@@ -1581,7 +1581,7 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 			if (theSession == NULL)
 			{
 				// 如果为推送端,且还未进行过Track SETUP,那么我们就需要设置sClientBroadcastSessionAttr属性
-				theSession = DoSessionSetup(inParams, qtssRTSPReqFilePathTrunc, isPush, &foundSession);
+				theSession = DoSessionSetup(inParams, qtssRTSPReqFileName, isPush, &foundSession);
 				if (theSession == NULL)
 					return QTSS_RequestFailed;
 			}
@@ -2260,6 +2260,9 @@ bool AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest)
 
 bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest)
 {
+	//Babosa 2016.12.2
+	return true;
+
 	bool allowed = false;
 
 	char* theURIPathStr;
