@@ -436,17 +436,17 @@ SInt64 RTSPSession::Run()
 
 				if (fInputStream.IsDataPacket())
 				{
-                    if(fRTSPSessionHandler)
-                    {
-                        RTSPMsg* theMsg = fRTSPSessionHandler->GetMsg();
-                        if(theMsg)
-                        {
-                            theMsg->fMsgCountID = this->fMsgCount++;
-                            theMsg->SetMsgData(fInputStream.GetRequestBuffer()->Ptr, fInputStream.GetRequestBuffer()->Len);
-                            fRTSPSessionHandler->ProcessMsg(OS::Milliseconds(), theMsg);
-                        }
-                    }
-                    else
+                    //if(fRTSPSessionHandler)
+                    //{
+                    //    RTSPMsg* theMsg = fRTSPSessionHandler->GetMsg();
+                    //    if(theMsg)
+                    //    {
+                    //        theMsg->fMsgCountID = this->fMsgCount++;
+                    //        theMsg->SetMsgData(fInputStream.GetRequestBuffer()->Ptr, fInputStream.GetRequestBuffer()->Len);
+                    //        fRTSPSessionHandler->ProcessMsg(OS::Milliseconds(), theMsg);
+                    //    }
+                    //}
+                    //else
                     {
                         this->HandleIncomingDataPacket();
                     }
