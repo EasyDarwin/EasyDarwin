@@ -142,7 +142,7 @@ QTSS_Error RTSPRequest::ParseFirstLine(StringParser &parser)
 	//no longer assume this is a space... instead, just consume whitespace
 	parser.ConsumeWhitespace();
 
-	//now parse the uri
+	//now parse the uri,for example rtsp://www.easydarwin.org:554/live.sdp?channel=1&token=888888
 	QTSS_Error err = ParseURI(parser);
 	if (err != QTSS_NoErr)
 		return err;
@@ -167,14 +167,17 @@ QTSS_Error RTSPRequest::ParseFirstLine(StringParser &parser)
 //returns: SyntaxError if there was an error in the uri. Or InternalServerError
 QTSS_Error RTSPRequest::ParseURI(StringParser &parser)
 {
+	//for example: rtsp://www.easydarwin.org:554/live.sdp?channel=1&token=888888
 	//read in the complete URL, set it to be the qtssAbsoluteURLParam
+	StrPtrLen theURL;
+	parser.ConsumeUntilWhitespace(&theURL);
+	//qtssRTSPReqAbsoluteURL = rtsp://www.easydarwin.org:554/live.sdp?channel=1&token=888888
+	this->SetVal(qtssRTSPReqAbsoluteURL, &theURL);
+
+	StringParser absParser(&theURL);
 	StrPtrLen theAbsURL;
-
-	//  RTSPRequestInterface::sPathURLStopConditions stop on ? as well as sURLStopConditions
-	parser.ConsumeUntil(&theAbsURL, sURLStopConditions);
-
-	// set qtssRTSPReqAbsoluteURL to the URL throught the path component; will be : <protocol>://<host-addr>/<path>
-	this->SetVal(qtssRTSPReqAbsoluteURL, &theAbsURL);
+	//theAbsURL = rtsp://www.easydarwin.org:554/live.sdp
+	absParser.ConsumeUntil(&theAbsURL, sURLStopConditions);
 
 	StringParser urlParser(&theAbsURL);
 
@@ -188,6 +191,7 @@ QTSS_Error RTSPRequest::ParseURI(StringParser &parser)
 		//assign the host field here to the proper QTSS param
 		StrPtrLen theHost;
 		urlParser.ConsumeUntil(&theHost, '/');
+		// qtssHostHeader = www.easydarwin.org:554
 		fHeaderDictionary.SetVal(qtssHostHeader, &theHost);
 	}
 
@@ -217,6 +221,7 @@ QTSS_Error RTSPRequest::ParseURI(StringParser &parser)
 	//in the qtssURLParam. Confused?
 	UInt32 uriLen = urlParser.GetDataReceivedLen() - urlParser.GetDataParsedLen();
 	if (uriLen > 0)
+		// qtssRTSPReqURI = /live.sdp
 		this->SetVal(qtssRTSPReqURI, urlParser.GetCurrentPosition(), urlParser.GetDataReceivedLen() - urlParser.GetDataParsedLen());
 	else
 		//
@@ -228,6 +233,7 @@ QTSS_Error RTSPRequest::ParseURI(StringParser &parser)
 	// parse the query string from the url if present.
 	// init qtssRTSPReqQueryString dictionary to an empty string
 	StrPtrLen queryString;
+	// qtssRTSPReqQueryString = channel=1&token=888888
 	this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
 
 	if (parser.GetDataRemaining() > 0)
