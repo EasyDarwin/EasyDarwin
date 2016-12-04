@@ -218,8 +218,8 @@
 
     /* paths */
     #define kEOLString "\r\n"
-    #define kPathDelimiterString "\\"
-    #define kPathDelimiterChar '\\'
+    #define kPathDelimiterString "/"
+    #define kPathDelimiterChar '/'
     #define kPartialPathBeginsWithDelimiter 0
     
     #define crypt(buf, salt) ((char*)buf)
