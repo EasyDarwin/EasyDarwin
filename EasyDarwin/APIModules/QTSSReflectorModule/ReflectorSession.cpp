@@ -83,10 +83,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo) :
 	fInitTimeMS(OS::Milliseconds()),
 	fHasBufferedStreams(false),
 	fRTSPRelaySession(NULL),
-	fSessionName(NULL),
 	fHLSLive(false),
-	fHasVideoKeyFrameUpdate(false),
-	fStreamName(NULL)
+	fHasVideoKeyFrameUpdate(false)
 {
 
 	fQueueElem.SetEnclosingObject(this);
@@ -123,59 +121,40 @@ ReflectorSession::~ReflectorSession()
 		fStreamArray[x] = NULL;
 	}
 
-	CSdpCache::GetInstance()->eraseSdpMap(GetSourcePath()->GetAsCString());
+	CSdpCache::GetInstance()->eraseSdpMap(GetSourceID()->GetAsCString());
 
 	// We own this object when it is given to us, so delete it now
 	delete[] fStreamArray;
 	delete fSourceInfo;
 	fLocalSDP.Delete();
-	fSourceID.Delete();
 
 	//将推流名称从redis中删除,使用fSessionName+".sdp"
-	if (fStreamName)
+	if (fSourceID.Ptr)
 	{
 		QTSS_RoleParams theParams;
-		theParams.StreamNameParams.inStreamName = fStreamName;
+		theParams.StreamNameParams.inStreamName = fSourceID.Ptr;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelPushStreamRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			qtss_printf("从redis中删除推流名称%s\n", fStreamName);
+			qtss_printf("从redis中删除推流名称%s\n", fSourceID.Ptr);
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisDelPushStreamRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisDelPushStream_Role, &theParams);
 		}
 	}
-	if (fSessionName)
-		delete[] fSessionName;
+
+	fSourceID.Delete();
 }
 
 QTSS_Error ReflectorSession::SetSessionName()
 {
 	if (fSourceID.Len > 0)
 	{
-		StringParser parser(&fSourceID);
-		StrPtrLen strName;
-
-		parser.Expect(kPathDelimiterChar);
-		parser.ConsumeUntil(&strName, '\.');
-		fSessionName = NEW char[strName.Len + 1];
-		::memcpy(fSessionName, strName.Ptr, strName.Len);
-		fSessionName[strName.Len] = '\0';
-
-		//将推流名称加入到redis中
-		int iLen = strlen(fSessionName) + 1;
-		fStreamName = new char[iLen];
-		sprintf(fStreamName, "%s", fSessionName);
-		for (int i = 0; i < iLen; i++)
-		{
-			if (fStreamName[i] == '\\')
-				fStreamName[i] = '/';
-		}
 		QTSS_RoleParams theParams;
-		theParams.StreamNameParams.inStreamName = fStreamName;
+		theParams.StreamNameParams.inStreamName = fSourceID.Ptr;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddPushStreamRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			qtss_printf("向redis中添加推流名称%s\n", fStreamName);
+			qtss_printf("向redis中添加推流名称%s\n", fSourceID.Ptr);
 
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddPushStreamRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisAddPushStream_Role, &theParams);
@@ -199,9 +178,9 @@ QTSS_Error ReflectorSession::StartHLSSession()
 
 		//构造本地URL
 		char url[QTSS_MAX_URL_LENGTH] = { 0 };
-		qtss_sprintf(url, "rtsp://127.0.0.1:%d/%s.sdp", thePort, fSessionName);
+		qtss_sprintf(url, "rtsp://127.0.0.1:%d/%s", thePort, fSourceID.Ptr);
 
-		Easy_StartHLSession(fSessionName, url, 0, NULL);
+		Easy_StartHLSession(fSourceID.Ptr, url, 0, NULL);
 		//if(QTSS_NoErr == theErr)
 		fHLSLive = true;
 	}
@@ -215,7 +194,7 @@ QTSS_Error ReflectorSession::StopHLSSession()
 
 	if (fHLSLive)
 	{
-		theErr = Easy_StopHLSession(fSessionName);
+		theErr = Easy_StopHLSession(fSourceID.Ptr);
 		if (QTSS_NoErr == theErr)
 			fHLSLive = false;
 	}
@@ -394,7 +373,7 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, bool isClient)
 	{
 		//调用角色，停止推流
 		QTSS_RoleParams theParams;
-		theParams.easyFreeStreamParams.inStreamName = fStreamName;
+		theParams.easyFreeStreamParams.inStreamName = fSourceID.Ptr;
 		UInt32 currentModule = 0;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
 		for (; currentModule < numModules; currentModule++)

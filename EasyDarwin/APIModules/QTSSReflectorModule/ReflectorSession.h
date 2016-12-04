@@ -126,12 +126,10 @@ public:
 	StrPtrLen*      GetSourceInfoHTML() { return &fSourceInfoHTML; }
 	SourceInfo*     GetSourceInfo() { return fSourceInfo; }
 	StrPtrLen*      GetLocalSDP() { return &fLocalSDP; }
-	StrPtrLen*      GetSourcePath() { return &fSourceID; }
+	StrPtrLen*      GetSourceID() { return &fSourceID; }
 	bool          IsSetup() { return fIsSetup; }
 
 	bool			HasVideoKeyFrameUpdate() { return fHasVideoKeyFrameUpdate; }
-
-	char*			GetSessionName() { return fSessionName; }
 
 	ReflectorStream*	GetStreamByIndex(UInt32 inIndex) { return fStreamArray[inIndex]; }
 	void AddBroadcasterClientSession(QTSS_StandardRTSP_Params* inParams);
@@ -169,7 +167,6 @@ public:
 
 	void	SetHasBufferedStreams(bool enableBuffer) { fHasBufferedStreams = enableBuffer; }
 	void	SetHasVideoKeyFrameUpdate(bool indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
-	char *   GetStreamName() { return fStreamName; }
 
 	QTSS_Object GetRTSPRelaySession() { return fRTSPRelaySession; }
 	void SetRTSPRelaySession(QTSS_Object relaySession) { fRTSPRelaySession = relaySession; }
@@ -182,8 +179,6 @@ private:
 	// For storage in the session map       
 	OSRef       fRef;
 	StrPtrLen   fSourceID;
-	char*	fSessionName;
-	char*   fStreamName;
 
 	// HLS Session
 	bool		fHLSLive;
