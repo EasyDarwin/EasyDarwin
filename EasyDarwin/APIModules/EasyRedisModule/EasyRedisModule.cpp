@@ -193,7 +193,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		{
 			OSRef* theRef = theIter.GetCurrent();
 			ReflectorSession  * theSession = (ReflectorSession  *)theRef->GetObject();
-			char * chPushName = theSession->GetSessionName();
+			char * chPushName = theSession->GetSourceID()->Ptr;
 			if (chPushName)
 			{
 				strAllPushName[iPos++] = ' ';

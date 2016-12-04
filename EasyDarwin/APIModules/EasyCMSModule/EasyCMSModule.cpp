@@ -55,7 +55,7 @@ SInt64 ReflectorSessionCheckTask::Run()
 		if ((theSession->GetNumOutputs() == 0) && (sNowTime - sCreateTime >= 20 * 1000))
 		{
 			QTSS_RoleParams theParams;
-			theParams.easyFreeStreamParams.inStreamName = theSession->GetStreamName();
+			theParams.easyFreeStreamParams.inStreamName = theSession->GetSourceID()->Ptr;
 			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
 			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 			{

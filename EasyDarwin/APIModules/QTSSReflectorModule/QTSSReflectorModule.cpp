@@ -1346,16 +1346,12 @@ bool InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, Str
 
 ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData, bool isPush, bool *foundSessionPtr)
 {
-	// 根据inPath查找ReflectorSession
 	OSMutexLocker locker(sSessionMap->GetMutex());
 	OSRef* theSessionRef = sSessionMap->Resolve(inPath);
 	ReflectorSession* theSession = NULL;
 
 	if (theSessionRef == NULL)
 	{
-		// 未查找到ReflectorSession,则根据sdp信息创建
-		// 注意:只有推送isPush=true才进行ReflectorSession创建
-
 		if (!isPush)
 		{
 			return NULL;
@@ -1364,7 +1360,6 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 		StrPtrLen theFileData;
 		StrPtrLen theFileDeleteData;
 
-		// 读取SDPCache中缓存的sdp信息
 		if (inData == NULL)
 		{
 			(void)QTSSModuleUtils::ReadEntireFile(inPath->Ptr, &theFileDeleteData);
@@ -1386,7 +1381,6 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 			delete theInfo;
 			return NULL;
 		}
-
 
 		if (!InfoPortsOK(inParams, theInfo, inPath))
 		{
@@ -2108,7 +2102,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool k
 
 			//if (theInfo->IsRTSPControlled())
 			//{   
-			//    FileDeleter(inSession->GetSourcePath());
+			//    FileDeleter(inSession->GetSourceID());
 			//}
 			//    
 
