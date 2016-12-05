@@ -125,7 +125,7 @@
 #define EASY_TAG_PLAY_COUNT								"PlayCount"
 #define EASY_TAG_SESSION_COUNT							"SessionCount"
 #define EASY_TAG_RECORDS								"Records"
-#define EASY_TAG_AUDIENCE_NUM							"AudienceNum"
+#define	EASY_TAG_NUM_OUTPUTS							"NumOutputs"
 #define EASY_TAG_ACTION_TYPE                            "ActionType"
 #define EASY_TAG_L_ACTION_TYPE                          "actiontype"
 #define EASY_TAG_SPEED                                  "Speed"
