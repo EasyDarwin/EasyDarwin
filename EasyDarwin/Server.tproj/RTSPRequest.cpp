@@ -236,15 +236,15 @@ QTSS_Error RTSPRequest::ParseURI(StringParser &parser)
 	// qtssRTSPReqQueryString = channel=1&token=888888
 	this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
 
-	if (parser.GetDataRemaining() > 0)
+	if (absParser.GetDataRemaining() > 0)
 	{
-		if (parser.PeekFast() == '?')
+		if (absParser.PeekFast() == '?')
 		{
 			// we've got some CGI param
-			parser.ConsumeLength(&queryString, 1); // toss '?'
+			absParser.ConsumeLength(&queryString, 1); // toss '?'
 
 			// consume the rest of the line..
-			parser.ConsumeUntilWhitespace(&queryString);
+			absParser.ConsumeUntilWhitespace(&queryString);
 
 			this->SetVal(qtssRTSPReqQueryString, queryString.Ptr, queryString.Len);
 		}
