@@ -438,10 +438,10 @@ QTSS_Error HTTPSession::SetupRequest()
 				//	return execNetMsgCSGetChannelsRESTful(fRequest->GetQueryString());
 				//}
 
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "getchannelstream")
-				//{
-				//	return execNetMsgCSGetChannelStreamRESTful(fRequest->GetQueryString());
-				//}
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "getdevicestream")
+				{
+					return execNetMsgCSGetDeviceStreamReqRESTful(fRequest->GetQueryString());
+				}
 
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
 				{
@@ -731,7 +731,7 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 	return theErr;
 }
 
-QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(char* queryString)
+QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* queryString)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -1047,4 +1047,83 @@ QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryStrin
 	//}
 
 	exit(-2);
+}
+
+QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryString)
+{
+	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//if (!hasLogin(cokieTemp))
+	//{
+	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+	//}
+
+
+	std::string queryTemp;
+	if (queryString)
+	{
+		queryTemp = EasyUtil::Urldecode(queryString);
+	}
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
+
+	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);
+	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);
+	const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
+
+	UInt32 theChannelNum = 0;
+
+	char* outURL = new char[QTSS_MAX_URL_LENGTH];
+	outURL[0] = '\0';
+	QTSSCharArrayDeleter theHLSURLDeleter(outURL);
+
+	int theErr = EASY_ERROR_SERVER_NOT_IMPLEMENTED;
+
+	do 
+	{
+		if (!chSerial)
+		{
+			theErr == EASY_ERROR_NOT_FOUND;
+			break;
+		}
+	
+		const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
+		if (chChannel)
+		{
+			theChannelNum = stoi(chChannel);
+		}
+
+		if (!chProtocol)
+		{
+			theErr = EASY_ERROR_CLIENT_BAD_REQUEST;
+			break;
+		}
+
+		StrPtrLen protocolRTSP("RTSP");
+		StrPtrLen chProtocolPtr((char*)chProtocol);
+		if (protocolRTSP.EqualIgnoreCase(chProtocolPtr))
+		{
+			printf("Get RTSP Stream~~~\n");
+		}
+
+
+	} while (0);
+
+
+	EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = theErr;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(theErr);
+
+	body[EASY_TAG_URL] = outURL;
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+
+	return QTSS_NoErr;
 }
