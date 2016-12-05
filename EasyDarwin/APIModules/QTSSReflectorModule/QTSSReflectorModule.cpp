@@ -46,6 +46,11 @@
 #include "SDPUtils.h"
 #include "sdpCache.h"
 
+#include "QueryParamList.h"
+#include "EasyUtil.h"
+
+using namespace std;
+
 #ifndef __Win32__
 #include <unistd.h>
 #endif
@@ -198,7 +203,7 @@ static QTSS_Error Shutdown();
 static QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
-ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData = NULL, bool isPush = false, bool *foundSessionPtr = NULL);
+ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Params* inParams, UInt32 inChannel = 0, StrPtrLen* inData = NULL, bool isPush = false, bool *foundSessionPtr = NULL);
 static QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams);
 static QTSS_Error DoPlay(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inSession);
 static QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams);
@@ -743,15 +748,32 @@ QTSS_Error ProcessRTSPRequest(QTSS_StandardRTSP_Params* inParams)
 
 ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_AttributeID inPathType, bool isPush, bool *foundSessionPtr, char** resultFilePath)
 {
-	char* theFullPathStr = NULL;
-	QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFullPathStr);
+	char* theFileNameStr = NULL;
+	QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFileNameStr);
 	Assert(theErr == QTSS_NoErr);
-	QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
-
+	QTSSCharArrayDeleter theFileNameStrDeleter(theFileNameStr);
 	if (theErr != QTSS_NoErr)
 		return NULL;
 
-	StrPtrLen theFullPath(theFullPathStr);
+	char* theQueryString = NULL;
+	theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqQueryString, 0, &theQueryString);
+	QTSSCharArrayDeleter theQueryStringDeleter(theQueryString);
+
+	std::string queryTemp;
+	if (theQueryString)
+	{
+		queryTemp = EasyUtil::Urldecode(theQueryString);
+	}
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
+
+	UInt32 theChannelNum = 0;
+	const char* chnNum = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
+	if (chnNum)
+	{
+		theChannelNum = stoi(chnNum);
+	}
+
+	StrPtrLen theFullPath(theFileNameStr);
 
 	if (theFullPath.Len > sMOVSuffix.Len)
 	{
@@ -786,7 +808,7 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
 		}
 		if (resultFilePath != NULL)
 			*resultFilePath = thePathPtr.GetAsCString();
-		return FindOrCreateSession(&thePathPtr, inParams);
+		return FindOrCreateSession(&thePathPtr, inParams, theChannelNum);
 	}
 	else
 	{
@@ -808,7 +830,7 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
 			{
 				if (resultFilePath != NULL)
 					*resultFilePath = theFullPath.GetAsCString();
-				return FindOrCreateSession(&theFullPath, inParams, NULL, isPush, foundSessionPtr);
+				return FindOrCreateSession(&theFullPath, inParams, theChannelNum, NULL, isPush, foundSessionPtr);
 			}
 		}
 		return NULL;
@@ -907,10 +929,31 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 	//qtss_printf("QTSSReflectorModule:DoAnnounce\n");
 	//
 	// Get the full path to this file
-	char* theFullPathStr = NULL;
-	(void)QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFullPathStr);
-	QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
-	StrPtrLen theFullPath(theFullPathStr);
+	char* theFileNameStr = NULL;
+	(void)QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFileNameStr);
+	QTSSCharArrayDeleter theFileNameStrDeleter(theFileNameStr);
+	StrPtrLen theFullPath(theFileNameStr);
+
+	char* theQueryString = NULL;
+	QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqQueryString, 0, &theQueryString);
+	QTSSCharArrayDeleter theQueryStringDeleter(theQueryString);
+
+	std::string queryTemp;
+	if (theQueryString)
+	{
+		queryTemp = EasyUtil::Urldecode(theQueryString);
+	}
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
+
+	UInt32 theChannelNum = 0;
+	const char* chnNum = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
+	if (chnNum)
+	{
+		theChannelNum = stoi(chnNum);
+	}
+
+	char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
+	sprintf(theStreamName, "%s/%d", theFileNameStr, theChannelNum);
 
 	// Check for a .kill at the end
 	bool pathOK = false;
@@ -1088,7 +1131,7 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 #endif 
 	char sdpContext[1024] = { 0 };
 	sprintf(sdpContext, "%s%s", sessionHeaders, mediaHeaders);
-	CSdpCache::GetInstance()->setSdpMap(theFullPath.Ptr, sdpContext);
+	CSdpCache::GetInstance()->setSdpMap(theStreamName, sdpContext);
 
 
 	//qtss_printf("QTSSReflectorModule:DoAnnounce SendResponse OK=200\n");
@@ -1150,9 +1193,9 @@ void DoDescribeAddRequiredSDPLines(QTSS_StandardRTSP_Params* inParams, Reflector
 
 QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 {
-	char *theFilepath = NULL;
-	ReflectorSession* theSession = DoSessionSetup(inParams, qtssRTSPReqFileName, false, NULL, &theFilepath);
-	OSCharArrayDeleter tempFilePath(theFilepath);
+	char *theFileName = NULL;
+	ReflectorSession* theSession = DoSessionSetup(inParams, qtssRTSPReqFileName, false, NULL, &theFileName);
+	OSCharArrayDeleter tempFilePath(theFileName);
 
 	if (theSession == NULL)
 		return QTSS_RequestFailed;
@@ -1161,10 +1204,10 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	//	if(true)//Don't forget relese ref that used in DoSessionSetup
 	//	{
 	//		//1.get the path
-	//		char* theFullPathStr = NULL;
-	//		QTSS_Error theErrEx = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqLocalPath, 0, &theFullPathStr);
+	//		char* theFileNameStr = NULL;
+	//		QTSS_Error theErrEx = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqLocalPath, 0, &theFileNameStr);
 	//		Assert(theErrEx == QTSS_NoErr);
-	//		QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
+	//		QTSSCharArrayDeleter theFileNameStrDeleter(theFileNameStr);
 	//
 	//		//2.get SessionID
 	//		char chStreamId[64]={0};
@@ -1173,7 +1216,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	//		char movieFolder[256] = { 0 };
 	//		UInt32 thePathLen = 256;
 	//		QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &thePathLen);
-	//		StringParser parser(&StrPtrLen(theFullPathStr));
+	//		StringParser parser(&StrPtrLen(theFileNameStr));
 	//		StrPtrLen strName;
 	//		parser.ConsumeLength(NULL,thePathLen);
 	//		parser.Expect('\\');
@@ -1228,7 +1271,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	StrPtrLen theFileData;
 	QTSS_TimeVal outModDate = 0;
 	QTSS_TimeVal inModDate = -1;
-	(void)QTSSModuleUtils::ReadEntireFile(theFilepath, &theFileData, inModDate, &outModDate);
+	(void)QTSSModuleUtils::ReadEntireFile(theFileName, &theFileData, inModDate, &outModDate);
 	OSCharArrayDeleter fileDataDeleter(theFileData.Ptr);
 
 	// -------------- process SDP to remove connection info and add track IDs, port info, and default c= line
@@ -1344,10 +1387,16 @@ bool InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, Str
 	return isOK;
 }
 
-ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Params* inParams, StrPtrLen* inData, bool isPush, bool *foundSessionPtr)
+ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Params* inParams, UInt32 inChannel, StrPtrLen* inData, bool isPush, bool *foundSessionPtr)
 {
 	OSMutexLocker locker(sSessionMap->GetMutex());
-	OSRef* theSessionRef = sSessionMap->Resolve(inPath);
+
+	char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
+	sprintf(theStreamName, "%s/%d", inName->Ptr, inChannel);
+
+	StrPtrLen inPath(theStreamName);
+
+	OSRef* theSessionRef = sSessionMap->Resolve(&inPath);
 	ReflectorSession* theSession = NULL;
 
 	if (theSessionRef == NULL)
@@ -1362,7 +1411,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 
 		if (inData == NULL)
 		{
-			(void)QTSSModuleUtils::ReadEntireFile(inPath->Ptr, &theFileDeleteData);
+			(void)QTSSModuleUtils::ReadEntireFile(inPath.Ptr, &theFileDeleteData);
 			theFileData = theFileDeleteData;
 		}
 		else
@@ -1382,7 +1431,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 			return NULL;
 		}
 
-		if (!InfoPortsOK(inParams, theInfo, inPath))
+		if (!InfoPortsOK(inParams, theInfo, &inPath))
 		{
 			delete theInfo;
 			return NULL;
@@ -1406,7 +1455,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 		if (isPush)
 			theSetupFlag |= ReflectorSession::kIsPushSession;
 
-		theSession = NEW ReflectorSession(inPath);
+		theSession = NEW ReflectorSession(inName, inChannel);
 		if (theSession == NULL)
 		{
 			return NULL;
@@ -1431,7 +1480,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 		// unless we do this, the refcount won't increment (and we'll delete the session prematurely
 		//if (!isPush)
 		{
-			OSRef* debug = sSessionMap->Resolve(inPath);
+			OSRef* debug = sSessionMap->Resolve(&inPath);
 			Assert(debug == theSession->GetRef());
 		}
 	}
@@ -1454,7 +1503,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 		StrPtrLen theFileData;
 
 		if (inData == NULL)
-			(void)QTSSModuleUtils::ReadEntireFile(inPath->Ptr, &theFileData);
+			(void)QTSSModuleUtils::ReadEntireFile(inPath.Ptr, &theFileData);
 		OSCharArrayDeleter charArrayDeleter(theFileData.Ptr);
 
 		if (theFileData.Len <= 0)
@@ -1464,7 +1513,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 		if (theInfo == NULL)
 			return NULL;
 
-		if (!InfoPortsOK(inParams, theInfo, inPath))
+		if (!InfoPortsOK(inParams, theInfo, &inPath))
 		{
 			delete theInfo;
 			return NULL;
@@ -1541,14 +1590,12 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 {
 	ReflectorSession* theSession = NULL;
 
-	// 首先通过SETUP报文中mode=record/receive字段判断是否为推送端
 	UInt32 theLen = 0;
 	UInt32 *transportModePtr = NULL;
 	QTSS_Error theErr = QTSS_GetValuePtr(inParams->inRTSPRequest, qtssRTSPReqTransportMode, 0, (void**)&transportModePtr, &theLen);
 	bool isPush = (transportModePtr != NULL && *transportModePtr == qtssRTPTransportModeRecord) ? true : false;
 	bool foundSession = false;
 
-	// 根据RTPSessionOutput属性判断是否为客户端
 	RTPSessionOutput** theOutput = NULL;
 	theErr = QTSS_GetValuePtr(inParams->inClientSession, sOutputAttr, 0, (void**)&theOutput, &theLen);
 	if (theLen != sizeof(RTPSessionOutput*))
@@ -1556,10 +1603,8 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 		//theLen = sizeof(theSession);
 		//theErr = QTSS_GetValue(inParams->inClientSession, sSessionAttr, 0, &theSession, &theLen);
 
-		// 如果没有RTPSessionOutput属性,就会有两种可能,一种为首次SETUP的客户端,另一种为推送端        
 		if (theErr != QTSS_NoErr && !isPush)
 		{
-			// 如果为客户端,那么NEW RTPSessionOutput,并进行属性设置
 			theSession = DoSessionSetup(inParams, qtssRTSPReqFileName);
 			if (theSession == NULL)
 				return QTSS_RequestFailed;
@@ -1574,18 +1619,15 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 			QTSS_Error theErr = QTSS_GetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &theSession, &theLenTemp);
 			if (theSession == NULL)
 			{
-				// 如果为推送端,且还未进行过Track SETUP,那么我们就需要设置sClientBroadcastSessionAttr属性
 				theSession = DoSessionSetup(inParams, qtssRTSPReqFileName, isPush, &foundSession);
 				if (theSession == NULL)
 					return QTSS_RequestFailed;
 			}
 			else
 			{
-				// 推送端在之前的SETUP命令中已经设置过了sClientBroadcastSessionAttr属性
 				;
 			}
 
-			// 获取到ReflectorSession,设置推送端RTSPSession的sClientBroadcastSessionAttr属性
 			theErr = QTSS_SetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &theSession, sizeof(theSession));
 			Assert(theErr == QTSS_NoErr);
 
@@ -1614,7 +1656,6 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 
 	UInt32 theTrackID = ::strtol(theDigitStr, NULL, 10);
 
-	// 如果是推送端,需要NEW RTPStream对象并进行设置
 	if (isPush)
 	{
 		//qtss_printf("QTSSReflectorModule.cpp:DoSetup is push setup\n");
