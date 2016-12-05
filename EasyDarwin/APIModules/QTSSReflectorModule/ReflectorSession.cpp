@@ -89,7 +89,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 	fQueueElem.SetEnclosingObject(this);
 	if (inSourceID != NULL)
 	{
-		char streamID[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+		char streamID[QTSS_MAX_NAME_LENGTH] = { 0 };
 		sprintf(streamID, "%s/%d", inSourceID->Ptr, fChannelNum);
 		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
 		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
