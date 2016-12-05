@@ -81,7 +81,6 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo) :
 	fBroadcasterSession(NULL),
 	fInitTimeMS(OS::Milliseconds()),
 	fHasBufferedStreams(false),
-	fRTSPRelaySession(NULL),
 	fHLSLive(false),
 	fHasVideoKeyFrameUpdate(false)
 {

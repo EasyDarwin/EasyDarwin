@@ -167,9 +167,6 @@ public:
 	void	SetHasBufferedStreams(bool enableBuffer) { fHasBufferedStreams = enableBuffer; }
 	void	SetHasVideoKeyFrameUpdate(bool indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
 
-	QTSS_Object GetRTSPRelaySession() { return fRTSPRelaySession; }
-	void SetRTSPRelaySession(QTSS_Object relaySession) { fRTSPRelaySession = relaySession; }
-
 private:
 
 	// Is this session setup?
@@ -205,9 +202,6 @@ private:
 	bool		fHasBufferedStreams;
 
 	bool		fHasVideoKeyFrameUpdate;
-
-	QTSS_Object fRTSPRelaySession;
-
 };
 
 #endif
