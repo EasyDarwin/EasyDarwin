@@ -623,7 +623,8 @@ namespace EasyDarwin { namespace Protocol
 		value[EASY_TAG_L_INDEX] = session.index;
 		value[EASY_TAG_L_URL] = session.Url;
 		value[EASY_TAG_L_NAME] = session.Name;
-		value[EASY_TAG_AUDIENCE_NUM] = session.numOutputs;
+		value[EASY_TAG_CHANNEL] = session.channel;
+		value[EASY_TAG_NUM_OUTPUTS] = session.numOutputs;
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_SESSIONS].append(value);
 		return true;
 	}

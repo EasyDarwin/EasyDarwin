@@ -349,7 +349,7 @@ public:
 class EasyDarwinRTSPSession
 {
 public:
-	EasyDarwinRTSPSession(): index(0), numOutputs(0)
+	EasyDarwinRTSPSession(): index(0), channel(0), numOutputs(0)
 	{}
 
     ~EasyDarwinRTSPSession(){}
@@ -358,6 +358,7 @@ public:
 	int index;
 	std::string Url;
 	std::string Name;
+	int channel;
 	int numOutputs;
 };
 
