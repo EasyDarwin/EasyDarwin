@@ -77,7 +77,7 @@ public:
 	//
 	// Caller may also provide a SourceInfo object, though it is not needed and
 	// will also need to be provided to SetupReflectorSession when that is called.
-	ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo = NULL);
+	ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum = 0, SourceInfo* inInfo = NULL);
 	virtual ~ReflectorSession();
 
 	//
@@ -120,6 +120,7 @@ public:
 	SourceInfo*     GetSourceInfo() { return fSourceInfo; }
 	StrPtrLen*      GetLocalSDP() { return &fLocalSDP; }
 	StrPtrLen*      GetSourceID() { return &fSourceID; }
+	UInt32			GetChannelNum() { return fChannelNum; }
 	bool			IsSetup() { return fIsSetup; }
 
 	bool			HasVideoKeyFrameUpdate() { return fHasVideoKeyFrameUpdate; }
@@ -168,6 +169,7 @@ private:
 	// For storage in the session map       
 	OSRef       fRef;
 	StrPtrLen   fSourceID;
+	UInt32		fChannelNum;
 
 	// HLS Session
 	bool		fHLSLive;

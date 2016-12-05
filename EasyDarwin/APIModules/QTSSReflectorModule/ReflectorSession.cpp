@@ -71,7 +71,7 @@ void ReflectorSession::Initialize()
 	;
 }
 
-ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo) :
+ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, SourceInfo* inInfo) :
 	fIsSetup(false),
 	fQueueElem(),
 	fNumOutputs(0),
@@ -82,16 +82,19 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo) :
 	fInitTimeMS(OS::Milliseconds()),
 	fHasBufferedStreams(false),
 	fHLSLive(false),
-	fHasVideoKeyFrameUpdate(false)
+	fHasVideoKeyFrameUpdate(false),
+	fChannelNum(inChannelNum)
 {
 
 	fQueueElem.SetEnclosingObject(this);
 	if (inSourceID != NULL)
 	{
-		fSourceID.Ptr = NEW char[inSourceID->Len + 1];
-		::memcpy(fSourceID.Ptr, inSourceID->Ptr, inSourceID->Len);
-		fSourceID.Ptr[inSourceID->Len] = '\0';
-		fSourceID.Len = inSourceID->Len;
+		char streamID[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+		sprintf(streamID, "%s/%d", inSourceID->Ptr, fChannelNum);
+		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
+		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
+		fSourceID.Ptr[strlen(streamID)] = '\0';
+		fSourceID.Len = strlen(streamID);
 		fRef.Set(fSourceID, this);
 
 		this->SetSessionName();
