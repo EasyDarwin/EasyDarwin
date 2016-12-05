@@ -263,47 +263,6 @@ void ReflectorSession::AddBroadcasterClientSession(QTSS_StandardRTSP_Params* inP
 	fBroadcasterSession = inParams->inClientSession;
 }
 
-void    ReflectorSession::FormatHTML(StrPtrLen* inURL)
-{
-	// Begin writing our source description HTML (used by the relay)
-	// Line looks like: Relay Source: 17.221.98.239, Ports: 5430 5432 5434
-	static StrPtrLen sHTMLStart("<H2>Relay Source: ");
-	static StrPtrLen sPorts(", Ports: ");
-	static StrPtrLen sHTMLEnd("</H2><BR>");
-
-	// Begin writing the HTML
-	fFormatter.Put(sHTMLStart);
-
-	if (inURL == NULL)
-	{
-		// If no URL is provided, format the source IP addr as a string.
-		char theIPAddrBuf[20];
-		StrPtrLen theIPAddr(theIPAddrBuf, 20);
-		struct in_addr theAddr;
-		theAddr.s_addr = htonl(fSourceInfo->GetStreamInfo(0)->fSrcIPAddr);
-		SocketUtils::ConvertAddrToString(theAddr, &theIPAddr);
-		fFormatter.Put(theIPAddr);
-	}
-	else
-		fFormatter.Put(*inURL);
-
-	fFormatter.Put(sPorts);
-
-	for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
-	{
-		fFormatter.Put(fSourceInfo->GetStreamInfo(x)->fPort);
-		fFormatter.PutSpace();
-	}
-	fFormatter.Put(sHTMLEnd);
-
-	// Setup the StrPtrLen to point to the right stuff
-	fSourceInfoHTML.Ptr = fFormatter.GetBufPtr();
-	fSourceInfoHTML.Len = fFormatter.GetCurrentOffset();
-
-	fFormatter.PutTerminator();
-}
-
-
 void    ReflectorSession::AddOutput(ReflectorOutput* inOutput, bool isClient)
 {
 	Assert(fSourceInfo->GetNumStreams() > 0);

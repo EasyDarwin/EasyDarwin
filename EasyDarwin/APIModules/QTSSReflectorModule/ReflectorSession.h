@@ -110,12 +110,6 @@ public:
 	void    RemoveSessionFromOutput(QTSS_ClientSessionObject inSession);
 	void    ManuallyMarkSetup() { fIsSetup = true; }
 
-	// For the Relay's status, a ReflectorSession can format an informative bit of
-	// HTML to describe the source. This must be called after the ReflectorSession
-	// is all setup.
-
-	void    FormatHTML(StrPtrLen* inURL);
-
 	//
 	// ACCESSORS
 
@@ -123,7 +117,6 @@ public:
 	OSQueueElem*    GetQueueElem() { return &fQueueElem; }
 	UInt32          GetNumOutputs() { return fNumOutputs; }
 	UInt32          GetNumStreams() { return fSourceInfo->GetNumStreams(); }
-	StrPtrLen*      GetSourceInfoHTML() { return &fSourceInfoHTML; }
 	SourceInfo*     GetSourceInfo() { return fSourceInfo; }
 	StrPtrLen*      GetLocalSDP() { return &fLocalSDP; }
 	StrPtrLen*      GetSourceID() { return &fSourceID; }
@@ -186,9 +179,6 @@ private:
 
 	ReflectorStream**   fStreamArray;
 
-	StrPtrLen   fSourceInfoHTML;
-	ResizeableStringFormatter fFormatter;
-
 	// The reflector session needs to hang onto the source info object
 	// for it's entire lifetime. Right now, this is used for reflector-as-client.
 	SourceInfo* fSourceInfo;
@@ -200,7 +190,6 @@ private:
 	SInt64		fInitTimeMS;
 
 	bool		fHasBufferedStreams;
-
 	bool		fHasVideoKeyFrameUpdate;
 };
 
