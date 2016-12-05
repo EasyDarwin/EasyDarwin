@@ -83,13 +83,16 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 	fHasBufferedStreams(false),
 	fHLSLive(false),
 	fHasVideoKeyFrameUpdate(false),
-	fChannelNum(inChannelNum)
+	fChannelNum(inChannelNum),
+	fSessionName(inSourceID->GetAsCString())
 {
-
 	fQueueElem.SetEnclosingObject(this);
 	if (inSourceID != NULL)
 	{
-		char streamID[QTSS_MAX_NAME_LENGTH] = { 0 };
+		char streamID[QTSS_MAX_NAME_LENGTH + 10] = { 0 };
+		if (inSourceID->Len > QTSS_MAX_NAME_LENGTH)
+			inSourceID->Len = QTSS_MAX_NAME_LENGTH;
+
 		sprintf(streamID, "%s/%d", inSourceID->Ptr, fChannelNum);
 		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
 		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
@@ -139,6 +142,7 @@ ReflectorSession::~ReflectorSession()
 	}
 
 	fSourceID.Delete();
+	fSessionName.Delete();
 }
 
 QTSS_Error ReflectorSession::SetSessionName()

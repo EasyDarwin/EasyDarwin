@@ -120,7 +120,10 @@ public:
 	SourceInfo*     GetSourceInfo() { return fSourceInfo; }
 	StrPtrLen*      GetLocalSDP() { return &fLocalSDP; }
 	StrPtrLen*      GetSourceID() { return &fSourceID; }
+
+	StrPtrLen*      GetStreamName() { return &fSessionName; }
 	UInt32			GetChannelNum() { return fChannelNum; }
+
 	bool			IsSetup() { return fIsSetup; }
 
 	bool			HasVideoKeyFrameUpdate() { return fHasVideoKeyFrameUpdate; }
@@ -169,6 +172,8 @@ private:
 	// For storage in the session map       
 	OSRef       fRef;
 	StrPtrLen   fSourceID;
+
+	StrPtrLen	fSessionName;
 	UInt32		fChannelNum;
 
 	// HLS Session
