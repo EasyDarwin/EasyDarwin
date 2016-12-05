@@ -127,7 +127,7 @@ public:
 	SourceInfo*     GetSourceInfo() { return fSourceInfo; }
 	StrPtrLen*      GetLocalSDP() { return &fLocalSDP; }
 	StrPtrLen*      GetSourceID() { return &fSourceID; }
-	bool          IsSetup() { return fIsSetup; }
+	bool			IsSetup() { return fIsSetup; }
 
 	bool			HasVideoKeyFrameUpdate() { return fHasVideoKeyFrameUpdate; }
 
@@ -157,7 +157,6 @@ public:
 	//Reflector quality levels:
 	enum
 	{
-		kMaxHTMLSize = 128,
 		kAudioOnlyQuality = 1,      //UInt32
 		kNormalQuality = 0,         //UInt32
 		kNumQualityLevels = 2       //UInt32
@@ -185,12 +184,11 @@ private:
 
 	OSQueueElem fQueueElem; // Relay uses this.
 
-	//unsigned int        fNumOutputs;
+	//unsigned int	fNumOutputs;
 	std::atomic_uint fNumOutputs;
 
 	ReflectorStream**   fStreamArray;
 
-	char        fHTMLBuf[kMaxHTMLSize];
 	StrPtrLen   fSourceInfoHTML;
 	ResizeableStringFormatter fFormatter;
 
@@ -202,9 +200,9 @@ private:
 	// For the QTSSSplitterModule, this object can cache a QTSS_StreamRef
 	QTSS_StreamRef fSocketStream;
 	QTSS_ClientSessionObject fBroadcasterSession;
-	SInt64      fInitTimeMS;
+	SInt64		fInitTimeMS;
 
-	bool      fHasBufferedStreams;
+	bool		fHasBufferedStreams;
 
 	bool		fHasVideoKeyFrameUpdate;
 

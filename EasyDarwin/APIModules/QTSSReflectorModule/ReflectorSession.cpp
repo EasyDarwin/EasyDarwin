@@ -76,7 +76,6 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, SourceInfo* inInfo) :
 	fQueueElem(),
 	fNumOutputs(0),
 	fStreamArray(NULL),
-	fFormatter(fHTMLBuf, kMaxHTMLSize),
 	fSourceInfo(inInfo),
 	fSocketStream(NULL),
 	fBroadcasterSession(NULL),
@@ -105,10 +104,6 @@ ReflectorSession::~ReflectorSession()
 {
 	this->StopHLSSession();
 
-#if REFLECTOR_SESSION_DEBUGGING
-	qtss_printf("Removing ReflectorSession: %s\n", fSourceInfoHTML.Ptr);
-#endif
-
 	// For each stream, check to see if the ReflectorStream should be deleted
 	for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
 	{
@@ -128,7 +123,6 @@ ReflectorSession::~ReflectorSession()
 	delete fSourceInfo;
 	fLocalSDP.Delete();
 
-	//将推流名称从redis中删除,使用fSessionName+".sdp"
 	if (fSourceID.Ptr)
 	{
 		QTSS_RoleParams theParams;
@@ -368,10 +362,8 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, bool isClient)
 			fStreamArray[y]->DecEyeCount();
 	}
 
-	//移除客户端之后判断fNumOutputs是否为0,add
 	if (fNumOutputs == 0)
 	{
-		//调用角色，停止推流
 		QTSS_RoleParams theParams;
 		theParams.easyFreeStreamParams.inStreamName = fSourceID.Ptr;
 		UInt32 currentModule = 0;
