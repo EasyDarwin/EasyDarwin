@@ -52,7 +52,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../../CommonUtilitiesLib/;../APIStubLib/;../RTPMetaInfoLib/;../../RTSPUtilitiesLib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../../CommonUtilitiesLib/;../APIStubLib/;../RTPMetaInfoLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/APICommonCode.pch</PrecompiledHeaderOutputFile>
