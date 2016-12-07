@@ -158,12 +158,6 @@
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </DebugInformationFormat>
     </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSAdminModule\AdminElementNode.cpp">
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\QTSSAdminModule\AdminQuery.cpp">
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
-    </ClCompile>
     <ClCompile Include="..\APIModules\QTSSFlowControlModule\QTSSFlowControlModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
