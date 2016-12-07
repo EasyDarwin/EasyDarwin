@@ -42,6 +42,7 @@ class EasyRTMPSession : public Task
 		StrPtrLen*      GetSourceID() { return &fSourceID; }
 		StrPtrLen*      GetStreamName() { return &fSessionName; }
 		StrPtrLen*		GetSourceURL() { return &fSourceURL; }
+		const char*		GetRTMPURL() { return fRTMPURL; }
 		UInt32			GetChannelNum() { return fChannelNum; }
 
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
@@ -54,6 +55,7 @@ class EasyRTMPSession : public Task
 		StrPtrLen   fSourceID;
 		StrPtrLen	fSessionName;
 		StrPtrLen	fSourceURL;
+		char		fRTMPURL[QTSS_MAX_URL_LENGTH];
 
 		UInt32		fChannelNum;
 

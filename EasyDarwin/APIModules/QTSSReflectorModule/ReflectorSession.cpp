@@ -93,7 +93,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 		if (inSourceID->Len > QTSS_MAX_NAME_LENGTH)
 			inSourceID->Len = QTSS_MAX_NAME_LENGTH;
 
-		sprintf(streamID, "%s/%d", inSourceID->Ptr, fChannelNum);
+		sprintf(streamID, "%s_%d", inSourceID->Ptr, fChannelNum);
 		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
 		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
 		fSourceID.Ptr[strlen(streamID)] = '\0';

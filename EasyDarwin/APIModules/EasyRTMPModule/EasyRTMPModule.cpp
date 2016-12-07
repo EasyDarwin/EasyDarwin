@@ -17,6 +17,8 @@
 #include "QueryParamList.h"
 #include "OSRef.h"
 #include "StringParser.h"
+#include "ReflectorSession.h"
+#include "MyAssert.h"
 
 #include "EasyRTSPClientAPI.h"
 #include "EasyRTMPAPI.h"
@@ -44,8 +46,7 @@ static QTSS_Error EasyRTMPModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inP
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs();
-
-static QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams);
+static QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams);
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyRTMPModule_Main(void* inPrivateArgs)
@@ -63,6 +64,8 @@ QTSS_Error  EasyRTMPModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize(&inParams->initParams);
         case QTSS_RereadPrefs_Role:
             return RereadPrefs();
+		case Easy_GetDeviceStream_Role:
+			return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
    }
     return QTSS_NoErr;
 }
@@ -123,7 +126,8 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_RereadPrefs_Role);    
+    (void)QTSS_AddRole(QTSS_RereadPrefs_Role); 
+	(void)QTSS_AddRole(Easy_GetDeviceStream_Role);
     
     // Tell the server our name!
     static char* sModuleName = "EasyRTMPModule";
@@ -143,9 +147,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
     sPrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
     RereadPrefs();
-
-	EasyRTMPSession* se = NEW EasyRTMPSession(&StrPtrLen("TEST"), &StrPtrLen("rtsp://192.168.66.138:554/and_111.sdp"), 0);
-	se->SessionStart();
     
    return QTSS_NoErr;
 }
@@ -159,110 +160,85 @@ QTSS_Error RereadPrefs()
 }
 
 
-QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
+QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 {
-	return 0;
- //   char* theFullPathStr = NULL;
- //   QTSS_Error theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqFileName, 0, &theFullPathStr);
- //   Assert(theErr == QTSS_NoErr);
- //   QTSSCharArrayDeleter theFullPathStrDeleter(theFullPathStr);
- //       
- //   if (theErr != QTSS_NoErr)
- //       return NULL;
+	QTSS_Error theErr = QTSS_Unimplemented;
 
- //   StrPtrLen theFullPath(theFullPathStr);
+	while (inParams->inDevice && inParams->inStreamType == easyRTMPType)
+	{
+		char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
+		sprintf(theStreamName, "%s_%d", inParams->inDevice, inParams->inChannel);
+		StrPtrLen inStreamName(theStreamName);
 
+		EasyRTMPSession* rtmpSe = NULL;
+		OSRef* sessionRef = sRTMPSessionMap->Resolve(&inStreamName);
+		if(sessionRef != NULL)
+		{
+			rtmpSe = (EasyRTMPSession*)sessionRef->GetObject();
+		}
+		else
+		{
+			OSRefTable* rtspSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
+			OSMutexLocker locker(rtspSessionMap->GetMutex());
+			OSRef* theSessionRef = rtspSessionMap->Resolve(&inStreamName);
+			ReflectorSession* theSession = NULL;
 
-	//StrPtrLen endOfPath2(&theFullPath.Ptr[theFullPath.Len -  sRelaySuffix.Len], sRelaySuffix.Len);
- //   if (!endOfPath2.Equal(sRelaySuffix))
- //   {   
- //       return NULL;
- //   }
+			if (theSessionRef == NULL)
+			{
+				theErr = QTSS_FileNotFound;
+				break;
+			}
 
-	////解析查询字符串
- //   char* theQueryStr = NULL;
- //   theErr = QTSS_GetValueAsString(inParams->inRTSPRequest, qtssRTSPReqQueryString, 0, &theQueryStr);
- //   Assert(theErr == QTSS_NoErr);
- //   QTSSCharArrayDeleter theQueryStringDeleter(theQueryStr);
- //       
- //   if (theErr != QTSS_NoErr)
- //       return NULL;
+			theSession = (ReflectorSession*)theSessionRef->GetObject();
+			QTSS_ClientSessionObject clientSession = theSession->GetBroadcasterSession();
+			Assert(theSession != NULL);
 
- //   StrPtrLen theQueryString(theQueryStr);
+			if (clientSession == NULL)
+			{
+				theErr = QTSS_FileNotFound;
+				break;
+			}
 
-	//QueryParamList parList(theQueryStr);
+			char* theFullRequestURL = NULL;
+			(void)QTSS_GetValueAsString(clientSession, qtssCliSesFullURL, 0, &theFullRequestURL);
+			QTSSCharArrayDeleter theFileNameStrDeleter(theFullRequestURL);
 
-	//const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
-	//if(sName == NULL) return NULL;
+			if (theFullRequestURL == NULL)
+			{
+				theErr = QTSS_FileNotFound;
+				break;
+			}
 
-	//const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
-	////if(sURL == NULL) return NULL;
+			StrPtrLen inURL(theFullRequestURL);
+			StrPtrLen inName(inParams->inDevice);
+			rtmpSe = NEW EasyRTMPSession(&inName, &inURL, inParams->inChannel);
 
-	//const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
+			QTSS_Error theErr = rtmpSe->SessionStart();
 
-	//bool bStop = false;
-	//if(sCMD)
-	//{
-	//	if(::strcmp(sCMD,QUERY_STREAM_CMD_STOP) == 0)
-	//		bStop = true;
-	//}
+			if (theErr == QTSS_NoErr)
+			{
+				OS_Error theErr = sRTMPSessionMap->Register(rtmpSe->GetRef());
+				Assert(theErr == QTSS_NoErr);
+			}
+			else
+			{
+				rtmpSe->Signal(Task::kKillEvent);
+				theErr = QTSS_Unimplemented;
+				break;
+			}
 
-	//StrPtrLen streamName((char*)sName);
-	////从接口获取信息结构体
-	//EasyRTMPSession* session = NULL;
-	////首先查找Map里面是否已经有了对应的流
-	//OSRef* sessionRef = sRTMPSessionMap->Resolve(&streamName);
-	//if(sessionRef != NULL)
-	//{
-	//	session = (EasyRTMPSession*)sessionRef->GetObject();
-	//}
-	//else
-	//{
-	//	if(bStop) return NULL;
+			OSRef* debug = sRTMPSessionMap->Resolve(&inStreamName);
+			Assert(debug == rtmpSe->GetRef());
 
-	//	if(sURL == NULL) return NULL;
+			
+			rtspSessionMap->Release(theSessionRef);
+		}
 
-	//	session = NEW EasyRTMPSession((char*)sURL, EasyRTMPSession::kRTSPTCPClientType, (char*)sName);
+		strcpy(inParams->outUrl, rtmpSe->GetRTMPURL());
+		sRTMPSessionMap->Release(rtmpSe->GetRef());
+		theErr = QTSS_NoErr;
+		break;
+	}
 
-	//	QTSS_Error theErr = session->RelaySessionStart();
-
-	//	if(theErr == QTSS_NoErr)
-	//	{
-	//		OS_Error theErr = sRTMPSessionMap->Register(session->GetRef());
-	//		Assert(theErr == QTSS_NoErr);
-	//	}
-	//	else
-	//	{
-	//		session->Signal(Task::kKillEvent);
-	//		return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssClientNotFound, 0); 
-	//	}
-
-	//	//增加一次对RelaySession的无效引用，后面会统一释放
-	//	OSRef* debug = sRTMPSessionMap->Resolve(&streamName);
-	//	Assert(debug == session->GetRef());
-	//}
-
-	//sRTMPSessionMap->Release(session->GetRef());
-
-	//if(bStop)
-	//{
-	//	sRTMPSessionMap->UnRegister(session->GetRef());
-	//	session->Signal(Task::kKillEvent);
-	//	return QTSSModuleUtils::SendErrorResponse(inParams->inRTSPRequest, qtssSuccessOK, 0); 
-	//}
-
-	//QTSS_RTSPStatusCode statusCode = qtssRedirectPermMoved;
-	//QTSS_SetValue(inParams->inRTSPRequest, qtssRTSPReqStatusCode, 0, &statusCode, sizeof(statusCode));
-
-	//// Get the ip addr out of the prefs dictionary
-	//UInt16 thePort = 554;
-	//UInt32 theLen = sizeof(UInt16);
-	//theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
-	//Assert(theErr == QTSS_NoErr);   
-
-	////构造本地URL
-	//char url[QTSS_MAX_URL_LENGTH] = { 0 };
-
-	//qtss_sprintf(url,"rtsp://%s:%d/%s.sdp", sLocal_IP_Addr, thePort, sName);
-	//StrPtrLen locationRedirect(url);
+	return theErr;
 }

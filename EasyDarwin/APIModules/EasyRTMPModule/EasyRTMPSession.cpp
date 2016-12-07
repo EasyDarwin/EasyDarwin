@@ -46,13 +46,15 @@ EasyRTMPSession::EasyRTMPSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt
 		if (inName->Len > QTSS_MAX_NAME_LENGTH)
 			inName->Len = QTSS_MAX_NAME_LENGTH;
 
-		sprintf(streamID, "%s/%d", inName->Ptr, fChannelNum);
+		sprintf(streamID, "%s_%d", inName->Ptr, fChannelNum);
 		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
 		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
 		fSourceID.Ptr[strlen(streamID)] = '\0';
 		fSourceID.Len = strlen(streamID);
 		fRef.Set(fSourceID, this);
 	}
+
+	fRTMPURL[0] = '\0';
 }
 
 EasyRTMPSession::~EasyRTMPSession()
@@ -117,30 +119,32 @@ QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RT
 	}
 	else if (mediatype == EASY_SDK_MEDIA_INFO_FLAG)
 	{
-		if((NULL == fRTMPHandle) && (pbuf != NULL) )
-		{
-			fRTMPHandle = EasyRTMP_Create();
-			EASY_MEDIA_INFO_T mediainfo;
-			memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
-			mediainfo.u32VideoFps = 25;
-			mediainfo.u32AudioSamplerate = 8000;
+		//if((NULL == fRTMPHandle) && (pbuf != NULL) )
+		//{
+		//	fRTMPHandle = EasyRTMP_Create();
+		//	EASY_MEDIA_INFO_T mediainfo;
+		//	memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
+		//	mediainfo.u32VideoFps = 25;
+		//	mediainfo.u32AudioSamplerate = 8000;
 
-			EasyRTMP_SetCallback(fRTMPHandle, __EasyRTMP_Callback, nullptr);
+		//	EasyRTMP_SetCallback(fRTMPHandle, __EasyRTMP_Callback, nullptr);
 
-			auto bRet = EasyRTMP_Connect(fRTMPHandle, "rtmp://127.0.0.1:10035/live/test");
-			if (!bRet)
-			{
-				printf("Fail to EasyRTMP_Connect channel {}");
-			}
-			auto iRet = EasyRTMP_InitMetadata(fRTMPHandle, &mediainfo, 1024);
-			if (iRet < 0)
-			{
-				printf("Fail to InitMetadata channel {}");
-			}
+		//	auto bRet = EasyRTMP_Connect(fRTMPHandle, "rtmp://127.0.0.1:10035/live/test");
+		//	if (!bRet)
+		//	{
+		//		printf("Fail to EasyRTMP_Connect channel {}");
+		//	}
+		//	auto iRet = EasyRTMP_InitMetadata(fRTMPHandle, &mediainfo, 1024);
+		//	if (iRet < 0)
+		//	{
+		//		printf("Fail to InitMetadata channel {}");
+		//	}
 
-			//fLocalRTMPAutoStop.ResetTimeout();
+		//	qtss_sprintf(fRTMPURL, "%s/%s", QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath(), fSourceID.Ptr);
 
-		}
+		//	//fLocalRTMPAutoStop.ResetTimeout();
+
+		//}
 
 	}
 	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)
@@ -166,6 +170,34 @@ QTSS_Error	EasyRTMPSession::SessionStart()
 		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fSourceURL.Ptr, EASY_RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0x01, 0);
 	}
 
+	if (NULL == fRTMPHandle)
+	{
+		fRTMPHandle = EasyRTMP_Create();
+		EASY_MEDIA_INFO_T mediainfo;
+		memset(&mediainfo, 0x00, sizeof(EASY_MEDIA_INFO_T));
+		mediainfo.u32VideoFps = 25;
+		mediainfo.u32AudioSamplerate = 8000;
+
+		EasyRTMP_SetCallback(fRTMPHandle, __EasyRTMP_Callback, nullptr);
+		
+		qtss_sprintf(fRTMPURL, "%s%s", QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath(), fSourceID.Ptr);
+
+		auto bRet = EasyRTMP_Connect(fRTMPHandle, fRTMPURL);
+		if (!bRet)
+		{
+			printf("Fail to EasyRTMP_Connect channel {}");
+		}
+		auto iRet = EasyRTMP_InitMetadata(fRTMPHandle, &mediainfo, 1024);
+		if (iRet < 0)
+		{
+			printf("Fail to InitMetadata channel {}");
+		}
+
+
+		//fLocalRTMPAutoStop.ResetTimeout();
+
+	}
+
 	return QTSS_NoErr;
 }
 
@@ -182,6 +214,7 @@ QTSS_Error	EasyRTMPSession::SessionRelease()
 	{
 		EasyRTMP_Release(fRTMPHandle);
 		fRTMPHandle = 0;
+		fRTMPURL[0] = '\0';
 	}
 
 	return QTSS_NoErr;

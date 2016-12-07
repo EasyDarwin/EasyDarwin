@@ -957,7 +957,7 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 	}
 
 	char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
-	sprintf(theStreamName, "%s/%d", theFileNameStr, theChannelNum);
+	sprintf(theStreamName, "%s_%d", theFileNameStr, theChannelNum);
 
 	// Check for a .kill at the end
 	bool pathOK = false;
@@ -1396,7 +1396,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 	OSMutexLocker locker(sSessionMap->GetMutex());
 
 	char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
-	sprintf(theStreamName, "%s/%d", inName->Ptr, inChannel);
+	sprintf(theStreamName, "%s_%d", inName->Ptr, inChannel);
 
 	StrPtrLen inPath(theStreamName);
 
