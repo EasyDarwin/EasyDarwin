@@ -27,6 +27,7 @@
 #define QTSS_H
 #include "OSHeaders.h"
 #include "QTSSRTSPProtocol.h"
+#include "HTTPProtocol.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -1010,20 +1011,25 @@ enum
     QTSS_CloseFile_Role =				FOUR_CHARS_TO_INT('c', 'l', 'f', 'l'),  //clfl
     QTSS_RequestEventFile_Role =		FOUR_CHARS_TO_INT('r', 'e', 'f', 'l'),  //refl
 
-	//HLS Session
+	//EasyHLSModule
 	Easy_HLSOpen_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'o'),  //hlso
 	Easy_HLSClose_Role	=				FOUR_CHARS_TO_INT('h', 'l', 's', 'c'),  //hlsc
     
-	//Easy FreeStream Role
+	//EasyCMSModule
 	Easy_CMSFreeStream_Role	=			FOUR_CHARS_TO_INT('e', 'f', 's', 'r'),  //efsr
 
-	//redis module roles
-	Easy_RedisChangeRTPNum_Role =		FOUR_CHARS_TO_INT('c','r','n','r'),//crnr
-	Easy_RedisAddPushStream_Role =		FOUR_CHARS_TO_INT('a','p','n','r'),//apnr
-	Easy_RedisDelPushStream_Role =		FOUR_CHARS_TO_INT('d','p','n','r'),//dpnr
-	Easy_RedisTTL_Role =				FOUR_CHARS_TO_INT('t','t','l','r'),//ttlr
-	Easy_RedisGetAssociatedCMS_Role =	FOUR_CHARS_TO_INT('g','a','c','r'),//gacr
-	Easy_RedisJudgeStreamID_Role =		FOUR_CHARS_TO_INT('j','s','i','r')//jsir
+	//EasyRedisModule
+	Easy_RedisChangeRTPNum_Role =		FOUR_CHARS_TO_INT('c', 'r', 'n', 'r'),	//crnr
+	Easy_RedisAddPushStream_Role =		FOUR_CHARS_TO_INT('a', 'p', 'n', 'r'),	//apnr
+	Easy_RedisDelPushStream_Role =		FOUR_CHARS_TO_INT('d', 'p', 'n', 'r'),	//dpnr
+	Easy_RedisTTL_Role =				FOUR_CHARS_TO_INT('t', 't', 'l', 'r'),	//ttlr
+	Easy_RedisGetAssociatedCMS_Role =	FOUR_CHARS_TO_INT('g', 'a', 'c', 'r'),	//gacr
+	Easy_RedisJudgeStreamID_Role =		FOUR_CHARS_TO_INT('j', 's', 'i', 'r'),	//jsir
+
+	//RESTful
+	Easy_GetDeviceStream_Role =			FOUR_CHARS_TO_INT('g', 'd', 's', 'r'),	//gdsr
+
+
 };
 typedef UInt32 QTSS_Role;
 
@@ -1195,7 +1201,7 @@ typedef struct
 {
     char*                       inStreamName;
 	char*						inRTSPUrl;
-	UInt32						inTimeout;	//HLSÊ±¼ä
+	UInt32						inTimeout;
 	char*						outHLSUrl;
 } Easy_HLSOpen_Params;
 
@@ -1203,6 +1209,15 @@ typedef struct
 {
     char*                       inStreamName;
 } Easy_HLSClose_Params;
+
+
+typedef struct
+{
+	char*						inDevice;
+	UInt32						inChannel;
+	EasyStreamType				inStreamType;
+	char*						outUrl;
+}Easy_GetDeviceStream_Params;
 
 //redis module
 typedef struct
@@ -1216,13 +1231,6 @@ typedef struct
 	char * outCMSIP;
 	char * outCMSPort;//UINT16 * outDssPort;
 }QTSS_GetAssociatedCMS_Params;
-
-/*
-typedef struct
-{
-	UInt32 inRtpNum;
-}QTSS_ChangeRtpMum_Params;
-*/
 
 typedef struct  
 {
@@ -1262,11 +1270,13 @@ typedef union
 	Easy_HLSClose_Params				easyHLSCloseParams;
 
 	Easy_FreeStream_Params				easyFreeStreamParams;
-	//EasyRedisModule
 	QTSS_StreamName_Params              StreamNameParams;
 	QTSS_GetAssociatedCMS_Params	    GetAssociatedCMSParams;
-	//QTSS_ChangeRtpMum_Params			ChangeRtpNumParams;    
 	QTSS_JudgeStreamID_Params			JudgeStreamIDParams;
+
+	Easy_GetDeviceStream_Params			easyGetDeviceStreamParams;
+
+
 } QTSS_RoleParams, *QTSS_RoleParamPtr;
 
 typedef struct
