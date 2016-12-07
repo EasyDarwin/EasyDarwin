@@ -160,7 +160,9 @@ public:
 		kRedisGetAssociatedCMSRole = 31,
 		kRedisJudgeStreamIDRole = 32,
 
-		kNumRoles = 33
+		kGetDeviceStreamRole = 33,
+
+		kNumRoles = 34
 	};
 	typedef UInt32 RoleIndex;
 

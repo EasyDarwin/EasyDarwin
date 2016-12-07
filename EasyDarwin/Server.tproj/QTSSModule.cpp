@@ -248,13 +248,15 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
 	case QTSS_Interval_Role:            return kTimedIntervalRole;
 	case Easy_HLSOpen_Role:				return kEasyHLSOpenRole;
 	case Easy_HLSClose_Role:			return kEasyHLSCloseRole;
-	case Easy_CMSFreeStream_Role:			return kEasyCMSFreeStreamRole;
-	case Easy_RedisTTL_Role:					return kRedisTTLRole;
-	case Easy_RedisChangeRTPNum_Role:		return kRedisChangeRTPNumRole;
-	case Easy_RedisAddPushStream_Role:			return kRedisAddPushStreamRole;
-	case Easy_RedisDelPushStream_Role:			return kRedisDelPushStreamRole;
+	case Easy_CMSFreeStream_Role:		return kEasyCMSFreeStreamRole;
+	case Easy_RedisTTL_Role:			return kRedisTTLRole;
+	case Easy_RedisChangeRTPNum_Role:	return kRedisChangeRTPNumRole;
+	case Easy_RedisAddPushStream_Role:	return kRedisAddPushStreamRole;
+	case Easy_RedisDelPushStream_Role:	return kRedisDelPushStreamRole;
 	case Easy_RedisGetAssociatedCMS_Role:	return kRedisGetAssociatedCMSRole;
-	case Easy_RedisJudgeStreamID_Role:		return kRedisJudgeStreamIDRole;
+	case Easy_RedisJudgeStreamID_Role:	return kRedisJudgeStreamIDRole;
+
+	case Easy_GetDeviceStream_Role:		return kGetDeviceStreamRole;
 	default:
 		return -1;
 	}
