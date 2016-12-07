@@ -61,15 +61,14 @@
 #include "QTSSFlowControlModule.h"
 #include "QTSSReflectorModule.h"
 //#include "EasyHLSModule.h"
+#include "EasyRTMPModule.h"
 #include "EasyCMSModule.h"
 #include "EasyRedisModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
 #include "QTSSPosixFileSysModule.h"
-//#include "QTSSAdminModule.h"
 #include "QTSSAccessModule.h"
-//#include "QTSSDSAuthModule.h"
 #if MEMORY_DEBUGGING
 #include "QTSSWebDebugModule.h"
 #endif
@@ -739,6 +738,10 @@ void    QTSServer::LoadCompiledInModules()
 	QTSSModule* theReflectorModule = new QTSSModule("QTSSReflectorModule");
 	(void)theReflectorModule->SetupModule(&sCallbacks, &QTSSReflectorModule_Main);
 	(void)AddModule(theReflectorModule);
+
+	QTSSModule* theRTMPModule = new QTSSModule("EasyRTMPModule");
+	(void)theRTMPModule->SetupModule(&sCallbacks, &EasyRTMPModule_Main);
+	(void)AddModule(theRTMPModule);
 
 	//QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
 	//(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
