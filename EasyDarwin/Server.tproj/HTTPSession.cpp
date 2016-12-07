@@ -1070,6 +1070,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 	const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
 
 	UInt32 theChannelNum = 0;
+	EasyStreamType streamType = easyIllegalStreamType;
 
 	char* outURL = new char[QTSS_MAX_URL_LENGTH];
 	outURL[0] = '\0';
@@ -1098,7 +1099,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 		}
 		
 		StrPtrLen chProtocolPtr((char*)chProtocol);
-		EasyStreamType streamType = HTTPProtocol::GetStreamType(&chProtocolPtr);
+		streamType = HTTPProtocol::GetStreamType(&chProtocolPtr);
 
 		if (streamType == easyIllegalStreamType)
 		{
@@ -1137,8 +1138,11 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 	header[EASY_TAG_ERROR_NUM] = theErr;
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(theErr);
 
-	if(theErr == EASY_ERROR_SUCCESS_OK)
+	if (theErr == EASY_ERROR_SUCCESS_OK)
+	{
 		body[EASY_TAG_URL] = outURL;
+		body[EASY_TAG_PROTOCOL] = HTTPProtocol::GetStreamTypeStream(streamType)->Ptr;
+	}
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
