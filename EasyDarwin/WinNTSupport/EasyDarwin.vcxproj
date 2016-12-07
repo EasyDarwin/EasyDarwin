@@ -59,7 +59,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTSPClientLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../../EasyRedisClient/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSAdminModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSFlowControlModule/;../APIModules/EasyHLSModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTSPClientLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../../EasyRedisClient/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSFlowControlModule/;../APIModules/EasyHLSModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../APIModules/EasyRTMPModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/EasyDarwin.pch</PrecompiledHeaderOutputFile>
@@ -77,7 +77,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;libEasyRTSPClient.lib;libEasyHLS.lib;libEasyAACEncoder.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;libEasyRTSPClient.lib;libEasyHLS.lib;libEasyAACEncoder.lib;libEasyRTMP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\WinNTSupport\Debug\EasyDarwin.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -145,6 +145,8 @@
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSModule.cpp" />
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSSession.cpp" />
     <ClCompile Include="..\APIModules\EasyRedisModule\EasyRedisModule.cpp" />
+    <ClCompile Include="..\APIModules\EasyRTMPModule\EasyRTMPModule.cpp" />
+    <ClCompile Include="..\APIModules\EasyRTMPModule\EasyRTMPSession.cpp" />
     <ClCompile Include="..\APIModules\QTSSAccessLogModule\QTSSAccessLogModule.cpp">
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
     </ClCompile>
@@ -219,6 +221,8 @@
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h" />
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSSession.h" />
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />
+    <ClInclude Include="..\APIModules\EasyRTMPModule\EasyRTMPModule.h" />
+    <ClInclude Include="..\APIModules\EasyRTMPModule\EasyRTMPSession.h" />
     <ClInclude Include="..\Server.tproj\HTTPSession.h" />
     <ClInclude Include="..\Server.tproj\HTTPSessionInterface.h" />
   </ItemGroup>
