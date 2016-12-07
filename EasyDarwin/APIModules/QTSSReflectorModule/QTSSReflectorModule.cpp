@@ -184,7 +184,7 @@ static SInt32   sWaitTimeLoopCount = 10;
 
 // Important strings
 static StrPtrLen    sSDPKillSuffix(".kill");
-static StrPtrLen    sSDPSuffix(".sdp");
+static StrPtrLen    sSDPSuffix("");
 static StrPtrLen    sMOVSuffix(".mov");
 static StrPtrLen    sSDPTooLongMessage("Announced SDP is too long");
 static StrPtrLen    sSDPNotValidMessage("Announced SDP is not a valid SDP");
@@ -222,6 +222,8 @@ static bool AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest);
 static bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest);
 static bool IsAbsolutePath(StrPtrLen *inPathPtr);
 
+static QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams);
+
 
 static void MakeTheSameFormat(char *chInput)//replace '\' with '/' ,the end of chInput is '\0'
 {
@@ -245,7 +247,6 @@ QTSS_Error QTSSReflectorModule_Main(void* inPrivateArgs)
 {
 	return _stublibrary_main(inPrivateArgs, QTSSReflectorModuleDispatch);
 }
-
 
 QTSS_Error  QTSSReflectorModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
@@ -271,6 +272,8 @@ QTSS_Error  QTSSReflectorModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inPa
 		return ReflectorAuthorizeRTSPRequest(&inParams->rtspRequestParams);
 	case QTSS_Interval_Role:
 		return IntervalRole();
+	case Easy_GetDeviceStream_Role:
+		return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
 	}
 	return QTSS_NoErr;
 }
@@ -283,10 +286,11 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_Shutdown_Role);
 	(void)QTSS_AddRole(QTSS_RTSPPreProcessor_Role);
 	(void)QTSS_AddRole(QTSS_ClientSessionClosing_Role);
-	(void)QTSS_AddRole(QTSS_RTSPIncomingData_Role); // call me with interleaved RTP streams on the RTSP session
+	(void)QTSS_AddRole(QTSS_RTSPIncomingData_Role); 
 	(void)QTSS_AddRole(QTSS_RTSPAuthorize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(QTSS_RTSPRoute_Role);
+	(void)QTSS_AddRole(Easy_GetDeviceStream_Role);
 
 	// Add text messages attributes
 	static char*        sExpectedDigitFilenameName = "QTSSReflectorModuleExpectedDigitFilename";
@@ -2367,4 +2371,46 @@ bool IsAbsolutePath(StrPtrLen *inPathPtr)
 		return true;
 
 	return false;
+}
+
+QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
+{
+	QTSS_Error theErr = QTSS_Unimplemented;
+
+	if (inParams->inDevice && inParams->inStreamType == easyRTSPType)
+	{
+
+		OSMutexLocker locker(sSessionMap->GetMutex());
+
+		char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
+		sprintf(theStreamName, "%s/%d", inParams->inDevice, inParams->inChannel);
+
+		StrPtrLen inPath(theStreamName);
+
+		OSRef* theSessionRef = sSessionMap->Resolve(&inPath);
+		ReflectorSession* theSession = NULL;
+
+		if (theSessionRef)
+		{
+			theSession = (ReflectorSession*)theSessionRef->GetObject();
+			QTSS_ClientSessionObject clientSession = theSession->GetBroadcasterSession();
+			Assert(theSession != NULL);
+
+			if (clientSession)
+			{				
+				char* theFullRequestURL = NULL;
+				(void)QTSS_GetValueAsString(clientSession, qtssCliSesFullURL, 0, &theFullRequestURL);
+				QTSSCharArrayDeleter theFileNameStrDeleter(theFullRequestURL);
+
+				if (theFullRequestURL)
+				{
+					strcpy(inParams->outUrl, theFullRequestURL);
+					theErr = QTSS_NoErr;
+				}
+			}
+			sSessionMap->Release(theSessionRef);
+		}
+	}
+
+	return theErr;
 }
