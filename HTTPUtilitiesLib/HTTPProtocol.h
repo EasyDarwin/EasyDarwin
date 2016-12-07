@@ -40,6 +40,18 @@ enum
 };
 typedef UInt32 HTTPVersion;
 
+// Stream Types
+enum
+{
+	easyRTSPType = 0,
+	easyRTMPType = 1,
+	easyHLSType = 2,
+
+	easyNumStreamTypes = 3,
+	easyIllegalStreamType = 3
+};
+typedef UInt32	EasyStreamType;
+
 // Methods
 enum
 {
@@ -206,12 +218,18 @@ public:
 	static HTTPVersion                  GetVersion(StrPtrLen* versionStr);
 	static StrPtrLen*                   GetVersionString(HTTPVersion version) { return &sVersionStrings[version]; }
 
+	// StreamType
+	static EasyStreamType				GetStreamType(StrPtrLen* streamTypeStr);
+	static StrPtrLen*					GetStreamTypeStream(EasyStreamType type) { return &sStreamTypes[type]; }
+
 private:
-	static StrPtrLen                        sMethods[];
-	static StrPtrLen                        sHeaders[];
-	static StrPtrLen                        sStatusCodeStrings[];
-	static StrPtrLen                        sStatusCodeAsStrings[];
-	static SInt32                           sStatusCodes[];
-	static StrPtrLen                        sVersionStrings[];
+	static StrPtrLen					sMethods[];
+	static StrPtrLen					sHeaders[];
+	static StrPtrLen					sStatusCodeStrings[];
+	static StrPtrLen					sStatusCodeAsStrings[];
+	static SInt32						sStatusCodes[];
+	static StrPtrLen					sVersionStrings[];
+
+	static StrPtrLen					sStreamTypes[];
 };
 #endif // __HTTPPROTOCOL_H__

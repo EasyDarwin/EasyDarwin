@@ -36,6 +36,13 @@ StrPtrLen HTTPProtocol::sMethods[] =
 	StrPtrLen("CONNECT"),
 };
 
+StrPtrLen HTTPProtocol::sStreamTypes[] =
+{
+	StrPtrLen("RTSP"),
+	StrPtrLen("RTMP"),
+	StrPtrLen("HLS")
+};
+
 HTTPMethod HTTPProtocol::GetMethod(const StrPtrLen* inMethodStr)
 {
 	HTTPMethod theMethod = httpIllegalMethod;
@@ -322,4 +329,19 @@ HTTPStatusCode	HTTPProtocol::GetStatusCodeEnum(SInt32 inCode)
 		if (GetStatusCode(x) == inCode)
 			return x;
 	return statusCode;
+}
+
+EasyStreamType HTTPProtocol::GetStreamType(StrPtrLen* streamTypeStr)
+{
+	if (streamTypeStr->Len < 3 || streamTypeStr->Len > 4)
+		return easyIllegalStreamType;
+
+	SInt32 limit = easyNumStreamTypes;
+	for (SInt32 x = 0; x < limit; x++)
+	{
+		if (streamTypeStr->EqualIgnoreCase(sStreamTypes[x].Ptr, sStreamTypes[x].Len))
+			return x;
+	}
+
+	return easyIllegalStreamType;
 }
