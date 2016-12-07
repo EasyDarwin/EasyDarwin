@@ -62,21 +62,21 @@ typedef int Easy_Error;
 
 typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 {
-	EASY_ACTIVATE_INVALID_KEY		=		-1,			//无效Key
-	EASY_ACTIVATE_TIME_ERR			=		-2,			//时间错误
-	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			//进程名称长度不匹配
-	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			//进程名称不匹配
-	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			//有效期校验不一致
-	EASY_ACTIVATE_PLATFORM_ERR		=		-6,			//平台不匹配
-	EASY_ACTIVATE_COMPANY_ID_LEN_ERR=		-7,			//授权使用商不匹配
-	EASY_ACTIVATE_SUCCESS			=		0,			//激活成功
+	EASY_ACTIVATE_INVALID_KEY		=		-1,			/* 无效Key */
+	EASY_ACTIVATE_TIME_ERR			=		-2,			/* 时间错误 */
+	EASY_ACTIVATE_PROCESS_NAME_LEN_ERR	=	-3,			/* 进程名称长度不匹配 */
+	EASY_ACTIVATE_PROCESS_NAME_ERR	=		-4,			/* 进程名称不匹配 */
+	EASY_ACTIVATE_VALIDITY_PERIOD_ERR=		-5,			/* 有效期校验不一致 */
+	EASY_ACTIVATE_PLATFORM_ERR		=		-6,			/* 平台不匹配 */
+	EASY_ACTIVATE_COMPANY_ID_LEN_ERR=		-7,			/* 授权使用商不匹配 */
+	EASY_ACTIVATE_SUCCESS			=		0,			/* 激活成功 */
 
 }EASY_ACTIVATE_ERR_CODE_ENUM;
 
 
 /* 视频编码 */
-#define EASY_SDK_VIDEO_CODEC_H264	0x1C		/* H264 */
-#define EASY_SDK_VIDEO_CODEC_H265	0x48323635	/* H265 */
+#define EASY_SDK_VIDEO_CODEC_H264	0x1C		/* H264  */
+#define EASY_SDK_VIDEO_CODEC_H265	0x48323635	/* 1211250229 */
 #define	EASY_SDK_VIDEO_CODEC_MJPEG	0x08		/* MJPEG */
 #define	EASY_SDK_VIDEO_CODEC_MPEG4	0x0D		/* MPEG4 */
 
@@ -86,6 +86,8 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 #define EASY_SDK_AUDIO_CODEC_G711A	0x10007		/* G711 alaw*/
 #define EASY_SDK_AUDIO_CODEC_G726	0x1100B		/* G726 */
 
+#define EASY_SDK_EVENT_CODEC_ERROR	0x63657272	/* ERROR */
+#define EASY_SDK_EVENT_CODEC_EXIT	0x65786974	/* EXIT */
 
 /* 音视频帧标识 */
 #define EASY_SDK_VIDEO_FRAME_FLAG	0x00000001		/* 视频帧标志 */
@@ -102,11 +104,11 @@ typedef enum __EASY_ACTIVATE_ERR_CODE_ENUM
 #define EASY_SDK_VIDEO_FRAME_J		0x04		/* JPEG */
 
 /* 连接类型 */
-typedef enum __RTP_CONNECT_TYPE
+typedef enum __EASY_RTP_CONNECT_TYPE
 {
-	RTP_OVER_TCP	=	0x01,		/* RTP Over TCP */
-	RTP_OVER_UDP					/* RTP Over UDP */
-}RTP_CONNECT_TYPE;
+	EASY_RTP_OVER_TCP	=	0x01,		/* RTP Over TCP */
+	EASY_RTP_OVER_UDP					/* RTP Over UDP */
+}EASY_RTP_CONNECT_TYPE;
 
 /* 媒体信息 */
 typedef struct __EASY_MEDIA_INFO_T
@@ -149,5 +151,15 @@ typedef struct
 	float			bitrate;			/* 比特率 */
 	float			losspacket;			/* 丢包率 */
 }RTSP_FRAME_INFO;
+
+typedef struct __EASY_AV_Frame
+{
+	Easy_U32    u32AVFrameFlag;		/* 帧标志  视频 or 音频 */
+	Easy_U32    u32AVFrameLen;		/* 帧的长度 */
+	Easy_U32    u32VFrameType;		/* 视频的类型，I帧或P帧 */
+	Easy_U8     *pBuffer;			/* 数据 */
+	Easy_U32	u32TimestampSec;	/* 时间戳(秒)*/
+	Easy_U32	u32TimestampUsec;	/* 时间戳(微秒) */
+}EASY_AV_Frame;
 
 #endif
