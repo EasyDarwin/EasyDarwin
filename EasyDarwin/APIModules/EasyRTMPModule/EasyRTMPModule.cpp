@@ -167,7 +167,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 	while (inParams->inDevice && inParams->inStreamType == easyRTMPType)
 	{
 		char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
-		sprintf(theStreamName, "%s_%d", inParams->inDevice, inParams->inChannel);
+		sprintf(theStreamName, "%s%s%d", inParams->inDevice, EASY_KEY_SPLITER, inParams->inChannel);
 		StrPtrLen inStreamName(theStreamName);
 
 		EasyRTMPSession* rtmpSe = NULL;

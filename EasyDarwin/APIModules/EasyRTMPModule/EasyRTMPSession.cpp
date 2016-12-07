@@ -46,7 +46,7 @@ EasyRTMPSession::EasyRTMPSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt
 		if (inName->Len > QTSS_MAX_NAME_LENGTH)
 			inName->Len = QTSS_MAX_NAME_LENGTH;
 
-		sprintf(streamID, "%s_%d", inName->Ptr, fChannelNum);
+		sprintf(streamID, "%s%s%d", inName->Ptr, EASY_KEY_SPLITER, fChannelNum);
 		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
 		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
 		fSourceID.Ptr[strlen(streamID)] = '\0';
