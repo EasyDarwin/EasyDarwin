@@ -1096,12 +1096,33 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 			theErr = EASY_ERROR_CLIENT_BAD_REQUEST;
 			break;
 		}
-
-		StrPtrLen protocolRTSP("RTSP");
+		
 		StrPtrLen chProtocolPtr((char*)chProtocol);
-		if (protocolRTSP.EqualIgnoreCase(chProtocolPtr))
+		EasyStreamType streamType = HTTPProtocol::GetStreamType(&chProtocolPtr);
+
+		if (streamType == easyIllegalStreamType)
 		{
-			printf("Get RTSP Stream~~~\n");
+			theErr = EASY_ERROR_CLIENT_BAD_REQUEST;
+			break;
+		}
+
+		QTSS_RoleParams params;
+		params.easyGetDeviceStreamParams.inDevice = (char*)chSerial;
+		params.easyGetDeviceStreamParams.inChannel = theChannelNum;
+		params.easyGetDeviceStreamParams.inStreamType = streamType;
+		params.easyGetDeviceStreamParams.outUrl = outURL;
+
+		UInt32 fCurrentModule = 0;
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetDeviceStreamRole);
+		for (; fCurrentModule < numModules; fCurrentModule++)
+		{
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetDeviceStreamRole, fCurrentModule);
+			QTSS_Error exeErr = theModule->CallDispatch(Easy_GetDeviceStream_Role, &params);
+			if (exeErr == QTSS_NoErr)
+			{
+				theErr = EASY_ERROR_SUCCESS_OK;
+				break;
+			}
 		}
 
 
@@ -1116,7 +1137,8 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 	header[EASY_TAG_ERROR_NUM] = theErr;
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(theErr);
 
-	body[EASY_TAG_URL] = outURL;
+	if(theErr == EASY_ERROR_SUCCESS_OK)
+		body[EASY_TAG_URL] = outURL;
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
