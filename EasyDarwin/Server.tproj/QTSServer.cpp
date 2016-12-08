@@ -44,6 +44,7 @@
 #endif
 
 #include "QTSServer.h"
+#include "Format.h"
 
 #include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
@@ -260,6 +261,24 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 		return false;
 	}
 
+	string defIP("127.0.0.1");
+	auto theLocalAddrStr = SocketUtils::GetIPAddrStr(0);
+	if (theLocalAddrStr->Ptr)
+	{
+		defIP = string(theLocalAddrStr->Ptr, theLocalAddrStr->Len);
+	}
+
+	if (strcmp(QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath(), NONE_CONFIG_NGINX_WEB_PATH) == 0)
+	{
+		auto ngxWebPath = Format("http://%s:%s/", defIP, NGINX_HTTP_PORT);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)ngxWebPath.c_str(), ngxWebPath.size());
+	}
+
+	if (strcmp(QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath(), NONE_CONFIG_NGINX_RTMP_PATH) == 0)
+	{
+		auto ngxRTMPPath = Format("rtmp://%s:%s/live/", defIP, NGINX_RTMP_PORT);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxRTMPPath, 0, (void*)ngxRTMPPath.c_str(), ngxRTMPPath.size());
+	}
 
 	fServerState = qtssStartingUpState;
 	return true;

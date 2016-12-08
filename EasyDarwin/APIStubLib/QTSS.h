@@ -26,6 +26,7 @@
 #ifndef QTSS_H
 #define QTSS_H
 #include "OSHeaders.h"
+#include <string>
 #include "QTSSRTSPProtocol.h"
 #include "HTTPProtocol.h"
 
@@ -48,6 +49,10 @@ extern "C" {
 #define QTSS_MAX_ATTRIBUTE_NUMS			128
 
 #define EASY_KEY_SPLITER				"-"
+	
+const std::string NGINX_HTTP_PORT = "10080";
+const std::string NGINX_RTMP_PORT = "10035";
+
 #define NONE_CONFIG_NGINX_WEB_PATH		"http://127.0.0.1:10080/"
 #define NONE_CONFIG_NGINX_RTMP_PATH		"rtmp://127.0.0.1:10035/live/"
 #define NONE_CONFIG_NGINX_LOCAL_PATH	"./nginx/www/"
