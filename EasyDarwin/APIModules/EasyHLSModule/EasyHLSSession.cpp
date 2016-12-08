@@ -23,23 +23,18 @@
 #endif
 
 // PREFS
-static UInt32                   sDefaultM3U8Version					= 3; 
-static bool                   sDefaultAllowCache					= false; 
-static UInt32                   sDefaultTargetDuration				= 4;
-static UInt32                   sDefaultPlaylistCapacity			= 4;
-static char*					sDefaultHTTPRootDir					= "http://www.easydarwin.org/";
+static UInt32					sDefaultM3U8Version					= 3; 
+static bool						sDefaultAllowCache					= false; 
+static UInt32					sDefaultTargetDuration				= 4;
+static UInt32					sDefaultPlaylistCapacity			= 10;
 
 UInt32                          EasyHLSSession::sM3U8Version		= 3;
-bool                          EasyHLSSession::sAllowCache			= false;
+bool							EasyHLSSession::sAllowCache			= false;
 UInt32                          EasyHLSSession::sTargetDuration		= 4;
-UInt32                          EasyHLSSession::sPlaylistCapacity	= 4;
-char*							EasyHLSSession::sHTTPRootDir		= NULL;
+UInt32                          EasyHLSSession::sPlaylistCapacity	= 10;
 
 void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 {
-	delete [] sHTTPRootDir;
-    sHTTPRootDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "HTTP_ROOT_DIR", sDefaultHTTPRootDir);
-
 	QTSSModuleUtils::GetAttribute(inPrefs, "M3U8_VERSION", qtssAttrDataTypeUInt32,
 							  &EasyHLSSession::sM3U8Version, &sDefaultM3U8Version, sizeof(sDefaultM3U8Version));
 
@@ -57,11 +52,8 @@ void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 int Easy_APICALL __RTSPClientCallBack( int _chid, void *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	EasyHLSSession* pSession = (EasyHLSSession *)_chPtr;
-
 	if (NULL == pSession)	return -1;
-
 	pSession->ProcessData(_chid, _mediatype, pbuf, frameinfo);
-
 	return 0;
 }
 
@@ -298,7 +290,7 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,rootDir=%s,subDir=%s", fHLSSessionID.Ptr, rootDir, subDir);
 			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 					
-			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", sHTTPRootDir, fHLSSessionID.Ptr, "0");
+			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath(), fHLSSessionID.Ptr, "0");
 		}
 		
 		fTimeoutTask.SetTimeout(inTimeout * 1000);
