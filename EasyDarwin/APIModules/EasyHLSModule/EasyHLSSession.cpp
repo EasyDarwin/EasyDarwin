@@ -286,7 +286,7 @@ QTSS_Error	EasyHLSSession::SessionStart()
 			}
 
 			char subDir[QTSS_MAX_NAME_LENGTH] = { 0 };
-			qtss_sprintf(subDir,"%s/", fSourceID.Ptr);
+			qtss_sprintf(subDir,"%s/", fSessionName.Ptr);
 
 			
 
@@ -298,7 +298,7 @@ QTSS_Error	EasyHLSSession::SessionStart()
 			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,rootDir=%s,subDir=%s", fSourceID.Ptr, rootDir, subDir);
 			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 					
-			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath(), fSourceID.Ptr, "0");
+			qtss_sprintf(fHLSURL, "%s%s/%d.m3u8", QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath(), fSessionName.Ptr, fChannelNum);
 		}
 		
 	}while(0);
