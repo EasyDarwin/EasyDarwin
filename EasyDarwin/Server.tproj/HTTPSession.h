@@ -19,10 +19,10 @@ public:
 	virtual ~HTTPSession();
 
 	//Send HTTPPacket
-	virtual QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement);
+	QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement) override;
 
 private:
-	SInt64 Run();
+	SInt64 Run() override;
 
 	// Does request prep & request cleanup, respectively
 	QTSS_Error SetupRequest();
@@ -45,7 +45,9 @@ private:
 	QTSS_Error ExecNetMsgGetHlsSessionsReq(char* queryString, char* json);
 
 	// test current connections handled by this object against server pref connection limit
-	bool OverMaxConnections(UInt32 buffer);
+	static inline bool OverMaxConnections(UInt32 buffer);
+
+	QTSS_Error dumpRequestData();
 
 	HTTPRequest*        fRequest;
 	OSMutex             fReadMutex;
@@ -69,7 +71,6 @@ private:
 	QTSS_RoleParams     fRoleParams;//module param blocks for roles.
 	QTSS_ModuleState    fModuleState;
 
-	QTSS_Error DumpRequestData();
 
 };
 #endif // __HTTPSESSION_H__

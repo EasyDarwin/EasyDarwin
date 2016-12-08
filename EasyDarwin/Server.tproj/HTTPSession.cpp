@@ -6,13 +6,12 @@
 */
 /*
 	File:       HTTPSession.cpp
-	Contains:   
+	Contains:
 */
 
 #include "HTTPSession.h"
 #include "QTSServerInterface.h"
 #include "OSArrayObjectDeleter.h"
-#include "OSMemory.h"
 #include "QTSSMemoryDeleter.h"
 #include "QueryParamList.h"
 
@@ -46,7 +45,7 @@ static StrPtrLen	sGetHLSSessions("api/gethlssessions");
 
 HTTPSession::HTTPSession()
 	: HTTPSessionInterface(),
-	fRequest(NULL),
+	fRequest(nullptr),
 	fReadMutex(),
 	fCurrentModule(0),
 	fState(kReadingFirstRequest)
@@ -57,10 +56,10 @@ HTTPSession::HTTPSession()
 
 	// Setup the QTSS param block, as none of these fields will change through the course of this session.
 	fRoleParams.rtspRequestParams.inRTSPSession = this;
-	fRoleParams.rtspRequestParams.inRTSPRequest = NULL;
-	fRoleParams.rtspRequestParams.inClientSession = NULL;
+	fRoleParams.rtspRequestParams.inRTSPRequest = nullptr;
+	fRoleParams.rtspRequestParams.inClientSession = nullptr;
 
-	fModuleState.curModule = NULL;
+	fModuleState.curModule = nullptr;
 	fModuleState.curTask = this;
 	fModuleState.curRole = 0;
 	fModuleState.globalLockRequested = false;
@@ -70,7 +69,7 @@ HTTPSession::~HTTPSession()
 {
 	char remoteAddress[20] = { 0 };
 	StrPtrLen theIPAddressStr(remoteAddress, sizeof(remoteAddress));
-	QTSS_GetValue(this, easyHTTPSesRemoteAddrStr, 0, (void*)theIPAddressStr.Ptr, &theIPAddressStr.Len);
+	QTSS_GetValue(this, easyHTTPSesRemoteAddrStr, 0, static_cast<void*>(theIPAddressStr.Ptr), &theIPAddressStr.Len);
 
 	char msgStr[2048] = { 0 };
 	qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession offline from ip[%s]", remoteAddress);
@@ -98,7 +97,7 @@ SInt64 HTTPSession::Run()
 	EventFlags events = this->GetEvents();
 	QTSS_Error err = QTSS_NoErr;
 	// Some callbacks look for this struct in the thread object
-	OSThreadDataSetter theSetter(&fModuleState, NULL);
+	OSThreadDataSetter theSetter(&fModuleState, nullptr);
 
 	//超时事件或者Kill事件，进入释放流程：清理 & 返回-1
 	if (events & Task::kKillEvent)
@@ -183,9 +182,9 @@ SInt64 HTTPSession::Run()
 			{
 				Assert(fInputStream.GetRequestBuffer());
 
-				Assert(fRequest == NULL);
+				Assert(fRequest == nullptr);
 				//根据具体请求报文构造HTTPRequest请求类
-				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
+				fRequest = new HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 				//在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
 				//在此过程中，此Session的Socket不进行任何网络数据的读/写；
@@ -268,7 +267,7 @@ SInt64 HTTPSession::Run()
 		case kSendingResponse:
 			{
 				//响应报文发送，确保完全发送
-				Assert(fRequest != NULL);
+				Assert(fRequest != nullptr);
 
 				//发送响应报文
 				err = fOutputStream.Flush();
@@ -300,7 +299,7 @@ SInt64 HTTPSession::Run()
 				// data off of the socket
 				if (this->GetRemainingReqBodyLen() > 0)
 				{
-					err = this->DumpRequestData();
+					err = this->dumpRequestData();
 
 					if (err == EAGAIN)
 					{
@@ -377,12 +376,12 @@ QTSS_Error HTTPSession::SetupRequest()
 
 		if (theFullPath.Equal(sEasyHLSModule))
 		{
-			return ExecNetMsgEasyHLSModuleReq(fRequest->GetQueryString(), NULL);
+			return ExecNetMsgEasyHLSModuleReq(fRequest->GetQueryString(), nullptr);
 		}
 
 		if (theFullPath.Equal(sGetHLSSessions))
 		{
-			return ExecNetMsgGetHlsSessionsReq(fRequest->GetQueryString(), NULL);
+			return ExecNetMsgGetHlsSessionsReq(fRequest->GetQueryString(), nullptr);
 		}
 	}
 
@@ -464,7 +463,7 @@ QTSS_Error HTTPSession::SetupRequest()
 	StrPtrLen* lengthPtr = fRequest->GetHeaderValue(httpContentLengthHeader);
 	StringParser theContentLenParser(lengthPtr);
 	theContentLenParser.ConsumeWhitespace();
-	UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
+	UInt32 content_length = theContentLenParser.ConsumeInteger(nullptr);
 
 	if (content_length)
 	{
@@ -473,7 +472,7 @@ QTSS_Error HTTPSession::SetupRequest()
 		// the request body, and the current offset in that buffer. If these attributes exist,
 		// then we've already been here for this request. If they don't exist, add them.
 		UInt32 theBufferOffset = 0;
-		char* theRequestBody = NULL;
+		char* theRequestBody = nullptr;
 		UInt32 theLen = sizeof(theRequestBody);
 		theErr = QTSS_GetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, &theLen);
 
@@ -481,7 +480,7 @@ QTSS_Error HTTPSession::SetupRequest()
 		{
 			// First time we've been here for this request. Create a buffer for the content body and
 			// shove it in the request.
-			theRequestBody = NEW char[content_length + 1];
+			theRequestBody = new char[content_length + 1];
 			memset(theRequestBody, 0, content_length + 1);
 			theLen = sizeof(theRequestBody);
 			theErr = QTSS_SetValue(this, easyHTTPSesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
@@ -494,7 +493,7 @@ QTSS_Error HTTPSession::SetupRequest()
 		}
 
 		theLen = sizeof(theBufferOffset);
-		theErr = QTSS_GetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, &theLen);
+		QTSS_GetValue(this, easyHTTPSesContentBodyOffset, 0, &theBufferOffset, &theLen);
 
 		// We have our buffer and offset. Read the data.
 		//theErr = QTSS_Read(this, theRequestBody + theBufferOffset, content_length - theBufferOffset, &theLen);
@@ -545,7 +544,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 		UInt32 offset = 0;
 		(void)QTSS_SetValue(this, easyHTTPSesContentBodyOffset, 0, &offset, sizeof(offset));
-		char* content = NULL;
+		char* content = nullptr;
 		(void)QTSS_SetValue(this, easyHTTPSesContentBody, 0, &content, 0);
 
 	}
@@ -557,13 +556,13 @@ QTSS_Error HTTPSession::SetupRequest()
 
 void HTTPSession::CleanupRequest()
 {
-	if (fRequest != NULL)
+	if (fRequest != nullptr)
 	{
-		// NULL out any references to the current request
+		// nullptr out any references to the current request
 		delete fRequest;
-		fRequest = NULL;
-		fRoleParams.rtspRequestParams.inRTSPRequest = NULL;
-		fRoleParams.rtspRequestParams.inRTSPHeaders = NULL;
+		fRequest = nullptr;
+		fRoleParams.rtspRequestParams.inRTSPRequest = nullptr;
+		fRoleParams.rtspRequestParams.inRTSPHeaders = nullptr;
 	}
 
 	fSessionMutex.Unlock();
@@ -581,7 +580,7 @@ bool HTTPSession::OverMaxConnections(UInt32 buffer)
 
 	if (maxConns > -1) // limit connections
 	{
-		UInt32 maxConnections = (UInt32)maxConns + buffer;
+		UInt32 maxConnections = static_cast<UInt32>(maxConns) + buffer;
 		if (theServer->GetNumRTSPSessions() > maxConnections)
 		{
 			overLimit = true;
@@ -590,13 +589,13 @@ bool HTTPSession::OverMaxConnections(UInt32 buffer)
 	return overLimit;
 }
 
-QTSS_Error HTTPSession::DumpRequestData()
+QTSS_Error HTTPSession::dumpRequestData()
 {
 	char theDumpBuffer[QTSS_MAX_REQUEST_BUFFER_SIZE];
 
 	QTSS_Error theErr = QTSS_NoErr;
 	while (theErr == QTSS_NoErr)
-		theErr = this->Read(theDumpBuffer, QTSS_MAX_REQUEST_BUFFER_SIZE, NULL);
+		theErr = this->Read(theDumpBuffer, QTSS_MAX_REQUEST_BUFFER_SIZE, nullptr);
 
 	return theErr;
 }
@@ -607,12 +606,13 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	bool bStop = false;
 
 	char decQueryString[QTSS_MAX_URL_LENGTH] = { 0 };
-	EasyUtil::Urldecode((unsigned char*)queryString, (unsigned char*)decQueryString);
+	EasyUtil::Urldecode(reinterpret_cast<unsigned char*>(queryString), reinterpret_cast<unsigned char*>(decQueryString));
 
-	char* hlsURL = NEW char[QTSS_MAX_URL_LENGTH];
+	char* hlsURL = new char[QTSS_MAX_URL_LENGTH];
 	hlsURL[0] = '\0';
 	QTSSCharArrayDeleter theHLSURLDeleter(hlsURL);
-	do {
+	do
+	{
 
 		if (strlen(decQueryString) == 0)
 			break;
@@ -622,7 +622,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 		QueryParamList parList(decQueryString);
 
 		const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
-		if (sName == NULL)
+		if (sName == nullptr)
 		{
 			theErr = QTSS_Unimplemented;
 			break;
@@ -645,7 +645,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 		}
 		else
 		{
-			if (sURL == NULL)
+			if (sURL == nullptr)
 			{
 				theErr = QTSS_Unimplemented;
 				break;
@@ -673,7 +673,7 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 		ack.SetStreamURL(hlsURL);
 
 	string msg = ack.GetMsg();
-	StrPtrLen msgJson((char*)msg.c_str());
+	StrPtrLen msgJson(const_cast<char*>(msg.c_str()));
 
 	//构造响应报文(HTTP头)
 	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
@@ -694,15 +694,16 @@ QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json
 	if (msgJson.Len > 0)
 		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
 
-	return QTSS_NoErr;
+	return theErr;
 }
 
 QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
-	do {
-		char* msgContent = (char*)Easy_GetHLSessions();
+	do
+	{
+		char* msgContent = static_cast<char*>(Easy_GetHLSessions());
 
 		StrPtrLen msgJson(msgContent);
 
@@ -735,9 +736,10 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* query
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
-	do {
+	do
+	{
 		// 获取响应Content
-		char* msgContent = (char*)Easy_GetRTSPPushSessions();
+		char* msgContent = static_cast<char*>(Easy_GetRTSPPushSessions());
 
 		StrPtrLen msgJson(msgContent);
 
@@ -762,7 +764,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* query
 			pOutputStream->Put(msgJson.Ptr, msgJson.Len);
 
 		delete[] msgContent;
-	} while (0);
+	} while (false);
 
 	return theErr;
 }
@@ -816,7 +818,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetServerVersionReqRESTful(const char* query
 
 QTSS_Error HTTPSession::execNetMsgCSLoginReqRESTful(const char* queryString)
 {
-	std::string queryTemp;
+	string queryTemp;
 	if (queryString != nullptr)
 	{
 		queryTemp = EasyUtil::Urldecode(queryString);
@@ -859,8 +861,8 @@ QTSS_Error HTTPSession::execNetMsgCSLoginReqRESTful(const char* queryString)
 
 QTSS_Error HTTPSession::execNetMsgCSLogoutReqRESTful(const char* queryString)
 {
-	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-	
+	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+
 	//cookie->token->clear redis->Platform clear,need login again
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_LOGOUT_ACK);
@@ -883,7 +885,7 @@ QTSS_Error HTTPSession::execNetMsgCSLogoutReqRESTful(const char* queryString)
 
 QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryString)
 {
-	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
 	//if (!hasLogin(cokieTemp))
 	//{
 	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
@@ -929,13 +931,13 @@ QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryStr
 
 QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryString)
 {
-	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
 	//if (!hasLogin(cokieTemp))
 	//{
 	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
 	//}
 
-	std::string queryTemp;
+	string queryTemp;
 	if (queryString)
 	{
 		queryTemp = EasyUtil::Urldecode(queryString);
@@ -1040,7 +1042,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 
 QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryString) const
 {
-	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
 	//if (!hasLogin(cokieTemp))
 	//{
 	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
@@ -1051,14 +1053,14 @@ QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryStrin
 
 QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryString)
 {
-	auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
 	//if (!hasLogin(cokieTemp))
 	//{
 	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
 	//}
 
 
-	std::string queryTemp;
+	string queryTemp;
 	if (queryString)
 	{
 		queryTemp = EasyUtil::Urldecode(queryString);
@@ -1067,7 +1069,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 
 	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);
 	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);
-	const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
+	//const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
 
 	UInt32 theChannelNum = 0;
 	EasyStreamType streamType = easyIllegalStreamType;
@@ -1078,14 +1080,14 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 
 	int theErr = EASY_ERROR_SERVER_NOT_IMPLEMENTED;
 
-	do 
+	do
 	{
 		if (!chSerial)
 		{
-			theErr == EASY_ERROR_NOT_FOUND;
+			theErr = EASY_ERROR_NOT_FOUND;
 			break;
 		}
-	
+
 		const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
 		if (chChannel)
 		{
@@ -1097,8 +1099,8 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 			theErr = EASY_ERROR_CLIENT_BAD_REQUEST;
 			break;
 		}
-		
-		StrPtrLen chProtocolPtr((char*)chProtocol);
+
+		StrPtrLen chProtocolPtr(const_cast<char*>(chProtocol));
 		streamType = HTTPProtocol::GetStreamType(&chProtocolPtr);
 
 		if (streamType == easyIllegalStreamType)
@@ -1108,14 +1110,14 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 		}
 
 		QTSS_RoleParams params;
-		params.easyGetDeviceStreamParams.inDevice = (char*)chSerial;
+		params.easyGetDeviceStreamParams.inDevice = const_cast<char*>(chSerial);
 		params.easyGetDeviceStreamParams.inChannel = theChannelNum;
 		params.easyGetDeviceStreamParams.inStreamType = streamType;
 		params.easyGetDeviceStreamParams.outUrl = outURL;
 
-		UInt32 fCurrentModule = 0;
+
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetDeviceStreamRole);
-		for (; fCurrentModule < numModules; fCurrentModule++)
+		for (UInt32 fCurrentModule = 0; fCurrentModule < numModules; fCurrentModule++)
 		{
 			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kGetDeviceStreamRole, fCurrentModule);
 			QTSS_Error exeErr = theModule->CallDispatch(Easy_GetDeviceStream_Role, &params);
@@ -1127,7 +1129,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 		}
 
 
-	} while (0);
+	} while (false);
 
 
 	EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
