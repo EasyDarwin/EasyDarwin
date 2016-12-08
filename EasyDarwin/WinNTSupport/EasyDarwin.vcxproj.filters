@@ -32,6 +32,9 @@
     <Filter Include="Source Files\API Modules\EasyRTMPModule">
       <UniqueIdentifier>{93fc2ad5-3a01-49f0-9e92-4d2ccb335736}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\API Modules\EasyHLSModule">
+      <UniqueIdentifier>{ae02ba8a-e5fd-47e3-b5af-16082afccd5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
@@ -226,6 +229,12 @@
     <ClCompile Include="..\APIModules\EasyRTMPModule\EasyRTMPSession.cpp">
       <Filter>Source Files\API Modules\EasyRTMPModule</Filter>
     </ClCompile>
+    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSModule.cpp">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSSession.cpp">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h">
@@ -257,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="..\APIModules\EasyRTMPModule\EasyRTMPSession.h">
       <Filter>Source Files\API Modules\EasyRTMPModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSModule.h">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSSession.h">
+      <Filter>Source Files\API Modules\EasyHLSModule</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
