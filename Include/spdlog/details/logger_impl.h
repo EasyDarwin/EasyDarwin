@@ -185,13 +185,11 @@ inline void spdlog::logger::warn(const T& msg)
     log(level::warn, msg);
 }
 
-
 template<typename T>
 inline void spdlog::logger::error(const T& msg)
 {
     log(level::err, msg);
 }
-
 
 template<typename T>
 inline void spdlog::logger::critical(const T& msg)
