@@ -14,14 +14,11 @@
 #include "QTSSModuleUtils.h"
 #include "OSArrayObjectDeleter.h"
 #include "QTSSMemoryDeleter.h"
-#include "QueryParamList.h"
 #include "OSRef.h"
 #include "StringParser.h"
 #include "ReflectorSession.h"
 #include "MyAssert.h"
 
-#include "EasyRTSPClientAPI.h"
-#include "EasyRTMPAPI.h"
 #include "EasyRTMPSession.h"
 
 #ifdef __Win32__
@@ -37,9 +34,6 @@ static OSRefTable*				sRTMPSessionMap	= NULL;
 static QTSS_PrefsObject			sServerPrefs = NULL;
 static QTSS_ServerObject		sServer = NULL;
 static QTSS_ModulePrefsObject	sPrefs = NULL;
-
-static char*					sLocal_IP_Addr = NULL;
-static char*					sDefaultLocal_IP_Addr = "127.0.0.1";
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyRTMPModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -153,12 +147,8 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 QTSS_Error RereadPrefs()
 {
-	delete [] sLocal_IP_Addr;
-    sLocal_IP_Addr = QTSSModuleUtils::GetStringAttribute(sPrefs, "local_ip_address", sDefaultLocal_IP_Addr);
-
 	return QTSS_NoErr;
 }
-
 
 QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 {
