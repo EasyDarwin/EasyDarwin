@@ -6,7 +6,7 @@
 */
 /*
     File:       EasyHLSModule.cpp
-    Contains:   EasyHLSModule. 
+    Contains:   EasyHLSModule
 */
 
 #ifdef __Win32__
@@ -20,30 +20,28 @@
 #include "OSArrayObjectDeleter.h"
 #include "OSMemory.h"
 #include "QTSSMemoryDeleter.h"
-#include "QueryParamList.h"
 #include "OSRef.h"
 #include "StringParser.h"
+
+#include "ReflectorSession.h"
+#include "MyAssert.h"
 #include "EasyHLSSession.h"
-
-#include "QTSServerInterface.h"
-
 // STATIC DATA
 static QTSS_PrefsObject         sServerPrefs		= NULL;
 static OSRefTable*				sHLSSessionMap		= NULL;
 static QTSS_ServerObject		sServer				= NULL;
 static QTSS_ModulePrefsObject	sModulePrefs		= NULL;
 
-
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
 static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
-
 static QTSS_Error RereadPrefs();
+static QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams);
 
-static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
-static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
-static char* GetHLSUrl(char* inSessionName);
+//static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
+//static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
+//static char* GetHLSUrl(char* inSessionName);
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyHLSModule_Main(void* inPrivateArgs)
@@ -61,10 +59,12 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize(&inParams->initParams);
         case QTSS_RereadPrefs_Role:
             return RereadPrefs();
-		case Easy_HLSOpen_Role:
-			return EasyHLSOpen(&inParams->easyHLSOpenParams);
-		case Easy_HLSClose_Role:
-			return EasyHLSClose(&inParams->easyHLSCloseParams);
+		case Easy_GetDeviceStream_Role:
+			return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
+		//case Easy_HLSOpen_Role:
+		//	return EasyHLSOpen(&inParams->easyHLSOpenParams);
+		//case Easy_HLSClose_Role:
+		//	return EasyHLSClose(&inParams->easyHLSCloseParams);
     }
     return QTSS_NoErr;
 }
@@ -101,9 +101,10 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 
     // Do role & attribute setup
     (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_RereadPrefs_Role);   
-    (void)QTSS_AddRole(Easy_HLSOpen_Role); 
-	(void)QTSS_AddRole(Easy_HLSClose_Role); 
+    (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
+	(void)QTSS_AddRole(Easy_GetDeviceStream_Role);
+	//(void)QTSS_AddRole(Easy_HLSOpen_Role); 
+	//(void)QTSS_AddRole(Easy_HLSClose_Role); 
     
     // Tell the server our name!
     static char* sModuleName = "EasyHLSModule";
@@ -116,7 +117,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
     // Setup module utils
     QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
-
 	sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
 
     // Setup global data structures
@@ -137,83 +137,167 @@ QTSS_Error RereadPrefs()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
-{
-	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
-	EasyHLSSession* session = NULL;
-	StrPtrLen streamName(inParams->inStreamName);
-	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
-	if(clientSesRef != NULL)
+QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
+{
+	QTSS_Error theErr = QTSS_Unimplemented;
+
+	while (inParams->inDevice && inParams->inStreamType == easyRTMPType)
 	{
-		session = (EasyHLSSession*)clientSesRef->GetObject();
+		char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
+		sprintf(theStreamName, "%s%s%d", inParams->inDevice, EASY_KEY_SPLITER, inParams->inChannel);
+		StrPtrLen inStreamName(theStreamName);
+
+		EasyHLSSession* hlsSe = NULL;
+		OSRef* sessionRef = sHLSSessionMap->Resolve(&inStreamName);
+		if (sessionRef != NULL)
+		{
+			hlsSe = (EasyHLSSession*)sessionRef->GetObject();
+		}
+		else
+		{
+			OSRefTable* rtspSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
+			OSMutexLocker locker(rtspSessionMap->GetMutex());
+			OSRef* theSessionRef = rtspSessionMap->Resolve(&inStreamName);
+			ReflectorSession* theSession = NULL;
+
+			if (theSessionRef == NULL)
+			{
+				theErr = QTSS_FileNotFound;
+				break;
+			}
+
+			theSession = (ReflectorSession*)theSessionRef->GetObject();
+			QTSS_ClientSessionObject clientSession = theSession->GetBroadcasterSession();
+			Assert(theSession != NULL);
+
+			if (clientSession == NULL)
+			{
+				theErr = QTSS_FileNotFound;
+				break;
+			}
+
+			char* theFullRequestURL = NULL;
+			(void)QTSS_GetValueAsString(clientSession, qtssCliSesFullURL, 0, &theFullRequestURL);
+			QTSSCharArrayDeleter theFileNameStrDeleter(theFullRequestURL);
+
+			if (theFullRequestURL == NULL)
+			{
+				theErr = QTSS_FileNotFound;
+				break;
+			}
+
+			StrPtrLen inURL(theFullRequestURL);
+			StrPtrLen inName(inParams->inDevice);
+			hlsSe = NEW EasyHLSSession(&inName, &inURL, inParams->inChannel);
+
+			QTSS_Error theErr = hlsSe->SessionStart();
+
+			if (theErr == QTSS_NoErr)
+			{
+				OS_Error theErr = sHLSSessionMap->Register(hlsSe->GetRef());
+				Assert(theErr == QTSS_NoErr);
+			}
+			else
+			{
+				hlsSe->Signal(Task::kKillEvent);
+				theErr = QTSS_Unimplemented;
+				break;
+			}
+
+			OSRef* debug = sHLSSessionMap->Resolve(&inStreamName);
+			Assert(debug == hlsSe->GetRef());
+
+
+			rtspSessionMap->Release(theSessionRef);
+		}
+
+		strcpy(inParams->outUrl, hlsSe->GetHLSURL());
+		sHLSSessionMap->Release(hlsSe->GetRef());
+		theErr = QTSS_NoErr;
+		break;
 	}
-	else
-	{
-		session = NEW EasyHLSSession(&streamName);
 
-		OS_Error theErr = sHLSSessionMap->Register(session->GetRef());
-		Assert(theErr == QTSS_NoErr);
-
-		//增加一次对RelaySession的无效引用，后面会统一释放
-		OSRef* debug = sHLSSessionMap->Resolve(&streamName);
-		Assert(debug == session->GetRef());
-	}
-	
-	//到这里，肯定是有一个EasyHLSSession可用的
-	session->HLSSessionStart(inParams->inRTSPUrl, inParams->inTimeout);
-
-	if(inParams->outHLSUrl)
-		qtss_sprintf(inParams->outHLSUrl,"%s",session->GetHLSURL());
-
-	sHLSSessionMap->Release(session->GetRef());
-
-	return QTSS_NoErr;
+	return theErr;
 }
 
-QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
-{
-	OSMutexLocker locker (sHLSSessionMap->GetMutex());
-
-	StrPtrLen streamName(inParams->inStreamName);
-
-	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
-
-	if(NULL == clientSesRef) return QTSS_RequestFailed;
-
-	EasyHLSSession* session = (EasyHLSSession*)clientSesRef->GetObject();
-
-	session->HLSSessionRelease();
-
-	sHLSSessionMap->Release(session->GetRef());
-
-    if (session->GetRef()->GetRefCount() == 0)
-    {   
-        qtss_printf("EasyHLSModule.cpp:EasyHLSClose UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", session->GetRef(), session->GetRef()->GetRefCount() ) ;       
-        sHLSSessionMap->UnRegister(session->GetRef());
-		session->Signal(Task::kKillEvent);
-    }
-	return QTSS_NoErr;
-}
-
-char* GetHLSUrl(char* inSessionName)
-{
-	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
-
-	OSMutexLocker locker (sHLSSessionMap->GetMutex());
-
-	char* hlsURL = NULL;
-	StrPtrLen streamName(inSessionName);
-
-	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
-
-	if(NULL == clientSesRef) return NULL;
-
-	EasyHLSSession* session = (EasyHLSSession*)clientSesRef->GetObject();
-
-	hlsURL = session->GetHLSURL();
-
-	sHLSSessionMap->Release(session->GetRef());
-
-	return hlsURL;
-}
+//QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
+//{
+//	OSMutexLocker locker (sHLSSessionMap->GetMutex());
+//
+//	EasyHLSSession* session = NULL;
+//	StrPtrLen streamName(inParams->inStreamName);
+//	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
+//	if(clientSesRef != NULL)
+//	{
+//		session = (EasyHLSSession*)clientSesRef->GetObject();
+//	}
+//	else
+//	{
+//		session = NEW EasyHLSSession(&streamName);
+//
+//		OS_Error theErr = sHLSSessionMap->Register(session->GetRef());
+//		Assert(theErr == QTSS_NoErr);
+//
+//		//增加一次对RelaySession的无效引用，后面会统一释放
+//		OSRef* debug = sHLSSessionMap->Resolve(&streamName);
+//		Assert(debug == session->GetRef());
+//	}
+//	
+//	//到这里，肯定是有一个EasyHLSSession可用的
+//	session->SessionStart();
+//
+//	if(inParams->outHLSUrl)
+//		qtss_sprintf(inParams->outHLSUrl,"%s",session->GetHLSURL());
+//
+//	sHLSSessionMap->Release(session->GetRef());
+//
+//	return QTSS_NoErr;
+//}
+//
+//QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
+//{
+//	OSMutexLocker locker (sHLSSessionMap->GetMutex());
+//
+//	StrPtrLen streamName(inParams->inStreamName);
+//
+//	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
+//
+//	if(NULL == clientSesRef) return QTSS_RequestFailed;
+//
+//	EasyHLSSession* session = (EasyHLSSession*)clientSesRef->GetObject();
+//
+//	session->SessionRelease();
+//
+//	sHLSSessionMap->Release(session->GetRef());
+//
+//    if (session->GetRef()->GetRefCount() == 0)
+//    {   
+//        qtss_printf("EasyHLSModule.cpp:EasyHLSClose UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", session->GetRef(), session->GetRef()->GetRefCount() ) ;       
+//        sHLSSessionMap->UnRegister(session->GetRef());
+//		session->Signal(Task::kKillEvent);
+//    }
+//	return QTSS_NoErr;
+//}
+//
+//char* GetHLSUrl(char* inSessionName)
+//{
+//	OSRefTable* sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
+//
+//	OSMutexLocker locker (sHLSSessionMap->GetMutex());
+//
+//	char* hlsURL = NULL;
+//	StrPtrLen streamName(inSessionName);
+//
+//	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
+//
+//	if(NULL == clientSesRef) return NULL;
+//
+//	EasyHLSSession* session = (EasyHLSSession*)clientSesRef->GetObject();
+//
+//	hlsURL = session->GetHLSURL();
+//
+//	sHLSSessionMap->Release(session->GetRef());
+//
+//	return hlsURL;
+//}

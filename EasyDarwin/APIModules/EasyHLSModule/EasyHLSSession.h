@@ -14,11 +14,13 @@
 #include "ResizeableStringFormatter.h"
 #include "MyAssert.h"
 #include "OSArrayObjectDeleter.h"
+
 #include "EasyRTSPClientAPI.h"
 #include "EasyHLSAPI.h"
 #include "EasyAACEncoderAPI.h"
 
 #include "TimeoutTask.h"
+#include "QTSServerInterface.h"
 
 #ifndef __EASY_HLS_SESSION__
 #define __EASY_HLS_SESSION__
