@@ -10,6 +10,7 @@
 #include <ctime>
 #include <functional>
 #include <string>
+#include <chrono>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -25,6 +26,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include <process.h>
 
 #ifdef __MINGW32__
 #include <share.h>
@@ -37,12 +39,13 @@
 
 #include <sys/syscall.h> //Use gettid() syscall under linux to get thread id
 #include <unistd.h>
-#include <chrono>
 
 #elif __FreeBSD__
 #include <sys/thr.h> //Use thr_self() syscall under FreeBSD to get thread id
+#include <unistd.h>
 
 #else
+#include <unistd.h> 
 #include <thread>
 
 #endif
@@ -293,7 +296,7 @@ inline int utc_minutes_offset(const std::tm& tm = details::os::localtime())
 
 //Return current thread id as size_t
 //It exists because the std::this_thread::get_id() is much slower(espcially under VS 2013)
-inline size_t thread_id()
+inline size_t _thread_id()
 {
 #ifdef _WIN32
     return  static_cast<size_t>(::GetCurrentThreadId());
@@ -309,9 +312,20 @@ inline size_t thread_id()
 #else //Default to standard C++11 (OSX and other Unix)
     return static_cast<size_t>(std::hash<std::thread::id>()(std::this_thread::get_id()));
 #endif
-
-
 }
+
+//Return current thread id as size_t (from thread local storage)
+inline size_t thread_id()
+{
+#if defined(_MSC_VER) && (_MSC_VER < 1900) || defined(__clang_major__) && (__clang_major__ < 8)
+    return _thread_id();
+#else
+    static thread_local const size_t tid = _thread_id();
+    return tid;
+#endif
+}
+
+
 
 
 // wchar support for windows file names (SPDLOG_WCHAR_FILENAMES must be defined)
@@ -354,6 +368,17 @@ inline std::string errno_str(int err_num)
 #else  // gnu version (might not use the given buf, so its retval pointer must be used)
     return std::string(strerror_r(err_num, buf, buf_size));
 #endif
+}
+
+inline int pid()
+{
+
+#ifdef _WIN32
+    return ::_getpid();
+#else
+    return static_cast<int>(::getpid());
+#endif
+
 }
 
 } //os
