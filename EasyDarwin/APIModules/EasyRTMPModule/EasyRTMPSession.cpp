@@ -64,6 +64,12 @@ EasyRTMPSession::~EasyRTMPSession()
 	fSourceID.Delete();
 	fSessionName.Delete();
 	fSourceURL.Delete();
+
+	if (this->GetRef()->GetRefCount() == 0)
+	{
+		qtss_printf("EasyRTMPSession::~EasyRTMPSession() UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", GetRef(), GetRef()->GetRefCount());
+		QTSServerInterface::GetServer()->GetRTMPSessionMap()->UnRegister(GetRef());
+	}
 }
 
 SInt64 EasyRTMPSession::Run()

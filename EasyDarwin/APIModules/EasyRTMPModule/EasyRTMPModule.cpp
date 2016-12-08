@@ -140,7 +140,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
     // Setup module utils
     QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
-	sRTMPSessionMap = NEW OSRefTable();
+	sRTMPSessionMap = QTSServerInterface::GetServer()->GetRTMPSessionMap();
 
     sServerPrefs = inParams->inPrefs;
     sServer = inParams->inServer;
