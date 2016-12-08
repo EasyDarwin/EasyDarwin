@@ -228,10 +228,9 @@ public:
 	static QTSServerInterface*  GetServer() { return sServer; }
 
 	//Allows you to map RTP session IDs (strings) to actual RTP session objects
-	OSRefTable*         GetRTPSessionMap() { return fRTPMap; }
-
-	OSRefTable*			GetHLSSessionMap() { return fHLSMap; }
-
+	OSRefTable*         GetRTPSessionMap()	{ return fRTPMap; }
+	OSRefTable*			GetHLSSessionMap()	{ return fHLSMap; }
+	OSRefTable*			GetRTMPSessionMap() { return fRTMPMap; }
 	OSRefTable*			GetReflectorSessionMap() { return fReflectorSessionMap; }
 
 	//Server provides a statically created & bound UDPSocket / Demuxer pair
@@ -327,9 +326,8 @@ protected:
 
 	// All RTP sessions are put into this map
 	OSRefTable*                 fRTPMap;
-
 	OSRefTable*					fHLSMap;
-
+	OSRefTable*					fRTMPMap;
 	OSRefTable*					fReflectorSessionMap;
 
 	QTSServerPrefs*             fSrvrPrefs;

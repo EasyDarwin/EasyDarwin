@@ -162,6 +162,7 @@ QTSServer::~QTSServer()
 
 	delete fRTPMap;
 	delete fHLSMap;
+	delete fRTMPMap;
 	delete fReflectorSessionMap;
 
 	delete fSocketPool;
@@ -173,9 +174,9 @@ QTSServer::~QTSServer()
 
 bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource, UInt16 inPortOverride, bool createListeners, const char*inAbsolutePath)
 {
-	static const UInt32 kRTPSessionMapSize = 5000;
-	static const UInt32 kHLSSessionMapSize = 5000;
-	static const UInt32 kReflectorSessionMapSize = 5000;
+	static const UInt32 kRTPSessionMapSize = 2000;
+	static const UInt32 kHLSSessionMapSize = 2000;
+	static const UInt32 kReflectorSessionMapSize = 2000;
 	fServerState = qtssFatalErrorState;
 	sPrefsSource = inPrefsSource;
 	sMessagesSource = inMessagesSource;
@@ -223,6 +224,7 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 	fSocketPool = new RTPSocketPool();
 	fRTPMap = new OSRefTable(kRTPSessionMapSize);
 	fHLSMap = new OSRefTable(kHLSSessionMapSize);
+	fRTMPMap = new OSRefTable();
 	fReflectorSessionMap = new OSRefTable(kReflectorSessionMapSize);
 
 	//

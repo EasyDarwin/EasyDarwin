@@ -178,6 +178,7 @@ QTSServerInterface::QTSServerInterface()
 	fSocketPool(NULL),
 	fRTPMap(NULL),
 	fHLSMap(NULL),
+	fRTMPMap(NULL),
 	fReflectorSessionMap(NULL),
 	fSrvrPrefs(NULL),
 	fSrvrMessages(NULL),
