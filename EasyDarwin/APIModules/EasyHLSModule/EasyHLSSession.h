@@ -35,7 +35,6 @@ class EasyHLSSession : public Task
 
         // ACCESSORS
         OSRef*          GetRef()		{ return &fRef; }
-        OSQueueElem*    GetQueueElem()	{ return &fQueueElem; }
 	
         StrPtrLen*      GetSessionID()	{ return &fHLSSessionID; }
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
@@ -57,7 +56,6 @@ class EasyHLSSession : public Task
         StrPtrLen   fHLSSessionID;
 		char		fHLSURL[QTSS_MAX_URL_LENGTH];
 		char		fSourceURL[QTSS_MAX_URL_LENGTH];
-        OSQueueElem fQueueElem; 
 
 		//RTSPClient Handle
 		Easy_RTSP_Handle		fRTSPClientHandle;

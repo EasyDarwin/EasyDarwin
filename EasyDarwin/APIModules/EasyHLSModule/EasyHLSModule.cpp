@@ -61,9 +61,9 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return Initialize(&inParams->initParams);
         case QTSS_RereadPrefs_Role:
             return RereadPrefs();
-		case Easy_HLSOpen_Role:		//Start HLS Streaming
+		case Easy_HLSOpen_Role:
 			return EasyHLSOpen(&inParams->easyHLSOpenParams);
-		case Easy_HLSClose_Role:	//Stop HLS Streaming
+		case Easy_HLSClose_Role:
 			return EasyHLSClose(&inParams->easyHLSCloseParams);
     }
     return QTSS_NoErr;
@@ -142,7 +142,6 @@ QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
 	EasyHLSSession* session = NULL;
-	//首先查找MAP里面是否已经有了对应的流
 	StrPtrLen streamName(inParams->inStreamName);
 	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
 	if(clientSesRef != NULL)

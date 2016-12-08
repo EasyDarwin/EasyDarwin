@@ -54,22 +54,19 @@ void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 
 }
 
-/* RTSPClient获取数据后回调给上层 */
 int Easy_APICALL __RTSPClientCallBack( int _chid, void *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
-	EasyHLSSession* pHLSSession = (EasyHLSSession *)_chPtr;
+	EasyHLSSession* pSession = (EasyHLSSession *)_chPtr;
 
-	if (NULL == pHLSSession)	return -1;
+	if (NULL == pSession)	return -1;
 
-	//投递到具体对应的EasyHLSSession进行处理
-	pHLSSession->ProcessData(_chid, _mediatype, pbuf, frameinfo);
+	pSession->ProcessData(_chid, _mediatype, pbuf, frameinfo);
 
 	return 0;
 }
 
 EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
-:   fQueueElem(),
-	fRTSPClientHandle(NULL),
+:   fRTSPClientHandle(NULL),
 	fHLSHandle(NULL),
 	fAAChandle(NULL),
 	tsTimeStampMSsec(0),
@@ -85,7 +82,6 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 	fLastAudioPTS(0)
 {
     fTimeoutTask.SetTask(this);
-    fQueueElem.SetEnclosingObject(this);
 
     if (inSessionID != NULL)
     {
@@ -259,7 +255,6 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 	do{
 		if(NULL == fRTSPClientHandle)
 		{
-			//创建RTSPClient
 			EasyRTSP_Init(&fRTSPClientHandle);
 
 			if (NULL == fRTSPClientHandle)
@@ -273,7 +268,7 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 			unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG | EASY_SDK_AUDIO_FRAME_FLAG;
 
 			EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
-			EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl,EASY_RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0x01, 0);
+			EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl, EASY_RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0x01, 0);
 
 			fPlayTime = fLastStatPlayTime = OS::Milliseconds();
 			fNumPacketsReceived = fLastNumPacketsReceived = 0;
