@@ -8,6 +8,14 @@
     File:       EasyHLSModule.cpp
     Contains:   EasyHLSModule
 */
+#include "EasyHLSModule.h"
+#include "QTSSModuleUtils.h"
+#include "OSArrayObjectDeleter.h"
+#include "QTSSMemoryDeleter.h"
+
+#include "ReflectorSession.h"
+#include "MyAssert.h"
+#include "EasyHLSSession.h"
 
 #ifdef __Win32__
 #define EasyHLS_KEY "333565546A4969576B5A7341476C4A58714B336B6B76464659584E355247467964326C754C6D56345A534E58444661672F704C67523246326157346D516D466962334E68514449774D545A4659584E355247467964326C75564756686257566863336B3D"
@@ -15,17 +23,6 @@
 #define EasyHLS_KEY "333565546A4A4F576B5971414A553558714C485A4576566C59584E355A47467964326C753456634D5671442B6B75424859585A7062695A4359574A76633246414D6A41784E6B566863336C4559584A33615735555A5746745A57467A65513D3D"
 #endif
 
-#include "EasyHLSModule.h"
-#include "QTSSModuleUtils.h"
-#include "OSArrayObjectDeleter.h"
-#include "OSMemory.h"
-#include "QTSSMemoryDeleter.h"
-#include "OSRef.h"
-#include "StringParser.h"
-
-#include "ReflectorSession.h"
-#include "MyAssert.h"
-#include "EasyHLSSession.h"
 // STATIC DATA
 static QTSS_PrefsObject         sServerPrefs		= NULL;
 static OSRefTable*				sHLSSessionMap		= NULL;
@@ -189,7 +186,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 
 			StrPtrLen inURL(theFullRequestURL);
 			StrPtrLen inName(inParams->inDevice);
-			hlsSe = NEW EasyHLSSession(&inName, &inURL, inParams->inChannel);
+			hlsSe = new EasyHLSSession(&inName, &inURL, inParams->inChannel);
 
 			QTSS_Error theErr = hlsSe->SessionStart();
 
