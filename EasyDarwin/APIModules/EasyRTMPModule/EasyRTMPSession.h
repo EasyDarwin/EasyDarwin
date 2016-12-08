@@ -56,7 +56,6 @@ class EasyRTMPSession : public Task
 		StrPtrLen	fSessionName;
 		StrPtrLen	fSourceURL;
 		char		fRTMPURL[QTSS_MAX_URL_LENGTH];
-
 		UInt32		fChannelNum;
 
 		OSMutex		fMutex;
