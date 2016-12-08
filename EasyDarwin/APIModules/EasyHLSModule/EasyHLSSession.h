@@ -13,35 +13,38 @@
 #include "StrPtrLen.h"
 #include "ResizeableStringFormatter.h"
 #include "MyAssert.h"
-
-#include "ReflectorStream.h"
-#include "SourceInfo.h"
 #include "OSArrayObjectDeleter.h"
 #include "EasyRTSPClientAPI.h"
 #include "EasyHLSAPI.h"
+#include "EasyAACEncoderAPI.h"
 
 #include "TimeoutTask.h"
-#include "EasyAACEncoderAPI.h"
+
 #ifndef __EASY_HLS_SESSION__
 #define __EASY_HLS_SESSION__
 
 class EasyHLSSession : public Task
 {
     public:
-        EasyHLSSession(StrPtrLen* inSourceID);
+        EasyHLSSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32 inChannel = 0);
         virtual ~EasyHLSSession();
         static void Initialize(QTSS_ModulePrefsObject inPrefs);
+
+
 		virtual SInt64	Run();
 
-        // ACCESSORS
-        OSRef*          GetRef()		{ return &fRef; }
-	
-        StrPtrLen*      GetSessionID()	{ return &fHLSSessionID; }
+		OSRef*			GetRef() { return &fRef; }
+		OSMutex*		GetMutex() { return &fMutex; }
+
+		StrPtrLen*      GetSourceID() { return &fSourceID; }
+		StrPtrLen*      GetStreamName() { return &fSessionName; }
+		StrPtrLen*		GetSourceURL() { return &fSourceURL; }
+		const char*		GetHLSURL() { return fHLSURL; }
+		UInt32			GetChannelNum() { return fChannelNum; }
+
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
-		QTSS_Error		HLSSessionStart(char* rtspUrl, UInt32 inTimeout);
-		QTSS_Error		HLSSessionRelease();
-		char*			GetHLSURL();
-		char*			GetSourceURL();
+		QTSS_Error		SessionStart();
+		QTSS_Error		SessionRelease();
 
 		void			RefreshTimeout()	{ fTimeoutTask.RefreshTimeout(); }
 
@@ -50,42 +53,40 @@ class EasyHLSSession : public Task
 		SInt64			GetNumBytesReceived()	const { return fNumBytesReceived; }
 		UInt32			GetLastStatBitrate()	const { return fLastStatBitrate; }
    
-    private:
-
-        OSRef       fRef;
-        StrPtrLen   fHLSSessionID;
+private:
+		// For storage in the session map       
+		OSRef       fRef;
+		StrPtrLen   fSourceID;
+		StrPtrLen	fSessionName;
+		StrPtrLen	fSourceURL;
 		char		fHLSURL[QTSS_MAX_URL_LENGTH];
-		char		fSourceURL[QTSS_MAX_URL_LENGTH];
+		UInt32		fChannelNum;
 
-		//RTSPClient Handle
+		OSMutex		fMutex;
+
 		Easy_RTSP_Handle		fRTSPClientHandle;
 		Easy_HLS_Handle			fHLSHandle;
 		EasyAACEncoder_Handle	fAAChandle;
-		unsigned long long		fLastAudioPTS;
 
+		//Audio
+		unsigned long long		fLastAudioPTS;
 		QTSS_Error EasyInitAACEncoder(int codec);
 		UInt8 pbAACBuffer[EASY_ACCENCODER_BUFFER_SIZE_LEN];
 
-		int tsTimeStampMSsec;
-
+		//hls prefs
 		static UInt32	sM3U8Version;
 		static bool		sAllowCache;
 		static UInt32	sTargetDuration;
 		static UInt32	sPlaylistCapacity;
-		static char*	sHTTPRootDir;
 
-		//统计
+		//stat
 		SInt64          fPlayTime;				//起始的时间
 		SInt64			fLastStatPlayTime;		//上一次统计的时间
-
         SInt64          fTotalPlayTime;			//总共播放时间
-
         SInt64			fNumPacketsReceived;	//收到的数据包的数量
 		SInt64			fLastNumPacketsReceived;//上一次统计收到的数据包数量
-
         SInt64			fNumBytesReceived;		//收到的数据总量
         SInt64			fLastNumBytesReceived;	//上一次统计收到的数据总量
-
 		UInt32			fLastStatBitrate;		//最后一次统计得到的比特率
 
 	protected:

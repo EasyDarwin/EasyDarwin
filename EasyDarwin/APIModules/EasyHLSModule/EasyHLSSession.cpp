@@ -57,11 +57,10 @@ int Easy_APICALL __RTSPClientCallBack( int _chid, void *_chPtr, int _mediatype, 
 	return 0;
 }
 
-EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
+EasyHLSSession::EasyHLSSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32 inChannel)
 :   fRTSPClientHandle(NULL),
 	fHLSHandle(NULL),
 	fAAChandle(NULL),
-	tsTimeStampMSsec(0),
 	fPlayTime(0),
     fTotalPlayTime(0),
 	fLastStatPlayTime(0),
@@ -71,21 +70,32 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 	fNumBytesReceived(0),
 	fLastNumBytesReceived(0),
 	fTimeoutTask(NULL, 60*1000),
-	fLastAudioPTS(0)
+	fLastAudioPTS(0),
+	fChannelNum(inChannel),
+	fSessionName(inName->GetAsCString()),
+	fSourceURL(inSourceURL->GetAsCString())
 {
-    fTimeoutTask.SetTask(this);
+	this->SetTaskName("EasyHLSSession");
 
-    if (inSessionID != NULL)
-    {
-        fHLSSessionID.Ptr = NEW char[inSessionID->Len + 1];
-        ::memcpy(fHLSSessionID.Ptr, inSessionID->Ptr, inSessionID->Len);
-		fHLSSessionID.Ptr[inSessionID->Len] = '\0';
-        fHLSSessionID.Len = inSessionID->Len;
-        fRef.Set(fHLSSessionID, this);
-    }
+    fTimeoutTask.SetTask(this);
+	fTimeoutTask.SetTimeout(120 * 1000);
+
+
+	if (inName != NULL)
+	{
+		char streamID[QTSS_MAX_NAME_LENGTH + 10] = { 0 };
+		if (inName->Len > QTSS_MAX_NAME_LENGTH)
+			inName->Len = QTSS_MAX_NAME_LENGTH;
+
+		sprintf(streamID, "%s%s%d", inName->Ptr, EASY_KEY_SPLITER, fChannelNum);
+		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
+		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
+		fSourceID.Ptr[strlen(streamID)] = '\0';
+		fSourceID.Len = strlen(streamID);
+		fRef.Set(fSourceID, this);
+	}
 
 	fHLSURL[0] = '\0';
-	fSourceURL[0] = '\0';
 
 	this->Signal(Task::kStartEvent);
 }
@@ -93,8 +103,11 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inSessionID)
 
 EasyHLSSession::~EasyHLSSession()
 {
-	HLSSessionRelease();
-    fHLSSessionID.Delete();
+	this->SessionRelease();
+
+	fSourceID.Delete();
+	fSessionName.Delete();
+	fSourceURL.Delete();
 
     if (this->GetRef()->GetRefCount() == 0)
     {   
@@ -117,7 +130,7 @@ SInt64 EasyHLSSession::Run()
 	if (theEvents & Task::kTimeoutEvent)
     {
 		char msgStr[2048] = { 0 };
-		qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::Run Timeout SessionID=%s", fHLSSessionID.Ptr);
+		qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::Run Timeout SessionID=%s", fSourceID.Ptr);
 		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
 		return -1;
@@ -226,21 +239,18 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	{
 		if (NULL == pbuf && NULL == frameinfo)
 		{
-			printf("Connecting:%s ...\n", fHLSSessionID.Ptr);
+			printf("Connecting:%s ...\n", fSourceID.Ptr);
 		}
 		else if (NULL!=frameinfo && frameinfo->type==0xF1)
 		{
-			printf("Lose Packet:%s ...\n", fHLSSessionID.Ptr);
+			printf("Lose Packet:%s ...\n", fSourceID.Ptr);
 		}
 	}
 
 	return QTSS_NoErr;
 }
 
-/*
-	创建HLS直播Session
-*/
-QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
+QTSS_Error	EasyHLSSession::SessionStart()
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -255,12 +265,10 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 				break;
 			}
 
-			::sprintf(fSourceURL, "%s", rtspUrl);
-
 			unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG | EASY_SDK_AUDIO_FRAME_FLAG;
 
 			EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
-			EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl, EASY_RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0x01, 0);
+			EasyRTSP_OpenStream(fRTSPClientHandle, 0, fSourceURL.Ptr, EASY_RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0x01, 0);
 
 			fPlayTime = fLastStatPlayTime = OS::Milliseconds();
 			fNumPacketsReceived = fLastNumPacketsReceived = 0;
@@ -278,7 +286,7 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 			}
 
 			char subDir[QTSS_MAX_NAME_LENGTH] = { 0 };
-			qtss_sprintf(subDir,"%s/", fHLSSessionID.Ptr);
+			qtss_sprintf(subDir,"%s/", fSourceID.Ptr);
 
 			
 
@@ -287,40 +295,40 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 			EasyHLS_ResetStreamCache(fHLSHandle, rootDir, subDir, "0", sTargetDuration);
 
 			char msgStr[2048] = { 0 };
-			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,rootDir=%s,subDir=%s", fHLSSessionID.Ptr, rootDir, subDir);
+			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,rootDir=%s,subDir=%s", fSourceID.Ptr, rootDir, subDir);
 			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 					
-			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath(), fHLSSessionID.Ptr, "0");
+			qtss_sprintf(fHLSURL, "%s%s/%s.m3u8", QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath(), fSourceID.Ptr, "0");
 		}
 		
-		fTimeoutTask.SetTimeout(inTimeout * 1000);
 	}while(0);
 
 	char msgStr[2048] = { 0 };
-	qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::HLSSessionStart SessionID=%s,url=%s,return=%d", fHLSSessionID.Ptr, rtspUrl, theErr);
+	qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::HLSSessionStart SessionID=%s,url=%s,return=%d", fSourceID.Ptr, fSourceURL.Ptr, theErr);
 	QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
 	return theErr;
 }
 
-QTSS_Error	EasyHLSSession::HLSSessionRelease()
+QTSS_Error	EasyHLSSession::SessionRelease()
 {
-	//释放source
+	//source
 	if(fRTSPClientHandle)
 	{
 		EasyRTSP_CloseStream(fRTSPClientHandle);
 		EasyRTSP_Deinit(&fRTSPClientHandle);
 		fRTSPClientHandle = NULL;
-		fSourceURL[0] = '\0';
 	}
 
-	//释放sink
+	//sink
 	if(fHLSHandle)
 	{
 		EasyHLS_Session_Release(fHLSHandle);
 		fHLSHandle = NULL;
 		fHLSURL[0] = '\0';
  	}
+
+	//filter
 	if(fAAChandle)
 	{
 		Easy_AACEncoder_Release(fAAChandle);
@@ -328,14 +336,4 @@ QTSS_Error	EasyHLSSession::HLSSessionRelease()
 		fLastAudioPTS = 0;
 	}
 	return QTSS_NoErr;
-}
-
-char* EasyHLSSession::GetHLSURL()
-{
-	return fHLSURL;
-}
-
-char* EasyHLSSession::GetSourceURL()
-{
-	return 	fSourceURL;
 }
