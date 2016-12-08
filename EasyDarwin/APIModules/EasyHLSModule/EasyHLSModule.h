@@ -6,7 +6,7 @@
 */
 /*
     File:       EasyHLSModule.h
-    Contains:   EasyDarwin HLS Module
+    Contains:   EasyHLSModule
 */
 
 #ifndef _EASYHLSMODULE_H_

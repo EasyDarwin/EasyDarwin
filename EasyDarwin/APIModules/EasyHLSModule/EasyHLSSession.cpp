@@ -55,7 +55,7 @@ void EasyHLSSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 }
 
 /* RTSPClient获取数据后回调给上层 */
-int Easy_APICALL __RTSPClientCallBack( int _chid, int *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
+int Easy_APICALL __RTSPClientCallBack( int _chid, void *_chPtr, int _mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	EasyHLSSession* pHLSSession = (EasyHLSSession *)_chPtr;
 
@@ -273,26 +273,15 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 			unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG | EASY_SDK_AUDIO_FRAME_FLAG;
 
 			EasyRTSP_SetCallback(fRTSPClientHandle, __RTSPClientCallBack);
-			EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl,RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0);
+			EasyRTSP_OpenStream(fRTSPClientHandle, 0, rtspUrl,EASY_RTP_OVER_TCP, mediaType, 0, 0, this, 1000, 0, 0x01, 0);
 
 			fPlayTime = fLastStatPlayTime = OS::Milliseconds();
 			fNumPacketsReceived = fLastNumPacketsReceived = 0;
 			fNumBytesReceived = fLastNumBytesReceived = 0;
-
 		}
 
 		if(NULL == fHLSHandle)
 		{
-			//创建HLSSessioin Sink
-			char movieFolder[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
-			UInt32 pathLen = QTSS_MAX_FILE_NAME_LENGTH;
-			QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
-
-			if( (pathLen > 0)&& (movieFolder[pathLen-1] == '/') )
-			{
-				movieFolder[pathLen-1] = 0;
-			}
-
 			fHLSHandle = EasyHLS_Session_Create(sPlaylistCapacity, sAllowCache, sM3U8Version);
 
 			if (NULL == fHLSHandle)
@@ -301,13 +290,13 @@ QTSS_Error	EasyHLSSession::HLSSessionStart(char* rtspUrl, UInt32 inTimeout)
 				break;
 			}
 
-			char subDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
+			char subDir[QTSS_MAX_NAME_LENGTH] = { 0 };
 			qtss_sprintf(subDir,"%s/", fHLSSessionID.Ptr);
 
 			
 
-			char rootDir[QTSS_MAX_FILE_NAME_LENGTH] = { 0 };
-			qtss_sprintf(rootDir,"%s/", movieFolder);
+			char rootDir[QTSS_MAX_NAME_LENGTH] = { 0 };
+			qtss_sprintf(rootDir,"%s/", QTSServerInterface::GetServer()->GetPrefs()->GetNginxRootFolder());
 			EasyHLS_ResetStreamCache(fHLSHandle, rootDir, subDir, "0", sTargetDuration);
 
 			char msgStr[2048] = { 0 };

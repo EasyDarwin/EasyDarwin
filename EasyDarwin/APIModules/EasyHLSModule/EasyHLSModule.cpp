@@ -6,13 +6,8 @@
 */
 /*
     File:       EasyHLSModule.cpp
-    Contains:   Implementation of EasyHLSModule class. 
+    Contains:   EasyHLSModule. 
 */
-
-#ifndef __Win32__
-// For gethostbyname
-#include <netdb.h>
-#endif
 
 #ifdef __Win32__
 #define EasyHLS_KEY "333565546A4969576B5A7341476C4A58714B336B6B76464659584E355247467964326C754C6D56345A534E58444661672F704C67523246326157346D516D466962334E68514449774D545A4659584E355247467964326C75564756686257566863336B3D"
@@ -32,38 +27,12 @@
 
 #include "QTSServerInterface.h"
 
-class HLSSessionCheckingTask : public Task
-{
-    public:
-        // Task that just polls on all the sockets in the pool, sending data on all available sockets
-        HLSSessionCheckingTask() : Task() {this->SetTaskName("HLSSessionCheckingTask");  this->Signal(Task::kStartEvent); }
-        virtual ~HLSSessionCheckingTask() {}
-    
-    private:
-        virtual SInt64 Run();
-        
-        enum
-        {
-            kProxyTaskPollIntervalMsec = 60*1000
-        };
-};
-
 // STATIC DATA
 static QTSS_PrefsObject         sServerPrefs		= NULL;
-static HLSSessionCheckingTask*	sCheckingTask		= NULL;
-
 static OSRefTable*				sHLSSessionMap		= NULL;
+static QTSS_ServerObject		sServer				= NULL;
+static QTSS_ModulePrefsObject	sModulePrefs		= NULL;
 
-static QTSS_ServerObject sServer					= NULL;
-static QTSS_ModulePrefsObject       sModulePrefs	= NULL;
-
-static StrPtrLen	sHLSSuffix("EasyHLSModule");
-
-#define QUERY_STREAM_NAME	"name"
-#define QUERY_STREAM_URL	"url"
-#define QUERY_STREAM_CMD	"cmd"
-#define QUERY_STREAM_CMD_START "start"
-#define QUERY_STREAM_CMD_STOP "stop"
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -152,10 +121,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
     // Setup global data structures
     sServerPrefs = inParams->inPrefs;
-    sCheckingTask = NEW HLSSessionCheckingTask();
-
     sServer = inParams->inServer;
-    
     sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
     // Call helper class initializers
@@ -169,12 +135,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 QTSS_Error RereadPrefs()
 {
 	return QTSS_NoErr;
-}
-
-
-SInt64 HLSSessionCheckingTask::Run()
-{
-	return kProxyTaskPollIntervalMsec;
 }
 
 QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams)
@@ -216,7 +176,6 @@ QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams)
 {
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
-	//首先查找Map里面是否已经有了对应的流
 	StrPtrLen streamName(inParams->inStreamName);
 
 	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);
@@ -245,7 +204,6 @@ char* GetHLSUrl(char* inSessionName)
 	OSMutexLocker locker (sHLSSessionMap->GetMutex());
 
 	char* hlsURL = NULL;
-	//首先查找Map里面是否已经有了对应的流
 	StrPtrLen streamName(inSessionName);
 
 	OSRef* clientSesRef = sHLSSessionMap->Resolve(&streamName);

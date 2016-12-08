@@ -6,7 +6,7 @@
 */
 /*
     File:       EasyHLSSession.h
-    Contains:   HLS
+    Contains:   EasyHLSSession
 */
 #include "QTSS.h"
 #include "OSRef.h"
@@ -30,26 +30,22 @@ class EasyHLSSession : public Task
     public:
         EasyHLSSession(StrPtrLen* inSourceID);
         virtual ~EasyHLSSession();
-        
-        //加载模块配置
         static void Initialize(QTSS_ModulePrefsObject inPrefs);
-
 		virtual SInt64	Run();
-        // ACCESSORS
 
-        OSRef*          GetRef()            { return &fRef; }
-        OSQueueElem*    GetQueueElem()      { return &fQueueElem; }
+        // ACCESSORS
+        OSRef*          GetRef()		{ return &fRef; }
+        OSQueueElem*    GetQueueElem()	{ return &fQueueElem; }
 	
-        StrPtrLen*      GetSessionID()     { return &fHLSSessionID; }
+        StrPtrLen*      GetSessionID()	{ return &fHLSSessionID; }
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 		QTSS_Error		HLSSessionStart(char* rtspUrl, UInt32 inTimeout);
 		QTSS_Error		HLSSessionRelease();
 		char*			GetHLSURL();
 		char*			GetSourceURL();
 
-		void RefreshTimeout()	{ fTimeoutTask.RefreshTimeout(); }
+		void			RefreshTimeout()	{ fTimeoutTask.RefreshTimeout(); }
 
-		//统计
 		SInt64          GetTotalPlayTime()		const { return fTotalPlayTime; }
 		SInt64			GetNumPacketsReceived() const { return fNumPacketsReceived; }
 		SInt64			GetNumBytesReceived()	const { return fNumBytesReceived; }
@@ -57,7 +53,6 @@ class EasyHLSSession : public Task
    
     private:
 
-        //HLSSession列表由EasyHLSModule的sHLSSessionMap维护  
         OSRef       fRef;
         StrPtrLen   fHLSSessionID;
 		char		fHLSURL[QTSS_MAX_URL_LENGTH];
@@ -65,22 +60,18 @@ class EasyHLSSession : public Task
         OSQueueElem fQueueElem; 
 
 		//RTSPClient Handle
-		Easy_RTSP_Handle	fRTSPClientHandle;
-		//HLS Handle
-		Easy_HLS_Handle fHLSHandle;
-		//AACEncode Handle
-		EasyAACEncoder_Handle fAAChandle;
-		//Last Audio PTS
-		unsigned long long fLastAudioPTS;
+		Easy_RTSP_Handle		fRTSPClientHandle;
+		Easy_HLS_Handle			fHLSHandle;
+		EasyAACEncoder_Handle	fAAChandle;
+		unsigned long long		fLastAudioPTS;
 
 		QTSS_Error EasyInitAACEncoder(int codec);
 		UInt8 pbAACBuffer[EASY_ACCENCODER_BUFFER_SIZE_LEN];
 
-		//TS timestamp ms，自定义时间戳
 		int tsTimeStampMSsec;
 
 		static UInt32	sM3U8Version;
-		static bool	sAllowCache;
+		static bool		sAllowCache;
 		static UInt32	sTargetDuration;
 		static UInt32	sPlaylistCapacity;
 		static char*	sHTTPRootDir;
