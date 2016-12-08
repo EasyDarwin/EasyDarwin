@@ -118,14 +118,13 @@ public:
 	UInt32          GetNumOutputs() { return fNumOutputs; }
 	UInt32          GetNumStreams() { return fSourceInfo->GetNumStreams(); }
 	SourceInfo*     GetSourceInfo() { return fSourceInfo; }
-	StrPtrLen*      GetLocalSDP() { return &fLocalSDP; }
-	StrPtrLen*      GetSourceID() { return &fSourceID; }
+	StrPtrLen*      GetLocalSDP()	{ return &fLocalSDP; }
 
+	StrPtrLen*      GetSourceID()	{ return &fSourceID; }
 	StrPtrLen*      GetStreamName() { return &fSessionName; }
 	UInt32			GetChannelNum() { return fChannelNum; }
 
 	bool			IsSetup() { return fIsSetup; }
-
 	bool			HasVideoKeyFrameUpdate() { return fHasVideoKeyFrameUpdate; }
 
 	ReflectorStream*	GetStreamByIndex(UInt32 inIndex) { return fStreamArray[inIndex]; }
