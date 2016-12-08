@@ -60,7 +60,7 @@
 #include "QTSSAccessLogModule.h"
 #include "QTSSFlowControlModule.h"
 #include "QTSSReflectorModule.h"
-//#include "EasyHLSModule.h"
+#include "EasyHLSModule.h"
 #include "EasyRTMPModule.h"
 #include "EasyCMSModule.h"
 #include "EasyRedisModule.h"
@@ -743,9 +743,9 @@ void    QTSServer::LoadCompiledInModules()
 	(void)theRTMPModule->SetupModule(&sCallbacks, &EasyRTMPModule_Main);
 	(void)AddModule(theRTMPModule);
 
-	//QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
-	//(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
-	//(void)AddModule(theHLSModule);
+	QTSSModule* theHLSModule = new QTSSModule("EasyHLSModule");
+	(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
+	(void)AddModule(theHLSModule);
 
 	QTSSModule* theAccessLog = new QTSSModule("QTSSAccessLogModule");
 	(void)theAccessLog->SetupModule(&sCallbacks, &QTSSAccessLogModule_Main);
