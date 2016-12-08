@@ -80,7 +80,6 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32
     fTimeoutTask.SetTask(this);
 	fTimeoutTask.SetTimeout(120 * 1000);
 
-
 	if (inName != NULL)
 	{
 		char streamID[QTSS_MAX_NAME_LENGTH + 10] = { 0 };
@@ -99,7 +98,6 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32
 
 	this->Signal(Task::kStartEvent);
 }
-
 
 EasyHLSSession::~EasyHLSSession()
 {
@@ -237,14 +235,6 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	}
 	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)
 	{
-		if (NULL == pbuf && NULL == frameinfo)
-		{
-			printf("Connecting:%s ...\n", fSourceID.Ptr);
-		}
-		else if (NULL!=frameinfo && frameinfo->type==0xF1)
-		{
-			printf("Lose Packet:%s ...\n", fSourceID.Ptr);
-		}
 	}
 
 	return QTSS_NoErr;
@@ -288,11 +278,12 @@ QTSS_Error	EasyHLSSession::SessionStart()
 			char subDir[QTSS_MAX_NAME_LENGTH] = { 0 };
 			qtss_sprintf(subDir,"%s/", fSessionName.Ptr);
 
-			
-
 			char rootDir[QTSS_MAX_NAME_LENGTH] = { 0 };
 			qtss_sprintf(rootDir,"%s/", QTSServerInterface::GetServer()->GetPrefs()->GetNginxRootFolder());
-			EasyHLS_ResetStreamCache(fHLSHandle, rootDir, subDir, "0", sTargetDuration);
+
+			char m3u8Name[QTSS_MAX_NAME_LENGTH] = { 0 };
+			qtss_sprintf(m3u8Name, "%d", fChannelNum);
+			EasyHLS_ResetStreamCache(fHLSHandle, rootDir, subDir, m3u8Name, sTargetDuration);
 
 			char msgStr[2048] = { 0 };
 			qtss_snprintf(msgStr, sizeof(msgStr), "EasyHLSSession::EasyHLS_ResetStreamCache SessionID=%s,rootDir=%s,subDir=%s", fSourceID.Ptr, rootDir, subDir);
