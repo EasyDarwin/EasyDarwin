@@ -648,11 +648,13 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 		return QTSS_NoErr;
 	}
 
-	if (fSessionType == EasyCameraSession)
+	auto picType = EasyProtocol::GetSnapType(strType);
+
+	if (picType == EASY_SNAP_TYPE_JPEG)
 	{
 		fwrite(image.data(), 1, image.size(), fSnap);
 	}
-	else if (fSessionType == EasyNVRSession)
+	else if (picType == EASY_SNAP_TYPE_IDR)
 	{
 		string decQueryString = EasyUtil::Urldecode(reserve);
 
