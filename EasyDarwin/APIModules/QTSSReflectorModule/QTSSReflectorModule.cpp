@@ -2405,7 +2405,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 				(void)QTSS_GetValueAsString(clientSession, qtssCliSesFullURL, 0, &theFullRequestURL);
 				QTSSCharArrayDeleter theFileNameStrDeleter(theFullRequestURL);
 
-				if (theFullRequestURL)
+				if (theFullRequestURL && inParams->outUrl)
 				{
 					strcpy(inParams->outUrl, theFullRequestURL);
 					theErr = QTSS_NoErr;

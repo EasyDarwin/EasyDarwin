@@ -209,7 +209,9 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 			rtspSessionMap->Release(theSessionRef);
 		}
 
-		strcpy(inParams->outUrl, hlsSe->GetHLSURL());
+		if(inParams->outUrl)
+			strcpy(inParams->outUrl, hlsSe->GetHLSURL());
+
 		sHLSSessionMap->Release(hlsSe->GetRef());
 		theErr = QTSS_NoErr;
 		break;

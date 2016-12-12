@@ -221,7 +221,9 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 			rtspSessionMap->Release(theSessionRef);
 		}
 
-		strcpy(inParams->outUrl, rtmpSe->GetRTMPURL());
+		if(inParams->outUrl)
+			strcpy(inParams->outUrl, rtmpSe->GetRTMPURL());
+
 		sRTMPSessionMap->Release(rtmpSe->GetRef());
 		theErr = QTSS_NoErr;
 		break;
