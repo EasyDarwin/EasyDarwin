@@ -127,8 +127,8 @@ static bool   sDefaultOneSSRCPerStream = true;
 static UInt32   sTimeoutSSRCSecs = 30;
 static UInt32   sDefaultTimeoutSSRCSecs = 30;
 
-static UInt32   sBroadcasterSessionTimeoutSecs = 20;
-static UInt32   sDefaultBroadcasterSessionTimeoutSecs = 20;
+static UInt32   sBroadcasterSessionTimeoutSecs = 30;
+static UInt32   sDefaultBroadcasterSessionTimeoutSecs = 30;
 static UInt32   sBroadcasterSessionTimeoutMilliSecs = sBroadcasterSessionTimeoutSecs * 1000;
 
 static UInt16 sLastMax = 0;
@@ -499,6 +499,9 @@ QTSS_Error RereadPrefs()
 
 	QTSSModuleUtils::GetAttribute(sPrefs, "timeout_broadcaster_session_secs", qtssAttrDataTypeUInt32,
 		&sBroadcasterSessionTimeoutSecs, &sDefaultBroadcasterSessionTimeoutSecs, sizeof(sDefaultTimeoutSSRCSecs));
+
+	if (sBroadcasterSessionTimeoutSecs < 30)
+		sBroadcasterSessionTimeoutSecs = 30;
 
 	QTSSModuleUtils::GetAttribute(sPrefs, "authenticate_local_broadcast", qtssAttrDataTypeBool16,
 		&sAuthenticateLocalBroadcast, &sDefaultAuthenticateLocalBroadcast, sizeof(sDefaultAuthenticateLocalBroadcast));

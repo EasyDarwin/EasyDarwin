@@ -152,7 +152,7 @@
 		<PREF NAME="kill_clients_when_broadcast_stops" TYPE="bool" >false</PREF>
 		<PREF NAME="use_one_SSRC_per_stream" TYPE="bool" >true</PREF>
 		<PREF NAME="timeout_stream_SSRC_secs" TYPE="UInt32" >30</PREF>
-		<PREF NAME="timeout_broadcaster_session_secs" TYPE="UInt32" >20</PREF>
+		<PREF NAME="timeout_broadcaster_session_secs" TYPE="UInt32" >30</PREF>
 		<PREF NAME="authenticate_local_broadcast" TYPE="bool" >false</PREF>
 		<PREF NAME="disable_overbuffering" TYPE="bool" >false</PREF>
 		<PREF NAME="allow_broadcasts" TYPE="bool" >true</PREF>
