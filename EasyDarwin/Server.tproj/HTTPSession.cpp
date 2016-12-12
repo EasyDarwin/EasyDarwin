@@ -1222,3 +1222,97 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 
 	return QTSS_NoErr;
 }
+
+QTSS_Error HTTPSession::execNetMsgCSLiveDeviceStreamReqRESTful(const char * queryString)
+{
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
+
+	string queryTemp;
+	if (queryString)
+	{
+		queryTemp = EasyUtil::Urldecode(queryString);
+	}
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
+
+	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);
+	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);
+	//const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
+
+	UInt32 theChannelNum = 0;
+	EasyStreamType streamType = easyIllegalStreamType;
+
+	int theErr = EASY_ERROR_SERVER_NOT_IMPLEMENTED;
+
+	do
+	{
+		if (!chSerial)
+		{
+			theErr = EASY_ERROR_NOT_FOUND;
+			break;
+		}
+
+		const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
+		if (chChannel)
+		{
+			theChannelNum = stoi(chChannel);
+		}
+
+		if (!chProtocol)
+		{
+			theErr = EASY_ERROR_CLIENT_BAD_REQUEST;
+			break;
+		}
+
+		StrPtrLen chProtocolPtr(const_cast<char*>(chProtocol));
+		streamType = HTTPProtocol::GetStreamType(&chProtocolPtr);
+
+		if (streamType == easyIllegalStreamType)
+		{
+			theErr = EASY_ERROR_CLIENT_BAD_REQUEST;
+			break;
+		}
+
+		QTSS_RoleParams params;
+		params.easyGetDeviceStreamParams.inDevice = const_cast<char*>(chSerial);
+		params.easyGetDeviceStreamParams.inChannel = theChannelNum;
+		params.easyGetDeviceStreamParams.inStreamType = streamType;
+		params.easyGetDeviceStreamParams.outUrl = nullptr;
+
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kLiveDeviceStreamRole);
+		for (UInt32 fCurrentModule = 0; fCurrentModule < numModules; fCurrentModule++)
+		{
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kLiveDeviceStreamRole, fCurrentModule);
+			QTSS_Error exeErr = theModule->CallDispatch(Easy_LiveDeviceStream_Role, &params);
+			if (exeErr == QTSS_NoErr)
+			{
+				theErr = EASY_ERROR_SUCCESS_OK;
+				break;
+			}
+		}
+	} while (false);
+
+	EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = theErr;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(theErr);
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+
+	return QTSS_NoErr;
+}

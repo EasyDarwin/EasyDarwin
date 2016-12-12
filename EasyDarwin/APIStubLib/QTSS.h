@@ -1033,8 +1033,7 @@ enum
 
 	//RESTful
 	Easy_GetDeviceStream_Role =			FOUR_CHARS_TO_INT('g', 'd', 's', 'r'),	//gdsr
-
-
+	Easy_LiveDeviceStream_Role =		FOUR_CHARS_TO_INT('l', 'd', 's', 'r'),	//ldsr
 };
 typedef UInt32 QTSS_Role;
 

@@ -35,6 +35,7 @@ static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs();
 static QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams);
+static QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams);
 
 //static QTSS_Error EasyHLSOpen(Easy_HLSOpen_Params* inParams);
 //static QTSS_Error EasyHLSClose(Easy_HLSClose_Params* inParams);
@@ -58,7 +59,10 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return RereadPrefs();
 		case Easy_GetDeviceStream_Role:
 			return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
-		//case Easy_HLSOpen_Role:
+		case Easy_LiveDeviceStream_Role:
+			return LiveDeviceStream(&inParams->easyGetDeviceStreamParams);
+    default: break;
+	    //case Easy_HLSOpen_Role:
 		//	return EasyHLSOpen(&inParams->easyHLSOpenParams);
 		//case Easy_HLSClose_Role:
 		//	return EasyHLSClose(&inParams->easyHLSCloseParams);
@@ -100,8 +104,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_GetDeviceStream_Role);
-	//(void)QTSS_AddRole(Easy_HLSOpen_Role); 
-	//(void)QTSS_AddRole(Easy_HLSClose_Role); 
+	(void)QTSS_AddRole(Easy_LiveDeviceStream_Role);
     
     // Tell the server our name!
     static char* sModuleName = "EasyHLSModule";
@@ -133,7 +136,6 @@ QTSS_Error RereadPrefs()
 {
 	return QTSS_NoErr;
 }
-
 
 QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 {
@@ -211,6 +213,36 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 
 		if(inParams->outUrl)
 			strcpy(inParams->outUrl, hlsSe->GetHLSURL());
+
+		sHLSSessionMap->Release(hlsSe->GetRef());
+		theErr = QTSS_NoErr;
+		break;
+	}
+
+	return theErr;
+}
+
+QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams)
+{
+	QTSS_Error theErr = QTSS_ValueNotFound;
+
+	while (inParams->inDevice && inParams->inStreamType == easyHLSType)
+	{
+		char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
+		sprintf(theStreamName, "%s%s%d", inParams->inDevice, EASY_KEY_SPLITER, inParams->inChannel);
+		StrPtrLen inStreamName(theStreamName);
+
+		EasyHLSSession* hlsSe = nullptr;
+		OSRef* sessionRef = sHLSSessionMap->Resolve(&inStreamName);
+		if (sessionRef != nullptr)
+		{
+			hlsSe = static_cast<EasyHLSSession*>(sessionRef->GetObject());
+			hlsSe->RefreshTimeout();
+		}
+		else
+		{
+			break;
+		}
 
 		sHLSSessionMap->Release(hlsSe->GetRef());
 		theErr = QTSS_NoErr;

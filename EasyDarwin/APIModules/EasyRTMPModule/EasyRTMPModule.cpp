@@ -38,6 +38,7 @@ static QTSS_Error Register(QTSS_Register_Params* inParams);
 static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs();
 static QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams);
+static QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams);
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyRTMPModule_Main(void* inPrivateArgs)
@@ -57,6 +58,8 @@ QTSS_Error  EasyRTMPModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
             return RereadPrefs();
 		case Easy_GetDeviceStream_Role:
 			return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
+		case Easy_LiveDeviceStream_Role:
+			return LiveDeviceStream(&inParams->easyGetDeviceStreamParams);
    }
     return QTSS_NoErr;
 }
@@ -119,6 +122,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
     (void)QTSS_AddRole(QTSS_Initialize_Role);
     (void)QTSS_AddRole(QTSS_RereadPrefs_Role); 
 	(void)QTSS_AddRole(Easy_GetDeviceStream_Role);
+	(void)QTSS_AddRole(Easy_LiveDeviceStream_Role);
     
     // Tell the server our name!
     static char* sModuleName = "EasyRTMPModule";
@@ -223,6 +227,37 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 
 		if(inParams->outUrl)
 			strcpy(inParams->outUrl, rtmpSe->GetRTMPURL());
+
+		sRTMPSessionMap->Release(rtmpSe->GetRef());
+		theErr = QTSS_NoErr;
+		break;
+	}
+
+	return theErr;
+}
+
+
+QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams)
+{
+	QTSS_Error theErr = QTSS_ValueNotFound;
+
+	while (inParams->inDevice && inParams->inStreamType == easyRTMPType)
+	{
+		char theStreamName[QTSS_MAX_NAME_LENGTH] = { 0 };
+		sprintf(theStreamName, "%s%s%d", inParams->inDevice, EASY_KEY_SPLITER, inParams->inChannel);
+		StrPtrLen inStreamName(theStreamName);
+
+		EasyRTMPSession* rtmpSe = nullptr;
+		OSRef* sessionRef = sRTMPSessionMap->Resolve(&inStreamName);
+		if (sessionRef != nullptr)
+		{
+			rtmpSe = static_cast<EasyRTMPSession*>(sessionRef->GetObject());
+			rtmpSe->RefreshTimeout();
+		}
+		else
+		{
+			break;
+		}
 
 		sRTMPSessionMap->Release(rtmpSe->GetRef());
 		theErr = QTSS_NoErr;

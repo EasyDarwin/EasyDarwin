@@ -257,11 +257,11 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
 	case Easy_RedisJudgeStreamID_Role:	return kRedisJudgeStreamIDRole;
 
 	case Easy_GetDeviceStream_Role:		return kGetDeviceStreamRole;
+	case Easy_LiveDeviceStream_Role:	return kLiveDeviceStreamRole;
 	default:
 		return -1;
 	}
 }
-
 
 QTSS_Error  QTSSModule::AddRole(QTSS_Role inRole)
 {
