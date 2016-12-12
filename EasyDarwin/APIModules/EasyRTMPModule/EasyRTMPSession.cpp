@@ -32,13 +32,16 @@ int __EasyRTMP_Callback(int _frameType, char *pBuf, EASY_RTMP_STATE_T _state, vo
 }
 
 EasyRTMPSession::EasyRTMPSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32 inChannel)
-:	fRTSPClientHandle(NULL),
+:	fTimeoutTask(NULL, 60 * 1000),
+	fRTSPClientHandle(NULL),
 	fRTMPHandle(NULL),
 	fChannelNum(inChannel),
 	fSessionName(inName->GetAsCString()),
 	fSourceURL(inSourceURL->GetAsCString())
 {
     this->SetTaskName("EasyRTMPSession");
+	fTimeoutTask.SetTask(this);
+	fTimeoutTask.SetTimeout(120 * 1000);
 
 	if (inName != NULL)
 	{
@@ -80,6 +83,11 @@ SInt64 EasyRTMPSession::Run()
     {
         return -1;
     }
+
+	if (theEvents & Task::kTimeoutEvent)
+	{
+		return 0;
+	}
 
     return 0;
 }

@@ -44,6 +44,7 @@ class EasyRTMPSession : public Task
 		StrPtrLen*		GetSourceURL() { return &fSourceURL; }
 		const char*		GetRTMPURL() { return fRTMPURL; }
 		UInt32			GetChannelNum() { return fChannelNum; }
+		void			RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
 
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 		QTSS_Error		SessionStart();
@@ -59,6 +60,7 @@ class EasyRTMPSession : public Task
 		UInt32		fChannelNum;
 
 		OSMutex		fMutex;
+		TimeoutTask	fTimeoutTask;
 
 		Easy_RTSP_Handle	fRTSPClientHandle;
 		Easy_RTMP_Handle	fRTMPHandle;

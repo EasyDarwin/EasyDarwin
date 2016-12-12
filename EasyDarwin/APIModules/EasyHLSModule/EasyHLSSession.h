@@ -65,6 +65,7 @@ private:
 		UInt32		fChannelNum;
 
 		OSMutex		fMutex;
+		TimeoutTask	fTimeoutTask;
 
 		Easy_RTSP_Handle		fRTSPClientHandle;
 		Easy_HLS_Handle			fHLSHandle;
@@ -90,9 +91,6 @@ private:
         SInt64			fNumBytesReceived;		//收到的数据总量
         SInt64			fLastNumBytesReceived;	//上一次统计收到的数据总量
 		UInt32			fLastStatBitrate;		//最后一次统计得到的比特率
-
-	protected:
-		TimeoutTask		fTimeoutTask;
 };
 
 #endif
