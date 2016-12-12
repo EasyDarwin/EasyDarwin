@@ -603,6 +603,17 @@ QTSS_Error HTTPSession::dumpRequestData()
 QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
+
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
+
 	bool bStop = false;
 
 	char decQueryString[QTSS_MAX_URL_LENGTH] = { 0 };
@@ -701,6 +712,16 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
+
 	do
 	{
 		char* msgContent = static_cast<char*>(Easy_GetHLSessions());
@@ -733,8 +754,18 @@ QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* jso
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* queryString)
-{
+{	
 	QTSS_Error theErr = QTSS_NoErr;
+
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
 
 	do
 	{
@@ -771,11 +802,15 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* query
 
 QTSS_Error HTTPSession::execNetMsgCSGetServerVersionReqRESTful(const char* queryString)
 {
-	/*auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-	if (!hasLogin(cokieTemp))
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
 	{
-	return EASY_ERROR_CLIENT_UNAUTHORIZED;
-	}*/
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_INFO_ACK);
 	EasyJsonValue header, body;
@@ -818,6 +853,16 @@ QTSS_Error HTTPSession::execNetMsgCSGetServerVersionReqRESTful(const char* query
 
 QTSS_Error HTTPSession::execNetMsgCSLoginReqRESTful(const char* queryString)
 {
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
+
 	string queryTemp;
 	if (queryString != nullptr)
 	{
@@ -861,8 +906,15 @@ QTSS_Error HTTPSession::execNetMsgCSLoginReqRESTful(const char* queryString)
 
 QTSS_Error HTTPSession::execNetMsgCSLogoutReqRESTful(const char* queryString)
 {
-	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
 	//cookie->token->clear redis->Platform clear,need login again
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_LOGOUT_ACK);
@@ -885,11 +937,15 @@ QTSS_Error HTTPSession::execNetMsgCSLogoutReqRESTful(const char* queryString)
 
 QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryString)
 {
-	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-	//if (!hasLogin(cokieTemp))
-	//{
-	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
-	//}
+	if(QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_BASE_CONFIG_ACK);
 	EasyJsonValue header, body;
@@ -931,11 +987,15 @@ QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryStr
 
 QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryString)
 {
-	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-	//if (!hasLogin(cokieTemp))
-	//{
-	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
-	//}
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
 
 	string queryTemp;
 	if (queryString)
@@ -1042,23 +1102,30 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 
 QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryString) const
 {
-	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-	//if (!hasLogin(cokieTemp))
-	//{
-	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
-	//}
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
 
 	exit(-2);
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryString)
 {
-	//auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-	//if (!hasLogin(cokieTemp))
-	//{
-	//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
-	//}
-
+	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+	{
+		//printf("if cloud platform enabled,we will check platform login token");
+		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+		//if (!hasLogin(cokieTemp))
+		//{
+		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+		//}
+	}
 
 	string queryTemp;
 	if (queryString)
