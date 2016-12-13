@@ -78,7 +78,7 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32
 	this->SetTaskName("EasyHLSSession");
 
     fTimeoutTask.SetTask(this);
-	fTimeoutTask.SetTimeout(120 * 1000);
+	fTimeoutTask.SetTimeout(90 * 1000);
 
 	if (inName != NULL)
 	{

@@ -41,7 +41,7 @@ EasyRTMPSession::EasyRTMPSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt
 {
     this->SetTaskName("EasyRTMPSession");
 	fTimeoutTask.SetTask(this);
-	fTimeoutTask.SetTimeout(120 * 1000);
+	fTimeoutTask.SetTimeout(90 * 1000);
 
 	if (inName != NULL)
 	{
@@ -86,7 +86,7 @@ SInt64 EasyRTMPSession::Run()
 
 	if (theEvents & Task::kTimeoutEvent)
 	{
-		return 0;
+		return -1;
 	}
 
     return 0;
