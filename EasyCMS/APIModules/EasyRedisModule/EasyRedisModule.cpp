@@ -285,44 +285,68 @@ QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };//注意128位是否足够
-	sprintf(chKey, "%s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());//更改超时时间
+	sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());//更改超时时间
+	sRedisClient->AppendCommand(chKey);
 
-	int ret = sRedisClient->SetExpire(chKey, 15);
-	if (ret == -1)//fatal error
-	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-		return QTSS_NotConnected;
-	}
-	else if (ret == 1)
-	{
-		return QTSS_NoErr;
-	}
-	else if (ret == 0)//the key doesn't exist, reset
+	easyRedisReply* reply = nullptr;
+	if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
 	{
 		char chTemp[128]{ 0 };
 		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, 0);
 		sRedisClient->AppendCommand(chTemp);
 
-		easyRedisReply* reply = nullptr;
-		auto re = sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-		EasyFreeReplyObject(reply);
-		//sprintf(chKey, "%s:%d_Live", sCMSIP, sCMSPort);
-		//int retret = sRedisClient->SetEX(chKey, 15, "1");
-		//if (retret == -1)//fatal error
-		//{
-		//	sRedisClient->Free();
-		//	sIfConSucess = false;
-		//}
-		//return retret;
+		easyRedisReply* replyTemp = nullptr;
+		auto re = sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
+		if (replyTemp)
+		{
+			EasyFreeReplyObject(replyTemp);
+		}
+	}
 
-		return ret;
-	}
-	else
+	if (reply)
 	{
-		return ret;
+		EasyFreeReplyObject(reply);
 	}
+
+	return QTSS_NoErr;
+
+	//int ret = sRedisClient->SetExpire(chKey, 15);
+	//if (ret == -1)//fatal error
+	//{
+	//	sRedisClient->Free();
+	//	sIfConSucess = false;
+	//	return QTSS_NotConnected;
+	//}
+	//else if (ret == 1)
+	//{
+	//	return QTSS_NoErr;
+	//}
+	//else if (ret == 0)//the key doesn't exist, reset
+	//{
+	//	char chTemp[128]{ 0 };
+	//	auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+	//	sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, 0);
+	//	sRedisClient->AppendCommand(chTemp);
+
+	//	easyRedisReply* reply = nullptr;
+	//	auto re = sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+	//	EasyFreeReplyObject(reply);
+	//	//sprintf(chKey, "%s:%d_Live", sCMSIP, sCMSPort);
+	//	//int retret = sRedisClient->SetEX(chKey, 15, "1");
+	//	//if (retret == -1)//fatal error
+	//	//{
+	//	//	sRedisClient->Free();
+	//	//	sIfConSucess = false;
+	//	//}
+	//	//return retret;
+
+	//	return ret;
+	//}
+	//else
+	//{
+	//	return ret;
+	//}
 }
 
 QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
