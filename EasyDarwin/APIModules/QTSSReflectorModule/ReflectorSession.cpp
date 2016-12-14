@@ -34,7 +34,6 @@
 #include "OS.h"
 
 #include "QTSServerInterface.h"
-#include <errno.h>
 #include "sdpCache.h"
 
 #ifndef __Win32__
@@ -73,6 +72,9 @@ void ReflectorSession::Initialize()
 
 ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, SourceInfo* inInfo) :
 	fIsSetup(false),
+	fSessionName(inSourceID->GetAsCString()),
+	fChannelNum(inChannelNum),
+	fHLSLive(false),
 	fQueueElem(),
 	fNumOutputs(0),
 	fStreamArray(NULL),
@@ -82,10 +84,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 	fInitTimeMS(OS::Milliseconds()),
 	fNoneOutputStartTimeMS(OS::Milliseconds()),
 	fHasBufferedStreams(false),
-	fHLSLive(false),
-	fHasVideoKeyFrameUpdate(false),
-	fChannelNum(inChannelNum),
-	fSessionName(inSourceID->GetAsCString())
+	fHasVideoKeyFrameUpdate(false)
 {
 	fQueueElem.SetEnclosingObject(this);
 	if (inSourceID != NULL)

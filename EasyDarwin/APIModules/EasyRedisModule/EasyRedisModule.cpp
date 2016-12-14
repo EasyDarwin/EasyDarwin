@@ -259,6 +259,13 @@ QTSS_Error RedisAddPushName(QTSS_StreamInfo_Params* inParams)
 		sIfConSucess = false;
 	}
 
+	ret = sRedisClient->HashSet(chKey, "EasyDarwin", QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	if (ret == -1)//fatal err,need reconnect
+	{
+		sRedisClient->Free();
+		sIfConSucess = false;
+	}
+
 	return ret;
 }
 
@@ -289,7 +296,7 @@ QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };//注意128位是否足够
-	sprintf(chKey, "%s:%s 15", QTSServerInterface::GetServer()->GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());//更改超时时间
+	sprintf(chKey, "%s:%s", QTSServerInterface::GetServer()->GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());//更改超时时间
 
 	auto ret = sRedisClient->SetExpire(chKey, 15);
 	if (ret == -1)//fatal error
