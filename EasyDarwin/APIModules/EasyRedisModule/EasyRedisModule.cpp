@@ -40,8 +40,8 @@ static QTSS_Error   RereadPrefs();
 static QTSS_Error	RedisConnect();
 static QTSS_Error	RedisInit();
 static QTSS_Error	RedisTTL();
-static QTSS_Error	RedisAddPushName(QTSS_StreamName_Params* inParams);
-static QTSS_Error	RedisDelPushName(QTSS_StreamName_Params* inParams);
+static QTSS_Error	RedisAddPushName(QTSS_StreamInfo_Params* inParams);
+static QTSS_Error	RedisDelPushName(QTSS_StreamInfo_Params* inParams);
 static QTSS_Error	RedisChangeRtpNum();
 static QTSS_Error	RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams);
 static QTSS_Error	RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams);
@@ -67,9 +67,9 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 	case Easy_RedisChangeRTPNum_Role:
 		return RedisChangeRtpNum();
 	case Easy_RedisAddPushStream_Role:
-		return RedisAddPushName(&inParamBlock->StreamNameParams);
+		return RedisAddPushName(&inParamBlock->StreamInfoParams);
 	case Easy_RedisDelPushStream_Role:
-		return RedisDelPushName(&inParamBlock->StreamNameParams);
+		return RedisDelPushName(&inParamBlock->StreamInfoParams);
 	case Easy_RedisGetAssociatedCMS_Role:
 		return RedisGetAssociatedCMS(&inParamBlock->GetAssociatedCMSParams);
 	case Easy_RedisJudgeStreamID_Role:
@@ -240,16 +240,19 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 	return static_cast<QTSS_Error>(false);
 }
 
-QTSS_Error RedisAddPushName(QTSS_StreamName_Params* inParams)
+QTSS_Error RedisAddPushName(QTSS_StreamInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%d_PushName", sRTSPWanIP, sRTSPWanPort);
+	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
 
-	int ret = sRedisClient->SAdd(chKey, inParams->inStreamName);
+	char chRtpNum[16] = { 0 };
+	sprintf(chRtpNum, "%d", inParams->inNumOutputs);
+
+	int ret = sRedisClient->HashSet(chKey, "output", chRtpNum);
 	if (ret == -1)//fatal err,need reconnect
 	{
 		sRedisClient->Free();
@@ -259,16 +262,16 @@ QTSS_Error RedisAddPushName(QTSS_StreamName_Params* inParams)
 	return ret;
 }
 
-QTSS_Error RedisDelPushName(QTSS_StreamName_Params* inParams)
+QTSS_Error RedisDelPushName(QTSS_StreamInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%d_PushName", sRTSPWanIP, sRTSPWanPort);
+	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
 
-	int ret = sRedisClient->SRem(chKey, inParams->inStreamName);
+	int ret = sRedisClient->Delete(chKey);
 	if (ret == -1)//fatal err,need reconnect
 	{
 		sRedisClient->Free();

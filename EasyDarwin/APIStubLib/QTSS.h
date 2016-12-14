@@ -1226,8 +1226,10 @@ typedef struct
 //redis module
 typedef struct
 {
-	char * inStreamName;
-}QTSS_StreamName_Params;
+	char *						inStreamName;
+	UINT32						inChannel;
+	UINT32						inNumOutputs;
+}QTSS_StreamInfo_Params;
 
 typedef struct
 {
@@ -1274,7 +1276,7 @@ typedef union
 	Easy_HLSClose_Params				easyHLSCloseParams;
 
 	Easy_FreeStream_Params				easyFreeStreamParams;
-	QTSS_StreamName_Params              StreamNameParams;
+	QTSS_StreamInfo_Params              StreamInfoParams;
 	QTSS_GetAssociatedCMS_Params	    GetAssociatedCMSParams;
 	QTSS_JudgeStreamID_Params			JudgeStreamIDParams;
 
