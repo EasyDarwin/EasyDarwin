@@ -17,8 +17,8 @@
 #include "ReflectorSession.h"
 
 // STATIC DATA
-static QTSS_PrefsObject				sServerPrefs		= nullptr;
-static QTSS_ServerObject			sServer				= nullptr;
+static QTSS_PrefsObject				sServerPrefs = nullptr;
+static QTSS_ServerObject			sServer = nullptr;
 static QTSS_ModulePrefsObject		sEasyCMSModulePrefs = nullptr;
 
 // FUNCTION PROTOTYPES
@@ -135,8 +135,8 @@ QTSS_Error RereadPrefs_EasyCMSModule()
  * \brief 动态创建EasyCMSSession对象，同时触发该对象向EasyCMS发送停止推流请求；
  * 然后等待EasyCMS的回应，如果EasyCMS正确回应，则析构EasyCMSSession对象如果在一定时间内没有收到
  * EasyCMS的回应，则进行重发（或者析构）
- * \param inParams 
- * \return 
+ * \param inParams
+ * \return
  */
 QTSS_Error FreeStream_EasyCMSModule(Easy_FreeStream_Params* inParams)
 {
