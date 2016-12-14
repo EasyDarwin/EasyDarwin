@@ -11,7 +11,6 @@
 
 #include "EasyRTMPModule.h"
 #include "QTSSModuleUtils.h"
-#include "OSArrayObjectDeleter.h"
 #include "QTSSMemoryDeleter.h"
 #include "ReflectorSession.h"
 #include "MyAssert.h"
@@ -27,10 +26,10 @@
 #endif
 
 // STATIC DATA
-static OSRefTable*				sRTMPSessionMap	= NULL;
-static QTSS_PrefsObject			sServerPrefs = NULL;
-static QTSS_ServerObject		sServer = NULL;
-static QTSS_ModulePrefsObject	sPrefs = NULL;
+static OSRefTable*				sRTMPSessionMap	= nullptr;
+static QTSS_PrefsObject			sServerPrefs = nullptr;
+static QTSS_ServerObject		sServer = nullptr;
+static QTSS_ModulePrefsObject	sPrefs = nullptr;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyRTMPModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -60,13 +59,14 @@ QTSS_Error  EasyRTMPModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 			return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
 		case Easy_LiveDeviceStream_Role:
 			return LiveDeviceStream(&inParams->easyGetDeviceStreamParams);
-   }
+    default: break;
+    }
     return QTSS_NoErr;
 }
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
-	int isEasyRTMPActivated = EasyRTMP_Activate(EasyRTMP_KEY);
+	auto isEasyRTMPActivated = EasyRTMP_Activate(EasyRTMP_KEY);
 	switch (isEasyRTMPActivated)
 	{
 	case EASY_ACTIVATE_INVALID_KEY:
@@ -87,12 +87,13 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	case EASY_ACTIVATE_SUCCESS:
 		printf("EasyRTMP_KEY is EASY_ACTIVATE_SUCCESS!");
 		break;
+	default: break;
 	}
 
 	if (EASY_ACTIVATE_SUCCESS != isEasyRTMPActivated)
 		return QTSS_RequestFailed;
 
-	int isEasyRTSPClientActivated = EasyRTSP_Activate(EasyRTSPClient_KEY);
+	auto isEasyRTSPClientActivated = EasyRTSP_Activate(EasyRTSPClient_KEY);
 	switch(isEasyRTSPClientActivated)
 	{
 	case EASY_ACTIVATE_INVALID_KEY:
@@ -113,6 +114,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	case EASY_ACTIVATE_SUCCESS:
 		//printf("EasyRTSPClient_KEY is EASY_ACTIVATE_SUCCESS!\n");
 		break;
+	default: break;
 	}
 
 	if(EASY_ACTIVATE_SUCCESS != isEasyRTSPClientActivated)
@@ -161,40 +163,40 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 		sprintf(theStreamName, "%s%s%d", inParams->inDevice, EASY_KEY_SPLITER, inParams->inChannel);
 		StrPtrLen inStreamName(theStreamName);
 
-		EasyRTMPSession* rtmpSe = NULL;
-		OSRef* sessionRef = sRTMPSessionMap->Resolve(&inStreamName);
-		if(sessionRef != NULL)
+		EasyRTMPSession* rtmpSe;
+		auto sessionRef = sRTMPSessionMap->Resolve(&inStreamName);
+		if(sessionRef != nullptr)
 		{
-			rtmpSe = (EasyRTMPSession*)sessionRef->GetObject();
+			rtmpSe = static_cast<EasyRTMPSession*>(sessionRef->GetObject());
 		}
 		else
 		{
-			OSRefTable* rtspSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
+			auto rtspSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();
 			OSMutexLocker locker(rtspSessionMap->GetMutex());
-			OSRef* theSessionRef = rtspSessionMap->Resolve(&inStreamName);
-			ReflectorSession* theSession = NULL;
+			auto theSessionRef = rtspSessionMap->Resolve(&inStreamName);
+			ReflectorSession* theSession;
 
-			if (theSessionRef == NULL)
+			if (theSessionRef == nullptr)
 			{
 				theErr = QTSS_FileNotFound;
 				break;
 			}
 
-			theSession = (ReflectorSession*)theSessionRef->GetObject();
-			QTSS_ClientSessionObject clientSession = theSession->GetBroadcasterSession();
+			theSession = static_cast<ReflectorSession*>(theSessionRef->GetObject());
+			auto clientSession = theSession->GetBroadcasterSession();
 			Assert(theSession != NULL);
 
-			if (clientSession == NULL)
+			if (clientSession == nullptr)
 			{
 				theErr = QTSS_FileNotFound;
 				break;
 			}
 
-			char* theFullRequestURL = NULL;
+			char* theFullRequestURL = nullptr;
 			(void)QTSS_GetValueAsString(clientSession, qtssCliSesFullURL, 0, &theFullRequestURL);
 			QTSSCharArrayDeleter theFileNameStrDeleter(theFullRequestURL);
 
-			if (theFullRequestURL == NULL)
+			if (theFullRequestURL == nullptr)
 			{
 				theErr = QTSS_FileNotFound;
 				break;
@@ -202,14 +204,14 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 
 			StrPtrLen inURL(theFullRequestURL);
 			StrPtrLen inName(inParams->inDevice);
-			rtmpSe = NEW EasyRTMPSession(&inName, &inURL, inParams->inChannel);
+			rtmpSe = new EasyRTMPSession(&inName, &inURL, inParams->inChannel);
 
-			QTSS_Error theErr = rtmpSe->SessionStart();
+			auto stErr = rtmpSe->SessionStart();
 
-			if (theErr == QTSS_NoErr)
+			if (stErr == QTSS_NoErr)
 			{
-				OS_Error theErr = sRTMPSessionMap->Register(rtmpSe->GetRef());
-				Assert(theErr == QTSS_NoErr);
+				auto regErr = sRTMPSessionMap->Register(rtmpSe->GetRef());
+				Assert(regErr == QTSS_NoErr);
 			}
 			else
 			{
@@ -218,7 +220,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 				break;
 			}
 
-			OSRef* debug = sRTMPSessionMap->Resolve(&inStreamName);
+			auto debug = sRTMPSessionMap->Resolve(&inStreamName);
 			Assert(debug == rtmpSe->GetRef());
 
 			
@@ -247,8 +249,8 @@ QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams)
 		sprintf(theStreamName, "%s%s%d", inParams->inDevice, EASY_KEY_SPLITER, inParams->inChannel);
 		StrPtrLen inStreamName(theStreamName);
 
-		EasyRTMPSession* rtmpSe = nullptr;
-		OSRef* sessionRef = sRTMPSessionMap->Resolve(&inStreamName);
+		EasyRTMPSession* rtmpSe;
+		auto sessionRef = sRTMPSessionMap->Resolve(&inStreamName);
 		if (sessionRef != nullptr)
 		{
 			rtmpSe = static_cast<EasyRTMPSession*>(sessionRef->GetObject());
