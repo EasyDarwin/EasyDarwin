@@ -8,17 +8,13 @@
     File:       EasyHLSSession.h
     Contains:   EasyHLSSession
 */
+#pragma once
 #include "QTSS.h"
 #include "OSRef.h"
 #include "StrPtrLen.h"
-#include "ResizeableStringFormatter.h"
-#include "MyAssert.h"
-#include "OSArrayObjectDeleter.h"
 
-#include "EasyRTSPClientAPI.h"
 #include "EasyHLSAPI.h"
 #include "EasyAACEncoderAPI.h"
-
 #include "TimeoutTask.h"
 #include "QTSServerInterface.h"
 
@@ -32,8 +28,7 @@ class EasyHLSSession : public Task
         virtual ~EasyHLSSession();
         static void Initialize(QTSS_ModulePrefsObject inPrefs);
 
-
-		virtual SInt64	Run();
+		SInt64	Run() override;
 
 		OSRef*			GetRef() { return &fRef; }
 		OSMutex*		GetMutex() { return &fMutex; }
@@ -41,8 +36,8 @@ class EasyHLSSession : public Task
 		StrPtrLen*      GetSourceID() { return &fSourceID; }
 		StrPtrLen*      GetStreamName() { return &fSessionName; }
 		StrPtrLen*		GetSourceURL() { return &fSourceURL; }
-		const char*		GetHLSURL() { return fHLSURL; }
-		UInt32			GetChannelNum() { return fChannelNum; }
+		const char*		GetHLSURL() const { return fHLSURL; }
+		UInt32			GetChannelNum() const { return fChannelNum; }
 
 		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 		QTSS_Error		SessionStart();
