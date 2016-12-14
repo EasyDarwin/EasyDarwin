@@ -221,19 +221,52 @@ static QTSS_Error RedirectBroadcast(QTSS_StandardRTSP_Params* inParams);
 static bool AllowBroadcast(QTSS_RTSPRequestObject inRTSPRequest);
 static bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest);
 static bool IsAbsolutePath(StrPtrLen *inPathPtr);
-
 static QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams);
 
-
-static void MakeTheSameFormat(char *chInput)//replace '\' with '/' ,the end of chInput is '\0'
+class ReflectorSessionCheckTask : public Task
 {
-	char *p = chInput;
-	while (*p != NULL)
+public:
+	ReflectorSessionCheckTask() : Task()
 	{
-		if (*p == '\\')
-			*p = '/';
-		p++;
+		this->SetTaskName("ReflectorSessionCheckTask");
+		this->Signal(Task::kStartEvent);
 	}
+	virtual ~ReflectorSessionCheckTask() {}
+
+private:
+	SInt64 Run() override;
+};
+
+static ReflectorSessionCheckTask* pCheckingTask = nullptr;
+
+SInt64 ReflectorSessionCheckTask::Run()
+{
+	if (sSessionMap)
+	{
+		OSMutexLocker locker(sSessionMap->GetMutex());
+
+		SInt64 sNowTime = OS::Milliseconds();
+		for (OSRefHashTableIter theIter(sSessionMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
+		{
+			OSRef* theRef = theIter.GetCurrent();
+			ReflectorSession* theSession = static_cast<ReflectorSession*>(theRef->GetObject());
+
+			SInt64  sNoneTime = theSession->GetNoneOutputStartTimeMS();
+			if ((theSession->GetNumOutputs() == 0) && (sNowTime - sNoneTime >= sBroadcasterSessionTimeoutMilliSecs))
+			{
+				QTSS_RoleParams theParams;
+				theParams.easyFreeStreamParams.inStreamName = theSession->GetSourceID()->Ptr;
+				auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
+				for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+				{
+					qtss_printf("没有客户端观看当前转发媒体\n");
+					auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
+					(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+				}
+			}
+		}
+	}
+	return sBroadcasterSessionTimeoutMilliSecs;
 }
 
 inline void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep)
@@ -274,6 +307,7 @@ QTSS_Error  QTSSReflectorModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inPa
 		return IntervalRole();
 	case Easy_GetDeviceStream_Role:
 		return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
+	default: break;
 	}
 	return QTSS_NoErr;
 }
@@ -286,7 +320,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_Shutdown_Role);
 	(void)QTSS_AddRole(QTSS_RTSPPreProcessor_Role);
 	(void)QTSS_AddRole(QTSS_ClientSessionClosing_Role);
-	(void)QTSS_AddRole(QTSS_RTSPIncomingData_Role); 
+	(void)QTSS_AddRole(QTSS_RTSPIncomingData_Role);
 	(void)QTSS_AddRole(QTSS_RTSPAuthorize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(QTSS_RTSPRoute_Role);
@@ -421,6 +455,8 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	QTSSModuleUtils::SetupSupportedMethods(inParams->inServer, sSupportedMethods, 7);
 
 	RereadPrefs();
+
+	pCheckingTask = new ReflectorSessionCheckTask();
 
 	return QTSS_NoErr;
 }
@@ -1806,7 +1842,7 @@ bool HaveStreamBuffers(QTSS_StandardRTSP_Params* inParams, ReflectorSession* inS
 
 	bool haveBufferedStreams = true; // set to false and return if we can't set the packets
 	UInt32 y = 0;
-	
+
 	SInt64 packetArrivalTime = 0;
 
 	//lock all streams
@@ -2400,7 +2436,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 			Assert(theSession != NULL);
 
 			if (clientSession)
-			{				
+			{
 				char* theFullRequestURL = NULL;
 				(void)QTSS_GetValueAsString(clientSession, qtssCliSesFullURL, 0, &theFullRequestURL);
 				QTSSCharArrayDeleter theFileNameStrDeleter(theFullRequestURL);
