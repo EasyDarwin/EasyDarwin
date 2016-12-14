@@ -8,26 +8,26 @@
 #include "Format.h"
 
 // STATIC VARIABLES
-static QTSS_ModulePrefsObject	modulePrefs		= NULL;
-static QTSS_PrefsObject			sServerPrefs    = NULL;
-static QTSS_ServerObject		sServer			= NULL;
+static QTSS_ModulePrefsObject	modulePrefs		= nullptr;
+static QTSS_PrefsObject			sServerPrefs    = nullptr;
+static QTSS_ServerObject		sServer			= nullptr;
 
 // Redis IP
-static char*            sRedis_IP				= NULL;
+static char*            sRedis_IP				= nullptr;
 static char*            sDefaultRedis_IP_Addr	= "127.0.0.1";
 // Redis Port
 static UInt16			sRedisPort				= 6379;
 static UInt16			sDefaultRedisPort		= 6379;
 // Redis user
-static char*            sRedisUser				= NULL;
+static char*            sRedisUser				= nullptr;
 static char*            sDefaultRedisUser		= "admin";
 // Redis password
-static char*            sRedisPassword			= NULL;
+static char*            sRedisPassword			= nullptr;
 static char*            sDefaultRedisPassword	= "admin";
 // EasyCMS
-static char*			sCMSIP					= NULL;
+static char*			sCMSIP					= nullptr;
 static UInt16			sCMSPort				= 10000;
-static EasyRedisClient* sRedisClient			= NULL;//the object pointer that package the redis operation
+static EasyRedisClient* sRedisClient			= nullptr;//the object pointer that package the redis operation
 static bool				sIfConSucess			= false;
 static OSMutex			sMutex;
 
@@ -73,6 +73,7 @@ QTSS_Error  EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamB
 		return RedisGetBestDarwin(&inParamBlock->GetBestDarwinParams);
 	case Easy_RedisGenStreamID_Role:
 		return RedisGenStreamID(&inParamBlock->GenStreamIDParams);
+	default: break;
 	}
 	return QTSS_NoErr;
 }
@@ -205,7 +206,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sRedisClient->AppendCommand(chTemp);
 
 		bool bBreak = false;
-		easyRedisReply* reply = NULL;
+		easyRedisReply* reply = nullptr;
 		for (int i = 0; i < 6; i++)
 		{
 			if (EASY_REDIS_OK != sRedisClient->GetReply((void**)&reply))
@@ -316,7 +317,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 
 	//1. get the list of EasyDarwin
 	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarwinName");
-	if (reply == NULL)
+	if (reply == nullptr)
 	{
 		sRedisClient->Free();
 		sIfConSucess = false;
@@ -326,7 +327,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	//2.judge if the EasyDarwin is ilve and contain serial/channel.sdp
 	if ((reply->elements > 0) && (reply->type == EASY_REDIS_REPLY_ARRAY))
 	{
-		easyRedisReply* childReply = NULL;
+		easyRedisReply* childReply = nullptr;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
 			childReply = reply->element[i];
@@ -339,7 +340,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 			sRedisClient->AppendCommand(strTemp.c_str());
 		}
 
-		easyRedisReply *reply2 = NULL, *reply3 = NULL;
+		easyRedisReply *reply2 = nullptr, *reply3 = nullptr;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
 			if (sRedisClient->GetReply((void**)&reply2) != EASY_REDIS_OK)
@@ -396,7 +397,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 
 	//1. get the list of EasyDarwin
 	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarwinName");
-	if (reply == NULL)
+	if (reply == nullptr)
 	{
 		sRedisClient->Free();
 		sIfConSucess = false;
@@ -406,7 +407,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 	//2.judge if the EasyDarwin is ilve and get the RTP
 	if ((reply->elements > 0) && (reply->type == EASY_REDIS_REPLY_ARRAY))
 	{
-		easyRedisReply* childReply = NULL;
+		easyRedisReply* childReply = nullptr;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
 			childReply = reply->element[i];
@@ -420,7 +421,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 		}
 
 		int key = -1, keynum = 0;
-		easyRedisReply *reply2 = NULL, *reply3 = NULL;
+		easyRedisReply *reply2 = nullptr, *reply3 = nullptr;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
 			if (sRedisClient->GetReply((void**)&reply2) != EASY_REDIS_OK)
@@ -496,7 +497,7 @@ QTSS_Error RedisGenStreamID(QTSS_GenStreamID_Params* inParams)
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
-	easyRedisReply* reply = NULL;
+	easyRedisReply* reply = nullptr;
 	char chTemp[128] = { 0 };
 	string strSessioionID;
 
@@ -509,7 +510,7 @@ QTSS_Error RedisGenStreamID(QTSS_GenStreamID_Params* inParams)
 
 		sprintf(chTemp, "SessionID_%s", strSessioionID.c_str());
 		reply = (easyRedisReply*)sRedisClient->Exists(chTemp);
-		if (NULL == reply)//错误，需要进行重连
+		if (nullptr == reply)//错误，需要进行重连
 		{
 			sRedisClient->Free();
 			sIfConSucess = false;

@@ -10,17 +10,19 @@
 */
 
 #include "HTTPSession.h"
-#include "QTSServerInterface.h"
-#include "OSMemory.h"
-#include "EasyUtil.h"
-#include <string>
-#include <set>
 
+#include "QTSServerInterface.h"
 #include "OSArrayObjectDeleter.h"
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "EasyUtil.h"
 #include "QueryParamList.h"
 #include "Format.h"
+
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+#include <unordered_set>
+#include <tuple>
+
+tuple<int, string> test;
 
 #if __FreeBSD__ || __hpux__	
 #include <unistd.h>
@@ -226,7 +228,7 @@ SInt64 HTTPSession::Run()
 				Assert(fInputStream.GetRequestBuffer());
 
 				Assert(fRequest == nullptr);
-				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
+				fRequest = new HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 				fReadMutex.Lock();
 				fSessionMutex.Lock();
@@ -350,6 +352,7 @@ SInt64 HTTPSession::Run()
 
 				fState = kReadingRequest;
 			}
+		default: break;
 		}
 	}
 
@@ -384,10 +387,9 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClo
 		UInt32 amtInBuffer = sendString.size();
 		do
 		{
-			QTSS_Error theErr = QTSS_NoErr;
-			{
-				theErr = fOutputSocketP->Send(sendString.c_str(), amtInBuffer, &theLengthSent);
-			}
+			auto str = fOutputSocketP->GetRemoteAddrStr();
+			string remote(str->Ptr);
+			QTSS_Error theErr = fOutputSocketP->Send(sendString.c_str(), amtInBuffer, &theLengthSent);
 
 			if (theErr != QTSS_NoErr && theErr != EAGAIN)
 			{
@@ -495,7 +497,7 @@ QTSS_Error HTTPSession::setupRequest()
 	{
 		// First time we've been here for this request. Create a buffer for the content body and
 		// shove it in the request.
-		theRequestBody = NEW char[content_length + 1];
+		theRequestBody = new char[content_length + 1];
 		memset(theRequestBody, 0, content_length + 1);
 		theLen = sizeof(theRequestBody);
 		theErr = QTSS_SetValue(this, EasyHTTPSesContentBody, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
@@ -549,7 +551,6 @@ QTSS_Error HTTPSession::setupRequest()
 	fRequestBody = theRequestBody;
 	Assert(theErr == QTSS_NoErr);
 
-	////TODO:://
 	//if (theBufferOffset < sHeaderSize)
 	//qtss_printf("Recv message: %s\n", fRequestBody);
 
@@ -1315,7 +1316,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
-	set<string> terminalSet;
+	unordered_set<string> terminalSet;
 	if (chTerminalType != nullptr)
 	{
 		string terminalTemp(chTerminalType);
@@ -1779,7 +1780,6 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 	if (nullptr != yuvdata)
 	{
 		delete[] yuvdata;
-		yuvdata = nullptr;
 	}
 
 	return theErr;
