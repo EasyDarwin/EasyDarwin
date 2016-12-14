@@ -213,6 +213,7 @@
 #define EASY_TAG_AVAILABLE_SIZE							"AvailableSize"
 #define EASY_TAG_FREE_SIZE								"FreeSize"
 #define EASY_TAG_PATHS									"Paths"
+#define EASY_TAG_USED									"Used"
 
 /*!
 \}
