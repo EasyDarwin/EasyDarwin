@@ -5,8 +5,8 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyHLSModule.cpp
-    Contains:   EasyHLSModule
+	File:       EasyHLSModule.cpp
+	Contains:   EasyHLSModule
 */
 #include "EasyHLSModule.h"
 #include "QTSSModuleUtils.h"
@@ -23,10 +23,10 @@
 #endif
 
 // STATIC DATA
-static QTSS_PrefsObject         sServerPrefs		= nullptr;
-static OSRefTable*				sHLSSessionMap		= nullptr;
-static QTSS_ServerObject		sServer				= nullptr;
-static QTSS_ModulePrefsObject	sModulePrefs		= nullptr;
+static QTSS_PrefsObject         sServerPrefs = nullptr;
+static OSRefTable*				sHLSSessionMap = nullptr;
+static QTSS_ServerObject		sServer = nullptr;
+static QTSS_ModulePrefsObject	sModulePrefs = nullptr;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -43,37 +43,37 @@ static QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams);
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyHLSModule_Main(void* inPrivateArgs)
 {
-    return _stublibrary_main(inPrivateArgs, EasyHLSModuleDispatch);
+	return _stublibrary_main(inPrivateArgs, EasyHLSModuleDispatch);
 }
 
 QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
-    switch (inRole)
-    {
-        case QTSS_Register_Role:
-            return Register(&inParams->regParams);
-        case QTSS_Initialize_Role:
-            return Initialize(&inParams->initParams);
-        case QTSS_RereadPrefs_Role:
-            return RereadPrefs();
-		case Easy_GetDeviceStream_Role:
-			return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
-		case Easy_LiveDeviceStream_Role:
-			return LiveDeviceStream(&inParams->easyGetDeviceStreamParams);
-    default: break;
-	    //case Easy_HLSOpen_Role:
+	switch (inRole)
+	{
+	case QTSS_Register_Role:
+		return Register(&inParams->regParams);
+	case QTSS_Initialize_Role:
+		return Initialize(&inParams->initParams);
+	case QTSS_RereadPrefs_Role:
+		return RereadPrefs();
+	case Easy_GetDeviceStream_Role:
+		return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
+	case Easy_LiveDeviceStream_Role:
+		return LiveDeviceStream(&inParams->easyGetDeviceStreamParams);
+	default: break;
+		//case Easy_HLSOpen_Role:
 		//	return EasyHLSOpen(&inParams->easyHLSOpenParams);
 		//case Easy_HLSClose_Role:
 		//	return EasyHLSClose(&inParams->easyHLSCloseParams);
-    }
-    return QTSS_NoErr;
+	}
+	return QTSS_NoErr;
 }
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
 
 	int isEasyHLSActivated = EasyHLS_Activate(EasyHLS_KEY);
-	switch(isEasyHLSActivated)
+	switch (isEasyHLSActivated)
 	{
 	case EASY_ACTIVATE_INVALID_KEY:
 		printf("EasyHLS_KEY is EASY_ACTIVATE_INVALID_KEY!\n");
@@ -96,40 +96,40 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	default: break;
 	}
 
-	if(EASY_ACTIVATE_SUCCESS != isEasyHLSActivated)
+	if (EASY_ACTIVATE_SUCCESS != isEasyHLSActivated)
 		return QTSS_RequestFailed;
 
 
-    // Do role & attribute setup
-    (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_RereadPrefs_Role);
+	// Do role & attribute setup
+	(void)QTSS_AddRole(QTSS_Initialize_Role);
+	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_GetDeviceStream_Role);
 	(void)QTSS_AddRole(Easy_LiveDeviceStream_Role);
-    
-    // Tell the server our name!
-    static char* sModuleName = "EasyHLSModule";
-    ::strcpy(inParams->outModuleName, sModuleName);
 
-    return QTSS_NoErr;
+	// Tell the server our name!
+	static char* sModuleName = "EasyHLSModule";
+	::strcpy(inParams->outModuleName, sModuleName);
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
-    // Setup module utils
-    QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
-	sHLSSessionMap =  QTSServerInterface::GetServer()->GetHLSSessionMap();
+	// Setup module utils
+	QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
+	sHLSSessionMap = QTSServerInterface::GetServer()->GetHLSSessionMap();
 
-    // Setup global data structures
-    sServerPrefs = inParams->inPrefs;
-    sServer = inParams->inServer;
-    sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
+	// Setup global data structures
+	sServerPrefs = inParams->inPrefs;
+	sServer = inParams->inServer;
+	sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
-    // Call helper class initializers
-    EasyHLSSession::Initialize(sModulePrefs);
+	// Call helper class initializers
+	EasyHLSSession::Initialize(sModulePrefs);
 
 	RereadPrefs();
 
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 QTSS_Error RereadPrefs()
@@ -211,7 +211,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 			rtspSessionMap->Release(theSessionRef);
 		}
 
-		if(inParams->outUrl)
+		if (inParams->outUrl)
 			strcpy(inParams->outUrl, hlsSe->GetHLSURL());
 
 		sHLSSessionMap->Release(hlsSe->GetRef());
