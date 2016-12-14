@@ -80,6 +80,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 	fSocketStream(NULL),
 	fBroadcasterSession(NULL),
 	fInitTimeMS(OS::Milliseconds()),
+	fNoneOutputStartTimeMS(OS::Milliseconds()),
 	fHasBufferedStreams(false),
 	fHLSLive(false),
 	fHasVideoKeyFrameUpdate(false),
@@ -329,16 +330,17 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, bool isClient)
 
 	if (fNumOutputs == 0)
 	{
-		QTSS_RoleParams theParams;
-		theParams.easyFreeStreamParams.inStreamName = fSourceID.Ptr;
-		UInt32 currentModule = 0;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
-		for (; currentModule < numModules; currentModule++)
-		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
-			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
-			break;
-		}
+		this->SetNoneOutputStartTimeMS();
+		//QTSS_RoleParams theParams;
+		//theParams.easyFreeStreamParams.inStreamName = fSourceID.Ptr;
+		//UInt32 currentModule = 0;
+		//UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
+		//for (; currentModule < numModules; currentModule++)
+		//{
+		//	QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
+		//	(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+		//	break;
+		//}
 	}
 }
 
