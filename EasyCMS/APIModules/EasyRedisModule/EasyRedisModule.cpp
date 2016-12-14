@@ -1,41 +1,44 @@
-#include <stdio.h>
 #include "EasyRedisModule.h"
+
 #include "OSHeaders.h"
 #include "QTSSModuleUtils.h"
 #include "EasyRedisClient.h"
 #include "QTSServerInterface.h"
 #include "HTTPSessionInterface.h"
 #include "Format.h"
+#include "EasyUtil.h"
+
+#include <stdio.h>
 
 // STATIC VARIABLES
-static QTSS_ModulePrefsObject	modulePrefs		= nullptr;
-static QTSS_PrefsObject			sServerPrefs    = nullptr;
-static QTSS_ServerObject		sServer			= nullptr;
+static QTSS_ModulePrefsObject	modulePrefs = nullptr;
+static QTSS_PrefsObject			sServerPrefs = nullptr;
+static QTSS_ServerObject		sServer = nullptr;
 
 // Redis IP
-static char*            sRedis_IP				= nullptr;
-static char*            sDefaultRedis_IP_Addr	= "127.0.0.1";
+static char*            sRedis_IP = nullptr;
+static char*            sDefaultRedis_IP_Addr = "127.0.0.1";
 // Redis Port
-static UInt16			sRedisPort				= 6379;
-static UInt16			sDefaultRedisPort		= 6379;
+static UInt16			sRedisPort = 6379;
+static UInt16			sDefaultRedisPort = 6379;
 // Redis user
-static char*            sRedisUser				= nullptr;
-static char*            sDefaultRedisUser		= "admin";
+static char*            sRedisUser = nullptr;
+static char*            sDefaultRedisUser = "admin";
 // Redis password
-static char*            sRedisPassword			= nullptr;
-static char*            sDefaultRedisPassword	= "admin";
+static char*            sRedisPassword = nullptr;
+static char*            sDefaultRedisPassword = "admin";
 // EasyCMS
-static char*			sCMSIP					= nullptr;
-static UInt16			sCMSPort				= 10000;
-static EasyRedisClient* sRedisClient			= nullptr;//the object pointer that package the redis operation
-static bool				sIfConSucess			= false;
+static char*			sCMSIP = nullptr;
+static UInt16			sCMSPort = 10000;
+static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
+static bool				sIfConSucess = false;
 static OSMutex			sMutex;
 
 // FUNCTION PROTOTYPES
-static QTSS_Error   EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
-static QTSS_Error   Register(QTSS_Register_Params* inParams);
-static QTSS_Error   Initialize(QTSS_Initialize_Params* inParams);
-static QTSS_Error   RereadPrefs();
+static QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
+static QTSS_Error Register(QTSS_Register_Params* inParams);
+static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
+static QTSS_Error RereadPrefs();
 
 static QTSS_Error RedisConnect();
 static QTSS_Error RedisInit();
@@ -51,7 +54,7 @@ QTSS_Error EasyRedisModule_Main(void* inPrivateArgs)
 	return _stublibrary_main(inPrivateArgs, EasyRedisModuleDispatch);
 }
 
-QTSS_Error  EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock)
+QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock)
 {
 	switch (inRole)
 	{
@@ -130,7 +133,7 @@ QTSS_Error RereadPrefs()
 	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsMonitorWANIPAddr, 0, &sCMSIP);
 
 	UInt32 len = sizeof(SInt32);
-	(void)QTSS_GetValue(sServerPrefs, qtssPrefsMonitorWANPort, 0, (void*)&sCMSPort, &len);
+	(void)QTSS_GetValue(sServerPrefs, qtssPrefsMonitorWANPort, 0, static_cast<void*>(&sCMSPort), &len);
 
 	return QTSS_NoErr;
 }
@@ -154,7 +157,15 @@ QTSS_Error RedisConnect()
 		qtss_printf("Connect redis failed\n");
 		sIfConSucess = false;
 	}
-	return (QTSS_Error)(!sIfConSucess);
+
+	if (sIfConSucess)
+	{
+		return QTSS_NoErr;
+	}
+	else
+	{
+		return QTSS_NotConnected;
+	}
 }
 
 QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
@@ -168,48 +179,47 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sprintf(chTemp, "auth %s", sRedisPassword);
 		sRedisClient->AppendCommand(chTemp);
 
-		//2,CMS唯一信息存储(覆盖上一次的存储)
-		sprintf(chTemp, "sadd EasyCMSName %s:%d", sCMSIP, sCMSPort);
-		sRedisClient->AppendCommand(chTemp);
-
-
-		//3,CMS属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
-		sprintf(chTemp, "hmset %s:%d_Info IP %s PORT %d", sCMSIP, sCMSPort, sCMSIP, sCMSPort);
-		sRedisClient->AppendCommand(chTemp);
-
-		//4,清除设备名称存储，因为连接之前和连接之后的设备可能一斤该发生了变化，因此必须先执行清楚操作
-		sprintf(chTemp, "del %s:%d_DevName", sCMSIP, sCMSPort);
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, 0);
 		sRedisClient->AppendCommand(chTemp);
 
 		OSRefTableEx*  deviceRefTable = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 		OSMutex *mutexMap = deviceRefTable->GetMutex();
 		OSHashMap  *deviceMap = deviceRefTable->GetMap();
 		OSRefIt itRef;
-		string strAllDevices;
 		{
 			OSMutexLocker lock(mutexMap);
-			for (itRef = deviceMap->begin(); itRef != deviceMap->end(); itRef++)
+			for (itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
 			{
-				strDevice *deviceInfo = (((HTTPSessionInterface*)(itRef->second->GetObjectPtr()))->GetDeviceInfo());
-				strAllDevices = strAllDevices + ' ' + deviceInfo->serial_;
+				auto deviceInfo = static_cast<HTTPSessionInterface*>(itRef->second->GetObjectPtr())->GetDeviceInfo();
+
+				string type, channel;
+				if (deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
+				{
+					type = "EasyCamera";
+				}
+				else if (deviceInfo->eAppType == EASY_APP_TYPE_NVR)
+				{
+					type = "EasyNVR";
+					auto channels = deviceInfo->channels_;
+					for (auto& item : channels)
+					{
+						channel += item.first;
+					}
+				}
+
+				sprintf(chTemp, "hmset Device:%s Type %s Channel %s EasyCMS %s Token %s", deviceInfo->serial_.c_str(),
+					type.c_str(), channel.c_str(), id, deviceInfo->password_.c_str());
+
+				sRedisClient->AppendCommand(chTemp);
 			}
 		}
 
-		char *chNewTemp = new char[strAllDevices.size() + 128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
-		//5,设备名称存储
-		sprintf(chNewTemp, "sadd %s:%d_DevName%s", sCMSIP, sCMSPort, strAllDevices.c_str());
-		sRedisClient->AppendCommand(chNewTemp);
-		delete[] chNewTemp;
-
-		//6,保活，设置15秒，这之后当前CMS已经开始提供服务了
-		sprintf(chTemp, "setex %s:%d_Live 15 1", sCMSIP, sCMSPort);
-		sRedisClient->AppendCommand(chTemp);
-
 		bool bBreak = false;
 		easyRedisReply* reply = nullptr;
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < deviceMap->size() + 2; i++)
 		{
-			if (EASY_REDIS_OK != sRedisClient->GetReply((void**)&reply))
+			if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
 			{
 				bBreak = true;
 				if (reply)
@@ -221,12 +231,12 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		if (bBreak)//说明redisGetReply出现了错误
 			break;
 		return QTSS_NoErr;
-	} while (0);
+	} while (false);
 	//走到这说明出现了错误，需要进行重连,重连操作再下一次执行命令时进行,在这仅仅是置标志位
 	sRedisClient->Free();
 
 	sIfConSucess = false;
-	return (QTSS_Error)false;
+	return QTSS_RequestFailed;
 }
 
 QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
@@ -269,14 +279,13 @@ QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams)
 
 QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key被删除，这时应该重新设置该key
 {
-
 	OSMutexLocker mutexLock(&sMutex);
 
 	if (RedisConnect() != QTSS_NoErr)//每一次执行命令之前都先连接redis,如果当前redis还没有成功连接
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };//注意128位是否足够
-	sprintf(chKey, "%s:%d_Live 15", sCMSIP, sCMSPort);//更改超时时间
+	sprintf(chKey, "%s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());//更改超时时间
 
 	int ret = sRedisClient->SetExpire(chKey, 15);
 	if (ret == -1)//fatal error
@@ -291,14 +300,24 @@ QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key
 	}
 	else if (ret == 0)//the key doesn't exist, reset
 	{
-		sprintf(chKey, "%s:%d_Live", sCMSIP, sCMSPort);
-		int retret = sRedisClient->SetEX(chKey, 15, "1");
-		if (retret == -1)//fatal error
-		{
-			sRedisClient->Free();
-			sIfConSucess = false;
-		}
-		return retret;
+		char chTemp[128]{ 0 };
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, 0);
+		sRedisClient->AppendCommand(chTemp);
+
+		easyRedisReply* reply = nullptr;
+		auto re = sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+		EasyFreeReplyObject(reply);
+		//sprintf(chKey, "%s:%d_Live", sCMSIP, sCMSPort);
+		//int retret = sRedisClient->SetEX(chKey, 15, "1");
+		//if (retret == -1)//fatal error
+		//{
+		//	sRedisClient->Free();
+		//	sIfConSucess = false;
+		//}
+		//return retret;
+
+		return ret;
 	}
 	else
 	{
@@ -316,7 +335,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	string strPushName = Format("%s/%s", string(inParams->inSerial), string(inParams->inChannel));
 
 	//1. get the list of EasyDarwin
-	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarwinName");
+	easyRedisReply * reply = static_cast<easyRedisReply*>(sRedisClient->SMembers("EasyDarwinName"));
 	if (reply == nullptr)
 	{
 		sRedisClient->Free();
@@ -327,7 +346,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	//2.judge if the EasyDarwin is ilve and contain serial/channel.sdp
 	if ((reply->elements > 0) && (reply->type == EASY_REDIS_REPLY_ARRAY))
 	{
-		easyRedisReply* childReply = nullptr;
+		easyRedisReply* childReply;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
 			childReply = reply->element[i];
@@ -343,7 +362,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		easyRedisReply *reply2 = nullptr, *reply3 = nullptr;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
-			if (sRedisClient->GetReply((void**)&reply2) != EASY_REDIS_OK)
+			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply2)) != EASY_REDIS_OK)
 			{
 				EasyFreeReplyObject(reply);
 				if (reply2)
@@ -354,7 +373,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 				sIfConSucess = false;
 				return QTSS_NotConnected;
 			}
-			if (sRedisClient->GetReply((void**)&reply3) != EASY_REDIS_OK)
+			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply3)) != EASY_REDIS_OK)
 			{
 				EasyFreeReplyObject(reply);
 				if (reply3)
@@ -396,7 +415,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 	char chTemp[128] = { 0 };
 
 	//1. get the list of EasyDarwin
-	easyRedisReply * reply = (easyRedisReply *)sRedisClient->SMembers("EasyDarwinName");
+	easyRedisReply * reply = static_cast<easyRedisReply *>(sRedisClient->SMembers("EasyDarwinName"));
 	if (reply == nullptr)
 	{
 		sRedisClient->Free();
@@ -407,7 +426,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 	//2.judge if the EasyDarwin is ilve and get the RTP
 	if ((reply->elements > 0) && (reply->type == EASY_REDIS_REPLY_ARRAY))
 	{
-		easyRedisReply* childReply = nullptr;
+		easyRedisReply* childReply;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
 			childReply = reply->element[i];
@@ -424,7 +443,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 		easyRedisReply *reply2 = nullptr, *reply3 = nullptr;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
-			if (sRedisClient->GetReply((void**)&reply2) != EASY_REDIS_OK)
+			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply2)) != EASY_REDIS_OK)
 			{
 				EasyFreeReplyObject(reply);
 				if (reply2)
@@ -436,7 +455,7 @@ QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams)
 				return QTSS_NotConnected;
 			}
 
-			if (sRedisClient->GetReply((void**)&reply3) != EASY_REDIS_OK)
+			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply3)) != EASY_REDIS_OK)
 			{
 				EasyFreeReplyObject(reply);
 				if (reply3)
@@ -509,7 +528,7 @@ QTSS_Error RedisGenStreamID(QTSS_GenStreamID_Params* inParams)
 		strSessioionID = OSMapEx::GenerateSessionIdForRedis(sCMSIP, sCMSPort);
 
 		sprintf(chTemp, "SessionID_%s", strSessioionID.c_str());
-		reply = (easyRedisReply*)sRedisClient->Exists(chTemp);
+		reply = static_cast<easyRedisReply*>(sRedisClient->Exists(chTemp));
 		if (nullptr == reply)//错误，需要进行重连
 		{
 			sRedisClient->Free();

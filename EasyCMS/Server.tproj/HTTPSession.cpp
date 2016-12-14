@@ -20,9 +20,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <unordered_set>
-#include <tuple>
-
-tuple<int, string> test;
 
 #if __FreeBSD__ || __hpux__	
 #include <unistd.h>
@@ -72,12 +69,12 @@ static const int sPortSize = 6;
 #define	SNAP_SIZE			SNAP_IMAGE_WIDTH * SNAP_IMAGE_HEIGHT * 3 + 58
 
 HTTPSession::HTTPSession()
-	: HTTPSessionInterface(),
-	fRequest(nullptr),
-	fReadMutex(),
-	fSendMutex(),
-	//fCurrentModule(0),
-	fState(kReadingFirstRequest)
+	: HTTPSessionInterface()
+	, fRequest(nullptr)
+	, fReadMutex()
+	, fSendMutex()
+	//, fCurrentModule(0)
+	, fState(kReadingFirstRequest)
 {
 	this->SetTaskName("HTTPSession");
 

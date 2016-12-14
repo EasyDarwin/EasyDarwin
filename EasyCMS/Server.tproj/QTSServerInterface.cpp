@@ -49,7 +49,7 @@
 // STATIC DATA
 
 UInt32                  QTSServerInterface::sServerAPIVersion = QTSS_API_VERSION;
-QTSServerInterface*     QTSServerInterface::sServer = NULL;
+QTSServerInterface*     QTSServerInterface::sServer = nullptr;
 #if __MacOSX__
 StrPtrLen               QTSServerInterface::sServerNameStr("EasyCMS");
 #else
@@ -73,37 +73,37 @@ QTSSErrorLogStream      QTSServerInterface::sErrorLogStream;
 
 QTSSAttrInfoDict::AttrInfo  QTSServerInterface::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
-    /* 0  */ { "qtssServerAPIVersion",          NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 1  */ { "qtssSvrDefaultDNSName",         NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead },
-    /* 2  */ { "qtssSvrDefaultIPAddr",          NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead },
-    /* 3  */ { "qtssSvrServerName",             NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 4  */ { "qtssSvrServerVersion",      NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 5  */ { "qtssSvrServerBuildDate",    NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 6  */ { "qtssSvrHTTPPorts",              NULL,   qtssAttrDataTypeUInt16,     qtssAttrModeRead },
-    /* 7  */ { "qtssSvrHTTPServerHeader",       NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 8  */ { "qtssSvrState",					NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite  },
+    /* 0  */ { "qtssServerAPIVersion",          nullptr,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 1  */ { "qtssSvrDefaultDNSName",         nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead },
+    /* 2  */ { "qtssSvrDefaultIPAddr",          nullptr,   qtssAttrDataTypeUInt32,     qtssAttrModeRead },
+    /* 3  */ { "qtssSvrServerName",             nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 4  */ { "qtssSvrServerVersion",      nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 5  */ { "qtssSvrServerBuildDate",    nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 6  */ { "qtssSvrHTTPPorts",              nullptr,   qtssAttrDataTypeUInt16,     qtssAttrModeRead },
+    /* 7  */ { "qtssSvrHTTPServerHeader",       nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 8  */ { "qtssSvrState",					nullptr,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite  },
     /* 9  */ { "qtssSvrIsOutOfDescriptors",     isOutOfDescriptors,     qtssAttrDataTypeBool16, qtssAttrModeRead },
-    /* 10 */ { "qtssCurrentSessionCount",		NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead },
+    /* 10 */ { "qtssCurrentSessionCount",		nullptr,   qtssAttrDataTypeUInt32,     qtssAttrModeRead },
 
-    /* 11 */ { "qtssSvrHandledMethods",         NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe  },
-    /* 12 */ { "qtssSvrModuleObjects",          NULL,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 13 */ { "qtssSvrStartupTime",            NULL,   qtssAttrDataTypeTimeVal,    qtssAttrModeRead },
-    /* 14 */ { "qtssSvrGMTOffsetInHrs",         NULL,   qtssAttrDataTypeSInt32,     qtssAttrModeRead },
-    /* 15 */ { "qtssSvrDefaultIPAddrStr",       NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead },
+    /* 11 */ { "qtssSvrHandledMethods",         nullptr,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite | qtssAttrModePreempSafe  },
+    /* 12 */ { "qtssSvrModuleObjects",          nullptr,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 13 */ { "qtssSvrStartupTime",            nullptr,   qtssAttrDataTypeTimeVal,    qtssAttrModeRead },
+    /* 14 */ { "qtssSvrGMTOffsetInHrs",         nullptr,   qtssAttrDataTypeSInt32,     qtssAttrModeRead },
+    /* 15 */ { "qtssSvrDefaultIPAddrStr",       nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead },
 
-    /* 16 */ { "qtssSvrPreferences",            NULL,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead | qtssAttrModeInstanceAttrAllowed},
-    /* 17 */ { "qtssSvrMessages",               NULL,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead },
-    /* 18 */ { "qtssSvrClientSessions",         NULL,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead },
+    /* 16 */ { "qtssSvrPreferences",            nullptr,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead | qtssAttrModeInstanceAttrAllowed},
+    /* 17 */ { "qtssSvrMessages",               nullptr,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead },
+    /* 18 */ { "qtssSvrClientSessions",         nullptr,   qtssAttrDataTypeQTSS_Object,qtssAttrModeRead },
     /* 19 */ { "qtssSvrCurrentTimeMilliseconds",currentUnixTimeMilli,   qtssAttrDataTypeTimeVal,qtssAttrModeRead},
-    /* 20 */ { "qtssSvrCPULoadPercent",         NULL,   qtssAttrDataTypeFloat32,    qtssAttrModeRead},
+    /* 20 */ { "qtssSvrCPULoadPercent",         nullptr,   qtssAttrDataTypeFloat32,    qtssAttrModeRead},
 
-    /* 21 */ { "qtssSvrConnectedUsers",         NULL, qtssAttrDataTypeQTSS_Object,      qtssAttrModeRead | qtssAttrModeWrite },
-    /* 22 */ { "qtssSvrServerBuild",           NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 23 */ { "qtssSvrServerPlatform",        NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 24 */ { "qtssSvrHTTPServerComment",     NULL,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 25 */ { "qtssSvrNumThinned",            NULL,   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 21 */ { "qtssSvrConnectedUsers",         nullptr, qtssAttrDataTypeQTSS_Object,      qtssAttrModeRead | qtssAttrModeWrite },
+    /* 22 */ { "qtssSvrServerBuild",           nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 23 */ { "qtssSvrServerPlatform",        nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 24 */ { "qtssSvrHTTPServerComment",     nullptr,   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 25 */ { "qtssSvrNumThinned",            nullptr,   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
 
-    /* 26 */ { "qtssSvrNumThreads",            NULL,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe }
+    /* 26 */ { "qtssSvrNumThreads",            nullptr,   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe }
 };
 
 void    QTSServerInterface::Initialize()
@@ -144,11 +144,11 @@ void    QTSServerInterface::Initialize()
 
 QTSServerInterface::QTSServerInterface()
     : QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kServerDictIndex), &fMutex),
-    fSrvrPrefs(NULL),
-    fSrvrMessages(NULL),
+    fSrvrPrefs(nullptr),
+    fSrvrMessages(nullptr),
     fServerState(qtssStartingUpState),
     fDefaultIPAddr(0),
-    fListeners(NULL),
+    fListeners(nullptr),
     fNumListeners(0),
     fStartupTime_UnixMilli(0),
     fGMTOffset(0),
@@ -164,7 +164,7 @@ QTSServerInterface::QTSServerInterface()
 {
     for (UInt32 y = 0; y < QTSSModule::kNumRoles; y++)
     {
-        sModuleArray[y] = NULL;
+        sModuleArray[y] = nullptr;
         sNumModulesInRole[y] = 0;
     }
 
@@ -203,7 +203,7 @@ void QTSServerInterface::LogError(QTSS_ErrorVerbosity inVerbosity, char* inBuffe
         (void)QTSServerInterface::GetModule(QTSSModule::kErrorLogRole, x)->CallDispatch(QTSS_ErrorLog_Role, &theParams);
 
     // If this is a fatal error, set the proper attribute in the RTSPServer dictionary
-    if ((inVerbosity == qtssFatalVerbosity) && (sServer != NULL))
+    if ((inVerbosity == qtssFatalVerbosity) && (sServer != nullptr))
     {
         QTSS_ServerState theState = qtssFatalErrorState;
         (void)sServer->SetValue(qtssSvrState, 0, &theState, sizeof(theState));
@@ -222,8 +222,8 @@ void QTSServerInterface::SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap*
         QTSS_RoleParams theParams;
         theParams.stateChangeParams.inNewState = *(QTSS_ServerState*)inNewValue;
 
-        static QTSS_ModuleState sStateChangeState = { NULL, 0, NULL, false };
-        if (OSThread::GetCurrent() == NULL)
+        static QTSS_ModuleState sStateChangeState = { nullptr, 0, nullptr, false };
+        if (OSThread::GetCurrent() == nullptr)
             OSThread::SetMainThreadData(&sStateChangeState);
         else
             OSThread::GetCurrent()->SetThreadData(&sStateChangeState);
@@ -239,10 +239,10 @@ void QTSServerInterface::SetValueComplete(UInt32 inAttrIndex, QTSSDictionaryMap*
 
         //
         // Make sure to clear out the thread data
-        if (OSThread::GetCurrent() == NULL)
-            OSThread::SetMainThreadData(NULL);
+        if (OSThread::GetCurrent() == nullptr)
+            OSThread::SetMainThreadData(nullptr);
         else
-            OSThread::GetCurrent()->SetThreadData(NULL);
+            OSThread::GetCurrent()->SetThreadData(nullptr);
     }
 }
 
@@ -282,7 +282,7 @@ QTSS_Error QTSSErrorLogStream::Write(void* inBuffer, UInt32 inLen, UInt32* outLe
         inFlags = qtssMessageVerbosity;
 
     QTSServerInterface::LogError(inFlags, (char*)inBuffer);
-    if (outLenWritten != NULL)
+    if (outLenWritten != nullptr)
         *outLenWritten = inLen;
 
     return QTSS_NoErr;
