@@ -5,8 +5,8 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyHLSModule.h
-    Contains:   EasyHLSModule
+	File:       EasyHLSModule.h
+	Contains:   EasyHLSModule
 */
 
 #ifndef _EASYHLSMODULE_H_
@@ -16,7 +16,7 @@
 
 extern "C"
 {
-    EXPORT QTSS_Error EasyHLSModule_Main(void* inPrivateArgs);
+	EXPORT QTSS_Error EasyHLSModule_Main(void* inPrivateArgs);
 }
 
 #endif //_EASYHLSMODULE_H_

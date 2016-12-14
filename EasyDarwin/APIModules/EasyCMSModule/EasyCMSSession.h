@@ -9,10 +9,10 @@
 	Contains:   CMS Session
 */
 
+#pragma once
 #include "Task.h"
 #include "TimeoutTask.h"
 
-#include "QTSServerInterface.h"
 #include "OSHeaders.h"
 #include "QTSS.h"
 #include "EasyProtocol.h"
@@ -71,13 +71,13 @@ public:
 
 private:
 
-	virtual SInt64 Run();
+	SInt64 Run() override;
 
 	char*	fStreamName;
 	UInt32	fEasyMsgType;
 	bool	fLiveSession;
 
-	bool IsConnected() { return fSocket->GetSocket()->IsConnected(); }
+	bool IsConnected() const { return fSocket->GetSocket()->IsConnected(); }
 };
 
 #endif

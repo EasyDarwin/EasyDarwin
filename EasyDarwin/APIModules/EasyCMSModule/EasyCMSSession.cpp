@@ -12,26 +12,26 @@
 #include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include "SocketUtils.h"
+#include "QTSServerInterface.h"
 
 EasyCMSSession::EasyCMSSession()
 	: Task(),
 	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),
-	fTimeoutTask(NULL),
+	fTimeoutTask(nullptr),
+	fState(kIdle),
 	fInputStream(fSocket),
-	fOutputStream(fSocket, &fTimeoutTask),
-	fState(kIdle),//状态机的初始状态
-	fRequest(NULL),
+	fOutputStream(fSocket, &fTimeoutTask),//状态机的初始状态
+	fRequest(nullptr),
 	fReadMutex(),
 	fMutex(),
+	fContentBuffer(nullptr),
 	fContentBufferOffset(0),
-	fContentBuffer(NULL),
-	fStreamName(NULL),
+	fStreamName(nullptr),
 	fLiveSession(true)
 {
 	this->SetTaskName("EasyCMSSession");
 	fTimeoutTask.SetTask(this);
 	fTimeoutTask.SetTimeout(30 * 1000);
-	fTimeoutTask.RefreshTimeout();
 }
 
 EasyCMSSession::~EasyCMSSession()
@@ -41,29 +41,29 @@ EasyCMSSession::~EasyCMSSession()
 	if (fSocket)
 	{
 		delete fSocket;
-		fSocket = NULL;
+		fSocket = nullptr;
 	}
 
 	if (fRequest)
 	{
 		delete fRequest;
-		fRequest = NULL;
+		fRequest = nullptr;
 	}
 
 	if (fContentBuffer)
 	{
 		delete[] fContentBuffer;
-		fContentBuffer = NULL;
+		fContentBuffer = nullptr;
 	}
 }
 
 void EasyCMSSession::CleanupRequest()
 {
-	if (fRequest != NULL)
+	if (fRequest != nullptr)
 	{
 		// NULL out any references to the current request
 		delete fRequest;
-		fRequest = NULL;
+		fRequest = nullptr;
 	}
 
 	//清空发送缓冲区
@@ -85,169 +85,170 @@ SInt64 EasyCMSSession::Run()
 		switch (fState)
 		{
 		case kIdle:
+		{
+			//根据事件类型执行不同的动作
+			if (events & Task::kStartEvent)
 			{
-				//根据事件类型执行不同的动作
-				if (events & Task::kStartEvent)
+				switch (fEasyMsgType)
 				{
-					switch (fEasyMsgType)
-					{
-					case MSG_CS_FREE_STREAM_REQ:
-						{
-							CSFreeStream();
-							break;
-						}
-					default:
-						break;
-					}
-				}
-
-				if (events & Task::kReadEvent)
+				case MSG_CS_FREE_STREAM_REQ:
 				{
-					// 已连接，有新消息需要读取(数据或者断开)
-					fState = kReadingMessage;
+					CSFreeStream();
+					break;
 				}
-
-				// 如果有消息需要发送则进入发送流程
-				if (fOutputStream.GetBytesWritten() > 0)
-				{
-					fState = kSendingMessage;
+				default:
+					break;
 				}
-
-				//当前状态没有进行数据发送，则等待下一次事件触发
-				if (kIdle == fState)
-				{
-					return 0;
-				}
-				break;
 			}
 
-		case kReadingMessage:
+			if (events & Task::kReadEvent)
 			{
-				// 网络请求报文存储在fInputStream中
-				if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
-				{
-					//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
-					//但！还不能构成一个整体报文Header部分，还要继续等待读取...
-					fSocket->GetSocket()->SetTask(this);
-					fSocket->GetSocket()->RequestEvent(EV_RE);
-
-					fState = kIdle;
-					return 0;
-				}
-
-				if ((theErr != QTSS_RequestArrived) && (theErr != E2BIG) && (theErr != QTSS_BadArgument))
-				{
-					//Any other error implies that the input connection has gone away.
-					// We should only kill the whole session if we aren't doing HTTP.
-					// (If we are doing HTTP, the POST connection can go away)
-					Assert(theErr > 0);
-					// If we've gotten here, this must be an HTTP session with
-					// a dead input connection. If that's the case, we should
-					// clean up immediately so as to not have an open socket
-					// needlessly lingering around, taking up space.
-					Assert(!fSocket->GetSocket()->IsConnected());
-
-					if (fSocket)
-					{
-						fSocket->GetSocket()->Cleanup();
-						delete fSocket;
-						fSocket = NULL;
-					}
-
-					this->CleanupRequest();
-					return 0;
-					//读取数据失败，直接进入析构
-				}
-				// 网络请求超过了缓冲区，返回Bad Request
-				if ((theErr == E2BIG) || (theErr == QTSS_BadArgument))
-				{
-					//返回HTTP报文，错误码408
-					//(void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest, qtssMsgBadBase64);
-					fState = kCleaningUp;
-				}
-				else
-				{
-					fState = kProcessingMessage;
-				}
-				break;
+				// 已连接，有新消息需要读取(数据或者断开)
+				fState = kReadingMessage;
 			}
-		case kProcessingMessage:
+
+			// 如果有消息需要发送则进入发送流程
+			if (fOutputStream.GetBytesWritten() > 0)
 			{
-				// 处理网络报文
-				Assert(fInputStream.GetRequestBuffer());
-				Assert(fRequest == NULL);
-
-				// 根据具体请求报文构造HTTPRequest请求类
-				fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
-
-				// 清空发送缓冲区
-				fOutputStream.ResetBytesWritten();
-
-				Assert(theErr == QTSS_RequestArrived);
-
-				// 处理收到的具体报文
-				ProcessMessage();
-
-				// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
-				if (fOutputStream.GetBytesWritten() > 0)
-				{
-					fState = kSendingMessage;
-				}
-				else
-				{
-					fState = kCleaningUp;
-				}
-				break;
+				fState = kSendingMessage;
 			}
-		case kSendingMessage:
+
+			//当前状态没有进行数据发送，则等待下一次事件触发
+			if (kIdle == fState)
 			{
-				//发送响应报文
-				theErr = fOutputStream.Flush();
-
-				if (theErr == 115)
-				{
-					fSocket->GetSocket()->SetTask(this);
-					fSocket->GetSocket()->RequestEvent(EV_WR);
-					this->ForceSameThread();
-					return 0;
-				}
-
-				if (theErr == EAGAIN || theErr == EINPROGRESS)
-				{
-					// If we get this error, we are currently flow-controlled and should
-					// wait for the socket to become writeable again
-					// 如果收到Socket EAGAIN错误，那么我们需要等Socket再次可写的时候再调用发送
-					fSocket->GetSocket()->SetTask(this);
-					fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask());
-					this->ForceSameThread();
-					// We are holding mutexes, so we need to force
-					// the same thread to be used for next Run()
-					return 0;
-				}
-				else if (theErr != QTSS_NoErr)
-				{
-					// Any other error means that the client has disconnected, right?
-					Assert(!this->IsConnected());
-					//向服务器发送数据失败，直接进入析构
-					//ResetClientSocket();
-					return -1;
-				}
-
-				fState = kCleaningUp;
-				break;
-			}
-		case kCleaningUp:
-			{
-				// 一次请求的读取、处理、响应过程完整，等待下一次网络报文！
-				this->CleanupRequest();
-				fState = kIdle;
-				if (IsConnected())
-				{
-					fSocket->GetSocket()->SetTask(this);
-					fSocket->GetSocket()->RequestEvent(EV_RE | EV_WR);//网络事件监听
-				}
 				return 0;
 			}
+			break;
+		}
+
+		case kReadingMessage:
+		{
+			// 网络请求报文存储在fInputStream中
+			if ((theErr = fInputStream.ReadRequest()) == QTSS_NoErr)
+			{
+				//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
+				//但！还不能构成一个整体报文Header部分，还要继续等待读取...
+				fSocket->GetSocket()->SetTask(this);
+				fSocket->GetSocket()->RequestEvent(EV_RE);
+
+				fState = kIdle;
+				return 0;
+			}
+
+			if ((theErr != QTSS_RequestArrived) && (theErr != E2BIG) && (theErr != QTSS_BadArgument))
+			{
+				//Any other error implies that the input connection has gone away.
+				// We should only kill the whole session if we aren't doing HTTP.
+				// (If we are doing HTTP, the POST connection can go away)
+				Assert(theErr > 0);
+				// If we've gotten here, this must be an HTTP session with
+				// a dead input connection. If that's the case, we should
+				// clean up immediately so as to not have an open socket
+				// needlessly lingering around, taking up space.
+				Assert(!fSocket->GetSocket()->IsConnected());
+
+				if (fSocket)
+				{
+					fSocket->GetSocket()->Cleanup();
+					delete fSocket;
+					fSocket = nullptr;
+				}
+
+				this->CleanupRequest();
+				return 0;
+				//读取数据失败，直接进入析构
+			}
+			// 网络请求超过了缓冲区，返回Bad Request
+			if ((theErr == E2BIG) || (theErr == QTSS_BadArgument))
+			{
+				//返回HTTP报文，错误码408
+				//(void)QTSSModuleUtils::SendErrorResponse(fRequest, qtssClientBadRequest, qtssMsgBadBase64);
+				fState = kCleaningUp;
+			}
+			else
+			{
+				fState = kProcessingMessage;
+			}
+			break;
+		}
+		case kProcessingMessage:
+		{
+			// 处理网络报文
+			Assert(fInputStream.GetRequestBuffer());
+			Assert(fRequest == NULL);
+
+			// 根据具体请求报文构造HTTPRequest请求类
+			fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
+
+			// 清空发送缓冲区
+			fOutputStream.ResetBytesWritten();
+
+			Assert(theErr == QTSS_RequestArrived);
+
+			// 处理收到的具体报文
+			ProcessMessage();
+
+			// 每一步都检测响应报文是否已完成，完成则直接进行回复响应
+			if (fOutputStream.GetBytesWritten() > 0)
+			{
+				fState = kSendingMessage;
+			}
+			else
+			{
+				fState = kCleaningUp;
+			}
+			break;
+		}
+		case kSendingMessage:
+		{
+			//发送响应报文
+			theErr = fOutputStream.Flush();
+
+			if (theErr == 115)
+			{
+				fSocket->GetSocket()->SetTask(this);
+				fSocket->GetSocket()->RequestEvent(EV_WR);
+				this->ForceSameThread();
+				return 0;
+			}
+
+			if (theErr == EAGAIN || theErr == EINPROGRESS)
+			{
+				// If we get this error, we are currently flow-controlled and should
+				// wait for the socket to become writeable again
+				// 如果收到Socket EAGAIN错误，那么我们需要等Socket再次可写的时候再调用发送
+				fSocket->GetSocket()->SetTask(this);
+				fSocket->GetSocket()->RequestEvent(fSocket->GetEventMask());
+				this->ForceSameThread();
+				// We are holding mutexes, so we need to force
+				// the same thread to be used for next Run()
+				return 0;
+			}
+			else if (theErr != QTSS_NoErr)
+			{
+				// Any other error means that the client has disconnected, right?
+				Assert(!this->IsConnected());
+				//向服务器发送数据失败，直接进入析构
+				//ResetClientSocket();
+				return -1;
+			}
+
+			fState = kCleaningUp;
+			break;
+		}
+		case kCleaningUp:
+		{
+			// 一次请求的读取、处理、响应过程完整，等待下一次网络报文！
+			this->CleanupRequest();
+			fState = kIdle;
+			if (IsConnected())
+			{
+				fSocket->GetSocket()->SetTask(this);
+				fSocket->GetSocket()->RequestEvent(EV_RE | EV_WR);//网络事件监听
+			}
+			return 0;
+		}
+		default: break;
 		}
 	}
 	return -1;
@@ -265,14 +266,14 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 	StrPtrLen* lengthPtr = fRequest->GetHeaderValue(httpContentLengthHeader);
 	StringParser theContentLenParser(lengthPtr);
 	theContentLenParser.ConsumeWhitespace();
-	UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
+	UInt32 content_length = theContentLenParser.ConsumeInteger(nullptr);
 
 	if (content_length)
 	{
 		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%d \n", content_length);
 		// 检查content的fContentBuffer和fContentBufferOffset是否有值存在,如果存在，说明我们已经开始
 		// 进行content请求处理,如果不存在,我们需要创建并初始化fContentBuffer和fContentBufferOffset
-		if (fContentBuffer == NULL)
+		if (fContentBuffer == nullptr)
 		{
 			fContentBuffer = NEW char[content_length + 1];
 			memset(fContentBuffer, 0, content_length + 1);
@@ -288,7 +289,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 		{
 			OSCharArrayDeleter charArrayPathDeleter(fContentBuffer);
 			fContentBufferOffset = 0;
-			fContentBuffer = NULL;
+			fContentBuffer = nullptr;
 
 			return QTSS_RequestFailed;
 		}
@@ -316,15 +317,15 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 		switch (nNetMsg)
 		{
 		case  MSG_SC_FREE_STREAM_ACK:
-			{
-				string strErrorNum = protocol.GetHeaderValue(EASY_TAG_ERROR_NUM);
-				string strSerial = protocol.GetBodyValue(EASY_TAG_SERIAL);
-				string strChannle = protocol.GetBodyValue(EASY_TAG_CHANNEL);
+		{
+			string strErrorNum = protocol.GetHeaderValue(EASY_TAG_ERROR_NUM);
+			string strSerial = protocol.GetBodyValue(EASY_TAG_SERIAL);
+			string strChannle = protocol.GetBodyValue(EASY_TAG_CHANNEL);
 
-				qtss_printf("EasyCMS停止推流响应:%s,Serial=%s,Channel=%s", strErrorNum.c_str(), strSerial.c_str(), strChannle.c_str());
-				fLiveSession = false;//进入析构
-			}
-			break;
+			qtss_printf("EasyCMS停止推流响应:%s,Serial=%s,Channel=%s", strErrorNum.c_str(), strSerial.c_str(), strChannle.c_str());
+			fLiveSession = false;//进入析构
+		}
+		break;
 		default:
 			break;
 		}
@@ -332,7 +333,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 
 	// 重置fContentBuffer和fContentBufferOffset值
 	fContentBufferOffset = 0;
-	fContentBuffer = NULL;
+	fContentBuffer = nullptr;
 
 	return QTSS_NoErr;
 }
@@ -363,9 +364,9 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 	req.SetHead(header);
 	req.SetBody(body);
 
-	string msg = req.GetMsg();
+	auto msg = req.GetMsg();
 
-	StrPtrLen jsonContent((char*)msg.data());
+	StrPtrLen jsonContent(const_cast<char*>(msg.data()));
 
 	// 构造HTTP注册报文,提交给fOutputStream进行发送
 	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
@@ -403,8 +404,8 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		strcpy(fStreamName, streamName);
 
 		char chSerial[32] = { 0 };
-		char * chPos = strstr(fStreamName, "/");
-		if (chPos == NULL)
+		auto chPos = strstr(fStreamName, "/");
+		if (chPos == nullptr)
 			return QTSS_BadArgument;
 
 		memcpy(chSerial, fStreamName, chPos - fStreamName);
@@ -422,10 +423,10 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		theParams.GetAssociatedCMSParams.outCMSIP = chCMSIP;
 		theParams.GetAssociatedCMSParams.outCMSPort = chCMSPort;
 		theParams.GetAssociatedCMSParams.inSerial = chSerial;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetAssociatedCMSRole);
+		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetAssociatedCMSRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetAssociatedCMSRole, currentModule);
+			auto theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetAssociatedCMSRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisGetAssociatedCMS_Role, &theParams);
 		}
 
@@ -444,7 +445,7 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 
 
 		//3.获取到EasyCMS参数进行Socket初始化
-		UInt32 inAddr = SocketUtils::ConvertStringToAddr(chCMSIP);
+		auto inAddr = SocketUtils::ConvertStringToAddr(chCMSIP);
 		if (inAddr)
 		{
 			fSocket->Set(inAddr, uCMSPort);
@@ -455,7 +456,7 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 			break;
 		}
 
-	} while (0);
+	} while (false);
 
 	return theErr;
 }

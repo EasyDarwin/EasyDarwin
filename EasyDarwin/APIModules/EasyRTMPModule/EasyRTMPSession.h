@@ -5,7 +5,7 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyRTMPSession.h
+	File:       EasyRTMPSession.h
 */
 
 #ifndef __EASY_RTMP_SESSION__
@@ -16,54 +16,51 @@
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
 #include "OSMutex.h"
-#include "MyAssert.h"
 #include "OSMemory.h"
-#include "StringParser.h"
-#include "StringFormatter.h"
-#include "StringTranslator.h"
 #include "StrPtrLen.h"
 #include "OSRef.h"
-#include "EasyRTSPClientAPI.h"
 #include "EasyRTMPAPI.h"
+#include <EasyRTSPClientAPI.h>
+
 #include "QTSServerInterface.h"
 
 class EasyRTMPSession : public Task
 {
-    public:
-        EasyRTMPSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32 inChannel = 0);
+public:
+	EasyRTMPSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32 inChannel = 0);
 
-        virtual ~EasyRTMPSession();
+	virtual ~EasyRTMPSession();
 
-        virtual SInt64	Run();
+	SInt64	Run() override;
 
-		OSRef*			GetRef()	{ return &fRef; } 
-		OSMutex*		GetMutex()	{ return &fMutex; }
+	OSRef*			GetRef() { return &fRef; }
+	OSMutex*		GetMutex() { return &fMutex; }
 
-		StrPtrLen*      GetSourceID() { return &fSourceID; }
-		StrPtrLen*      GetStreamName() { return &fSessionName; }
-		StrPtrLen*		GetSourceURL() { return &fSourceURL; }
-		const char*		GetRTMPURL() { return fRTMPURL; }
-		UInt32			GetChannelNum() { return fChannelNum; }
-		void			RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
+	StrPtrLen*      GetSourceID() { return &fSourceID; }
+	StrPtrLen*      GetStreamName() { return &fSessionName; }
+	StrPtrLen*		GetSourceURL() { return &fSourceURL; }
+	const char*		GetRTMPURL() const { return fRTMPURL; }
+	UInt32			GetChannelNum() const { return fChannelNum; }
+	void			RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
 
-		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
-		QTSS_Error		SessionStart();
-		QTSS_Error		SessionRelease();
-  
-    private:
-		// For storage in the session map       
-		OSRef       fRef;
-		StrPtrLen   fSourceID;
-		StrPtrLen	fSessionName;
-		StrPtrLen	fSourceURL;
-		char		fRTMPURL[QTSS_MAX_URL_LENGTH];
-		UInt32		fChannelNum;
+	QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo) const;
+	QTSS_Error		SessionStart();
+	QTSS_Error		SessionRelease();
 
-		OSMutex		fMutex;
-		TimeoutTask	fTimeoutTask;
+private:
+	// For storage in the session map       
+	OSRef       fRef;
+	StrPtrLen   fSourceID;
+	StrPtrLen	fSessionName;
+	StrPtrLen	fSourceURL;
+	char		fRTMPURL[QTSS_MAX_URL_LENGTH];
+	UInt32		fChannelNum;
 
-		Easy_RTSP_Handle	fRTSPClientHandle;
-		Easy_RTMP_Handle	fRTMPHandle;
+	OSMutex		fMutex;
+	TimeoutTask	fTimeoutTask;
+
+	Easy_RTSP_Handle	fRTSPClientHandle;
+	Easy_RTMP_Handle	fRTMPHandle;
 };
 
 #endif //__EASY_RTMP_SESSION__

@@ -159,6 +159,8 @@ public:
 	};
 
 	SInt64  GetInitTimeMS() { return fInitTimeMS; }
+	SInt64	GetNoneOutputStartTimeMS() { return fNoneOutputStartTimeMS;	}
+	void	SetNoneOutputStartTimeMS() { fNoneOutputStartTimeMS = OS::Milliseconds(); }
 
 	void	SetHasBufferedStreams(bool enableBuffer) { fHasBufferedStreams = enableBuffer; }
 	void	SetHasVideoKeyFrameUpdate(bool indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
@@ -194,6 +196,7 @@ private:
 	QTSS_StreamRef fSocketStream;
 	QTSS_ClientSessionObject fBroadcasterSession;
 	SInt64		fInitTimeMS;
+	SInt64		fNoneOutputStartTimeMS;
 
 	bool		fHasBufferedStreams;
 	bool		fHasVideoKeyFrameUpdate;

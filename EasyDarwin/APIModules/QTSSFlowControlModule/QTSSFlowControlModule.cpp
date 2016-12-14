@@ -26,10 +26,6 @@
 	 File:       QTSSFlowControlModule.cpp
 
 	 Contains:   Implements object defined in .h file
-
-
-
-
  */
 
 #include <stdio.h>
@@ -103,6 +99,7 @@ QTSS_Error  QTSSFlowControlModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr in
 		return RereadPrefs();
 	case QTSS_RTCPProcess_Role:
 		return ProcessRTCPPacket(&inParamBlock->rtcpProcessParams);
+	default: break;
 	}
 	return QTSS_NoErr;
 }

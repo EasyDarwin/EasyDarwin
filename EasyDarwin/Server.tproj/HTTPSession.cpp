@@ -442,6 +442,11 @@ QTSS_Error HTTPSession::SetupRequest()
 					return execNetMsgCSGetDeviceStreamReqRESTful(fRequest->GetQueryString());
 				}
 
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "livedevicestream")
+				{
+					return execNetMsgCSLiveDeviceStreamReqRESTful(fRequest->GetQueryString());
+				}
+
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
 				{
 					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString());

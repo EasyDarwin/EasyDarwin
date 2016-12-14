@@ -136,6 +136,7 @@ QTSS_Error  QTSSAccessModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParam
 
 	case QTSS_Shutdown_Role:
 		return Shutdown();
+	default: break;
 	}
 
 	return QTSS_NoErr;

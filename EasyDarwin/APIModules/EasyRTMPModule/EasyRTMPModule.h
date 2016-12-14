@@ -5,8 +5,8 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyRTMPModule.h
-    Contains:   EasyRTMPModule live
+	File:       EasyRTMPModule.h
+	Contains:   EasyRTMPModule live
 */
 
 #ifndef _EASYRTMPMODULE_H_
@@ -16,6 +16,6 @@
 
 extern "C"
 {
-    EXPORT QTSS_Error EasyRTMPModule_Main(void* inPrivateArgs);
+	EXPORT QTSS_Error EasyRTMPModule_Main(void* inPrivateArgs);
 }
 #endif //_EASYRTMPMODULE_H_
