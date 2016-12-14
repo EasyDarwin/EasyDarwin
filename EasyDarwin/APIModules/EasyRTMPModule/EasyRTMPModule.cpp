@@ -5,8 +5,8 @@
 	Website: http://www.easydarwin.org
 */
 /*
-    File:       EasyRTMPModule.cpp
-    Contains:   RTMP live
+	File:       EasyRTMPModule.cpp
+	Contains:   RTMP live
 */
 
 #include "EasyRTMPModule.h"
@@ -26,7 +26,7 @@
 #endif
 
 // STATIC DATA
-static OSRefTable*				sRTMPSessionMap	= nullptr;
+static OSRefTable*				sRTMPSessionMap = nullptr;
 static QTSS_PrefsObject			sServerPrefs = nullptr;
 static QTSS_ServerObject		sServer = nullptr;
 static QTSS_ModulePrefsObject	sPrefs = nullptr;
@@ -42,26 +42,26 @@ static QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams);
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyRTMPModule_Main(void* inPrivateArgs)
 {
-    return _stublibrary_main(inPrivateArgs, EasyRTMPModuleDispatch);
+	return _stublibrary_main(inPrivateArgs, EasyRTMPModuleDispatch);
 }
 
 QTSS_Error  EasyRTMPModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 {
-    switch (inRole)
-    {
-        case QTSS_Register_Role:
-            return Register(&inParams->regParams);
-        case QTSS_Initialize_Role:
-            return Initialize(&inParams->initParams);
-        case QTSS_RereadPrefs_Role:
-            return RereadPrefs();
-		case Easy_GetDeviceStream_Role:
-			return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
-		case Easy_LiveDeviceStream_Role:
-			return LiveDeviceStream(&inParams->easyGetDeviceStreamParams);
-    default: break;
-    }
-    return QTSS_NoErr;
+	switch (inRole)
+	{
+	case QTSS_Register_Role:
+		return Register(&inParams->regParams);
+	case QTSS_Initialize_Role:
+		return Initialize(&inParams->initParams);
+	case QTSS_RereadPrefs_Role:
+		return RereadPrefs();
+	case Easy_GetDeviceStream_Role:
+		return GetDeviceStream(&inParams->easyGetDeviceStreamParams);
+	case Easy_LiveDeviceStream_Role:
+		return LiveDeviceStream(&inParams->easyGetDeviceStreamParams);
+	default: break;
+	}
+	return QTSS_NoErr;
 }
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
@@ -94,7 +94,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 		return QTSS_RequestFailed;
 
 	auto isEasyRTSPClientActivated = EasyRTSP_Activate(EasyRTSPClient_KEY);
-	switch(isEasyRTSPClientActivated)
+	switch (isEasyRTSPClientActivated)
 	{
 	case EASY_ACTIVATE_INVALID_KEY:
 		printf("EasyRTSPClient_KEY is EASY_ACTIVATE_INVALID_KEY!\n");
@@ -117,35 +117,35 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	default: break;
 	}
 
-	if(EASY_ACTIVATE_SUCCESS != isEasyRTSPClientActivated)
+	if (EASY_ACTIVATE_SUCCESS != isEasyRTSPClientActivated)
 		return QTSS_RequestFailed;
 
-    // Do role & attribute setup
-    (void)QTSS_AddRole(QTSS_Initialize_Role);
-    (void)QTSS_AddRole(QTSS_RereadPrefs_Role); 
+	// Do role & attribute setup
+	(void)QTSS_AddRole(QTSS_Initialize_Role);
+	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_GetDeviceStream_Role);
 	(void)QTSS_AddRole(Easy_LiveDeviceStream_Role);
-    
-    // Tell the server our name!
-    static char* sModuleName = "EasyRTMPModule";
-    ::strcpy(inParams->outModuleName, sModuleName);
 
-    return QTSS_NoErr;
+	// Tell the server our name!
+	static char* sModuleName = "EasyRTMPModule";
+	::strcpy(inParams->outModuleName, sModuleName);
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
-    // Setup module utils
-    QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
+	// Setup module utils
+	QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
 	sRTMPSessionMap = QTSServerInterface::GetServer()->GetRTMPSessionMap();
 
-    sServerPrefs = inParams->inPrefs;
-    sServer = inParams->inServer;
-    sPrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
+	sServerPrefs = inParams->inPrefs;
+	sServer = inParams->inServer;
+	sPrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
-    RereadPrefs();
-    
-   return QTSS_NoErr;
+	RereadPrefs();
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error RereadPrefs()
@@ -165,7 +165,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 
 		EasyRTMPSession* rtmpSe;
 		auto sessionRef = sRTMPSessionMap->Resolve(&inStreamName);
-		if(sessionRef != nullptr)
+		if (sessionRef != nullptr)
 		{
 			rtmpSe = static_cast<EasyRTMPSession*>(sessionRef->GetObject());
 		}
@@ -223,11 +223,11 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 			auto debug = sRTMPSessionMap->Resolve(&inStreamName);
 			Assert(debug == rtmpSe->GetRef());
 
-			
+
 			rtspSessionMap->Release(theSessionRef);
 		}
 
-		if(inParams->outUrl)
+		if (inParams->outUrl)
 			strcpy(inParams->outUrl, rtmpSe->GetRTMPURL());
 
 		sRTMPSessionMap->Release(rtmpSe->GetRef());
