@@ -79,6 +79,7 @@ QTSS_Error  QTSSPosixFileSysModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr i
 		return CloseFile(&inParams->closeFileParams);
 	case QTSS_RequestEventFile_Role:
 		return RequestEventFile(&inParams->reqEventFileParams);
+	default: break;
 	}
 	return QTSS_NoErr;
 }
