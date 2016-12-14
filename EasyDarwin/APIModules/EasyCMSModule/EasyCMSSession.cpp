@@ -16,22 +16,21 @@
 EasyCMSSession::EasyCMSSession()
 	: Task(),
 	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),
-	fTimeoutTask(NULL),
+	fTimeoutTask(nullptr),
+	fState(kIdle),
 	fInputStream(fSocket),
-	fOutputStream(fSocket, &fTimeoutTask),
-	fState(kIdle),//状态机的初始状态
-	fRequest(NULL),
+	fOutputStream(fSocket, &fTimeoutTask),//状态机的初始状态
+	fRequest(nullptr),
 	fReadMutex(),
 	fMutex(),
+	fContentBuffer(nullptr),
 	fContentBufferOffset(0),
-	fContentBuffer(NULL),
-	fStreamName(NULL),
+	fStreamName(nullptr),
 	fLiveSession(true)
 {
 	this->SetTaskName("EasyCMSSession");
 	fTimeoutTask.SetTask(this);
 	fTimeoutTask.SetTimeout(30 * 1000);
-	fTimeoutTask.RefreshTimeout();
 }
 
 EasyCMSSession::~EasyCMSSession()
@@ -41,29 +40,29 @@ EasyCMSSession::~EasyCMSSession()
 	if (fSocket)
 	{
 		delete fSocket;
-		fSocket = NULL;
+		fSocket = nullptr;
 	}
 
 	if (fRequest)
 	{
 		delete fRequest;
-		fRequest = NULL;
+		fRequest = nullptr;
 	}
 
 	if (fContentBuffer)
 	{
 		delete[] fContentBuffer;
-		fContentBuffer = NULL;
+		fContentBuffer = nullptr;
 	}
 }
 
 void EasyCMSSession::CleanupRequest()
 {
-	if (fRequest != NULL)
+	if (fRequest != nullptr)
 	{
 		// NULL out any references to the current request
 		delete fRequest;
-		fRequest = NULL;
+		fRequest = nullptr;
 	}
 
 	//清空发送缓冲区
@@ -151,7 +150,7 @@ SInt64 EasyCMSSession::Run()
 					{
 						fSocket->GetSocket()->Cleanup();
 						delete fSocket;
-						fSocket = NULL;
+						fSocket = nullptr;
 					}
 
 					this->CleanupRequest();
@@ -248,6 +247,7 @@ SInt64 EasyCMSSession::Run()
 				}
 				return 0;
 			}
+		default: break;
 		}
 	}
 	return -1;
@@ -265,14 +265,14 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 	StrPtrLen* lengthPtr = fRequest->GetHeaderValue(httpContentLengthHeader);
 	StringParser theContentLenParser(lengthPtr);
 	theContentLenParser.ConsumeWhitespace();
-	UInt32 content_length = theContentLenParser.ConsumeInteger(NULL);
+	UInt32 content_length = theContentLenParser.ConsumeInteger(nullptr);
 
 	if (content_length)
 	{
 		qtss_printf("EasyCMSSession::ProcessMessage read content-length:%d \n", content_length);
 		// 检查content的fContentBuffer和fContentBufferOffset是否有值存在,如果存在，说明我们已经开始
 		// 进行content请求处理,如果不存在,我们需要创建并初始化fContentBuffer和fContentBufferOffset
-		if (fContentBuffer == NULL)
+		if (fContentBuffer == nullptr)
 		{
 			fContentBuffer = NEW char[content_length + 1];
 			memset(fContentBuffer, 0, content_length + 1);
@@ -288,7 +288,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 		{
 			OSCharArrayDeleter charArrayPathDeleter(fContentBuffer);
 			fContentBufferOffset = 0;
-			fContentBuffer = NULL;
+			fContentBuffer = nullptr;
 
 			return QTSS_RequestFailed;
 		}
@@ -332,7 +332,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 
 	// 重置fContentBuffer和fContentBufferOffset值
 	fContentBufferOffset = 0;
-	fContentBuffer = NULL;
+	fContentBuffer = nullptr;
 
 	return QTSS_NoErr;
 }
@@ -363,9 +363,9 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 	req.SetHead(header);
 	req.SetBody(body);
 
-	string msg = req.GetMsg();
+	auto msg = req.GetMsg();
 
-	StrPtrLen jsonContent((char*)msg.data());
+	StrPtrLen jsonContent(const_cast<char*>(msg.data()));
 
 	// 构造HTTP注册报文,提交给fOutputStream进行发送
 	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
@@ -403,8 +403,8 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		strcpy(fStreamName, streamName);
 
 		char chSerial[32] = { 0 };
-		char * chPos = strstr(fStreamName, "/");
-		if (chPos == NULL)
+		auto chPos = strstr(fStreamName, "/");
+		if (chPos == nullptr)
 			return QTSS_BadArgument;
 
 		memcpy(chSerial, fStreamName, chPos - fStreamName);
@@ -422,10 +422,10 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		theParams.GetAssociatedCMSParams.outCMSIP = chCMSIP;
 		theParams.GetAssociatedCMSParams.outCMSPort = chCMSPort;
 		theParams.GetAssociatedCMSParams.inSerial = chSerial;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetAssociatedCMSRole);
+		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetAssociatedCMSRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetAssociatedCMSRole, currentModule);
+			auto theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetAssociatedCMSRole, currentModule);
 			(void)theModule->CallDispatch(Easy_RedisGetAssociatedCMS_Role, &theParams);
 		}
 
@@ -444,7 +444,7 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 
 
 		//3.获取到EasyCMS参数进行Socket初始化
-		UInt32 inAddr = SocketUtils::ConvertStringToAddr(chCMSIP);
+		auto inAddr = SocketUtils::ConvertStringToAddr(chCMSIP);
 		if (inAddr)
 		{
 			fSocket->Set(inAddr, uCMSPort);
@@ -455,7 +455,7 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 			break;
 		}
 
-	} while (0);
+	} while (false);
 
 	return theErr;
 }
