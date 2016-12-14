@@ -41,7 +41,6 @@
 class RTCPTask;
 class RTSPListenerSocket;
 class RTPSocketPool;
-class SessionTimeoutTask;
 
 class QTSServer : public QTSServerInterface
 {
@@ -116,7 +115,6 @@ private:
 	// GLOBAL TASKS
 	RTCPTask*           fRTCPTask;
 	RTPStatsUpdaterTask*fStatsTask;
-	SessionTimeoutTask  *fSessionTimeoutTask;
 	static char*        sPortPrefString;
 	static XMLPrefsParser* sPrefsSource;
 	static PrefsSource* sMessagesSource;

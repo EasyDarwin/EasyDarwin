@@ -40,6 +40,7 @@
 #include "RTSPProtocol.h"
 #include "RTPPacketResender.h"
 #include "revision.h"
+#include "EasyUtil.h"
 
 // STATIC DATA
 
@@ -250,6 +251,7 @@ QTSServerInterface::QTSServerInterface()
 	this->SetVal(qtssSvrNumThinned, &fNumThinned, sizeof(fNumThinned));
 	this->SetVal(qtssSvrNumThreads, &fNumThreads, sizeof(fNumThreads));
 
+	qtss_sprintf(fCloudServiceNodeID, "%s", EasyUtil::GetUUID().c_str());
 
 	sServer = this;
 }

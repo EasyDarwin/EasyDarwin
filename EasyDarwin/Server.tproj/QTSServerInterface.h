@@ -238,6 +238,8 @@ public:
 	//this function. This returns a pair pre-bound to the IPAddr specified.
 	UDPSocketPool*      GetSocketPool() { return fSocketPool; }
 
+	char* GetCloudServiceNodeID() { return fCloudServiceNodeID; }
+
 	QTSServerPrefs*     GetPrefs() { return fSrvrPrefs; }
 	QTSSMessages*       GetMessages() { return fSrvrMessages; }
 
@@ -358,6 +360,8 @@ protected:
 	static OSQueue                  sModuleQueue;
 	static QTSSErrorLogStream       sErrorLogStream;
 
+	char fCloudServiceNodeID[QTSS_MAX_SESSION_ID_LENGTH];
+
 private:
 
 	enum
@@ -458,7 +462,6 @@ private:
 	static QTSSAttrInfoDict::AttrInfo   sConnectedUserAttributes[];
 
 	friend class RTPStatsUpdaterTask;
-	friend class SessionTimeoutTask;
 };
 
 
