@@ -16,14 +16,9 @@
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
 #include "OSMutex.h"
-#include "MyAssert.h"
 #include "OSMemory.h"
-#include "StringParser.h"
-#include "StringFormatter.h"
-#include "StringTranslator.h"
 #include "StrPtrLen.h"
 #include "OSRef.h"
-#include "EasyRTSPClientAPI.h"
 #include "EasyRTMPAPI.h"
 #include "QTSServerInterface.h"
 
@@ -34,7 +29,7 @@ class EasyRTMPSession : public Task
 
         virtual ~EasyRTMPSession();
 
-        virtual SInt64	Run();
+		SInt64	Run() override;
 
 		OSRef*			GetRef()	{ return &fRef; } 
 		OSMutex*		GetMutex()	{ return &fMutex; }
@@ -42,11 +37,11 @@ class EasyRTMPSession : public Task
 		StrPtrLen*      GetSourceID() { return &fSourceID; }
 		StrPtrLen*      GetStreamName() { return &fSessionName; }
 		StrPtrLen*		GetSourceURL() { return &fSourceURL; }
-		const char*		GetRTMPURL() { return fRTMPURL; }
-		UInt32			GetChannelNum() { return fChannelNum; }
+		const char*		GetRTMPURL() const { return fRTMPURL; }
+		UInt32			GetChannelNum() const { return fChannelNum; }
 		void			RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
 
-		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
+		QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo) const;
 		QTSS_Error		SessionStart();
 		QTSS_Error		SessionRelease();
   
