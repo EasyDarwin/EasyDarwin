@@ -12,6 +12,7 @@
 #include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include "SocketUtils.h"
+#include "QTSServerInterface.h"
 
 EasyCMSSession::EasyCMSSession()
 	: Task(),
