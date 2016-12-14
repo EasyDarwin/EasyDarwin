@@ -8,28 +8,28 @@
 #include "ReflectorSession.h"
 
 // STATIC VARIABLES
-static QTSS_ModulePrefsObject	modulePrefs		= nullptr;
-static QTSS_PrefsObject			sServerPrefs	= nullptr;
-static QTSS_ServerObject		sServer			= nullptr;
+static QTSS_ModulePrefsObject	modulePrefs = nullptr;
+static QTSS_PrefsObject			sServerPrefs = nullptr;
+static QTSS_ServerObject		sServer = nullptr;
 
 // Redis IP
-static char*            sRedis_IP				= nullptr;
-static char*            sDefaultRedis_IP_Addr	= "127.0.0.1";
+static char*            sRedis_IP = nullptr;
+static char*            sDefaultRedis_IP_Addr = "127.0.0.1";
 // Redis Port
-static UInt16			sRedisPort				= 6379;
-static UInt16			sDefaultRedisPort		= 6379;
+static UInt16			sRedisPort = 6379;
+static UInt16			sDefaultRedisPort = 6379;
 // Redis user
-static char*            sRedisUser				= nullptr;
-static char*            sDefaultRedisUser		= "admin";
+static char*            sRedisUser = nullptr;
+static char*            sDefaultRedisUser = "admin";
 // Redis password
-static char*            sRedisPassword			= nullptr;
-static char*            sDefaultRedisPassword	= "admin";
+static char*            sRedisPassword = nullptr;
+static char*            sDefaultRedisPassword = "admin";
 
-static char*			sRTSPWanIP				= nullptr;
-static UInt16			sRTSPWanPort			= 10554;
+static char*			sRTSPWanIP = nullptr;
+static UInt16			sRTSPWanPort = 10554;
 
-static EasyRedisClient* sRedisClient			= nullptr;//the object pointer that package the redis operation
-static bool				sIfConSucess			= false;
+static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
+static bool				sIfConSucess = false;
 static OSMutex			sMutex;
 
 // FUNCTION PROTOTYPES
