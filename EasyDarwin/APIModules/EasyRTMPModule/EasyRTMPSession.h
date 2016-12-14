@@ -20,6 +20,8 @@
 #include "StrPtrLen.h"
 #include "OSRef.h"
 #include "EasyRTMPAPI.h"
+#include <EasyRTSPClientAPI.h>
+
 #include "QTSServerInterface.h"
 
 class EasyRTMPSession : public Task
