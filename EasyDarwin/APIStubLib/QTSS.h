@@ -1232,6 +1232,7 @@ typedef struct
 	char *						inStreamName;
 	UInt32						inChannel;
 	UInt32						inNumOutputs;
+	UInt32						inBitrate;
 	Easy_RedisAction			inAction;
 }Easy_StreamInfo_Params;
 
