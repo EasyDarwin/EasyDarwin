@@ -131,8 +131,8 @@ ReflectorSession::~ReflectorSession()
 	if (fSourceID.Ptr)
 	{
 		QTSS_RoleParams theParams;
-		theParams.StreamInfoParams.inStreamName = fSessionName.Ptr;
-		theParams.StreamInfoParams.inChannel = fChannelNum;
+		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+		theParams.easyStreamInfoParams.inChannel = fChannelNum;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelPushStreamRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
@@ -151,9 +151,9 @@ QTSS_Error ReflectorSession::SetSessionName()
 	if (fSourceID.Len > 0)
 	{
 		QTSS_RoleParams theParams;
-		theParams.StreamInfoParams.inStreamName = fSessionName.Ptr;
-		theParams.StreamInfoParams.inChannel = fChannelNum;
-		theParams.StreamInfoParams.inNumOutputs = fNumOutputs;
+		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+		theParams.easyStreamInfoParams.inChannel = fChannelNum;
+		theParams.easyStreamInfoParams.inNumOutputs = fNumOutputs;
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddPushStreamRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{

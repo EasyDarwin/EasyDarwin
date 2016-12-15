@@ -40,8 +40,8 @@ static QTSS_Error   RereadPrefs();
 static QTSS_Error	RedisConnect();
 static QTSS_Error	RedisInit();
 static QTSS_Error	RedisTTL();
-static QTSS_Error	RedisAddPushName(QTSS_StreamInfo_Params* inParams);
-static QTSS_Error	RedisDelPushName(QTSS_StreamInfo_Params* inParams);
+static QTSS_Error	RedisAddPushName(Easy_StreamInfo_Params* inParams);
+static QTSS_Error	RedisDelPushName(Easy_StreamInfo_Params* inParams);
 static QTSS_Error	RedisChangeRtpNum();
 static QTSS_Error	RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams);
 static QTSS_Error	RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams);
@@ -67,9 +67,9 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 	case Easy_RedisChangeRTPNum_Role:
 		return RedisChangeRtpNum();
 	case Easy_RedisAddPushStream_Role:
-		return RedisAddPushName(&inParamBlock->StreamInfoParams);
+		return RedisAddPushName(&inParamBlock->easyStreamInfoParams);
 	case Easy_RedisDelPushStream_Role:
-		return RedisDelPushName(&inParamBlock->StreamInfoParams);
+		return RedisDelPushName(&inParamBlock->easyStreamInfoParams);
 	case Easy_RedisGetAssociatedCMS_Role:
 		return RedisGetAssociatedCMS(&inParamBlock->GetAssociatedCMSParams);
 	case Easy_RedisJudgeStreamID_Role:
@@ -170,48 +170,17 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		sprintf(chTemp, "auth %s", sRedisPassword);
 		sRedisClient->AppendCommand(chTemp);
 
-		//2,EasyDarwin唯一信息存储(覆盖上一次的存储)
-		sprintf(chTemp, "sadd EasyDarwinName %s:%d", sRTSPWanIP, sRTSPWanPort);
-		sRedisClient->AppendCommand(chTemp);
+		////2,EasyDarwin唯一信息存储(覆盖上一次的存储)
+		//sprintf(chTemp, "sadd EasyDarwinName %s:%d", sRTSPWanIP, sRTSPWanPort);
+		//sRedisClient->AppendCommand(chTemp);
 
-		//3,EasyDarwin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
-		sprintf(chTemp, "hmset %s:%d_Info IP %s PORT %d RTP %d", sRTSPWanIP, sRTSPWanPort, sRTSPWanIP, sRTSPWanPort, QTSServerInterface::GetServer()->GetNumRTPSessions());
-		sRedisClient->AppendCommand(chTemp);
+		////3,EasyDarwin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
+		//sprintf(chTemp, "hmset %s:%d_Info IP %s PORT %d RTP %d", sRTSPWanIP, sRTSPWanPort, sRTSPWanIP, sRTSPWanPort, QTSServerInterface::GetServer()->GetNumRTPSessions());
+		//sRedisClient->AppendCommand(chTemp);
 
-		//4,清除推流名称存储
-		sprintf(chTemp, "del %s:%d_PushName", sRTSPWanIP, sRTSPWanPort);
-		sRedisClient->AppendCommand(chTemp);
-
-		char* strAllPushName;
-		OSRefTable * reflectorTable = QTSServerInterface::GetServer()->GetReflectorSessionMap();
-		auto mutexMap = reflectorTable->GetMutex();
-		auto iPos = 0;
-		mutexMap->Lock();
-		strAllPushName = new char[reflectorTable->GetNumRefsInTable() * 128 + 1];//为每一个推流名称分配128字节的内存
-		memset(strAllPushName, 0, reflectorTable->GetNumRefsInTable() * 128 + 1);//内存初始化为0
-		for (OSRefHashTableIter theIter(reflectorTable->GetHashTable()); !theIter.IsDone(); theIter.Next())
-		{
-			OSRef* theRef = theIter.GetCurrent();
-			ReflectorSession  * theSession = static_cast<ReflectorSession *>(theRef->GetObject());
-			char * chPushName = theSession->GetSourceID()->Ptr;
-			if (chPushName)
-			{
-				strAllPushName[iPos++] = ' ';
-				memcpy(strAllPushName + iPos, chPushName, strlen(chPushName));
-				iPos = iPos + strlen(chPushName);
-			}
-		}
-		mutexMap->Unlock();
-
-		char *chNewTemp = new char[strlen(strAllPushName) + 128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
-
-		//5,推流名称存储
-		sprintf(chNewTemp, "sadd %s:%d_PushName%s", sRTSPWanIP, sRTSPWanPort, strAllPushName);
-		sRedisClient->AppendCommand(chTemp);
-
-
-		delete[] chNewTemp;
-		delete[] strAllPushName;
+		////4,清除推流名称存储
+		//sprintf(chTemp, "del %s:%d_PushName", sRTSPWanIP, sRTSPWanPort);
+		//sRedisClient->AppendCommand(chTemp);
 
 		//6,保活，设置15秒，这之后当前EasyDarwin已经开始提供服务了
 		sprintf(chTemp, "setex %s:%d_Live 15 1", sRTSPWanIP, sRTSPWanPort);
@@ -240,7 +209,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 	return static_cast<QTSS_Error>(false);
 }
 
-QTSS_Error RedisAddPushName(QTSS_StreamInfo_Params* inParams)
+QTSS_Error RedisAddPushName(Easy_StreamInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
@@ -269,7 +238,7 @@ QTSS_Error RedisAddPushName(QTSS_StreamInfo_Params* inParams)
 	return ret;
 }
 
-QTSS_Error RedisDelPushName(QTSS_StreamInfo_Params* inParams)
+QTSS_Error RedisDelPushName(Easy_StreamInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)

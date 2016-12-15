@@ -59,7 +59,6 @@ private:
 #ifndef __REFLECTOR_SESSION__
 #define __REFLECTOR_SESSION__
 
-//ReflectorSession的构造函数中向redis写入推流信息，析构函数中移除推流信息。
 class ReflectorSession
 {
 public:
