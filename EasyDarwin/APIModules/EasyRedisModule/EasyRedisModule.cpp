@@ -40,8 +40,7 @@ static QTSS_Error   RereadPrefs();
 static QTSS_Error	RedisConnect();
 static QTSS_Error	RedisInit();
 static QTSS_Error	RedisTTL();
-static QTSS_Error	RedisAddPushName(Easy_StreamInfo_Params* inParams);
-static QTSS_Error	RedisDelPushName(Easy_StreamInfo_Params* inParams);
+static QTSS_Error	RedisUpdateStream(Easy_StreamInfo_Params* inParams);
 static QTSS_Error	RedisChangeRtpNum();
 static QTSS_Error	RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams);
 static QTSS_Error	RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams);
@@ -67,9 +66,7 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 	case Easy_RedisChangeRTPNum_Role:
 		return RedisChangeRtpNum();
 	case Easy_RedisUpdateStreamInfo_Role:
-		return RedisAddPushName(&inParamBlock->easyStreamInfoParams);
-	//case Easy_RedisDelPushStream_Role:
-	//	return RedisDelPushName(&inParamBlock->easyStreamInfoParams);
+		return RedisUpdateStream(&inParamBlock->easyStreamInfoParams);
 	case Easy_RedisGetAssociatedCMS_Role:
 		return RedisGetAssociatedCMS(&inParamBlock->GetAssociatedCMSParams);
 	case Easy_RedisJudgeStreamID_Role:
@@ -87,7 +84,6 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(Easy_RedisTTL_Role);
 	(void)QTSS_AddRole(Easy_RedisChangeRTPNum_Role);
 	(void)QTSS_AddRole(Easy_RedisUpdateStreamInfo_Role);
-	//(void)QTSS_AddRole(Easy_RedisDelPushStream_Role);
 	(void)QTSS_AddRole(Easy_RedisGetAssociatedCMS_Role);
 	(void)QTSS_AddRole(Easy_RedisJudgeStreamID_Role);
 
@@ -209,19 +205,31 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 	return static_cast<QTSS_Error>(false);
 }
 
-QTSS_Error RedisAddPushName(Easy_StreamInfo_Params* inParams)
+QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
+	auto ret = 0;
 	char chKey[128] = { 0 };
 	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
+
+	if(inParams->inAction == easyRedisActionDelete)
+	{
+		sRedisClient->Delete(chKey);
+		if (ret == -1)//fatal err,need reconnect
+		{
+			sRedisClient->Free();
+			sIfConSucess = false;
+		}
+		return ret;
+	}
 
 	char chRtpNum[16] = { 0 };
 	sprintf(chRtpNum, "%d", inParams->inNumOutputs);
 
-	int ret = sRedisClient->HashSet(chKey, "output", chRtpNum);
+	ret = sRedisClient->HashSet(chKey, "output", chRtpNum);
 	if (ret == -1)//fatal err,need reconnect
 	{
 		sRedisClient->Free();
@@ -235,24 +243,6 @@ QTSS_Error RedisAddPushName(Easy_StreamInfo_Params* inParams)
 		sIfConSucess = false;
 	}
 
-	return ret;
-}
-
-QTSS_Error RedisDelPushName(Easy_StreamInfo_Params* inParams)
-{
-	OSMutexLocker mutexLock(&sMutex);
-	if (!sIfConSucess)
-		return QTSS_NotConnected;
-
-	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
-
-	int ret = sRedisClient->Delete(chKey);
-	if (ret == -1)//fatal err,need reconnect
-	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-	}
 	return ret;
 }
 
