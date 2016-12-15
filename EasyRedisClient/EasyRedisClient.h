@@ -91,6 +91,7 @@ public:
 
 	EasyRedisReplyObject Exists(const char* key);
 	EasyRedisReplyObject SMembers(const char* key);
+	EasyRedisReplyObject Keys(const char* key);
 
 	static std::string IntToString(int value);
 	static int StringToInt(std::string value);
