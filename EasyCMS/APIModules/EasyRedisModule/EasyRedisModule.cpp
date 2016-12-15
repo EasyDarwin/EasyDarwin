@@ -315,7 +315,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	string strPushName = Format("%s/%s", string(inParams->inSerial), string(inParams->inChannel));
 
 	//1. get the list of EasyDarwin
-	easyRedisReply * reply = static_cast<easyRedisReply*>(sRedisClient->SMembers("EasyDarwinName"));
+	auto reply = static_cast<easyRedisReply*>(sRedisClient->Keys("EasyDarwin:*"));
 	if (reply == nullptr)
 	{
 		sRedisClient->Free();
@@ -324,24 +324,19 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	}
 
 	//2.judge if the EasyDarwin is ilve and contain serial/channel.sdp
-	if ((reply->elements > 0) && (reply->type == EASY_REDIS_REPLY_ARRAY))
+	if (reply->elements > 0 && reply->type == EASY_REDIS_REPLY_ARRAY)
 	{
+		multimap<int, pair<string, string>> easydarwinMap;
 		easyRedisReply* childReply;
 		for (size_t i = 0; i < reply->elements; i++)
 		{
 			childReply = reply->element[i];
 			string strChileReply(childReply->str);
 
-			string strTemp = Format("exists %s", strChileReply + "_Live");
+			string strTemp = Format("HMGET %s", strChileReply + " Load IP Port");
 			sRedisClient->AppendCommand(strTemp.c_str());
 
-			strTemp = Format("sismember %s %s", strChileReply + "_PushName", strPushName);
-			sRedisClient->AppendCommand(strTemp.c_str());
-		}
-
-		easyRedisReply *reply2 = nullptr, *reply3 = nullptr;
-		for (size_t i = 0; i < reply->elements; i++)
-		{
+			easyRedisReply* reply2 = nullptr;
 			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply2)) != EASY_REDIS_OK)
 			{
 				EasyFreeReplyObject(reply);
@@ -353,32 +348,35 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 				sIfConSucess = false;
 				return QTSS_NotConnected;
 			}
-			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply3)) != EASY_REDIS_OK)
+
+			if (reply2->type == EASY_REDIS_REPLY_NIL)
 			{
-				EasyFreeReplyObject(reply);
-				if (reply3)
-				{
-					EasyFreeReplyObject(reply3);
-				}
-				sRedisClient->Free();
-				sIfConSucess = false;
-				return QTSS_NotConnected;
+				continue;
 			}
 
-			if ((reply2->type == EASY_REDIS_REPLY_INTEGER) && (reply2->integer == 1) &&
-				(reply3->type == EASY_REDIS_REPLY_INTEGER) && (reply3->integer == 1))
-			{//find it
-				string strIpPort(reply->element[i]->str);
-				int ipos = strIpPort.find(':');//judge error
-				memcpy(inParams->outDssIP, strIpPort.c_str(), ipos);
-				memcpy(inParams->outDssPort, &strIpPort[ipos + 1], strIpPort.size() - ipos - 1);
-				//break;//can't break,as 1 to 1
+			if (reply2->type == EASY_REDIS_REPLY_ARRAY)
+			{
+				auto load = stoi(reply2->element[0]->str);
+				string ip(reply2->element[1]->str);
+				string port(reply2->element[2]->str);
+
+				easydarwinMap.emplace(load, make_pair(ip, port));
 			}
 			EasyFreeReplyObject(reply2);
-			EasyFreeReplyObject(reply3);
 		}
+
+		if (easydarwinMap.empty())
+		{
+			return QTSS_RequestFailed;
+		}
+
+		auto easydarwin = easydarwinMap.begin()->second;
+		memcpy(inParams->outDssIP, easydarwin.first.c_str(), easydarwin.first.size());
+		memcpy(inParams->outDssPort, easydarwin.second.c_str(), easydarwin.second.size());
 	}
+
 	EasyFreeReplyObject(reply);
+
 	return QTSS_NoErr;
 }
 

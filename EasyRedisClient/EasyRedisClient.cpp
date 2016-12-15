@@ -578,3 +578,12 @@ EasyRedisClient::EasyRedisReplyObject EasyRedisClient::Exists(const char* key)
 	}
 	return NULL;
 }
+
+EasyRedisClient::EasyRedisReplyObject EasyRedisClient::Keys(const char* key)
+{
+	if (fRedisContext != NULL)
+	{
+		return redisCommand(RedisContextPtr(fRedisContext), "KEYS %s", key);
+	}
+	return NULL;
+}
