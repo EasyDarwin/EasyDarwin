@@ -177,7 +177,7 @@ QTSS_Error RedisTTL()
 	{
 		char chTemp[128]{ 0 };
 		sprintf(chTemp, "hmset %s:%s Load %d", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID(), QTSServerInterface::GetServer()->GetNumRTPSessions());
-		sRedisClient->AppendCommand(chKey);
+		sRedisClient->AppendCommand(chTemp);
 
 		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
 		if (reply)
