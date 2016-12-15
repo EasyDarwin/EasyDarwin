@@ -39,7 +39,6 @@ static QTSS_Error	RedisChangeRtpNum();
 static QTSS_Error	RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams);
 static QTSS_Error	RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams);
 
-
 QTSS_Error EasyRedisModule_Main(void* inPrivateArgs)
 {
 	return _stublibrary_main(inPrivateArgs, EasyRedisModuleDispatch);
@@ -143,52 +142,24 @@ QTSS_Error RedisConnect()
 
 QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 {
-	//每一次与redis连接后，都应该清除上一次的数据存储，使用覆盖或者直接清除的方式,串行命令使用管线更加高效
 	char chTemp[128] = { 0 };
 
-	do
+	sprintf(chTemp, "auth %s", sRedisPassword);
+	sRedisClient->AppendCommand(chTemp);
+
+	easyRedisReply* reply = nullptr;
+
+	if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
 	{
-		//1,redis密码认证
-		sprintf(chTemp, "auth %s", sRedisPassword);
-		sRedisClient->AppendCommand(chTemp);
+		if (reply)
+			EasyFreeReplyObject(reply);	
+		sRedisClient->Free();
+		sIfConSucess = false;
+		return static_cast<QTSS_Error>(false);
+	}
 
-		////2,EasyDarwin唯一信息存储(覆盖上一次的存储)
-		//sprintf(chTemp, "sadd EasyDarwinName %s:%d", sRTSPWanIP, sRTSPWanPort);
-		//sRedisClient->AppendCommand(chTemp);
-
-		////3,EasyDarwin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
-		//sprintf(chTemp, "hmset %s:%d_Info IP %s PORT %d RTP %d", sRTSPWanIP, sRTSPWanPort, sRTSPWanIP, sRTSPWanPort, QTSServerInterface::GetServer()->GetNumRTPSessions());
-		//sRedisClient->AppendCommand(chTemp);
-
-		////4,清除推流名称存储
-		//sprintf(chTemp, "del %s:%d_PushName", sRTSPWanIP, sRTSPWanPort);
-		//sRedisClient->AppendCommand(chTemp);
-
-		//6,保活，设置15秒，这之后当前EasyDarwin已经开始提供服务了
-		sprintf(chTemp, "setex %s:%d_Live 15 1", QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP(), QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort());
-		sRedisClient->AppendCommand(chTemp);
-
-		bool bBreak = false;
-		easyRedisReply* reply = nullptr;
-		for (int i = 0; i < 6; i++)
-		{
-			if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
-			{
-				bBreak = true;
-				if (reply)
-					EasyFreeReplyObject(reply);
-				break;
-			}
-			EasyFreeReplyObject(reply);
-		}
-		if (bBreak)//说明redisGetReply出现了错误
-			break;
-		return QTSS_NoErr;
-	} while (false);
-	//走到这说明出现了错误，需要进行重连,重连操作再下一次执行命令时进行,在这仅仅是置标志位
-	sRedisClient->Free();
-	sIfConSucess = false;
-	return static_cast<QTSS_Error>(false);
+	EasyFreeReplyObject(reply);
+	return QTSS_NoErr;
 }
 
 QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
@@ -201,7 +172,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 	char chKey[128] = { 0 };
 	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
 
-	if(inParams->inAction == easyRedisActionDelete)
+	if (inParams->inAction == easyRedisActionDelete)
 	{
 		sRedisClient->Delete(chKey);
 		if (ret == -1)//fatal err,need reconnect
