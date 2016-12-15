@@ -20,7 +20,7 @@ EasyCMSSession::EasyCMSSession()
 	fTimeoutTask(nullptr),
 	fState(kIdle),
 	fInputStream(fSocket),
-	fOutputStream(fSocket, &fTimeoutTask),//×´Ì¬»úµÄ³õÊ¼×´Ì¬
+	fOutputStream(fSocket, &fTimeoutTask),
 	fRequest(nullptr),
 	fReadMutex(),
 	fMutex(),
