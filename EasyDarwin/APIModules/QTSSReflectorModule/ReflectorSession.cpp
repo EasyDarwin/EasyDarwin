@@ -133,12 +133,13 @@ ReflectorSession::~ReflectorSession()
 		QTSS_RoleParams theParams;
 		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
 		theParams.easyStreamInfoParams.inChannel = fChannelNum;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelPushStreamRole);
+		theParams.easyStreamInfoParams.inAction = easyRedisActionDelete;
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
 			qtss_printf("从redis中删除推流名称%s\n", fSourceID.Ptr);
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisDelPushStreamRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisDelPushStream_Role, &theParams);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
+			(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
 		}
 	}
 
@@ -154,13 +155,14 @@ QTSS_Error ReflectorSession::SetSessionName()
 		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
 		theParams.easyStreamInfoParams.inChannel = fChannelNum;
 		theParams.easyStreamInfoParams.inNumOutputs = fNumOutputs;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddPushStreamRole);
+		theParams.easyStreamInfoParams.inAction = easyRedisActionSet;
+		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			qtss_printf("向redis中添加推流名称%s\n", fSourceID.Ptr);
+			qtss_printf("向redis中添加推流名称%s\n", fSessionName.Ptr);
 
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddPushStreamRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisAddPushStream_Role, &theParams);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
+			(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
 		}
 		return QTSS_NoErr;
 	}
