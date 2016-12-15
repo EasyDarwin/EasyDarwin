@@ -220,22 +220,19 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return ret;
 	}
 
-	char chRtpNum[16] = { 0 };
-	sprintf(chRtpNum, "%d", inParams->inNumOutputs);
+	char chTemp[128] = { 0 };
+	easyRedisReply* reply = nullptr;
+	sprintf(chTemp, "hmset Live:%s/%d output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	sRedisClient->AppendCommand(chTemp);
 
-	ret = sRedisClient->HashSet(chKey, "output", chRtpNum);
-	if (ret == -1)//fatal err,need reconnect
+	sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+	if (reply)
 	{
-		sRedisClient->Free();
-		sIfConSucess = false;
+		EasyFreeReplyObject(reply);
 	}
 
-	ret = sRedisClient->HashSet(chKey, "EasyDarwin", QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	if (ret == -1)//fatal err,need reconnect
-	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-	}
+	// 5 min
+	sRedisClient->SetExpire(chKey, 60*5);
 
 	return ret;
 }
@@ -319,24 +316,23 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 
 QTSS_Error RedisChangeRtpNum()
 {
-	OSMutexLocker mutexLock(&sMutex);
-	if (!sIfConSucess)
-		return QTSS_NotConnected;
+	//OSMutexLocker mutexLock(&sMutex);
+	//if (!sIfConSucess)
+	//	return QTSS_NotConnected;
 
-	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	//char chKey[128] = { 0 };
+	//easyRedisReply* reply = nullptr;
+	//auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+	//sprintf(chKey, "hset %s:%s Load %d", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID(), QTSServerInterface::GetServer()->GetNumRTPSessions());
+	//sRedisClient->AppendCommand(chKey);
 
-	char chRtpNum[16] = { 0 };
-	sprintf(chRtpNum, "%d", QTSServerInterface::GetServer()->GetNumRTPSessions());
+	//sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+	//if (reply)
+	//{
+	//	EasyFreeReplyObject(reply);
+	//}
 
-	int ret = sRedisClient->HashSet(chKey, "Load", chRtpNum);
-	if (ret == -1)//fatal err,need reconnect
-	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-	}
-
-	return ret;
+	return QTSS_NoErr;
 }
 
 QTSS_Error RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams)
