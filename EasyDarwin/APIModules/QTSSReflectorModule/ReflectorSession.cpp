@@ -70,7 +70,7 @@ void ReflectorSession::Initialize()
 	;
 }
 
-ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, SourceInfo* inInfo) :
+ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, SourceInfo* inInfo) : Task(),
 	fIsSetup(false),
 	fSessionName(inSourceID->GetAsCString()),
 	fChannelNum(inChannelNum),
@@ -102,6 +102,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 
 		this->SetSessionName();
 	}
+
+	this->Signal(Task::kStartEvent);
 }
 
 
@@ -131,14 +133,15 @@ ReflectorSession::~ReflectorSession()
 	if (fSourceID.Ptr)
 	{
 		QTSS_RoleParams theParams;
-		theParams.StreamInfoParams.inStreamName = fSessionName.Ptr;
-		theParams.StreamInfoParams.inChannel = fChannelNum;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelPushStreamRole);
+		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+		theParams.easyStreamInfoParams.inChannel = fChannelNum;
+		theParams.easyStreamInfoParams.inAction = easyRedisActionDelete;
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
 			qtss_printf("从redis中删除推流名称%s\n", fSourceID.Ptr);
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisDelPushStreamRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisDelPushStream_Role, &theParams);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
+			(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
 		}
 	}
 
@@ -151,16 +154,17 @@ QTSS_Error ReflectorSession::SetSessionName()
 	if (fSourceID.Len > 0)
 	{
 		QTSS_RoleParams theParams;
-		theParams.StreamInfoParams.inStreamName = fSessionName.Ptr;
-		theParams.StreamInfoParams.inChannel = fChannelNum;
-		theParams.StreamInfoParams.inNumOutputs = fNumOutputs;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddPushStreamRole);
+		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+		theParams.easyStreamInfoParams.inChannel = fChannelNum;
+		theParams.easyStreamInfoParams.inNumOutputs = fNumOutputs;
+		theParams.easyStreamInfoParams.inAction = easyRedisActionSet;
+		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			qtss_printf("向redis中添加推流名称%s\n", fSourceID.Ptr);
+			qtss_printf("向redis中添加推流名称%s\n", fSessionName.Ptr);
 
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddPushStreamRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisAddPushStream_Role, &theParams);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
+			(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
 		}
 		return QTSS_NoErr;
 	}
@@ -382,5 +386,30 @@ void*   ReflectorSession::GetStreamCookie(UInt32 inStreamID)
 		if (fSourceInfo->GetStreamInfo(x)->fTrackID == inStreamID)
 			return fStreamArray[x]->GetStreamCookie();
 	}
-	return NULL;
+	return nullptr;
+}
+
+SInt64 ReflectorSession::Run()
+{
+	EventFlags events = this->GetEvents();
+
+	if (events & Task::kKillEvent)
+		return -1;
+
+	SInt64 sNowTime = OS::Milliseconds();
+	SInt64  sNoneTime = GetNoneOutputStartTimeMS();
+	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= 30000))
+	{
+		QTSS_RoleParams theParams;
+		theParams.easyFreeStreamParams.inStreamName = GetSourceID()->Ptr;
+		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
+		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+		{
+			qtss_printf("没有客户端观看当前转发媒体\n");
+			auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
+			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+		}
+	}
+
+	return 15 * 1000;
 }

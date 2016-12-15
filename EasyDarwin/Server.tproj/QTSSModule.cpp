@@ -251,8 +251,7 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
 	case Easy_CMSFreeStream_Role:		return kEasyCMSFreeStreamRole;
 	case Easy_RedisTTL_Role:			return kRedisTTLRole;
 	case Easy_RedisChangeRTPNum_Role:	return kRedisChangeRTPNumRole;
-	case Easy_RedisAddPushStream_Role:	return kRedisAddPushStreamRole;
-	case Easy_RedisDelPushStream_Role:	return kRedisDelPushStreamRole;
+	case Easy_RedisUpdateStreamInfo_Role:	return kRedisUpdateStreamInfoRole;
 	case Easy_RedisGetAssociatedCMS_Role:	return kRedisGetAssociatedCMSRole;
 	case Easy_RedisJudgeStreamID_Role:	return kRedisJudgeStreamIDRole;
 

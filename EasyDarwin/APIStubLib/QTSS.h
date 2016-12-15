@@ -140,6 +140,13 @@ enum
 };
 typedef UInt32 QTSS_ActionFlags;
 
+enum
+{
+	easyRedisActionDelete		= 0,
+	easyRedisActionSet			= 1
+};
+typedef UInt32 Easy_RedisAction;
+
 /**********************************/
 // RTP SESSION STATES
 //
@@ -234,8 +241,6 @@ enum
     qtssRTPNetworkModeUnicast       = 2
 };
 typedef UInt32 QTSS_RTPNetworkMode;
-
-
 
 /**********************************/
 //
@@ -522,7 +527,6 @@ enum
 };
 typedef UInt32 QTSS_ClientSessionAttributes;
 
-
 enum
 {
     //QTSS_RTSPSessionObject parameters
@@ -549,7 +553,6 @@ enum
     qtssRTSPSesNumParams    = 15
 };
 typedef UInt32 QTSS_RTSPSessionAttributes;
-
 
 enum
 {
@@ -1025,8 +1028,7 @@ enum
 
 	//EasyRedisModule
 	Easy_RedisChangeRTPNum_Role =		FOUR_CHARS_TO_INT('c', 'r', 'n', 'r'),	//crnr
-	Easy_RedisAddPushStream_Role =		FOUR_CHARS_TO_INT('a', 'p', 'n', 'r'),	//apnr
-	Easy_RedisDelPushStream_Role =		FOUR_CHARS_TO_INT('d', 'p', 'n', 'r'),	//dpnr
+	Easy_RedisUpdateStreamInfo_Role =	FOUR_CHARS_TO_INT('a', 'p', 'n', 'r'),	//apnr
 	Easy_RedisTTL_Role =				FOUR_CHARS_TO_INT('t', 't', 'l', 'r'),	//ttlr
 	Easy_RedisGetAssociatedCMS_Role =	FOUR_CHARS_TO_INT('g', 'a', 'c', 'r'),	//gacr
 	Easy_RedisJudgeStreamID_Role =		FOUR_CHARS_TO_INT('j', 's', 'i', 'r'),	//jsir
@@ -1227,9 +1229,11 @@ typedef struct
 typedef struct
 {
 	char *						inStreamName;
-	UINT32						inChannel;
-	UINT32						inNumOutputs;
-}QTSS_StreamInfo_Params;
+	UInt32						inChannel;
+	UInt32						inNumOutputs;
+	UInt32						inBitrate;
+	Easy_RedisAction			inAction;
+}Easy_StreamInfo_Params;
 
 typedef struct
 {
@@ -1276,7 +1280,7 @@ typedef union
 	Easy_HLSClose_Params				easyHLSCloseParams;
 
 	Easy_FreeStream_Params				easyFreeStreamParams;
-	QTSS_StreamInfo_Params              StreamInfoParams;
+	Easy_StreamInfo_Params              easyStreamInfoParams;
 	QTSS_GetAssociatedCMS_Params	    GetAssociatedCMSParams;
 	QTSS_JudgeStreamID_Params			JudgeStreamIDParams;
 

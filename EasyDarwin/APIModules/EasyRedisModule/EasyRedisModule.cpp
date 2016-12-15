@@ -18,15 +18,9 @@ static char*            sDefaultRedis_IP_Addr = "127.0.0.1";
 // Redis Port
 static UInt16			sRedisPort = 6379;
 static UInt16			sDefaultRedisPort = 6379;
-// Redis user
-static char*            sRedisUser = nullptr;
-static char*            sDefaultRedisUser = "admin";
 // Redis password
 static char*            sRedisPassword = nullptr;
 static char*            sDefaultRedisPassword = "admin";
-
-static char*			sRTSPWanIP = nullptr;
-static UInt16			sRTSPWanPort = 10554;
 
 static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
 static bool				sIfConSucess = false;
@@ -40,12 +34,10 @@ static QTSS_Error   RereadPrefs();
 static QTSS_Error	RedisConnect();
 static QTSS_Error	RedisInit();
 static QTSS_Error	RedisTTL();
-static QTSS_Error	RedisAddPushName(QTSS_StreamInfo_Params* inParams);
-static QTSS_Error	RedisDelPushName(QTSS_StreamInfo_Params* inParams);
+static QTSS_Error	RedisUpdateStream(Easy_StreamInfo_Params* inParams);
 static QTSS_Error	RedisChangeRtpNum();
 static QTSS_Error	RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams);
 static QTSS_Error	RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams);
-
 
 QTSS_Error EasyRedisModule_Main(void* inPrivateArgs)
 {
@@ -66,10 +58,8 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 		return RedisTTL();
 	case Easy_RedisChangeRTPNum_Role:
 		return RedisChangeRtpNum();
-	case Easy_RedisAddPushStream_Role:
-		return RedisAddPushName(&inParamBlock->StreamInfoParams);
-	case Easy_RedisDelPushStream_Role:
-		return RedisDelPushName(&inParamBlock->StreamInfoParams);
+	case Easy_RedisUpdateStreamInfo_Role:
+		return RedisUpdateStream(&inParamBlock->easyStreamInfoParams);
 	case Easy_RedisGetAssociatedCMS_Role:
 		return RedisGetAssociatedCMS(&inParamBlock->GetAssociatedCMSParams);
 	case Easy_RedisJudgeStreamID_Role:
@@ -86,8 +76,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_RedisTTL_Role);
 	(void)QTSS_AddRole(Easy_RedisChangeRTPNum_Role);
-	(void)QTSS_AddRole(Easy_RedisAddPushStream_Role);
-	(void)QTSS_AddRole(Easy_RedisDelPushStream_Role);
+	(void)QTSS_AddRole(Easy_RedisUpdateStreamInfo_Role);
 	(void)QTSS_AddRole(Easy_RedisGetAssociatedCMS_Role);
 	(void)QTSS_AddRole(Easy_RedisJudgeStreamID_Role);
 
@@ -121,16 +110,8 @@ QTSS_Error RereadPrefs()
 
 	QTSSModuleUtils::GetAttribute(modulePrefs, "redis_port", qtssAttrDataTypeUInt16, &sRedisPort, &sDefaultRedisPort, sizeof(sRedisPort));
 
-	delete[] sRedisUser;
-	sRedisUser = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_user", sDefaultRedisUser);
-
 	delete[] sRedisPassword;
 	sRedisPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_password", sDefaultRedisPassword);
-
-	delete[] sRTSPWanIP;
-	(void)QTSS_GetValueAsString(sServerPrefs, easyPrefsServiceWANIPAddr, 0, &sRTSPWanIP);
-
-	sRTSPWanPort = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort();
 
 	return QTSS_NoErr;
 
@@ -161,98 +142,51 @@ QTSS_Error RedisConnect()
 
 QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 {
-	//每一次与redis连接后，都应该清除上一次的数据存储，使用覆盖或者直接清除的方式,串行命令使用管线更加高效
 	char chTemp[128] = { 0 };
 
-	do
+	sprintf(chTemp, "auth %s", sRedisPassword);
+	sRedisClient->AppendCommand(chTemp);
+
+	easyRedisReply* reply = nullptr;
+
+	if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
 	{
-		//1,redis密码认证
-		sprintf(chTemp, "auth %s", sRedisPassword);
-		sRedisClient->AppendCommand(chTemp);
+		if (reply)
+			EasyFreeReplyObject(reply);	
+		sRedisClient->Free();
+		sIfConSucess = false;
+		return static_cast<QTSS_Error>(false);
+	}
 
-		//2,EasyDarwin唯一信息存储(覆盖上一次的存储)
-		sprintf(chTemp, "sadd EasyDarwinName %s:%d", sRTSPWanIP, sRTSPWanPort);
-		sRedisClient->AppendCommand(chTemp);
-
-		//3,EasyDarwin属性存储,设置多个filed使用hmset，单个使用hset(覆盖上一次的存储)
-		sprintf(chTemp, "hmset %s:%d_Info IP %s PORT %d RTP %d", sRTSPWanIP, sRTSPWanPort, sRTSPWanIP, sRTSPWanPort, QTSServerInterface::GetServer()->GetNumRTPSessions());
-		sRedisClient->AppendCommand(chTemp);
-
-		//4,清除推流名称存储
-		sprintf(chTemp, "del %s:%d_PushName", sRTSPWanIP, sRTSPWanPort);
-		sRedisClient->AppendCommand(chTemp);
-
-		char* strAllPushName;
-		OSRefTable * reflectorTable = QTSServerInterface::GetServer()->GetReflectorSessionMap();
-		auto mutexMap = reflectorTable->GetMutex();
-		auto iPos = 0;
-		mutexMap->Lock();
-		strAllPushName = new char[reflectorTable->GetNumRefsInTable() * 128 + 1];//为每一个推流名称分配128字节的内存
-		memset(strAllPushName, 0, reflectorTable->GetNumRefsInTable() * 128 + 1);//内存初始化为0
-		for (OSRefHashTableIter theIter(reflectorTable->GetHashTable()); !theIter.IsDone(); theIter.Next())
-		{
-			OSRef* theRef = theIter.GetCurrent();
-			ReflectorSession  * theSession = static_cast<ReflectorSession *>(theRef->GetObject());
-			char * chPushName = theSession->GetSourceID()->Ptr;
-			if (chPushName)
-			{
-				strAllPushName[iPos++] = ' ';
-				memcpy(strAllPushName + iPos, chPushName, strlen(chPushName));
-				iPos = iPos + strlen(chPushName);
-			}
-		}
-		mutexMap->Unlock();
-
-		char *chNewTemp = new char[strlen(strAllPushName) + 128];//注意，这里不能再使用chTemp，因为长度不确定，可能导致缓冲区溢出
-
-		//5,推流名称存储
-		sprintf(chNewTemp, "sadd %s:%d_PushName%s", sRTSPWanIP, sRTSPWanPort, strAllPushName);
-		sRedisClient->AppendCommand(chTemp);
-
-
-		delete[] chNewTemp;
-		delete[] strAllPushName;
-
-		//6,保活，设置15秒，这之后当前EasyDarwin已经开始提供服务了
-		sprintf(chTemp, "setex %s:%d_Live 15 1", sRTSPWanIP, sRTSPWanPort);
-		sRedisClient->AppendCommand(chTemp);
-
-		bool bBreak = false;
-		easyRedisReply* reply = nullptr;
-		for (int i = 0; i < 6; i++)
-		{
-			if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
-			{
-				bBreak = true;
-				if (reply)
-					EasyFreeReplyObject(reply);
-				break;
-			}
-			EasyFreeReplyObject(reply);
-		}
-		if (bBreak)//说明redisGetReply出现了错误
-			break;
-		return QTSS_NoErr;
-	} while (false);
-	//走到这说明出现了错误，需要进行重连,重连操作再下一次执行命令时进行,在这仅仅是置标志位
-	sRedisClient->Free();
-	sIfConSucess = false;
-	return static_cast<QTSS_Error>(false);
+	EasyFreeReplyObject(reply);
+	return QTSS_NoErr;
 }
 
-QTSS_Error RedisAddPushName(QTSS_StreamInfo_Params* inParams)
+QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
+	auto ret = 0;
 	char chKey[128] = { 0 };
 	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
+
+	if (inParams->inAction == easyRedisActionDelete)
+	{
+		sRedisClient->Delete(chKey);
+		if (ret == -1)//fatal err,need reconnect
+		{
+			sRedisClient->Free();
+			sIfConSucess = false;
+		}
+		return ret;
+	}
 
 	char chRtpNum[16] = { 0 };
 	sprintf(chRtpNum, "%d", inParams->inNumOutputs);
 
-	int ret = sRedisClient->HashSet(chKey, "output", chRtpNum);
+	ret = sRedisClient->HashSet(chKey, "output", chRtpNum);
 	if (ret == -1)//fatal err,need reconnect
 	{
 		sRedisClient->Free();
@@ -266,24 +200,6 @@ QTSS_Error RedisAddPushName(QTSS_StreamInfo_Params* inParams)
 		sIfConSucess = false;
 	}
 
-	return ret;
-}
-
-QTSS_Error RedisDelPushName(QTSS_StreamInfo_Params* inParams)
-{
-	OSMutexLocker mutexLock(&sMutex);
-	if (!sIfConSucess)
-		return QTSS_NotConnected;
-
-	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
-
-	int ret = sRedisClient->Delete(chKey);
-	if (ret == -1)//fatal err,need reconnect
-	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-	}
 	return ret;
 }
 
@@ -409,7 +325,7 @@ QTSS_Error RedisChangeRtpNum()
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%d_Info", sRTSPWanIP, sRTSPWanPort);//hset对RTP属性进行覆盖更新
+	sprintf(chKey, "%s:%d_Info", QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP(), QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort());//hset对RTP属性进行覆盖更新
 
 	char chRtpNum[16] = { 0 };
 	sprintf(chRtpNum, "%d", QTSServerInterface::GetServer()->GetNumRTPSessions());

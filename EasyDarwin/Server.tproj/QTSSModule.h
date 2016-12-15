@@ -155,15 +155,14 @@ public:
 
 		kRedisTTLRole = 27,
 		kRedisChangeRTPNumRole = 28,
-		kRedisAddPushStreamRole = 29,
-		kRedisDelPushStreamRole = 30,
-		kRedisGetAssociatedCMSRole = 31,
-		kRedisJudgeStreamIDRole = 32,
+		kRedisUpdateStreamInfoRole = 29,
+		kRedisGetAssociatedCMSRole = 30,
+		kRedisJudgeStreamIDRole = 31,
 
-		kGetDeviceStreamRole = 33,
-		kLiveDeviceStreamRole = 34,
+		kGetDeviceStreamRole = 32,
+		kLiveDeviceStreamRole = 33,
 
-		kNumRoles = 35
+		kNumRoles = 34
 	};
 	typedef UInt32 RoleIndex;
 

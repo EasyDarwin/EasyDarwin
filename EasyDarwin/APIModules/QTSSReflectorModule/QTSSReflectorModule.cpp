@@ -223,52 +223,6 @@ static bool InBroadcastDirList(QTSS_RTSPRequestObject inRTSPRequest);
 static bool IsAbsolutePath(StrPtrLen *inPathPtr);
 static QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams);
 
-class ReflectorSessionCheckTask : public Task
-{
-public:
-	ReflectorSessionCheckTask() : Task()
-	{
-		this->SetTaskName("ReflectorSessionCheckTask");
-		this->Signal(Task::kStartEvent);
-	}
-	virtual ~ReflectorSessionCheckTask() {}
-
-private:
-	SInt64 Run() override;
-};
-
-static ReflectorSessionCheckTask* pCheckingTask = nullptr;
-
-SInt64 ReflectorSessionCheckTask::Run()
-{
-	if (sSessionMap)
-	{
-		OSMutexLocker locker(sSessionMap->GetMutex());
-
-		SInt64 sNowTime = OS::Milliseconds();
-		for (OSRefHashTableIter theIter(sSessionMap->GetHashTable()); !theIter.IsDone(); theIter.Next())
-		{
-			OSRef* theRef = theIter.GetCurrent();
-			ReflectorSession* theSession = static_cast<ReflectorSession*>(theRef->GetObject());
-
-			SInt64  sNoneTime = theSession->GetNoneOutputStartTimeMS();
-			if ((theSession->GetNumOutputs() == 0) && (sNowTime - sNoneTime >= sBroadcasterSessionTimeoutMilliSecs))
-			{
-				QTSS_RoleParams theParams;
-				theParams.easyFreeStreamParams.inStreamName = theSession->GetSourceID()->Ptr;
-				auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
-				for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-				{
-					qtss_printf("没有客户端观看当前转发媒体\n");
-					auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
-					(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
-				}
-			}
-		}
-	}
-	return sBroadcasterSessionTimeoutMilliSecs;
-}
-
 inline void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep)
 {
 	(void)QTSS_SetValue(theRequest, qtssRTSPReqRespKeepAlive, 0, &keep, sizeof(keep));
@@ -455,8 +409,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	QTSSModuleUtils::SetupSupportedMethods(inParams->inServer, sSupportedMethods, 7);
 
 	RereadPrefs();
-
-	pCheckingTask = new ReflectorSessionCheckTask();
 
 	return QTSS_NoErr;
 }
@@ -1511,7 +1463,8 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 		QTSS_Error theErr = theSession->SetupReflectorSession(theInfo, inParams, theSetupFlag, sOneSSRCPerStream, sTimeoutSSRCSecs);
 		if (theErr != QTSS_NoErr)
 		{
-			delete theSession;
+			//delete theSession;
+			theSession->Signal(Task::kKillEvent);
 			return NULL;
 		}
 
@@ -1600,7 +1553,8 @@ void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSes
 	{
 		theSession->TearDownAllOutputs(); // just to be sure because we are about to delete the session.
 		sSessionMap->UnRegister(theSessionRef);// we had an error while setting up-- don't let anyone get the session
-		delete theSession;
+		//delete theSession;
+		theSession->Signal(Task::kKillEvent);
 	}
 }
 
@@ -2221,7 +2175,8 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool k
 				qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", theSessionRef, theSessionRef->GetRefCount());
 #endif
 				sSessionMap->UnRegister(theSessionRef);
-				delete inSession;
+				//delete inSession;
+				inSession->Signal(Task::kKillEvent);
 			}
 		}
 	}
