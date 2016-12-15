@@ -1028,8 +1028,7 @@ enum
 
 	//EasyRedisModule
 	Easy_RedisChangeRTPNum_Role =		FOUR_CHARS_TO_INT('c', 'r', 'n', 'r'),	//crnr
-	Easy_RedisAddPushStream_Role =		FOUR_CHARS_TO_INT('a', 'p', 'n', 'r'),	//apnr
-	Easy_RedisDelPushStream_Role =		FOUR_CHARS_TO_INT('d', 'p', 'n', 'r'),	//dpnr
+	Easy_RedisUpdateStreamInfo_Role =	FOUR_CHARS_TO_INT('a', 'p', 'n', 'r'),	//apnr
 	Easy_RedisTTL_Role =				FOUR_CHARS_TO_INT('t', 't', 'l', 'r'),	//ttlr
 	Easy_RedisGetAssociatedCMS_Role =	FOUR_CHARS_TO_INT('g', 'a', 'c', 'r'),	//gacr
 	Easy_RedisJudgeStreamID_Role =		FOUR_CHARS_TO_INT('j', 's', 'i', 'r'),	//jsir
