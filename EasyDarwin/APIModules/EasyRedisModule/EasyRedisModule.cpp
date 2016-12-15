@@ -18,15 +18,9 @@ static char*            sDefaultRedis_IP_Addr = "127.0.0.1";
 // Redis Port
 static UInt16			sRedisPort = 6379;
 static UInt16			sDefaultRedisPort = 6379;
-// Redis user
-static char*            sRedisUser = nullptr;
-static char*            sDefaultRedisUser = "admin";
 // Redis password
 static char*            sRedisPassword = nullptr;
 static char*            sDefaultRedisPassword = "admin";
-
-static char*			sRTSPWanIP = nullptr;
-static UInt16			sRTSPWanPort = 10554;
 
 static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
 static bool				sIfConSucess = false;
@@ -117,16 +111,8 @@ QTSS_Error RereadPrefs()
 
 	QTSSModuleUtils::GetAttribute(modulePrefs, "redis_port", qtssAttrDataTypeUInt16, &sRedisPort, &sDefaultRedisPort, sizeof(sRedisPort));
 
-	delete[] sRedisUser;
-	sRedisUser = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_user", sDefaultRedisUser);
-
 	delete[] sRedisPassword;
 	sRedisPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_password", sDefaultRedisPassword);
-
-	delete[] sRTSPWanIP;
-	(void)QTSS_GetValueAsString(sServerPrefs, easyPrefsServiceWANIPAddr, 0, &sRTSPWanIP);
-
-	sRTSPWanPort = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort();
 
 	return QTSS_NoErr;
 
@@ -179,7 +165,7 @@ QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 		//sRedisClient->AppendCommand(chTemp);
 
 		//6,保活，设置15秒，这之后当前EasyDarwin已经开始提供服务了
-		sprintf(chTemp, "setex %s:%d_Live 15 1", sRTSPWanIP, sRTSPWanPort);
+		sprintf(chTemp, "setex %s:%d_Live 15 1", QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP(), QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort());
 		sRedisClient->AppendCommand(chTemp);
 
 		bool bBreak = false;
@@ -368,7 +354,7 @@ QTSS_Error RedisChangeRtpNum()
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%d_Info", sRTSPWanIP, sRTSPWanPort);//hset对RTP属性进行覆盖更新
+	sprintf(chKey, "%s:%d_Info", QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP(), QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort());//hset对RTP属性进行覆盖更新
 
 	char chRtpNum[16] = { 0 };
 	sprintf(chRtpNum, "%d", QTSServerInterface::GetServer()->GetNumRTPSessions());
