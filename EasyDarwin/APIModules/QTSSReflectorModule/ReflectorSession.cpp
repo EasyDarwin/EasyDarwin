@@ -396,20 +396,36 @@ SInt64 ReflectorSession::Run()
 	if (events & Task::kKillEvent)
 		return -1;
 
-	SInt64 sNowTime = OS::Milliseconds();
-	SInt64  sNoneTime = GetNoneOutputStartTimeMS();
-	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= 30000))
+	if(QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
 	{
-		QTSS_RoleParams theParams;
-		theParams.easyFreeStreamParams.inStreamName = GetSourceID()->Ptr;
-		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
-		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+		SInt64 sNowTime = OS::Milliseconds();
+		SInt64  sNoneTime = GetNoneOutputStartTimeMS();
+		if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= 3000000))
 		{
-			qtss_printf("没有客户端观看当前转发媒体\n");
-			auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
-			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+			QTSS_RoleParams theParams;
+			theParams.easyFreeStreamParams.inStreamName = GetSourceID()->Ptr;
+			auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
+			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+			{
+				auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
+				(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+			}
+		}
+		else
+		{
+			QTSS_RoleParams theParams;
+			theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+			theParams.easyStreamInfoParams.inChannel = fChannelNum;
+			theParams.easyStreamInfoParams.inNumOutputs = fNumOutputs;
+			theParams.easyStreamInfoParams.inAction = easyRedisActionSet;
+			auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
+			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
+				(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
+			}
 		}
 	}
 
-	return 15 * 1000;
+	return 30 * 1000;
 }
