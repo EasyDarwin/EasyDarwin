@@ -191,7 +191,8 @@ int EasyRedisClient::getValue(EasyRedisReplyObject reply, std::string& value)//g
 		{
 		case REDIS_REPLY_INTEGER:
 			value = IntToString(RedisReplyPtr(reply)->integer);
-			ret = 0;
+			//ret = 0;
+			ret = RedisReplyPtr(reply)->integer;
 			break;
 
 		case REDIS_REPLY_STRING:
@@ -296,7 +297,7 @@ int EasyRedisClient::SetExpire(const char* key, std::size_t expire)//expire key 
 			printf("EasyRedisClient::SetExpire[line:%d] error:key[%s], expire[%d](%s)\n", __LINE__, key, expire, res.c_str());
 		}
 		freeReplyObject(reply);
-		return RedisContextPtr(fRedisContext)->err;
+		//return RedisContextPtr(fRedisContext)->err;
 	}
 	return ret;
 }

@@ -589,7 +589,7 @@ typedef struct//add
 
 typedef struct
 {
-	char * inStreamName;
+	void* inDevice;
 }QTSS_StreamName_Params;
 
 typedef struct

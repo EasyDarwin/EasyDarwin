@@ -170,73 +170,7 @@ QTSS_Error RedisConnect()
 
 QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
 {
-	//每一次与redis连接后，都应该清除上一次的数据存储，使用覆盖或者直接清除的方式,串行命令使用管线更加高效
-	char chTemp[128] = { 0 };
-
-	do
-	{
-		//1,redis密码认证
-		sprintf(chTemp, "auth %s", sRedisPassword);
-		sRedisClient->AppendCommand(chTemp);
-
-		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, 0);
-		sRedisClient->AppendCommand(chTemp);
-
-		OSRefTableEx*  deviceRefTable = QTSServerInterface::GetServer()->GetDeviceSessionMap();
-		OSMutex *mutexMap = deviceRefTable->GetMutex();
-		OSHashMap  *deviceMap = deviceRefTable->GetMap();
-		OSRefIt itRef;
-		{
-			OSMutexLocker lock(mutexMap);
-			for (itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
-			{
-				auto deviceInfo = static_cast<HTTPSessionInterface*>(itRef->second->GetObjectPtr())->GetDeviceInfo();
-
-				string type, channel;
-				if (deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
-				{
-					type = "EasyCamera";
-				}
-				else if (deviceInfo->eAppType == EASY_APP_TYPE_NVR)
-				{
-					type = "EasyNVR";
-					auto channels = deviceInfo->channels_;
-					for (auto& item : channels)
-					{
-						channel += item.first;
-					}
-				}
-
-				sprintf(chTemp, "hmset Device:%s Type %s Channel %s EasyCMS %s Token %s", deviceInfo->serial_.c_str(),
-					type.c_str(), channel.c_str(), id, deviceInfo->password_.c_str());
-
-				sRedisClient->AppendCommand(chTemp);
-			}
-		}
-
-		bool bBreak = false;
-		easyRedisReply* reply = nullptr;
-		for (int i = 0; i < deviceMap->size() + 2; i++)
-		{
-			if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
-			{
-				bBreak = true;
-				if (reply)
-					EasyFreeReplyObject(reply);
-				break;
-			}
-			EasyFreeReplyObject(reply);
-		}
-		if (bBreak)//说明redisGetReply出现了错误
-			break;
-		return QTSS_NoErr;
-	} while (false);
-	//走到这说明出现了错误，需要进行重连,重连操作再下一次执行命令时进行,在这仅仅是置标志位
-	sRedisClient->Free();
-
-	sIfConSucess = false;
-	return QTSS_RequestFailed;
+	return RedisTTL();
 }
 
 QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
@@ -245,17 +179,60 @@ QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
-	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%d_DevName", sCMSIP, sCMSPort);
-
-	int ret = sRedisClient->SAdd(chKey, inParams->inStreamName);
-	if (ret == -1)//fatal err,need reconnect
+	if (!inParams->inDevice)
 	{
-		sRedisClient->Free();
-		sIfConSucess = false;
+		return QTSS_BadArgument;
 	}
 
-	return ret;
+	auto deviceInfo = static_cast<strDevice*>(inParams->inDevice);
+
+	char chKey[128] = { 0 };
+
+	string type, channel;
+	if (deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
+	{
+		type = "EasyCamera";
+		channel = "1";
+	}
+	else if (deviceInfo->eAppType == EASY_APP_TYPE_NVR)
+	{
+		type = "EasyNVR";
+		auto channels = deviceInfo->channels_;
+		for (auto& item : channels)
+		{
+			channel += item.first + R"(/)";
+		}
+	}
+
+	if (channel.empty())
+	{
+		channel = "0";
+	}
+	else
+	{
+		if (channel.back() == '/')
+		{
+			channel.pop_back();
+		}
+	}
+
+	auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+	sprintf(chKey, "hmset Device:%s Type %s Channel %s EasyCMS %s Token %s", deviceInfo->serial_.c_str(),
+		type.c_str(), channel.c_str(), id, deviceInfo->password_.c_str());
+
+	sRedisClient->AppendCommand(chKey);
+
+	easyRedisReply* replyTemp = nullptr;
+	auto x = sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
+	if (replyTemp)
+	{
+		EasyFreeReplyObject(replyTemp);
+	}
+
+	sprintf(chKey, "Device:%s", deviceInfo->serial_.c_str());
+	sRedisClient->SetExpire(chKey, 150);
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams)
@@ -264,89 +241,89 @@ QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams)
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
-	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%d_DevName", sCMSIP, sCMSPort);
-
-	int ret = sRedisClient->SRem(chKey, inParams->inStreamName);
-	if (ret == -1)//fatal err,need reconnect
+	if (!inParams->inDevice)
 	{
-		sRedisClient->Free();
-		sIfConSucess = false;
+		return QTSS_BadArgument;
 	}
 
-	return ret;
+	auto deviceInfo = static_cast<strDevice*>(inParams->inDevice);
+
+	char chKey[128] = { 0 };
+	sprintf(chKey, "hdel Device:%s", deviceInfo->serial_.c_str());
+
+	easyRedisReply* replyTemp = nullptr;
+	sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
+	if (replyTemp)
+	{
+		EasyFreeReplyObject(replyTemp);
+	}
+
+	return QTSS_NoErr;
 }
 
-QTSS_Error RedisTTL()//注意当网络在一段时间很差时可能会因为超时时间达到而导致key被删除，这时应该重新设置该key
+QTSS_Error RedisTTL()
 {
 	OSMutexLocker mutexLock(&sMutex);
 
-	if (RedisConnect() != QTSS_NoErr)//每一次执行命令之前都先连接redis,如果当前redis还没有成功连接
-		return QTSS_NotConnected;
-
-	char chKey[128] = { 0 };//注意128位是否足够
-	sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());//更改超时时间
-	sRedisClient->AppendCommand(chKey);
-
-	easyRedisReply* reply = nullptr;
-	if (EASY_REDIS_OK != sRedisClient->GetReply(reinterpret_cast<void**>(&reply)))
+	if (RedisConnect() != QTSS_NoErr)
 	{
-		char chTemp[128]{ 0 };
-		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, 0);
-		sRedisClient->AppendCommand(chTemp);
-
-		easyRedisReply* replyTemp = nullptr;
-		auto re = sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
-		if (replyTemp)
-		{
-			EasyFreeReplyObject(replyTemp);
-		}
+		return QTSS_NotConnected;
 	}
 
+	char chKey[128] = { 0 };
+
+	sprintf(chKey, "auth %s", sRedisPassword);
+	sRedisClient->AppendCommand(chKey);
+	easyRedisReply* reply = nullptr;
+	sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
 	if (reply)
 	{
 		EasyFreeReplyObject(reply);
 	}
+	reply = nullptr;
+
+	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	int ret = sRedisClient->SetExpire(chKey, 15);
+	if (ret == -1)//fatal error
+	{
+		sRedisClient->Free();
+		sIfConSucess = false;
+		return QTSS_NotConnected;
+	}
+	if (ret == 1)
+	{
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+		sprintf(chKey, "hset EasyCMS:%s Load %d", id, deviceMap->size());
+		sRedisClient->AppendCommand(chKey);
+
+		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+		if (reply)
+		{
+			EasyFreeReplyObject(reply);
+		}
+
+		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+		sRedisClient->SetExpire(chKey, 15);
+
+		return QTSS_NoErr;
+	}
+	if (ret == 0)//the key doesn't exist, reset
+	{
+		char chTemp[128]{ 0 };
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, deviceMap->size());
+		sRedisClient->AppendCommand(chTemp);
+
+		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+		if (reply)
+		{
+			EasyFreeReplyObject(reply);
+		}
+	}
 
 	return QTSS_NoErr;
-
-	//int ret = sRedisClient->SetExpire(chKey, 15);
-	//if (ret == -1)//fatal error
-	//{
-	//	sRedisClient->Free();
-	//	sIfConSucess = false;
-	//	return QTSS_NotConnected;
-	//}
-	//else if (ret == 1)
-	//{
-	//	return QTSS_NoErr;
-	//}
-	//else if (ret == 0)//the key doesn't exist, reset
-	//{
-	//	char chTemp[128]{ 0 };
-	//	auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-	//	sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, 0);
-	//	sRedisClient->AppendCommand(chTemp);
-
-	//	easyRedisReply* reply = nullptr;
-	//	auto re = sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-	//	EasyFreeReplyObject(reply);
-	//	//sprintf(chKey, "%s:%d_Live", sCMSIP, sCMSPort);
-	//	//int retret = sRedisClient->SetEX(chKey, 15, "1");
-	//	//if (retret == -1)//fatal error
-	//	//{
-	//	//	sRedisClient->Free();
-	//	//	sIfConSucess = false;
-	//	//}
-	//	//return retret;
-
-	//	return ret;
-	//}
-	//else
-	//{
-	//	return ret;
-	//}
 }
 
 QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)

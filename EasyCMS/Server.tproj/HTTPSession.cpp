@@ -247,6 +247,18 @@ SInt64 HTTPSession::Run()
 			{
 				fTimeoutTask.RefreshTimeout();
 
+				if (fSessionType != EasyHTTPSession && !fDevice.serial_.empty())
+				{
+					QTSS_RoleParams theParams;
+					theParams.StreamNameParams.inDevice = &fDevice;
+					UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDevNameRole);
+					for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+					{
+						QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDevNameRole, currentModule);
+						(void)theModule->CallDispatch(Easy_RedisAddDevName_Role, &theParams);
+					}
+				}
+
 				QTSS_Error theErr = setupRequest();
 
 				if (theErr == QTSS_WouldBlock)
@@ -790,7 +802,7 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 			QTSServerInterface::LogError(qtssMessageVerbosity, const_cast<char *>(msgStr.c_str()));
 
 			QTSS_RoleParams theParams;
-			theParams.StreamNameParams.inStreamName = const_cast<char *>(fDevice.serial_.c_str());
+			theParams.StreamNameParams.inDevice = &fDevice;
 			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDevNameRole);
 			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 			{

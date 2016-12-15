@@ -20,22 +20,22 @@ std::atomic_uint HTTPSessionInterface::sSessionIndexCounter{ kFirstHTTPSessionID
 QTSSAttrInfoDict::AttrInfo HTTPSessionInterface::sAttributes[] =
 {
     /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
-    /* 0 */ { "EasyHTTPSesIndex",            NULL,          qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 0 */ { "EasyHTTPSesIndex",            nullptr,          qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
     /* 1 */ { "EasyHTTPSesLocalAddr",       setupParams,    qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
     /* 2 */ { "EasyHTTPSesLocalAddrStr",    setupParams,    qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
     /* 3 */ { "EasyHTTPSesLocalDNS",        setupParams,    qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
     /* 4 */ { "EasyHTTPSesRemoteAddr",      setupParams,    qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
     /* 5 */ { "EasyHTTPSesRemoteAddrStr",   setupParams,    qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
-    /* 6 */ { "EasyHTTPSesEventCntxt",      NULL,           qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
-    /* 7 */ { "EasyHTTPSesType",            NULL,           qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
-    /* 8 */ { "EasyHTTPSesSerial",			NULL,           qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
+    /* 6 */ { "EasyHTTPSesEventCntxt",      nullptr,           qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe },
+    /* 7 */ { "EasyHTTPSesType",            nullptr,           qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
+    /* 8 */ { "EasyHTTPSesSerial",			nullptr,           qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
 
-    /* 9 */ { "EasyHTTPSessionID",			NULL,			qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe  },
+    /* 9 */ { "EasyHTTPSessionID",			nullptr,			qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe  },
     /* 10 */{ "EasyHTTPSesLocalPort",       setupParams,    qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
     /* 11 */{ "EasyHTTPSesRemotePort",      setupParams,    qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeCacheable },
 
-    /* 12 */{ "EasyHTTPSesContentBody",		NULL,           qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
-    /* 13 */{ "EasyHTTPSesContentBodyOffset",NULL,          qtssAttrDataTypeUInt32,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite }
+    /* 12 */{ "EasyHTTPSesContentBody",		nullptr,           qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
+    /* 13 */{ "EasyHTTPSesContentBodyOffset",nullptr,          qtssAttrDataTypeUInt32,  qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite }
 };
 
 
@@ -51,11 +51,11 @@ void HTTPSessionInterface::Initialize()
 HTTPSessionInterface::HTTPSessionInterface()
     : QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kHTTPSessionDictIndex)),
     Task(),
-    fTimeoutTask(NULL, QTSServerInterface::GetServer()->GetPrefs()->GetSessionTimeoutInSecs() * 1000),
+    fTimeoutTask(nullptr, QTSServerInterface::GetServer()->GetPrefs()->GetSessionTimeoutInSecs() * 1000),
     fInputStream(&fSocket),
     fOutputStream(&fSocket, &fTimeoutTask),
     fSessionMutex(),
-    fSocket(NULL, Socket::kNonBlockingSocketType),
+    fSocket(nullptr, Socket::kNonBlockingSocketType),
     fOutputSocketP(&fSocket),
     fInputSocketP(&fSocket),
     fSessionType(EasyHTTPSession),
@@ -64,7 +64,7 @@ HTTPSessionInterface::HTTPSessionInterface()
     fObjectHolders(0),
     fRequestBodyLen(-1),
     fAuthenticated(false),
-    fRequestBody(NULL),//add
+    fRequestBody(nullptr),//add
     fCSeq(1)//add
 {
     fTimeoutTask.SetTask(this);
@@ -166,7 +166,7 @@ QTSS_Error HTTPSessionInterface::Read(void* ioBuffer, UInt32 inLength, UInt32* o
     if (fRequestBodyLen >= 0)
         fRequestBodyLen -= theLenRead;
 
-    if (outLenRead != NULL)
+    if (outLenRead != nullptr)
         *outLenRead = theLenRead;
 
     return theErr;
@@ -184,8 +184,8 @@ QTSS_Error HTTPSessionInterface::RequestEvent(QTSS_EventType inEventMask)
 
 void HTTPSessionInterface::snarfInputSocket(HTTPSessionInterface* fromHTTPSession)
 {
-    Assert(fromHTTPSession != NULL);
-    Assert(fromHTTPSession->fOutputSocketP != NULL);
+    Assert(fromHTTPSession != nullptr);
+    Assert(fromHTTPSession->fOutputSocketP != nullptr);
 
     fInputStream.SnarfRetreat(fromHTTPSession->fInputStream);
 
@@ -214,11 +214,11 @@ void* HTTPSessionInterface::setupParams(QTSSDictionary* inSession, UInt32* /*out
     StrPtrLen* theLocalAddrStr = theSession->fSocket.GetLocalAddrStr();
     StrPtrLen* theLocalDNSStr = theSession->fSocket.GetLocalDNSStr();
     StrPtrLen* theRemoteAddrStr = theSession->fSocket.GetRemoteAddrStr();
-    if (theLocalAddrStr == NULL || theLocalDNSStr == NULL || theRemoteAddrStr == NULL)
+    if (theLocalAddrStr == nullptr || theLocalDNSStr == nullptr || theRemoteAddrStr == nullptr)
     {    //the socket is bad most likely values are all 0. If the socket had an error we shouldn't even be here.
          //theLocalDNSStr is set to localAddr if it is unavailable, so it should be present at this point as well.
         Assert(0);   //for debugging
-        return NULL; //nothing to set
+        return nullptr; //nothing to set
     }
     theSession->SetVal(EasyHTTPSesLocalAddr, &theSession->fLocalAddr, sizeof(theSession->fLocalAddr));
     theSession->SetVal(EasyHTTPSesLocalAddrStr, theLocalAddrStr->Ptr, theLocalAddrStr->Len);
@@ -228,7 +228,7 @@ void* HTTPSessionInterface::setupParams(QTSSDictionary* inSession, UInt32* /*out
 
     theSession->SetVal(EasyHTTPSesLocalPort, &theSession->fLocalPort, sizeof(theSession->fLocalPort));
     theSession->SetVal(EasyHTTPSesRemotePort, &theSession->fRemotePort, sizeof(theSession->fRemotePort));
-    return NULL;
+    return nullptr;
 }
 
 QTSS_Error HTTPSessionInterface::UpdateDevSnap(const char* inSnapTime, const char* inSnapJpg) const
@@ -250,7 +250,7 @@ void HTTPSessionInterface::UnRegDevSession() const
         //QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
 
         QTSS_RoleParams theParams;
-        theParams.StreamNameParams.inStreamName = const_cast<char *>(fDevice.serial_.c_str());
+        theParams.StreamNameParams.inDevice = (void*)&fDevice;
         UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelDevNameRole);
         for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
         {
