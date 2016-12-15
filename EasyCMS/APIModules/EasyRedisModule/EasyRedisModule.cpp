@@ -21,15 +21,9 @@ static char*            sDefaultRedis_IP_Addr = "127.0.0.1";
 // Redis Port
 static UInt16			sRedisPort = 6379;
 static UInt16			sDefaultRedisPort = 6379;
-// Redis user
-static char*            sRedisUser = nullptr;
-static char*            sDefaultRedisUser = "admin";
 // Redis password
 static char*            sRedisPassword = nullptr;
 static char*            sDefaultRedisPassword = "admin";
-// EasyCMS
-static char*			sCMSIP = nullptr;
-static UInt16			sCMSPort = 10000;
 static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
 static bool				sIfConSucess = false;
 static OSMutex			sMutex;
@@ -41,7 +35,6 @@ static QTSS_Error Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs();
 
 static QTSS_Error RedisConnect();
-static QTSS_Error RedisInit();
 static QTSS_Error RedisTTL();
 static QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams);
 static QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams);
@@ -122,18 +115,8 @@ QTSS_Error RereadPrefs()
 
 	QTSSModuleUtils::GetAttribute(modulePrefs, "redis_port", qtssAttrDataTypeUInt16, &sRedisPort, &sDefaultRedisPort, sizeof(sRedisPort));
 
-	delete[] sRedisUser;
-	sRedisUser = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_user", sDefaultRedisUser);
-
 	delete[] sRedisPassword;
 	sRedisPassword = QTSSModuleUtils::GetStringAttribute(modulePrefs, "redis_password", sDefaultRedisPassword);
-
-	//get cms ip and port
-	delete[] sCMSIP;
-	(void)QTSS_GetValueAsString(sServerPrefs, qtssPrefsMonitorWANIPAddr, 0, &sCMSIP);
-
-	UInt32 len = sizeof(SInt32);
-	(void)QTSS_GetValue(sServerPrefs, qtssPrefsMonitorWANPort, 0, static_cast<void*>(&sCMSPort), &len);
 
 	return QTSS_NoErr;
 }
@@ -150,7 +133,6 @@ QTSS_Error RedisConnect()
 		sIfConSucess = true;
 		std::size_t timeoutSocket = 1;//timeout socket second
 		sRedisClient->SetTimeout(timeoutSocket);
-		RedisInit();
 	}
 	else
 	{
@@ -160,17 +142,21 @@ QTSS_Error RedisConnect()
 
 	if (sIfConSucess)
 	{
+		char chKey[128] = { 0 };
+
+		sprintf(chKey, "auth %s", sRedisPassword);
+		sRedisClient->AppendCommand(chKey);
+		easyRedisReply* reply = nullptr;
+		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+		if (reply)
+		{
+			EasyFreeReplyObject(reply);
+		}
+
 		return QTSS_NoErr;
 	}
-	else
-	{
-		return QTSS_NotConnected;
-	}
-}
 
-QTSS_Error RedisInit()//only called by RedisConnect after connect redis sucess
-{
-	return RedisTTL();
+	return QTSS_NotConnected;
 }
 
 QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
@@ -223,7 +209,7 @@ QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
 	sRedisClient->AppendCommand(chKey);
 
 	easyRedisReply* replyTemp = nullptr;
-	auto x = sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
+	sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
 	if (replyTemp)
 	{
 		EasyFreeReplyObject(replyTemp);
@@ -303,9 +289,6 @@ QTSS_Error RedisTTL()
 			EasyFreeReplyObject(reply);
 		}
 
-		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-		sRedisClient->SetExpire(chKey, 15);
-
 		return QTSS_NoErr;
 	}
 	if (ret == 0)//the key doesn't exist, reset
@@ -313,7 +296,9 @@ QTSS_Error RedisTTL()
 		char chTemp[128]{ 0 };
 		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
-		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, sCMSIP, sCMSPort, deviceMap->size());
+		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANIP();
+		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANPort();
+		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, deviceMap->size());
 		sRedisClient->AppendCommand(chTemp);
 
 		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
@@ -321,6 +306,9 @@ QTSS_Error RedisTTL()
 		{
 			EasyFreeReplyObject(reply);
 		}
+
+		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+		sRedisClient->SetExpire(chKey, 15);
 	}
 
 	return QTSS_NoErr;
@@ -526,7 +514,9 @@ QTSS_Error RedisGenStreamID(QTSS_GenStreamID_Params* inParams)
 		if (reply)//释放上一个回应
 			EasyFreeReplyObject(reply);
 
-		strSessioionID = OSMapEx::GenerateSessionIdForRedis(sCMSIP, sCMSPort);
+		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANIP();
+		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANPort();
+		strSessioionID = OSMapEx::GenerateSessionIdForRedis(cmsIp, cmsPort);
 
 		sprintf(chTemp, "SessionID_%s", strSessioionID.c_str());
 		reply = static_cast<easyRedisReply*>(sRedisClient->Exists(chTemp));
