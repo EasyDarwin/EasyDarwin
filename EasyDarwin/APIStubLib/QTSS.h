@@ -1239,7 +1239,7 @@ typedef struct
 {
 	char * inSerial;
 	char * outCMSIP;
-	char * outCMSPort;//UINT16 * outDssPort;
+	char * outCMSPort;
 }QTSS_GetAssociatedCMS_Params;
 
 typedef struct  

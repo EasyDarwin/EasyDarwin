@@ -159,6 +159,64 @@ QTSS_Error RedisConnect()
 	return QTSS_NotConnected;
 }
 
+QTSS_Error RedisTTL()
+{
+	OSMutexLocker mutexLock(&sMutex);
+
+	if (RedisConnect() != QTSS_NoErr)
+	{
+		return QTSS_NotConnected;
+	}
+
+	char chKey[128] = { 0 };
+	easyRedisReply* reply = nullptr;
+
+	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	int ret = sRedisClient->SetExpire(chKey, 15);
+	if (ret == -1)//fatal error
+	{
+		sRedisClient->Free();
+		sIfConSucess = false;
+		return QTSS_NotConnected;
+	}
+	if (ret == 1)
+	{
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+		sprintf(chKey, "hset EasyCMS:%s Load %d", id, deviceMap->size());
+		sRedisClient->AppendCommand(chKey);
+
+		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+		if (reply)
+		{
+			EasyFreeReplyObject(reply);
+		}
+
+		return QTSS_NoErr;
+	}
+	if (ret == 0)//the key doesn't exist, reset
+	{
+		char chTemp[128]{ 0 };
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANIP();
+		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANPort();
+		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, deviceMap->size());
+		sRedisClient->AppendCommand(chTemp);
+
+		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+		if (reply)
+		{
+			EasyFreeReplyObject(reply);
+		}
+
+		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+		sRedisClient->SetExpire(chKey, 15);
+	}
+
+	return QTSS_NoErr;
+}
+
 QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
@@ -242,73 +300,6 @@ QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams)
 	if (replyTemp)
 	{
 		EasyFreeReplyObject(replyTemp);
-	}
-
-	return QTSS_NoErr;
-}
-
-QTSS_Error RedisTTL()
-{
-	OSMutexLocker mutexLock(&sMutex);
-
-	if (RedisConnect() != QTSS_NoErr)
-	{
-		return QTSS_NotConnected;
-	}
-
-	char chKey[128] = { 0 };
-
-	sprintf(chKey, "auth %s", sRedisPassword);
-	sRedisClient->AppendCommand(chKey);
-	easyRedisReply* reply = nullptr;
-	sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-	if (reply)
-	{
-		EasyFreeReplyObject(reply);
-	}
-	reply = nullptr;
-
-	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	int ret = sRedisClient->SetExpire(chKey, 15);
-	if (ret == -1)//fatal error
-	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-		return QTSS_NotConnected;
-	}
-	if (ret == 1)
-	{
-		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
-		sprintf(chKey, "hset EasyCMS:%s Load %d", id, deviceMap->size());
-		sRedisClient->AppendCommand(chKey);
-
-		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-		if (reply)
-		{
-			EasyFreeReplyObject(reply);
-		}
-
-		return QTSS_NoErr;
-	}
-	if (ret == 0)//the key doesn't exist, reset
-	{
-		char chTemp[128]{ 0 };
-		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
-		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANIP();
-		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANPort();
-		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, deviceMap->size());
-		sRedisClient->AppendCommand(chTemp);
-
-		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-		if (reply)
-		{
-			EasyFreeReplyObject(reply);
-		}
-
-		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-		sRedisClient->SetExpire(chKey, 15);
 	}
 
 	return QTSS_NoErr;
