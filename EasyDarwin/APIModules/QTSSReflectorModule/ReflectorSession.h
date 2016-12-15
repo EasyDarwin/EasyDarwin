@@ -59,7 +59,7 @@ private:
 #ifndef __REFLECTOR_SESSION__
 #define __REFLECTOR_SESSION__
 
-class ReflectorSession
+class ReflectorSession : public Task
 {
 public:
 
@@ -199,6 +199,9 @@ private:
 
 	bool		fHasBufferedStreams;
 	bool		fHasVideoKeyFrameUpdate;
+
+private:
+	virtual SInt64 Run();
 };
 
 #endif

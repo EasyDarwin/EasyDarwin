@@ -70,7 +70,7 @@ void ReflectorSession::Initialize()
 	;
 }
 
-ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, SourceInfo* inInfo) :
+ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, SourceInfo* inInfo) : Task(),
 	fIsSetup(false),
 	fSessionName(inSourceID->GetAsCString()),
 	fChannelNum(inChannelNum),
@@ -102,6 +102,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 
 		this->SetSessionName();
 	}
+
+	this->Signal(Task::kStartEvent);
 }
 
 
@@ -384,5 +386,30 @@ void*   ReflectorSession::GetStreamCookie(UInt32 inStreamID)
 		if (fSourceInfo->GetStreamInfo(x)->fTrackID == inStreamID)
 			return fStreamArray[x]->GetStreamCookie();
 	}
-	return NULL;
+	return nullptr;
+}
+
+SInt64 ReflectorSession::Run()
+{
+	EventFlags events = this->GetEvents();
+
+	if (events & Task::kKillEvent)
+		return -1;
+
+	SInt64 sNowTime = OS::Milliseconds();
+	SInt64  sNoneTime = GetNoneOutputStartTimeMS();
+	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= 30000))
+	{
+		QTSS_RoleParams theParams;
+		theParams.easyFreeStreamParams.inStreamName = GetSourceID()->Ptr;
+		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
+		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+		{
+			qtss_printf("没有客户端观看当前转发媒体\n");
+			auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
+			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+		}
+	}
+
+	return 15 * 1000;
 }
