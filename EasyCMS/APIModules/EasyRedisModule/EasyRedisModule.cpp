@@ -181,16 +181,16 @@ QTSS_Error RedisTTL()
 	}
 	if (ret == 1)
 	{
-		//auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		//auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
-		//sprintf(chKey, "hset EasyCMS:%s Load %d", id, deviceMap->size());
-		//sRedisClient->AppendCommand(chKey);
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+		sprintf(chKey, "hset EasyCMS:%s Load %d", id, deviceMap->size());
+		sRedisClient->AppendCommand(chKey);
 
-		//sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-		//if (reply)
-		//{
-		//	EasyFreeReplyObject(reply);
-		//}
+		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+		if (reply)
+		{
+			EasyFreeReplyObject(reply);
+		}
 
 		return QTSS_NoErr;
 	}
