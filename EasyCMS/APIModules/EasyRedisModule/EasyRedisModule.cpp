@@ -257,16 +257,7 @@ QTSS_Error RedisTTL()
 	}
 
 	char chKey[128] = { 0 };
-
-	sprintf(chKey, "auth %s", sRedisPassword);
-	sRedisClient->AppendCommand(chKey);
 	easyRedisReply* reply = nullptr;
-	sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-	if (reply)
-	{
-		EasyFreeReplyObject(reply);
-	}
-	reply = nullptr;
 
 	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	int ret = sRedisClient->SetExpire(chKey, 15);
