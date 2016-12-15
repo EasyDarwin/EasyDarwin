@@ -241,8 +241,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		EasyFreeReplyObject(reply);
 	}
 
-	// 5 min
-	sRedisClient->SetExpire(chKey, 60*5);
+	sRedisClient->SetExpire(chKey, QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs()*2);
 
 	return ret;
 }
