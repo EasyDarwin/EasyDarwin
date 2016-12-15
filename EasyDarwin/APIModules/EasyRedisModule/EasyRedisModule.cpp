@@ -66,10 +66,10 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 		return RedisTTL();
 	case Easy_RedisChangeRTPNum_Role:
 		return RedisChangeRtpNum();
-	case Easy_RedisAddPushStream_Role:
+	case Easy_RedisUpdateStreamInfo_Role:
 		return RedisAddPushName(&inParamBlock->easyStreamInfoParams);
-	case Easy_RedisDelPushStream_Role:
-		return RedisDelPushName(&inParamBlock->easyStreamInfoParams);
+	//case Easy_RedisDelPushStream_Role:
+	//	return RedisDelPushName(&inParamBlock->easyStreamInfoParams);
 	case Easy_RedisGetAssociatedCMS_Role:
 		return RedisGetAssociatedCMS(&inParamBlock->GetAssociatedCMSParams);
 	case Easy_RedisJudgeStreamID_Role:
@@ -86,8 +86,8 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_RedisTTL_Role);
 	(void)QTSS_AddRole(Easy_RedisChangeRTPNum_Role);
-	(void)QTSS_AddRole(Easy_RedisAddPushStream_Role);
-	(void)QTSS_AddRole(Easy_RedisDelPushStream_Role);
+	(void)QTSS_AddRole(Easy_RedisUpdateStreamInfo_Role);
+	//(void)QTSS_AddRole(Easy_RedisDelPushStream_Role);
 	(void)QTSS_AddRole(Easy_RedisGetAssociatedCMS_Role);
 	(void)QTSS_AddRole(Easy_RedisJudgeStreamID_Role);
 
