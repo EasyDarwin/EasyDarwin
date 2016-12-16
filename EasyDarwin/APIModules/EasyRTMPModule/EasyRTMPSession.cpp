@@ -117,7 +117,7 @@ QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RT
 
 		if (fRTMPHandle == nullptr) return 0;
 
-		if (frameinfo && frameinfo->length)
+		if (frameinfo && frameinfo->length && (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC))
 		{
 			EASY_AV_Frame  avFrame;
 			memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
@@ -127,7 +127,7 @@ QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RT
 			avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
 			avFrame.u32TimestampSec = frameinfo->timestamp_sec;
 			avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
-			//EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
+			EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
 		}
 	}
 	else if (mediatype == EASY_SDK_MEDIA_INFO_FLAG)
@@ -152,11 +152,8 @@ QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RT
 		//	{
 		//		printf("Fail to InitMetadata channel {}");
 		//	}
-
 		//	qtss_sprintf(fRTMPURL, "%s/%s", QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath(), fSourceID.Ptr);
-
 		//	//fLocalRTMPAutoStop.ResetTimeout();
-
 		//}
 
 	}
