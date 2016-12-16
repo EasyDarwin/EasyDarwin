@@ -147,10 +147,15 @@ QTSS_Error RedisConnect()
 		sprintf(chKey, "auth %s", sRedisPassword);
 		sRedisClient->AppendCommand(chKey);
 		easyRedisReply* reply = nullptr;
-		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-		if (reply)
+		while (!reply)
 		{
-			EasyFreeReplyObject(reply);
+			sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
+			if (reply)
+			{
+				EasyFreeReplyObject(reply);
+				break;
+			}
+			::Sleep(1000);
 		}
 
 		return QTSS_NoErr;
@@ -172,7 +177,7 @@ QTSS_Error RedisTTL()
 	easyRedisReply* reply = nullptr;
 
 	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	int ret = sRedisClient->SetExpire(chKey, 15);
+	int ret = sRedisClient->SetExpire(chKey, 300);
 	if (ret == -1)//fatal error
 	{
 		sRedisClient->Free();
@@ -211,7 +216,7 @@ QTSS_Error RedisTTL()
 		}
 
 		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-		sRedisClient->SetExpire(chKey, 15);
+		sRedisClient->SetExpire(chKey, 300);
 	}
 
 	return QTSS_NoErr;
@@ -310,12 +315,92 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	OSMutexLocker mutexLock(&sMutex);
 
 	if (!sIfConSucess)
+	{
 		return QTSS_NotConnected;
+	}
 
-	string strPushName = Format("%s/%s", string(inParams->inSerial), string(inParams->inChannel));
+	string exists = Format("Live:%s/%s", string(inParams->inSerial), string(inParams->inChannel));
+	auto reply = static_cast<easyRedisReply*>(sRedisClient->Exists(exists.c_str()));
+	if (reply == nullptr)
+	{
+		sRedisClient->Free();
+		sIfConSucess = false;
+		return QTSS_NotConnected;
+	}
+
+	if (reply->type == EASY_REDIS_REPLY_INTEGER && reply->integer == 1)
+	{
+		string strTemp = Format("HMGET %s", exists + " EasyDarwin");
+		sRedisClient->AppendCommand(strTemp.c_str());
+
+		easyRedisReply* reply2 = nullptr;
+		if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply2)) != EASY_REDIS_OK)
+		{
+			EasyFreeReplyObject(reply);
+			if (reply2)
+			{
+				EasyFreeReplyObject(reply2);
+			}
+			sRedisClient->Free();
+			sIfConSucess = false;
+			return QTSS_NotConnected;
+		}
+
+		if (reply2->type == EASY_REDIS_REPLY_NIL)
+		{
+			EasyFreeReplyObject(reply2);
+			return QTSS_RequestFailed;
+		}
+
+		if (reply2->type == EASY_REDIS_REPLY_INTEGER)
+		{
+			string easydarwin("EasyDarwin:");
+			easydarwin += reply2->str;
+
+			strTemp = Format("HMGET %s", easydarwin + " IP Port");
+			sRedisClient->AppendCommand(strTemp.c_str());
+
+			easyRedisReply* reply3 = nullptr;
+			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply3)) != EASY_REDIS_OK)
+			{
+				EasyFreeReplyObject(reply);
+				if (reply3)
+				{
+					EasyFreeReplyObject(reply3);
+				}
+				sRedisClient->Free();
+				sIfConSucess = false;
+
+				EasyFreeReplyObject(reply2);
+				return QTSS_NotConnected;
+			}
+
+			if (reply3->type == EASY_REDIS_REPLY_NIL)
+			{
+				EasyFreeReplyObject(reply3);
+				EasyFreeReplyObject(reply2);
+
+				return QTSS_RequestFailed;
+			}
+
+			if (reply3->type == EASY_REDIS_REPLY_ARRAY)
+			{
+				string ip(reply3->element[0]->str);
+				string port(reply3->element[1]->str);
+
+				memcpy(inParams->outDssIP, reply3->element[0]->str, reply3->element[0]->len);
+				memcpy(inParams->outDssPort, reply3->element[1]->str, reply3->element[1]->len);
+				inParams->isOn = true;
+			}
+			EasyFreeReplyObject(reply3);
+		}
+		EasyFreeReplyObject(reply2);
+
+		return QTSS_NoErr;
+	}
 
 	//1. get the list of EasyDarwin
-	auto reply = static_cast<easyRedisReply*>(sRedisClient->Keys("EasyDarwin:*"));
+	reply = static_cast<easyRedisReply*>(sRedisClient->Keys("EasyDarwin:*"));
 	if (reply == nullptr)
 	{
 		sRedisClient->Free();
@@ -373,6 +458,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		auto easydarwin = easydarwinMap.begin()->second;
 		memcpy(inParams->outDssIP, easydarwin.first.c_str(), easydarwin.first.size());
 		memcpy(inParams->outDssPort, easydarwin.second.c_str(), easydarwin.second.size());
+		inParams->isOn = false;
 	}
 
 	EasyFreeReplyObject(reply);
