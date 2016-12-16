@@ -178,15 +178,15 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 	{ kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //udp_monitor_dest_ip
 	{ kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //udp_monitor_src_ip
 	{ kDontAllowMultipleValues, "true",     NULL                     }, //enable_allow_guest_default
-	{ kDontAllowMultipleValues, "4",        NULL                     },  //run_num_rtsp_threads
+	{ kDontAllowMultipleValues, "4",        NULL                     }, //run_num_rtsp_threads
 
-	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_lan_port
-	{ kDontAllowMultipleValues, "10008",     NULL					 },  //service_wan_port
+	{ kDontAllowMultipleValues, "10008",     NULL					 }, //service_lan_port
+	{ kDontAllowMultipleValues, "10008",     NULL					 }, //service_wan_port
 
-	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 },  //service_wan_ip
-	{ kDontAllowMultipleValues, "10554",	NULL					 },  //rtsp_wan_port
-	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL },  //nginx_web_path
-	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }   //nginx_rtmp_path
+	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 }, //service_wan_ip
+	{ kDontAllowMultipleValues, "10554",	NULL					 }, //rtsp_wan_port
+	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL }, //nginx_web_path
+	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }  //nginx_rtmp_path
 
 };
 
