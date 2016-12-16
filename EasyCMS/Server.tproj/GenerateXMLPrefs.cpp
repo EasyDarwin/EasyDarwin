@@ -73,9 +73,8 @@ static const PrefConversionInfo kPrefs[] =
     /* 23 */ { "force_logs_close_on_write",             false,                   qtssAttrDataTypeBool16 },
 	/* 24 */ { "monitor_lan_port",						NULL,					qtssAttrDataTypeUInt16 },
     /* 25 */ { "monitor_wan_port",						NULL,					qtssAttrDataTypeUInt16 },
-    /* 26 */ { "monitor_lan_ip",						NULL,                   qtssAttrDataTypeCharArray },
-    /* 27 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray },
-    /* 28 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32 },
+    /* 26 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray },
+    /* 27 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32 },
 
     // This element will be used if the pref is something we don't know about.
     // Just have unknown prefs default to be server prefs with a type of char

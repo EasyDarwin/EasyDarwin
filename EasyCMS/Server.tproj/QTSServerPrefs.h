@@ -125,7 +125,6 @@ public:
     UInt16  GetMonitorLANPort() { return fMonitorLANPort; }
     UInt16  GetMonitorWANPort() { return fMonitorWANPort; }
 
-    char* GetMonitorLANIP() { return this->getStringPref(qtssPrefsMonitorLANIPAddr); }
     char* GetMonitorWANIP() { return this->getStringPref(qtssPrefsMonitorWANIPAddr); }
 
     char* GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
@@ -165,7 +164,6 @@ private:
     UInt16 fMonitorWANPort;
 
     char   fMonitorWANAddr[20];
-    char   fMonitorLANAddr[20];
     char   fServiceID[64];
 
     enum

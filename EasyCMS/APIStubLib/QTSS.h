@@ -339,11 +339,10 @@ enum
     qtssPrefsCloseLogsOnWrite               = 23,   // "force_logs_close_on_write" //bool // force log files to close after each write.
 	qtssPrefsMonitorLANPort					= 24,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
     qtssPrefsMonitorWANPort					= 25,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorLANIPAddr				= 26,   // "monitor_lan_ip"    //char array    //IP address the server should send RTP monitor reflected streams. 
-    qtssPrefsMonitorWANIPAddr				= 27,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
-    qtssPrefsNumMsgThreads					= 28,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
+    qtssPrefsMonitorWANIPAddr				= 26,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
+    qtssPrefsNumMsgThreads					= 27,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 
-    qtssPrefsNumParams                      = 29
+    qtssPrefsNumParams                      = 28
 };
 
 typedef UInt32 QTSS_PrefsAttributes;

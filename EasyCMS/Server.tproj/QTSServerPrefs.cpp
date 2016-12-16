@@ -79,7 +79,6 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "false",    NULL                    },  //23 force_logs_close_on_write
     { kDontAllowMultipleValues, "10000",    NULL                     }, //24 monitor_lan_port
     { kDontAllowMultipleValues, "10000",    NULL                     }, //25 monitor_wan_port
-    { kDontAllowMultipleValues, "127.0.0.1",NULL                     }, //26 monitor_lan_ip
     { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //27 monitor_wan_ip
     { kDontAllowMultipleValues, "2",        NULL                     }  //28 run_num_msg_threads
 };
@@ -112,9 +111,8 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 23 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 24 */ { "monitor_lan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 25 */ { "monitor_wan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 26 */ { "monitor_lan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 27 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-    /* 28 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
+    /* 26 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 27 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
 QTSServerPrefs::QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs)
@@ -181,7 +179,6 @@ void QTSServerPrefs::setupAttributes()
 	
     this->SetVal(qtssPrefsMonitorLANPort,				&fMonitorLANPort,          sizeof(fMonitorLANPort));
     this->SetVal(qtssPrefsMonitorWANPort,				&fMonitorWANPort,          sizeof(fMonitorWANPort));
-    this->SetVal(qtssPrefsMonitorLANIPAddr,				&fMonitorLANAddr,           sizeof(fMonitorLANAddr));
     this->SetVal(qtssPrefsMonitorWANIPAddr,				&fMonitorWANAddr,            sizeof(fMonitorWANAddr));
 
 	this->SetVal(qtssPrefsServiceID,					&fServiceID,            sizeof(fServiceID));
