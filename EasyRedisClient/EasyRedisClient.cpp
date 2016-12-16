@@ -70,6 +70,11 @@ int EasyRedisClient::Delete(const char* key)//del
 	if (fRedisContext != NULL)
 	{
 		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "DEL %s", key);
+		if (reply == NULL)
+		{
+			printf("EasyRedisClient::Delete error:key[%s], value[%s](%s)\n", key.c_str(), value.c_str(), GetErrorString());
+			return -1;
+		}
 		freeReplyObject(reply);
 		return RedisContextPtr(fRedisContext)->err;
 	}
@@ -84,6 +89,11 @@ int EasyRedisClient::Get(const char* key, std::string& value)//get
 	if (fRedisContext != NULL)
 	{
 		redisReply *reply = (redisReply*)redisCommand(RedisContextPtr(fRedisContext), "GET %s", key);
+		if (reply == NULL)
+		{
+			printf("EasyRedisClient::Get error:key[%s], value[%s](%s)\n", key.c_str(), value.c_str(), GetErrorString());
+			return -1;
+		}
 		ret = getValue(reply, value);
 		//printf("[EasyRedisClient]GET: %s\n",  reply->str);        
 		if (ret < 0)
