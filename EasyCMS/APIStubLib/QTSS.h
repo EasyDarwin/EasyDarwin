@@ -313,7 +313,7 @@ enum
 {
     //QTSS_PrefsObject parameters 
     // All of these parameters are read-write. 
-    qtssPrefsSessionTimeout					= 0,	//"session_timeout"				//UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
+    qtssPrefsSessionTimeout					= 0,	//"http_session_timeout"		//UInt32    //Amount of time in seconds the server will wait before disconnecting idle RTSP clients. 0 means no timeout
 	qtssPrefsMaximumConnections				= 1,    //"maximum_connections"         //SInt32    //Maximum # of concurrent RTP connections allowed by the server. -1 means unlimited.
 	qtssPrefsBindIPAddr						= 2,    //"bind_ip_addr"                //char array    //IP address the server should accept RTSP connections on. 0.0.0.0 means all addresses on the machine.
     qtssPrefsBreakOnAssert					= 3,    //"break_on_assert"             //bool        //If true, the server will break in the debugger when an assert fails.

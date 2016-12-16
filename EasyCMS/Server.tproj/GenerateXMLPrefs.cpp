@@ -47,7 +47,7 @@ struct PrefConversionInfo
 
 static const PrefConversionInfo kPrefs[] =
 {
-	/* 0 */ { "session_timeout",						NULL,                   qtssAttrDataTypeUInt32 },
+	/* 0 */ { "http_session_timeout",						NULL,                   qtssAttrDataTypeUInt32 },
 	/* 1 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32 },
 	/* 2 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray },
     /* 3 */ { "break_on_assert",                        false,                   qtssAttrDataTypeBool16 },

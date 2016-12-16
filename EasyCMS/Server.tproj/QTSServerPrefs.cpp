@@ -53,7 +53,7 @@
 
 QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 {
-    { kDontAllowMultipleValues, "90",      NULL                     },  //0 session_timeout
+    { kDontAllowMultipleValues, "90",      NULL                     },  //0 http_session_timeout
     { kDontAllowMultipleValues, "1000",     NULL                    },  //1 maximum_connections
     { kAllowMultipleValues,     "0",        NULL                    },  //2 bind_ip_addr
     { kDontAllowMultipleValues, "false",    NULL                    },  //3 break_on_assert
@@ -84,7 +84,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
  
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
-    /* 0 */ { "session_timeout",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
+    /* 0 */ { "http_session_timeout",						NULL,                   qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 1 */ { "maximum_connections",                    NULL,                   qtssAttrDataTypeSInt32,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 2 */ { "bind_ip_addr",                           NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 3 */ { "break_on_assert",                        NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
