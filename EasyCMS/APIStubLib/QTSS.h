@@ -598,6 +598,7 @@ typedef struct
 	char * inChannel;
 	char * outDssIP;
 	char * outDssPort;//UINT16 * outDssPort;
+	bool isOn;
 }QTSS_GetAssociatedDarwin_Params;
 
 typedef struct

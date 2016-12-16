@@ -965,8 +965,8 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
 	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
 	const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
-	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//获取通道
-	const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);//获取通道
+	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);
+	const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
 
 	//为可选参数填充默认值
 	if (!isRightChannel(chChannel))
@@ -978,7 +978,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 		return QTSS_BadArgument;
 
 	string strCSeq = EasyUtil::ToString(GetCSeq());
-	string strURL;//直播地址
+	string service;
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(chSerial);
@@ -998,6 +998,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	theParams.GetAssociatedDarwinParams.inChannel = const_cast<char*>(chChannel);
 	theParams.GetAssociatedDarwinParams.outDssIP = chDssIP;
 	theParams.GetAssociatedDarwinParams.outDssPort = chDssPort;
+	theParams.GetAssociatedDarwinParams.isOn = false;
 
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetEasyDarwinRole);
 	for (UInt32 currentModule = 0; currentModule < numModules; ++currentModule)
@@ -1009,105 +1010,68 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	{
 		strDssIP = chDssIP;
 		strDssPort = chDssPort;
-		//合成直播的RTSP地址，后续有可能根据请求流的协议不同而生成不同的直播地址，如RTMP、HLS等
-		string strSessionID;
-		char chSessionID[128] = { 0 };
 
-		QTSS_RoleParams theParamsGetStream;
-		theParamsGetStream.GenStreamIDParams.outStreanID = chSessionID;
-		theParamsGetStream.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
+		service = string("IP=") + strDssIP + ";Port=" + strDssPort + ";Type=EasyDarwin";
 
-		numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
-		for (UInt32 currentModule = 0; currentModule < numModules; ++currentModule)
+		if (!theParams.GetAssociatedDarwinParams.isOn)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParamsGetStream);
-		}
+			EasyProtocolACK reqreq(MSG_SD_PUSH_STREAM_REQ);
+			EasyJsonValue headerheader, bodybody;
 
-		if (chSessionID[0] == 0)//sessionID在redis上的存储失败
-		{
-			return EASY_ERROR_SERVER_INTERNAL_ERROR;
+			headerheader[EASY_TAG_CSEQ] = EasyUtil::ToString(pDevSession->GetCSeq());//注意这个地方不能直接将UINT32->int,因为会造成数据失真
+			headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+
+			string strSessionID;
+			char chSessionID[128] = { 0 };
+
+			//QTSS_RoleParams theParams;
+			theParams.GenStreamIDParams.outStreanID = chSessionID;
+			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
+
+			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
+			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+			{
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
+				(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParams);
+			}
+			if (chSessionID[0] == 0)//sessionID再redis上的存储失败
+			{
+				return EASY_ERROR_SERVER_INTERNAL_ERROR;
+			}
+
+			strSessionID = chSessionID;
+			bodybody[EASY_TAG_STREAM_ID] = strSessionID;
+			bodybody[EASY_TAG_SERVER_IP] = strDssIP;
+			bodybody[EASY_TAG_SERVER_PORT] = strDssPort;
+			bodybody[EASY_TAG_SERIAL] = chSerial;
+			bodybody[EASY_TAG_CHANNEL] = chChannel;
+			bodybody[EASY_TAG_PROTOCOL] = chProtocol;
+			bodybody[EASY_TAG_RESERVE] = chReserve;
+			bodybody[EASY_TAG_FROM] = fSessionID;
+			bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
+			bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+
+			reqreq.SetHead(headerheader);
+			reqreq.SetBody(bodybody);
+
+			string buffer = reqreq.GetMsg();
+			StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
+			pDevSession->SendHTTPPacket(&theValue, false, false);
+			fTimeoutTask.SetTimeout(3 * 1000);
+			fTimeoutTask.RefreshTimeout();
+
+			return QTSS_NoErr;
 		}
-		strSessionID = chSessionID;
-		strURL = string("rtsp://").append(strDssIP).append(":").append(strDssPort).append("/")
-			.append(chSerial).append("/")
-			.append(chChannel).append(".sdp")
-			.append("?token=").append(strSessionID);
 	}
 	else
 	{
-		//不存在关联的EasyDarWin
-		QTSS_RoleParams theParamsRedis;
-		theParamsRedis.GetBestDarwinParams.outDssIP = chDssIP;
-		theParamsRedis.GetBestDarwinParams.outDssPort = chDssPort;
-
-		numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetBestEasyDarwinRole);
-		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetBestEasyDarwinRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisGetBestEasyDarwin_Role, &theParamsRedis);
-		}
-
-		if (chDssIP[0] == 0)//不存在DarWin
-		{
-			return EASY_ERROR_SERVICE_NOT_FOUND;
-		}
-		//向指定设备发送开始流请求
-
-		strDssIP = chDssIP;
-		strDssPort = chDssPort;
-		EasyProtocolACK reqreq(MSG_SD_PUSH_STREAM_REQ);
-		EasyJsonValue headerheader, bodybody;
-
-		headerheader[EASY_TAG_CSEQ] = EasyUtil::ToString(pDevSession->GetCSeq());//注意这个地方不能直接将UINT32->int,因为会造成数据失真
-		headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
-
-		string strSessionID;
-		char chSessionID[128] = { 0 };
-
-		//QTSS_RoleParams theParams;
-		theParams.GenStreamIDParams.outStreanID = chSessionID;
-		theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
-
-		numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
-		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParams);
-		}
-		if (chSessionID[0] == 0)//sessionID再redis上的存储失败
-		{
-			return EASY_ERROR_SERVER_INTERNAL_ERROR;
-		}
-
-		strSessionID = chSessionID;
-		bodybody[EASY_TAG_STREAM_ID] = strSessionID;
-		bodybody[EASY_TAG_SERVER_IP] = strDssIP;
-		bodybody[EASY_TAG_SERVER_PORT] = strDssPort;
-		bodybody[EASY_TAG_SERIAL] = chSerial;
-		bodybody[EASY_TAG_CHANNEL] = chChannel;
-		bodybody[EASY_TAG_PROTOCOL] = chProtocol;
-		bodybody[EASY_TAG_RESERVE] = chReserve;
-		bodybody[EASY_TAG_FROM] = fSessionID;
-		bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
-		bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-
-		reqreq.SetHead(headerheader);
-		reqreq.SetBody(bodybody);
-
-		string buffer = reqreq.GetMsg();
-		StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-		pDevSession->SendHTTPPacket(&theValue, false, false);
-		fTimeoutTask.SetTimeout(3 * 1000);
-		fTimeoutTask.RefreshTimeout();
-
-		return QTSS_NoErr;
+		return QTSS_IllegalService;
 	}
 
 	//走到这说明对客户端的正确回应,因为错误回应直接返回。
 	EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
 	EasyJsonValue header, body;
-	body[EASY_TAG_URL] = strURL;
+	body[EASY_TAG_SERVICE] = service;
 	body[EASY_TAG_SERIAL] = chSerial;
 	body[EASY_TAG_CHANNEL] = chChannel;
 	body[EASY_TAG_PROTOCOL] = chProtocol;//如果当前已经推流，则返回请求的，否则返回实际推流类型
@@ -1783,7 +1747,7 @@ QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int 
 	else
 	{
 		memset(decodeParam.imageData, 0, SNAP_SIZE);
-		yuv2BMPImage(snapWidth, snapHeight, (char*)yuvdata, &decodeParam.imageSize, (unsigned char*)decodeParam.imageData);
+		yuv2BMPImage(snapWidth, snapHeight, static_cast<char*>(yuvdata), &decodeParam.imageSize, reinterpret_cast<unsigned char*>(decodeParam.imageData));
 	}
 
 	if (nullptr != yuvdata)
