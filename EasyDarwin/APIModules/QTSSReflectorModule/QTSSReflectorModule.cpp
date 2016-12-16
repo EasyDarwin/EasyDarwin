@@ -228,7 +228,6 @@ inline void KeepSession(QTSS_RTSPRequestObject theRequest, bool keep)
 	(void)QTSS_SetValue(theRequest, qtssRTSPReqRespKeepAlive, 0, &keep, sizeof(keep));
 }
 
-
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error QTSSReflectorModule_Main(void* inPrivateArgs)
 {
