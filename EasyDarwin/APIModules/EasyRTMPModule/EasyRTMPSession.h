@@ -23,6 +23,7 @@
 #include <EasyRTSPClientAPI.h>
 
 #include "QTSServerInterface.h"
+#include "EasyAACEncoderAPI.h"
 
 class EasyRTMPSession : public Task
 {
@@ -43,7 +44,7 @@ public:
 	UInt32			GetChannelNum() const { return fChannelNum; }
 	void			RefreshTimeout() { fTimeoutTask.RefreshTimeout(); }
 
-	QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo) const;
+	QTSS_Error		ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo);
 	QTSS_Error		SessionStart();
 	QTSS_Error		SessionRelease();
 
@@ -61,6 +62,10 @@ private:
 
 	Easy_RTSP_Handle	fRTSPClientHandle;
 	Easy_RTMP_Handle	fRTMPHandle;
+	EasyAACEncoder_Handle	fAAChandle;
+
+	QTSS_Error EasyInitAACEncoder(int codec);
+	unsigned char pbAACBuffer[EASY_ACCENCODER_BUFFER_SIZE_LEN];
 };
 
 #endif //__EASY_RTMP_SESSION__

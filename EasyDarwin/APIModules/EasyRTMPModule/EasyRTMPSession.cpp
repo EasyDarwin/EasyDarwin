@@ -36,7 +36,8 @@ EasyRTMPSession::EasyRTMPSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt
 	fChannelNum(inChannel),
 	fTimeoutTask(nullptr, 60 * 1000),
 	fRTSPClientHandle(nullptr),
-	fRTMPHandle(nullptr)
+	fRTMPHandle(nullptr),
+	fAAChandle(nullptr)
 {
 	this->SetTaskName("EasyRTMPSession");
 	fTimeoutTask.SetTask(this);
@@ -91,24 +92,48 @@ SInt64 EasyRTMPSession::Run()
 	return 0;
 }
 
+QTSS_Error EasyRTMPSession::EasyInitAACEncoder(int codec)
+{
+	if (fAAChandle == nullptr)
+	{
+		InitParam initParam;
+		initParam.u32AudioSamplerate = 8000;
+		initParam.ucAudioChannel = 1;
+		initParam.u32PCMBitSize = 16;
 
-QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo) const
+		if (codec == EASY_SDK_AUDIO_CODEC_G711A)
+			initParam.ucAudioCodec = Law_ALaw;
+		else if (codec == EASY_SDK_AUDIO_CODEC_G711U)
+			initParam.ucAudioCodec = Law_ULaw;
+		else
+			return QTSS_UnknowAudioCoder;
+
+		fAAChandle = Easy_AACEncoder_Init(initParam);
+	}
+	return QTSS_NoErr;
+
+}
+
+QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
 {
 	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
 	{
 		//printf("Get video Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
-
-		if (fRTMPHandle == nullptr) return 0;
-
-		if (frameinfo && frameinfo->length)
+		//RTMP ONLY SUPPORT H.264 YET
+		if (frameinfo->codec == EASY_SDK_VIDEO_CODEC_H264)
 		{
-			EASY_AV_Frame  avFrame;
-			memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-			avFrame.u32AVFrameFlag = EASY_SDK_VIDEO_FRAME_FLAG;
-			avFrame.u32AVFrameLen = frameinfo->length;
-			avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
-			avFrame.u32VFrameType = (frameinfo->type == EASY_SDK_VIDEO_FRAME_I) ? EASY_SDK_VIDEO_FRAME_I : EASY_SDK_VIDEO_FRAME_P;
-			EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
+			if (fRTMPHandle == nullptr) return 0;
+
+			if (frameinfo && frameinfo->length)
+			{
+				EASY_AV_Frame  avFrame;
+				memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+				avFrame.u32AVFrameFlag = EASY_SDK_VIDEO_FRAME_FLAG;
+				avFrame.u32AVFrameLen = frameinfo->length;
+				avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
+				avFrame.u32VFrameType = (frameinfo->type == EASY_SDK_VIDEO_FRAME_I) ? EASY_SDK_VIDEO_FRAME_I : EASY_SDK_VIDEO_FRAME_P;
+				EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
+			}
 		}
 	}
 	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
@@ -129,6 +154,29 @@ QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RT
 			avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
 			EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
 		}
+
+		//printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
+		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711A || frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711U)
+		{
+			if (EasyInitAACEncoder(frameinfo->codec) == QTSS_NoErr)
+			{
+				memset(pbAACBuffer, 0, EASY_ACCENCODER_BUFFER_SIZE_LEN);
+				unsigned int iAACBufferLen = 0;
+				if (Easy_AACEncoder_Encode(fAAChandle, reinterpret_cast<unsigned char*>(pbuf), frameinfo->length, pbAACBuffer, &iAACBufferLen) > 0)
+				{
+					EASY_AV_Frame  avFrame;
+					memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+					avFrame.u32AVFrameLen = frameinfo->length;
+					avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
+					avFrame.u32VFrameType = frameinfo->type;
+					avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
+					avFrame.u32TimestampSec = frameinfo->timestamp_sec;
+					avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
+					EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
+				}
+			}
+		}
+
 	}
 	else if (mediatype == EASY_SDK_MEDIA_INFO_FLAG)
 	{
@@ -225,6 +273,12 @@ QTSS_Error	EasyRTMPSession::SessionRelease()
 		EasyRTMP_Release(fRTMPHandle);
 		fRTMPHandle = nullptr;
 		fRTMPURL[0] = '\0';
+	}
+
+	if (fAAChandle)
+	{
+		Easy_AACEncoder_Release(fAAChandle);
+		fAAChandle = nullptr;
 	}
 
 	return QTSS_NoErr;
