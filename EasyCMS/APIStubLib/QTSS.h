@@ -326,23 +326,22 @@ enum
     qtssPrefsErrorLogVerbosity				= 10,   //"error_logfile_verbosity"     //UInt32    //Max verbosity level of messages the error logger will log
     qtssPrefsScreenLogging					= 11,   //"screen_logging"              //bool        //Should the error logger echo messages to the screen?
     qtssPrefsErrorLogEnabled				= 12,   //"error_logging"               //bool        //Is error logging enabled?
-    qtssPrefsServiceID						= 13,   //"service_id"    //SInt32 // Don't send video packets later than this
-	qtssPrefsSnapLocalPath					= 14,   //"snap_local_path"		// char array   //snap local path
-    qtssPrefsSnapWebPath			        = 15,   //"snap_web_path"		// char array   //snap web path
-	qtssPrefsAutoStart                      = 16,   //"auto_start" //bool //If true, streaming server likes to be started at system startup
-	qtssPrefsEnableMSGDebugPrintfs			= 17,	//"MSG_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
-    qtssPrefsEnableMonitorStatsFile         = 18,   //"enable_monitor_stats_file" //bool //write server stats to the monitor file
-    qtssPrefsMonitorStatsFileIntervalSec    = 19,   //"monitor_stats_file_interval_seconds" // private
-    qtssPrefsMonitorStatsFileName           = 20,   //"monitor_stats_file_name" // private
-    qtssPrefsRunNumThreads                  = 21,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
-    qtssPrefsPidFile                        = 22,    //"pid_file" //Char Array //path to pid file
-    qtssPrefsCloseLogsOnWrite               = 23,   // "force_logs_close_on_write" //bool // force log files to close after each write.
-	qtssPrefsMonitorLANPort					= 24,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorWANPort					= 25,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorWANIPAddr				= 26,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
-    qtssPrefsNumMsgThreads					= 27,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
+	qtssPrefsSnapLocalPath					= 13,   //"snap_local_path"		// char array   //snap local path
+    qtssPrefsSnapWebPath			        = 14,   //"snap_web_path"		// char array   //snap web path
+	qtssPrefsAutoStart                      = 15,   //"auto_start" //bool //If true, streaming server likes to be started at system startup
+	qtssPrefsEnableMSGDebugPrintfs			= 16,	//"MSG_debug_printfs" //Boo1l6 // printfs incoming RTSPRequests and Outgoing RTSP responses.
+    qtssPrefsEnableMonitorStatsFile         = 17,   //"enable_monitor_stats_file" //bool //write server stats to the monitor file
+    qtssPrefsMonitorStatsFileIntervalSec    = 18,   //"monitor_stats_file_interval_seconds" // private
+    qtssPrefsMonitorStatsFileName           = 19,   //"monitor_stats_file_name" // private
+    qtssPrefsRunNumThreads                  = 20,   //"run_num_threads" //UInt32 // if value is non-zero, will  create that many task threads; otherwise a thread will be created for each processor
+    qtssPrefsPidFile                        = 21,    //"pid_file" //Char Array //path to pid file
+    qtssPrefsCloseLogsOnWrite               = 22,   // "force_logs_close_on_write" //bool // force log files to close after each write.
+	qtssPrefsMonitorLANPort					= 23,   // "monitor_lan_port" //UInt16 // localhost destination port of reflected stream
+    qtssPrefsMonitorWANPort					= 24,   // "monitor_wan_port" //UInt16 // localhost destination port of reflected stream
+    qtssPrefsMonitorWANIPAddr				= 25,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
+    qtssPrefsNumMsgThreads					= 26,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 
-    qtssPrefsNumParams                      = 28
+    qtssPrefsNumParams                      = 27
 };
 
 typedef UInt32 QTSS_PrefsAttributes;

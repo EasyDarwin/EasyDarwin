@@ -96,11 +96,6 @@ public:
         return this->getStringPref(qtssPrefsErrorLogName);
     }
 
-    char*	GetServiceID()
-    {
-        return this->getStringPref(qtssPrefsServiceID);
-    }
-
     char*   GetModuleDirectory()
     {
         return this->getStringPref(qtssPrefsModuleFolder);
@@ -164,7 +159,6 @@ private:
     UInt16 fMonitorWANPort;
 
     char   fMonitorWANAddr[20];
-    char   fServiceID[64];
 
     enum
     {
