@@ -338,7 +338,7 @@ enum
     qtssPrefsCloseLogsOnWrite               = 22,   // "force_logs_close_on_write" //bool // force log files to close after each write.
 	qtssPrefsServiceLANPort					= 23,   // "service_lan_port" //UInt16 // localhost destination port of reflected stream
     qtssPrefsServiceWANPort					= 24,   // "service_wan_port" //UInt16 // localhost destination port of reflected stream
-    qtssPrefsMonitorWANIPAddr				= 25,   // "monitor_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
+    qtssPrefsServiceWANIPAddr				= 25,   // "service_wan_ip"    //char array    //client IP address the server monitor should reflect. *.*.*.* means all client addresses.
     qtssPrefsNumMsgThreads					= 26,   // "run_num_msg_threads" //UInt32 // if value is non-zero, the server will  create that many task threads; otherwise a single thread will be created.
 
     qtssPrefsNumParams                      = 27

@@ -120,7 +120,7 @@ public:
     UInt16  GetMonitorLANPort() { return fMonitorLANPort; }
     UInt16  GetMonitorWANPort() { return fMonitorWANPort; }
 
-    char* GetMonitorWANIP() { return this->getStringPref(qtssPrefsMonitorWANIPAddr); }
+    char* GetMonitorWANIP() { return this->getStringPref(qtssPrefsServiceWANIPAddr); }
 
     char* GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
     char* GetSnapWebPath() { return this->getStringPref(qtssPrefsSnapWebPath); }

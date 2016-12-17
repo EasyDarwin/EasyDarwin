@@ -78,7 +78,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
     { kDontAllowMultipleValues, "false",    NULL                    },  //22 force_logs_close_on_write
     { kDontAllowMultipleValues, "10000",    NULL                     }, //23 service_lan_port
     { kDontAllowMultipleValues, "10000",    NULL                     }, //24 service_wan_port
-    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //25 monitor_wan_ip
+    { kDontAllowMultipleValues, "0.0.0.0",  NULL                     }, //25 service_wan_ip
     { kDontAllowMultipleValues, "2",        NULL                     }  //26 run_num_msg_threads
 };
  
@@ -109,7 +109,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
     /* 22 */ { "force_logs_close_on_write",             NULL,                   qtssAttrDataTypeBool16,     qtssAttrModeRead | qtssAttrModeWrite },
 	/* 23 */ { "service_lan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
     /* 24 */ { "service_wan_port",						NULL,					qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
-    /* 25 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
+    /* 25 */ { "service_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
     /* 26 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32,     qtssAttrModeRead | qtssAttrModeWrite }
 };
 
@@ -177,7 +177,7 @@ void QTSServerPrefs::setupAttributes()
 	
     this->SetVal(qtssPrefsServiceLANPort,				&fMonitorLANPort,          sizeof(fMonitorLANPort));
     this->SetVal(qtssPrefsServiceWANPort,				&fMonitorWANPort,          sizeof(fMonitorWANPort));
-    this->SetVal(qtssPrefsMonitorWANIPAddr,				&fMonitorWANAddr,            sizeof(fMonitorWANAddr));
+    this->SetVal(qtssPrefsServiceWANIPAddr,				&fMonitorWANAddr,            sizeof(fMonitorWANAddr));
 
     this->SetVal(qtssPrefsNumMsgThreads,				&fNumMsgThreads,               sizeof(fNumMsgThreads));
 }
