@@ -462,7 +462,7 @@ UInt16 QTSServer::getServicePorts(QTSServerPrefs* inPrefs)
     UInt16 thePort = 0;
     // Get the ip addr out of the prefs dictionary
     UInt32 theLen = sizeof(UInt16);
-    QTSS_Error theErr = inPrefs->GetValue(qtssPrefsMonitorLANPort, 0, &thePort, &theLen);
+    QTSS_Error theErr = inPrefs->GetValue(qtssPrefsServiceLANPort, 0, &thePort, &theLen);
     Assert(theErr == QTSS_NoErr);
 
     return thePort;
