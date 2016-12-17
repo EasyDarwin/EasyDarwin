@@ -119,12 +119,14 @@
 		<PREF NAME="run_num_rtsp_threads" TYPE="UInt32" >4</PREF>
 		<PREF NAME="http_service_port" TYPE="UInt16" >10008</PREF>
 		<PREF NAME="rtsp_wan_port" TYPE="UInt16" >10554</PREF>
-		<PREF NAME="nginx_web_path" >http://127.0.0.1:10080/</PREF>
-		<PREF NAME="nginx_rtmp_path" >rtmp://127.0.0.1:10035/live/</PREF>
+		<PREF NAME="nginx_web_path" >http://192.168.1.53:€ºE</PREF>
+		<PREF NAME="nginx_rtmp_path" >rtmp://192.168.1.53:10035/live/</PREF>
 		<PREF NAME="nginx_root_folder" >./nginx/www/</PREF>
 		<PREF NAME="service_lan_port" TYPE="UInt16" >10008</PREF>
 		<PREF NAME="service_wan_port" TYPE="UInt16" >10008</PREF>
 		<PREF NAME="service_wan_ip" >0.0.0.0</PREF>
+		<PREF NAME="module_folder" >c:\Program Files\EasyDarwin\QTSSModules\</PREF>
+		<PREF NAME="error_logfile_dir" >c:\Program Files\EasyDarwin\Logs\</PREF>
 	</SERVER>
 	<MODULE NAME="QTSSAccessLogModule" >
 		<PREF NAME="request_logfile_interval" TYPE="UInt32" >7</PREF>
@@ -132,9 +134,11 @@
 		<PREF NAME="request_logfile_size" TYPE="UInt32" >10240000</PREF>
 		<PREF NAME="request_logtime_in_gmt" TYPE="bool" >true</PREF>
 		<PREF NAME="request_logfile_name" >EasyDarwin</PREF>
+		<PREF NAME="request_logfile_dir" >c:\Program Files\EasyDarwin\Logs\</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSReflectorModule" >
 		<PREF NAME="hls_output_enabled" TYPE="bool" >false</PREF>
+		<PREF NAME="record_output_enabled" TYPE="bool" >true</PREF>
 		<PREF NAME="reflector_bucket_offset_delay_msec" TYPE="UInt32" >73</PREF>
 		<PREF NAME="reflector_buffer_size_sec" TYPE="UInt32" >1</PREF>
 		<PREF NAME="reflector_use_in_packet_receive_time" TYPE="bool" >false</PREF>
@@ -178,6 +182,8 @@
 	<MODULE NAME="QTSSAccessModule" >
 		<PREF NAME="modAccess_qtaccessfilename" >qtaccess</PREF>
 		<PREF NAME="modAccess_enabled" TYPE="bool" >true</PREF>
+		<PREF NAME="modAccess_usersfilepath" >c:\Program Files\EasyDarwin\qtusers</PREF>
+		<PREF NAME="modAccess_groupsfilepath" >c:\Program Files\EasyDarwin\qtgroups</PREF>
 	</MODULE>
 	<MODULE NAME="QTSSErrorLogModule" ></MODULE>
 	<MODULE NAME="QTSSPosixFileSysModule" ></MODULE>
@@ -187,5 +193,16 @@
 		<PREF NAME="redis_port" TYPE="UInt16" >6379</PREF>
 		<PREF NAME="redis_user" >admin</PREF>
 		<PREF NAME="redis_password" >admin</PREF>
+	</MODULE>
+	<MODULE NAME="RtspRecordModule" >
+		<PREF NAME="HTTP_ROOT_DIR" >http://cninct.com:10001/html/Movies/</PREF>
+		<PREF NAME="Record_DIR" >./Movies/</PREF>
+	</MODULE>
+	<MODULE NAME="EasyRTMPModule" ></MODULE>
+	<MODULE NAME="EasyHLSModule" >
+		<PREF NAME="M3U8_VERSION" TYPE="UInt32" >3</PREF>
+		<PREF NAME="ALLOW_CACHE" TYPE="bool" >false</PREF>
+		<PREF NAME="TARGET_DURATION" TYPE="UInt32" >4</PREF>
+		<PREF NAME="PLAYLIST_CAPACITY" TYPE="UInt32" >10</PREF>
 	</MODULE>
 </CONFIGURATION>

@@ -75,6 +75,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 	fSessionName(inSourceID->GetAsCString()),
 	fChannelNum(inChannelNum),
 	fHLSLive(false),
+	fRtspRecord(false),
 	fQueueElem(),
 	fNumOutputs(0),
 	fStreamArray(nullptr),
@@ -188,7 +189,7 @@ QTSS_Error ReflectorSession::StartHLSSession()
 		//if(QTSS_NoErr == theErr)
 		fHLSLive = true;
 	}
-
+	
 	return theErr;
 }
 
@@ -201,6 +202,49 @@ QTSS_Error ReflectorSession::StopHLSSession()
 		theErr = Easy_StopHLSession(fSourceID.Ptr);
 		if (QTSS_NoErr == theErr)
 			fHLSLive = false;
+	}
+
+	return theErr;
+}
+
+
+
+QTSS_Error ReflectorSession::StartRecordSession()
+{
+	QTSS_Error theErr = QTSS_NoErr;
+
+	if (!fRtspRecord)
+	{
+		// Get the ip addr out of the prefs dictionary
+		UInt16 thePort = 554;
+		UInt32 theLen = sizeof(UInt16);
+		theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
+		Assert(theErr == QTSS_NoErr);
+
+		//构造本地URL
+		char url[QTSS_MAX_URL_LENGTH] = { 0 };
+		qtss_sprintf(url, "rtsp://127.0.0.1:%d/%s", thePort, fSourceID.Ptr);
+		if (_recordWriter) {
+			_recordWriter = new RtspRecordSession();
+		}
+		_recordWriter->init();
+		_recordWriter->play(url, fSourceID.Ptr);
+		//if(QTSS_NoErr == theErr)
+		fRtspRecord = true;
+	}
+
+	return theErr;
+}
+
+QTSS_Error ReflectorSession::StopRecordSession()
+{
+	QTSS_Error theErr = QTSS_NoErr;
+
+	if (fRtspRecord)
+	{
+		_recordWriter->stop();
+		if (QTSS_NoErr == theErr)
+			fRtspRecord = false;
 	}
 
 	return theErr;

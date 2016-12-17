@@ -104,6 +104,9 @@ static bool   sDefaultRTPInfoDisabled = false;
 static bool   sHLSOutputEnabled = false;
 static bool   sDefaultHLSOutputEnabled = false;
 
+static bool   sRecordOutputEnabled = false;
+static bool   sDefaultRecordOutputEnabled = false;
+
 static bool   sAnnounceEnabled = true;
 static bool   sDefaultAnnounceEnabled = true;
 static bool   sBroadcastPushEnabled = true;
@@ -590,6 +593,10 @@ QTSS_Error RereadPrefs()
 	QTSSModuleUtils::GetAttribute(sPrefs, "hls_output_enabled", qtssAttrDataTypeBool16,
 		&sHLSOutputEnabled, &sDefaultHLSOutputEnabled, sizeof(sDefaultHLSOutputEnabled));
 
+	//Êä³öRecord
+	QTSSModuleUtils::GetAttribute(sPrefs, "record_output_enabled", qtssAttrDataTypeBool16,
+		&sRecordOutputEnabled, &sDefaultRecordOutputEnabled, sizeof(sDefaultRecordOutputEnabled));
+
 
 	return QTSS_NoErr;
 }
@@ -626,6 +633,8 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
 
 	if (sHLSOutputEnabled)
 		theSession->StartHLSSession();
+	if (sRecordOutputEnabled)
+		theSession->StartRecordSession();
 
 	// it is a broadcaster session
 	//qtss_printf("QTSSReflectorModule.cpp:is broadcaster session\n");
@@ -2094,7 +2103,8 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 
 		if (sHLSOutputEnabled)
 			theSession->StopHLSSession();
-
+		if (sRecordOutputEnabled)
+			theSession->StopRecordSession();
 		RemoveOutput(NULL, theSession, killClients);
 	}
 	else // ¿Í»§¶Ë

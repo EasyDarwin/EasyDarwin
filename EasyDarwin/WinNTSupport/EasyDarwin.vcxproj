@@ -59,7 +59,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTSPClientLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../../EasyRedisClient/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSFlowControlModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../APIModules/EasyRTMPModule/;../APIModules/EasyHLSModule/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../;../Include/;../../Include/;../../EasyProtocol/jsoncpp/include/;../../EasyProtocol/Include/;../../CommonUtilitiesLib/;../../RTSPUtilitiesLib/;../../HTTPUtilitiesLib/;../Server.tproj/;../QTFileLib/;../RTSPClientLib/;../RTPMetaInfoLib/;../PrefsSourceLib/;../APIStubLib/;../APICommonCode/;../RTCPUtilitiesLib/;../../EasyRedisClient/;../APIModules/QTSSAccessModule/;../APIModules/QTSSAccessLogModule/;../APIModules/QTSSPosixFileSysModule/;../APIModules/QTSSReflectorModule/;../APIModules/QTSSFlowControlModule/;../APIModules/EasyCMSModule/;../APIModules/EasyRedisModule/;../APIModules/EasyRTMPModule/;../APIModules/EasyHLSModule/;../../EasyMP4Writer;../APIModules/RtspRecordModule/;../../Include/FFmpeg;../FileBrowserUtils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DSS_USE_API_CALLBACKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/EasyDarwin.pch</PrecompiledHeaderOutputFile>
@@ -77,10 +77,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;libEasyRTSPClient.lib;libEasyHLS.lib;libEasyAACEncoder.lib;libEasyRTMP.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;libEasyRTSPClient.lib;libEasyHLS.lib;libEasyAACEncoder.lib;libEasyRTMP.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\WinNTSupport\Debug\EasyDarwin.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib\;..\..\Lib\FFmpeg\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/EasyDarwin.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -88,6 +88,7 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
       <Profile>true</Profile>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -174,6 +175,10 @@
     <ClCompile Include="..\APIModules\QTSSReflectorModule\ReflectorStream.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\RTPSessionOutput.cpp" />
     <ClCompile Include="..\APIModules\QTSSReflectorModule\SequenceNumberMap.cpp" />
+    <ClCompile Include="..\APIModules\RtspRecordModule\EasyMP4Writer.cpp" />
+    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordModule.cpp" />
+    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordSession.cpp" />
+    <ClCompile Include="..\FileBrowserUtils\SearchFileDir.cpp" />
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp" />
     <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp" />
     <ClCompile Include="..\PrefsSourceLib\XMLPrefsParser.cpp" />
@@ -227,6 +232,10 @@
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />
     <ClInclude Include="..\APIModules\EasyRTMPModule\EasyRTMPModule.h" />
     <ClInclude Include="..\APIModules\EasyRTMPModule\EasyRTMPSession.h" />
+    <ClInclude Include="..\APIModules\RtspRecordModule\EasyMP4Writer.h" />
+    <ClInclude Include="..\APIModules\RtspRecordModule\RtspRecordModule.h" />
+    <ClInclude Include="..\APIModules\RtspRecordModule\RtspRecordSession.h" />
+    <ClInclude Include="..\FileBrowserUtils\SearchFileDir.h" />
     <ClInclude Include="..\Server.tproj\HTTPSession.h" />
     <ClInclude Include="..\Server.tproj\HTTPSessionInterface.h" />
   </ItemGroup>

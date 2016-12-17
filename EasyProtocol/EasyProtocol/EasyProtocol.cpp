@@ -774,6 +774,26 @@ namespace EasyDarwin { namespace Protocol
 	}
 
 //add,�Ϲ⣬end
+
+	EasyMsgSCRecordList::EasyMsgSCRecordList()
+		: EasyProtocol(MSG_SC_RTSP_RECORD_SESSION_LIST_ACK)
+	{
+	}
+
+	EasyMsgSCRecordList::EasyMsgSCRecordList(const string& msg)
+		: EasyProtocol(msg, MSG_SC_RTSP_RECORD_SESSION_LIST_ACK)
+	{
+	}
+	bool EasyMsgSCRecordList::AddRecord(EasyDarwinRecordSession &session)
+	{
+		Json::Value value;
+		value[EASY_TAG_L_INDEX] = session.index;
+		value[EASY_TAG_START_TIME] = session.startTime;
+		value[EASY_TAG_L_URL] = session.Name;
+		value[EASY_TAG_END_TIME] = session.endTime;
+		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_SESSIONS].append(value);
+		return true;
+	}
 }
 }//namespace
 
