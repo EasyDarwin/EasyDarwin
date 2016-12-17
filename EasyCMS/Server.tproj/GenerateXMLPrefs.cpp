@@ -71,7 +71,7 @@ static const PrefConversionInfo kPrefs[] =
 	/* 21 */ { "pid_file",								NULL,					qtssAttrDataTypeCharArray },
     /* 22 */ { "force_logs_close_on_write",             false,                   qtssAttrDataTypeBool16 },
 	/* 23 */ { "service_lan_port",						NULL,					qtssAttrDataTypeUInt16 },
-    /* 24 */ { "monitor_wan_port",						NULL,					qtssAttrDataTypeUInt16 },
+    /* 24 */ { "service_wan_port",						NULL,					qtssAttrDataTypeUInt16 },
     /* 25 */ { "monitor_wan_ip",						NULL,                   qtssAttrDataTypeCharArray },
     /* 26 */ { "run_num_msg_threads",					NULL,					qtssAttrDataTypeUInt32 },
 
