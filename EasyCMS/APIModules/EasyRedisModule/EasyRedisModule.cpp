@@ -41,8 +41,8 @@ static QTSS_Error RereadPrefs();
 
 static QTSS_Error RedisConnect();
 static QTSS_Error RedisTTL();
-static QTSS_Error RedisAddDevName(Easy_DeviceInfo_Params* inParams);
-static QTSS_Error RedisDelDevName(Easy_DeviceInfo_Params* inParams);
+static QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams);
+static QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams);
 static QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams);
 static QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams);
 static QTSS_Error RedisGenStreamID(QTSS_GenStreamID_Params* inParams);
@@ -63,9 +63,9 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 	case QTSS_RereadPrefs_Role:
 		return RereadPrefs();
 	case Easy_RedisSetDevice_Role:
-		return RedisAddDevName(&inParamBlock->DeviceInfoParams);
+		return RedisSetDevice(&inParamBlock->DeviceInfoParams);
 	case Easy_RedisDelDevice_Role:
-		return RedisDelDevName(&inParamBlock->DeviceInfoParams);
+		return RedisDelDevice(&inParamBlock->DeviceInfoParams);
 	case Easy_RedisTTL_Role:
 		return RedisTTL();
 	case Easy_RedisGetEasyDarwin_Role:
@@ -203,7 +203,7 @@ QTSS_Error RedisTTL()
 	return QTSS_NoErr;
 }
 
-QTSS_Error RedisAddDevName(Easy_DeviceInfo_Params* inParams)
+QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
@@ -261,7 +261,7 @@ QTSS_Error RedisAddDevName(Easy_DeviceInfo_Params* inParams)
 	return QTSS_NoErr;
 }
 
-QTSS_Error RedisDelDevName(Easy_DeviceInfo_Params* inParams)
+QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)

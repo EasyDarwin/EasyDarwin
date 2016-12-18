@@ -247,7 +247,7 @@ void HTTPSessionInterface::UnRegDevSession() const
 
         QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(fDevice.serial_);//add
         //在redis上删除设备
-        //QTSServerInterface::GetServer()->RedisDelDevName(fDevice.serial_.c_str());
+        //QTSServerInterface::GetServer()->RedisDelDevice(fDevice.serial_.c_str());
 
         QTSS_RoleParams theParams;
         theParams.DeviceInfoParams.inDevice = (void*)&fDevice;
