@@ -146,7 +146,7 @@ public:
 		kEasyAuthRole = 13,
 
 		kRedisTTLRole = 14,
-		kRedisAddDeviceRole = 15,
+		kRedisSetDeviceRole = 15,
 		kRedisDelDeviceRole = 16,
 		kRedisGetEasyDarwinRole = 17,
 		kRedisGetBestEasyDarwinRole = 18,
