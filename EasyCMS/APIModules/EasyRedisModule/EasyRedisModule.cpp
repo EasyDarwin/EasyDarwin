@@ -26,11 +26,12 @@ static UInt16			sDefaultRedisPort = 6379;
 // Redis password
 static char*            sRedisPassword = nullptr;
 static char*            sDefaultRedisPassword = "admin";
+
 static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
 static bool				sIfConSucess = false;
 static OSMutex			sMutex;
 
-static redisContext* redisContext_ = nullptr;
+static redisContext*	redisContext_ = nullptr;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
@@ -40,8 +41,8 @@ static QTSS_Error RereadPrefs();
 
 static QTSS_Error RedisConnect();
 static QTSS_Error RedisTTL();
-static QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams);
-static QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams);
+static QTSS_Error RedisAddDevName(Easy_DeviceInfo_Params* inParams);
+static QTSS_Error RedisDelDevName(Easy_DeviceInfo_Params* inParams);
 static QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams);
 static QTSS_Error RedisGetBestDarwin(QTSS_GetBestDarwin_Params * inParams);
 static QTSS_Error RedisGenStreamID(QTSS_GenStreamID_Params* inParams);
@@ -202,7 +203,7 @@ QTSS_Error RedisTTL()
 	return QTSS_NoErr;
 }
 
-QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
+QTSS_Error RedisAddDevName(Easy_DeviceInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
@@ -260,7 +261,7 @@ QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
 	return QTSS_NoErr;
 }
 
-QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams)
+QTSS_Error RedisDelDevName(Easy_DeviceInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 	if (!sIfConSucess)
