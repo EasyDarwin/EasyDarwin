@@ -451,6 +451,10 @@ QTSS_Error HTTPSession::SetupRequest()
 				{
 					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString());
 				}
+				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrecordlist")
+				{
+					return execNetMsgCSGetRTSPRecordSessionsRESTful(fRequest->GetQueryString());
+				}
 			}
 
 			EasyMsgExceptionACK rsp;
@@ -776,6 +780,56 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* query
 	{
 		// 获取响应Content
 		char* msgContent = static_cast<char*>(Easy_GetRTSPPushSessions());
+
+		StrPtrLen msgJson(msgContent);
+
+		// 构造响应报文(HTTP头)
+		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+		httpAck.CreateResponseHeader(msgJson.Len ? httpOK : httpNotImplemented);
+		if (msgJson.Len)
+			httpAck.AppendContentLengthHeader(msgJson.Len);
+
+		// 响应完成后断开连接
+		httpAck.AppendConnectionCloseHeader();
+
+		// HTTP响应Body
+		char respHeader[2048] = { 0 };
+		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+
+		// HTTP响应Content
+		RTSPResponseStream *pOutputStream = GetOutputStream();
+		pOutputStream->Put(respHeader);
+		if (msgJson.Len > 0)
+			pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+
+		delete[] msgContent;
+	} while (false);
+
+	return theErr;
+}
+
+
+
+QTSS_Error HTTPSession::execNetMsgCSGetRTSPRecordSessionsRESTful(const char* queryString)
+{
+	QTSS_Error theErr = QTSS_NoErr;
+
+	string queryTemp;
+	if (queryString != nullptr)
+	{
+		queryTemp = EasyUtil::Urldecode(queryString);
+	}
+
+	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
+	const char* startTime = parList.DoFindCGIValueForParam(EASY_TAG_L_START_TIME);//username
+	const char* name = parList.DoFindCGIValueForParam(EASY_TAG_L_NAME);//username
+	const char* endTime = parList.DoFindCGIValueForParam(EASY_TAG_L_END_TIME);//username
+
+	do
+	{
+		// 获取响应Content
+		char* msgContent = static_cast<char*>(Easy_GetRTSPRecordSessions((char *)name, atoi(startTime), atoi(endTime)));
 
 		StrPtrLen msgJson(msgContent);
 

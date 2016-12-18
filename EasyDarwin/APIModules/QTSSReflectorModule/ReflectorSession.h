@@ -39,7 +39,7 @@
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "Task.h"//add
-
+#include "RtspRecordSession.h"
 #include <atomic>
 
 #ifndef _FILE_DELETER_
@@ -101,6 +101,9 @@ public:
 	QTSS_Error		SetSessionName();
 	QTSS_Error		StartHLSSession();
 	QTSS_Error		StopHLSSession();
+
+	QTSS_Error		StartRecordSession();
+	QTSS_Error		StopRecordSession();
 	// Packets get forwarded by attaching ReflectorOutput objects to a ReflectorSession.
 
 	void    AddOutput(ReflectorOutput* inOutput, bool isClient);
@@ -178,6 +181,7 @@ private:
 
 	// HLS Session
 	bool		fHLSLive;
+	bool		fRtspRecord;
 
 	OSQueueElem fQueueElem; // Relay uses this.
 
@@ -200,6 +204,7 @@ private:
 	bool		fHasBufferedStreams;
 	bool		fHasVideoKeyFrameUpdate;
 
+	RtspRecordSession	*_recordWriter;
 private:
 	virtual SInt64 Run();
 };

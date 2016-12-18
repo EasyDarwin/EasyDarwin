@@ -65,6 +65,7 @@
 #include "EasyRTMPModule.h"
 #include "EasyCMSModule.h"
 #include "EasyRedisModule.h"
+#include "RtspRecordModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
@@ -768,6 +769,10 @@ void    QTSServer::LoadCompiledInModules()
 	(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
 	(void)AddModule(theHLSModule);
 
+	QTSSModule* theRecordModule = new QTSSModule("RtspRecordModule");
+	(void)theRecordModule->SetupModule(&sCallbacks, &RtspRecordModule_Main);
+	(void)AddModule(theRecordModule);
+
 	QTSSModule* theAccessLog = new QTSSModule("QTSSAccessLogModule");
 	(void)theAccessLog->SetupModule(&sCallbacks, &QTSSAccessLogModule_Main);
 	(void)AddModule(theAccessLog);
@@ -903,6 +908,8 @@ void    QTSServer::InitCallbacks()
 	sCallbacks.addr[kStopHLSessionCallback] = (QTSS_CallbackProcPtr)QTSSCallbacks::Easy_StopHLSession;
 	sCallbacks.addr[kGetHLSessionsCallback] = (QTSS_CallbackProcPtr)QTSSCallbacks::Easy_GetHLSessions;
 	sCallbacks.addr[kGetRTSPPushSessionsCallback] = (QTSS_CallbackProcPtr)QTSSCallbacks::Easy_GetRTSPPushSessions;
+	sCallbacks.addr[kGetRTSPRecordSessionsCallback] = (QTSS_CallbackProcPtr)QTSSCallbacks::Easy_GetRTSPRecordSessions;
+
 }
 
 void QTSServer::LoadModules(QTSServerPrefs* inPrefs)

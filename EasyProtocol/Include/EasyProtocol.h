@@ -440,6 +440,40 @@ public:
 	void AddRecord(const string& starttime, const string &endtime);//format-HH:MM:SS
 };
 
+
+class EasyDarwinRecordSession
+{
+public:
+	EasyDarwinRecordSession() : index(0), numOutputs(0)
+	{}
+
+	~EasyDarwinRecordSession() {}
+
+public:
+	int index;
+	__int64 startTime;
+	__int64 endTime;
+	std::string Name;
+	int numOutputs;
+};
+
+class Easy_API EasyMsgSCRecordList : public EasyProtocol//封装录像列表回应
+{
+
+public:
+	EasyMsgSCRecordList();
+	EasyMsgSCRecordList(const string& msg);
+	virtual ~EasyMsgSCRecordList() {}
+
+public:
+	bool AddRecord(EasyDarwinRecordSession& session);
+	//int StartGetDevice();
+	//bool GetNextDevice(EasyDarwinDevice &device);
+
+private:
+	std::list<EasyDarwinRecordSession> sessions;
+};
+
 //add,Unisiot，start
 typedef struct 
 {

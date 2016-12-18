@@ -166,7 +166,7 @@ QTSS_Error RedisTTL()
 	easyRedisReply* reply = nullptr;
 
 	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	int ret = sRedisClient->SetExpire(chKey, 15);
+	int ret = sRedisClient->SetExpire(chKey, 150);
 	if (ret == -1)//fatal error
 	{
 		sRedisClient->Free();
@@ -192,8 +192,9 @@ QTSS_Error RedisTTL()
 		char chTemp[128]{ 0 };
 		int size = QTSServerInterface::GetServer()->GetNumRTPSessions();
 		auto ip = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP();
-		auto port = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWanPort();
-		sprintf(chTemp, "hmset %s:%s IP %s Port %d Load %d", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID(), ip, port, size);
+		auto httport = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWanPort();
+		auto rtsport = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort();
+		sprintf(chTemp, "hmset %s:%s IP %s HTTP %d RTSP %d Load %d", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID(), ip, httport, rtsport, size);
 		sRedisClient->AppendCommand(chTemp);
 
 		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
@@ -203,7 +204,7 @@ QTSS_Error RedisTTL()
 		}
 
 		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-		sRedisClient->SetExpire(chKey, 15);
+		sRedisClient->SetExpire(chKey, 150);
 	}
 
 	return QTSS_NoErr;

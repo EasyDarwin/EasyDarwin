@@ -39,6 +39,7 @@ private:
 	QTSS_Error execNetMsgCSLiveDeviceStreamReqRESTful(const char* queryString);
 
 	QTSS_Error execNetMsgCSGetRTSPLiveSessionsRESTful(const char* queryString);
+	QTSS_Error execNetMsgCSGetRTSPRecordSessionsRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSRestartServiceRESTful(const char* queryString) const;
 
 

@@ -183,25 +183,28 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 
 	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
 	{
-		unsigned long long llPTS = (frameinfo->timestamp_sec % 1000000) * 1000 + frameinfo->timestamp_usec / 1000;
-
-		//printf("Get %s Video \tLen:%d \ttm:%u.%u \t%u\n",frameinfo->type==EASY_SDK_VIDEO_FRAME_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
-
-		unsigned int uiFrameType;
-		if (frameinfo->type == EASY_SDK_VIDEO_FRAME_I)
+		//EASYHLS ONLY SUPPORT H.264 YET
+		if (frameinfo->codec == EASY_SDK_VIDEO_CODEC_H264)
 		{
-			uiFrameType = TS_TYPE_PES_VIDEO_I_FRAME;
-		}
-		else if (frameinfo->type == EASY_SDK_VIDEO_FRAME_P)
-		{
-			uiFrameType = TS_TYPE_PES_VIDEO_P_FRAME;
-		}
-		else
-		{
-			return QTSS_OutOfState;
-		}
+			unsigned long long llPTS = (frameinfo->timestamp_sec % 1000000) * 1000 + frameinfo->timestamp_usec / 1000;
 
-		EasyHLS_VideoMux(fHLSHandle, uiFrameType, reinterpret_cast<unsigned char*>(pbuf), frameinfo->length, llPTS * 90, llPTS * 90, llPTS * 90);
+			//printf("Get %s Video \tLen:%d \ttm:%u.%u \t%u\n",frameinfo->type==EASY_SDK_VIDEO_FRAME_I?"I":"P", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
+			unsigned int uiFrameType;
+			if (frameinfo->type == EASY_SDK_VIDEO_FRAME_I)
+			{
+				uiFrameType = TS_TYPE_PES_VIDEO_I_FRAME;
+			}
+			else if (frameinfo->type == EASY_SDK_VIDEO_FRAME_P)
+			{
+				uiFrameType = TS_TYPE_PES_VIDEO_P_FRAME;
+			}
+			else
+			{
+				return QTSS_OutOfState;
+			}
+
+			EasyHLS_VideoMux(fHLSHandle, uiFrameType, reinterpret_cast<unsigned char*>(pbuf), frameinfo->length, llPTS * 90, llPTS * 90, llPTS * 90);
+		}
 	}
 	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
 	{

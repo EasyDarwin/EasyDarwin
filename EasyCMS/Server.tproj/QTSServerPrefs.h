@@ -96,11 +96,6 @@ public:
         return this->getStringPref(qtssPrefsErrorLogName);
     }
 
-    char*	GetServiceID()
-    {
-        return this->getStringPref(qtssPrefsServiceID);
-    }
-
     char*   GetModuleDirectory()
     {
         return this->getStringPref(qtssPrefsModuleFolder);
@@ -125,8 +120,7 @@ public:
     UInt16  GetMonitorLANPort() { return fMonitorLANPort; }
     UInt16  GetMonitorWANPort() { return fMonitorWANPort; }
 
-    char* GetMonitorLANIP() { return this->getStringPref(qtssPrefsMonitorLANIPAddr); }
-    char* GetMonitorWANIP() { return this->getStringPref(qtssPrefsMonitorWANIPAddr); }
+    char* GetMonitorWANIP() { return this->getStringPref(qtssPrefsServiceWANIPAddr); }
 
     char* GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
     char* GetSnapWebPath() { return this->getStringPref(qtssPrefsSnapWebPath); }
@@ -165,8 +159,6 @@ private:
     UInt16 fMonitorWANPort;
 
     char   fMonitorWANAddr[20];
-    char   fMonitorLANAddr[20];
-    char   fServiceID[64];
 
     enum
     {
