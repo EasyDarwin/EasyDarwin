@@ -1,4 +1,4 @@
-#include "SearchFileDir.h"
+﻿#include "SearchFileDir.h"
 #include <string> 
 #include <fstream>
 #include <algorithm>
