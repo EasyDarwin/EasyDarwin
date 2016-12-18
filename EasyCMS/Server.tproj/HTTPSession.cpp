@@ -673,7 +673,7 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 		int height = EasyUtil::String2Int(parList.DoFindCGIValueForParam("height"));
 		int codec = EasyUtil::String2Int(parList.DoFindCGIValueForParam("codec"));
 
-		rawData2Image((char*)image.data(), image.size(), codec, width, height);
+		rawData2Image(const_cast<char*>(image.data()), image.size(), codec, width, height);
 		fwrite(decodeParam.imageData, 1, decodeParam.imageSize, fSnap);
 	}
 
