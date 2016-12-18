@@ -147,7 +147,7 @@ public:
 
 		kRedisTTLRole = 14,
 		kRedisAddDeviceRole = 15,
-		kRedisDelDevNameRole = 16,
+		kRedisDelDeviceRole = 16,
 		kRedisGetEasyDarwinRole = 17,
 		kRedisGetBestEasyDarwinRole = 18,
 		kRedisGenStreamIDRole = 19,
