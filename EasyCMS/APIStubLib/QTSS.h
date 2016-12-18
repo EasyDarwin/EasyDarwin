@@ -478,7 +478,7 @@ extern "C" {
 		Easy_Auth_Role = FOUR_CHARS_TO_INT('a', 'u', 't', 'r'),//autr,auth
 
 		//redis module roles
-		Easy_RedisAddDevName_Role = FOUR_CHARS_TO_INT('a', 'd', 'n', 'r'),//adnr
+		Easy_RedisAddDevice_Role = FOUR_CHARS_TO_INT('a', 'd', 'n', 'r'),//adnr
 		Easy_RedisDelDevName_Role = FOUR_CHARS_TO_INT('d', 'd', 'n', 'r'),//ddnr
 		Easy_RedisTTL_Role = FOUR_CHARS_TO_INT('t', 't', 'l', 'r'),//ttlr
 		Easy_RedisGetEasyDarwin_Role = FOUR_CHARS_TO_INT('g', 'a', 'd', 'r'),//gadr

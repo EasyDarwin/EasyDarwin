@@ -255,7 +255,7 @@ SInt64 HTTPSession::Run()
 					for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 					{
 						QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDevNameRole, currentModule);
-						(void)theModule->CallDispatch(Easy_RedisAddDevName_Role, &theParams);
+						(void)theModule->CallDispatch(Easy_RedisAddDevice_Role, &theParams);
 					}
 				}
 
@@ -807,7 +807,7 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 			{
 				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDevNameRole, currentModule);
-				(void)theModule->CallDispatch(Easy_RedisAddDevName_Role, &theParams);
+				(void)theModule->CallDispatch(Easy_RedisAddDevice_Role, &theParams);
 			}
 			fAuthenticated = true;
 		}
