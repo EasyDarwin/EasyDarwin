@@ -251,10 +251,10 @@ SInt64 HTTPSession::Run()
 				{
 					QTSS_RoleParams theParams;
 					theParams.DeviceInfoParams.inDevice = &fDevice;
-					UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDevNameRole);
+					UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDeviceRole);
 					for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 					{
-						QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDevNameRole, currentModule);
+						QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDeviceRole, currentModule);
 						(void)theModule->CallDispatch(Easy_RedisAddDevice_Role, &theParams);
 					}
 				}
@@ -803,10 +803,10 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 
 			QTSS_RoleParams theParams;
 			theParams.DeviceInfoParams.inDevice = &fDevice;
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDevNameRole);
+			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDeviceRole);
 			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDevNameRole, currentModule);
+				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisAddDeviceRole, currentModule);
 				(void)theModule->CallDispatch(Easy_RedisAddDevice_Role, &theParams);
 			}
 			fAuthenticated = true;
