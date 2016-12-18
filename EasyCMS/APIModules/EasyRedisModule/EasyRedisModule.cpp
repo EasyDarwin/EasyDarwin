@@ -64,7 +64,7 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 		return RereadPrefs();
 	case Easy_RedisAddDevice_Role:
 		return RedisAddDevName(&inParamBlock->DeviceInfoParams);
-	case Easy_RedisDelDevName_Role:
+	case Easy_RedisDelDevice_Role:
 		return RedisDelDevName(&inParamBlock->DeviceInfoParams);
 	case Easy_RedisTTL_Role:
 		return RedisTTL();
@@ -86,7 +86,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_RedisTTL_Role);
 	(void)QTSS_AddRole(Easy_RedisAddDevice_Role);
-	(void)QTSS_AddRole(Easy_RedisDelDevName_Role);
+	(void)QTSS_AddRole(Easy_RedisDelDevice_Role);
 	(void)QTSS_AddRole(Easy_RedisGetEasyDarwin_Role);
 	(void)QTSS_AddRole(Easy_RedisGetBestEasyDarwin_Role);
 	(void)QTSS_AddRole(Easy_RedisGenStreamID_Role);
