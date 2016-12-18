@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 
+#include "Windows/hiredis.h"
+
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject	modulePrefs = nullptr;
 static QTSS_PrefsObject			sServerPrefs = nullptr;
@@ -27,6 +29,8 @@ static char*            sDefaultRedisPassword = "admin";
 static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
 static bool				sIfConSucess = false;
 static OSMutex			sMutex;
+
+static redisContext* redisContext_ = nullptr;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
@@ -124,44 +128,38 @@ QTSS_Error RereadPrefs()
 QTSS_Error RedisConnect()
 {
 	if (sIfConSucess)
+	{
 		return QTSS_NoErr;
-
-	std::size_t timeout = 1;//timeout second
-	if (sRedisClient->ConnectWithTimeOut(sRedis_IP, sRedisPort, timeout) == EASY_REDIS_OK)//return 0 if connect sucess
-	{
-		qtss_printf("Connect redis sucess\n");
-		sIfConSucess = true;
-		std::size_t timeoutSocket = 1;//timeout socket second
-		sRedisClient->SetTimeout(timeoutSocket);
-	}
-	else
-	{
-		qtss_printf("Connect redis failed\n");
-		sIfConSucess = false;
 	}
 
-	if (sIfConSucess)
+	struct timeval timeout = { 1, 500000 }; // 1.5 seconds
+	redisContext_ = redisConnectWithTimeout(sRedis_IP, sRedisPort, timeout);
+	if (!redisContext_ || redisContext_->err)
 	{
-		char chKey[128] = { 0 };
-
-		sprintf(chKey, "auth %s", sRedisPassword);
-		sRedisClient->AppendCommand(chKey);
-		easyRedisReply* reply = nullptr;
-		while (!reply)
+		if (redisContext_)
 		{
-			sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-			if (reply)
-			{
-				EasyFreeReplyObject(reply);
-				break;
-			}
-			::Sleep(1000);
+			printf("Connection error: %s\n", redisContext_->errstr);
+			sIfConSucess = false;
+			redisFree(redisContext_);
+		}
+		else
+		{
+			printf("Connection error: can't allocate redis context\n");
 		}
 
-		return QTSS_NoErr;
+		return QTSS_NotConnected;
 	}
 
-	return QTSS_NotConnected;
+	sIfConSucess = true;
+
+	char chKey[128] = { 0 };
+	sprintf(chKey, "auth %s", sRedisPassword);
+
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+	printf("AUTH: %s\n", reply->str);
+	freeReplyObject(reply);
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error RedisTTL()
@@ -174,50 +172,32 @@ QTSS_Error RedisTTL()
 	}
 
 	char chKey[128] = { 0 };
-	easyRedisReply* reply = nullptr;
+	sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 
-	sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	int ret = sRedisClient->SetExpire(chKey, 300);
-	if (ret == -1)//fatal error
+	if (reply->integer == 0)
 	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-		return QTSS_NotConnected;
-	}
-	if (ret == 1)
-	{
-		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
-		sprintf(chKey, "hset EasyCMS:%s Load %d", id, deviceMap->size());
-		sRedisClient->AppendCommand(chKey);
-
-		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-		if (reply)
-		{
-			EasyFreeReplyObject(reply);
-		}
-
-		return QTSS_NoErr;
-	}
-	if (ret == 0)//the key doesn't exist, reset
-	{
-		char chTemp[128]{ 0 };
 		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
 		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANIP();
 		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANPort();
-		sprintf(chTemp, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, deviceMap->size());
-		sRedisClient->AppendCommand(chTemp);
+		sprintf(chKey, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, deviceMap->size());
+		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		freeReplyObject(replyHmset);
 
-		sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-		if (reply)
-		{
-			EasyFreeReplyObject(reply);
-		}
-
-		sprintf(chKey, "%s:%s", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-		sRedisClient->SetExpire(chKey, 300);
+		sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		freeReplyObject(replyExpire);
 	}
+	else if (reply->integer == 1)
+	{
+		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+		auto deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
+		sprintf(chKey, "hset EasyCMS:%s Load %d", id, deviceMap->size());
+		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		freeReplyObject(replyHset);
+	}
+	freeReplyObject(reply);
 
 	return QTSS_NoErr;
 }
@@ -268,18 +248,14 @@ QTSS_Error RedisAddDevName(QTSS_StreamName_Params* inParams)
 	auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 	sprintf(chKey, "hmset Device:%s Type %s Channel %s EasyCMS %s Token %s", deviceInfo->serial_.c_str(),
 		type.c_str(), channel.c_str(), id, deviceInfo->password_.c_str());
-
-	sRedisClient->AppendCommand(chKey);
-
-	easyRedisReply* replyTemp = nullptr;
-	sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
-	if (replyTemp)
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+	if (string(reply->str) == string("OK"))
 	{
-		EasyFreeReplyObject(replyTemp);
+		sprintf(chKey, "expire Device:%s 150", deviceInfo->serial_.c_str());
+		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		freeReplyObject(replyExpire);
 	}
-
-	sprintf(chKey, "Device:%s", deviceInfo->serial_.c_str());
-	sRedisClient->SetExpire(chKey, 150);
+	freeReplyObject(reply);
 
 	return QTSS_NoErr;
 }
@@ -299,13 +275,8 @@ QTSS_Error RedisDelDevName(QTSS_StreamName_Params* inParams)
 
 	char chKey[128] = { 0 };
 	sprintf(chKey, "hdel Device:%s", deviceInfo->serial_.c_str());
-
-	easyRedisReply* replyTemp = nullptr;
-	sRedisClient->GetReply(reinterpret_cast<void**>(&replyTemp));
-	if (replyTemp)
-	{
-		EasyFreeReplyObject(replyTemp);
-	}
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+	freeReplyObject(reply);
 
 	return QTSS_NoErr;
 }
@@ -319,149 +290,91 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		return QTSS_NotConnected;
 	}
 
-	string exists = Format("Live:%s/%s", string(inParams->inSerial), string(inParams->inChannel));
-	auto reply = static_cast<easyRedisReply*>(sRedisClient->Exists(exists.c_str()));
-	if (reply == nullptr)
+	string exists = Format("exists Live:%s/%s", string(inParams->inSerial), string(inParams->inChannel));
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, exists.c_str()));
+	if (reply->integer == 1)
 	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-		return QTSS_NotConnected;
-	}
-
-	if (reply->type == EASY_REDIS_REPLY_INTEGER && reply->integer == 1)
-	{
-		string strTemp = Format("HMGET %s", exists + " EasyDarwin");
-		sRedisClient->AppendCommand(strTemp.c_str());
-
-		easyRedisReply* reply2 = nullptr;
-		if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply2)) != EASY_REDIS_OK)
+		string strTemp = Format("hmget Live:%s/%s EasyDarwin", string(inParams->inSerial), string(inParams->inChannel));
+		auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
+		string easydarwin("EasyDarwin:");
+		easydarwin += replyHmget->str;
+		strTemp = Format("hmget %s", easydarwin + " IP HTTP RTSP");
+		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
+		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_NIL)
 		{
-			EasyFreeReplyObject(reply);
-			if (reply2)
-			{
-				EasyFreeReplyObject(reply2);
-			}
-			sRedisClient->Free();
-			sIfConSucess = false;
-			return QTSS_NotConnected;
-		}
+			freeReplyObject(replyHmgetEasyDarwin);
+			freeReplyObject(replyHmget);
+			freeReplyObject(reply);
 
-		if (reply2->type == EASY_REDIS_REPLY_NIL)
-		{
-			EasyFreeReplyObject(reply2);
 			return QTSS_RequestFailed;
 		}
 
-		if (reply2->type == EASY_REDIS_REPLY_INTEGER)
+		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_ARRAY)
 		{
-			string easydarwin("EasyDarwin:");
-			easydarwin += reply2->str;
-
-			strTemp = Format("HMGET %s", easydarwin + " IP Port");
-			sRedisClient->AppendCommand(strTemp.c_str());
-
-			easyRedisReply* reply3 = nullptr;
-			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply3)) != EASY_REDIS_OK)
+			memcpy(inParams->outDssIP, replyHmgetEasyDarwin->element[0]->str, replyHmgetEasyDarwin->element[0]->len);
+			memcpy(inParams->outHTTPPort, replyHmgetEasyDarwin->element[1]->str, replyHmgetEasyDarwin->element[1]->len);
+			memcpy(inParams->outDssPort, replyHmgetEasyDarwin->element[2]->str, replyHmgetEasyDarwin->element[2]->len);
+			inParams->isOn = true;
+		}
+		freeReplyObject(replyHmgetEasyDarwin);
+		freeReplyObject(replyHmget);
+	}
+	else
+	{
+		string keys("keys EasyDarwin:*");
+		auto replyKeys = static_cast<redisReply*>(redisCommand(redisContext_, keys.c_str()));
+		if (replyKeys->elements > 0)
+		{
+			multimap<int, tuple<string, string, string>> easydarwinMap;
+			for (size_t i = 0; i < reply->elements; i++)
 			{
-				EasyFreeReplyObject(reply);
-				if (reply3)
+				auto replyTemp = reply->element[i];
+				string strTemp = Format("hmget %s", string(replyTemp->str) + " Load IP HTTP RTSP");
+				auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, keys.c_str()));
+				if (replyHmget->type == EASY_REDIS_REPLY_NIL)
 				{
-					EasyFreeReplyObject(reply3);
+					freeReplyObject(replyHmget);
+					continue;
 				}
-				sRedisClient->Free();
-				sIfConSucess = false;
 
-				EasyFreeReplyObject(reply2);
-				return QTSS_NotConnected;
+				auto load = stoi(replyHmget->element[0]->str);
+				string ip(replyHmget->element[1]->str);
+				string http(replyHmget->element[2]->str);
+				string rtsp(replyHmget->element[3]->str);
+
+				easydarwinMap.emplace(load, make_tuple(ip, http, rtsp));
+
+				freeReplyObject(replyHmget);
 			}
 
-			if (reply3->type == EASY_REDIS_REPLY_NIL)
+			if (easydarwinMap.empty())
 			{
-				EasyFreeReplyObject(reply3);
-				EasyFreeReplyObject(reply2);
+				freeReplyObject(replyKeys);
+				freeReplyObject(reply);
 
 				return QTSS_RequestFailed;
 			}
 
-			if (reply3->type == EASY_REDIS_REPLY_ARRAY)
-			{
-				string ip(reply3->element[0]->str);
-				string port(reply3->element[1]->str);
-
-				memcpy(inParams->outDssIP, reply3->element[0]->str, reply3->element[0]->len);
-				memcpy(inParams->outDssPort, reply3->element[1]->str, reply3->element[1]->len);
-				inParams->isOn = true;
-			}
-			EasyFreeReplyObject(reply3);
+			auto easydarwin = easydarwinMap.begin()->second;
+			auto ip = std::get<0>(easydarwin);
+			auto http = std::get<1>(easydarwin);
+			auto rtsp = std::get<2>(easydarwin);
+			memcpy(inParams->outDssIP, ip.c_str(), ip.size());
+			memcpy(inParams->outHTTPPort, http.c_str(), http.size());
+			memcpy(inParams->outDssPort, rtsp.c_str(), rtsp.size());
+			inParams->isOn = false;
 		}
-		EasyFreeReplyObject(reply2);
-
-		return QTSS_NoErr;
-	}
-
-	//1. get the list of EasyDarwin
-	reply = static_cast<easyRedisReply*>(sRedisClient->Keys("EasyDarwin:*"));
-	if (reply == nullptr)
-	{
-		sRedisClient->Free();
-		sIfConSucess = false;
-		return QTSS_NotConnected;
-	}
-
-	//2.judge if the EasyDarwin is ilve and contain serial/channel.sdp
-	if (reply->elements > 0 && reply->type == EASY_REDIS_REPLY_ARRAY)
-	{
-		multimap<int, pair<string, string>> easydarwinMap;
-		easyRedisReply* childReply;
-		for (size_t i = 0; i < reply->elements; i++)
+		else
 		{
-			childReply = reply->element[i];
-			string strChileReply(childReply->str);
+			freeReplyObject(replyKeys);
+			freeReplyObject(reply);
 
-			string strTemp = Format("HMGET %s", strChileReply + " Load IP Port");
-			sRedisClient->AppendCommand(strTemp.c_str());
-
-			easyRedisReply* reply2 = nullptr;
-			if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply2)) != EASY_REDIS_OK)
-			{
-				EasyFreeReplyObject(reply);
-				if (reply2)
-				{
-					EasyFreeReplyObject(reply2);
-				}
-				sRedisClient->Free();
-				sIfConSucess = false;
-				return QTSS_NotConnected;
-			}
-
-			if (reply2->type == EASY_REDIS_REPLY_NIL)
-			{
-				continue;
-			}
-
-			if (reply2->type == EASY_REDIS_REPLY_ARRAY)
-			{
-				auto load = stoi(reply2->element[0]->str);
-				string ip(reply2->element[1]->str);
-				string port(reply2->element[2]->str);
-
-				easydarwinMap.emplace(load, make_pair(ip, port));
-			}
-			EasyFreeReplyObject(reply2);
+			return QTSS_NoErr;
 		}
 
-		if (easydarwinMap.empty())
-		{
-			return QTSS_RequestFailed;
-		}
-
-		auto easydarwin = easydarwinMap.begin()->second;
-		memcpy(inParams->outDssIP, easydarwin.first.c_str(), easydarwin.first.size());
-		memcpy(inParams->outDssPort, easydarwin.second.c_str(), easydarwin.second.size());
-		inParams->isOn = false;
+		freeReplyObject(replyKeys);
 	}
-
-	EasyFreeReplyObject(reply);
+	freeReplyObject(reply);
 
 	return QTSS_NoErr;
 }

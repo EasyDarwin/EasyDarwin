@@ -56,9 +56,7 @@ public:
 	string GetTalkbackSession() const { return talkbackSession; }
 	void SetTalkbackSession(const string& session) { talkbackSession = session; }
 
-
-	/*void SetStreamPushInfo(EasyJsonValue &info) { fStreamPushInfo = info; }
-	EasyJsonValue &GetStreamPushInfo() { return fStreamPushInfo; }*/
+	string GetDarwinHTTPPort() const { return darwinHttpPort_; }
 
 private:
 	SInt64 Run();
@@ -131,6 +129,8 @@ private:
 	DecoderHelper		decoderHelper;
 
 	string				talkbackSession;
+
+	string darwinHttpPort_;
 };
 #endif // __HTTP_SESSION_H__
 

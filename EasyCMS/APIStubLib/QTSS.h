@@ -594,10 +594,11 @@ typedef struct
 
 typedef struct
 {
-	char * inSerial;
-	char * inChannel;
-	char * outDssIP;
-	char * outDssPort;//UINT16 * outDssPort;
+	char* inSerial;
+	char* inChannel;
+	char* outDssIP;
+	char* outHTTPPort;
+	char* outDssPort;//UINT16 * outDssPort;
 	bool isOn;
 }QTSS_GetAssociatedDarwin_Params;
 

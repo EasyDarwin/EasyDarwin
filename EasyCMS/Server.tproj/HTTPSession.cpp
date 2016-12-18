@@ -989,14 +989,16 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	//×ßµ½ÕâËµÃ÷´æÔÚÖ¸¶¨Éè±¸
 	HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//»ñµÃµ±Ç°Éè±¸»Ø»°
 
-	string strDssIP, strDssPort;
+	string strDssIP, strHttpPort, strDssPort;
 	char chDssIP[sIPSize] = { 0 };
 	char chDssPort[sPortSize] = { 0 };
+	char chHTTPPort[sPortSize] = { 0 };
 
 	QTSS_RoleParams theParams;
 	theParams.GetAssociatedDarwinParams.inSerial = const_cast<char*>(chSerial);
 	theParams.GetAssociatedDarwinParams.inChannel = const_cast<char*>(chChannel);
 	theParams.GetAssociatedDarwinParams.outDssIP = chDssIP;
+	theParams.GetAssociatedDarwinParams.outHTTPPort = chHTTPPort;
 	theParams.GetAssociatedDarwinParams.outDssPort = chDssPort;
 	theParams.GetAssociatedDarwinParams.isOn = false;
 
@@ -1009,38 +1011,19 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	if (chDssIP[0] != 0)//ÊÇ·ñ´æÔÚ¹ØÁªµÄEasyDarWin×ª·¢·þÎñÆ÷test,Ó¦¸ÃÓÃRedisÉÏµÄÊý¾Ý£¬ÒòÎªÍÆÁ÷ÊÇ²»¿É¿¿µÄ£¬¶øEasyDarWinÉÏµÄÊý¾ÝÊÇ¿É¿¿µÄ
 	{
 		strDssIP = chDssIP;
+		strHttpPort = chHTTPPort;
 		strDssPort = chDssPort;
 
-		service = string("IP=") + strDssIP + ";Port=" + strDssPort + ";Type=EasyDarwin";
+		service = string("IP=") + strDssIP + ";Port=" + strHttpPort + ";Type=EasyDarwin";
 
 		if (!theParams.GetAssociatedDarwinParams.isOn)
 		{
 			EasyProtocolACK reqreq(MSG_SD_PUSH_STREAM_REQ);
 			EasyJsonValue headerheader, bodybody;
 
-			headerheader[EASY_TAG_CSEQ] = EasyUtil::ToString(pDevSession->GetCSeq());//×¢ÒâÕâ¸öµØ·½²»ÄÜÖ±½Ó½«UINT32->int,ÒòÎª»áÔì³ÉÊý¾ÝÊ§Õæ
+			headerheader[EASY_TAG_CSEQ] = EasyUtil::ToString(pDevSession->GetCSeq());
 			headerheader[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
 
-			string strSessionID;
-			char chSessionID[128] = { 0 };
-
-			//QTSS_RoleParams theParams;
-			theParams.GenStreamIDParams.outStreanID = chSessionID;
-			theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
-
-			numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
-			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
-				(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParams);
-			}
-			if (chSessionID[0] == 0)//sessionIDÔÙredisÉÏµÄ´æ´¢Ê§°Ü
-			{
-				return EASY_ERROR_SERVER_INTERNAL_ERROR;
-			}
-
-			strSessionID = chSessionID;
-			bodybody[EASY_TAG_STREAM_ID] = strSessionID;
 			bodybody[EASY_TAG_SERVER_IP] = strDssIP;
 			bodybody[EASY_TAG_SERVER_PORT] = strDssPort;
 			bodybody[EASY_TAG_SERIAL] = chSerial;
@@ -1050,6 +1033,8 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 			bodybody[EASY_TAG_FROM] = fSessionID;
 			bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 			bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+
+			darwinHttpPort_ = strHttpPort;
 
 			reqreq.SetHead(headerheader);
 			reqreq.SetBody(bodybody);
@@ -1107,7 +1092,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString
 
 	string decQueryString = EasyUtil::Urldecode(queryString);
 
-	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
+	QueryParamList parList(const_cast<char*>(decQueryString.c_str()));
 	const char* strDeviceSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//»ñÈ¡Éè±¸ÐòÁÐºÅ
 	const char* strChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//»ñÈ¡Í¨µÀ
 	const char* strProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//
@@ -1215,36 +1200,12 @@ QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 
 	if (httpSession->IsLiveSession())
 	{
-		//ºÏ³ÉÖ±²¥µØÖ·
-
-		string strSessionID;
-		char chSessionID[128] = { 0 };
-
-		QTSS_RoleParams theParams;
-		theParams.GenStreamIDParams.outStreanID = chSessionID;
-		theParams.GenStreamIDParams.inTimeoutMil = SessionIDTimeout;
-
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGenStreamIDRole);
-		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGenStreamIDRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisGenStreamID_Role, &theParams);
-		}
-		if (chSessionID[0] == 0)//sessionIDÔÚredisÉÏµÄ´æ´¢Ê§°Ü
-		{
-			return EASY_ERROR_SERVER_INTERNAL_ERROR;
-		}
-		strSessionID = chSessionID;
-		string strURL = string("rtsp://")
-			.append(strDssIP).append(":").append(strDssPort).append("/")
-			.append(strDeviceSerial).append("/")
-			.append(strChannel).append(".sdp")
-			.append("?token=").append(strSessionID);
+		string service = string("IP=") + strDssIP + ";Port=" + httpSession->GetDarwinHTTPPort() + ";Type=EasyDarwin";
 
 		//×ßµ½ÕâËµÃ÷¶Ô¿Í»§¶ËµÄÕýÈ·»ØÓ¦,ÒòÎª´íÎó»ØÓ¦Ö±½Ó·µ»Ø¡£
 		EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
 		EasyJsonValue header, body;
-		body[EASY_TAG_URL] = strURL;
+		body[EASY_TAG_SERVICE] = service;
 		body[EASY_TAG_SERIAL] = strDeviceSerial;
 		body[EASY_TAG_CHANNEL] = strChannel;
 		body[EASY_TAG_PROTOCOL] = strProtocol;//Èç¹ûµ±Ç°ÒÑ¾­ÍÆÁ÷£¬Ôò·µ»ØÇëÇóµÄ£¬·ñÔò·µ»ØÊµ¼ÊÍÆÁ÷ÀàÐÍ
