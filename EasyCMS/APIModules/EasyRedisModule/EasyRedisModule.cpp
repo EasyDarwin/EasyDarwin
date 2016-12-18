@@ -63,9 +63,9 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 	case QTSS_RereadPrefs_Role:
 		return RereadPrefs();
 	case Easy_RedisAddDevName_Role:
-		return RedisAddDevName(&inParamBlock->StreamNameParams);
+		return RedisAddDevName(&inParamBlock->DeviceInfoParams);
 	case Easy_RedisDelDevName_Role:
-		return RedisDelDevName(&inParamBlock->StreamNameParams);
+		return RedisDelDevName(&inParamBlock->DeviceInfoParams);
 	case Easy_RedisTTL_Role:
 		return RedisTTL();
 	case Easy_RedisGetEasyDarwin_Role:

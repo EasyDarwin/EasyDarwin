@@ -250,7 +250,7 @@ SInt64 HTTPSession::Run()
 				if (fSessionType != EasyHTTPSession && !fDevice.serial_.empty())
 				{
 					QTSS_RoleParams theParams;
-					theParams.StreamNameParams.inDevice = &fDevice;
+					theParams.DeviceInfoParams.inDevice = &fDevice;
 					UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDevNameRole);
 					for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 					{
@@ -802,7 +802,7 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 			QTSServerInterface::LogError(qtssMessageVerbosity, const_cast<char *>(msgStr.c_str()));
 
 			QTSS_RoleParams theParams;
-			theParams.StreamNameParams.inDevice = &fDevice;
+			theParams.DeviceInfoParams.inDevice = &fDevice;
 			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisAddDevNameRole);
 			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 			{

@@ -588,7 +588,7 @@ extern "C" {
 	typedef struct
 	{
 		void* inDevice;
-	}QTSS_StreamName_Params;
+	}Easy_DeviceInfo_Params;
 
 	typedef struct
 	{
@@ -597,7 +597,7 @@ extern "C" {
 	char* outDssIP;
 	char* outHTTPPort;
 	char* outDssPort;//UINT16 * outDssPort;
-		bool isOn;
+	bool isOn;
 	}QTSS_GetAssociatedDarwin_Params;
 
 	typedef struct
@@ -636,7 +636,7 @@ extern "C" {
 		QTSS_Nonce_Params                   NonceParams;
 
 		//EasyRedisModule
-		QTSS_StreamName_Params              StreamNameParams;
+		Easy_DeviceInfo_Params              DeviceInfoParams;
 		QTSS_GetAssociatedDarwin_Params	    GetAssociatedDarwinParams;
 		QTSS_GetBestDarwin_Params			GetBestDarwinParams;
 		QTSS_GenStreamID_Params				GenStreamIDParams;
