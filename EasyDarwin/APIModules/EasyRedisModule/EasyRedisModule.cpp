@@ -8,6 +8,8 @@
 #include "EasyUtil.h"
 
 #include "Windows/hiredis.h"
+#include "Format.h"
+#include "EasyRedisClient.h"
 
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject	modulePrefs = nullptr;
@@ -291,76 +293,68 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 
-	//if (!sIfConSucess)
-	//	return QTSS_NotConnected;
+	if (!sIfConSucess)
+	{
+		return QTSS_NotConnected;
+	}
 
-	//char chTemp[128] = { 0 };
+	string exists = Format("exists Device:%s", string(inParams->inSerial));
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, exists.c_str()));
+	if (!reply)
+	{
+		RedisErrorHandler([&]() {});
 
-	////1. get the list of EasyDarwin
-	//easyRedisReply * reply = static_cast<easyRedisReply *>(sRedisClient->SMembers("Device"));
-	//if (reply == nullptr)
-	//{
-	//	sRedisClient->Free();
-	//	sIfConSucess = false;
-	//	return QTSS_NotConnected;
-	//}
+		return QTSS_NotConnected;
+	}
 
-	////2.judge if the EasyCMS is ilve and contain serial  device
-	//if ((reply->elements > 0) && (reply->type == EASY_REDIS_REPLY_ARRAY))
-	//{
-	//	easyRedisReply* childReply;
-	//	for (size_t i = 0; i < reply->elements; i++)
-	//	{
-	//		childReply = reply->element[i];
-	//		std::string strChileReply(childReply->str);
+	if (reply->integer == 1)
+	{
+		string strTemp = Format("hmget Device:%s EasyCMS", string(inParams->inSerial));
+		auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
+		if (!replyHmget)
+		{
+			RedisErrorHandler([&]()
+			{
+				freeReplyObject(reply);
+			});
 
-	//		sprintf(chTemp, "exists %s", (strChileReply + "_Live").c_str());
-	//		sRedisClient->AppendCommand(chTemp);
+			return QTSS_NotConnected;
+		}
 
-	//		sprintf(chTemp, "sismember %s %s", (strChileReply + "_DevName").c_str(), inParams->inSerial);
-	//		sRedisClient->AppendCommand(chTemp);
-	//	}
+		string easycms("EasyCMS:");
+		easycms += replyHmget->str;
+		strTemp = Format("hmget %s", easycms + " IP Port");
+		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
+		if (!replyHmgetEasyDarwin)
+		{
+			RedisErrorHandler([&]()
+			{
+				freeReplyObject(replyHmget);
+				freeReplyObject(reply);
+			});
 
-	//	easyRedisReply *reply2 = nullptr, *reply3 = nullptr;
-	//	for (size_t i = 0; i < reply->elements; i++)
-	//	{
-	//		if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply2)) != EASY_REDIS_OK)
-	//		{
-	//			EasyFreeReplyObject(reply);
-	//			if (reply2)
-	//			{
-	//				EasyFreeReplyObject(reply2);
-	//			}
-	//			sRedisClient->Free();
-	//			sIfConSucess = false;
-	//			return QTSS_NotConnected;
-	//		}
-	//		if (sRedisClient->GetReply(reinterpret_cast<void**>(&reply3)) != EASY_REDIS_OK)
-	//		{
-	//			EasyFreeReplyObject(reply);
-	//			if (reply3)
-	//			{
-	//				EasyFreeReplyObject(reply3);
-	//			}
-	//			sRedisClient->Free();
-	//			sIfConSucess = false;
-	//			return QTSS_NotConnected;
-	//		}
+			return QTSS_NotConnected;
+		}
 
-	//		if ((reply2->type == EASY_REDIS_REPLY_INTEGER) && (reply2->integer == 1) &&
-	//			(reply3->type == EASY_REDIS_REPLY_INTEGER) && (reply3->integer == 1))
-	//		{//find it
-	//			std::string strIpPort(reply->element[i]->str);
-	//			int ipos = strIpPort.find(':');//judge error
-	//			memcpy(inParams->outCMSIP, strIpPort.c_str(), ipos);
-	//			memcpy(inParams->outCMSPort, &strIpPort[ipos + 1], strIpPort.size() - ipos - 1);
-	//			//break;//can't break,as 1 to 1
-	//		}
-	//		EasyFreeReplyObject(reply2);
-	//		EasyFreeReplyObject(reply3);
-	//	}
-	//}
-	//EasyFreeReplyObject(reply);
+		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_NIL)
+		{
+			freeReplyObject(replyHmgetEasyDarwin);
+			freeReplyObject(replyHmget);
+			freeReplyObject(reply);
+
+			return QTSS_RequestFailed;
+		}
+
+		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_ARRAY)
+		{
+			memcpy(inParams->outCMSIP, replyHmgetEasyDarwin->element[0]->str, replyHmgetEasyDarwin->element[0]->len);
+			memcpy(inParams->outCMSPort, replyHmgetEasyDarwin->element[1]->str, replyHmgetEasyDarwin->element[1]->len);
+		}
+		freeReplyObject(replyHmgetEasyDarwin);
+		freeReplyObject(replyHmget);
+	}
+
+	freeReplyObject(reply);
 	return QTSS_NoErr;
 }
 
