@@ -280,8 +280,16 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 	{
 		sprintf(chKey, "expire Live:%s/%d 150", inParams->inStreamName, inParams->inChannel);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		if(replyExpire)
-			freeReplyObject(replyExpire);
+		if (!replyExpire)
+		{
+			RedisErrorHandler([&]()
+			{
+				freeReplyObject(reply);
+			});
+
+			return QTSS_NotConnected;
+		}
+		freeReplyObject(replyExpire);
 	}
 	else
 	{

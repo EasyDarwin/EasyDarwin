@@ -293,15 +293,23 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 	{
 		RedisErrorHandler([&]() {});
 
-		return QTSS_NotConnected;		
+		return QTSS_NotConnected;
 	}
 
 	if (string(reply->str) == string("OK"))
 	{
 		sprintf(chKey, "expire Device:%s 150", deviceInfo->serial_.c_str());
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		if(replyExpire)
-			freeReplyObject(replyExpire);
+		if (!replyExpire)
+		{
+			RedisErrorHandler([&]()
+			{
+				freeReplyObject(reply);
+			});
+
+			return QTSS_NotConnected;
+		}
+		freeReplyObject(replyExpire);
 	}
 	else
 	{
