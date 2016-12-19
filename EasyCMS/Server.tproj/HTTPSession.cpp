@@ -629,7 +629,7 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 	string reserve = parse.GetBodyValue(EASY_TAG_RESERVE);
 
 	if (channel.empty())
-		channel = "0";
+		channel = "1";
 
 	if (strTime.empty())
 	{
@@ -879,7 +879,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 
 	//Îª¿ÉÑ¡²ÎÊýÌî³äÄ¬ÈÏÖµ
 	if (strChannel.empty())
-		strChannel = "0";
+		strChannel = "1";
 	if (strReserve.empty())
 		strReserve = "1";
 
@@ -970,7 +970,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 
 	//Îª¿ÉÑ¡²ÎÊýÌî³äÄ¬ÈÏÖµ
 	if (!isRightChannel(chChannel))
-		chChannel = "0";
+		chChannel = "1";
 	if (chReserve == nullptr)
 		chReserve = "1";
 
@@ -1100,7 +1100,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString
 
 	//Îª¿ÉÑ¡²ÎÊýÌî³äÄ¬ÈÏÖµ
 	if (!isRightChannel(strChannel))
-		strChannel = "0";
+		strChannel = "1";
 	if (strReserve == nullptr)
 		strReserve = "1";
 
@@ -1186,7 +1186,7 @@ QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á
 	string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//×´Ì¬Âë
 
 	if (strChannel.empty())
-		strChannel = "0";
+		strChannel = "1";
 	if (strReserve.empty())
 		strReserve = "1";
 
@@ -1748,7 +1748,7 @@ QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString
 
 	//Îª¿ÉÑ¡²ÎÊýÌî³äÄ¬ÈÏÖµ
 	if (!isRightChannel(chChannel))
-		chChannel = "0";
+		chChannel = "1";
 	if (chReserve == nullptr)
 		chReserve = "1";
 
@@ -1834,7 +1834,7 @@ QTSS_Error HTTPSession::execNetMsgDSPTZControlAck(const char* json)
 	//  string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//×´Ì¬Âë
 
 	//  if (strChannel.empty())
-	//      strChannel = "0";
+	//      strChannel = "1";
 	//  if (strReserve.empty())
 	//      strReserve = "1";
 
@@ -1898,7 +1898,7 @@ QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryStr
 
 	//Îª¿ÉÑ¡²ÎÊýÌî³äÄ¬ÈÏÖµ
 	if (!isRightChannel(chChannel))
-		chChannel = "0";
+		chChannel = "1";
 	if (chReserve == nullptr)
 		chReserve = "1";
 
@@ -1959,7 +1959,7 @@ QTSS_Error HTTPSession::execNetMsgDSPresetControlAck(const char* json)
 	string strStateCode = req.GetHeaderValue(EASY_TAG_ERROR_NUM);//×´Ì¬Âë
 
 	if (strChannel.empty())
-		strChannel = "0";
+		strChannel = "1";
 	if (strReserve.empty())
 		strReserve = "1";
 
@@ -2015,7 +2015,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 	string strCSeq = req.GetHeaderValue(EASY_TAG_CSEQ);//Õâ¸öÊÇ¹Ø¼ü×Ö
 
 	if (strChannel.empty())
-		strChannel = "0";
+		strChannel = "1";
 	if (strReserve.empty())
 		strReserve = "1";
 
