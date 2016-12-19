@@ -11,6 +11,8 @@
 #include "Format.h"
 #include "EasyRedisClient.h"
 
+#include "Resources.h"
+
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject	modulePrefs = nullptr;
 static QTSS_PrefsObject			sServerPrefs = nullptr;
@@ -133,9 +135,7 @@ QTSS_Error RedisConnect()
 	{
 		if (redisContext_)
 		{
-			printf("Connection error: %s\n", redisContext_->errstr);
-			sIfConSucess = false;
-			redisFree(redisContext_);
+			RedisErrorHandler([&]() {});
 		}
 		else
 		{
@@ -197,7 +197,8 @@ QTSS_Error RedisTTL()
 		auto http = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWanPort();
 		auto rtsp = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort();
 
-		sprintf(chKey, "hmset %s:%s IP %s HTTP %d RTSP %d Load %d", server, guid, ip, http, rtsp, load);
+		sprintf(chKey, "hmset %s:%s %s %s %s %d %s %d %s %d", server, guid, EASY_DARWIN_REDIS_IP, ip, EASY_DARWIN_REDIS_HTTP,
+			http, EASY_DARWIN_REDIS_RTSP, rtsp, EASY_DARWIN_REDIS_LOAD, load);
 		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		if (!replyHmset)
 		{
@@ -239,7 +240,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return QTSS_NotConnected;
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
+	sprintf(chKey, "%s:%s/%d", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
 
 	if (inParams->inAction == easyRedisActionDelete)
 	{
@@ -254,7 +255,9 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return QTSS_NoErr;
 	}
 
-	sprintf(chKey, "hmset Live:%s/%d Bitrate %d Output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inBitrate, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	sprintf(chKey, "hmset %s:%s/%d %s %d %s %d %s %s", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel,
+		EASY_DARWIN_REDIS_BITRATE, inParams->inBitrate, EASY_DARWIN_REDIS_OUTPUT, inParams->inNumOutputs,
+		EASY_DARWIN_REDIS_EASYDARWIN, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	if (!reply)
 	{
@@ -265,7 +268,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 
 	if (string(reply->str) == string("OK"))
 	{
-		sprintf(chKey, "expire Live:%s/%d 150", inParams->inStreamName, inParams->inChannel);
+		sprintf(chKey, "expire %s:%s/%d 150", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		if (!replyExpire)
 		{
@@ -298,7 +301,7 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 		return QTSS_NotConnected;
 	}
 
-	string exists = Format("exists Device:%s", string(inParams->inSerial));
+	string exists = Format("exists %s:%s", EASY_DARWIN_REDIS_DEVICE, string(inParams->inSerial));
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, exists.c_str()));
 	if (!reply)
 	{
@@ -309,7 +312,7 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 
 	if (reply->integer == 1)
 	{
-		string strTemp = Format("hmget Device:%s EasyCMS", string(inParams->inSerial));
+		string strTemp = Format("hmget %s:%s %s", EASY_DARWIN_REDIS_DEVICE, string(inParams->inSerial), EASY_DARWIN_REDIS_EASYCMS);
 		auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		if (!replyHmget)
 		{
@@ -321,11 +324,11 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 			return QTSS_NotConnected;
 		}
 
-		string easycms("EasyCMS:");
+		string easycms = Format("%s:", EASY_DARWIN_REDIS_EASYCMS);
 		easycms += replyHmget->element[0]->str;;
 		freeReplyObject(replyHmget);
 
-		strTemp = Format("hmget %s", easycms + " IP Port");
+		strTemp = Format("hmget %s %s %s ", easycms, EASY_DARWIN_REDIS_IP, EASY_DARWIN_REDIS_PORT);
 		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		if (!replyHmgetEasyDarwin)
 		{
@@ -380,7 +383,7 @@ QTSS_Error RedisSetRTSPLoad()
 
 	if (reply->integer == 1)
 	{
-		sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
+		sprintf(chKey, "hset %s:%s %s %d", server, guid, EASY_DARWIN_REDIS_LOAD, load);
 		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		if (!replyHset)
 		{
@@ -427,7 +430,7 @@ QTSS_Error RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams)
 
 static void RedisErrorHandler(function<void()> func)
 {
-	printf("connect error");
+	printf("Connection error: %s\n", redisContext_->errstr);
 
 	sIfConSucess = false;
 	redisFree(redisContext_);
