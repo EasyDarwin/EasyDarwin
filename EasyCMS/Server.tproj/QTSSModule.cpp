@@ -223,7 +223,6 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         // in the role array
         case QTSS_Initialize_Role:          return kInitializeRole          ;
         case QTSS_Shutdown_Role:            return kShutdownRole            ;
-
 		case QTSS_ErrorLog_Role:            return kErrorLogRole            ;
         case QTSS_RereadPrefs_Role:         return kRereadPrefsRole         ;
         case QTSS_OpenFile_Role:            return kOpenFileRole            ;
@@ -234,11 +233,11 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
         case QTSS_RequestEventFile_Role:    return kRequestEventFileRole    ;  
         case QTSS_StateChange_Role:         return kStateChangeRole         ;      
         case QTSS_Interval_Role:            return kTimedIntervalRole       ;
-		case Easy_Nonce_Role:               return kEasyNonceRole               ;
-		case Easy_Auth_Role:                return kEasyAuthRole                ;
-		case Easy_RedisTTL_Role:			return kRedisTTLRole					;
-		case Easy_RedisSetDevice_Role:		return kRedisSetDeviceRole			;
-		case Easy_RedisDelDevice_Role:		return kRedisDelDeviceRole			;
+		case Easy_Nonce_Role:               return kEasyNonceRole			;
+		case Easy_Auth_Role:                return kEasyAuthRole			;
+		case Easy_RedisTTL_Role:			return kRedisTTLRole			;
+		case Easy_RedisSetDevice_Role:		return kRedisSetDeviceRole		;
+		case Easy_RedisDelDevice_Role:		return kRedisDelDeviceRole		;
 		case Easy_RedisGetEasyDarwin_Role: return kRedisGetEasyDarwinRole	;
         default:
             return -1;
