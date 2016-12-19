@@ -60,7 +60,7 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 		return RereadPrefs();
 	case Easy_RedisTTL_Role:
 		return RedisTTL();
-	case Easy_RedisChangeRTPNum_Role:
+	case Easy_RedisSetRTSPLoad_Role:
 		return RedisChangeRtpNum();
 	case Easy_RedisUpdateStreamInfo_Role:
 		return RedisUpdateStream(&inParamBlock->easyStreamInfoParams);
@@ -79,7 +79,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_Initialize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_RedisTTL_Role);
-	(void)QTSS_AddRole(Easy_RedisChangeRTPNum_Role);
+	(void)QTSS_AddRole(Easy_RedisSetRTSPLoad_Role);
 	(void)QTSS_AddRole(Easy_RedisUpdateStreamInfo_Role);
 	(void)QTSS_AddRole(Easy_RedisGetAssociatedCMS_Role);
 	(void)QTSS_AddRole(Easy_RedisJudgeStreamID_Role);
@@ -264,7 +264,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return QTSS_NoErr;
 	}
 
-	sprintf(chKey, "hmset Live:%s/%d output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	sprintf(chKey, "hmset Live:%s/%d Bitrate %d Output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inBitrate, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	if (!reply)
 	{

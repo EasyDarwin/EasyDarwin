@@ -127,21 +127,21 @@ public:
 	void            IncrementTotalRTPSessions()
 	{
 		OSMutexLocker locker(&fMutex); fNumRTPSessions++; fTotalRTPSessions++;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisChangeRTPNumRole);
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetRTSPLoadRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisChangeRTPNumRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisChangeRTPNum_Role, NULL);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetRTSPLoadRole, currentModule);
+			(void)theModule->CallDispatch(Easy_RedisSetRTSPLoad_Role, NULL);
 		}
 	}
 	void            AlterCurrentRTPSessionCount(SInt32 inDifference)
 	{
 		OSMutexLocker locker(&fMutex); fNumRTPSessions += inDifference;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisChangeRTPNumRole);
+		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetRTSPLoadRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisChangeRTPNumRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisChangeRTPNum_Role, NULL);
+			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetRTSPLoadRole, currentModule);
+			(void)theModule->CallDispatch(Easy_RedisSetRTSPLoad_Role, NULL);
 		}
 	}
 

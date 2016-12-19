@@ -407,8 +407,11 @@ void    ReflectorSession::RemoveSessionFromOutput(QTSS_ClientSessionObject inSes
 UInt32  ReflectorSession::GetBitRate()
 {
 	UInt32 retval = 0;
-	for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
-		retval += fStreamArray[x]->GetBitRate();
+	if (fStreamArray)
+	{
+		for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
+			retval += fStreamArray[x]->GetBitRate();
+	}
 	return retval;
 }
 
@@ -453,6 +456,7 @@ SInt64 ReflectorSession::Run()
 		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
 		theParams.easyStreamInfoParams.inChannel = fChannelNum;
 		theParams.easyStreamInfoParams.inNumOutputs = fNumOutputs;
+		theParams.easyStreamInfoParams.inBitrate = GetBitRate();
 		theParams.easyStreamInfoParams.inAction = easyRedisActionSet;
 		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
