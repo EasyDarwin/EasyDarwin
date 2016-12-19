@@ -373,7 +373,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		return QTSS_NotConnected;
 	}
 
-	string exists = Format("exists %s:%s/%s", EASY_CMS_REDIS_LIVE, string(inParams->inSerial), string(inParams->inChannel));
+	string exists = Format("exists %s:%s/%s", string(EASY_CMS_REDIS_LIVE), string(inParams->inSerial), string(inParams->inChannel));
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, exists.c_str()));
 	if (!reply)
 	{
@@ -384,8 +384,8 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 
 	if (reply->integer == 1)
 	{
-		string strTemp = Format("hmget %s:%s/%s %s", EASY_CMS_REDIS_LIVE, string(inParams->inSerial),
-			string(inParams->inChannel), EASY_CMS_REDIS_EASYDARWIN);
+		string strTemp = Format("hmget %s:%s/%s %s", string(EASY_CMS_REDIS_LIVE), string(inParams->inSerial),
+			string(inParams->inChannel), string(EASY_CMS_REDIS_EASYDARWIN));
 		auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		if (!replyHmget)
 		{
@@ -396,11 +396,12 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 
 			return QTSS_NotConnected;
 		}
-		string easydarwin = Format("%s:", EASY_CMS_REDIS_EASYDARWIN);
+		string easydarwin = Format("%s:", string(EASY_CMS_REDIS_EASYDARWIN));
 		easydarwin += replyHmget->element[0]->str;
 		freeReplyObject(replyHmget);
 
-		strTemp = Format("hmget %s %s %s %s", easydarwin, EASY_CMS_REDIS_IP, EASY_CMS_REDIS_HTTP, EASY_CMS_REDIS_RTSP);
+		strTemp = Format("hmget %s %s %s %s", easydarwin, string(EASY_CMS_REDIS_IP), string(EASY_CMS_REDIS_HTTP),
+			string(EASY_CMS_REDIS_RTSP));
 
 		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		if (!replyHmgetEasyDarwin)
@@ -435,7 +436,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	}
 	else
 	{
-		string keys = Format("keys %s:*", EASY_CMS_REDIS_EASYDARWIN);
+		string keys = Format("keys %s:*", string(EASY_CMS_REDIS_EASYDARWIN));
 		auto replyKeys = static_cast<redisReply*>(redisCommand(redisContext_, keys.c_str()));
 		if (!replyKeys)
 		{
@@ -453,8 +454,8 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 			for (size_t i = 0; i < replyKeys->elements; i++)
 			{
 				auto replyTemp = replyKeys->element[i];
-				string strTemp = Format("hmget %s %s %s %s %s ", string(replyTemp->str), EASY_CMS_REDIS_LOAD, EASY_CMS_REDIS_IP,
-					EASY_CMS_REDIS_HTTP, EASY_CMS_REDIS_RTSP);
+				string strTemp = Format("hmget %s %s %s %s %s ", string(replyTemp->str), string(EASY_CMS_REDIS_LOAD), string(EASY_CMS_REDIS_IP),
+					string(EASY_CMS_REDIS_HTTP), string(EASY_CMS_REDIS_RTSP));
 				auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 				if (!replyHmget)
 				{
