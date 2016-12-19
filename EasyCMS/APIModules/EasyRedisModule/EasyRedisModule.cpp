@@ -19,7 +19,7 @@ static QTSS_ServerObject		sServer = nullptr;
 
 // Redis IP
 static char*            sRedis_IP = nullptr;
-static char*            sDefaultRedis_IP_Addr = "127.0.0.1";
+static char*            sDefaultRedis_IP_Addr = "192.168.66.115";
 // Redis Port
 static UInt16			sRedisPort = 6379;
 static UInt16			sDefaultRedisPort = 6379;
@@ -213,7 +213,6 @@ QTSS_Error RedisTTL()
 			RedisErrorHandler([&]()
 			{
 				freeReplyObject(reply);
-				freeReplyObject(replyHmset);
 			});
 
 			return QTSS_NotConnected;
@@ -389,16 +388,17 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 
 			return QTSS_NotConnected;
 		}
-
 		string easydarwin("EasyDarwin:");
-		easydarwin += replyHmget->str;
+		easydarwin += replyHmget->element[0]->str;
+		freeReplyObject(replyHmget);		
+
 		strTemp = Format("hmget %s", easydarwin + " IP HTTP RTSP");
+
 		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		if (!replyHmgetEasyDarwin)
 		{
 			RedisErrorHandler([&]()
 			{
-				freeReplyObject(replyHmget);
 				freeReplyObject(reply);
 			});
 
@@ -408,21 +408,22 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_NIL)
 		{
 			freeReplyObject(replyHmgetEasyDarwin);
-			freeReplyObject(replyHmget);
 			freeReplyObject(reply);
 
 			return QTSS_RequestFailed;
 		}
 
-		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_ARRAY)
+		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_ARRAY && replyHmgetEasyDarwin->elements == 3)
 		{
-			memcpy(inParams->outDssIP, replyHmgetEasyDarwin->element[0]->str, replyHmgetEasyDarwin->element[0]->len);
-			memcpy(inParams->outHTTPPort, replyHmgetEasyDarwin->element[1]->str, replyHmgetEasyDarwin->element[1]->len);
-			memcpy(inParams->outDssPort, replyHmgetEasyDarwin->element[2]->str, replyHmgetEasyDarwin->element[2]->len);
+			string ip(replyHmgetEasyDarwin->element[0]->str);
+			string httpPort(replyHmgetEasyDarwin->element[1]->str);
+			string rtspPort(replyHmgetEasyDarwin->element[2]->str);
+			memcpy(inParams->outDssIP, ip.c_str(), ip.size());
+			memcpy(inParams->outHTTPPort, httpPort.c_str(), httpPort.size());
+			memcpy(inParams->outDssPort, rtspPort.c_str(), rtspPort.size());
 			inParams->isOn = true;
 		}
 		freeReplyObject(replyHmgetEasyDarwin);
-		freeReplyObject(replyHmget);
 	}
 	else
 	{
@@ -441,11 +442,11 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		if (replyKeys->elements > 0)
 		{
 			multimap<int, tuple<string, string, string>> easydarwinMap;
-			for (size_t i = 0; i < reply->elements; i++)
+			for (size_t i = 0; i < replyKeys->elements; i++)
 			{
-				auto replyTemp = reply->element[i];
+				auto replyTemp = replyKeys->element[i];
 				string strTemp = Format("hmget %s", string(replyTemp->str) + " Load IP HTTP RTSP");
-				auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, keys.c_str()));
+				auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 				if (!replyHmget)
 				{
 					RedisErrorHandler([&]()
@@ -463,10 +464,14 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 					continue;
 				}
 
-				auto load = stoi(replyHmget->element[0]->str);
-				string ip(replyHmget->element[1]->str);
-				string http(replyHmget->element[2]->str);
-				string rtsp(replyHmget->element[3]->str);
+				auto loadReply = replyHmget->element[0];
+				auto ipReply = replyHmget->element[1];
+				auto httpReply = replyHmget->element[2];
+				auto rtspReply = replyHmget->element[3];
+				auto load = stoi(loadReply->str);
+				string ip(ipReply->str);
+				string http(httpReply->str);
+				string rtsp(rtspReply->str);
 
 				easydarwinMap.emplace(load, make_tuple(ip, http, rtsp));
 
