@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="..\APIModules\EasyAuthModule\EasyAuthModule.h" />
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />
+    <ClInclude Include="..\APIModules\EasyRedisModule\Resources.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CommonUtilitiesLib\CommonUtilitiesLib.vcxproj">
