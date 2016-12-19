@@ -300,7 +300,8 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 	{
 		sprintf(chKey, "expire Device:%s 150", deviceInfo->serial_.c_str());
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		freeReplyObject(replyExpire);
+		if(replyExpire)
+			freeReplyObject(replyExpire);
 	}
 	else
 	{
