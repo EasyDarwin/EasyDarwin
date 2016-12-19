@@ -403,15 +403,6 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		fStreamName = new char[strlen(streamName) + 1];
 		strcpy(fStreamName, streamName);
 
-		char chSerial[32] = { 0 };
-		auto chPos = strstr(fStreamName, "/");
-		if (chPos == nullptr)
-			return QTSS_BadArgument;
-
-		memcpy(chSerial, fStreamName, chPos - fStreamName);
-		//TODO::解析fStreamName出Serial/Channel.sdp
-		//如果解析失败,返回QTSS_BadArgument
-
 		//2.根据Serial查询到设备所在的EasyCMS信息
 		char chCMSIP[20] = { 0 };
 		char chCMSPort[6] = { 0 };
@@ -422,7 +413,7 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		QTSS_RoleParams theParams;
 		theParams.GetAssociatedCMSParams.outCMSIP = chCMSIP;
 		theParams.GetAssociatedCMSParams.outCMSPort = chCMSPort;
-		theParams.GetAssociatedCMSParams.inSerial = chSerial;
+		theParams.GetAssociatedCMSParams.inSerial = fStreamName;
 		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisGetAssociatedCMSRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{

@@ -322,14 +322,15 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 		}
 
 		string easycms("EasyCMS:");
-		easycms += replyHmget->str;
+		easycms += replyHmget->element[0]->str;;
+		freeReplyObject(replyHmget);
+
 		strTemp = Format("hmget %s", easycms + " IP Port");
 		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		if (!replyHmgetEasyDarwin)
 		{
 			RedisErrorHandler([&]()
 			{
-				freeReplyObject(replyHmget);
 				freeReplyObject(reply);
 			});
 
@@ -339,7 +340,6 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_NIL)
 		{
 			freeReplyObject(replyHmgetEasyDarwin);
-			freeReplyObject(replyHmget);
 			freeReplyObject(reply);
 
 			return QTSS_RequestFailed;
@@ -351,7 +351,6 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 			memcpy(inParams->outCMSPort, replyHmgetEasyDarwin->element[1]->str, replyHmgetEasyDarwin->element[1]->len);
 		}
 		freeReplyObject(replyHmgetEasyDarwin);
-		freeReplyObject(replyHmget);
 	}
 
 	freeReplyObject(reply);
