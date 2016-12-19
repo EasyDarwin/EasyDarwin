@@ -25,13 +25,13 @@ static QTSS_ServerObject		sServer = nullptr;
 
 // Redis IP
 static char*            sRedis_IP = nullptr;
-static char*            sDefaultRedis_IP_Addr = "192.168.66.115";
+static char*            sDefaultRedis_IP_Addr = "127.0.0.1";
 // Redis Port
 static UInt16			sRedisPort = 6379;
 static UInt16			sDefaultRedisPort = 6379;
 // Redis password
 static char*            sRedisPassword = nullptr;
-static char*            sDefaultRedisPassword = "EasyDSSEasyDarwinEasyCMSEasyCamera";
+static char*            sDefaultRedisPassword = "";
 
 //static EasyRedisClient* sRedisClient = nullptr;//the object pointer that package the redis operation
 static bool				sIfConSucess = false;
