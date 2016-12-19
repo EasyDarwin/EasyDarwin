@@ -5,9 +5,9 @@
 #include "QTSSModuleUtils.h"
 #include "QTSServerInterface.h"
 #include "ReflectorSession.h"
+#include "EasyUtil.h"
 
 #include "Windows/hiredis.h"
-#include "EasyRedisClient.h"
 
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject	modulePrefs = nullptr;
@@ -28,6 +28,8 @@ static bool				sIfConSucess = false;
 static OSMutex			sMutex;
 
 static redisContext*	redisContext_ = nullptr;
+
+static void RedisErrorHandler(function<void()> func);
 
 
 // FUNCTION PROTOTYPES
@@ -148,7 +150,18 @@ QTSS_Error RedisConnect()
 	sprintf(chKey, "auth %s", sRedisPassword);
 
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-	printf("AUTH: %s\n", reply->str);
+	if (!reply || string(reply->str) != string("OK"))
+	{
+		RedisErrorHandler([&]()
+		{
+			if (reply)
+			{
+				freeReplyObject(reply);
+			}
+		});
+
+		return QTSS_NotConnected;
+	}
 	freeReplyObject(reply);
 
 	return QTSS_NoErr;
@@ -162,14 +175,20 @@ QTSS_Error RedisTTL()
 	{
 		return QTSS_NotConnected;
 	}
-
-	char chKey[128] = { 0 };
-	sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		
 	auto server = QTSServerInterface::GetServerName().Ptr;
 	auto guid = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 	auto load = QTSServerInterface::GetServer()->GetNumRTPSessions();
+
+	char chKey[128] = { 0 };
+	sprintf(chKey, "expire %s:%s 15", server, guid);
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+
+	if (!reply)
+	{
+		RedisErrorHandler([&]() {});
+
+		return QTSS_NotConnected;
+	}
 
 	if (reply->integer == 0)
 	{
@@ -179,16 +198,44 @@ QTSS_Error RedisTTL()
 
 		sprintf(chKey, "hmset %s:%s IP %s HTTP %d RTSP %d Load %d", server, guid, ip, http, rtsp, load);
 		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		if (!replyHmset)
+		{
+			RedisErrorHandler([&]()
+			{
+				freeReplyObject(reply);
+			});
+
+			return QTSS_NotConnected;
+		}
 		freeReplyObject(replyHmset);
 
-		sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+		sprintf(chKey, "expire %s:%s 15", server, guid);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		if (!replyExpire)
+		{
+			RedisErrorHandler([&]()
+			{
+				freeReplyObject(reply);
+				freeReplyObject(replyHmset);
+			});
+
+			return QTSS_NotConnected;
+		}
 		freeReplyObject(replyExpire);
 	}
 	else if (reply->integer == 1)
 	{
 		sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
 		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		if (!replyHset)
+		{
+			RedisErrorHandler([&]()
+			{
+				freeReplyObject(reply);
+			});
+
+			return QTSS_NotConnected;
+		}
 		freeReplyObject(replyHset);
 	}
 	freeReplyObject(reply);
@@ -210,19 +257,38 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 	{
 		sprintf(chKey, "hdel %s", chKey);
 		auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		freeReplyObject(reply);
-		return 0;
+		if (!reply)
+		{
+			RedisErrorHandler([&]() {});
+
+			return QTSS_NotConnected;
+		}
+		return QTSS_NoErr;
 	}
 
 	char chTemp[128] = { 0 };
 	sprintf(chTemp, "hmset Live:%s/%d output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chTemp));
+	if (!reply)
+	{
+		RedisErrorHandler([&]() {});
+
+		return QTSS_NotConnected;
+	}
+
 	if (string(reply->str) == string("OK"))
 	{
 		sprintf(chKey, "expire Live:%s/%d 150", inParams->inStreamName, inParams->inChannel);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		freeReplyObject(replyExpire);
+		if(replyExpire)
+			freeReplyObject(replyExpire);
 	}
+	else
+	{
+		freeReplyObject(reply);
+		return QTSS_RequestFailed;
+	}
+
 	freeReplyObject(reply);
 
 	return QTSS_NoErr;
@@ -355,4 +421,14 @@ QTSS_Error RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams)
 	//	return ret;
 	//}
 	return 0;
+}
+
+static void RedisErrorHandler(function<void()> func)
+{
+	printf("connect error");
+
+	sIfConSucess = false;
+	redisFree(redisContext_);
+
+	func();
 }
