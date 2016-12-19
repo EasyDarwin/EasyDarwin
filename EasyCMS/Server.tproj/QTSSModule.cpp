@@ -240,8 +240,6 @@ SInt32 QTSSModule::GetPrivateRoleIndex(QTSS_Role apiRole)
 		case Easy_RedisSetDevice_Role:		return kRedisSetDeviceRole			;
 		case Easy_RedisDelDevice_Role:		return kRedisDelDeviceRole			;
 		case Easy_RedisGetEasyDarwin_Role: return kRedisGetEasyDarwinRole	;
-		case Easy_RedisGetBestEasyDarwin_Role:		return kRedisGetBestEasyDarwinRole		;
-		case Easy_RedisGenStreamID_Role:			return kRedisGenStreamIDRole			;
         default:
             return -1;
     }
