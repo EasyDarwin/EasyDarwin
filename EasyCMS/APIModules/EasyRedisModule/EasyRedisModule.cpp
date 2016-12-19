@@ -100,8 +100,6 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	RereadPrefs();
 
-	//sRedisClient = new EasyRedisClient();
-
 	RedisConnect();
 
 	return QTSS_NoErr;
@@ -176,9 +174,12 @@ QTSS_Error RedisTTL()
 	{
 		return QTSS_NotConnected;
 	}
+	auto server = QTSServerInterface::GetServer()->GetServerName().Ptr;
+	auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+	auto load = QTSServerInterface::GetServer()->GetNumServiceSessions();
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	sprintf(chKey, "expire %s:%s 15", server, id);
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	if (!reply)
 	{
@@ -187,13 +188,12 @@ QTSS_Error RedisTTL()
 		return QTSS_NotConnected;
 	}
 
+
 	if (reply->integer == 0)
 	{
-		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		auto sessionCount = QTSServerInterface::GetServer()->GetNumServiceSessions();
 		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP();
 		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANPort();
-		sprintf(chKey, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, sessionCount);
+		sprintf(chKey, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, load);
 		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		if (!replyHmset)
 		{
@@ -206,7 +206,7 @@ QTSS_Error RedisTTL()
 		}
 		freeReplyObject(replyHmset);
 
-		sprintf(chKey, "expire %s:%s 15", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+		sprintf(chKey, "expire %s:%s 15", server, id);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		if (!replyExpire)
 		{
@@ -222,9 +222,7 @@ QTSS_Error RedisTTL()
 	}
 	else if (reply->integer == 1)
 	{
-		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-		auto sessionCount = QTSServerInterface::GetServer()->GetNumServiceSessions();
-		sprintf(chKey, "hset EasyCMS:%s Load %d", id, sessionCount);
+		sprintf(chKey, "hset %s:%s Load %d", server, id, load);
 		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		if (!replyHset)
 		{
