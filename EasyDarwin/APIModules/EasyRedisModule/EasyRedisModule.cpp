@@ -31,7 +31,6 @@ static redisContext*	redisContext_ = nullptr;
 
 static void RedisErrorHandler(function<void()> func);
 
-
 // FUNCTION PROTOTYPES
 static QTSS_Error   EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
@@ -224,18 +223,19 @@ QTSS_Error RedisTTL()
 	}
 	else if (reply->integer == 1)
 	{
-		sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
-		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		if (!replyHset)
-		{
-			RedisErrorHandler([&]()
-			{
-				freeReplyObject(reply);
-			});
+		//sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
+		//auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		//if (!replyHset)
+		//{
+		//	RedisErrorHandler([&]()
+		//	{
+		//		freeReplyObject(reply);
+		//	});
 
-			return QTSS_NotConnected;
-		}
-		freeReplyObject(replyHset);
+		//	return QTSS_NotConnected;
+		//}
+		//freeReplyObject(replyHset);
+		//TODO::nothing
 	}
 	freeReplyObject(reply);
 

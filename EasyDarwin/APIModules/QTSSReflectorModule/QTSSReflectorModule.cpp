@@ -1472,6 +1472,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 		if (theErr != QTSS_NoErr)
 		{
 			//delete theSession;
+			CSdpCache::GetInstance()->eraseSdpMap(theSession->GetSourceID()->Ptr);
 			theSession->Signal(Task::kKillEvent);
 			return NULL;
 		}
@@ -1562,6 +1563,7 @@ void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSes
 		theSession->TearDownAllOutputs(); // just to be sure because we are about to delete the session.
 		sSessionMap->UnRegister(theSessionRef);// we had an error while setting up-- don't let anyone get the session
 		//delete theSession;
+		CSdpCache::GetInstance()->eraseSdpMap(theSession->GetSourceID()->Ptr);
 		theSession->Signal(Task::kKillEvent);
 	}
 }
@@ -2130,36 +2132,36 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 	return QTSS_NoErr;
 }
 
-void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool killClients)
+void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* theSession, bool killClients)
 {
 	// 对ReflectorSession的引用继续处理,包括推送端和客户端
-	Assert(inSession);
-	if (inSession != NULL)
+	Assert(theSession);
+	if (theSession != NULL)
 	{
 		if (inOutput != NULL)
 		{
 			// ReflectorSession移除客户端
-			inSession->RemoveOutput(inOutput, true);
+			theSession->RemoveOutput(inOutput, true);
 		}
 		else
 		{
 			// 推送端
-			SourceInfo* theInfo = inSession->GetSourceInfo();
+			SourceInfo* theInfo = theSession->GetSourceInfo();
 			Assert(theInfo);
 
 			//if (theInfo->IsRTSPControlled())
 			//{   
-			//    FileDeleter(inSession->GetSourceID());
+			//    FileDeleter(theSession->GetSourceID());
 			//}
 			//    
 
 			if (killClients || sTearDownClientsOnDisconnect)
 			{
-				inSession->TearDownAllOutputs();
+				theSession->TearDownAllOutputs();
 			}
 		}
 		// 检测推送端或者客户端退出时,ReflectorSession是否需要退出
-		OSRef* theSessionRef = inSession->GetRef();
+		OSRef* theSessionRef = theSession->GetRef();
 		if (theSessionRef != NULL)
 		{
 			//qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister session =%p refcount=%"   _U32BITARG_   "\n", theSessionRef, theSessionRef->GetRefCount() ) ;       
@@ -2175,7 +2177,7 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool k
 			}
 
 #ifdef REFLECTORSESSION_DEBUG
-			qtss_printf("QTSSReflectorModule.cpp:RemoveOutput Session =%p refcount=%"   _U32BITARG_   "\n", inSession->GetRef(), inSession->GetRef()->GetRefCount());
+			qtss_printf("QTSSReflectorModule.cpp:RemoveOutput Session =%p refcount=%"   _U32BITARG_   "\n", theSession->GetRef(), theSession->GetRef()->GetRefCount());
 #endif
 			if (theSessionRef->GetRefCount() == 0)
 			{
@@ -2184,8 +2186,9 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* inSession, bool k
 				qtss_printf("QTSSReflectorModule.cpp:RemoveOutput UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", theSessionRef, theSessionRef->GetRefCount());
 #endif
 				sSessionMap->UnRegister(theSessionRef);
-				//delete inSession;
-				inSession->Signal(Task::kKillEvent);
+				//delete theSession;
+				CSdpCache::GetInstance()->eraseSdpMap(theSession->GetSourceID()->Ptr);
+				theSession->Signal(Task::kKillEvent);
 			}
 		}
 	}
