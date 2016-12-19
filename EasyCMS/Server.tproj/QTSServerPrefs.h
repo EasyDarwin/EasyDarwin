@@ -117,13 +117,13 @@ public:
     UInt32  GetNumThreads() { return fNumThreads; }
     UInt32  GetNumBlockingThreads() { return fNumMsgThreads; }
 
-    UInt16  GetMonitorLANPort() { return fMonitorLANPort; }
-    UInt16  GetMonitorWANPort() { return fMonitorWANPort; }
+    UInt16  GetServiceLANPort() { return fMonitorLANPort; }
+    UInt16  GetServiceWANPort() { return fMonitorWANPort; }
 
-    char* GetMonitorWANIP() { return this->getStringPref(qtssPrefsServiceWANIPAddr); }
+    char*	GetServiceWANIP() { return this->getStringPref(qtssPrefsServiceWANIPAddr); }
 
-    char* GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
-    char* GetSnapWebPath() { return this->getStringPref(qtssPrefsSnapWebPath); }
+    char*	GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
+    char*	GetSnapWebPath() { return this->getStringPref(qtssPrefsSnapWebPath); }
 private:
     void setupAttributes();
 

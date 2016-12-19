@@ -193,8 +193,8 @@ QTSS_Error RedisTTL()
 	{
 		auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 		auto sessionCount = QTSServerInterface::GetServer()->GetNumServiceSessions();
-		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANIP();
-		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetMonitorWANPort();
+		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP();
+		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANPort();
 		sprintf(chKey, "hmset EasyCMS:%s IP %s Port %d Load %d", id, cmsIp, cmsPort, sessionCount);
 		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		if (!replyHmset)
