@@ -375,14 +375,28 @@ QTSS_Error RedisSetRTSPLoad()
 	auto guid = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 	auto load = QTSServerInterface::GetServer()->GetNumRTPSessions();
 
-	sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
-	auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-	if (!replyHset)
+	sprintf(chKey, "expire %s:%s 15", server, guid);
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+
+	if (!reply)
 	{
 		RedisErrorHandler([&]() {});
+
 		return QTSS_NotConnected;
 	}
-	freeReplyObject(replyHset);
+
+	if (reply->integer == 1)
+	{
+		sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
+		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		if (!replyHset)
+		{
+			RedisErrorHandler([&]() {});
+			return QTSS_NotConnected;
+		}
+		freeReplyObject(replyHset);
+	}
+	freeReplyObject(reply);
 
 	return QTSS_NoErr;
 }
