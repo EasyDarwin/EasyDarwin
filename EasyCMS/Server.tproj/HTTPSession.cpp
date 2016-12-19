@@ -86,12 +86,9 @@ HTTPSession::HTTPSession()
 	fModuleState.curRole = 0;
 	fModuleState.globalLockRequested = false;
 
-	memset(&decodeParam, 0x00, sizeof(DECODE_PARAM_T));
-
 	decodeParam.gopTally = SNAP_CAPTURE_TIME;
 
 	decodeParam.imageData = new char[SNAP_SIZE];
-	memset(decodeParam.imageData, 0, SNAP_SIZE);
 
 	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	sessionMap->Register(fSessionID, this);
@@ -940,10 +937,12 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::execNetMsgDSStreamStopAck(const char* json)//Éè±¸µÄÍ£Ö¹ÍÆÁ÷»ØÓ¦
+QTSS_Error HTTPSession::execNetMsgDSStreamStopAck(const char* json) const
 {
-	if (!fAuthenticated)//Ã»ÓÐ½øÐÐÈÏÖ¤ÇëÇó
+	if (!fAuthenticated)
+	{
 		return httpUnAuthorized;
+	}
 
 	return QTSS_NoErr;
 }
@@ -1164,7 +1163,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString
 }
 
 
-QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json)//Éè±¸µÄ¿ªÊ¼Á÷»ØÓ¦
+QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json) const
 {
 	if (!fAuthenticated)//Ã»ÓÐ½øÐÐÈÏÖ¤ÇëÇó
 		return httpUnAuthorized;
@@ -1939,7 +1938,7 @@ QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryStr
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::execNetMsgDSPresetControlAck(const char* json)
+QTSS_Error HTTPSession::execNetMsgDSPresetControlAck(const char* json) const
 {
 	if (!fAuthenticated)//Ã»ÓÐ½øÐÐÈÏÖ¤ÇëÇó
 		return httpUnAuthorized;
@@ -2160,7 +2159,7 @@ QTSS_Error HTTPSession::execNetMSGDSTalkbackControlAck(const char* json)
 	return QTSS_NoErr;
 }
 
-bool HTTPSession::isRightChannel(const char* channel)
+bool HTTPSession::isRightChannel(const char* channel) const
 {
 	if (channel == nullptr)
 	{
