@@ -482,9 +482,6 @@ extern "C" {
 		Easy_RedisDelDevice_Role = FOUR_CHARS_TO_INT('d', 'd', 'n', 'r'),//ddnr
 		Easy_RedisTTL_Role = FOUR_CHARS_TO_INT('t', 't', 'l', 'r'),//ttlr
 		Easy_RedisGetEasyDarwin_Role = FOUR_CHARS_TO_INT('g', 'a', 'd', 'r'),//gadr
-		Easy_RedisGetBestEasyDarwin_Role = FOUR_CHARS_TO_INT('g', 'b', 'd', 'r'),//gbdr
-		Easy_RedisGenStreamID_Role = FOUR_CHARS_TO_INT('g', 's', 'i', 'd'),//gsid
-
 	};
 	typedef UInt32 QTSS_Role;
 

@@ -149,10 +149,8 @@ public:
 		kRedisSetDeviceRole = 15,
 		kRedisDelDeviceRole = 16,
 		kRedisGetEasyDarwinRole = 17,
-		kRedisGetBestEasyDarwinRole = 18,
-		kRedisGenStreamIDRole = 19,
 
-		kNumRoles = 20
+		kNumRoles = 18
 	};
 	typedef UInt32 RoleIndex;
 

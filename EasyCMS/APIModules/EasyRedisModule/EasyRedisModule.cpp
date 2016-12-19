@@ -84,8 +84,6 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(Easy_RedisSetDevice_Role);
 	(void)QTSS_AddRole(Easy_RedisDelDevice_Role);
 	(void)QTSS_AddRole(Easy_RedisGetEasyDarwin_Role);
-	(void)QTSS_AddRole(Easy_RedisGetBestEasyDarwin_Role);
-	(void)QTSS_AddRole(Easy_RedisGenStreamID_Role);
 	// Tell the server our name!
 	static char* sModuleName = "EasyRedisModule";
 	::strcpy(inParams->outModuleName, sModuleName);
