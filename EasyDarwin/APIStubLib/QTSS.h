@@ -1027,7 +1027,7 @@ enum
 	Easy_CMSFreeStream_Role	=			FOUR_CHARS_TO_INT('e', 'f', 's', 'r'),  //efsr
 
 	//EasyRedisModule
-	Easy_RedisChangeRTPNum_Role =		FOUR_CHARS_TO_INT('c', 'r', 'n', 'r'),	//crnr
+	Easy_RedisSetRTSPLoad_Role =		FOUR_CHARS_TO_INT('c', 'r', 'n', 'r'),	//crnr
 	Easy_RedisUpdateStreamInfo_Role =	FOUR_CHARS_TO_INT('a', 'p', 'n', 'r'),	//apnr
 	Easy_RedisTTL_Role =				FOUR_CHARS_TO_INT('t', 't', 'l', 'r'),	//ttlr
 	Easy_RedisGetAssociatedCMS_Role =	FOUR_CHARS_TO_INT('g', 'a', 'c', 'r'),	//gacr

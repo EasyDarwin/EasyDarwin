@@ -154,7 +154,7 @@ public:
 		kEasyCMSFreeStreamRole = 26,
 
 		kRedisTTLRole = 27,
-		kRedisChangeRTPNumRole = 28,
+		kRedisSetRTSPLoadRole = 28,
 		kRedisUpdateStreamInfoRole = 29,
 		kRedisGetAssociatedCMSRole = 30,
 		kRedisJudgeStreamIDRole = 31,

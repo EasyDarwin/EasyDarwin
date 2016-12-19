@@ -31,7 +31,6 @@ static redisContext*	redisContext_ = nullptr;
 
 static void RedisErrorHandler(function<void()> func);
 
-
 // FUNCTION PROTOTYPES
 static QTSS_Error   EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
@@ -40,7 +39,7 @@ static QTSS_Error   RereadPrefs();
 static QTSS_Error	RedisConnect();
 static QTSS_Error	RedisTTL();
 static QTSS_Error	RedisUpdateStream(Easy_StreamInfo_Params* inParams);
-static QTSS_Error	RedisChangeRtpNum();
+static QTSS_Error	RedisSetRTSPLoad();
 static QTSS_Error	RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams);
 static QTSS_Error	RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams);
 
@@ -61,8 +60,8 @@ QTSS_Error EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBl
 		return RereadPrefs();
 	case Easy_RedisTTL_Role:
 		return RedisTTL();
-	case Easy_RedisChangeRTPNum_Role:
-		return RedisChangeRtpNum();
+	case Easy_RedisSetRTSPLoad_Role:
+		return RedisSetRTSPLoad();
 	case Easy_RedisUpdateStreamInfo_Role:
 		return RedisUpdateStream(&inParamBlock->easyStreamInfoParams);
 	case Easy_RedisGetAssociatedCMS_Role:
@@ -80,7 +79,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	(void)QTSS_AddRole(QTSS_Initialize_Role);
 	(void)QTSS_AddRole(QTSS_RereadPrefs_Role);
 	(void)QTSS_AddRole(Easy_RedisTTL_Role);
-	(void)QTSS_AddRole(Easy_RedisChangeRTPNum_Role);
+	(void)QTSS_AddRole(Easy_RedisSetRTSPLoad_Role);
 	(void)QTSS_AddRole(Easy_RedisUpdateStreamInfo_Role);
 	(void)QTSS_AddRole(Easy_RedisGetAssociatedCMS_Role);
 	(void)QTSS_AddRole(Easy_RedisJudgeStreamID_Role);
@@ -224,18 +223,7 @@ QTSS_Error RedisTTL()
 	}
 	else if (reply->integer == 1)
 	{
-		sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
-		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
-		if (!replyHset)
-		{
-			RedisErrorHandler([&]()
-			{
-				freeReplyObject(reply);
-			});
-
-			return QTSS_NotConnected;
-		}
-		freeReplyObject(replyHset);
+		//TODO::nothing
 	}
 	freeReplyObject(reply);
 
@@ -264,7 +252,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return QTSS_NoErr;
 	}
 
-	sprintf(chKey, "hmset Live:%s/%d output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	sprintf(chKey, "hmset Live:%s/%d Bitrate %d Output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inBitrate, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	if (!reply)
 	{
@@ -376,23 +364,39 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 	return QTSS_NoErr;
 }
 
-QTSS_Error RedisChangeRtpNum()
+QTSS_Error RedisSetRTSPLoad()
 {
-	//OSMutexLocker mutexLock(&sMutex);
-	//if (!sIfConSucess)
-	//	return QTSS_NotConnected;
+	OSMutexLocker mutexLock(&sMutex);
+	if (!sIfConSucess)
+		return QTSS_NotConnected;
 
-	//char chKey[128] = { 0 };
-	//easyRedisReply* reply = nullptr;
-	//auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-	//sprintf(chKey, "hset %s:%s Load %d", QTSServerInterface::GetServerName().Ptr, QTSServerInterface::GetServer()->GetCloudServiceNodeID(), QTSServerInterface::GetServer()->GetNumRTPSessions());
-	//sRedisClient->AppendCommand(chKey);
+	char chKey[128] = { 0 };
+	auto server = QTSServerInterface::GetServer()->GetServerName().Ptr;
+	auto guid = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+	auto load = QTSServerInterface::GetServer()->GetNumRTPSessions();
 
-	//sRedisClient->GetReply(reinterpret_cast<void**>(&reply));
-	//if (reply)
-	//{
-	//	EasyFreeReplyObject(reply);
-	//}
+	sprintf(chKey, "expire %s:%s 15", server, guid);
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+
+	if (!reply)
+	{
+		RedisErrorHandler([&]() {});
+
+		return QTSS_NotConnected;
+	}
+
+	if (reply->integer == 1)
+	{
+		sprintf(chKey, "hset %s:%s Load %d", server, guid, load);
+		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		if (!replyHset)
+		{
+			RedisErrorHandler([&]() {});
+			return QTSS_NotConnected;
+		}
+		freeReplyObject(replyHset);
+	}
+	freeReplyObject(reply);
 
 	return QTSS_NoErr;
 }
