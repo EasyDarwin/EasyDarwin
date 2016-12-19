@@ -126,7 +126,7 @@ QTSS_Error RedisConnect()
 		return QTSS_NoErr;
 	}
 
-	struct timeval timeout = { 1, 500000 }; // 1.5 seconds
+	struct timeval timeout = { 1, 500000 }; //1.5 seconds
 	redisContext_ = redisConnectWithTimeout(sRedis_IP, sRedisPort, timeout);
 	if (!redisContext_ || redisContext_->err)
 	{
@@ -216,7 +216,6 @@ QTSS_Error RedisTTL()
 			RedisErrorHandler([&]()
 			{
 				freeReplyObject(reply);
-				freeReplyObject(replyHmset);
 			});
 
 			return QTSS_NotConnected;
@@ -249,7 +248,6 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 	if (!sIfConSucess)
 		return QTSS_NotConnected;
 
-	auto ret = 0;
 	char chKey[128] = { 0 };
 	sprintf(chKey, "%s:%s/%d", "Live", inParams->inStreamName, inParams->inChannel);
 
@@ -266,9 +264,8 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return QTSS_NoErr;
 	}
 
-	char chTemp[128] = { 0 };
-	sprintf(chTemp, "hmset Live:%s/%d output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chTemp));
+	sprintf(chKey, "hmset Live:%s/%d output %d EasyDarwin %s", inParams->inStreamName, inParams->inChannel, inParams->inNumOutputs, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	if (!reply)
 	{
 		RedisErrorHandler([&]() {});
