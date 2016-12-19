@@ -769,7 +769,7 @@ ReflectorSession* DoSessionSetup(QTSS_StandardRTSP_Params* inParams, QTSS_Attrib
 	}
 	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
 
-	UInt32 theChannelNum = 0;
+	UInt32 theChannelNum = 1;
 	const char* chnNum = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
 	if (chnNum)
 	{
@@ -948,7 +948,7 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 	}
 	QueryParamList parList(const_cast<char *>(queryTemp.c_str()));
 
-	UInt32 theChannelNum = 0;
+	UInt32 theChannelNum = 1;
 	const char* chnNum = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
 	if (chnNum)
 	{

@@ -439,7 +439,7 @@ SInt64 ReflectorSession::Run()
 
 	SInt64 sNowTime = OS::Milliseconds();
 	SInt64 sNoneTime = GetNoneOutputStartTimeMS();
-	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= 30*1000))
+	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs() * 1000))
 	{
 		QTSS_RoleParams theParams;
 		theParams.easyFreeStreamParams.inStreamName = GetSourceID()->Ptr;
