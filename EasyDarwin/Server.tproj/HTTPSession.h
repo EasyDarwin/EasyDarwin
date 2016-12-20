@@ -28,7 +28,7 @@ private:
 	QTSS_Error SetupRequest();
 	void CleanupRequest();
 
-	QTSS_Error execNetMsgCSUsageReqRESTful();
+	QTSS_Error execNetMsgCSUsageAck();
 	QTSS_Error execNetMsgCSGetServerVersionReqRESTful(const char* queryString);
 
 	QTSS_Error execNetMsgCSLoginReqRESTful(const char* queryString);

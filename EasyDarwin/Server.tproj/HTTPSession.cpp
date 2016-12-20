@@ -428,7 +428,7 @@ QTSS_Error HTTPSession::SetupRequest()
 
 			}
 
-			execNetMsgCSUsageReqRESTful();
+			execNetMsgCSUsageAck();
 
 			return QTSS_NoErr;
 		}
@@ -672,7 +672,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPRecordSessionsRESTful(const char* que
 	return theErr;
 }
 
-QTSS_Error HTTPSession::execNetMsgCSUsageReqRESTful()
+QTSS_Error HTTPSession::execNetMsgCSUsageAck()
 {
 	/*//暂时注释掉，实际上是需要认证的
 	if(!fAuthenticated)//没有进行认证请求
