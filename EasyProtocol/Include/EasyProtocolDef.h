@@ -23,6 +23,7 @@
 #endif
 //#define Easy_API
 #define EASY_PROTOCOL_VERSION							"v1"
+#define EASY_PROTOCOL_VERSION_NUM						"1.0"
 #define EASY_PROTOCOL_STREAM_MAIN						"0"
 #define EASY_PROTOCOL_STREAM_SUB						"1"
 
@@ -300,7 +301,7 @@
 #define MSG_SC_SERVER_SEEK_PLAY_RECORD_ACK					0x1018
 #define MSG_SC_SERVER_TOUCH_PLAY_RECORD_ACK					0x1019
 
-#define MSG_SC_SERVER_USAGES_ACK						0x101a
+#define MSG_SC_SERVER_USAGES_ACK							0x101a
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
