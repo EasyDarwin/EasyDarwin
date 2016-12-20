@@ -464,6 +464,10 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
 				}
+				if (path[0] == "api" && path[1] == "getusages")
+				{
+					return execNetMsgCSGetUsagesReqRESTful(fRequest->GetQueryString());
+				}
 			}
 
 			EasyMsgExceptionACK rsp;
@@ -2104,7 +2108,6 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 			}
 		}
 
-
 		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
 		EasyJsonValue headerheader, bodybody;
 
@@ -2156,6 +2159,102 @@ ACK:
 
 QTSS_Error HTTPSession::execNetMSGDSTalkbackControlAck(const char* json)
 {
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
+{
+	/*//暂时注释掉，实际上是需要认证的
+	if(!fAuthenticated)//没有进行认证请求
+	return httpUnAuthorized;
+	*/
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_GET_USAGES_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	Json::Value* proot = rsp.GetRoot();
+
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
+		value[EASY_TAG_ACTION] = "GetDeviceList";
+		value[EASY_TAG_PARAMETER] = "";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/getdevicelist";
+		value[EASY_TAG_DESCRIPTION] = "";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
+
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
+		value[EASY_TAG_ACTION] = "GetDeviceInfo";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/getdeviceinfo?device=00100100001";
+		value[EASY_TAG_DESCRIPTION] = "";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
+
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
+		value[EASY_TAG_ACTION] = "GetDeviceStream";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]&reserve=[Reserve]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/getdevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
+		value[EASY_TAG_DESCRIPTION] = "";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
+
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
+		value[EASY_TAG_ACTION] = "FreeDeviceStream";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]&reserve=[Reserve]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/freedevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
+		value[EASY_TAG_DESCRIPTION] = "";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
+
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
+		value[EASY_TAG_ACTION] = "PTZControl";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[ONVIF/SDK]&actiontype=[Continuous/Single]&command=[Stop/Up/Down/Left/Right/Zoomin/Zoomout/Focusin/Focusout/Aperturein/Apertureout]&speed=[Speed]&reserve=[Reserve]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/ptzcontrol?device=001002000001&channel=1&protocol=onvif&actiontype=single&command=down&speed=5&reserve=1";
+		value[EASY_TAG_DESCRIPTION] = "";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
+
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
+		value[EASY_TAG_ACTION] = "PresetControl";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[ONVIF/SDK]&preset=[Preset]&command=[Goto/Set/Remove]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/presetcontrol?device=001001000058&channel=1&command=goto&preset=1&protocol=onvif";
+		value[EASY_TAG_DESCRIPTION] = "";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
+
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_POST;
+		value[EASY_TAG_ACTION] = "MSG_CS_TALKBACK_CONTROL_REQ";
+		value[EASY_TAG_PARAMETER] = "";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port";
+		value[EASY_TAG_DESCRIPTION] = "";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+	string msg = rsp.GetMsg();
+	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValueAck, false, false);
+
 	return QTSS_NoErr;
 }
 

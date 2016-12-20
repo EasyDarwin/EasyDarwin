@@ -217,6 +217,15 @@
 #define EASY_TAG_PATHS									"Paths"
 #define EASY_TAG_USED									"Used"
 
+#define EASY_TAG_API									"API"
+#define EASY_TAG_ACTION									"Action"
+#define EASY_TAG_PARAMETER								"Parameter"
+#define EASY_TAG_EXAMPLE								"Example"
+#define EASY_TAG_DESCRIPTION							"Description"
+#define EASY_TAG_HTTP_METHOD							"Method"
+#define EASY_TAG_HTTP_GET								"GET"
+#define EASY_TAG_HTTP_POST								"POST"
+
 /*!
 \}
 */
@@ -290,6 +299,8 @@
 #define MSG_SC_SERVER_STOP_PLAY_RECORD_ACK					0x1017
 #define MSG_SC_SERVER_SEEK_PLAY_RECORD_ACK					0x1018
 #define MSG_SC_SERVER_TOUCH_PLAY_RECORD_ACK					0x1019
+
+#define MSG_SC_SERVER_GET_USAGES_ACK						0x101a
 
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
