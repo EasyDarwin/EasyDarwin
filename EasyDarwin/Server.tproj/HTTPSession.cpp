@@ -33,16 +33,6 @@ using namespace std;
 #include <crypt.h>
 #endif
 
-static StrPtrLen	sEasyHLSModule("api/easyhlsmodule");
-static StrPtrLen	sGetHLSSessions("api/gethlssessions");
-
-#define	QUERY_STREAM_NAME		"name"
-#define QUERY_STREAM_URL		"url"
-#define QUERY_STREAM_CMD		"cmd"
-#define QUERY_STREAM_TIMEOUT	"timeout"
-#define QUERY_STREAM_CMD_START	"start"
-#define QUERY_STREAM_CMD_STOP	"stop"
-
 HTTPSession::HTTPSession()
 	: HTTPSessionInterface(),
 	fRequest(nullptr),
@@ -369,22 +359,6 @@ QTSS_Error HTTPSession::SetupRequest()
 	if (theErr != QTSS_NoErr)
 		return QTSS_BadArgument;
 
-
-	if (fRequest->GetRequestPath())
-	{
-		StrPtrLen theFullPath(fRequest->GetRequestPath());
-
-		if (theFullPath.Equal(sEasyHLSModule))
-		{
-			return ExecNetMsgEasyHLSModuleReq(fRequest->GetQueryString(), nullptr);
-		}
-
-		if (theFullPath.Equal(sGetHLSSessions))
-		{
-			return ExecNetMsgGetHlsSessionsReq(fRequest->GetQueryString(), nullptr);
-		}
-	}
-
 	if (fRequest->GetRequestPath() != nullptr)
 	{
 		string sRequest(fRequest->GetRequestPath());
@@ -431,11 +405,6 @@ QTSS_Error HTTPSession::SetupRequest()
 				{
 					return execNetMsgCSRestartServiceRESTful(fRequest->GetQueryString());
 				}
-
-				//if (path[0] == "api" && path[1] == "v1" && path[2] == "getchannels")
-				//{
-				//	return execNetMsgCSGetChannelsRESTful(fRequest->GetQueryString());
-				//}
 
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getdevicestream")
 				{
@@ -609,159 +578,6 @@ QTSS_Error HTTPSession::dumpRequestData()
 	return theErr;
 }
 
-QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json)
-{
-	QTSS_Error theErr = QTSS_NoErr;
-
-	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
-	{
-		//printf("if cloud platform enabled,we will check platform login token");
-		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-		//if (!hasLogin(cokieTemp))
-		//{
-		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
-		//}
-	}
-
-	bool bStop = false;
-
-	char decQueryString[QTSS_MAX_URL_LENGTH] = { 0 };
-	EasyUtil::Urldecode(reinterpret_cast<unsigned char*>(queryString), reinterpret_cast<unsigned char*>(decQueryString));
-
-	char* hlsURL = new char[QTSS_MAX_URL_LENGTH];
-	hlsURL[0] = '\0';
-	QTSSCharArrayDeleter theHLSURLDeleter(hlsURL);
-	do
-	{
-
-		if (strlen(decQueryString) == 0)
-			break;
-
-		StrPtrLen theQueryString(decQueryString);
-
-		QueryParamList parList(decQueryString);
-
-		const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
-		if (sName == nullptr)
-		{
-			theErr = QTSS_Unimplemented;
-			break;
-		}
-
-		const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
-		const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
-		const char* sTIMEOUT = parList.DoFindCGIValueForParam(QUERY_STREAM_TIMEOUT);
-		int iTIMEOUT = 0;
-
-		if (sCMD)
-		{
-			if (::strcmp(sCMD, QUERY_STREAM_CMD_STOP) == 0)
-				bStop = true;
-		}
-
-		if (bStop)
-		{
-			Easy_StopHLSession(sName);
-		}
-		else
-		{
-			if (sURL == nullptr)
-			{
-				theErr = QTSS_Unimplemented;
-				break;
-			}
-
-			//TODO::这里需要对URL进行过滤
-			//
-
-
-			if (sTIMEOUT)
-				iTIMEOUT = ::atoi(sTIMEOUT);
-
-			char msgStr[2048] = { 0 };
-			qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession::ExecNetMsgEasyHLSModuleReq name=%s,url=%s,time=%d", sName, sURL, iTIMEOUT);
-			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
-
-			Easy_StartHLSession(sName, sURL, iTIMEOUT, hlsURL);
-		}
-	} while (0);
-
-	//构造MSG_SC_START_HLS_ACK响应报文
-	EasyMsgSCStartHLSACK ack;
-	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
-	if (strlen(hlsURL))
-		ack.SetStreamURL(hlsURL);
-
-	string msg = ack.GetMsg();
-	StrPtrLen msgJson(const_cast<char*>(msg.c_str()));
-
-	//构造响应报文(HTTP头)
-	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-	httpAck.CreateResponseHeader(msgJson.Len ? httpOK : httpNotImplemented);
-	if (msgJson.Len)
-		httpAck.AppendContentLengthHeader(msgJson.Len);
-
-	//响应完成后断开连接
-	httpAck.AppendConnectionCloseHeader();
-
-	//Push MSG to OutputBuffer
-	char respHeader[2048] = { 0 };
-	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-	RTSPResponseStream *pOutputStream = GetOutputStream();
-	pOutputStream->Put(respHeader);
-	if (msgJson.Len > 0)
-		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
-
-	return theErr;
-}
-
-QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* json)
-{
-	QTSS_Error theErr = QTSS_NoErr;
-
-	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
-	{
-		//printf("if cloud platform enabled,we will check platform login token");
-		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
-		//if (!hasLogin(cokieTemp))
-		//{
-		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
-		//}
-	}
-
-	do
-	{
-		char* msgContent = static_cast<char*>(Easy_GetHLSessions());
-
-		StrPtrLen msgJson(msgContent);
-
-		//构造响应报文(HTTP头)
-		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
-		httpAck.CreateResponseHeader(msgJson.Len ? httpOK : httpNotImplemented);
-		if (msgJson.Len)
-			httpAck.AppendContentLengthHeader(msgJson.Len);
-
-		//响应完成后断开连接
-		httpAck.AppendConnectionCloseHeader();
-
-		//Push MSG to OutputBuffer
-		char respHeader[2048] = { 0 };
-		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
-		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
-
-		RTSPResponseStream *pOutputStream = GetOutputStream();
-		pOutputStream->Put(respHeader);
-		if (msgJson.Len > 0)
-			pOutputStream->Put(msgJson.Ptr, msgJson.Len);
-
-		delete[] msgContent;
-	} while (0);
-
-	return theErr;
-}
-
 QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* queryString)
 {	
 	QTSS_Error theErr = QTSS_NoErr;
@@ -808,8 +624,6 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* query
 
 	return theErr;
 }
-
-
 
 QTSS_Error HTTPSession::execNetMsgCSGetRTSPRecordSessionsRESTful(const char* queryString)
 {
@@ -1159,7 +973,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryString) const
+QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryString)
 {
 	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
 	{
@@ -1375,3 +1189,156 @@ QTSS_Error HTTPSession::execNetMsgCSLiveDeviceStreamReqRESTful(const char * quer
 
 	return QTSS_NoErr;
 }
+
+//QTSS_Error HTTPSession::ExecNetMsgEasyHLSModuleReq(char* queryString, char* json)
+//{
+//	QTSS_Error theErr = QTSS_NoErr;
+//
+//	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+//	{
+//		//printf("if cloud platform enabled,we will check platform login token");
+//		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+//		//if (!hasLogin(cokieTemp))
+//		//{
+//		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+//		//}
+//	}
+//
+//	bool bStop = false;
+//
+//	char decQueryString[QTSS_MAX_URL_LENGTH] = { 0 };
+//	EasyUtil::Urldecode(reinterpret_cast<unsigned char*>(queryString), reinterpret_cast<unsigned char*>(decQueryString));
+//
+//	char* hlsURL = new char[QTSS_MAX_URL_LENGTH];
+//	hlsURL[0] = '\0';
+//	QTSSCharArrayDeleter theHLSURLDeleter(hlsURL);
+//	do
+//	{
+//
+//		if (strlen(decQueryString) == 0)
+//			break;
+//
+//		StrPtrLen theQueryString(decQueryString);
+//
+//		QueryParamList parList(decQueryString);
+//
+//		const char* sName = parList.DoFindCGIValueForParam(QUERY_STREAM_NAME);
+//		if (sName == nullptr)
+//		{
+//			theErr = QTSS_Unimplemented;
+//			break;
+//		}
+//
+//		const char* sURL = parList.DoFindCGIValueForParam(QUERY_STREAM_URL);
+//		const char* sCMD = parList.DoFindCGIValueForParam(QUERY_STREAM_CMD);
+//		const char* sTIMEOUT = parList.DoFindCGIValueForParam(QUERY_STREAM_TIMEOUT);
+//		int iTIMEOUT = 0;
+//
+//		if (sCMD)
+//		{
+//			if (::strcmp(sCMD, QUERY_STREAM_CMD_STOP) == 0)
+//				bStop = true;
+//		}
+//
+//		if (bStop)
+//		{
+//			Easy_StopHLSession(sName);
+//		}
+//		else
+//		{
+//			if (sURL == nullptr)
+//			{
+//				theErr = QTSS_Unimplemented;
+//				break;
+//			}
+//
+//			//TODO::这里需要对URL进行过滤
+//			//
+//
+//
+//			if (sTIMEOUT)
+//				iTIMEOUT = ::atoi(sTIMEOUT);
+//
+//			char msgStr[2048] = { 0 };
+//			qtss_snprintf(msgStr, sizeof(msgStr), "HTTPSession::ExecNetMsgEasyHLSModuleReq name=%s,url=%s,time=%d", sName, sURL, iTIMEOUT);
+//			QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
+//
+//			Easy_StartHLSession(sName, sURL, iTIMEOUT, hlsURL);
+//		}
+//	} while (0);
+//
+//	//构造MSG_SC_START_HLS_ACK响应报文
+//	EasyMsgSCStartHLSACK ack;
+//	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
+//	if (strlen(hlsURL))
+//		ack.SetStreamURL(hlsURL);
+//
+//	string msg = ack.GetMsg();
+//	StrPtrLen msgJson(const_cast<char*>(msg.c_str()));
+//
+//	//构造响应报文(HTTP头)
+//	HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+//	httpAck.CreateResponseHeader(msgJson.Len ? httpOK : httpNotImplemented);
+//	if (msgJson.Len)
+//		httpAck.AppendContentLengthHeader(msgJson.Len);
+//
+//	//响应完成后断开连接
+//	httpAck.AppendConnectionCloseHeader();
+//
+//	//Push MSG to OutputBuffer
+//	char respHeader[2048] = { 0 };
+//	StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+//	strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+//
+//	RTSPResponseStream *pOutputStream = GetOutputStream();
+//	pOutputStream->Put(respHeader);
+//	if (msgJson.Len > 0)
+//		pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+//
+//	return theErr;
+//}
+//
+//QTSS_Error HTTPSession::ExecNetMsgGetHlsSessionsReq(char* queryString, char* json)
+//{
+//	QTSS_Error theErr = QTSS_NoErr;
+//
+//	if (QTSServerInterface::GetServer()->GetPrefs()->CloudPlatformEnabled())
+//	{
+//		//printf("if cloud platform enabled,we will check platform login token");
+//		auto cokieTemp = fRequest->GetHeaderValue(httpCookieHeader);
+//		//if (!hasLogin(cokieTemp))
+//		//{
+//		//	return EASY_ERROR_CLIENT_UNAUTHORIZED;
+//		//}
+//	}
+//
+//	do
+//	{
+//		char* msgContent = static_cast<char*>(Easy_GetHLSessions());
+//
+//		StrPtrLen msgJson(msgContent);
+//
+//		//构造响应报文(HTTP头)
+//		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
+//		httpAck.CreateResponseHeader(msgJson.Len ? httpOK : httpNotImplemented);
+//		if (msgJson.Len)
+//			httpAck.AppendContentLengthHeader(msgJson.Len);
+//
+//		//响应完成后断开连接
+//		httpAck.AppendConnectionCloseHeader();
+//
+//		//Push MSG to OutputBuffer
+//		char respHeader[2048] = { 0 };
+//		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
+//		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
+//
+//		RTSPResponseStream *pOutputStream = GetOutputStream();
+//		pOutputStream->Put(respHeader);
+//		if (msgJson.Len > 0)
+//			pOutputStream->Put(msgJson.Ptr, msgJson.Len);
+//
+//		delete[] msgContent;
+//	} while (0);
+//
+//	return theErr;
+//}
