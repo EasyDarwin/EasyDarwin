@@ -1197,7 +1197,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);
 	//const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
 
-	UInt32 theChannelNum = 0;
+	UInt32 theChannelNum = 1;
 	EasyStreamType streamType = easyIllegalStreamType;
 
 	char* outURL = new char[QTSS_MAX_URL_LENGTH];
