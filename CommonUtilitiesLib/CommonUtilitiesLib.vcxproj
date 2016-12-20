@@ -163,6 +163,7 @@
     <ClInclude Include="OSMemory.h" />
     <ClInclude Include="OSRefTableEx.h" />
     <ClInclude Include="QueryParamList.h" />
+    <ClInclude Include="ScopeGuard.h" />
     <ClInclude Include="SyncDeque.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

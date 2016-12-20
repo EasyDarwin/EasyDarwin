@@ -167,5 +167,6 @@
     <ClInclude Include="OSRefTableEx.h" />
     <ClInclude Include="OSMemory.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="ScopeGuard.h" />
   </ItemGroup>
 </Project>
