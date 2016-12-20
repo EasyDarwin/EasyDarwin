@@ -376,52 +376,52 @@ QTSS_Error HTTPSession::SetupRequest()
 			if (path.size() == 3)
 			{
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "login")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "login")
 				{
 					return execNetMsgCSLoginReqRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "logout")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "logout")
 				{
 					return execNetMsgCSLogoutReqRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "getserverinfo")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getserverinfo")
 				{
 					return execNetMsgCSGetServerVersionReqRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "getbaseconfig")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getbaseconfig")
 				{
 					return execNetMsgCSGetBaseConfigReqRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "setbaseconfig")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "setbaseconfig")
 				{
 					return execNetMsgCSSetBaseConfigReqRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "restart")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "restart")
 				{
 					return execNetMsgCSRestartServiceRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "getdevicestream")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getdevicestream")
 				{
 					return execNetMsgCSGetDeviceStreamReqRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "livedevicestream")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "livedevicestream")
 				{
 					return execNetMsgCSLiveDeviceStreamReqRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrtsplivesessions")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getrtsplivesessions")
 				{
 					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrecordlist")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getrecordlist")
 				{
 					return execNetMsgCSGetRTSPRecordSessionsRESTful(fRequest->GetQueryString());
 				}
@@ -674,24 +674,36 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPRecordSessionsRESTful(const char* que
 
 QTSS_Error HTTPSession::execNetMsgCSUsageReqRESTful()
 {
-	EasyProtocolACK ack(MSG_SC_SERVER_INFO_ACK);
+	/*//暂时注释掉，实际上是需要认证的
+	if(!fAuthenticated)//没有进行认证请求
+	return httpUnAuthorized;
+	*/
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_GET_USAGES_ACK);
 	EasyJsonValue header, body;
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
 	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
-	char* serverHeader = nullptr;
-	(void)QTSS_GetValueAsString(QTSServerInterface::GetServer(), qtssSvrRTSPServerHeader, 0, &serverHeader);
-	QTSSCharArrayDeleter theFullPathStrDeleter(serverHeader);
-	body[EASY_TAG_SERVER_HEADER] = serverHeader;
+	Json::Value* proot = rsp.GetRoot();
 
-	ack.SetHead(header);
-	ack.SetBody(body);
+	{
+		Json::Value value;
+		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
+		value[EASY_TAG_ACTION] = "GetServerInfo";
+		value[EASY_TAG_PARAMETER] = "";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/getserverinfo";
+		value[EASY_TAG_DESCRIPTION] = "get server information";
+		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
+	}
 
-	string msg = ack.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, true, false);
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+	string msg = rsp.GetMsg();
+	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValueAck, false, false);
 
 	return QTSS_NoErr;
 }

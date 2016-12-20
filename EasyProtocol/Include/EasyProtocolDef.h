@@ -22,7 +22,7 @@
 #define Easy_API
 #endif
 //#define Easy_API
-#define EASY_PROTOCOL_VERSION							"1.0"
+#define EASY_PROTOCOL_VERSION							"v1"
 #define EASY_PROTOCOL_STREAM_MAIN						"0"
 #define EASY_PROTOCOL_STREAM_SUB						"1"
 
