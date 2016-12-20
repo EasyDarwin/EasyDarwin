@@ -470,10 +470,7 @@ QTSS_Error HTTPSession::setupRequest()
 				}
 			}
 
-			EasyMsgExceptionACK rsp;
-			string msg = rsp.GetMsg();
-			StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-			this->SendHTTPPacket(&theValue, false, false);
+			execNetMsgCSGetUsagesReqRESTful(nullptr);
 
 			return QTSS_NoErr;
 		}
