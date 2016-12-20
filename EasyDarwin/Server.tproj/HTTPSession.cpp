@@ -420,16 +420,15 @@ QTSS_Error HTTPSession::SetupRequest()
 				{
 					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == "v1" && path[2] == "getrecordlist")
 				{
 					return execNetMsgCSGetRTSPRecordSessionsRESTful(fRequest->GetQueryString());
 				}
+
 			}
 
-			EasyMsgExceptionACK rsp;
-			string msg = rsp.GetMsg();
-			StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-			this->SendHTTPPacket(&theValue, false, false);
+			execNetMsgCSUsageReqRESTful();
 
 			return QTSS_NoErr;
 		}
@@ -671,6 +670,30 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPRecordSessionsRESTful(const char* que
 	} while (false);
 
 	return theErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSUsageReqRESTful()
+{
+	EasyProtocolACK ack(MSG_SC_SERVER_INFO_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	char* serverHeader = nullptr;
+	(void)QTSS_GetValueAsString(QTSServerInterface::GetServer(), qtssSvrRTSPServerHeader, 0, &serverHeader);
+	QTSSCharArrayDeleter theFullPathStrDeleter(serverHeader);
+	body[EASY_TAG_SERVER_HEADER] = serverHeader;
+
+	ack.SetHead(header);
+	ack.SetBody(body);
+
+	string msg = ack.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, true, false);
+
+	return QTSS_NoErr;
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetServerVersionReqRESTful(const char* queryString)
