@@ -28,9 +28,11 @@ private:
 	QTSS_Error SetupRequest();
 	void CleanupRequest();
 
+	QTSS_Error execNetMsgCSUsageReqRESTful();
+	QTSS_Error execNetMsgCSGetServerVersionReqRESTful(const char* queryString);
+
 	QTSS_Error execNetMsgCSLoginReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSLogoutReqRESTful(const char* queryString);
-	QTSS_Error execNetMsgCSGetServerVersionReqRESTful(const char* queryString);
 
 	QTSS_Error execNetMsgCSGetBaseConfigReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSSetBaseConfigReqRESTful(const char* queryString);
@@ -39,12 +41,9 @@ private:
 	QTSS_Error execNetMsgCSLiveDeviceStreamReqRESTful(const char* queryString);
 
 	QTSS_Error execNetMsgCSGetRTSPLiveSessionsRESTful(const char* queryString);
+
 	QTSS_Error execNetMsgCSGetRTSPRecordSessionsRESTful(const char* queryString);
-	QTSS_Error execNetMsgCSRestartServiceRESTful(const char* queryString) const;
-
-
-	QTSS_Error ExecNetMsgEasyHLSModuleReq(char* queryString, char* json);
-	QTSS_Error ExecNetMsgGetHlsSessionsReq(char* queryString, char* json);
+	QTSS_Error execNetMsgCSRestartServiceRESTful(const char* queryString);
 
 	// test current connections handled by this object against server pref connection limit
 	static inline bool OverMaxConnections(UInt32 buffer);
@@ -72,8 +71,6 @@ private:
 
 	QTSS_RoleParams     fRoleParams;//module param blocks for roles.
 	QTSS_ModuleState    fModuleState;
-
-
 };
 #endif // __HTTPSESSION_H__
 
