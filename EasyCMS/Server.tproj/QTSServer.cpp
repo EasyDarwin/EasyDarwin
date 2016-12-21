@@ -66,6 +66,22 @@
 #include "EasyAuthModule.h"
 #include "EasyRedisModule.h"
 
+#ifdef _WIN32
+#include "CreateDump.h"
+
+LONG CrashHandler_EasyCMS(EXCEPTION_POINTERS *pException)
+{
+	SYSTEMTIME	systemTime;
+	GetLocalTime(&systemTime);
+
+	char szFile[MAX_PATH] = { 0, };
+	sprintf(szFile, TEXT("EasyCMS_%04d%02d%02d %02d%02d%02d.dmp"), systemTime.wYear, systemTime.wMonth, systemTime.wDay, systemTime.wHour, systemTime.wMinute, systemTime.wSecond);
+	CreateDumpFile(szFile, pException);
+
+	return EXCEPTION_EXECUTE_HANDLER;		//∑µªÿ÷µEXCEPTION_EXECUTE_HANDLER	EXCEPTION_CONTINUE_SEARCH	EXCEPTION_CONTINUE_EXECUTION
+}
+#endif
+
 // CLASS DEFINITIONS
 class HTTPListenerSocket : public TCPListenerSocket
 {
@@ -81,8 +97,8 @@ public:
 };
 
 QTSS_Callbacks  QTSServer::sCallbacks;
-XMLPrefsParser* QTSServer::sPrefsSource = NULL;
-PrefsSource*    QTSServer::sMessagesSource = NULL;
+XMLPrefsParser* QTSServer::sPrefsSource = nullptr;
+PrefsSource*    QTSServer::sMessagesSource = nullptr;
 
 QTSServer::~QTSServer()
 {
@@ -97,13 +113,13 @@ QTSServer::~QTSServer()
 
     QTSS_ModuleState theModuleState;
     theModuleState.curRole = QTSS_Shutdown_Role;
-    theModuleState.curTask = NULL;
+    theModuleState.curTask = nullptr;
     OSThread::SetMainThreadData(&theModuleState);
 
     for (UInt32 x = 0; x < QTSServerInterface::GetNumModulesInRole(QTSSModule::kShutdownRole); x++)
-        (void)QTSServerInterface::GetModule(QTSSModule::kShutdownRole, x)->CallDispatch(QTSS_Shutdown_Role, NULL);
+        (void)QTSServerInterface::GetModule(QTSSModule::kShutdownRole, x)->CallDispatch(QTSS_Shutdown_Role, nullptr);
 
-    OSThread::SetMainThreadData(NULL);
+    OSThread::SetMainThreadData(nullptr);
 
     delete fSrvrMessages;
     delete locker;
@@ -259,13 +275,13 @@ bool QTSServer::SetDefaultIPAddr()
         if (SocketUtils::GetIPAddr(ipAddrIter) == fDefaultIPAddr)
         {
             this->SetVal(qtssSvrDefaultDNSName, SocketUtils::GetDNSNameStr(ipAddrIter));
-            Assert(this->GetValue(qtssSvrDefaultDNSName)->Ptr != NULL);
+            Assert(this->GetValue(qtssSvrDefaultDNSName)->Ptr != nullptr);
             this->SetVal(qtssSvrDefaultIPAddrStr, SocketUtils::GetIPAddrStr(ipAddrIter));
-            Assert(this->GetValue(qtssSvrDefaultDNSName)->Ptr != NULL);
+            Assert(this->GetValue(qtssSvrDefaultDNSName)->Ptr != nullptr);
             break;
         }
     }
-    if (this->GetValue(qtssSvrDefaultDNSName)->Ptr == NULL)
+    if (this->GetValue(qtssSvrDefaultDNSName)->Ptr == nullptr)
     {
         //If we've gotten here, what has probably happened is the IP address (explicitly
         //entered as a preference) doesn't exist
@@ -290,13 +306,13 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
     // Get the IP addresses from the pref
     UInt32 theNumAddrs = 0;
     UInt32* theIPAddrs = this->getBindIPAddrs(inPrefs, &theNumAddrs);
-    UInt32 index = 0;
-    PortTracking* thePortTrackers = NULL;
-    UInt32 theTotalPortTrackers = 0;
+    UInt32 index;
+    PortTracking* thePortTrackers;
+    UInt32 theTotalPortTrackers;
     if (inPortOverride != 0)
     {
         theTotalPortTrackers = theNumAddrs; // one port tracking struct for each IP addr
-        thePortTrackers = NEW PortTracking[theTotalPortTrackers];
+        thePortTrackers = new PortTracking[theTotalPortTrackers];
         for (index = 0; index < theNumAddrs; index++)
         {
             thePortTrackers[index].fPort = inPortOverride;
@@ -307,7 +323,7 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
     {
         UInt16 thePorts = getServicePorts(inPrefs);
         theTotalPortTrackers = theNumAddrs;
-        thePortTrackers = NEW PortTracking[theTotalPortTrackers];
+        thePortTrackers = new PortTracking[theTotalPortTrackers];
 
         for (index = 0; index < theNumAddrs; index++)
         {
@@ -321,7 +337,7 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
     // Now figure out which of these ports we are *already* listening on.
     // If we already are listening on that port, just move the pointer to the
     // listener over to the new array
-    TCPListenerSocket** newListenerArray = NEW TCPListenerSocket*[theTotalPortTrackers];
+    TCPListenerSocket** newListenerArray = new TCPListenerSocket*[theTotalPortTrackers];
     UInt32 curPortIndex = 0;
 
     for (UInt32 count = 0; count < theTotalPortTrackers; count++)
@@ -345,7 +361,7 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
     {
         if (thePortTrackers[count3].fNeedsCreating)
         {
-            newListenerArray[curPortIndex] = NEW HTTPListenerSocket();
+            newListenerArray[curPortIndex] = new HTTPListenerSocket();
             QTSS_Error err = newListenerArray[curPortIndex]->Initialize(thePortTrackers[count3].fIPAddr, thePortTrackers[count3].fPort);
 
             char thePortStr[20];
@@ -411,24 +427,24 @@ bool QTSServer::CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs,
 UInt32* QTSServer::getBindIPAddrs(QTSServerPrefs* inPrefs, UInt32* outNumAddrsPtr)
 {
     UInt32 numAddrs = inPrefs->GetNumValues(qtssPrefsBindIPAddr);
-    UInt32* theIPAddrArray = NULL;
+    UInt32* theIPAddrArray;
 
     if (numAddrs == 0)
     {
         *outNumAddrsPtr = 1;
-        theIPAddrArray = NEW UInt32[1];
+        theIPAddrArray = new UInt32[1];
         theIPAddrArray[0] = INADDR_ANY;
     }
     else
     {
-        theIPAddrArray = NEW UInt32[numAddrs + 1];
+        theIPAddrArray = new UInt32[numAddrs + 1];
         UInt32 arrIndex = 0;
 
         for (UInt32 theIndex = 0; theIndex < numAddrs; theIndex++)
         {
             // Get the ip addr out of the prefs dictionary
 
-            char* theIPAddrStr = NULL;
+            char* theIPAddrStr = nullptr;
             QTSS_Error theErr = inPrefs->GetValueAsString(qtssPrefsBindIPAddr, theIndex, &theIPAddrStr);
             if (theErr != QTSS_NoErr)
             {
@@ -436,7 +452,7 @@ UInt32* QTSServer::getBindIPAddrs(QTSServerPrefs* inPrefs, UInt32* outNumAddrsPt
                 break;
             }
 
-            if (theIPAddrStr != NULL)
+            if (theIPAddrStr != nullptr)
             {
                 UInt32 theIPAddr = SocketUtils::ConvertStringToAddr(theIPAddrStr);
                 delete[] theIPAddrStr;
@@ -480,7 +496,7 @@ bool  QTSServer::SwitchPersonality()
     if (::strlen(runGroupName.GetObject()) > 0)
     {
         struct group* gr = ::getgrnam(runGroupName.GetObject());
-        if (gr == NULL || ::setgid(gr->gr_gid) == -1)
+        if (gr == nullptr || ::setgid(gr->gr_gid) == -1)
         {
             char buffer[kErrorStrSize];
 
@@ -496,11 +512,11 @@ bool  QTSServer::SwitchPersonality()
         struct passwd* pw = ::getpwnam(runUserName.GetObject());
 
 #if __MacOSX__
-        if (pw != NULL && groupID != 0) //call initgroups before doing a setuid
+        if (pw != nullptr && groupID != 0) //call initgroups before doing a setuid
             (void) initgroups(runUserName.GetObject(), groupID);
 #endif  
 
-        if (pw == NULL || ::setuid(pw->pw_uid) == -1)
+        if (pw == nullptr || ::setuid(pw->pw_uid) == -1)
         {
             QTSSModuleUtils::LogError(qtssFatalVerbosity, qtssMsgCannotSetRunUser, 0,
                 runUserName.GetObject(), strerror(OSThread::GetErrno()));
@@ -536,6 +552,10 @@ void QTSServer::loadCompiledInModules()
     //
     // The following modules are all compiled into the server. 
 
+#endif
+
+#ifdef _WIN32
+	SetUnhandledExceptionFilter(reinterpret_cast<LPTOP_LEVEL_EXCEPTION_FILTER>(CrashHandler_EasyCMS));
 #endif
 }
 
@@ -617,7 +637,7 @@ void QTSServer::loadModules(QTSServerPrefs* inPrefs)
 
 #ifdef __Win32__
     // NT doesn't seem to have support for the POSIX directory parsing APIs.
-    OSCharArrayDeleter theLargeModDirName(NEW char[::strlen(theModDirName.GetObject()) + 3]);
+    OSCharArrayDeleter theLargeModDirName(new char[::strlen(theModDirName.GetObject()) + 3]);
     ::strcpy(theLargeModDirName.GetObject(), theModDirName.GetObject());
     ::strcat(theLargeModDirName.GetObject(), "\\*");
 
@@ -645,7 +665,7 @@ void QTSServer::loadModules(QTSServerPrefs* inPrefs)
     // POSIX version
     // opendir mallocs memory for DIR* so call closedir to free the allocated memory
     DIR* theDir = ::opendir(theModDirName.GetObject());
-    if (theDir == NULL)
+    if (theDir == nullptr)
     {
         QTSSModuleUtils::LogError(qtssWarningVerbosity, qtssMsgNoModuleFolder, 0);
         return;
@@ -657,7 +677,7 @@ void QTSServer::loadModules(QTSServerPrefs* inPrefs)
         // a module object from that file.
 
         struct dirent* theFile = ::readdir(theDir);
-        if (theFile == NULL)
+        if (theFile == nullptr)
             break;
 
         this->createModule(theModDirName.GetObject(), theFile->d_name);
@@ -684,14 +704,14 @@ void QTSServer::createModule(char* inModuleFolderPath, char* inModuleName)
     //
     // Construct a full path to this module
     UInt32 totPathLen = ::strlen(inModuleFolderPath) + ::strlen(inModuleName);
-    OSCharArrayDeleter theModPath(NEW char[totPathLen + 4]);
+    OSCharArrayDeleter theModPath(new char[totPathLen + 4]);
     ::strcpy(theModPath.GetObject(), inModuleFolderPath);
     ::strcat(theModPath.GetObject(), kPathDelimiterString);
     ::strcat(theModPath.GetObject(), inModuleName);
 
     //
     // Construct a QTSSModule object, and attempt to initialize the module
-    QTSSModule* theNewModule = NEW QTSSModule(inModuleName, theModPath.GetObject());
+    QTSSModule* theNewModule = new QTSSModule(inModuleName, theModPath.GetObject());
     QTSS_Error theErr = theNewModule->SetupModule(&sCallbacks);
 
     if (theErr != QTSS_NoErr)
@@ -719,7 +739,7 @@ bool QTSServer::addModule(QTSSModule* inModule)
 
     theModuleState.curModule = inModule;
     theModuleState.curRole = QTSS_Register_Role;
-    theModuleState.curTask = NULL;
+    theModuleState.curTask = nullptr;
     OSThread::SetMainThreadData(&theModuleState);
 
     // Currently we do nothing with the module name
@@ -730,7 +750,7 @@ bool QTSServer::addModule(QTSSModule* inModule)
     if (inModule->CallDispatch(QTSS_Register_Role, &theRegParams) != QTSS_NoErr)
         return false;
 
-    OSThread::SetMainThreadData(NULL);
+    OSThread::SetMainThreadData(nullptr);
 
     //
     // Update the module name to reflect what was returned from the register role
@@ -740,7 +760,7 @@ bool QTSServer::addModule(QTSSModule* inModule)
 
     //
     // Give the module object a prefs dictionary. Instance attributes are allowed for these objects.
-    QTSSPrefs* thePrefs = NEW QTSSPrefs(sPrefsSource, inModule->GetValue(qtssModName), QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kModulePrefsDictIndex), true);
+    QTSSPrefs* thePrefs = new QTSSPrefs(sPrefsSource, inModule->GetValue(qtssModName), QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kModulePrefsDictIndex), true);
     thePrefs->RereadPreferences();
     inModule->SetPrefsDict(thePrefs);
 
@@ -767,13 +787,13 @@ void QTSServer::buildModuleRoleArrays()
     // modules in each role, and also recording which modules are doing what.
 
     OSQueueIter theIter(&sModuleQueue);
-    QTSSModule* theModule = NULL;
+    QTSSModule* theModule;
     for (UInt32 x = 0; x < QTSSModule::kNumRoles; x++)
     {
         sNumModulesInRole[x] = 0;
         for (theIter.Reset(); !theIter.IsDone(); theIter.Next())
         {
-            theModule = (QTSSModule*)theIter.GetCurrent()->GetEnclosingObject();
+            theModule = static_cast<QTSSModule*>(theIter.GetCurrent()->GetEnclosingObject());
             if (theModule->RunsInRole(x))
                 sNumModulesInRole[x] += 1;
         }
@@ -784,7 +804,7 @@ void QTSServer::buildModuleRoleArrays()
             sModuleArray[x] = new QTSSModule*[sNumModulesInRole[x] + 1];
             for (theIter.Reset(); !theIter.IsDone(); theIter.Next())
             {
-                theModule = (QTSSModule*)theIter.GetCurrent()->GetEnclosingObject();
+                theModule = static_cast<QTSSModule*>(theIter.GetCurrent()->GetEnclosingObject());
                 if (theModule->RunsInRole(x))
                 {
                     sModuleArray[x][moduleIndex] = theModule;
@@ -800,9 +820,9 @@ void QTSServer::destroyModuleRoleArrays()
     for (UInt32 x = 0; x < QTSSModule::kNumRoles; x++)
     {
         sNumModulesInRole[x] = 0;
-        if (sModuleArray[x] != NULL)
+        if (sModuleArray[x] != nullptr)
             delete[] sModuleArray[x];
-        sModuleArray[x] = NULL;
+        sModuleArray[x] = nullptr;
     }
 }
 
@@ -816,7 +836,7 @@ void QTSServer::doInitRole()
 
     QTSS_ModuleState theModuleState;
     theModuleState.curRole = QTSS_Initialize_Role;
-    theModuleState.curTask = NULL;
+    theModuleState.curTask = nullptr;
     OSThread::SetMainThreadData(&theModuleState);
 
     //
@@ -847,14 +867,14 @@ void QTSServer::doInitRole()
             delete theModule;
         }
     }
-    OSThread::SetMainThreadData(NULL);
+    OSThread::SetMainThreadData(nullptr);
 }
 
 Task*   HTTPListenerSocket::GetSessionTask(TCPSocket** outSocket)
 {
-    Assert(outSocket != NULL);
+    Assert(outSocket != nullptr);
 
-    HTTPSession* theTask = NEW HTTPSession();
+    HTTPSession* theTask = new HTTPSession();
     *outSocket = theTask->GetSocket();  // out socket is not attached to a unix socket yet.
 
     if (this->OverMaxConnections(0))
@@ -894,7 +914,7 @@ QTSS_Error QTSServer::RereadPrefsService(QTSS_ServiceFunctionArgsPtr /*inArgs*/)
 
     // This is to make sure this function isn't being called before the server is
     // completely started up.
-    if ((theServer == NULL) || (theServer->GetServerState() != qtssRunningState))
+    if ((theServer == nullptr) || (theServer->GetServerState() != qtssRunningState))
         return QTSS_OutOfState;
 
     // Because the server must have started up, and because this object always stays
@@ -929,18 +949,18 @@ QTSS_Error QTSServer::RereadPrefsService(QTSS_ServiceFunctionArgsPtr /*inArgs*/)
     }
 
     // Delete all the streams
-    QTSSModule** theModule = NULL;
+    QTSSModule** theModule = nullptr;
     UInt32 theLen = 0;
 
     for (int y = 0; QTSServerInterface::GetServer()->GetValuePtr(qtssSvrModuleObjects, y, (void**)(void*)&theModule, &theLen) == QTSS_NoErr; y++)
     {
-        Assert(theModule != NULL);
+        Assert(theModule != nullptr);
         Assert(theLen == sizeof(QTSSModule*));
 
         (*theModule)->GetPrefsDict()->RereadPreferences();
 
 #if DEBUG
-        theModule = NULL;
+        theModule = nullptr;
         theLen = 0;
 #endif
     }
@@ -954,7 +974,7 @@ QTSS_Error QTSServer::RereadPrefsService(QTSS_ServiceFunctionArgsPtr /*inArgs*/)
     for (UInt32 x = 0; x < QTSServerInterface::GetNumModulesInRole(QTSSModule::kRereadPrefsRole); x++)
     {
         QTSSModule* module = QTSServerInterface::GetModule(QTSSModule::kRereadPrefsRole, x);
-        (void)module->CallDispatch(QTSS_RereadPrefs_Role, NULL);
+        (void)module->CallDispatch(QTSS_RereadPrefs_Role, nullptr);
     }
     return QTSS_NoErr;
 }
