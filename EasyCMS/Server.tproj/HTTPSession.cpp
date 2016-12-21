@@ -2178,7 +2178,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "GetDeviceList";
 		value[EASY_TAG_PARAMETER] = "";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/getdevicelist";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/getdevicelist";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -2188,7 +2188,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "GetDeviceInfo";
 		value[EASY_TAG_PARAMETER] = "device=[Serial]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/getdeviceinfo?device=00100100001";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/getdeviceinfo?device=00100100001";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -2198,7 +2198,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "GetDeviceStream";
 		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]&reserve=[Reserve]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/getdevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/getdevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -2208,7 +2208,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "FreeDeviceStream";
 		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]&reserve=[Reserve]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/freedevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/freedevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -2218,7 +2218,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "PTZControl";
 		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[ONVIF/SDK]&actiontype=[Continuous/Single]&command=[Stop/Up/Down/Left/Right/Zoomin/Zoomout/Focusin/Focusout/Aperturein/Apertureout]&speed=[Speed]&reserve=[Reserve]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/ptzcontrol?device=001002000001&channel=1&protocol=onvif&actiontype=single&command=down&speed=5&reserve=1";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/ptzcontrol?device=001002000001&channel=1&protocol=onvif&actiontype=single&command=down&speed=5&reserve=1";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -2228,7 +2228,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "PresetControl";
 		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[ONVIF/SDK]&preset=[Preset]&command=[Goto/Set/Remove]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/presetcontrol?device=001001000058&channel=1&command=goto&preset=1&protocol=onvif";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/presetcontrol?device=001001000058&channel=1&command=goto&preset=1&protocol=onvif";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
