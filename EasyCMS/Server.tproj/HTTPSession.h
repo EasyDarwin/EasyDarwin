@@ -56,8 +56,8 @@ private:
 	QTSS_Error execNetMsgCSDeviceListReq(const char* json);
 	QTSS_Error execNetMsgCSCameraListReq(const char* json);
 
-	QTSS_Error execNetMsgCSGetStreamReqRESTful(const char* queryString);
-	QTSS_Error execNetMsgCSFreeStreamReqRESTful(const char* queryString);
+	QTSS_Error execNetMsgCSStartStreamReqRESTful(const char* queryString);
+	QTSS_Error execNetMsgCSStopStreamReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSGetDeviceListReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSGetCameraListReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSPTZControlReqRESTful(const char* queryString);

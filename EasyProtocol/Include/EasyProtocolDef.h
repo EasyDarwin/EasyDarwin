@@ -303,6 +303,9 @@
 
 #define MSG_SC_SERVER_USAGES_ACK							0x101a
 
+#define MSG_SC_START_STREAM_ACK								0x101b
+#define MSG_SC_STOP_STREAM_ACK								0x101c
+
 #define MSG_SC_START_HLS_ACK								0xeee0
 #define MSG_SC_HLS_SESSION_LIST_ACK							0xeee1
 #define MSG_SC_RTSP_LIVE_SESSIONS_ACK						0xeee2

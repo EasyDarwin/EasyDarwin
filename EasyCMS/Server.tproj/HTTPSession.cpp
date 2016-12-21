@@ -448,13 +448,13 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "getdevicestream")
+				if (path[0] == "api" && path[1] == "startdevicestream")
 				{
-					return execNetMsgCSGetStreamReqRESTful(fRequest->GetQueryString());
+					return execNetMsgCSStartStreamReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "freedevicestream")
+				if (path[0] == "api" && path[1] == "stopdevicestream")
 				{
-					return execNetMsgCSFreeStreamReqRESTful(fRequest->GetQueryString());
+					return execNetMsgCSStopStreamReqRESTful(fRequest->GetQueryString());
 				}
 				if (path[0] == "api" && path[1] == "ptzcontrol")
 				{
@@ -948,7 +948,7 @@ QTSS_Error HTTPSession::execNetMsgDSStreamStopAck(const char* json) const
 	return QTSS_NoErr;
 }
 
-QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)//放到ProcessRequest所在的状态去处理，方便多次循环调用
+QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryString)//放到ProcessRequest所在的状态去处理，方便多次循环调用
 {
 	/*//暂时注释掉，实际上是需要认证的
 	if(!fAuthenticated)//没有进行认证请求
@@ -965,7 +965,6 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
 	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
 	const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
-	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);
 	const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
 
 	//为可选参数填充默认值
@@ -974,7 +973,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	if (chReserve == nullptr)
 		chReserve = "1";
 
-	if (chSerial == nullptr || chProtocol == nullptr)
+	if (chSerial == nullptr)
 		return QTSS_BadArgument;
 
 	string strCSeq = EasyUtil::ToString(GetCSeq());
@@ -1028,7 +1027,6 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 			bodybody[EASY_TAG_SERVER_PORT] = strDssPort;
 			bodybody[EASY_TAG_SERIAL] = chSerial;
 			bodybody[EASY_TAG_CHANNEL] = chChannel;
-			bodybody[EASY_TAG_PROTOCOL] = chProtocol;
 			bodybody[EASY_TAG_RESERVE] = chReserve;
 			bodybody[EASY_TAG_FROM] = fSessionID;
 			bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
@@ -1054,12 +1052,11 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 	}
 
 	//走到这说明对客户端的正确回应,因为错误回应直接返回。
-	EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
+	EasyProtocolACK rsp(MSG_SC_START_STREAM_ACK);
 	EasyJsonValue header, body;
 	body[EASY_TAG_SERVICE] = service;
 	body[EASY_TAG_SERIAL] = chSerial;
 	body[EASY_TAG_CHANNEL] = chChannel;
-	body[EASY_TAG_PROTOCOL] = chProtocol;//如果当前已经推流，则返回请求的，否则返回实际推流类型
 	body[EASY_TAG_RESERVE] = chReserve;//如果当前已经推流，则返回请求的，否则返回实际推流类型
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
@@ -1078,7 +1075,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetStreamReqRESTful(const char* queryString)
 }
 
 
-QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString)//放到ProcessRequest所在的状态去处理，方便多次循环调用
+QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString)//放到ProcessRequest所在的状态去处理，方便多次循环调用
 {
 	/*//暂时注释掉，实际上是需要认证的
 	if(!fAuthenticated)//没有进行认证请求
@@ -1141,7 +1138,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReqRESTful(const char* queryString
 	pDevSession->SendHTTPPacket(&theValue, false, false);
 
 	//直接对客户端（EasyDarWin)进行正确回应
-	EasyProtocolACK rsp(MSG_SC_FREE_STREAM_ACK);
+	EasyProtocolACK rsp(MSG_SC_STOP_STREAM_ACK);
 	EasyJsonValue header, body;
 	header[EASY_TAG_CSEQ] = strCSeq;
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
@@ -1203,7 +1200,7 @@ QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json) const
 		string service = string("IP=") + strDssIP + ";Port=" + httpSession->GetDarwinHTTPPort() + ";Type=EasyDarwin";
 
 		//走到这说明对客户端的正确回应,因为错误回应直接返回。
-		EasyProtocolACK rsp(MSG_SC_GET_STREAM_ACK);
+		EasyProtocolACK rsp(MSG_SC_START_STREAM_ACK);
 		EasyJsonValue header, body;
 		body[EASY_TAG_SERVICE] = service;
 		body[EASY_TAG_SERIAL] = strDeviceSerial;
