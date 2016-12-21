@@ -110,6 +110,7 @@
     <ClCompile Include="base64.c" />
     <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="ConfParser.cpp" />
+    <ClCompile Include="CreateDump.cpp" />
     <ClCompile Include="DateTranslator.cpp" />
     <ClCompile Include="EventContext.cpp" />
     <ClCompile Include="Format.cpp" />
@@ -157,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientSocket.h" />
+    <ClInclude Include="CreateDump.h" />
     <ClInclude Include="Format.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="OSMapEx.h" />

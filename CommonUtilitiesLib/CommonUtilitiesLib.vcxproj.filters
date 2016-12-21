@@ -151,6 +151,9 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CreateDump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientSocket.h">
@@ -168,5 +171,6 @@
     <ClInclude Include="OSMemory.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ScopeGuard.h" />
+    <ClInclude Include="CreateDump.h" />
   </ItemGroup>
 </Project>
