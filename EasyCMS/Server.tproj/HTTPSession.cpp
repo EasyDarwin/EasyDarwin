@@ -438,33 +438,33 @@ QTSS_Error HTTPSession::setupRequest()
 				boost::erase_tail(sRequest, 1);
 			}
 			boost::split(path, sRequest, boost::is_any_of("/"), boost::token_compress_on);
-			if (path.size() == 2)
+			if (path.size() == 3)
 			{
-				if (path[0] == "api" && path[1] == "getdevicelist")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getdevicelist")
 				{
 					return execNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "getdeviceinfo")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getdeviceinfo")
 				{
 					return execNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "startdevicestream")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "startdevicestream")
 				{
 					return execNetMsgCSStartStreamReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "stopdevicestream")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "stopdevicestream")
 				{
 					return execNetMsgCSStopStreamReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "ptzcontrol")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "ptzcontrol")
 				{
 					return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "presetcontrol")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "presetcontrol")
 				{
 					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == "getusages")
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getusages")
 				{
 					return execNetMsgCSGetUsagesReqRESTful(fRequest->GetQueryString());
 				}
