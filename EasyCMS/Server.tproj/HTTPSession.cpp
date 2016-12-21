@@ -2166,7 +2166,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 	return httpUnAuthorized;
 	*/
 
-	EasyProtocolACK rsp(MSG_SC_SERVER_GET_USAGES_ACK);
+	EasyProtocolACK rsp(MSG_SC_SERVER_USAGES_ACK);
 	EasyJsonValue header, body;
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
