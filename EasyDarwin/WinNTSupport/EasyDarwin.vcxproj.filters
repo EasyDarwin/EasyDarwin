@@ -35,6 +35,9 @@
     <Filter Include="Source Files\API Modules\EasyHLSModule">
       <UniqueIdentifier>{ae02ba8a-e5fd-47e3-b5af-16082afccd5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\API Modules\RtspRecordModule">
+      <UniqueIdentifier>{7073c92b-0ae7-4723-a8cb-a931e6f767c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
@@ -235,17 +238,17 @@
     <ClCompile Include="..\APIModules\EasyHLSModule\EasyHLSSession.cpp">
       <Filter>Source Files\API Modules\EasyHLSModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\RtspRecordModule\EasyMP4Writer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordModule.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordSession.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\FileBrowserUtils\SearchFileDir.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\RtspRecordModule\EasyMP4Writer.cpp">
+      <Filter>Source Files\API Modules\RtspRecordModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordSession.cpp">
+      <Filter>Source Files\API Modules\RtspRecordModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordModule.cpp">
+      <Filter>Source Files\API Modules\RtspRecordModule</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
