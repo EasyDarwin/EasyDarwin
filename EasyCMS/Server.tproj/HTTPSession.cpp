@@ -464,10 +464,6 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
 				}
-				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getusages")
-				{
-					return execNetMsgCSGetUsagesReqRESTful(fRequest->GetQueryString());
-				}
 			}
 
 			execNetMsgCSGetUsagesReqRESTful(nullptr);
