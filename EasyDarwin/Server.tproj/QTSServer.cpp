@@ -285,12 +285,6 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 		defIP = string(theLocalAddrStr->Ptr, theLocalAddrStr->Len);
 	}
 
-	if (strcmp(QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath(), NONE_CONFIG_NGINX_WEB_PATH) == 0)
-	{
-		auto ngxWebPath = Format("http://%s:%s/", defIP, NGINX_HTTP_PORT);
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)ngxWebPath.c_str(), ngxWebPath.size());
-	}
-
 	fServerState = qtssStartingUpState;
 	return true;
 }
