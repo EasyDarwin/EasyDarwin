@@ -15,7 +15,7 @@
 #include "OS.h"
 #include "QTSSModuleUtils.h"
 #include "QTSServerInterface.h"
-#include <EasyRTSPClientAPI.h>
+#include "EasyRTSPClientAPI.h"
 
 #ifndef __Win32__
 #include <unistd.h>
