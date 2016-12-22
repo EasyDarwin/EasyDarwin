@@ -958,7 +958,6 @@ QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryStr
 
 	body[EASY_TAG_CONFIG_NGINX_ROOT_FOLDER] = QTSServerInterface::GetServer()->GetPrefs()->GetNginxRootFolder();
 	body[EASY_TAG_CONFIG_NGINX_WEB_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetNginxWebPath();
-	body[EASY_TAG_CONFIG_NGINX_RTMP_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath();
 
 	body[EASY_TAG_CONFIG_SERVICE_LAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetServiceLanPort());
 	body[EASY_TAG_CONFIG_SERVICE_WAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetServiceWanPort());
@@ -1042,19 +1041,8 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)nginxWebPath.c_str(), nginxWebPath.size());
 	}
 
-	//7.EASY_TAG_CONFIG_NGINX_RTMP_PATH
-	const char* chNginxRTMPPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_RTMP_PATH);
-	if (chNginxRTMPPath)
-	{
-		string nginxRTMPPath(chNginxRTMPPath);
-		if (nginxRTMPPath.back() != '\/')
-		{
-			nginxRTMPPath.push_back('\/');
-		}
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxRTMPPath, 0, (void*)nginxRTMPPath.c_str(), nginxRTMPPath.size());
-	}
 
-	//8.EASY_TAG_CONFIG_SERVICE_LAN_PORT
+	//7.EASY_TAG_CONFIG_SERVICE_LAN_PORT
 	const char* chHTTPLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
 	if (chHTTPLanPort)
 	{
@@ -1062,7 +1050,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsHTTPServiceLanPort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
 	}
 
-	//9.EASY_TAG_CONFIG_SERVICE_WAN_PORT
+	//8.EASY_TAG_CONFIG_SERVICE_WAN_PORT
 	const char*	chHTTPWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_PORT);
 	if (chHTTPWanPort)
 	{

@@ -185,9 +185,7 @@ QTSServerPrefs::PrefInfo QTSServerPrefs::sPrefInfo[] =
 
 	{ kDontAllowMultipleValues, "0.0.0.0",	NULL					 }, //service_wan_ip
 	{ kDontAllowMultipleValues, "10554",	NULL					 }, //rtsp_wan_port
-	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL }, //nginx_web_path
-	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_RTMP_PATH,	NULL }  //nginx_rtmp_path
-
+	{ kDontAllowMultipleValues, NONE_CONFIG_NGINX_WEB_PATH,		NULL }	//nginx_web_path
 };
 
 QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
@@ -281,9 +279,7 @@ QTSSAttrInfoDict::AttrInfo  QTSServerPrefs::sAttributes[] =
 	/* 84 */ { "service_wan_ip",						NULL,                   qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
 	/* 85 */ { "rtsp_wan_port",							NULL,                   qtssAttrDataTypeUInt16,     qtssAttrModeRead | qtssAttrModeWrite },
 
-	/* 86 */{ "nginx_web_path",							NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite },
-	/* 87 */{ "nginx_rtmp_path",						NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite }
-
+	/* 86 */{ "nginx_web_path",							NULL,					qtssAttrDataTypeCharArray,  qtssAttrModeRead | qtssAttrModeWrite }
 };
 
 

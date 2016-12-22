@@ -229,7 +229,6 @@ public:
 
 	char* GetNginxRootFolder() { return this->GetStringPref(qtssPrefsNginxRootFolder); }
 	char* GetNginxWebPath() { return this->GetStringPref(easyPrefsNginxWebPath); }
-	char* GetNginxRTMPPath() { return this->GetStringPref(easyPrefsNginxRTMPPath); }
 
 private:
 

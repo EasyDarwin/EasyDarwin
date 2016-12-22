@@ -54,7 +54,6 @@ const std::string NGINX_HTTP_PORT = "10080";
 const std::string NGINX_RTMP_PORT = "10035";
 
 #define NONE_CONFIG_NGINX_WEB_PATH		"http://127.0.0.1:10080/"
-#define NONE_CONFIG_NGINX_RTMP_PATH		"rtmp://127.0.0.1:10035/live/"
 #define NONE_CONFIG_NGINX_LOCAL_PATH	"./nginx/www/"
 
 //*******************************
@@ -821,9 +820,7 @@ enum
 	easyPrefsRTSPWANPort					= 85,	// "rtsp_wan_port"		//UInt16
 
 	easyPrefsNginxWebPath					= 86,	// "nginx_web_path"		//char array
-	easyPrefsNginxRTMPPath					= 87,	// "nginx_rtmp_path"	//char array
-
-	qtssPrefsNumParams                      = 88
+	qtssPrefsNumParams                      = 87
 };
 
 typedef UInt32 QTSS_PrefsAttributes;

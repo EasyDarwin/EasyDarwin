@@ -238,7 +238,7 @@ QTSS_Error	EasyRTMPSession::SessionStart()
 
 		EasyRTMP_SetCallback(fRTMPHandle, __EasyRTMP_Callback, nullptr);
 
-		qtss_sprintf(fRTMPURL, "%s%s", QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath(), fSourceID.Ptr);
+		qtss_sprintf(fRTMPURL, "rtmp://%s:%d/live/%s", "127.0.0.1", 10035, fSourceID.Ptr);
 
 		auto bRet = EasyRTMP_Connect(fRTMPHandle, fRTMPURL);
 		if (!bRet)
