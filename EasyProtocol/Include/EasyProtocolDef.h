@@ -161,6 +161,9 @@
 #define EASY_TAG_CONFIG_RTSP_LAN_PORT					"RTSPLanPort"
 #define	EASY_TAG_CONFIG_RTSP_WAN_PORT					"RTSPWanPort"
 
+#define EASY_TAG_CONFIG_RTMP_LAN_PORT					"RTMPLanPort"
+#define EASY_TAG_CONFIG_RTMP_WAN_PORT					"RTMPWanPort"
+
 #define EASY_TAG_CONFIG_CHANNEL_SNAP_INTERVAL			"ChannelSnapInterval"
 #define EASY_TAG_CONFIG_CHANNEL_L_SNAP_INTERVAL			"channelsnapinterval"
 
