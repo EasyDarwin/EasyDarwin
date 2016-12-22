@@ -158,6 +158,9 @@
 #define EASY_TAG_CONFIG_SERVICE_WAN_IP					"ServiceWanIP"
 #define EASY_TAG_CONFIG_SERVICE_L_WAN_IP				"servicewanip"
 
+#define EASY_TAG_CONFIG_SNAP_LOCAL_PATH					"SnapLocalPath"
+#define EASY_TAG_CONFIG_SNAP_WEB_PATH					"SnapWebPath"
+
 #define EASY_TAG_CONFIG_RTSP_LAN_PORT					"RTSPLanPort"
 #define	EASY_TAG_CONFIG_RTSP_WAN_PORT					"RTSPWanPort"
 
