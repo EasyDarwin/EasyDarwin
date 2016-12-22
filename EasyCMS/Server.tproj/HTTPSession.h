@@ -63,6 +63,9 @@ private:
 	QTSS_Error execNetMsgCSPTZControlReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSPresetControlReqRESTful(const char* queryString);
 
+	QTSS_Error execNetMsgCSGetBaseConfigReqRESTful(const char* queryString);
+	QTSS_Error execNetMsgCSSetBaseConfigReqRESTful(const char* queryString);
+
 	QTSS_Error execNetMsgCSGetUsagesReqRESTful(const char* queryString);
 
 	QTSS_Error dumpRequestData();

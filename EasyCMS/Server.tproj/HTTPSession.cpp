@@ -15,6 +15,7 @@
 #include "OSArrayObjectDeleter.h"
 #include "EasyUtil.h"
 #include "QueryParamList.h"
+#include "QTSSMemoryDeleter.h"
 #include "Format.h"
 
 #include <boost/algorithm/string.hpp>
@@ -2149,6 +2150,110 @@ ACK:
 
 QTSS_Error HTTPSession::execNetMSGDSTalkbackControlAck(const char* json)
 {
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryString)
+{
+	//if (!fAuthenticated)//没有进行认证请求
+	//	return httpUnAuthorized;
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_BASE_CONFIG_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	body[EASY_TAG_CONFIG_SERVICE_WAN_IP] = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP();
+	body[EASY_TAG_CONFIG_SNAP_LOCAL_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetSnapLocalPath();
+	body[EASY_TAG_CONFIG_SNAP_WEB_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath();
+	body[EASY_TAG_CONFIG_SERVICE_LAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetServiceLANPort());
+	body[EASY_TAG_CONFIG_SERVICE_WAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANPort());
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+
+	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryString)
+{
+	//if (!fAuthenticated)//没有进行认证请求
+	//	return httpUnAuthorized;
+
+	string queryTemp;
+	if (queryString)
+	{
+		queryTemp = EasyUtil::Urldecode(queryString);
+	}
+	QueryParamList parList(const_cast<char*>(queryTemp.c_str()));
+
+	//4.EASY_TAG_CONFIG_SERVICE_WAN_IP
+	const char* chWanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_IP);
+	if (chWanIP)
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANIPAddr, 0, (void*)chWanIP, strlen(chWanIP));
+
+	////5.EASY_TAG_CONFIG_NGINX_ROOT_FOLDER
+	//const char* chNginxRootFolder = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_ROOT_FOLDER);
+	//if (chNginxRootFolder)
+	//{
+	//	string nginxRootFolder(chNginxRootFolder);
+	//	if (nginxRootFolder.back() != '\\')
+	//	{
+	//		nginxRootFolder.push_back('\\');
+	//	}
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxRootFolder, 0, (void*)nginxRootFolder.c_str(), nginxRootFolder.size());
+	//}
+
+	////6.EASY_TAG_CONFIG_NGINX_WEB_PATH
+	//const char* chNginxWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_WEB_PATH);
+	//if (chNginxWebPath)
+	//{
+	//	string nginxWebPath(chNginxWebPath);
+	//	if (nginxWebPath.back() != '\/')
+	//	{
+	//		nginxWebPath.push_back('\/');
+	//	}
+	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)nginxWebPath.c_str(), nginxWebPath.size());
+	//}
+
+	//7.EASY_TAG_CONFIG_SERVICE_LAN_PORT
+	const char* chHTTPLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
+	if (chHTTPLanPort)
+	{
+		UInt16 uHTTPLanPort = stoi(chHTTPLanPort);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceLANPort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
+	}
+
+	//8.EASY_TAG_CONFIG_SERVICE_WAN_PORT
+	const char*	chHTTPWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_PORT);
+	if (chHTTPWanPort)
+	{
+		UInt16 uHTTPWanPort = stoi(chHTTPWanPort);
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANPort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
+	}
+
+	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);
+	EasyJsonValue header, body;
+
+	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
+	header[EASY_TAG_CSEQ] = 1;
+	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+
+	rsp.SetHead(header);
+	rsp.SetBody(body);
+
+	string msg = rsp.GetMsg();
+	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
+	this->SendHTTPPacket(&theValue, false, false);
+
 	return QTSS_NoErr;
 }
 
