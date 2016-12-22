@@ -71,33 +71,32 @@ QTSS_Error  EasyHLSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
+	//int isEasyHLSActivated = EasyHLS_Activate(EasyHLS_KEY);
+	//switch (isEasyHLSActivated)
+	//{
+	//case EASY_ACTIVATE_INVALID_KEY:
+	//	printf("EasyHLS_KEY is EASY_ACTIVATE_INVALID_KEY!\n");
+	//	break;
+	//case EASY_ACTIVATE_TIME_ERR:
+	//	printf("EasyHLS_KEY is EASY_ACTIVATE_TIME_ERR!\n");
+	//	break;
+	//case EASY_ACTIVATE_PROCESS_NAME_LEN_ERR:
+	//	printf("EasyHLS_KEY is EASY_ACTIVATE_PROCESS_NAME_LEN_ERR!\n");
+	//	break;
+	//case EASY_ACTIVATE_PROCESS_NAME_ERR:
+	//	printf("EasyHLS_KEY is EASY_ACTIVATE_PROCESS_NAME_ERR!\n");
+	//	break;
+	//case EASY_ACTIVATE_VALIDITY_PERIOD_ERR:
+	//	printf("EasyHLS_KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
+	//	break;
+	//case EASY_ACTIVATE_SUCCESS:
+	//	//printf("EasyHLS_KEY is EASY_ACTIVATE_SUCCESS!\n");
+	//	break;
+	//default: break;
+	//}
 
-	int isEasyHLSActivated = EasyHLS_Activate(EasyHLS_KEY);
-	switch (isEasyHLSActivated)
-	{
-	case EASY_ACTIVATE_INVALID_KEY:
-		printf("EasyHLS_KEY is EASY_ACTIVATE_INVALID_KEY!\n");
-		break;
-	case EASY_ACTIVATE_TIME_ERR:
-		printf("EasyHLS_KEY is EASY_ACTIVATE_TIME_ERR!\n");
-		break;
-	case EASY_ACTIVATE_PROCESS_NAME_LEN_ERR:
-		printf("EasyHLS_KEY is EASY_ACTIVATE_PROCESS_NAME_LEN_ERR!\n");
-		break;
-	case EASY_ACTIVATE_PROCESS_NAME_ERR:
-		printf("EasyHLS_KEY is EASY_ACTIVATE_PROCESS_NAME_ERR!\n");
-		break;
-	case EASY_ACTIVATE_VALIDITY_PERIOD_ERR:
-		printf("EasyHLS_KEY is EASY_ACTIVATE_VALIDITY_PERIOD_ERR!\n");
-		break;
-	case EASY_ACTIVATE_SUCCESS:
-		//printf("EasyHLS_KEY is EASY_ACTIVATE_SUCCESS!\n");
-		break;
-	default: break;
-	}
-
-	if (EASY_ACTIVATE_SUCCESS != isEasyHLSActivated)
-		return QTSS_RequestFailed;
+	//if (EASY_ACTIVATE_SUCCESS != isEasyHLSActivated)
+	//	return QTSS_RequestFailed;
 
 
 	// Do role & attribute setup
@@ -125,7 +124,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
 	// Call helper class initializers
-	EasyHLSSession::Initialize(sModulePrefs);
+	//EasyHLSSession::Initialize(sModulePrefs);
 
 	RereadPrefs();
 
