@@ -818,9 +818,10 @@ enum
 
 	easyPrefsServiceWANIPAddr				= 84,	// "service_wan_ip"		//char array
 	easyPrefsRTSPWANPort					= 85,	// "rtsp_wan_port"		//UInt16
+	easyPrefsRTMPWANPort					= 86,	// "rtmp_wan_port"		//UInt16
 
-	easyPrefsNginxWebPath					= 86,	// "nginx_web_path"		//char array
-	qtssPrefsNumParams                      = 87
+	easyPrefsNginxWebPath					= 87,	// "nginx_web_path"		//char array
+	qtssPrefsNumParams                      = 88
 };
 
 typedef UInt32 QTSS_PrefsAttributes;
