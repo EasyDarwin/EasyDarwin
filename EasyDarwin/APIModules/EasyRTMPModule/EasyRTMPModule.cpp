@@ -14,7 +14,6 @@
 #include "QTSSMemoryDeleter.h"
 #include "ReflectorSession.h"
 #include "MyAssert.h"
-
 #include "EasyRTMPSession.h"
 
 #ifdef __Win32__

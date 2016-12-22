@@ -226,10 +226,10 @@ public:
 
 	char* GetServiceWANIP() { return this->GetStringPref(easyPrefsServiceWANIPAddr); }
 	UInt16 GetRTSPWANPort() const {	return fRTSPWANPort; }
+	UINT16 GetRTMPWANPort()	const { return fRTMPWANPort; }
 
 	char* GetNginxRootFolder() { return this->GetStringPref(qtssPrefsNginxRootFolder); }
 	char* GetNginxWebPath() { return this->GetStringPref(easyPrefsNginxWebPath); }
-	char* GetNginxRTMPPath() { return this->GetStringPref(easyPrefsNginxRTMPPath); }
 
 private:
 
@@ -320,6 +320,7 @@ private:
 
 	char   fRTSPWANAddr[20];
 	UInt16 fRTSPWANPort;
+	UINT16 fRTMPWANPort;
 
 	enum //fPacketHeaderPrintfOptions
 	{

@@ -161,6 +161,9 @@
 #define EASY_TAG_CONFIG_RTSP_LAN_PORT					"RTSPLanPort"
 #define	EASY_TAG_CONFIG_RTSP_WAN_PORT					"RTSPWanPort"
 
+#define EASY_TAG_CONFIG_RTMP_LAN_PORT					"RTMPLanPort"
+#define EASY_TAG_CONFIG_RTMP_WAN_PORT					"RTMPWanPort"
+
 #define EASY_TAG_CONFIG_CHANNEL_SNAP_INTERVAL			"ChannelSnapInterval"
 #define EASY_TAG_CONFIG_CHANNEL_L_SNAP_INTERVAL			"channelsnapinterval"
 
@@ -169,8 +172,6 @@
 
 #define EASY_TAG_CONFIG_NGINX_WEB_PATH					"NginxWebPath"
 #define EASY_TAG_CONFIG_NGINX_L_WEB_PATH				"nginxwebpath"
-#define EASY_TAG_CONFIG_NGINX_RTMP_PATH					"NginxRTMPPath"
-#define EASY_TAG_CONFIG_NGINX_L_RTMP_PATH				"nginxrtmppath"
 
 #define EASY_TAG_THRID_PART_PLATFORM_NAME				"ThridPlatform"
 #define EASY_TAG_L_THRID_PART_PLATFORM_NAME				"thridplatform"

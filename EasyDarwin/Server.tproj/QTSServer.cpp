@@ -291,12 +291,6 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)ngxWebPath.c_str(), ngxWebPath.size());
 	}
 
-	if (strcmp(QTSServerInterface::GetServer()->GetPrefs()->GetNginxRTMPPath(), NONE_CONFIG_NGINX_RTMP_PATH) == 0)
-	{
-		auto ngxRTMPPath = Format("rtmp://%s:%s/live/", defIP, NGINX_RTMP_PORT);
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxRTMPPath, 0, (void*)ngxRTMPPath.c_str(), ngxRTMPPath.size());
-	}
-
 	fServerState = qtssStartingUpState;
 	return true;
 }
