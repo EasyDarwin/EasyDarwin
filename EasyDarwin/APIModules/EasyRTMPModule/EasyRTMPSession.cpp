@@ -238,9 +238,12 @@ QTSS_Error	EasyRTMPSession::SessionStart()
 
 		EasyRTMP_SetCallback(fRTMPHandle, __EasyRTMP_Callback, nullptr);
 
-		qtss_sprintf(fRTMPURL, "rtmp://%s:%d/live/%s", "127.0.0.1", 10035, fSourceID.Ptr);
+		char localRTMPURL[QTSS_MAX_URL_LENGTH] = { 0 };
+		qtss_sprintf(localRTMPURL, "rtmp://%s:%d/live/%s", "127.0.0.1", QTSServerInterface::GetServer()->GetPrefs()->GetRTMPWANPort(), fSourceID.Ptr);
 
-		auto bRet = EasyRTMP_Connect(fRTMPHandle, fRTMPURL);
+		qtss_sprintf(fRTMPURL, "rtmp://%s:%d/live/%s", QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP(), QTSServerInterface::GetServer()->GetPrefs()->GetRTMPWANPort(), fSourceID.Ptr);
+
+		auto bRet = EasyRTMP_Connect(fRTMPHandle, localRTMPURL);
 		if (!bRet)
 		{
 			printf("Fail to EasyRTMP_Connect channel {}");
