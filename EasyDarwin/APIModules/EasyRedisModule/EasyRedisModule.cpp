@@ -278,11 +278,10 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 	}
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "%s:%s/%d", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
+	sprintf(chKey, "del %s:%s/%d", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
 
 	if (inParams->inAction == easyRedisActionDelete)
 	{
-		sprintf(chKey, "hdel %s", chKey);
 		auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyGuard = MakeGuard([&]()
 		{
@@ -296,7 +295,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		{
 			RedisErrorHandler([&]()
 			{
-				printf("Redis hdel Live error\n");
+				printf("Redis del Live error\n");
 			});
 
 			return QTSS_NotConnected;
