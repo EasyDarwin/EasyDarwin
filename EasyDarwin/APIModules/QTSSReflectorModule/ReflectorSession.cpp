@@ -377,14 +377,15 @@ void    ReflectorSession::RemoveOutput(ReflectorOutput* inOutput, bool isClient)
 	if (fNumOutputs == 0)
 	{
 		this->SetNoneOutputStartTimeMS();
-		//QTSS_RoleParams theParams;
-		//theParams.easyFreeStreamParams.inStreamName = GetSourceID()->Ptr;
-		//auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
-		//for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-		//{
-		//	auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
-		//	(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
-		//}
+		QTSS_RoleParams theParams;
+		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+		theParams.easyStreamInfoParams.inChannel = fChannelNum;
+		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
+		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+		{
+			auto theModule = QTSServerInterface::GetModule(QTSSModule::kEasyCMSFreeStreamRole, currentModule);
+			(void)theModule->CallDispatch(Easy_CMSFreeStream_Role, &theParams);
+		}
 	}
 }
 
@@ -439,10 +440,11 @@ SInt64 ReflectorSession::Run()
 
 	SInt64 sNowTime = OS::Milliseconds();
 	SInt64 sNoneTime = GetNoneOutputStartTimeMS();
-	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= /*QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs()*/20 * 1000))
+	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= /*QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs()*/30 * 1000))
 	{
 		QTSS_RoleParams theParams;
 		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+		theParams.easyStreamInfoParams.inChannel = fChannelNum;
 		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{

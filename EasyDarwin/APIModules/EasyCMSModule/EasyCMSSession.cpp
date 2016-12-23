@@ -27,7 +27,8 @@ EasyCMSSession::EasyCMSSession()
 	fContentBuffer(nullptr),
 	fContentBufferOffset(0),
 	fStreamName(nullptr),
-	fLiveSession(true)
+	fLiveSession(true),
+	fChannelNum(1)
 {
 	this->SetTaskName("EasyCMSSession");
 	fTimeoutTask.SetTask(this);
@@ -357,9 +358,9 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 
 
 	body[EASY_TAG_SERIAL] = fStreamName;
-	//body[EASY_TAG_CHANNEL]		=	fChannel;
-	body[EASY_TAG_PROTOCOL] = EasyProtocol::GetProtocolString(EASY_PROTOCOL_TYPE_RTSP);
-	body[EASY_TAG_RESERVE] = "1";
+	body[EASY_TAG_CHANNEL] = to_string(fChannelNum);
+	//body[EASY_TAG_PROTOCOL] = EasyProtocol::GetProtocolString(EASY_PROTOCOL_TYPE_RTSP);
+	//body[EASY_TAG_RESERVE] = "1";
 
 	req.SetHead(header);
 	req.SetBody(body);
@@ -368,7 +369,6 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 
 	StrPtrLen jsonContent(const_cast<char*>(msg.data()));
 
-	// 构造HTTP注册报文,提交给fOutputStream进行发送
 	HTTPRequest httpReq(&QTSServerInterface::GetServerHeader(), httpRequestType);
 
 	if (!httpReq.CreateRequestHeader()) return QTSS_Unimplemented;
@@ -387,7 +387,7 @@ QTSS_Error EasyCMSSession::CSFreeStream()
 	return QTSS_NoErr;
 }
 
-QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
+QTSS_Error EasyCMSSession::FreeStream(const char * streamName, UInt32 streamChannel)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
@@ -402,6 +402,8 @@ QTSS_Error EasyCMSSession::FreeStream(const char * streamName)
 		}
 		fStreamName = new char[strlen(streamName) + 1];
 		strcpy(fStreamName, streamName);
+
+		fChannelNum = streamChannel;
 
 		//2.根据Serial查询到设备所在的EasyCMS信息
 		char chCMSIP[20] = { 0 };

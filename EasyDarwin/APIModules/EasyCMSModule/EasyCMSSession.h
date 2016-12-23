@@ -67,13 +67,14 @@ public:
 
 	UInt32				fContentBufferOffset;
 
-	QTSS_Error FreeStream(const char * streamName);
+	QTSS_Error FreeStream(const char * streamName, UInt32 streamChannel);
 
 private:
 
 	SInt64 Run() override;
 
 	char*	fStreamName;
+	UInt32	fChannelNum;
 	UInt32	fEasyMsgType;
 	bool	fLiveSession;
 

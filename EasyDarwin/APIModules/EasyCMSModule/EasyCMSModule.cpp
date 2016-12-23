@@ -98,10 +98,10 @@ QTSS_Error FreeStream_EasyCMSModule(Easy_StreamInfo_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
-	if (inParams->inStreamName != NULL)
+	if (inParams->inStreamName != nullptr)
 	{
 		auto pCMSSession = new EasyCMSSession();
-		theErr = pCMSSession->FreeStream(inParams->inStreamName);
+		theErr = pCMSSession->FreeStream(inParams->inStreamName, inParams->inChannel);
 		if (theErr == QTSS_NoErr)
 			pCMSSession->Signal(Task::kStartEvent);
 		else
