@@ -855,17 +855,14 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	return httpUnAuthorized;
 	*/
 	EasyProtocol req(json);
-	//´Óserial/channelÖÐ½âÎö³öserialºÍchannel
-	string strStreamName = req.GetBodyValue(EASY_TAG_SERIAL);//Á÷Ãû³Æ
-	if (strStreamName.size() <= 0)
-		return QTSS_BadArgument;
 
-	int iPos = strStreamName.find('/');
-	if (iPos == string::npos)
-		return QTSS_BadArgument;
+	string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);
+	string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);
 
-	string strDeviceSerial = strStreamName.substr(0, iPos);
-	string strChannel = strStreamName.substr(iPos + 1, strStreamName.size() - iPos - 1);
+	if (strDeviceSerial.size() <= 0)
+	{
+		return QTSS_BadArgument;
+	}
 
 	//string strDeviceSerial	=	req.GetBodyValue(EASY_TAG_SERIAL);//Éè±¸ÐòÁÐºÅ
 	//string strChannel	=	req.GetBodyValue(EASY_TAG_CHANNEL);//ÉãÏñÍ·ÐòÁÐºÅ
@@ -876,10 +873,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	if (strChannel.empty())
 		strChannel = "1";
 	if (strReserve.empty())
-		strReserve = "1";
-
-	if ((strDeviceSerial.size() <= 0) || (strProtocol.size() <= 0))//²ÎÊýÅÐ¶Ï
-		return QTSS_BadArgument;
+		strReserve = "1";	
 
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSRefTableEx::OSRefEx* theDevRef = deviceMap->Resolve(strDeviceSerial);////////////////////////////////++
