@@ -522,13 +522,29 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 
 		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_ARRAY && replyHmgetEasyDarwin->elements == 3)
 		{
-			string ip(replyHmgetEasyDarwin->element[0]->str);
-			string httpPort(replyHmgetEasyDarwin->element[1]->str);
-			string rtspPort(replyHmgetEasyDarwin->element[2]->str);
-			memcpy(inParams->outDssIP, ip.c_str(), ip.size());
-			memcpy(inParams->outHTTPPort, httpPort.c_str(), httpPort.size());
-			memcpy(inParams->outDssPort, rtspPort.c_str(), rtspPort.size());
-			inParams->isOn = true;
+			bool ok = true;
+			for (int i = 0; i < replyHmgetEasyDarwin->elements; ++i)
+			{
+				if (replyHmgetEasyDarwin->element[i]->type == EASY_REDIS_REPLY_NIL)
+				{
+					ok = ok && false;
+				}
+			}
+
+			if (ok)
+			{
+				string ip(replyHmgetEasyDarwin->element[0]->str);
+				string httpPort(replyHmgetEasyDarwin->element[1]->str);
+				string rtspPort(replyHmgetEasyDarwin->element[2]->str);
+				memcpy(inParams->outDssIP, ip.c_str(), ip.size());
+				memcpy(inParams->outHTTPPort, httpPort.c_str(), httpPort.size());
+				memcpy(inParams->outDssPort, rtspPort.c_str(), rtspPort.size());
+				inParams->isOn = true;
+			}
+			else
+			{
+				return QTSS_RequestFailed;
+			}
 		}
 	}
 	else
@@ -557,9 +573,14 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		if (replyKeys->elements > 0)
 		{
 			multimap<int, tuple<string, string, string>> easydarwinMap;
-			for (size_t i = 0; i < replyKeys->elements; i++)
+			for (size_t i = 0; i < replyKeys->elements; ++i)
 			{
 				auto replyTemp = replyKeys->element[i];
+				if (replyTemp->type == EASY_REDIS_REPLY_NIL)
+				{
+					continue;
+				}
+
 				string strTemp = Format("hmget %s %s %s %s %s ", string(replyTemp->str), string(EASY_CMS_REDIS_LOAD), string(EASY_CMS_REDIS_IP),
 					string(EASY_CMS_REDIS_HTTP), string(EASY_CMS_REDIS_RTSP));
 				printf("%s\n", strTemp.c_str());
