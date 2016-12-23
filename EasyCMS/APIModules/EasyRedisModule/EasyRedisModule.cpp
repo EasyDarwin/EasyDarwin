@@ -408,7 +408,7 @@ QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams)
 	auto deviceInfo = static_cast<strDevice*>(inParams->inDevice);
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "hdel %s:%s", EASY_CMS_REDIS_DEVICE, deviceInfo->serial_.c_str());
+	sprintf(chKey, "del %s:%s", EASY_CMS_REDIS_DEVICE, deviceInfo->serial_.c_str());
 	printf("%s\n", chKey);
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	auto replyGuard = MakeGuard([&]()
@@ -423,7 +423,7 @@ QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams)
 	{
 		RedisErrorHandler([&]()
 		{
-			printf("Redis hdel Device error\n");
+			printf("Redis del Device error\n");
 		});
 
 		return QTSS_NotConnected;
