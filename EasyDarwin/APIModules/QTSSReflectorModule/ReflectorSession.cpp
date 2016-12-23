@@ -124,27 +124,25 @@ ReflectorSession::~ReflectorSession()
 		fStreamArray[x] = nullptr;
 	}
 
-	//CSdpCache::GetInstance()->eraseSdpMap(GetSourceID()->GetAsCString());
-
 	// We own this object when it is given to us, so delete it now
 	delete[] fStreamArray;
 	delete fSourceInfo;
 	fLocalSDP.Delete();
 
-	if (fSourceID.Ptr)
-	{
-		QTSS_RoleParams theParams;
-		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
-		theParams.easyStreamInfoParams.inChannel = fChannelNum;
-		theParams.easyStreamInfoParams.inAction = easyRedisActionDelete;
-		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
-		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-		{
-			qtss_printf("从redis中删除推流名称%s\n", fSourceID.Ptr);
-			QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
-			(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
-		}
-	}
+	//if (fSourceID.Ptr)
+	//{
+	//	QTSS_RoleParams theParams;
+	//	theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+	//	theParams.easyStreamInfoParams.inChannel = fChannelNum;
+	//	theParams.easyStreamInfoParams.inAction = easyRedisActionDelete;
+	//	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
+	//	for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+	//	{
+	//		qtss_printf("从redis中删除推流名称%s\n", fSourceID.Ptr);
+	//		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
+	//		(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
+	//	}
+	//}
 
 	fSourceID.Delete();
 	fSessionName.Delete();
@@ -411,7 +409,12 @@ UInt32  ReflectorSession::GetBitRate()
 	if (fStreamArray)
 	{
 		for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
-			retval += fStreamArray[x]->GetBitRate();
+		{
+			if (fStreamArray[x])
+			{
+				retval += fStreamArray[x]->GetBitRate();
+			}
+		}
 	}
 	return retval;
 }
@@ -431,12 +434,29 @@ void*   ReflectorSession::GetStreamCookie(UInt32 inStreamID)
 	return nullptr;
 }
 
+void ReflectorSession::DelRedisLive()
+{
+	QTSS_RoleParams theParams;
+	theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
+	theParams.easyStreamInfoParams.inChannel = fChannelNum;
+	theParams.easyStreamInfoParams.inAction = easyRedisActionDelete;
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
+	for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+	{
+		qtss_printf("从redis中删除推流名称%s\n", fSourceID.Ptr);
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
+		(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
+	}
+}
+
 SInt64 ReflectorSession::Run()
 {
 	EventFlags events = this->GetEvents();
 
 	if (events & Task::kKillEvent)
+	{
 		return -1;
+	}
 
 	SInt64 sNowTime = OS::Milliseconds();
 	SInt64 sNoneTime = GetNoneOutputStartTimeMS();

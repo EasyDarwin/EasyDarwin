@@ -1473,6 +1473,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 		{
 			//delete theSession;
 			CSdpCache::GetInstance()->eraseSdpMap(theSession->GetSourceID()->Ptr);
+			theSession->DelRedisLive();
 			theSession->Signal(Task::kKillEvent);
 			return NULL;
 		}
@@ -1564,6 +1565,7 @@ void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSes
 		sSessionMap->UnRegister(theSessionRef);// we had an error while setting up-- don't let anyone get the session
 		//delete theSession;
 		CSdpCache::GetInstance()->eraseSdpMap(theSession->GetSourceID()->Ptr);
+		theSession->DelRedisLive();
 		theSession->Signal(Task::kKillEvent);
 	}
 }
@@ -2188,6 +2190,8 @@ void RemoveOutput(ReflectorOutput* inOutput, ReflectorSession* theSession, bool 
 				sSessionMap->UnRegister(theSessionRef);
 				//delete theSession;
 				CSdpCache::GetInstance()->eraseSdpMap(theSession->GetSourceID()->Ptr);
+				theSession->DelRedisLive();
+
 				theSession->Signal(Task::kKillEvent);
 			}
 		}

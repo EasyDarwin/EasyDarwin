@@ -167,6 +167,8 @@ public:
 	void	SetHasBufferedStreams(bool enableBuffer) { fHasBufferedStreams = enableBuffer; }
 	void	SetHasVideoKeyFrameUpdate(bool indexUpdate) { fHasVideoKeyFrameUpdate = indexUpdate; }
 
+	void	DelRedisLive();
+
 private:
 
 	// Is this session setup?
