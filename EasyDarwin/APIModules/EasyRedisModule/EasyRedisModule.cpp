@@ -48,7 +48,7 @@ static QTSS_Error   EasyRedisModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr 
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
 static QTSS_Error   Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error   RereadPrefs();
-static QTSS_Error	RedisConnect();
+static bool	RedisConnect();
 static QTSS_Error	RedisTTL();
 static QTSS_Error	RedisUpdateStream(Easy_StreamInfo_Params* inParams);
 static QTSS_Error	RedisSetRTSPLoad();
@@ -130,11 +130,11 @@ QTSS_Error RereadPrefs()
 	return QTSS_NoErr;
 }
 
-QTSS_Error RedisConnect()
+bool RedisConnect()
 {
 	if (sIfConSucess)
 	{
-		return QTSS_NoErr;
+		return true;
 	}
 
 	struct timeval timeout = { 1, 500000 }; //1.5 seconds
@@ -150,10 +150,8 @@ QTSS_Error RedisConnect()
 			printf("Connection error: can't allocate redis context\n");
 		}
 
-		return QTSS_NotConnected;
+		return false;
 	}
-
-	sIfConSucess = true;
 
 	char chKey[128] = { 0 };
 	sprintf(chKey, "auth %s", sRedisPassword);
@@ -174,17 +172,19 @@ QTSS_Error RedisConnect()
 			printf("Redis auth error\n");
 		});
 
-		return QTSS_NotConnected;
+		return false;
 	}
 
-	return QTSS_NoErr;
+	sIfConSucess = true;
+
+	return true;
 }
 
 QTSS_Error RedisTTL()
 {
 	OSMutexLocker mutexLock(&sMutex);
 
-	if (RedisConnect() != QTSS_NoErr)
+	if (!RedisConnect())
 	{
 		return QTSS_NotConnected;
 	}
@@ -271,8 +271,11 @@ QTSS_Error RedisTTL()
 QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
-	if (!sIfConSucess)
+
+	if (!RedisConnect())
+	{
 		return QTSS_NotConnected;
+	}
 
 	char chKey[128] = { 0 };
 	sprintf(chKey, "%s:%s/%d", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
@@ -357,7 +360,7 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 {
 	OSMutexLocker mutexLock(&sMutex);
 
-	if (!sIfConSucess)
+	if (!RedisConnect())
 	{
 		return QTSS_NotConnected;
 	}
@@ -446,8 +449,11 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 QTSS_Error RedisSetRTSPLoad()
 {
 	OSMutexLocker mutexLock(&sMutex);
-	if (!sIfConSucess)
+
+	if (!RedisConnect())
+	{
 		return QTSS_NotConnected;
+	}
 
 	char chKey[128] = { 0 };
 	auto server = QTSServerInterface::GetServer()->GetServerName().Ptr;
@@ -532,7 +538,7 @@ QTSS_Error RedisJudgeStreamID(QTSS_JudgeStreamID_Params* inParams)
 
 static void RedisErrorHandler(function<void()> func)
 {
-	printf("Connection error: %s\n", redisContext_->errstr);
+	//printf("Connection error: %s\n", redisContext_->errstr);
 
 	sIfConSucess = false;
 	redisFree(redisContext_);
