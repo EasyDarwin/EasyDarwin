@@ -1102,11 +1102,6 @@ typedef struct
 
 typedef struct
 {
-	char *	inStreamName;
-}Easy_FreeStream_Params;
-
-typedef struct
-{
     QTSS_ServerState            inNewState;
 } QTSS_StateChange_Params;
 
@@ -1277,7 +1272,6 @@ typedef union
 	Easy_HLSOpen_Params					easyHLSOpenParams;
 	Easy_HLSClose_Params				easyHLSCloseParams;
 
-	Easy_FreeStream_Params				easyFreeStreamParams;
 	Easy_StreamInfo_Params              easyStreamInfoParams;
 	QTSS_GetAssociatedCMS_Params	    GetAssociatedCMSParams;
 	QTSS_JudgeStreamID_Params			JudgeStreamIDParams;

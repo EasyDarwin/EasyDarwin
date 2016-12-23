@@ -442,7 +442,7 @@ SInt64 ReflectorSession::Run()
 	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= /*QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs()*/20 * 1000))
 	{
 		QTSS_RoleParams theParams;
-		theParams.easyFreeStreamParams.inStreamName = fSessionName.Ptr;
+		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
 		auto numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kEasyCMSFreeStreamRole);
 		for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
 		{

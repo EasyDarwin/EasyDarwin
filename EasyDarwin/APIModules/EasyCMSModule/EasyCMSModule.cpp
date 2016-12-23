@@ -27,7 +27,7 @@ static QTSS_Error Initialize_EasyCMSModule(QTSS_Initialize_Params* inParams);
 static QTSS_Error RereadPrefs_EasyCMSModule();
 
 //ÏòEasyCMS·¢ËÍMSG_CS_FREE_STREAM_REQ
-static QTSS_Error FreeStream_EasyCMSModule(Easy_FreeStream_Params* inParams);
+static QTSS_Error FreeStream_EasyCMSModule(Easy_StreamInfo_Params* inParams);
 
 // FUNCTION IMPLEMENTATIONS
 QTSS_Error EasyCMSModule_Main(void* inPrivateArgs)
@@ -46,7 +46,7 @@ QTSS_Error  EasyCMSModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams)
 	case QTSS_RereadPrefs_Role:
 		return RereadPrefs_EasyCMSModule();
 	case Easy_CMSFreeStream_Role:
-		return FreeStream_EasyCMSModule(&inParams->easyFreeStreamParams);
+		return FreeStream_EasyCMSModule(&inParams->easyStreamInfoParams);
 	default: break;
 	}
 	return QTSS_NoErr;
@@ -94,7 +94,7 @@ QTSS_Error RereadPrefs_EasyCMSModule()
  * \param inParams
  * \return
  */
-QTSS_Error FreeStream_EasyCMSModule(Easy_FreeStream_Params* inParams)
+QTSS_Error FreeStream_EasyCMSModule(Easy_StreamInfo_Params* inParams)
 {
 	QTSS_Error theErr = QTSS_NoErr;
 
