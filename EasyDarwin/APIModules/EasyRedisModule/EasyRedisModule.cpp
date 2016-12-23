@@ -437,8 +437,24 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 
 		if (replyHmgetEasyDarwin->type == EASY_REDIS_REPLY_ARRAY && replyHmgetEasyDarwin->elements == 2)
 		{
-			memcpy(inParams->outCMSIP, replyHmgetEasyDarwin->element[0]->str, replyHmgetEasyDarwin->element[0]->len);
-			memcpy(inParams->outCMSPort, replyHmgetEasyDarwin->element[1]->str, replyHmgetEasyDarwin->element[1]->len);
+			bool ok = true;
+			for (int i = 0; i < replyHmgetEasyDarwin->elements; ++i)
+			{
+				if (replyHmgetEasyDarwin->element[i]->type == EASY_REDIS_REPLY_NIL)
+				{
+					ok = ok && false;
+				}
+			}
+
+			if (ok)
+			{
+				memcpy(inParams->outCMSIP, replyHmgetEasyDarwin->element[0]->str, replyHmgetEasyDarwin->element[0]->len);
+				memcpy(inParams->outCMSPort, replyHmgetEasyDarwin->element[1]->str, replyHmgetEasyDarwin->element[1]->len);
+			}
+			else
+			{
+				return QTSS_RequestFailed;
+			}
 		}
 	}
 
