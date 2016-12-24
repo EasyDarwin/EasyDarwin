@@ -2185,36 +2185,12 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	}
 	QueryParamList parList(const_cast<char*>(queryTemp.c_str()));
 
-	//4.EASY_TAG_CONFIG_SERVICE_WAN_IP
 	const char* chWanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_IP);
 	if (chWanIP)
+	{
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANIPAddr, 0, (void*)chWanIP, strlen(chWanIP));
+	}
 
-	////5.EASY_TAG_CONFIG_NGINX_ROOT_FOLDER
-	//const char* chNginxRootFolder = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_ROOT_FOLDER);
-	//if (chNginxRootFolder)
-	//{
-	//	string nginxRootFolder(chNginxRootFolder);
-	//	if (nginxRootFolder.back() != '\\')
-	//	{
-	//		nginxRootFolder.push_back('\\');
-	//	}
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxRootFolder, 0, (void*)nginxRootFolder.c_str(), nginxRootFolder.size());
-	//}
-
-	////6.EASY_TAG_CONFIG_NGINX_WEB_PATH
-	//const char* chNginxWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_WEB_PATH);
-	//if (chNginxWebPath)
-	//{
-	//	string nginxWebPath(chNginxWebPath);
-	//	if (nginxWebPath.back() != '\/')
-	//	{
-	//		nginxWebPath.push_back('\/');
-	//	}
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)nginxWebPath.c_str(), nginxWebPath.size());
-	//}
-
-	//7.EASY_TAG_CONFIG_SERVICE_LAN_PORT
 	const char* chHTTPLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
 	if (chHTTPLanPort)
 	{
@@ -2222,12 +2198,33 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceLANPort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
 	}
 
-	//8.EASY_TAG_CONFIG_SERVICE_WAN_PORT
 	const char*	chHTTPWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_PORT);
 	if (chHTTPWanPort)
 	{
 		UInt16 uHTTPWanPort = stoi(chHTTPWanPort);
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANPort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
+	}
+
+	const char* chSnapLocalPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SNAP_LOCAL_PATH);
+	if (chSnapLocalPath)
+	{
+		string snapLocalPath(chSnapLocalPath);
+		if (snapLocalPath.back() != '\\')
+		{
+			snapLocalPath.push_back('\\');
+		}
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapLocalPath, 0, (void*)snapLocalPath.c_str(), snapLocalPath.size());
+	}
+
+	const char* chSnapWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SNAP_WEB_PATH);
+	if (chSnapWebPath)
+	{
+		string snapWebPath(chSnapWebPath);
+		if (snapWebPath.back() != '\/')
+		{
+			snapWebPath.push_back('\/');
+		}
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapWebPath, 0, (void*)snapWebPath.c_str(), snapWebPath.size());
 	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);
