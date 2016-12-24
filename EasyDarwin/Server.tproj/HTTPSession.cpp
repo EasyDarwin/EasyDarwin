@@ -1147,9 +1147,20 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 		}
 
 		const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
-		if (chChannel)
+		if (!chChannel || string(chChannel).empty())
 		{
-			theChannelNum = stoi(chChannel);
+			theChannelNum = 1;
+		}
+		else
+		{
+			try
+			{
+				theChannelNum = stoi(chChannel);
+			}
+			catch(...)
+			{
+				theChannelNum = 1;
+			}
 		}
 
 		if (!chProtocol)
