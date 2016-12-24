@@ -66,6 +66,8 @@ private:
 	QTSS_Error execNetMsgCSGetBaseConfigReqRESTful(const char* queryString);
 	QTSS_Error execNetMsgCSSetBaseConfigReqRESTful(const char* queryString);
 
+	static QTSS_Error execNetMsgCSRestartReqRESTful(const char* queryString);
+
 	QTSS_Error execNetMsgCSGetUsagesReqRESTful(const char* queryString);
 
 	QTSS_Error dumpRequestData();

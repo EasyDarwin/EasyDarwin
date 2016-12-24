@@ -444,25 +444,45 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getdeviceinfo")
 				{
 					return execNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "startdevicestream")
 				{
 					return execNetMsgCSStartStreamReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "stopdevicestream")
 				{
 					return execNetMsgCSStopStreamReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "ptzcontrol")
 				{
 					return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "presetcontrol")
 				{
 					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
+				}
+
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getbaseconfig")
+				{
+					return execNetMsgCSGetBaseConfigReqRESTful(fRequest->GetQueryString());
+				}
+
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "setbaseconfig")
+				{
+					return execNetMsgCSSetBaseConfigReqRESTful(fRequest->GetQueryString());
+				}
+
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "restart")
+				{
+					return execNetMsgCSRestartReqRESTful(fRequest->GetQueryString());
 				}
 			}
 
@@ -2243,6 +2263,16 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSRestartReqRESTful(const char* queryString)
+{
+	/*//暂时注释掉，实际上是需要认证的
+	if(!fAuthenticated)//没有进行认证请求
+	return httpUnAuthorized;
+	*/
+
+	::ExitProcess(0);
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
