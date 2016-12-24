@@ -120,8 +120,5 @@
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h">
       <Filter>Source Files\API Modules\EasyRedisModule</Filter>
     </ClInclude>
-    <ClInclude Include="..\APIModules\EasyRedisModule\Resources.h">
-      <Filter>Source Files\API Modules\EasyRedisModule</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

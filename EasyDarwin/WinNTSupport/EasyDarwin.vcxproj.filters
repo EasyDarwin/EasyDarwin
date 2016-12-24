@@ -292,8 +292,5 @@
     <ClInclude Include="..\APIModules\RtspRecordModule\RtspRecordModule.h" />
     <ClInclude Include="..\APIModules\RtspRecordModule\RtspRecordSession.h" />
     <ClInclude Include="..\FileBrowserUtils\SearchFileDir.h" />
-    <ClInclude Include="..\APIModules\EasyRedisModule\Resources.h">
-      <Filter>Source Files\API Modules\EasyRedisModule</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

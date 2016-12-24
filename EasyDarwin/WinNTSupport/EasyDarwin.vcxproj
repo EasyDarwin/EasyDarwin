@@ -230,7 +230,6 @@
     <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSModule.h" />
     <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSSession.h" />
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />
-    <ClInclude Include="..\APIModules\EasyRedisModule\Resources.h" />
     <ClInclude Include="..\APIModules\EasyRTMPModule\EasyRTMPModule.h" />
     <ClInclude Include="..\APIModules\EasyRTMPModule\EasyRTMPSession.h" />
     <ClInclude Include="..\APIModules\RtspRecordModule\EasyMP4Writer.h" />

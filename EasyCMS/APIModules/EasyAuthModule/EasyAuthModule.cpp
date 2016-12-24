@@ -21,19 +21,18 @@ static OSMapEx sSessionIdMap;
 //add
 
 // STATIC VARIABLES
-static QTSS_ModulePrefsObject sPrefs = NULL;
-static QTSS_PrefsObject     sServerPrefs = NULL;
-static QTSS_ServerObject    sServer = NULL;
+static QTSS_ModulePrefsObject sPrefs = nullptr;
+static QTSS_PrefsObject     sServerPrefs = nullptr;
+static QTSS_ServerObject    sServer = nullptr;
 
 // FUNCTION PROTOTYPES
 static QTSS_Error   EasyAuthModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock);
 static QTSS_Error   Register(QTSS_Register_Params* inParams);
 static QTSS_Error   Initialize(QTSS_Initialize_Params* inParams);
 static QTSS_Error   RereadPrefs();
-static QTSS_Error   MakeNonce(QTSS_Nonce_Params* inParams);//生成随机数
-static QTSS_Error   MakeAuth(QTSS_Nonce_Params* inParams);//认证随机数
+static QTSS_Error   MakeNonce(QTSS_Nonce_Params* inParams);
+static QTSS_Error   MakeAuth(QTSS_Nonce_Params* inParams);
 
-//检查是否有超时SessionID的任务
 class SessionIDCheckTask : public Task
 {
 public:
@@ -43,12 +42,12 @@ public:
 private:
 	virtual SInt64 Run();
 };
-static SessionIDCheckTask *pSessionIdTask = NULL;
+static SessionIDCheckTask *pSessionIdTask = nullptr;
 //add 
 SInt64 SessionIDCheckTask::Run()
 {
-	sSessionIdMap.CheckTimeoutAndDelete();//检查超时的SessionID并进行删除
-	return 60 * 1000;//一分钟一检查
+	sSessionIdMap.CheckTimeoutAndDelete();
+	return 60 * 1000;
 }
 QTSS_Error EasyAuthModule_Main(void* inPrivateArgs)
 {
@@ -98,7 +97,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	//string strTest("123456");
 	//sSessionIdMap.Insert(strTest);
-	pSessionIdTask = new SessionIDCheckTask();//add,检查SessionID是否超时的TASK
+	pSessionIdTask = new SessionIDCheckTask();
 	return RereadPrefs();
 }
 
@@ -106,13 +105,13 @@ QTSS_Error RereadPrefs()
 {
 	return QTSS_NoErr;
 }
-QTSS_Error MakeNonce(QTSS_Nonce_Params* inParams)//生成随机数
+QTSS_Error MakeNonce(QTSS_Nonce_Params* inParams)
 {
 	string strTemp = sSessionIdMap.GererateAndInsert();
 	strcpy(inParams->pNonce, strTemp.c_str());
 	return QTSS_NoErr;
 }
-QTSS_Error MakeAuth(QTSS_Nonce_Params* inParams)//生成随机数
+QTSS_Error MakeAuth(QTSS_Nonce_Params* inParams)
 {
 	string strSessionID(inParams->pNonce);
 	*(inParams->pResult) = (char)sSessionIdMap.FindAndDelete(strSessionID);

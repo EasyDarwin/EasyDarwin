@@ -219,8 +219,8 @@ QTSS_Error RedisTTL()
 		auto http = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWanPort();
 		auto rtsp = QTSServerInterface::GetServer()->GetPrefs()->GetRTSPWANPort();
 
-		sprintf(chKey, "hmset %s:%s %s %s %s %d %s %d %s %d", server, guid, EASY_DARWIN_REDIS_IP, ip, EASY_DARWIN_REDIS_HTTP,
-			http, EASY_DARWIN_REDIS_RTSP, rtsp, EASY_DARWIN_REDIS_LOAD, load);
+		sprintf(chKey, "hmset %s:%s %s %s %s %d %s %d %s %d", server, guid, EASY_REDIS_IP, ip, EASY_REDIS_HTTP,
+			http, EASY_REDIS_RTSP, rtsp, EASY_REDIS_LOAD, load);
 		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyHmsetGuard = MakeGuard([&]()
 		{
@@ -278,7 +278,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 	}
 
 	char chKey[128] = { 0 };
-	sprintf(chKey, "del %s:%s/%d", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
+	sprintf(chKey, "del %s:%s/%d", EASY_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
 
 	if (inParams->inAction == easyRedisActionDelete)
 	{
@@ -303,9 +303,9 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return QTSS_NoErr;
 	}
 
-	sprintf(chKey, "hmset %s:%s/%d %s %d %s %d %s %s", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel,
-		EASY_DARWIN_REDIS_BITRATE, inParams->inBitrate, EASY_DARWIN_REDIS_OUTPUT, inParams->inNumOutputs,
-		EASY_DARWIN_REDIS_EASYDARWIN, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	sprintf(chKey, "hmset %s:%s/%d %s %d %s %d %s %s", EASY_REDIS_LIVE, inParams->inStreamName, inParams->inChannel,
+		EASY_REDIS_BITRATE, inParams->inBitrate, EASY_REDIS_OUTPUT, inParams->inNumOutputs,
+		EASY_REDIS_EASYDARWIN, QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -327,7 +327,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 
 	if (string(reply->str) == string("OK"))
 	{
-		sprintf(chKey, "expire %s:%s/%d 150", EASY_DARWIN_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
+		sprintf(chKey, "expire %s:%s/%d 150", EASY_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyExpireGuard = MakeGuard([&]()
 		{
@@ -364,7 +364,7 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 		return QTSS_NotConnected;
 	}
 
-	string exists = Format("exists %s:%s", string(EASY_DARWIN_REDIS_DEVICE), string(inParams->inSerial));
+	string exists = Format("exists %s:%s", string(EASY_REDIS_DEVICE), string(inParams->inSerial));
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, exists.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -386,8 +386,8 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 
 	if (reply->integer == 1)
 	{
-		string strTemp = Format("hmget %s:%s %s", string(EASY_DARWIN_REDIS_DEVICE), string(inParams->inSerial),
-			string(EASY_DARWIN_REDIS_EASYCMS));
+		string strTemp = Format("hmget %s:%s %s", string(EASY_REDIS_DEVICE), string(inParams->inSerial),
+			string(EASY_REDIS_EASYCMS));
 		auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		auto replyHmgetGuard = MakeGuard([&]()
 		{
@@ -407,10 +407,10 @@ QTSS_Error RedisGetAssociatedCMS(QTSS_GetAssociatedCMS_Params* inParams)
 			return QTSS_NotConnected;
 		}
 
-		string easycms = Format("%s:", string(EASY_DARWIN_REDIS_EASYCMS));
+		string easycms = Format("%s:", string(EASY_REDIS_EASYCMS));
 		easycms += replyHmget->element[0]->str;
 
-		strTemp = Format("hmget %s %s %s ", easycms, string(EASY_DARWIN_REDIS_IP), string(EASY_DARWIN_REDIS_PORT));
+		strTemp = Format("hmget %s %s %s ", easycms, string(EASY_REDIS_IP), string(EASY_REDIS_PORT));
 		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		auto replyHmgetEasyDarwinGuard = MakeGuard([&]()
 		{
@@ -497,7 +497,7 @@ QTSS_Error RedisSetRTSPLoad()
 
 	if (reply->integer == 1)
 	{
-		sprintf(chKey, "hset %s:%s %s %d", server, guid, EASY_DARWIN_REDIS_LOAD, load);
+		sprintf(chKey, "hset %s:%s %s %d", server, guid, EASY_REDIS_LOAD, load);
 		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyHsetGuard = MakeGuard([&]()
 		{
