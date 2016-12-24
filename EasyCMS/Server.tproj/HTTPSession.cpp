@@ -15,7 +15,6 @@
 #include "OSArrayObjectDeleter.h"
 #include "EasyUtil.h"
 #include "QueryParamList.h"
-#include "QTSSMemoryDeleter.h"
 #include "Format.h"
 
 #include <boost/algorithm/string.hpp>
@@ -1083,7 +1082,6 @@ QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString
 	QueryParamList parList(const_cast<char*>(decQueryString.c_str()));
 	const char* strDeviceSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
 	const char* strChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
-	const char* strProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);//
 	const char* strReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);//
 
 	//为可选参数填充默认值
@@ -1092,7 +1090,7 @@ QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString
 	if (strReserve == nullptr)
 		strReserve = "1";
 
-	if (strDeviceSerial == nullptr || strProtocol == nullptr)
+	if (strDeviceSerial == nullptr)
 		return QTSS_BadArgument;
 
 	string strCSeq = EasyUtil::ToString(GetCSeq());
@@ -1115,7 +1113,7 @@ QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString
 	bodybody[EASY_TAG_SERIAL] = strDeviceSerial;
 	bodybody[EASY_TAG_CHANNEL] = strChannel;
 	bodybody[EASY_TAG_RESERVE] = strReserve;
-	bodybody[EASY_TAG_PROTOCOL] = strProtocol;
+	bodybody[EASY_TAG_PROTOCOL] = "";
 	bodybody[EASY_TAG_FROM] = fSessionID;
 	bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 	bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
@@ -1139,7 +1137,6 @@ QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString
 	body[EASY_TAG_SERIAL] = strDeviceSerial;
 	body[EASY_TAG_CHANNEL] = strChannel;
 	body[EASY_TAG_RESERVE] = strReserve;
-	body[EASY_TAG_PROTOCOL] = strProtocol;
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
@@ -2161,10 +2158,10 @@ QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryStr
 	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 
 	body[EASY_TAG_CONFIG_SERVICE_WAN_IP] = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP();
-	body[EASY_TAG_CONFIG_SNAP_LOCAL_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetSnapLocalPath();
-	body[EASY_TAG_CONFIG_SNAP_WEB_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath();
 	body[EASY_TAG_CONFIG_SERVICE_LAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetServiceLANPort());
 	body[EASY_TAG_CONFIG_SERVICE_WAN_PORT] = to_string(QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANPort());
+	body[EASY_TAG_CONFIG_SNAP_LOCAL_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetSnapLocalPath();
+	body[EASY_TAG_CONFIG_SNAP_WEB_PATH] = QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath();	
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
@@ -2291,9 +2288,9 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 	{
 		Json::Value value;
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
-		value[EASY_TAG_ACTION] = "GetDeviceStream";
-		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]&reserve=[Reserve]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/getdevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
+		value[EASY_TAG_ACTION] = "StartDeviceStream";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&reserve=[Reserve]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/startdevicestream?device=001002000001&channel=1&reserve=1";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -2301,9 +2298,9 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 	{
 		Json::Value value;
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
-		value[EASY_TAG_ACTION] = "FreeDeviceStream";
-		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]&reserve=[Reserve]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/freedevicestream?device=001002000001&channel=1&protocol=RTSP&reserve=1";
+		value[EASY_TAG_ACTION] = "StopDeviceStream";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&reserve=[Reserve]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/v1/stopdevicestream?device=001002000001&channel=1&reserve=1";
 		value[EASY_TAG_DESCRIPTION] = "";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
