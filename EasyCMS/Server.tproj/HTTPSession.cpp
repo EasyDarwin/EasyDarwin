@@ -2272,7 +2272,11 @@ QTSS_Error HTTPSession::execNetMsgCSRestartReqRESTful(const char* queryString)
 	return httpUnAuthorized;
 	*/
 
+#ifdef WIN32
 	::ExitProcess(0);
+#else
+	exit(0);
+#endif //__WIN32__
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
