@@ -155,8 +155,6 @@ bool RedisConnect()
 
 	char chKey[128] = { 0 };
 	sprintf(chKey, "auth %s", sRedisPassword);
-	printf("%s\n", chKey);
-
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -195,7 +193,6 @@ QTSS_Error RedisTTL()
 
 	char chKey[128] = { 0 };
 	sprintf(chKey, "expire %s:%s 15", server, id);
-	printf("%s\n", chKey);
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -222,7 +219,6 @@ QTSS_Error RedisTTL()
 		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANPort();
 		sprintf(chKey, "hmset %s:%s %s %s %s %d %s %d", EASY_REDIS_EASYCMS, id, EASY_REDIS_IP, cmsIp,
 			EASY_REDIS_PORT, cmsPort, EASY_REDIS_LOAD, load);
-		printf("%s\n", chKey);
 		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyHmsetGuard = MakeGuard([&]()
 		{
@@ -243,7 +239,6 @@ QTSS_Error RedisTTL()
 		}
 
 		sprintf(chKey, "expire %s:%s 15", server, id);
-		printf("%s\n", chKey);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyExpireGuard = MakeGuard([&]()
 		{
@@ -267,7 +262,6 @@ QTSS_Error RedisTTL()
 	else if (reply->integer == 1)
 	{
 		sprintf(chKey, "hset %s:%s %s %d", server, id, EASY_REDIS_LOAD, load);
-		printf("%s\n", chKey);
 		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyHsetGuard = MakeGuard([&]()
 		{
@@ -340,7 +334,6 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 	sprintf(chKey, "hmset %s:%s %s %s %s %s %s %s %s %s", EASY_REDIS_DEVICE, deviceInfo->serial_.c_str(),
 		EASY_REDIS_TYPE, type.c_str(), EASY_REDIS_CHANNEL, channel.c_str(), EASY_REDIS_EASYCMS, id,
 		EASY_REDIS_TOKEN, deviceInfo->password_.c_str());
-	printf("%s\n", chKey);
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -363,7 +356,6 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 	if (string(reply->str) == string("OK"))
 	{
 		sprintf(chKey, "expire %s:%s 150", EASY_REDIS_DEVICE, deviceInfo->serial_.c_str());
-		printf("%s\n", chKey);
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 		auto replyExpireGuard = MakeGuard([&]()
 		{
@@ -409,7 +401,6 @@ QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams)
 
 	char chKey[128] = { 0 };
 	sprintf(chKey, "del %s:%s", EASY_REDIS_DEVICE, deviceInfo->serial_.c_str());
-	printf("%s\n", chKey);
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -447,7 +438,6 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	}
 
 	string exists = Format("exists %s:%s/%s", string(EASY_REDIS_LIVE), string(inParams->inSerial), string(inParams->inChannel));
-	printf("%s\n", exists.c_str());
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, exists.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -471,7 +461,6 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	{
 		string strTemp = Format("hmget %s:%s/%s %s", string(EASY_REDIS_LIVE), string(inParams->inSerial),
 			string(inParams->inChannel), string(EASY_REDIS_EASYDARWIN));
-		printf("%s\n", strTemp.c_str());
 		auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		auto replyHmgetGuard = MakeGuard([&]()
 		{
@@ -495,7 +484,6 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 
 		strTemp = Format("hmget %s %s %s %s", easydarwin, string(EASY_REDIS_IP), string(EASY_REDIS_HTTP),
 			string(EASY_REDIS_RTSP));
-		printf("%s\n", strTemp.c_str());
 		auto replyHmgetEasyDarwin = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 		auto replyHmgetEasyDarwinGuard = MakeGuard([&]()
 		{
@@ -550,7 +538,6 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 	else
 	{
 		string keys = Format("keys %s:*", string(EASY_REDIS_EASYDARWIN));
-		printf("%s\n", keys.c_str());
 		auto replyKeys = static_cast<redisReply*>(redisCommand(redisContext_, keys.c_str()));
 		auto replyKeysGuard = MakeGuard([&]()
 		{
@@ -583,7 +570,6 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 
 				string strTemp = Format("hmget %s %s %s %s %s ", string(replyTemp->str), string(EASY_REDIS_LOAD), string(EASY_REDIS_IP),
 					string(EASY_REDIS_HTTP), string(EASY_REDIS_RTSP));
-				printf("%s\n", strTemp.c_str());
 				auto replyHmget = static_cast<redisReply*>(redisCommand(redisContext_, strTemp.c_str()));
 				auto replyHmgetGuard = MakeGuard([&]()
 				{
