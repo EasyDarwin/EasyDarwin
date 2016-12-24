@@ -187,7 +187,6 @@ private:
 
 	OSQueueElem fQueueElem; // Relay uses this.
 
-	//unsigned int	fNumOutputs;
 	std::atomic_uint fNumOutputs;
 
 	ReflectorStream**   fStreamArray;

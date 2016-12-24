@@ -29,21 +29,12 @@
 
 #include "ReflectorSession.h"
 #include "SocketUtils.h"
-
 #include "OSMemory.h"
 #include "OS.h"
-
 #include "QTSServerInterface.h"
-#include "sdpCache.h"
 
 #ifndef __Win32__
 #include <unistd.h>
-#endif
-
-#if DEBUG
-#define REFLECTOR_SESSION_DEBUGGING 0
-#else
-#define REFLECTOR_SESSION_DEBUGGING 0
 #endif
 
 FileDeleter::FileDeleter(StrPtrLen* inSDPPath)
@@ -128,22 +119,6 @@ ReflectorSession::~ReflectorSession()
 	delete[] fStreamArray;
 	delete fSourceInfo;
 	fLocalSDP.Delete();
-
-	//if (fSourceID.Ptr)
-	//{
-	//	QTSS_RoleParams theParams;
-	//	theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
-	//	theParams.easyStreamInfoParams.inChannel = fChannelNum;
-	//	theParams.easyStreamInfoParams.inAction = easyRedisActionDelete;
-	//	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisUpdateStreamInfoRole);
-	//	for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-	//	{
-	//		qtss_printf("从redis中删除推流名称%s\n", fSourceID.Ptr);
-	//		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisUpdateStreamInfoRole, currentModule);
-	//		(void)theModule->CallDispatch(Easy_RedisUpdateStreamInfo_Role, &theParams);
-	//	}
-	//}
-
 	fSourceID.Delete();
 	fSessionName.Delete();
 }
@@ -460,7 +435,7 @@ SInt64 ReflectorSession::Run()
 
 	SInt64 sNowTime = OS::Milliseconds();
 	SInt64 sNoneTime = GetNoneOutputStartTimeMS();
-	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= /*QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs()*/30 * 1000))
+	if ((GetNumOutputs() == 0) && (sNowTime - sNoneTime >= /*QTSServerInterface::GetServer()->GetPrefs()->GetRTPSessionTimeoutInSecs()*/35 * 1000))
 	{
 		QTSS_RoleParams theParams;
 		theParams.easyStreamInfoParams.inStreamName = fSessionName.Ptr;
