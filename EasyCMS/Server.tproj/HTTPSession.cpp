@@ -1017,6 +1017,9 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetEasyDarwinRole, currentModule);
 		(void)theModule->CallDispatch(Easy_RedisGetEasyDarwin_Role, &theParams);
 	}
+
+	int errorNo = EASY_ERROR_SUCCESS_OK;
+
 	if (chDssIP[0] != 0)//是否存在关联的EasyDarWin转发服务器test,应该用Redis上的数据，因为推流是不可靠的，而EasyDarWin上的数据是可靠的
 	{
 		strDssIP = chDssIP;
@@ -1058,7 +1061,7 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 	}
 	else
 	{
-		return QTSS_IllegalService;
+		errorNo = EASY_ERROR_SERVER_UNAVAILABLE;
 	}
 
 	//走到这说明对客户端的正确回应,因为错误回应直接返回。
@@ -1071,8 +1074,8 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
 	header[EASY_TAG_CSEQ] = strCSeq;
-	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
-	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+	header[EASY_TAG_ERROR_NUM] = errorNo;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(errorNo);
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
@@ -2276,7 +2279,7 @@ QTSS_Error HTTPSession::execNetMsgCSRestartReqRESTful(const char* queryString)
 	::ExitProcess(0);
 #else
 	exit(0);
-#endif //__WIN32__
+#endif //WIN32
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
