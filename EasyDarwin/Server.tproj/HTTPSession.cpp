@@ -1098,7 +1098,12 @@ QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryStrin
 		//}
 	}
 
-	exit(-2);
+#ifdef WIN32
+	::ExitProcess(0);
+#else
+	exit(0);
+#endif //__WIN32__
+
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryString)
