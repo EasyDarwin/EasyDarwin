@@ -444,25 +444,45 @@ QTSS_Error HTTPSession::setupRequest()
 				{
 					return execNetMsgCSGetDeviceListReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getdeviceinfo")
 				{
 					return execNetMsgCSGetCameraListReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "startdevicestream")
 				{
 					return execNetMsgCSStartStreamReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "stopdevicestream")
 				{
 					return execNetMsgCSStopStreamReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "ptzcontrol")
 				{
 					return execNetMsgCSPTZControlReqRESTful(fRequest->GetQueryString());
 				}
+
 				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "presetcontrol")
 				{
 					return execNetMsgCSPresetControlReqRESTful(fRequest->GetQueryString());
+				}
+
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getbaseconfig")
+				{
+					return execNetMsgCSGetBaseConfigReqRESTful(fRequest->GetQueryString());
+				}
+
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "setbaseconfig")
+				{
+					return execNetMsgCSSetBaseConfigReqRESTful(fRequest->GetQueryString());
+				}
+
+				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "restart")
+				{
+					return execNetMsgCSRestartReqRESTful(fRequest->GetQueryString());
 				}
 			}
 
@@ -997,6 +1017,9 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisGetEasyDarwinRole, currentModule);
 		(void)theModule->CallDispatch(Easy_RedisGetEasyDarwin_Role, &theParams);
 	}
+
+	int errorNo = EASY_ERROR_SUCCESS_OK;
+
 	if (chDssIP[0] != 0)//是否存在关联的EasyDarWin转发服务器test,应该用Redis上的数据，因为推流是不可靠的，而EasyDarWin上的数据是可靠的
 	{
 		strDssIP = chDssIP;
@@ -1038,7 +1061,7 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 	}
 	else
 	{
-		return QTSS_IllegalService;
+		errorNo = EASY_ERROR_SERVER_UNAVAILABLE;
 	}
 
 	//走到这说明对客户端的正确回应,因为错误回应直接返回。
@@ -1051,8 +1074,8 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 
 	header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
 	header[EASY_TAG_CSEQ] = strCSeq;
-	header[EASY_TAG_ERROR_NUM] = EASY_ERROR_SUCCESS_OK;
-	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
+	header[EASY_TAG_ERROR_NUM] = errorNo;
+	header[EASY_TAG_ERROR_STRING] = EasyProtocol::GetErrorString(errorNo);
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
@@ -2185,36 +2208,12 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	}
 	QueryParamList parList(const_cast<char*>(queryTemp.c_str()));
 
-	//4.EASY_TAG_CONFIG_SERVICE_WAN_IP
 	const char* chWanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_IP);
 	if (chWanIP)
+	{
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANIPAddr, 0, (void*)chWanIP, strlen(chWanIP));
+	}
 
-	////5.EASY_TAG_CONFIG_NGINX_ROOT_FOLDER
-	//const char* chNginxRootFolder = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_ROOT_FOLDER);
-	//if (chNginxRootFolder)
-	//{
-	//	string nginxRootFolder(chNginxRootFolder);
-	//	if (nginxRootFolder.back() != '\\')
-	//	{
-	//		nginxRootFolder.push_back('\\');
-	//	}
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsNginxRootFolder, 0, (void*)nginxRootFolder.c_str(), nginxRootFolder.size());
-	//}
-
-	////6.EASY_TAG_CONFIG_NGINX_WEB_PATH
-	//const char* chNginxWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_NGINX_WEB_PATH);
-	//if (chNginxWebPath)
-	//{
-	//	string nginxWebPath(chNginxWebPath);
-	//	if (nginxWebPath.back() != '\/')
-	//	{
-	//		nginxWebPath.push_back('\/');
-	//	}
-	//	(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), easyPrefsNginxWebPath, 0, (void*)nginxWebPath.c_str(), nginxWebPath.size());
-	//}
-
-	//7.EASY_TAG_CONFIG_SERVICE_LAN_PORT
 	const char* chHTTPLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
 	if (chHTTPLanPort)
 	{
@@ -2222,12 +2221,33 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceLANPort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
 	}
 
-	//8.EASY_TAG_CONFIG_SERVICE_WAN_PORT
 	const char*	chHTTPWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_PORT);
 	if (chHTTPWanPort)
 	{
 		UInt16 uHTTPWanPort = stoi(chHTTPWanPort);
 		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANPort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
+	}
+
+	const char* chSnapLocalPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SNAP_LOCAL_PATH);
+	if (chSnapLocalPath)
+	{
+		string snapLocalPath(chSnapLocalPath);
+		if (snapLocalPath.back() != '\\')
+		{
+			snapLocalPath.push_back('\\');
+		}
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapLocalPath, 0, (void*)snapLocalPath.c_str(), snapLocalPath.size());
+	}
+
+	const char* chSnapWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SNAP_WEB_PATH);
+	if (chSnapWebPath)
+	{
+		string snapWebPath(chSnapWebPath);
+		if (snapWebPath.back() != '\/')
+		{
+			snapWebPath.push_back('\/');
+		}
+		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapWebPath, 0, (void*)snapWebPath.c_str(), snapWebPath.size());
 	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);
@@ -2246,6 +2266,20 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	this->SendHTTPPacket(&theValue, false, false);
 
 	return QTSS_NoErr;
+}
+
+QTSS_Error HTTPSession::execNetMsgCSRestartReqRESTful(const char* queryString)
+{
+	/*//暂时注释掉，实际上是需要认证的
+	if(!fAuthenticated)//没有进行认证请求
+	return httpUnAuthorized;
+	*/
+
+#ifdef WIN32
+	::ExitProcess(0);
+#else
+	exit(0);
+#endif //WIN32
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)

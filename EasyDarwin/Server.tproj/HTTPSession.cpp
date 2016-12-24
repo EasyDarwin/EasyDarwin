@@ -1098,7 +1098,12 @@ QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryStrin
 		//}
 	}
 
-	exit(-2);
+#ifdef WIN32
+	::ExitProcess(0);
+#else
+	exit(0);
+#endif //__WIN32__
+
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryString)
@@ -1142,9 +1147,20 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 		}
 
 		const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_CHANNEL);
-		if (chChannel)
+		if (!chChannel || string(chChannel).empty())
 		{
-			theChannelNum = stoi(chChannel);
+			theChannelNum = 1;
+		}
+		else
+		{
+			try
+			{
+				theChannelNum = stoi(chChannel);
+			}
+			catch(...)
+			{
+				theChannelNum = 1;
+			}
 		}
 
 		if (!chProtocol)
