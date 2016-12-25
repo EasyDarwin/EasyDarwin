@@ -726,28 +726,28 @@ namespace EasyDarwin { namespace Protocol
 				int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size(); //数组大小 
 
 
-				for (int i = 0; i < size; i++)
+				for (int i = 0; i < size; ++i)
 				{
-					Json::Value &json_camera = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];
-					EasyDevice camera;
-					camera.name_ = json_camera[EASY_TAG_NAME].asString();
-					camera.channel_ = json_camera[EASY_TAG_CHANNEL].asString();
-					camera.status_ = json_camera[EASY_TAG_STATUS].asString();
+					Json::Value& json_camera = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];
+					auto channel = json_camera[EASY_TAG_CHANNEL].asString();
+					auto name = json_camera[EASY_TAG_NAME].asString();
+					auto status = json_camera[EASY_TAG_STATUS].asString();
 
-					//update channels enable true to false
-					channels_[camera.channel_] = camera;
-
-					////channels_.push_back(camera);
-					////如果已经存在，则只修改status_属性，否则插入到map中。这样对于1个线程写，多个线程读不用加锁，因为不会出现不可预知的中间值。  
-					////注意NVR包含摄像头的信息除了状态外不应该发生变化，否则多线程操作可能会出bug.
-					//if (channels_.find(camera.channel_) != channels_.end())//Already exist
-					//{
-					//	channels_[camera.channel_].status_ = camera.status_;//change status_
-					//}
-					//else//insert
-					//{
-					//	channels_[camera.channel_] = camera;
-					//}
+					//channels_.push_back(camera);
+					//如果已经存在，则只修改status_属性，否则插入到map中。这样对于1个线程写，多个线程读不用加锁，因为不会出现不可预知的中间值。  
+					//注意NVR包含摄像头的信息除了状态外不应该发生变化，否则多线程操作可能会出bug.
+					if (channels_.find(channel) != channels_.end())//Already exist
+					{
+						channels_[channel].status_ = status;//change status_
+					}
+					else
+					{
+						EasyDevice camera;
+						camera.name_ = name;
+						camera.channel_ = channel;
+						camera.status_ = status;
+						channels_[channel] = camera;
+					}
 				}
 			}
 			return true;

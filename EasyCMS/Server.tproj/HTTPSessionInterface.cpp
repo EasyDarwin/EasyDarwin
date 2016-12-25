@@ -70,6 +70,8 @@ HTTPSessionInterface::HTTPSessionInterface()
     fTimeoutTask.SetTask(this);
     fSocket.SetTask(this);
 
+	device_ = make_shared<strDevice>();
+
     fSessionIndex = ++sSessionIndexCounter;
     this->SetVal(EasyHTTPSesIndex, &fSessionIndex, sizeof(fSessionIndex));
 
@@ -99,14 +101,14 @@ HTTPSessionInterface::~HTTPSessionInterface()
     {
     case EasyCameraSession:
         this->UnRegDevSession();
-        qtss_snprintf(msgStr, sizeof(msgStr), "EasyCameraSession offline from ip[%s], device_serial[%s]", remoteAddress, fDevice.serial_.c_str());
+        qtss_snprintf(msgStr, sizeof(msgStr), "EasyCameraSession offline from ip[%s], device_serial[%s]", remoteAddress, device_->serial_.c_str());
         break;
     case EasyNVRSession:
         this->UnRegDevSession();
         qtss_snprintf(msgStr, sizeof(msgStr), "EasyNVRSession offline from ip[%s]", remoteAddress);
         break;
     case EasyHTTPSession:
-        qtss_snprintf(msgStr, sizeof(msgStr), "EasyHTTPSession offline from ip[%s]", remoteAddress);
+        //qtss_snprintf(msgStr, sizeof(msgStr), "EasyHTTPSession offline from ip[%s]", remoteAddress);
         break;
     default:
         qtss_snprintf(msgStr, sizeof(msgStr), "Unknown session offline from ip[%s]", remoteAddress);
@@ -242,15 +244,15 @@ void HTTPSessionInterface::UnRegDevSession() const
     if (fAuthenticated)
     {
         char msgStr[512];
-        qtss_snprintf(msgStr, sizeof(msgStr), "Device unregister，Device_serial[%s]\n", fDevice.serial_.c_str());
+        qtss_snprintf(msgStr, sizeof(msgStr), "Device unregister，Device_serial[%s]\n", device_->serial_.c_str());
         QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
-        QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(fDevice.serial_);//add
+        QTSServerInterface::GetServer()->GetDeviceSessionMap()->UnRegister(device_->serial_);//add
         //在redis上删除设备
         //QTSServerInterface::GetServer()->RedisDelDevice(fDevice.serial_.c_str());
 
         QTSS_RoleParams theParams;
-        theParams.DeviceInfoParams.inDevice = (void*)&fDevice;
+        theParams.DeviceInfoParams.inDevice = (void*)&device_;
         UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelDeviceRole);
         for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
         {

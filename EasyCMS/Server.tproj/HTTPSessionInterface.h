@@ -86,7 +86,7 @@ public:
     virtual QTSS_Error Read(void* ioBuffer, UInt32 inLength, UInt32* outLenRead);
     virtual QTSS_Error RequestEvent(QTSS_EventType inEventMask);
 
-    strDevice *GetDeviceInfo() { return &fDevice; }
+    shared_ptr<strDevice> GetDeviceInfo() { return device_; }
     UInt32 GetCSeq() { OSMutexLocker MutexLocker(&fMutexCSeq); return fCSeq++; }
 
     enum
@@ -155,12 +155,11 @@ protected:
 
     static QTSSAttrInfoDict::AttrInfo   sAttributes[];
 
-    //add,紫光，start
 #define CliStartStreamTimeout	30000//客户端开始流超时时间，单位为ms
 #define CliSNapShotTimeout		30000//客户端抓拍超时时间，单位为ms  
 #define SessionIDTimeout		30000//sessionID在redis上的存活时间，单位为ms
 
-    strDevice fDevice;//add,存储设备信息，仅当Session类型是设备时有效
+    shared_ptr<strDevice> device_;//add,存储设备信息，仅当Session类型是设备时有效
 
     char* fRequestBody;//存储请求的数据部分
 

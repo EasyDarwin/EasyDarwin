@@ -444,8 +444,9 @@ public:
 class EasyDarwinRecordSession
 {
 public:
-	EasyDarwinRecordSession() : index(0), numOutputs(0)
-	{}
+	EasyDarwinRecordSession() : index(0), startTime(0), endTime(0), numOutputs(0)
+	{
+	}
 
 	~EasyDarwinRecordSession() {}
 
