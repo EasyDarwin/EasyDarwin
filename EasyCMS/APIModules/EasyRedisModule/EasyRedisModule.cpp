@@ -299,7 +299,7 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 		return QTSS_BadArgument;
 	}
 
-	auto deviceInfo = static_cast<strDevice*>(inParams->inDevice);
+	auto deviceInfo = *static_cast<shared_ptr<strDevice>*>(inParams->inDevice);
 
 	char chKey[128] = { 0 };
 	string type, channel;
@@ -397,7 +397,7 @@ QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams)
 		return QTSS_BadArgument;
 	}
 
-	auto deviceInfo = static_cast<strDevice*>(inParams->inDevice);
+	auto deviceInfo = *static_cast<shared_ptr<strDevice>*>(inParams->inDevice);
 
 	char chKey[128] = { 0 };
 	sprintf(chKey, "del %s:%s", EASY_REDIS_DEVICE, deviceInfo->serial_.c_str());
