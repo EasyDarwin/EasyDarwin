@@ -54,19 +54,18 @@ char* QTSServerPrefs::sAdditionalDefaultPorts[] =
 
 char* QTSServerPrefs::sRTP_Header_Players[] =
 {
-	"vlc",
+	"EasyPlayer",
 	NULL
 };
 
 char* QTSServerPrefs::sAdjust_Bandwidth_Players[] =
 {
-	"vlc",
+	"EasyPlayer",
 	NULL
 };
 
 char* QTSServerPrefs::sNo_Pause_Time_Adjustment_Players[] =
 {
-	"vlc",
 	"EasyPlayer",
 	NULL
 };
