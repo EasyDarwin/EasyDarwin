@@ -108,7 +108,7 @@ HTTPSessionInterface::~HTTPSessionInterface()
         qtss_snprintf(msgStr, sizeof(msgStr), "EasyNVRSession offline from ip[%s]", remoteAddress);
         break;
     case EasyHTTPSession:
-        //qtss_snprintf(msgStr, sizeof(msgStr), "EasyHTTPSession offline from ip[%s]", remoteAddress);
+        qtss_snprintf(msgStr, sizeof(msgStr), "EasyHTTPSession offline from ip[%s]", remoteAddress);
         break;
     default:
         qtss_snprintf(msgStr, sizeof(msgStr), "Unknown session offline from ip[%s]", remoteAddress);
