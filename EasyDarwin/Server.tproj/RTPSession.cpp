@@ -401,7 +401,7 @@ UInt32 RTPSession::PowerOf2Floor(UInt32 inNumToFloor)
 
 void RTPSession::Teardown()
 {
-	// To proffer a quick death of the RTSP session, let's disassociate
+	OSMutexLocker locker(this->GetRTSPSessionMutex());
 	// ourselves with it right now.
 
 	// Note that this function relies on the session mutex being grabbed, because

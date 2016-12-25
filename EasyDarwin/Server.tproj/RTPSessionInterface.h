@@ -95,10 +95,12 @@ public:
 	//so AdjustedPlayTime() == 10,000
 	QTSS_PlayFlags GetPlayFlags() { return fPlayFlags; }
 	OSMutex*        GetSessionMutex() { return &fSessionMutex; }
+	OSMutex*		GetRTSPSessionMutex() { return  &fRTSPSessionMutex; }
+
 	UInt32          GetPacketsSent() { return fPacketsSent; }
 	UInt32          GetBytesSent() { return fBytesSent; }
 	OSRef*      GetRef() { return &fRTPMapElem; }
-	RTSPSessionInterface* GetRTSPSession() { return fRTSPSession; }
+	RTSPSessionInterface* GetRTSPSession() { OSMutexLocker locker(this->GetRTSPSessionMutex()); return fRTSPSession; }
 	UInt32      GetMovieAvgBitrate() { return fMovieAverageBitRate; }
 	QTSS_CliSesTeardownReason GetTeardownReason() { return fTeardownReason; }
 	QTSS_RTPSessionState    GetSessionState() { return fState; }
@@ -224,6 +226,7 @@ protected:
 	//responsible for managing this session. This allows the module to be
 	//non-preemptive-safe with respect to a session
 	OSMutex     fSessionMutex;
+	OSMutex		fRTSPSessionMutex;
 
 	//Stores the session ID
 	OSRef               fRTPMapElem;
