@@ -142,7 +142,6 @@
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp" />
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
     <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
-    <ClCompile Include="..\APIModules\EasyAuthModule\EasyAuthModule.cpp" />
     <ClCompile Include="..\APIModules\EasyRedisModule\EasyRedisModule.cpp" />
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp" />
     <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp" />
@@ -170,7 +169,6 @@
     <ClCompile Include="..\Server.tproj\win32main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\APIModules\EasyAuthModule\EasyAuthModule.h" />
     <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h" />
   </ItemGroup>
   <ItemGroup>

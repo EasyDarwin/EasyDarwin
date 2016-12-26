@@ -63,7 +63,6 @@
 
 //Compile time modules
 #include "QTSSErrorLogModule.h"
-#include "EasyAuthModule.h"
 #include "EasyRedisModule.h"
 
 #ifdef _WIN32
@@ -533,11 +532,6 @@ bool  QTSServer::SwitchPersonality()
 void QTSServer::loadCompiledInModules()
 {
 #ifndef DSS_DYNAMIC_MODULES_ONLY
-
-    QTSSModule* theAuthModule = new QTSSModule("EasyAuthModule");
-    (void)theAuthModule->SetupModule(&sCallbacks, &EasyAuthModule_Main);
-    (void)addModule(theAuthModule);
-
 
     QTSSModule* theRedisModule = new QTSSModule("EasyRedisModule");
     (void)theRedisModule->SetupModule(&sCallbacks, &EasyRedisModule_Main);
