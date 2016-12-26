@@ -176,6 +176,8 @@ bool RedisConnect()
 
 	sIfConSucess = true;
 
+	printf("Connect Redis success\n");
+
 	return true;
 }
 
