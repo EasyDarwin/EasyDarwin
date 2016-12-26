@@ -100,7 +100,7 @@ public:
 	UInt32          GetPacketsSent() { return fPacketsSent; }
 	UInt32          GetBytesSent() { return fBytesSent; }
 	OSRef*      GetRef() { return &fRTPMapElem; }
-	RTSPSessionInterface* GetRTSPSession() { OSMutexLocker locker(this->GetRTSPSessionMutex()); return fRTSPSession; }
+	RTSPSessionInterface* GetRTSPSession() { return fRTSPSession; }
 	UInt32      GetMovieAvgBitrate() { return fMovieAverageBitRate; }
 	QTSS_CliSesTeardownReason GetTeardownReason() { return fTeardownReason; }
 	QTSS_RTPSessionState    GetSessionState() { return fState; }
