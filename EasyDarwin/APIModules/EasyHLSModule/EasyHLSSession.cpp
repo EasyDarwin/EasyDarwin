@@ -164,10 +164,10 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 				unsigned int iAACBufferLen = 0;
 				if (Easy_AACEncoder_Encode(fAAChandle, reinterpret_cast<unsigned char*>(pbuf), frameinfo->length, pbAACBuffer, &iAACBufferLen) > 0)
 				{
-					EASY_AV_Frame  avFrame;
+					EASY_AV_Frame avFrame;
 					memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-					avFrame.u32AVFrameLen = frameinfo->length;
-					avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
+					avFrame.u32AVFrameLen = iAACBufferLen;
+					avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbAACBuffer);
 					avFrame.u32VFrameType = frameinfo->type;
 					avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
 					avFrame.u32TimestampSec = frameinfo->timestamp_sec;
