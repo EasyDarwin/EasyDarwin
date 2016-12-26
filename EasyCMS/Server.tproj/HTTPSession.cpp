@@ -1213,8 +1213,7 @@ QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json) const
 		body[EASY_TAG_SERVICE] = service;
 		body[EASY_TAG_SERIAL] = strDeviceSerial;
 		body[EASY_TAG_CHANNEL] = strChannel;
-		body[EASY_TAG_PROTOCOL] = strProtocol;//如果当前已经推流，则返回请求的，否则返回实际推流类型
-		body[EASY_TAG_RESERVE] = strReserve;//如果当前已经推流，则返回请求的，否则返回实际推流类型
+		body[EASY_TAG_RESERVE] = strReserve;
 
 		header[EASY_TAG_VERSION] = EASY_PROTOCOL_VERSION;
 		header[EASY_TAG_CSEQ] = strCSeq;
