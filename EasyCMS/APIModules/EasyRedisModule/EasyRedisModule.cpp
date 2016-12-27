@@ -217,7 +217,7 @@ QTSS_Error RedisTTL()
 	{
 		string cmsIp(QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP());
 		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANPort();
-		auto hmset = Format("hmset %s:%s %s %s %s %d %s %d", string(EASY_REDIS_EASYCMS), id, string(EASY_REDIS_IP), cmsIp,
+		auto hmset = Format("hmset %s:%s %s %s %s %hu %s %lu", string(EASY_REDIS_EASYCMS), id, string(EASY_REDIS_IP), cmsIp,
 			string(EASY_REDIS_PORT), cmsPort, string(EASY_REDIS_LOAD), load);
 		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, hmset.c_str()));
 		auto replyHmsetGuard = MakeGuard([&]()
@@ -260,7 +260,7 @@ QTSS_Error RedisTTL()
 	}
 	else if (reply->integer == 1)
 	{
-		auto hset = Format("hset %s:%s %s %d", server, id, string(EASY_REDIS_LOAD), load);
+		auto hset = Format("hset %s:%s %s %lu", server, id, string(EASY_REDIS_LOAD), load);
 		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, hset.c_str()));
 		auto replyHsetGuard = MakeGuard([&]()
 		{
