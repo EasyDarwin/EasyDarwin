@@ -153,9 +153,8 @@ bool RedisConnect()
 		return false;
 	}
 
-	char chKey[128] = { 0 };
-	sprintf(chKey, "auth %s", sRedisPassword);
-	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+	auto auth = Format("auth %s", string(sRedisPassword));
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, auth.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{
 		if (reply)
@@ -189,13 +188,12 @@ QTSS_Error RedisTTL()
 	{
 		return QTSS_NotConnected;
 	}
-	auto server = QTSServerInterface::GetServer()->GetServerName().Ptr;
-	auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
+	string server(QTSServerInterface::GetServer()->GetServerName().Ptr);
+	string id(QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	auto load = QTSServerInterface::GetServer()->GetNumServiceSessions();
 
-	char chKey[128] = { 0 };
-	sprintf(chKey, "expire %s:%s 15", server, id);
-	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+	auto expire = Format("expire %s:%s 15", server, id);
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, expire.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{
 		if (reply)
@@ -217,11 +215,11 @@ QTSS_Error RedisTTL()
 
 	if (reply->integer == 0)
 	{
-		auto cmsIp = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP();
+		string cmsIp(QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANIP());
 		auto cmsPort = QTSServerInterface::GetServer()->GetPrefs()->GetServiceWANPort();
-		sprintf(chKey, "hmset %s:%s %s %s %s %d %s %d", EASY_REDIS_EASYCMS, id, EASY_REDIS_IP, cmsIp,
-			EASY_REDIS_PORT, cmsPort, EASY_REDIS_LOAD, load);
-		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		auto hmset = Format("hmset %s:%s %s %s %s %d %s %d", string(EASY_REDIS_EASYCMS), id, string(EASY_REDIS_IP), cmsIp,
+			string(EASY_REDIS_PORT), cmsPort, string(EASY_REDIS_LOAD), load);
+		auto replyHmset = static_cast<redisReply*>(redisCommand(redisContext_, hmset.c_str()));
 		auto replyHmsetGuard = MakeGuard([&]()
 		{
 			if (replyHmset)
@@ -240,8 +238,7 @@ QTSS_Error RedisTTL()
 			return QTSS_NotConnected;
 		}
 
-		sprintf(chKey, "expire %s:%s 15", server, id);
-		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, expire.c_str()));
 		auto replyExpireGuard = MakeGuard([&]()
 		{
 			if (replyExpire)
@@ -263,8 +260,8 @@ QTSS_Error RedisTTL()
 	}
 	else if (reply->integer == 1)
 	{
-		sprintf(chKey, "hset %s:%s %s %d", server, id, EASY_REDIS_LOAD, load);
-		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		auto hset = Format("hset %s:%s %s %d", server, id, string(EASY_REDIS_LOAD), load);
+		auto replyHset = static_cast<redisReply*>(redisCommand(redisContext_, hset.c_str()));
 		auto replyHsetGuard = MakeGuard([&]()
 		{
 			if (replyHset)
@@ -303,7 +300,6 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 
 	auto deviceInfo = *static_cast<shared_ptr<strDevice>*>(inParams->inDevice);
 
-	char chKey[128] = { 0 };
 	string type, channel;
 	if (deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
 	{
@@ -332,11 +328,11 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 		}
 	}
 
-	auto id = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
-	sprintf(chKey, "hmset %s:%s %s %s %s %s %s %s %s %s", EASY_REDIS_DEVICE, deviceInfo->serial_.c_str(),
-		EASY_REDIS_TYPE, type.c_str(), EASY_REDIS_CHANNEL, channel.c_str(), EASY_REDIS_EASYCMS, id,
-		EASY_REDIS_TOKEN, deviceInfo->password_.c_str());
-	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+	string id(QTSServerInterface::GetServer()->GetCloudServiceNodeID());
+	auto hmset = Format("hmset %s:%s %s %s %s %s %s %s %s %s", string(EASY_REDIS_DEVICE), deviceInfo->serial_,
+		string(EASY_REDIS_TYPE), type, string(EASY_REDIS_CHANNEL), channel, string(EASY_REDIS_EASYCMS), id,
+		string(EASY_REDIS_TOKEN), deviceInfo->password_);
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, hmset.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{
 		if (reply)
@@ -357,8 +353,8 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 
 	if (string(reply->str) == string("OK"))
 	{
-		sprintf(chKey, "expire %s:%s 150", EASY_REDIS_DEVICE, deviceInfo->serial_.c_str());
-		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+		auto expire = Format("expire %s:%s 150", string(EASY_REDIS_DEVICE), deviceInfo->serial_);
+		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, expire.c_str()));
 		auto replyExpireGuard = MakeGuard([&]()
 		{
 			if (replyExpire)
@@ -401,9 +397,8 @@ QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams)
 
 	auto deviceInfo = *static_cast<shared_ptr<strDevice>*>(inParams->inDevice);
 
-	char chKey[128] = { 0 };
-	sprintf(chKey, "del %s:%s", EASY_REDIS_DEVICE, deviceInfo->serial_.c_str());
-	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, chKey));
+	auto del = Format("del %s:%s", EASY_REDIS_DEVICE, deviceInfo->serial_);
+	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, del.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{
 		if (reply)
