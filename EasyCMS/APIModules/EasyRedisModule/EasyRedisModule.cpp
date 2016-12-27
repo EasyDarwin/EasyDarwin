@@ -293,45 +293,15 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 		return QTSS_NotConnected;
 	}
 
-	if (!inParams->inDevice)
+	if (!inParams->serial_ || string(inParams->serial_).empty())
 	{
 		return QTSS_BadArgument;
 	}
 
-	auto deviceInfo = *static_cast<shared_ptr<strDevice>*>(inParams->inDevice);
-
-	string type, channel;
-	if (deviceInfo->eAppType == EASY_APP_TYPE_CAMERA)
-	{
-		type = "EasyCamera";
-		channel = "1";
-	}
-	else if (deviceInfo->eAppType == EASY_APP_TYPE_NVR)
-	{
-		type = "EasyNVR";
-		auto channels = deviceInfo->channels_;
-		for (auto& item : channels)
-		{
-			channel += item.first + R"(/)";
-		}
-	}
-
-	if (channel.empty())
-	{
-		channel = "0";
-	}
-	else
-	{
-		if (channel.back() == '/')
-		{
-			channel.pop_back();
-		}
-	}
-
 	string id(QTSServerInterface::GetServer()->GetCloudServiceNodeID());
-	auto hmset = Format("hmset %s:%s %s %s %s %s %s %s %s %s", string(EASY_REDIS_DEVICE), deviceInfo->serial_,
-		string(EASY_REDIS_TYPE), type, string(EASY_REDIS_CHANNEL), channel, string(EASY_REDIS_EASYCMS), id,
-		string(EASY_REDIS_TOKEN), deviceInfo->password_);
+	auto hmset = Format("hmset %s:%s %s %s %s %s %s %s %s %s", string(EASY_REDIS_DEVICE), string(inParams->serial_),
+		string(EASY_REDIS_TYPE), string(inParams->type_), string(EASY_REDIS_CHANNEL), string(inParams->channels_), string(EASY_REDIS_EASYCMS), id,
+		string(EASY_REDIS_TOKEN), string(inParams->token_));
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, hmset.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{
@@ -353,7 +323,7 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 
 	if (string(reply->str) == string("OK"))
 	{
-		auto expire = Format("expire %s:%s 150", string(EASY_REDIS_DEVICE), deviceInfo->serial_);
+		auto expire = Format("expire %s:%s 150", string(EASY_REDIS_DEVICE), string(inParams->serial_));
 		auto replyExpire = static_cast<redisReply*>(redisCommand(redisContext_, expire.c_str()));
 		auto replyExpireGuard = MakeGuard([&]()
 		{
@@ -390,14 +360,12 @@ QTSS_Error RedisDelDevice(Easy_DeviceInfo_Params* inParams)
 		return QTSS_NotConnected;
 	}
 
-	if (!inParams->inDevice)
+	if (!inParams->serial_ || string(inParams->serial_).empty())
 	{
 		return QTSS_BadArgument;
 	}
 
-	auto deviceInfo = *static_cast<shared_ptr<strDevice>*>(inParams->inDevice);
-
-	auto del = Format("del %s:%s", EASY_REDIS_DEVICE, deviceInfo->serial_);
+	auto del = Format("del %s:%s", EASY_REDIS_DEVICE, string(inParams->serial_));
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, del.c_str()));
 	auto replyGuard = MakeGuard([&]()
 	{

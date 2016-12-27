@@ -77,6 +77,7 @@ private:
 
 	QTSS_Error rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height);
 	static int yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
+	void addDevice() const;
 
 	HTTPRequest* fRequest;
 	OSMutex fReadMutex;

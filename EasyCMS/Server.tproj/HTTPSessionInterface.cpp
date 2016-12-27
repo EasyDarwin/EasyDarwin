@@ -252,7 +252,7 @@ void HTTPSessionInterface::UnRegDevSession() const
         //QTSServerInterface::GetServer()->RedisDelDevice(fDevice.serial_.c_str());
 
         QTSS_RoleParams theParams;
-        theParams.DeviceInfoParams.inDevice = (void*)&device_;
+		strncpy(theParams.DeviceInfoParams.serial_, device_->serial_.c_str(), device_->serial_.size());
         UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisDelDeviceRole);
         for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
         {

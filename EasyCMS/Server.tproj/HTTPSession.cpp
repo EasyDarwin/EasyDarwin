@@ -244,7 +244,7 @@ SInt64 HTTPSession::Run()
 			{
 				fTimeoutTask.RefreshTimeout();
 
-				if (fSessionType != EasyHTTPSession && !device_->serial_.empty())
+				/*if (fSessionType != EasyHTTPSession && !device_->serial_.empty())
 				{
 					QTSS_RoleParams theParams;
 					theParams.DeviceInfoParams.inDevice = &device_;
@@ -254,7 +254,7 @@ SInt64 HTTPSession::Run()
 						QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetDeviceRole, currentModule);
 						(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
 					}
-				}
+				}*/
 
 				QTSS_Error theErr = setupRequest();
 
@@ -741,6 +741,50 @@ QTSS_Error HTTPSession::execNetMsgErrorReqHandler(HTTPStatusCode errCode)
 	return QTSS_NoErr;
 }
 
+void HTTPSession::addDevice() const
+{
+	QTSS_RoleParams theParams;
+	strncpy(theParams.DeviceInfoParams.serial_, device_->serial_.c_str(), device_->serial_.size());
+	strncpy(theParams.DeviceInfoParams.token_, device_->password_.c_str(), device_->password_.size());
+	string type, channel;
+	if (device_->eAppType == EASY_APP_TYPE_CAMERA)
+	{
+		type = "EasyCamera";
+		channel = "1";
+	}
+	else if (device_->eAppType == EASY_APP_TYPE_NVR)
+	{
+		type = "EasyNVR";
+		auto channels = device_->channels_;
+		for (auto& item : channels)
+		{
+			channel += item.first + R"(/)";
+		}
+	}
+
+	if (channel.empty())
+	{
+		channel = "0";
+	}
+	else
+	{
+		if (channel.back() == '/')
+		{
+			channel.pop_back();
+		}
+	}
+
+	strncpy(theParams.DeviceInfoParams.channels_, channel.c_str(), channel.size());
+	strncpy(theParams.DeviceInfoParams.type_, type.c_str(), type.size());
+
+	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetDeviceRole);
+	for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+	{
+		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetDeviceRole, currentModule);
+		(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
+	}
+}
+
 /*
 	1.获取TerminalType和AppType,进行逻辑验证，不符合则返回400 httpBadRequest;
 	2.验证Serial和Token进行权限验证，不符合则返回401 httpUnAuthorized;
@@ -750,6 +794,7 @@ QTSS_Error HTTPSession::execNetMsgErrorReqHandler(HTTPStatusCode errCode)
 QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 {
 	QTSS_Error theErr = QTSS_NoErr;
+
 	EasyMsgDSRegisterREQ regREQ(json);
 
 	//update info each time
@@ -766,17 +811,13 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 		switch (appType)
 		{
 		case EASY_APP_TYPE_CAMERA:
-			{
-				fSessionType = EasyCameraSession;
-				//fTerminalType = terminalType;
-				break;
-			}
+			fSessionType = EasyCameraSession;
+			//fTerminalType = terminalType;
+			break;
 		case EASY_APP_TYPE_NVR:
-			{
-				fSessionType = EasyNVRSession;
-				//fTerminalType = terminalType;
-				break;
-			}
+			fSessionType = EasyNVRSession;
+			//fTerminalType = terminalType;
+			break;
 		default:
 			break;
 		}
@@ -809,18 +850,10 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 		auto regErr = deviceMap->Register(device_->serial_, this);
 		if (regErr == OS_NoErr)
 		{
-			//在redis上增加设备
 			auto msgStr = Format("Device register，Device_serial[%s]\n", device_->serial_);
 			QTSServerInterface::LogError(qtssMessageVerbosity, const_cast<char*>(msgStr.c_str()));
 
-			QTSS_RoleParams theParams;
-			theParams.DeviceInfoParams.inDevice = &device_;
-			UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetDeviceRole);
-			for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-			{
-				QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetDeviceRole, currentModule);
-				(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
-			}
+			addDevice();
 			fAuthenticated = true;
 		}
 		else

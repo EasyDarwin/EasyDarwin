@@ -578,24 +578,27 @@ extern "C" {
 
 	typedef struct//add  
 	{
-		char *pNonce;//用于存放随机数
-		char *pResult;//存放验证随机数的结构
-	}QTSS_Nonce_Params;
+		char* pNonce;//用于存放随机数
+		char* pResult;//存放验证随机数的结构
+	} QTSS_Nonce_Params;
 
 	typedef struct
 	{
-		void* inDevice;
-	}Easy_DeviceInfo_Params;
+		char* serial_;
+		char* token_;
+		char* type_;
+		char* channels_;
+	} Easy_DeviceInfo_Params;
 
 	typedef struct
 	{
-	char* inSerial;
-	char* inChannel;
-	char* outDssIP;
-	char* outHTTPPort;
-	char* outDssPort;//UINT16 * outDssPort;
-	bool isOn;
-	}QTSS_GetAssociatedDarwin_Params;
+		char* inSerial;
+		char* inChannel;
+		char* outDssIP;
+		char* outHTTPPort;
+		char* outDssPort;//UINT16 * outDssPort;
+		bool isOn;
+	} QTSS_GetAssociatedDarwin_Params;
 
 	typedef struct
 	{
