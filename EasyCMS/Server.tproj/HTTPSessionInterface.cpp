@@ -260,6 +260,6 @@ void HTTPSessionInterface::UnRegDevSession() const
             QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisDelDeviceRole, currentModule);
             (void)theModule->CallDispatch(Easy_RedisDelDevice_Role, &theParams);
         }
-		delete theParams.DeviceInfoParams.serial_;
+		delete[] theParams.DeviceInfoParams.serial_;
     }
 }

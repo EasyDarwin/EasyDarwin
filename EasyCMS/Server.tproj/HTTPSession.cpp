@@ -778,10 +778,10 @@ void HTTPSession::addDevice() const
 		(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
 	}
 
-	delete theParams.DeviceInfoParams.serial_;
-	delete theParams.DeviceInfoParams.channels_;
-	delete theParams.DeviceInfoParams.type_;
-	delete theParams.DeviceInfoParams.token_;
+	delete[] theParams.DeviceInfoParams.serial_;
+	delete[] theParams.DeviceInfoParams.channels_;
+	delete[] theParams.DeviceInfoParams.type_;
+	delete[] theParams.DeviceInfoParams.token_;
 }
 
 /*
