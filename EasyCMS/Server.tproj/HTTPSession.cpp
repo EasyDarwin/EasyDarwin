@@ -729,8 +729,8 @@ void HTTPSession::addDevice() const
 	theParams.DeviceInfoParams.channels_ = new char[64];
 	theParams.DeviceInfoParams.type_ = new char[64];
 	theParams.DeviceInfoParams.token_ = new char[64];
-	strncpy(theParams.DeviceInfoParams.serial_, device_->serial_.c_str(), device_->serial_.size());
-	strncpy(theParams.DeviceInfoParams.token_, device_->password_.c_str(), device_->password_.size());
+	strncpy(theParams.DeviceInfoParams.serial_, device_->serial_.c_str(), device_->serial_.size() + 1);
+	strncpy(theParams.DeviceInfoParams.token_, device_->password_.c_str(), device_->password_.size() + 1);
 	string type, channel;
 	if (device_->eAppType == EASY_APP_TYPE_CAMERA)
 	{
@@ -759,8 +759,8 @@ void HTTPSession::addDevice() const
 		}
 	}
 
-	strncpy(theParams.DeviceInfoParams.channels_, channel.c_str(), channel.size());
-	strncpy(theParams.DeviceInfoParams.type_, type.c_str(), type.size());
+	strncpy(theParams.DeviceInfoParams.channels_, channel.c_str(), channel.size() + 1);
+	strncpy(theParams.DeviceInfoParams.type_, type.c_str(), type.size() + 1);
 
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetDeviceRole);
 	for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
