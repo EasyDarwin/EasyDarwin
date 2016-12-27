@@ -49,6 +49,10 @@ public:
 	QTSS_Error		SessionRelease();
 
 private:
+	QTSS_Error initAACEncoder(int codec);
+	void pushVideo(char* pbuf, RTSP_FRAME_INFO* frameinfo) const;
+	void pushAudio(char* pbuf, RTSP_FRAME_INFO* frameinfo);
+
 	// For storage in the session map       
 	OSRef       fRef;
 	StrPtrLen   fSourceID;
@@ -64,7 +68,6 @@ private:
 	Easy_RTMP_Handle	fRTMPHandle;
 	EasyAACEncoder_Handle	fAAChandle;
 
-	QTSS_Error EasyInitAACEncoder(int codec);
 	unsigned char pbAACBuffer[EASY_ACCENCODER_BUFFER_SIZE_LEN];
 };
 
