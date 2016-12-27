@@ -2228,7 +2228,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		{
 			snapLocalPath.push_back('\\');
 		}
-		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapLocalPath, 0, (void*)snapLocalPath.c_str(), snapLocalPath.size());
+		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapLocalPath, 0, snapLocalPath.c_str(), snapLocalPath.size());
 	}
 
 	const char* chSnapWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SNAP_WEB_PATH);
@@ -2239,7 +2239,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		{
 			snapWebPath.push_back('\/');
 		}
-		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapWebPath, 0, (void*)snapWebPath.c_str(), snapWebPath.size());
+		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapWebPath, 0, snapWebPath.c_str(), snapWebPath.size());
 	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);
