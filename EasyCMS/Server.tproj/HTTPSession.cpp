@@ -735,7 +735,7 @@ void HTTPSession::addDevice() const
 {
 	QTSS_RoleParams theParams;
 	theParams.DeviceInfoParams.serial_ = new char[64];
-	theParams.DeviceInfoParams.token_ = new char[64];
+	theParams.DeviceInfoParams.channels_ = new char[64];
 	theParams.DeviceInfoParams.type_ = new char[64];
 	theParams.DeviceInfoParams.token_ = new char[64];
 	strncpy(theParams.DeviceInfoParams.serial_, device_->serial_.c_str(), device_->serial_.size());
@@ -779,7 +779,7 @@ void HTTPSession::addDevice() const
 	}
 
 	delete theParams.DeviceInfoParams.serial_;
-	delete theParams.DeviceInfoParams.token_;
+	delete theParams.DeviceInfoParams.channels_;
 	delete theParams.DeviceInfoParams.type_;
 	delete theParams.DeviceInfoParams.token_;
 }
