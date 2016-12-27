@@ -1419,9 +1419,8 @@ QTSS_Error HTTPSession::execNetMsgCSGetCameraListReqRESTful(const char* queryStr
 		}
 		else
 		{
-			EasyDevicesIterator itCam;
 			body[EASY_TAG_CHANNEL_COUNT] = deviceInfo->channelCount_;
-			for (itCam = deviceInfo->channels_.begin(); itCam != deviceInfo->channels_.end(); ++itCam)
+			for (auto itCam = deviceInfo->channels_.begin(); itCam != deviceInfo->channels_.end(); ++itCam)
 			{
 				Json::Value value;
 				value[EASY_TAG_CHANNEL] = itCam->second.channel_;
@@ -1480,11 +1479,8 @@ QTSS_Error HTTPSession::execNetMsgCSCameraListReq(const char* json)
 	}
 	else
 	{
-		EasyDevices *camerasInfo = &(deviceInfo->channels_);
-		EasyDevicesIterator itCam;
-
 		body[EASY_TAG_CHANNEL_COUNT] = static_cast<HTTPSession*>(theDevRef->GetObjectPtr())->GetDeviceInfo()->channelCount_;
-		for (itCam = camerasInfo->begin(); itCam != camerasInfo->end(); ++itCam)
+		for (auto itCam = deviceInfo->channels_.begin(); itCam != deviceInfo->channels_.end(); ++itCam)
 		{
 			Json::Value value;
 			value[EASY_TAG_CHANNEL] = itCam->second.channel_;
@@ -2207,21 +2203,21 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	const char* chWanIP = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_IP);
 	if (chWanIP)
 	{
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANIPAddr, 0, (void*)chWanIP, strlen(chWanIP));
+		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANIPAddr, 0, chWanIP, strlen(chWanIP));
 	}
 
 	const char* chHTTPLanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_LAN_PORT);
 	if (chHTTPLanPort)
 	{
 		UInt16 uHTTPLanPort = stoi(chHTTPLanPort);
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceLANPort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
+		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceLANPort, 0, &uHTTPLanPort, sizeof(uHTTPLanPort));
 	}
 
 	const char*	chHTTPWanPort = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SERVICE_WAN_PORT);
 	if (chHTTPWanPort)
 	{
 		UInt16 uHTTPWanPort = stoi(chHTTPWanPort);
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANPort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
+		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsServiceWANPort, 0, &uHTTPWanPort, sizeof(uHTTPWanPort));
 	}
 
 	const char* chSnapLocalPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SNAP_LOCAL_PATH);
@@ -2232,7 +2228,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		{
 			snapLocalPath.push_back('\\');
 		}
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapLocalPath, 0, (void*)snapLocalPath.c_str(), snapLocalPath.size());
+		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapLocalPath, 0, (void*)snapLocalPath.c_str(), snapLocalPath.size());
 	}
 
 	const char* chSnapWebPath = parList.DoFindCGIValueForParam(EASY_TAG_CONFIG_SNAP_WEB_PATH);
@@ -2243,7 +2239,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 		{
 			snapWebPath.push_back('\/');
 		}
-		(void)QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapWebPath, 0, (void*)snapWebPath.c_str(), snapWebPath.size());
+		QTSS_SetValue(QTSServerInterface::GetServer()->GetPrefs(), qtssPrefsSnapWebPath, 0, (void*)snapWebPath.c_str(), snapWebPath.size());
 	}
 
 	EasyProtocolACK rsp(MSG_SC_SERVER_SET_BASE_CONFIG_ACK);

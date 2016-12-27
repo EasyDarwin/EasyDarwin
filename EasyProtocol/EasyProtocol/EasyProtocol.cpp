@@ -764,16 +764,13 @@ namespace EasyDarwin { namespace Protocol
 		}
 		else//否则就要保留到对应的摄像头属性里
 		{
-			EasyDevicesIterator it;
-			for (it = channels_.begin(); it != channels_.end(); ++it)
+			for (auto it = channels_.begin(); it != channels_.end(); ++it)
 			{
 				if (it->second.channel_ == strChannel)
 					it->second.snapJpgPath_ = strJpgPath;
 			}
 		}
 	}
-
-//add,紫光，end
 
 	EasyMsgSCRecordList::EasyMsgSCRecordList()
 		: EasyProtocol(MSG_SC_RTSP_RECORD_SESSION_LIST_ACK)
