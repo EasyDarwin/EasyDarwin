@@ -93,7 +93,7 @@ HTTPSession::HTTPSession()
 	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	sessionMap->Register(fSessionID, this);
 
-	//qtss_printf("Create HTTPSession:%s\n", fSessionID);
+	qtss_printf("Create HTTPSession:%s\n", fSessionID);
 }
 
 HTTPSession::~HTTPSession()
@@ -118,7 +118,7 @@ HTTPSession::~HTTPSession()
 
 	if (decodeParam.imageData)
 	{
-		delete[]decodeParam.imageData;
+		delete[] decodeParam.imageData;
 		decodeParam.imageData = nullptr;
 	}
 
@@ -130,7 +130,7 @@ HTTPSession::~HTTPSession()
 	auto sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	sessionMap->UnRegister(fSessionID);
 
-	//qtss_printf("Release HTTPSession:%s\n", fSessionID);
+	qtss_printf("Release HTTPSession:%s Serial:%s Type:%d\n", fSessionID, device_->serial_.c_str(), device_->eAppType);
 
 	if (fRequestBody)
 	{
@@ -163,26 +163,24 @@ SInt64 HTTPSession::Run()
 		switch (fState)
 		{
 		case kReadingFirstRequest:
+			if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
 			{
-				if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
-				{
-					fInputSocketP->RequestEvent(EV_RE);
-					return 0;
-				}
-
-				if ((err != QTSS_RequestArrived) && (err != E2BIG))
-				{
-					// Any other error implies that the client has gone away. At this point,
-					// we can't have 2 sockets, so we don't need to do the "half closed" check
-					// we do below
-					Assert(err > 0);
-					Assert(!this->IsLiveSession());
-					break;
-				}
-
-				if ((err == QTSS_RequestArrived) || (err == E2BIG))
-					fState = kHaveCompleteMessage;
+				fInputSocketP->RequestEvent(EV_RE);
+				return 0;
 			}
+
+			if ((err != QTSS_RequestArrived) && (err != E2BIG))
+			{
+				// Any other error implies that the client has gone away. At this point,
+				// we can't have 2 sockets, so we don't need to do the "half closed" check
+				// we do below
+				Assert(err > 0);
+				Assert(!this->IsLiveSession());
+				break;
+			}
+
+			if ((err == QTSS_RequestArrived) || (err == E2BIG))
+				fState = kHaveCompleteMessage;
 			continue;
 
 		case kReadingRequest:
@@ -218,27 +216,25 @@ SInt64 HTTPSession::Run()
 				fState = kHaveCompleteMessage;
 			}
 		case kHaveCompleteMessage:
+			Assert(fInputStream.GetRequestBuffer());
+
+			Assert(fRequest == nullptr);
+			fRequest = new HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
+
+			fReadMutex.Lock();
+			fSessionMutex.Lock();
+
+			fOutputStream.ResetBytesWritten();
+
+			if ((err == E2BIG) || (err == QTSS_BadArgument))
 			{
-				Assert(fInputStream.GetRequestBuffer());
-
-				Assert(fRequest == nullptr);
-				fRequest = new HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
-
-				fReadMutex.Lock();
-				fSessionMutex.Lock();
-
-				fOutputStream.ResetBytesWritten();
-
-				if ((err == E2BIG) || (err == QTSS_BadArgument))
-				{
-					execNetMsgErrorReqHandler(httpBadRequest);
-					fState = kSendingResponse;
-					break;
-				}
-
-				Assert(err == QTSS_RequestArrived);
-				fState = kFilteringRequest;
+				execNetMsgErrorReqHandler(httpBadRequest);
+				fState = kSendingResponse;
+				break;
 			}
+
+			Assert(err == QTSS_RequestArrived);
+			fState = kFilteringRequest;
 
 		case kFilteringRequest:
 			{
@@ -273,81 +269,73 @@ SInt64 HTTPSession::Run()
 			}
 
 		case kPreprocessingRequest:
+			processRequest();
+
+			if (fOutputStream.GetBytesWritten() > 0)
 			{
-				processRequest();
-
-				if (fOutputStream.GetBytesWritten() > 0)
-				{
-					delete[] fRequestBody;
-					fRequestBody = nullptr;
-					fState = kSendingResponse;
-					break;
-				}
-
 				delete[] fRequestBody;
 				fRequestBody = nullptr;
-				fState = kCleaningUp;
+				fState = kSendingResponse;
 				break;
 			}
 
+			delete[] fRequestBody;
+			fRequestBody = nullptr;
+			fState = kCleaningUp;
+			break;
+
 		case kProcessingRequest:
+			if (fOutputStream.GetBytesWritten() == 0)
 			{
-				if (fOutputStream.GetBytesWritten() == 0)
-				{
-					execNetMsgErrorReqHandler(httpInternalServerError);
-					fState = kSendingResponse;
-					break;
-				}
-
+				execNetMsgErrorReqHandler(httpInternalServerError);
 				fState = kSendingResponse;
+				break;
 			}
-		case kSendingResponse:
-			{
-				Assert(fRequest != nullptr);
 
-				err = fOutputStream.Flush();
+			fState = kSendingResponse;
+		case kSendingResponse:
+			Assert(fRequest != nullptr);
+
+			err = fOutputStream.Flush();
+
+			if (err == EAGAIN)
+			{
+				// If we get this error, we are currently flow-controlled and should
+				// wait for the socket to become writeable again
+				fSocket.RequestEvent(EV_WR);
+				this->ForceSameThread();
+				// We are holding mutexes, so we need to force
+				// the same thread to be used for next Run()
+				return 0;
+			}
+			if (err != QTSS_NoErr)
+			{
+				// Any other error means that the client has disconnected, right?
+				Assert(!this->IsLiveSession());
+				break;
+			}
+
+			fState = kCleaningUp;
+
+		case kCleaningUp:
+			// Cleaning up consists of making sure we've read all the incoming Request Body
+			// data off of the socket
+			if (this->GetRemainingReqBodyLen() > 0)
+			{
+				err = this->dumpRequestData();
 
 				if (err == EAGAIN)
 				{
-					// If we get this error, we are currently flow-controlled and should
-					// wait for the socket to become writeable again
-					fSocket.RequestEvent(EV_WR);
-					this->ForceSameThread();
-					// We are holding mutexes, so we need to force
+					fInputSocketP->RequestEvent(EV_RE);
+					this->ForceSameThread();    // We are holding mutexes, so we need to force
 					// the same thread to be used for next Run()
 					return 0;
 				}
-				if (err != QTSS_NoErr)
-				{
-					// Any other error means that the client has disconnected, right?
-					Assert(!this->IsLiveSession());
-					break;
-				}
-
-				fState = kCleaningUp;
 			}
 
-		case kCleaningUp:
-			{
-				// Cleaning up consists of making sure we've read all the incoming Request Body
-				// data off of the socket
-				if (this->GetRemainingReqBodyLen() > 0)
-				{
-					err = this->dumpRequestData();
+			this->cleanupRequest();
 
-					if (err == EAGAIN)
-					{
-						fInputSocketP->RequestEvent(EV_RE);
-						this->ForceSameThread();    // We are holding mutexes, so we need to force
-						// the same thread to be used for next Run()
-						return 0;
-					}
-				}
-
-				this->cleanupRequest();
-
-				fState = kReadingRequest;
-			}
+			fState = kReadingRequest;
 		default: break;
 		}
 	}
@@ -776,6 +764,7 @@ void HTTPSession::addDevice() const
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetDeviceRole, currentModule);
 		(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
+		break;
 	}
 
 	delete[] theParams.DeviceInfoParams.serial_;
