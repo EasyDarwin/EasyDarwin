@@ -92,7 +92,7 @@ SInt64 EasyRTMPSession::Run()
 	return 0;
 }
 
-QTSS_Error EasyRTMPSession::EasyInitAACEncoder(int codec)
+QTSS_Error EasyRTMPSession::initAACEncoder(int codec)
 {
 	if (fAAChandle == nullptr)
 	{
@@ -110,72 +110,81 @@ QTSS_Error EasyRTMPSession::EasyInitAACEncoder(int codec)
 
 		fAAChandle = Easy_AACEncoder_Init(initParam);
 	}
-	return QTSS_NoErr;
 
+	return QTSS_NoErr;
 }
 
-QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
+void EasyRTMPSession::pushVideo(char* pbuf, RTSP_FRAME_INFO* frameinfo) const
 {
-	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG)
-	{
-		//printf("Get video Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
-		//RTMP ONLY SUPPORT H.264 YET
-		if (frameinfo->codec == EASY_SDK_VIDEO_CODEC_H264)
-		{
-			if (fRTMPHandle == nullptr) return 0;
+	if (fRTMPHandle == nullptr) return;
 
-			if (frameinfo && frameinfo->length)
+	if (frameinfo->codec == EASY_SDK_VIDEO_CODEC_H264)
+	{
+		EASY_AV_Frame avFrame;
+		memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+		avFrame.u32AVFrameFlag = EASY_SDK_VIDEO_FRAME_FLAG;
+		avFrame.u32AVFrameLen = frameinfo->length;
+		avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
+		avFrame.u32VFrameType = frameinfo->type == EASY_SDK_VIDEO_FRAME_I ? EASY_SDK_VIDEO_FRAME_I : EASY_SDK_VIDEO_FRAME_P;
+		avFrame.u32TimestampSec = frameinfo->timestamp_sec;
+		avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
+		EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
+	}
+}
+
+void EasyRTMPSession::pushAudio(char* pbuf, RTSP_FRAME_INFO* frameinfo)
+{
+	if (fRTMPHandle == nullptr) return;
+
+	if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC)
+	{
+		EASY_AV_Frame  avFrame;
+		memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
+		avFrame.u32AVFrameLen = frameinfo->length;
+		avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
+		avFrame.u32VFrameType = frameinfo->type;
+		avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
+		avFrame.u32TimestampSec = frameinfo->timestamp_sec;
+		avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
+		EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
+	}
+
+	//printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
+	if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711A || frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711U)
+	{
+		if (initAACEncoder(frameinfo->codec) == QTSS_NoErr)
+		{
+			memset(pbAACBuffer, 0, EASY_ACCENCODER_BUFFER_SIZE_LEN);
+			unsigned int iAACBufferLen = 0;
+			if (Easy_AACEncoder_Encode(fAAChandle, reinterpret_cast<unsigned char*>(pbuf), frameinfo->length, pbAACBuffer, &iAACBufferLen) > 0)
 			{
-				EASY_AV_Frame  avFrame;
+				EASY_AV_Frame avFrame;
 				memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-				avFrame.u32AVFrameFlag = EASY_SDK_VIDEO_FRAME_FLAG;
-				avFrame.u32AVFrameLen = frameinfo->length;
-				avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
-				avFrame.u32VFrameType = (frameinfo->type == EASY_SDK_VIDEO_FRAME_I) ? EASY_SDK_VIDEO_FRAME_I : EASY_SDK_VIDEO_FRAME_P;
+				avFrame.u32AVFrameLen = iAACBufferLen;
+				avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbAACBuffer);
+				avFrame.u32VFrameType = frameinfo->type;
+				avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
+				avFrame.u32TimestampSec = frameinfo->timestamp_sec;
+				avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
 				EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
 			}
 		}
 	}
-	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG)
+}
+
+QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RTSP_FRAME_INFO *frameinfo)
+{
+	if (mediatype == EASY_SDK_VIDEO_FRAME_FLAG && frameinfo && frameinfo->length)
+	{
+		//printf("Get video Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
+		//RTMP ONLY SUPPORT H.264 YET
+		pushVideo(pbuf, frameinfo);
+	}
+	else if (mediatype == EASY_SDK_AUDIO_FRAME_FLAG && frameinfo && frameinfo->length)
 	{
 		//printf("Get Audio Len:%d tm:%u.%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec);
 
-		if (fRTMPHandle == nullptr) return 0;
-
-		if (frameinfo && frameinfo->length && (frameinfo->codec == EASY_SDK_AUDIO_CODEC_AAC))
-		{
-			EASY_AV_Frame  avFrame;
-			memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-			avFrame.u32AVFrameLen = frameinfo->length;
-			avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbuf);
-			avFrame.u32VFrameType = frameinfo->type;
-			avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
-			avFrame.u32TimestampSec = frameinfo->timestamp_sec;
-			avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
-			EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
-		}
-
-		//printf("Get Audio \tLen:%d \ttm:%u.%u \t%u\n", frameinfo->length, frameinfo->timestamp_sec, frameinfo->timestamp_usec, llPTS);
-		if (frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711A || frameinfo->codec == EASY_SDK_AUDIO_CODEC_G711U)
-		{
-			if (EasyInitAACEncoder(frameinfo->codec) == QTSS_NoErr)
-			{
-				memset(pbAACBuffer, 0, EASY_ACCENCODER_BUFFER_SIZE_LEN);
-				unsigned int iAACBufferLen = 0;
-				if (Easy_AACEncoder_Encode(fAAChandle, reinterpret_cast<unsigned char*>(pbuf), frameinfo->length, pbAACBuffer, &iAACBufferLen) > 0)
-				{
-					EASY_AV_Frame avFrame;
-					memset(&avFrame, 0x00, sizeof(EASY_AV_Frame));
-					avFrame.u32AVFrameLen = iAACBufferLen;
-					avFrame.pBuffer = reinterpret_cast<unsigned char*>(pbAACBuffer);
-					avFrame.u32VFrameType = frameinfo->type;
-					avFrame.u32AVFrameFlag = EASY_SDK_AUDIO_FRAME_FLAG;
-					avFrame.u32TimestampSec = frameinfo->timestamp_sec;
-					avFrame.u32TimestampUsec = frameinfo->timestamp_usec;
-					EasyRTMP_SendPacket(fRTMPHandle, &avFrame);
-				}
-			}
-		}
+		pushAudio(pbuf, frameinfo);
 
 	}
 	else if (mediatype == EASY_SDK_MEDIA_INFO_FLAG)
@@ -207,7 +216,6 @@ QTSS_Error EasyRTMPSession::ProcessData(int _chid, int mediatype, char *pbuf, RT
 	}
 	else if (mediatype == EASY_SDK_EVENT_FRAME_FLAG)
 	{
-		;
 	}
 
 	return QTSS_NoErr;
