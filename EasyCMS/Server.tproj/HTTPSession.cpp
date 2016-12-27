@@ -240,7 +240,10 @@ SInt64 HTTPSession::Run()
 			{
 				fTimeoutTask.RefreshTimeout();
 
-				addDevice();
+				if (fSessionType != EasyHTTPSession && !device_->serial_.empty())
+				{
+					addDevice();
+				}
 
 				QTSS_Error theErr = setupRequest();
 
