@@ -244,17 +244,7 @@ SInt64 HTTPSession::Run()
 			{
 				fTimeoutTask.RefreshTimeout();
 
-				/*if (fSessionType != EasyHTTPSession && !device_->serial_.empty())
-				{
-					QTSS_RoleParams theParams;
-					theParams.DeviceInfoParams.inDevice = &device_;
-					UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetDeviceRole);
-					for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
-					{
-						QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetDeviceRole, currentModule);
-						(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
-					}
-				}*/
+				addDevice();
 
 				QTSS_Error theErr = setupRequest();
 
@@ -744,6 +734,10 @@ QTSS_Error HTTPSession::execNetMsgErrorReqHandler(HTTPStatusCode errCode)
 void HTTPSession::addDevice() const
 {
 	QTSS_RoleParams theParams;
+	theParams.DeviceInfoParams.serial_ = new char[64];
+	theParams.DeviceInfoParams.token_ = new char[64];
+	theParams.DeviceInfoParams.type_ = new char[64];
+	theParams.DeviceInfoParams.token_ = new char[64];
 	strncpy(theParams.DeviceInfoParams.serial_, device_->serial_.c_str(), device_->serial_.size());
 	strncpy(theParams.DeviceInfoParams.token_, device_->password_.c_str(), device_->password_.size());
 	string type, channel;
@@ -783,6 +777,11 @@ void HTTPSession::addDevice() const
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetDeviceRole, currentModule);
 		(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
 	}
+
+	delete theParams.DeviceInfoParams.serial_;
+	delete theParams.DeviceInfoParams.token_;
+	delete theParams.DeviceInfoParams.type_;
+	delete theParams.DeviceInfoParams.token_;
 }
 
 /*
