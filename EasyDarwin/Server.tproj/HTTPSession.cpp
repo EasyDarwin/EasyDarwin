@@ -1287,6 +1287,8 @@ QTSS_Error HTTPSession::execNetMsgCSLiveDeviceStreamReqRESTful(const char * quer
 		params.easyGetDeviceStreamParams.inChannel = theChannelNum;
 		params.easyGetDeviceStreamParams.inStreamType = streamType;
 		params.easyGetDeviceStreamParams.outUrl = nullptr;
+		params.easyGetDeviceStreamParams.outIsReady = false;
+
 
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kLiveDeviceStreamRole);
 		for (UInt32 fCurrentModule = 0; fCurrentModule < numModules; fCurrentModule++)

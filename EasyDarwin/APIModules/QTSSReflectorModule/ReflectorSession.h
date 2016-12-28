@@ -39,7 +39,7 @@
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "Task.h"//add
-#include "RtspRecordSession.h"
+#include "RTSPRecordSession.h"
 #include <atomic>
 
 #ifndef _FILE_DELETER_
@@ -205,7 +205,7 @@ private:
 	bool		fHasBufferedStreams;
 	bool		fHasVideoKeyFrameUpdate;
 
-	RtspRecordSession	*_recordWriter;
+	RTSPRecordSession	*_recordWriter;
 private:
 	virtual SInt64 Run();
 };

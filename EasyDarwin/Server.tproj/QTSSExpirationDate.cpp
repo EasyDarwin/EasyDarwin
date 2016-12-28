@@ -29,11 +29,7 @@
 
 	 Written by: Denis Serenyi
 
-	 Copyright:  ?1998 by Apple Computer, Inc., all rights reserved.
-
-
-
-
+	 Copyright:  @1998 by Apple Computer, Inc., all rights reserved.
  */
 
 #include "QTSSExpirationDate.h"
@@ -44,14 +40,14 @@
 #include <time.h>
 
 
-bool  QTSSExpirationDate::sIsExpirationEnabled = false;
+bool  QTSSExpirationDate::sIsExpirationEnabled = true;
 //must be in "5/12/1998" format, "m/d/4digityear"
-char*   QTSSExpirationDate::sExpirationDate = "3/15/2002";
+char*   QTSSExpirationDate::sExpirationDate = "12/31/2017";
 
 void QTSSExpirationDate::PrintExpirationDate()
 {
 	if (sIsExpirationEnabled)
-		qtss_printf("Software expires on: %s\n", sExpirationDate);
+		qtss_printf("Software expires on: %s ,Get latest version on www.EasyDarwin.org\n", sExpirationDate);
 }
 
 void QTSSExpirationDate::sPrintExpirationDate(char* ioExpireMessage)

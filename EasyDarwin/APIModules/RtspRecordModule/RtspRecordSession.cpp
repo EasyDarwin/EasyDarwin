@@ -1,4 +1,4 @@
-#include "RtspRecordSession.h"
+#include "RTSPRecordSession.h"
 #include <windows.h>
 #include "QTSServerInterface.h"
 #include "QTSSModuleUtils.h"
@@ -9,7 +9,7 @@ static char*            sDefaultHttpDir = "http://127.0.0.1/Movies";
 static char*            sRecordDir = "./Movies";
 static char*            sDefaultRecordDir = "./Movies";
 
-void RtspRecordSession::Initialize(QTSS_ModulePrefsObject inPrefs)
+void RTSPRecordSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 {
 	sHttpDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "HTTP_ROOT_DIR", sDefaultHttpDir);
 	sRecordDir = QTSSModuleUtils::GetStringAttribute(inPrefs, "Record_DIR", sDefaultRecordDir);
@@ -18,7 +18,7 @@ void RtspRecordSession::Initialize(QTSS_ModulePrefsObject inPrefs)
 
 DWORD WINAPI ProcessData(LPVOID lpParam)
 {
-	RtspRecordSession *session = (RtspRecordSession *)lpParam;
+	RTSPRecordSession *session = (RTSPRecordSession *)lpParam;
 	while (true) {
 		if (!session->readFrame()) {
 			break;
@@ -30,7 +30,7 @@ DWORD WINAPI ProcessData(LPVOID lpParam)
 
 DWORD WINAPI ProcessStart(LPVOID lpParam)
 {
-	RtspRecordSession *session = (RtspRecordSession *)lpParam;
+	RTSPRecordSession *session = (RTSPRecordSession *)lpParam;
 	
 	session->rtspRead();
 	
@@ -39,14 +39,14 @@ DWORD WINAPI ProcessStart(LPVOID lpParam)
 
 DWORD WINAPI ProcessEnd(LPVOID lpParam)
 {
-	RtspRecordSession *session = (RtspRecordSession *)lpParam;
+	RTSPRecordSession *session = (RTSPRecordSession *)lpParam;
 
 	session->close();
 
 	return 0;
 }
 
-RtspRecordSession::RtspRecordSession()
+RTSPRecordSession::RTSPRecordSession()
 	: m_url(""),
 	m_pMP4Writer(NULL),
 	m_bRecording(false),
@@ -56,17 +56,17 @@ RtspRecordSession::RtspRecordSession()
 
 }
 
-RtspRecordSession::~RtspRecordSession() {
+RTSPRecordSession::~RTSPRecordSession() {
 	close();
 }
 
-void RtspRecordSession::init() {
+void RTSPRecordSession::init() {
 	av_register_all();//注册组件
 	avformat_network_init();//支持网络流
 	m_pFormatContext = avformat_alloc_context();//初始化AVFormatContext
 }
 
-int RtspRecordSession::rtspRead() {
+int RTSPRecordSession::rtspRead() {
 
 	AVDictionary* options = NULL;
 	av_dict_set(&options, "rtsp_transport", "tcp", 0);
@@ -127,7 +127,7 @@ int RtspRecordSession::rtspRead() {
 
 	hThread = CreateThread(NULL, 0, ProcessData, this, 0, NULL);
 }
-int RtspRecordSession::play(const string& url,const string& subName) {
+int RTSPRecordSession::play(const string& url,const string& subName) {
 
 	fSubName = subName.substr(0,subName.size() - 6);
 	sUri = url.substr(0, url.size() - 2);
@@ -138,7 +138,7 @@ int RtspRecordSession::play(const string& url,const string& subName) {
 	
 }
 
-bool RtspRecordSession::readFrame() {
+bool RTSPRecordSession::readFrame() {
 	OSMutex *mutex = &fMutex;
 	if (!mutex->TryLock()) {
 		return true;
@@ -195,7 +195,7 @@ bool RtspRecordSession::readFrame() {
 	return true;
 }
 
-void RtspRecordSession::close() {
+void RTSPRecordSession::close() {
 
 	if (bPlaying) {
 		bPlaying = false;
@@ -217,7 +217,7 @@ void RtspRecordSession::close() {
 	}
 }
 
-void RtspRecordSession::stop(){
+void RTSPRecordSession::stop(){
 
 	hThread = CreateThread(NULL, 0, ProcessEnd, this, 0, NULL);
 	
@@ -225,7 +225,7 @@ void RtspRecordSession::stop(){
 }
 	
 
-int RtspRecordSession::CreateNewMp4Writer(int sample_rate,int channels) {
+int RTSPRecordSession::CreateNewMp4Writer(int sample_rate,int channels) {
 
 	
 	if (!bPlaying) {
@@ -262,7 +262,7 @@ int RtspRecordSession::CreateNewMp4Writer(int sample_rate,int channels) {
 }
 
 //写MP4文件(录制相关)
-int RtspRecordSession::CreateMP4Writer(char* sFileName,  int nSampleRate, int nChannel, int nBitsPerSample, int nFlag)
+int RTSPRecordSession::CreateMP4Writer(char* sFileName,  int nSampleRate, int nChannel, int nBitsPerSample, int nFlag)
 {
 	if (m_bRecording)
 	{
@@ -317,7 +317,7 @@ int RtspRecordSession::CreateMP4Writer(char* sFileName,  int nSampleRate, int nC
 	return 1;
 }
 
-int RtspRecordSession::WriteMP4VideoFrame(unsigned char* pdata, int datasize, bool keyframe, long nTimestamp, int nWidth, int nHeight)
+int RTSPRecordSession::WriteMP4VideoFrame(unsigned char* pdata, int datasize, bool keyframe, long nTimestamp, int nWidth, int nHeight)
 {
 
 	{
@@ -330,7 +330,7 @@ int RtspRecordSession::WriteMP4VideoFrame(unsigned char* pdata, int datasize, bo
 	return 1;
 }
 
-int RtspRecordSession::WriteMP4AudioFrame(unsigned char* pdata, int datasize, long timestamp)
+int RTSPRecordSession::WriteMP4AudioFrame(unsigned char* pdata, int datasize, long timestamp)
 {
 
 	{
@@ -345,7 +345,7 @@ int RtspRecordSession::WriteMP4AudioFrame(unsigned char* pdata, int datasize, lo
 
 	return 0;
 }
-void RtspRecordSession::CloseMP4Writer()
+void RTSPRecordSession::CloseMP4Writer()
 {
 	//fclose(h264);
 	m_bRecording = 0;
@@ -362,10 +362,10 @@ void RtspRecordSession::CloseMP4Writer()
 
 }
 
-char *RtspRecordSession::getRecordRootPath() {
+char *RTSPRecordSession::getRecordRootPath() {
 	return sRecordDir;
 }
 
-char *RtspRecordSession::getNetRecordRootPath() {
+char *RTSPRecordSession::getNetRecordRootPath() {
 	return sHttpDir;
 }

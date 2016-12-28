@@ -53,7 +53,6 @@
 #include "QTSServer.h"
 
 #include <stdlib.h>
-#include <sys/stat.h>
 #include <QTSSModuleUtils.h>
 
 QTSServer* sServer = NULL;

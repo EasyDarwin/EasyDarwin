@@ -198,7 +198,7 @@ QTSS_Error ReflectorSession::StartRecordSession()
 		char url[QTSS_MAX_URL_LENGTH] = { 0 };
 		qtss_sprintf(url, "rtsp://127.0.0.1:%d/%s", thePort, fSourceID.Ptr);
 		if (_recordWriter) {
-			_recordWriter = new RtspRecordSession();
+			_recordWriter = new RTSPRecordSession();
 		}
 		_recordWriter->init();
 		_recordWriter->play(url, fSourceID.Ptr);

@@ -29,12 +29,11 @@
 
 #include "getopt.h"
 #include "FilePrefsSource.h"
-
 #include "RunServer.h"
 #include "QTSServer.h"
 #include "QTSSExpirationDate.h"
 #include "GenerateXMLPrefs.h"
- //
+
  // Data
 static FilePrefsSource sPrefsSource(true); // Allow dups
 static XMLPrefsParser* sXMLParser = NULL;
@@ -44,7 +43,6 @@ static int sStatsUpdateInterval = 0;
 static SERVICE_STATUS_HANDLE sServiceStatusHandle = 0;
 static QTSS_ServerState sInitialState = qtssRunningState;
 
-//
 // Functions
 static void ReportStatus(DWORD inCurrentState, DWORD inExitCode);
 static void InstallService(char* inServiceName);
@@ -53,10 +51,8 @@ static void RunAsService(char* inServiceName);
 void WINAPI ServiceControl(DWORD);
 void WINAPI ServiceMain(DWORD argc, LPTSTR *argv);
 
-
 int main(int argc, char * argv[])
 {
-
 	extern char* optarg;
 	char sAbsolutePath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, sAbsolutePath);
@@ -91,7 +87,8 @@ int main(int argc, char * argv[])
 		{
 		case 'v':
 
-			qtss_printf("%s/%s ( Build/%s; Platform/%s; %s%s) Built on: %s\n", QTSServerInterface::GetServerName().Ptr,
+			qtss_printf("%s/%s ( Build/%s; Platform/%s; %s%s) Built on: %s\n", 
+				QTSServerInterface::GetServerName().Ptr,
 				QTSServerInterface::GetServerVersion().Ptr,
 				QTSServerInterface::GetServerBuild().Ptr,
 				QTSServerInterface::GetServerPlatform().Ptr,
@@ -158,7 +155,6 @@ int main(int argc, char * argv[])
 
 	//
 	// Check expiration date
-
 	QTSSExpirationDate::PrintExpirationDate();
 	if (QTSSExpirationDate::IsSoftwareExpired())
 	{

@@ -1216,6 +1216,7 @@ typedef struct
 	UInt32						inChannel;
 	EasyStreamType				inStreamType;
 	char*						outUrl;
+	bool						outIsReady;
 }Easy_GetDeviceStream_Params;
 
 //redis module

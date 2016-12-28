@@ -167,6 +167,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 		if (sessionRef != nullptr)
 		{
 			rtmpSe = static_cast<EasyRTMPSession*>(sessionRef->GetObject());
+			inParams->outIsReady = true;
 		}
 		else
 		{
