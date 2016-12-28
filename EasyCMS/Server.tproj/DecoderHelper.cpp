@@ -1,24 +1,14 @@
 /*
-	Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	Copyright (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
 	Github: https://github.com/EasyDarwin
 	WEChat: EasyDarwin
-	Website: http://www.EasyDarwin.org
+	Website: http://www.easydarwin.org
 */
 #include "DecoderHelper.h"
 
+
+
 DecoderHelper::DecoderHelper()
-	: _formatContext(NULL),
-	_videoCodecContext(NULL),
-	_videoFrame420(NULL),
-	_swsContext(NULL),
-	_buffYUV420(NULL),
-	_buffYUV(NULL),
-	_avframeYUV(NULL),
-	_avframeSWS(NULL),
-	_codec(0),
-	_width(0),
-	_height(0),
-	_outputFormat(0)
 {
 	//Register all the codec
 	avcodec_register_all();
@@ -33,50 +23,50 @@ DecoderHelper::~DecoderHelper()
 
 int DecoderHelper::SetVideoDecoderParam(int width, int height, int codec, int format)
 {
-	if (_width != width || _height != height || _codec != codec)
+	if (width_ != width || height_ != height || codec_ != codec)
 	{
 		releaseVideoDecoder();
 	}
 
-	if (NULL != _videoCodecContext)
+	if (videoCodecContext_)
 	{
 		return -1;
 	}
 
-	AVCodec* avcodec = avcodec_find_decoder((AVCodecID)codec);
-	if (NULL == avcodec)
+	AVCodec* avcodec = avcodec_find_decoder(static_cast<AVCodecID>(codec));
+	if (!avcodec)
 	{
 		return -1;
 	}
 
-	_videoCodecContext = avcodec_alloc_context3(avcodec);
-	_videoCodecContext->pix_fmt = AV_PIX_FMT_YUV420P;
-	_videoCodecContext->width   = width;
-	_videoCodecContext->height  = height;
+	videoCodecContext_ = avcodec_alloc_context3(avcodec);
+	videoCodecContext_->pix_fmt = AV_PIX_FMT_YUV420P;
+	videoCodecContext_->width = width;
+	videoCodecContext_->height = height;
 
-	int numBytes = 0;
-	int ret = avcodec_open2(_videoCodecContext, avcodec, NULL);
-	
+	int numBytes;
+	int ret = avcodec_open2(videoCodecContext_, avcodec, nullptr);
+
 	if (ret < 0)
 	{
 		goto $fail;
 	}
 
 	numBytes = avpicture_get_size(AV_PIX_FMT_YUV420P, width, height);
-	_buffYUV420 = (uint8_t *)av_malloc(numBytes * sizeof(uint8_t));
-	_videoFrame420 = av_frame_alloc();
-	if (avpicture_fill((AVPicture *)_videoFrame420, _buffYUV420, AV_PIX_FMT_YUV420P,
-		_width, _height) < 0)
+	buffYUV420_ = static_cast<uint8_t *>(av_malloc(numBytes * sizeof(uint8_t)));
+	videoFrame420_ = av_frame_alloc();
+	if (avpicture_fill(reinterpret_cast<AVPicture *>(videoFrame420_), buffYUV420_, AV_PIX_FMT_YUV420P,
+		width_, height_) < 0)
 	{
 
 	}
 
-	av_init_packet(&_videoAVPacket);
-	_width = width;
-	_height = height;
-	_codec = codec;
-	_outputFormat = format;
-	
+	av_init_packet(&videoAVPacket_);
+	width_ = width;
+	height_ = height;
+	codec_ = codec;
+	outputFormat_ = format;
+
 	return 0;
 
 $fail:
@@ -88,102 +78,102 @@ $fail:
 
 int DecoderHelper::DecodeVideo(char* inBuff, int inBuffSize, void* yuvBuff, int width, int height)
 {
-	if (NULL == inBuff)			return -1;
+	if (nullptr == inBuff)			return -1;
 	if (1 > inBuffSize)			return -1;
-	if (NULL == yuvBuff)		return -1;
-	if (NULL == _videoCodecContext)		return -2;
+	if (nullptr == yuvBuff)		return -1;
+	if (nullptr == videoCodecContext_)		return -2;
 
-	_videoAVPacket.size = inBuffSize;
-	_videoAVPacket.data	= (uint8_t*)inBuff;
+	videoAVPacket_.size = inBuffSize;
+	videoAVPacket_.data = reinterpret_cast<uint8_t*>(inBuff);
 
 	int frameFinished = 0;
-	int nDecode = avcodec_decode_video2(_videoCodecContext, _videoFrame420, &frameFinished, &_videoAVPacket);//(uint8_t*)pInBuffer, inputSize);
+	int nDecode = avcodec_decode_video2(videoCodecContext_, videoFrame420_, &frameFinished, &videoAVPacket_);//(uint8_t*)pInBuffer, inputSize);
 	if (nDecode < 0)	return -3;
 	if (!frameFinished)	return -4;
 
-	if  (width != _width || height != _height)
+	if (width != width_ || height != height_)
 	{
-		if (NULL != _avframeYUV)
+		if (avframeYUV_)
 		{
-			av_frame_free(&_avframeYUV);
-			_avframeYUV = NULL;
+			av_frame_free(&avframeYUV_);
+			avframeYUV_ = nullptr;
 		}
 
-		if (NULL != _swsContext)
+		if (swsContext_)
 		{
-			sws_freeContext(_swsContext);
-			_swsContext = NULL;
+			sws_freeContext(swsContext_);
+			swsContext_ = nullptr;
 		}
 
-		_width = width;
-		_height = height;
+		width_ = width;
+		height_ = height;
 	}
 
-	if (NULL == _avframeYUV)
+	if (nullptr == avframeYUV_)
 	{
-		int numBytes = avpicture_get_size((AVPixelFormat)_outputFormat, width, height);
-		_avframeYUV = av_frame_alloc();
+		int numBytes = avpicture_get_size(static_cast<AVPixelFormat>(outputFormat_), width, height);
+		avframeYUV_ = av_frame_alloc();
 	}
-	if (NULL == _avframeYUV)		return -5;
+	if (nullptr == avframeYUV_)		return -5;
 
-	if (avpicture_fill((AVPicture *)_avframeYUV, (uint8_t*)yuvBuff, (AVPixelFormat)_outputFormat,
+	if (avpicture_fill(reinterpret_cast<AVPicture *>(avframeYUV_), static_cast<uint8_t*>(yuvBuff), static_cast<AVPixelFormat>(outputFormat_),
 		width, height) < 0)
 	{
 		return -1;
 	}
 
-	if (NULL == _swsContext)
+	if (nullptr == swsContext_)
 	{
-		_swsContext = sws_getCachedContext(_swsContext, _videoCodecContext->width, _videoCodecContext->height, (AVPixelFormat)AV_PIX_FMT_YUV420P, 
-			width, height, (AVPixelFormat)_outputFormat, SWS_BICUBIC, NULL, NULL, NULL);
+		swsContext_ = sws_getCachedContext(swsContext_, videoCodecContext_->width, videoCodecContext_->height, static_cast<AVPixelFormat>(AV_PIX_FMT_YUV420P),
+			width, height, static_cast<AVPixelFormat>(outputFormat_), SWS_BICUBIC, nullptr, nullptr, nullptr);
 	}
-	if (NULL == _swsContext)		return -1;
+	if (nullptr == swsContext_)		return -1;
 
-	int ret = sws_scale(_swsContext, _videoFrame420->data, _videoFrame420->linesize, 0, _videoCodecContext->height, 
-		_avframeYUV->data, _avframeYUV->linesize);
+	int ret = sws_scale(swsContext_, videoFrame420_->data, videoFrame420_->linesize, 0, videoCodecContext_->height,
+		avframeYUV_->data, avframeYUV_->linesize);
 
 	return 0;
 }
 
 void DecoderHelper::releaseVideoDecoder()
 {
-	if (NULL != _videoFrame420)
+	if (nullptr != videoFrame420_)
 	{
-		av_frame_free(&_videoFrame420);
-		_videoFrame420 = NULL;
+		av_frame_free(&videoFrame420_);
+		videoFrame420_ = nullptr;
 	}
-	if (NULL != _buffYUV420)
+	if (nullptr != buffYUV420_)
 	{
-		av_free(_buffYUV420);
-		_buffYUV420 = NULL;
+		av_free(buffYUV420_);
+		buffYUV420_ = nullptr;
 	}
-	if (NULL != _avframeSWS)
+	if (nullptr != avframeSWS_)
 	{
-		av_frame_free(&_avframeSWS);
-		_avframeSWS = NULL;
+		av_frame_free(&avframeSWS_);
+		avframeSWS_ = nullptr;
 	}
-	if (NULL != _avframeYUV)
+	if (nullptr != avframeYUV_)
 	{
-		av_frame_free(&_avframeYUV);
-		_avframeYUV = NULL;
+		av_frame_free(&avframeYUV_);
+		avframeYUV_ = nullptr;
 	}
-	if (NULL != _buffYUV)
+	if (nullptr != buffYUV_)
 	{
-		av_free(_buffYUV);
-		_buffYUV = NULL;
-	}
-
-	if (NULL != _swsContext)
-	{
-		sws_freeContext(_swsContext);
-		_swsContext = NULL;
+		av_free(buffYUV_);
+		buffYUV_ = nullptr;
 	}
 
-	if (NULL != _videoCodecContext)
+	if (nullptr != swsContext_)
 	{
-		avcodec_close(_videoCodecContext);
-		av_free(_videoCodecContext);
-		_videoCodecContext = NULL;
+		sws_freeContext(swsContext_);
+		swsContext_ = nullptr;
+	}
+
+	if (nullptr != videoCodecContext_)
+	{
+		avcodec_close(videoCodecContext_);
+		av_free(videoCodecContext_);
+		videoCodecContext_ = nullptr;
 	}
 }
 
