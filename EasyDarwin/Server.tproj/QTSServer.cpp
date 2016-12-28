@@ -65,7 +65,7 @@
 #include "EasyRTMPModule.h"
 #include "EasyCMSModule.h"
 #include "EasyRedisModule.h"
-#include "RtspRecordModule.h"
+#include "RTSPRecordModule.h"
 #ifdef PROXYSERVER
 #include "QTSSProxyModule.h"
 #endif
@@ -773,7 +773,7 @@ void    QTSServer::LoadCompiledInModules()
 	(void)theHLSModule->SetupModule(&sCallbacks, &EasyHLSModule_Main);
 	(void)AddModule(theHLSModule);
 
-	QTSSModule* theRecordModule = new QTSSModule("RtspRecordModule");
+	QTSSModule* theRecordModule = new QTSSModule("RTSPRecordModule");
 	(void)theRecordModule->SetupModule(&sCallbacks, &RtspRecordModule_Main);
 	(void)AddModule(theRecordModule);
 
