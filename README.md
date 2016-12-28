@@ -51,10 +51,10 @@
 - EasyCMS：接口服务端口,10000
 - EasyDarwin：接口服务端口,10008
 - EasyDarwin：RTSP服务端口,10554
-- EasyDarwin：后台管理端口,10080
+- EasyDarwin：RTMP服务端口,10035
+- EasyDarwin：HTTP后台管理端口,10080
 - EasyNVR：接口服务端口,10010
 - EasyNVR：后台管理端口,10080
-
 
 
 ## 平台在线演示客户端 ##
