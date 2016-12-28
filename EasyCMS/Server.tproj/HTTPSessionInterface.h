@@ -111,15 +111,6 @@ protected:
 
     char                fSessionID[QTSS_MAX_SESSION_ID_LENGTH];
 
-    //char				fSerial[EASY_MAX_SERIAL_LENGTH];
-    //StrPtrLen			fDevSerialPtr;
-    //string				fDevSerial;
-    //boost::mutex		fNVROperatorMutex;
-    //boost::mutex		fStreamReqCountMutex;
-    //boost::condition_variable fCond;
-    //EasyNVRMessageQueue fNVRMessageQueue;
-    //OSRef				fDevRef;
-
     TimeoutTask         fTimeoutTask;//allows the session to be timed out
 
     HTTPRequestStream   fInputStream;

@@ -62,7 +62,7 @@ static const int sHeaderSize = 2048;
 static const int sIPSize = 20;
 static const int sPortSize = 6;
 
-#define	_WIDTHBYTES(c)		((c+31)/32*4)	// c = width * bpp
+#define	WIDTHBYTES(c)		((c+31)/32*4)	// c = width * bpp
 #define	SNAP_CAPTURE_TIME	30
 #define SNAP_IMAGE_WIDTH	320
 #define	SNAP_IMAGE_HEIGHT	180
@@ -994,18 +994,17 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 	string decQueryString = EasyUtil::Urldecode(queryString);
 
 	QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
-	const char* chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
-	const char* chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
-	const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
+	auto chSerial = parList.DoFindCGIValueForParam(EASY_TAG_L_DEVICE);//获取设备序列号
+	auto chChannel = parList.DoFindCGIValueForParam(EASY_TAG_L_CHANNEL);//获取通道
+	auto chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
 
-	//为可选参数填充默认值
+	if (chSerial == nullptr || string(chSerial).empty())
+		return QTSS_BadArgument;
+
 	if (!isRightChannel(chChannel))
 		chChannel = "1";
 	if (chReserve == nullptr)
 		chReserve = "1";
-
-	if (chSerial == nullptr)
-		return QTSS_BadArgument;
 
 	string strCSeq = EasyUtil::ToString(GetCSeq());
 	string service;
@@ -1017,7 +1016,23 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 
 	OSRefReleaserEx releaser(deviceMap, chSerial);
 	//走到这说明存在指定设备
-	HTTPSession* pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());//获得当前设备回话
+	auto pDevSession = static_cast<HTTPSession *>(theDevRef->GetObjectPtr());
+
+	auto deviceInfo = pDevSession->GetDeviceInfo();
+
+	if (deviceInfo->eAppType == EASY_APP_TYPE_NVR)
+	{
+		auto& channels = deviceInfo->channels_;
+		if (channels.find(chChannel) == channels.end())
+		{
+			return QTSS_BadArgument;
+		}
+
+		if (channels[chChannel].status_ == string("offline"))
+		{
+			return QTSS_BadArgument;
+		}
+	}
 
 	string strDssIP, strHttpPort, strDssPort;
 	char chDssIP[sIPSize] = { 0 };
@@ -1648,7 +1663,7 @@ int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuv
 
 	dwW = width;
 	dwH = height;
-	dwWB = _WIDTHBYTES(dwW * nBpp);
+	dwWB = WIDTHBYTES(dwW * nBpp);
 
 	// SaveFile to BMP
 	BITMAPFILEHEADER bfh = { 0, };
