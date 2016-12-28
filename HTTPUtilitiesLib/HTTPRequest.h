@@ -76,17 +76,17 @@ public:
 	bool					CreateRequestHeader(HTTPMethod method = httpPostMethod, HTTPVersion version = http11Version);
 
 	// To append response header fields as appropriate
-	void                    AppendResponseHeader(HTTPHeader inHeader, StrPtrLen* inValue);
-	void                    AppendDateAndExpiresFields();
-	void                    AppendDateField();
-	void                    AppendConnectionCloseHeader();
-	void                    AppendConnectionKeepAliveHeader();
-	void                    AppendContentLengthHeader(UInt64 length_64bit);
-	void                    AppendContentLengthHeader(UInt32 length_32bit);
+	void                    AppendResponseHeader(HTTPHeader inHeader, StrPtrLen* inValue) const;
+	void                    AppendDateAndExpiresFields() const;
+	void                    AppendDateField() const;
+	void                    AppendConnectionCloseHeader() const;
+	void                    AppendConnectionKeepAliveHeader() const;
+	void                    AppendContentLengthHeader(UInt64 length_64bit) const;
+	void                    AppendContentLengthHeader(UInt32 length_32bit) const;
 
 	// Returns the completed response header by appending CRLF to the end of the header
 	// fields buffer
-	StrPtrLen*              GetCompleteHTTPHeader();
+	StrPtrLen*              GetCompleteHTTPHeader() const;
 
 	// Parse if-modified-since header
 	time_t                  ParseIfModSinceHeader();
@@ -105,9 +105,9 @@ private:
 	// Sets fRequestKeepAlive
 	void                    setKeepAlive(StrPtrLen* keepAliveValue);
 	// Used in initialize and CreateResponseHeader
-	void                    putStatusLine(StringFormatter* putStream, HTTPStatusCode status, HTTPVersion version);
+	static void                    putStatusLine(StringFormatter* putStream, HTTPStatusCode status, HTTPVersion version);
 	// Used in initialize and CreateRequestHeader
-	void					putMethedLine(StringFormatter* putStream, HTTPMethod method, HTTPVersion version);
+	static void					putMethedLine(StringFormatter* putStream, HTTPMethod method, HTTPVersion version);
 	//For writing into the premade headers
 	StrPtrLen*              getServerHeader() { return &fSvrHeader; }
 
