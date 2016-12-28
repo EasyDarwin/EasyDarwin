@@ -16,10 +16,10 @@ extern "C" {
 #include "EasyMP4Writer.h"
 using namespace std;
 #define SWAP(x,y)   ((x)^=(y)^=(x)^=(y))
-class RtspRecordSession {
+class RTSPRecordSession {
 public:
-	RtspRecordSession();
-	~RtspRecordSession();
+	RTSPRecordSession();
+	~RTSPRecordSession();
 	static void Initialize(QTSS_ModulePrefsObject inPrefs);
 	void init();
 	int play(const string& url,const string& subName);

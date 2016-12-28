@@ -49,7 +49,7 @@
 
 #include "ReflectorSession.h"
 #include "SearchFileDir.h"
-#include "RtspRecordSession.h"
+#include "RTSPRecordSession.h"
 
 using namespace EasyDarwin::Protocol;
 using namespace std;
@@ -1052,7 +1052,7 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 
 void *QTSSCallbacks::Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime) {
 
-	char * rootdir = RtspRecordSession::getNetRecordRootPath();
+	char * rootdir = RTSPRecordSession::getNetRecordRootPath();
 
 	EasyMsgSCRecordList ack;
 	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
@@ -1063,7 +1063,7 @@ void *QTSSCallbacks::Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 star
 	//UInt32 pathLen = QTSS_MAX_NAME_LENGTH;
 	//QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
 
-	char *movieFolder = RtspRecordSession::getRecordRootPath();
+	char *movieFolder = RTSPRecordSession::getRecordRootPath();
 
 	char httpRoot[QTSS_MAX_NAME_LENGTH] = { 0 };
 

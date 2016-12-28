@@ -1,6 +1,6 @@
 #include "RTSPRecordModule.h"
 #include "QTSSModuleUtils.h"
-#include "RtspRecordSession.h"
+#include "RTSPRecordSession.h"
 
 // FUNCTION PROTOTYPES
 static QTSS_Error RTSPRecordModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParams);
@@ -33,7 +33,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	QTSS_ModulePrefsObject sModulePrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 
 	// Call helper class initializers
-	RtspRecordSession::Initialize(sModulePrefs);
+	RTSPRecordSession::Initialize(sModulePrefs);
 
 	return QTSS_NoErr;
 }
