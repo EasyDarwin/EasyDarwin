@@ -1103,7 +1103,6 @@ QTSS_Error HTTPSession::execNetMsgCSRestartServiceRESTful(const char* queryStrin
 #else
 	exit(0);
 #endif //__WIN32__
-
 }
 
 QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryString)
@@ -1135,6 +1134,8 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 	char* outURL = new char[QTSS_MAX_URL_LENGTH];
 	outURL[0] = '\0';
 	QTSSCharArrayDeleter theHLSURLDeleter(outURL);
+
+	bool outIsReady = false;
 
 	int theErr = EASY_ERROR_SERVER_NOT_IMPLEMENTED;
 
@@ -1183,7 +1184,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 		params.easyGetDeviceStreamParams.inChannel = theChannelNum;
 		params.easyGetDeviceStreamParams.inStreamType = streamType;
 		params.easyGetDeviceStreamParams.outUrl = outURL;
-
+		params.easyGetDeviceStreamParams.outIsReady = false;
 
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kGetDeviceStreamRole);
 		for (UInt32 fCurrentModule = 0; fCurrentModule < numModules; fCurrentModule++)
@@ -1193,11 +1194,10 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 			if (exeErr == QTSS_NoErr)
 			{
 				theErr = EASY_ERROR_SUCCESS_OK;
+				outIsReady = params.easyGetDeviceStreamParams.outIsReady;
 				break;
 			}
 		}
-
-
 	} while (false);
 
 
@@ -1213,6 +1213,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceStreamReqRESTful(const char* queryS
 	{
 		body[EASY_TAG_URL] = outURL;
 		body[EASY_TAG_PROTOCOL] = HTTPProtocol::GetStreamTypeStream(streamType)->Ptr;
+		body[EASY_TAG_IS_READY] = outIsReady;
 	}
 
 	rsp.SetHead(header);
@@ -1288,7 +1289,6 @@ QTSS_Error HTTPSession::execNetMsgCSLiveDeviceStreamReqRESTful(const char * quer
 		params.easyGetDeviceStreamParams.inStreamType = streamType;
 		params.easyGetDeviceStreamParams.outUrl = nullptr;
 		params.easyGetDeviceStreamParams.outIsReady = false;
-
 
 		UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kLiveDeviceStreamRole);
 		for (UInt32 fCurrentModule = 0; fCurrentModule < numModules; fCurrentModule++)
