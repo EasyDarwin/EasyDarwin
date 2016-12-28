@@ -763,7 +763,7 @@ void HTTPSession::addDevice() const
 	strncpy(theParams.DeviceInfoParams.type_, type.c_str(), type.size() + 1);
 
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetDeviceRole);
-	for (UInt32 currentModule = 0; currentModule < numModules; currentModule++)
+	for (UInt32 currentModule = 0; currentModule < numModules;)
 	{
 		QTSSModule* theModule = QTSServerInterface::GetModule(QTSSModule::kRedisSetDeviceRole, currentModule);
 		(void)theModule->CallDispatch(Easy_RedisSetDevice_Role, &theParams);
@@ -1292,14 +1292,13 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 
 	OSMutex* mutexMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMutex();
 	OSHashMap* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap()->GetMap();
-	OSRefIt itRef;
 	Json::Value* proot = rsp.GetRoot();
 
 	{
 		OSMutexLocker lock(mutexMap);
 		int iDevNum = 0;
 
-		for (itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
+		for (auto itRef = deviceMap->begin(); itRef != deviceMap->end(); ++itRef)
 		{
 			auto deviceInfo = static_cast<HTTPSession*>(itRef->second->GetObjectPtr())->GetDeviceInfo();
 			if (chAppType != nullptr)// AppType fileter
@@ -1360,13 +1359,12 @@ QTSS_Error HTTPSession::execNetMsgCSDeviceListReq(const char* json)//¿Í»§¶Ë»ñµÃÉ
 	OSRefTableEx* deviceMap = QTSServerInterface::GetServer()->GetDeviceSessionMap();
 	OSMutex* mutexMap = deviceMap->GetMutex();
 	OSHashMap* deviceHashMap = deviceMap->GetMap();
-	OSRefIt itRef;
 	Json::Value* proot = rsp.GetRoot();
 
 	{
 		OSMutexLocker lock(mutexMap);
 		body[EASY_TAG_DEVICE_COUNT] = deviceMap->GetEleNumInMap();
-		for (itRef = deviceHashMap->begin(); itRef != deviceHashMap->end(); ++itRef)
+		for (auto itRef = deviceHashMap->begin(); itRef != deviceHashMap->end(); ++itRef)
 		{
 			Json::Value value;
 			auto deviceInfo = static_cast<HTTPSession*>(itRef->second->GetObjectPtr())->GetDeviceInfo();
