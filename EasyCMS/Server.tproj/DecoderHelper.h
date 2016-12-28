@@ -3,17 +3,12 @@
 
 #define __STDC_CONSTANT_MACROS
 
-extern "C" 
+extern "C"
 {
-#ifndef __linux__
-#include <inttypes.h>
-#endif
-#include "libavcodec/avcodec.h"
-#include "libavformat/avformat.h"
-#include "libavutil/avutil.h"
-#include "libavutil/imgutils.h"
-#include "libswresample/swresample.h"
-#include "libswscale/swscale.h"
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libswresample/swresample.h>
+#include <libswscale/swscale.h>
 }
 
 class DecoderHelper
@@ -22,30 +17,30 @@ public:
 	DecoderHelper();
 	~DecoderHelper();
 
-	int		SetVideoDecoderParam(int width, int height, int codec, int format);
-	int		DecodeVideo(char* inBuff, int inBuffSize, void* yuvBuff, int width, int height);
+	int SetVideoDecoderParam(int width, int height, int codec, int format);
+	int DecodeVideo(char* inBuff, int inBuffSize, void* yuvBuff, int width, int height);
 
 private:
-	void	releaseVideoDecoder();
+	void releaseVideoDecoder();
 
-private:
-	AVFormatContext*	_formatContext;
-	AVCodecContext*		_videoCodecContext;
-	AVFrame*			_videoFrame420;
+	AVFormatContext* formatContext_ = nullptr;
+	AVCodecContext* videoCodecContext_ = nullptr;
+	AVFrame* videoFrame420_ = nullptr;
 
-	struct SwsContext*	_swsContext;
-	uint8_t*			_buffYUV420;
-	AVPacket			_videoAVPacket;
+	SwsContext*	swsContext_ = nullptr;
+	uint8_t* buffYUV420_ = nullptr;
 
-	uint8_t*			_buffYUV;
-	AVFrame*			_avframeYUV;
+	AVPacket videoAVPacket_;
 
-	AVFrame*			_avframeSWS;
+	uint8_t* buffYUV_ = nullptr;
+	AVFrame* avframeYUV_ = nullptr;
 
-	int					_codec;
-	int					_width;
-	int					_height;
-	int					_outputFormat;
+	AVFrame* avframeSWS_ = nullptr;
+
+	int codec_ = 0;
+	int width_ = 0;
+	int height_ = 0;
+	int outputFormat_ = 0;
 
 };
 

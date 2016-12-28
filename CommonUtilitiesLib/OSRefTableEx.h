@@ -5,7 +5,6 @@
 //注意这个类是后来加上的，不是Darwin自带的
 
 #include <unordered_map>
-#include <string>
 
 using namespace std;
 
@@ -40,7 +39,7 @@ public:
 	OS_Error TryUnRegister(const string& key);//尝试移除，如果引用为0,则移除并返回true，否则返回false
 	int GetEleNumInMap() const { return m_Map.size(); }//获得map中的元素个数
 	OSMutex *GetMutex() { return &m_Mutex; }//给外面提供互斥接口
-	unordered_map<string, OSRefEx*> *GetMap() { return &m_Map; }
+	unordered_map<string, OSRefEx*>* GetMap() { return &m_Map; }
 
 private:
 	unordered_map<string, OSRefEx*> m_Map;//以string为key，以OSRefEx为value
