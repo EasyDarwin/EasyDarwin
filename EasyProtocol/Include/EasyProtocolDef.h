@@ -230,6 +230,7 @@
 #define EASY_TAG_HTTP_METHOD							"Method"
 #define EASY_TAG_HTTP_GET								"GET"
 #define EASY_TAG_HTTP_POST								"POST"
+#define EASY_TAG_IS_READY								"IsReady"
 
 /*!
 \}
