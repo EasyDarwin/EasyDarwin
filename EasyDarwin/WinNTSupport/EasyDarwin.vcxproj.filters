@@ -244,10 +244,10 @@
     <ClCompile Include="..\APIModules\RtspRecordModule\EasyMP4Writer.cpp">
       <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordSession.cpp">
+    <ClCompile Include="..\APIModules\RTSPRecordModule\RTSPRecordModule.cpp">
       <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\RtspRecordModule\RtspRecordModule.cpp">
+    <ClCompile Include="..\APIModules\RTSPRecordModule\RTSPRecordSession.cpp">
       <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
     </ClCompile>
   </ItemGroup>
@@ -291,13 +291,13 @@
     <ClInclude Include="..\APIModules\RtspRecordModule\EasyMP4Writer.h">
       <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
     </ClInclude>
-    <ClInclude Include="..\APIModules\RtspRecordModule\RtspRecordModule.h">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\APIModules\RtspRecordModule\RtspRecordSession.h">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClInclude>
     <ClInclude Include="..\FileBrowserUtils\SearchFileDir.h">
+      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\RTSPRecordModule\RTSPRecordModule.h">
+      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\RTSPRecordModule\RTSPRecordSession.h">
       <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
     </ClInclude>
   </ItemGroup>
