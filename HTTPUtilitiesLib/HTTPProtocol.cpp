@@ -59,6 +59,7 @@ HTTPMethod HTTPProtocol::GetMethod(const StrPtrLen* inMethodStr)
 	case 'D':       theMethod = httpDeleteMethod; break;
 	case 'T':       theMethod = httpTraceMethod; break;
 	case 'C':       theMethod = httpConnectMethod; break;
+	default: break;
 	}
 
 	if ((theMethod != httpIllegalMethod) && (inMethodStr->Equal(sMethods[theMethod])))
@@ -155,6 +156,7 @@ HTTPHeader HTTPProtocol::GetHeader(const StrPtrLen* inHeaderStr)
 	case 'L':       case 'l':       theHeader = httpLastModifiedHeader; break;
 		// Added this to optimize for HTTP tunnelling in the server (Not really a VIP header)
 	case 'X':       case 'x':       theHeader = httpSessionCookieHeader; break;
+	default: break;
 	}
 
 	if ((theHeader != httpIllegalHeader) &&
