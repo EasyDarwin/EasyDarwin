@@ -16,7 +16,6 @@
 #include "QTSSModuleUtils.h"
 #include "MyAssert.h"
 #include "OSMutex.h"
-#include "OSMemory.h"
 #include "StrPtrLen.h"
 #include "OSRef.h"
 #include "EasyRTMPAPI.h"

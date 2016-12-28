@@ -14,7 +14,7 @@ int Easy_APICALL EasyRTSPClientCallBack(int _chid, void *_chPtr, int _mediatype,
 {
 	auto pSession = static_cast<EasyHLSSession*>(_chPtr);
 
-	if (NULL == pSession)	return -1;
+	if (nullptr == pSession)	return -1;
 
 	return pSession->ProcessData(_chid, _mediatype, pbuf, frameinfo);
 }
@@ -34,14 +34,14 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32
 	: fSessionName(inName->GetAsCString()),
 	fSourceURL(inSourceURL->GetAsCString()),
 	fChannelNum(inChannel),
-	fTimeoutTask(nullptr, 60 * 1000),
+	fTimeoutTask(nullptr),
 	fRTSPClientHandle(nullptr),
 	fRTMPHandle(nullptr),
 	fAAChandle(nullptr)
 {
 	this->SetTaskName("EasyHLSSession");
 	fTimeoutTask.SetTask(this);
-	fTimeoutTask.SetTimeout(90 * 1000);
+	fTimeoutTask.SetTimeout(60 * 1000);
 
 	if (inName != nullptr)
 	{
@@ -50,7 +50,7 @@ EasyHLSSession::EasyHLSSession(StrPtrLen* inName, StrPtrLen* inSourceURL, UInt32
 			inName->Len = QTSS_MAX_NAME_LENGTH;
 
 		sprintf(streamID, "%s%s%d", inName->Ptr, EASY_KEY_SPLITER, fChannelNum);
-		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
+		fSourceID.Ptr = new char[::strlen(streamID) + 1];
 		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
 		fSourceID.Ptr[strlen(streamID)] = '\0';
 		fSourceID.Len = strlen(streamID);
@@ -70,7 +70,7 @@ EasyHLSSession::~EasyHLSSession()
 
 	if (this->GetRef()->GetRefCount() == 0)
 	{
-		qtss_printf("EasyHLSSession::~EasyHLSSession() UnRegister and delete session =%p refcount=%"   _U32BITARG_   "\n", GetRef(), GetRef()->GetRefCount());
+		qtss_printf("EasyHLSSession::~EasyHLSSession() UnRegister and delete session =%p refcount=%" _U32BITARG_ "\n", GetRef(), GetRef()->GetRefCount());
 		QTSServerInterface::GetServer()->GetHLSSessionMap()->UnRegister(GetRef());
 	}
 }
@@ -192,7 +192,7 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 	}
 	else if (mediatype == EASY_SDK_MEDIA_INFO_FLAG)
 	{
-		//if((NULL == fRTMPHandle) && (pbuf != NULL) )
+		//if((nullptr == fRTMPHandle) && (pbuf != nullptr) )
 		//{
 		//	fRTMPHandle = EasyRTMP_Create();
 		//	EASY_MEDIA_INFO_T mediainfo;
@@ -226,12 +226,12 @@ QTSS_Error EasyHLSSession::ProcessData(int _chid, int mediatype, char *pbuf, RTS
 
 QTSS_Error	EasyHLSSession::SessionStart()
 {
-	if (NULL == fRTSPClientHandle)
+	if (nullptr == fRTSPClientHandle)
 	{
 		//´´½¨EasyRTSPClient
 		EasyRTSP_Init(&fRTSPClientHandle);
 
-		if (NULL == fRTSPClientHandle) return QTSS_Unimplemented;
+		if (nullptr == fRTSPClientHandle) return QTSS_Unimplemented;
 
 		unsigned int mediaType = EASY_SDK_VIDEO_FRAME_FLAG | EASY_SDK_AUDIO_FRAME_FLAG;
 
@@ -239,7 +239,7 @@ QTSS_Error	EasyHLSSession::SessionStart()
 		EasyRTSP_OpenStream(fRTSPClientHandle, 0, fSourceURL.Ptr, EASY_RTP_OVER_TCP, mediaType, nullptr, nullptr, this, 1000, 0, 0x01, 0);
 	}
 
-	if (NULL == fRTMPHandle)
+	if (nullptr == fRTMPHandle)
 	{
 		fRTMPHandle = EasyRTMP_Create();
 		EASY_MEDIA_INFO_T mediainfo;
