@@ -40,14 +40,14 @@
 #include "SafeStdLib.h"
 #include <time.h>
 
-bool  QTSSExpirationDate::sIsExpirationEnabled = false;
+bool  QTSSExpirationDate::sIsExpirationEnabled = true;
 //must be in "5/12/1998" format, "m/d/4digityear"
-char* QTSSExpirationDate::sExpirationDate = "12/31/2016";
+char* QTSSExpirationDate::sExpirationDate = "12/31/2017";
 
 void QTSSExpirationDate::PrintExpirationDate()
 {
     if (sIsExpirationEnabled)
-        qtss_printf("Software expires on: %s\n", sExpirationDate);
+        qtss_printf("Software expires on: %s,Get latest version on www.easydarwin.org\n", sExpirationDate);
 }
 
 void QTSSExpirationDate::sPrintExpirationDate(char* ioExpireMessage)
