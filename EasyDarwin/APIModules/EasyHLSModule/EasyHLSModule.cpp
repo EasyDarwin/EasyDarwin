@@ -151,6 +151,7 @@ QTSS_Error GetDeviceStream(Easy_GetDeviceStream_Params* inParams)
 		if (sessionRef != nullptr)
 		{
 			hlsSe = static_cast<EasyHLSSession*>(sessionRef->GetObject());
+			inParams->outIsReady = true;
 		}
 		else
 		{
