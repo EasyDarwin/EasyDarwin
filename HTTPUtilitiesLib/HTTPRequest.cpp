@@ -24,7 +24,6 @@
  */
 #include "HTTPRequest.h"
 #include "HTTPProtocol.h"
-#include "OSMemory.h"
 #include "StringParser.h"
 #include "StringTranslator.h"
 #include "ResizeableStringFormatter.h"
