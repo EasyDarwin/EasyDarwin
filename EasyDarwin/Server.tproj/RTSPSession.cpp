@@ -214,7 +214,6 @@ RTSPSession::~RTSPSession()
 	}
 }
 
-
 SInt64 RTSPSession::Run()
 {
 	EventFlags events = this->GetEvents();
@@ -1386,7 +1385,6 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 		}
 		else // use the premade stopck version
 		{
-			// 添加200 OK信息
 			if (showServerInfo)
 				fOutputStream.Put(sHTTPResponseHeaderPtr);  // 200 OK just means we connected...
 			else
@@ -1401,7 +1399,6 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 	// session with a matching magic number, it resolves it and returns that Ref.
 	// If it returns nullptr, something bad has happened, and we should just kill the session.
 
-	// 注册RTSPSession到Map中
 	OSRef* rtspSessionRef = this->RegisterRTSPSessionIntoHTTPProxyTunnelMap(theOtherSessionType);
 
 	// Something went wrong (usually we get here because there is a session with this magic
@@ -1413,7 +1410,6 @@ QTSS_Error RTSPSession::PreFilterForHTTPProxyTunnel()
 	}
 
 	// We registered ourselves into the map (we are the first half), so wait for our other half
-	// 前一半注册到map中,等待后一半
 	if (rtspSessionRef == &fProxyRef)
 	{
 		HTTP_TRACE("Registered this session into map. Waiting to bind\n");
@@ -2181,7 +2177,7 @@ void RTSPSession::HandleIncomingDataPacket()
 	fCurrentModule = 0;
 }
 
-//
+
 //RTSPSessionHandler::RTSPSessionHandler(RTSPSession* session)
 //	: Task(),
 //    fRTSPSession(nullptr),
