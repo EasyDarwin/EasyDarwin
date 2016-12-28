@@ -28,9 +28,6 @@
 	 Contains:   A QTSS Stream object for a generic socket
 
 	 Written By: Denis Serenyi
-
-
-
  */
 
 #include "QTSSSocket.h"

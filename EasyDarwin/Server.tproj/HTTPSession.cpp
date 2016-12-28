@@ -70,26 +70,21 @@ HTTPSession::~HTTPSession()
 	QTSS_RoleParams theParams;
 	theParams.rtspSessionClosingParams.inRTSPSession = this;
 
-	//会话断开时，调用模块进行一些停止的工作
 	for (UInt32 x = 0; x < QTSServerInterface::GetNumModulesInRole(QTSSModule::kRTSPSessionClosingRole); x++)
 		(void)QTSServerInterface::GetModule(QTSSModule::kRTSPSessionClosingRole, x)->CallDispatch(QTSS_RTSPSessionClosing_Role, &theParams);
 
 	fLiveSession = false; //used in Clean up request to remove the RTP session.
 	this->CleanupRequest();// Make sure that all our objects are deleted
-	//if (fSessionType == qtssServiceSession)
-	//    QTSServerInterface::GetServer()->AlterCurrentServiceSessionCount(-1);
 
 }
 
 SInt64 HTTPSession::Run()
 {
-	//获取事件类型
 	EventFlags events = this->GetEvents();
 	QTSS_Error err = QTSS_NoErr;
 	// Some callbacks look for this struct in the thread object
 	OSThreadDataSetter theSetter(&fModuleState, nullptr);
 
-	//超时事件或者Kill事件，进入释放流程：清理 & 返回-1
 	if (events & Task::kKillEvent)
 		fLiveSession = false;
 
@@ -99,13 +94,11 @@ SInt64 HTTPSession::Run()
 		return -1;
 	}
 
-	//正常事件处理流程
 	while (this->IsLiveSession())
 	{
-		//报文处理以状态机的形式，可以方便多次处理同一个消息
 		switch (fState)
 		{
-		case kReadingFirstRequest://首次对Socket进行读取
+		case kReadingFirstRequest:
 			{
 				if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
 				{
@@ -131,10 +124,8 @@ SInt64 HTTPSession::Run()
 			continue;
 		case kReadingRequest://读取请求报文
 			{
-				//读取锁，已经在处理一个报文包时，不进行新网络报文的读取和处理
 				OSMutexLocker readMutexLocker(&fReadMutex);
 
-				//网络请求报文存储在fInputStream中
 				if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
 				{
 					//如果RequestStream返回QTSS_NoErr，就表示已经读取了目前所到达的网络数据
@@ -173,7 +164,6 @@ SInt64 HTTPSession::Run()
 				Assert(fInputStream.GetRequestBuffer());
 
 				Assert(fRequest == nullptr);
-				//根据具体请求报文构造HTTPRequest请求类
 				fRequest = new HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 				//在这里，我们已经读取了一个完整的Request，并准备进行请求的处理，直到响应报文发出
@@ -181,10 +171,8 @@ SInt64 HTTPSession::Run()
 				fReadMutex.Lock();
 				fSessionMutex.Lock();
 
-				//清空发送缓冲区
 				fOutputStream.ResetBytesWritten();
 
-				//网络请求超过了缓冲区，返回Bad Request
 				if (err == E2BIG)
 				{
 					//返回HTTP报文，错误码408
@@ -304,6 +292,7 @@ SInt64 HTTPSession::Run()
 				this->CleanupRequest();
 				fState = kReadingRequest;
 			}
+		default: break;
 		}
 	}
 
@@ -604,10 +593,8 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPLiveSessionsRESTful(const char* query
 		if (msgJson.Len)
 			httpAck.AppendContentLengthHeader(msgJson.Len);
 
-		// 响应完成后断开连接
 		httpAck.AppendConnectionCloseHeader();
 
-		// HTTP响应Body
 		char respHeader[2048] = { 0 };
 		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
@@ -641,26 +628,21 @@ QTSS_Error HTTPSession::execNetMsgCSGetRTSPRecordSessionsRESTful(const char* que
 
 	do
 	{
-		// 获取响应Content
 		char* msgContent = static_cast<char*>(Easy_GetRTSPRecordSessions((char *)name, atoi(startTime), atoi(endTime)));
 
 		StrPtrLen msgJson(msgContent);
 
-		// 构造响应报文(HTTP头)
 		HTTPRequest httpAck(&QTSServerInterface::GetServerHeader(), httpResponseType);
 		httpAck.CreateResponseHeader(msgJson.Len ? httpOK : httpNotImplemented);
 		if (msgJson.Len)
 			httpAck.AppendContentLengthHeader(msgJson.Len);
 
-		// 响应完成后断开连接
 		httpAck.AppendConnectionCloseHeader();
 
-		// HTTP响应Body
 		char respHeader[2048] = { 0 };
 		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 		strncpy(respHeader, ackPtr->Ptr, ackPtr->Len);
 
-		// HTTP响应Content
 		RTSPResponseStream *pOutputStream = GetOutputStream();
 		pOutputStream->Put(respHeader);
 		if (msgJson.Len > 0)

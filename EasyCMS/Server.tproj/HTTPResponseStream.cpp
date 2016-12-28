@@ -14,7 +14,6 @@
 #include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include "OS.h"
-
 #include <errno.h>
 
 QTSS_Error HTTPResponseStream::WriteV(iovec* inVec, UInt32 inNumVectors, UInt32 inTotalLength,

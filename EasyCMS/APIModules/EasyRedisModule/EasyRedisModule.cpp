@@ -15,11 +15,8 @@
 #include "EasyUtil.h"
 #include "Resources.h"
 #include "ScopeGuard.h"
-
 #include "Windows/hiredis.h"
-
 #include <stdio.h>
-
 
 // STATIC VARIABLES
 static QTSS_ModulePrefsObject	modulePrefs = nullptr;
@@ -134,7 +131,7 @@ bool RedisConnect()
 		return true;
 	}
 
-	struct timeval timeout = { 2, 0 }; // 1.5 seconds
+	struct timeval timeout = { 2, 0 }; // 2 seconds
 	redisContext_ = redisConnectWithTimeout(sRedis_IP, sRedisPort, timeout);
 	if (!redisContext_ || redisContext_->err)
 	{
@@ -256,7 +253,6 @@ QTSS_Error RedisTTL()
 
 			return QTSS_NotConnected;
 		}
-
 	}
 	else if (reply->integer == 1)
 	{
@@ -589,9 +585,7 @@ QTSS_Error RedisGetAssociatedDarwin(QTSS_GetAssociatedDarwin_Params* inParams)
 		{
 			return QTSS_NoErr;
 		}
-
 	}
-
 	return QTSS_NoErr;
 }
 

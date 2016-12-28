@@ -44,9 +44,6 @@ void HTTPRequestStream::SnarfRetreat(HTTPRequestStream &fromRequest)
 	::memcpy(&fRequestBuffer[0], fromRequest.fRequest.Ptr + fromRequest.fRequest.Len, fromRequest.fRetreatBytes);
 }
 
-/*
-	读取网络报文进行处理，区分报文头部、Content、以及数据包
-*/
 QTSS_Error HTTPRequestStream::ReadRequest()
 {
 	while (true)

@@ -36,8 +36,6 @@
      Written by: Denis Serenyi
 
      Copyright:  ?1998 by Apple Computer, Inc., all rights reserved.
-
-
  */
 
 #ifndef __QTSS_EXPIRATION_DATE_H__

@@ -26,11 +26,6 @@
 	 File:       RTCPTask.cpp
 
 	 Contains:   Implementation of class defined in RTCPTask.h
-
-
-
-
-
  */
 
 #include "RTCPTask.h"
