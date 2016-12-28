@@ -29,12 +29,11 @@
 
 #include "getopt.h"
 #include "FilePrefsSource.h"
-
 #include "RunServer.h"
 #include "QTSServer.h"
 #include "QTSSExpirationDate.h"
 #include "GenerateXMLPrefs.h"
- //
+
  // Data
 static FilePrefsSource sPrefsSource(true); // Allow dups
 static XMLPrefsParser* sXMLParser = NULL;
@@ -44,7 +43,6 @@ static int sStatsUpdateInterval = 0;
 static SERVICE_STATUS_HANDLE sServiceStatusHandle = 0;
 static QTSS_ServerState sInitialState = qtssRunningState;
 
-//
 // Functions
 static void ReportStatus(DWORD inCurrentState, DWORD inExitCode);
 static void InstallService(char* inServiceName);
