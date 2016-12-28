@@ -176,6 +176,9 @@
 #define EASY_TAG_CONFIG_NGINX_WEB_PATH					"NginxWebPath"
 #define EASY_TAG_CONFIG_NGINX_L_WEB_PATH				"nginxwebpath"
 
+#define EASY_TAG_CONFIG_NGINX_RTMP_PATH					"NginxRTMPPath"
+#define EASY_TAG_CONFIG_NGINX_L_RTMP_PATH				"nginxrtmppath"
+
 #define EASY_TAG_THRID_PART_PLATFORM_NAME				"ThridPlatform"
 #define EASY_TAG_L_THRID_PART_PLATFORM_NAME				"thridplatform"
 #define	EASY_TAG_THRID_PART_PLATFORM_IP					"ThridPlatformIP"
