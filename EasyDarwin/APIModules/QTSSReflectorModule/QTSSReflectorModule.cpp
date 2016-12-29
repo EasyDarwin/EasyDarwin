@@ -633,8 +633,6 @@ QTSS_Error ProcessRTPData(QTSS_IncomingData_Params* inParams)
 
 	if (sHLSOutputEnabled)
 		theSession->StartHLSSession();
-	if (sRecordOutputEnabled)
-		theSession->StartRecordSession();
 
 	// it is a broadcaster session
 	//qtss_printf("QTSSReflectorModule.cpp:is broadcaster session\n");
@@ -2107,8 +2105,6 @@ QTSS_Error DestroySession(QTSS_ClientSessionClosing_Params* inParams)
 
 		if (sHLSOutputEnabled)
 			theSession->StopHLSSession();
-		if (sRecordOutputEnabled)
-			theSession->StopRecordSession();
 		RemoveOutput(NULL, theSession, killClients);
 	}
 	else // ¿Í»§¶Ë
