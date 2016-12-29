@@ -2043,10 +2043,6 @@ QTSS_Error    QTSS_Authorize(QTSS_RTSPRequestObject inAuthRequestObject, char** 
 void        QTSS_LockStdLib();
 void        QTSS_UnlockStdLib();
 
-// Start HLS Session
-QTSS_Error	Easy_StartHLSession(const char* inSessionName, const char* inURL, UInt32 inTimeout, char* outURL);
-// Stop HLS Session
-QTSS_Error	Easy_StopHLSession(const char* inSessionName);
 // Get HLS Sessions(json)
 void*	Easy_GetRTSPPushSessions();
 
