@@ -15,8 +15,6 @@
 #include "QTSSModule.h"
 #include "OSQueue.h"
 
-#include "DecoderHelper.h"
-
 using namespace std;
 
 class HTTPSession : public HTTPSessionInterface
@@ -75,8 +73,6 @@ private:
 	// test current connections handled by this object against server pref connection limit
 	static bool overMaxConnections(UInt32 buffer);
 
-	QTSS_Error rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height);
-	static int yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata);
 	void addDevice() const;
 
 	HTTPRequest* fRequest;
@@ -96,25 +92,9 @@ private:
 		kHaveCompleteMessage = 7
 	};
 
-	struct DecodeParam
-	{
-		int codec;
-		int width;
-		int height;
-		int gopTally;
-		char* imageData;
-		unsigned int imageSize;
-
-	};
-
 	UInt32 fState;
 
 	QTSS_ModuleState fModuleState;
-
-	// Channel Snap
-	DecodeParam decodeParam;
-
-	DecoderHelper decoderHelper;
 
 	string talkbackSession;
 

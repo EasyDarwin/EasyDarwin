@@ -86,10 +86,6 @@ HTTPSession::HTTPSession()
 	fModuleState.curRole = 0;
 	fModuleState.globalLockRequested = false;
 
-	decodeParam.gopTally = SNAP_CAPTURE_TIME;
-
-	decodeParam.imageData = new char[SNAP_SIZE];
-
 	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	sessionMap->Register(fSessionID, this);
 
@@ -114,12 +110,6 @@ HTTPSession::~HTTPSession()
 				}
 			}
 		}
-	}
-
-	if (decodeParam.imageData)
-	{
-		delete[] decodeParam.imageData;
-		decodeParam.imageData = nullptr;
 	}
 
 	fLiveSession = false;
@@ -646,33 +636,18 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 	OS::RecursiveMakeDir(const_cast<char*>(jpgDir.c_str()));
 	string jpgPath = Format("%s/%s_%s_%s.%s", jpgDir, device_serial, channel, strTime, EasyProtocol::GetSnapTypeString(EASY_SNAP_TYPE_JPEG));
 
-	FILE* fSnap = ::fopen(jpgPath.c_str(), "wb");
-	if (fSnap == nullptr)
-	{
-		//DWORD e=GetLastError();
-		return QTSS_NoErr;
-	}
-
 	auto picType = EasyProtocol::GetSnapType(strType);
 
 	if (picType == EASY_SNAP_TYPE_JPEG)
 	{
+		FILE* fSnap = ::fopen(jpgPath.c_str(), "wb");
+		if (fSnap == nullptr)
+		{
+			return QTSS_NoErr;
+		}
 		fwrite(image.data(), 1, image.size(), fSnap);
+		::fclose(fSnap);
 	}
-	else if (picType == EASY_SNAP_TYPE_IDR)
-	{
-		string decQueryString = EasyUtil::Urldecode(reserve);
-
-		QueryParamList parList(const_cast<char *>(decQueryString.c_str()));
-		int width = EasyUtil::String2Int(parList.DoFindCGIValueForParam("width"));
-		int height = EasyUtil::String2Int(parList.DoFindCGIValueForParam("height"));
-		int codec = EasyUtil::String2Int(parList.DoFindCGIValueForParam("codec"));
-
-		rawData2Image(const_cast<char*>(image.data()), image.size(), codec, width, height);
-		fwrite(decodeParam.imageData, 1, decodeParam.imageSize, fSnap);
-	}
-
-	::fclose(fSnap);
 
 	//web path
 
@@ -1653,106 +1628,6 @@ QTSS_Error HTTPSession::processRequest()//¥¶¿Ì«Î«Û
 		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
 		this->SendHTTPPacket(&theValue, false, false);
 	}
-	return theErr;
-}
-
-int	HTTPSession::yuv2BMPImage(unsigned int width, unsigned int height, char* yuvpbuf, unsigned int* rgbsize, unsigned char* rgbdata)
-{
-	int nBpp = 24;
-	int dwW, dwH, dwWB;
-
-	dwW = width;
-	dwH = height;
-	dwWB = WIDTHBYTES(dwW * nBpp);
-
-	// SaveFile to BMP
-	BITMAPFILEHEADER bfh = { 0, };
-	bfh.bfType = 0x4D42;
-	bfh.bfSize = 0;
-	bfh.bfReserved1 = 0;
-	bfh.bfReserved2 = 0;
-	bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-	/*if (nBpp == 16)
-	{
-		bfh.bfOffBits += sizeof(RGBQUAD) * 3;
-	}
-	else
-	{
-		bfh.bfOffBits += sizeof(RGBQUAD) * 1;
-	}*/
-
-	auto dwWriteLength = sizeof(BITMAPFILEHEADER);
-	int rgbOffset = 0;
-	memcpy(rgbdata + rgbOffset, static_cast<void*>(&bfh), dwWriteLength);
-	rgbOffset += dwWriteLength;
-
-	BITMAPINFOHEADER	bih = { 0, };
-	bih.biSize = sizeof(BITMAPINFOHEADER);
-	bih.biWidth = dwW;
-	bih.biHeight = -static_cast<int>(dwH);
-	bih.biPlanes = 1;
-	bih.biBitCount = nBpp;
-	//bih.biCompression = (nBpp == 16) ? BI_BITFIELDS : BI_RGB;
-	bih.biCompression = 0;
-	bih.biSizeImage = dwWB * height;
-	bih.biXPelsPerMeter = 0;
-	bih.biYPelsPerMeter = 0;
-	bih.biClrUsed = 0;
-	bih.biClrImportant = 0;
-
-	dwWriteLength = sizeof(BITMAPINFOHEADER);
-
-	memcpy(rgbdata + rgbOffset, static_cast<void*>(&bih), dwWriteLength);
-	rgbOffset += dwWriteLength;
-
-	if (nBpp == 24)
-	{
-		unsigned long rgbQuad = 0;
-		dwWriteLength = sizeof(rgbQuad);
-		memcpy(rgbdata + rgbOffset, static_cast<void*>(&rgbQuad), dwWriteLength);
-		rgbOffset += dwWriteLength;
-	}
-
-	dwWriteLength = dwWB * height;
-	memcpy(rgbdata + rgbOffset, static_cast<void*>(yuvpbuf), dwWriteLength);
-	rgbOffset += dwWriteLength;
-
-	if (nullptr != rgbsize)	*rgbsize = rgbOffset;
-
-	return 0;
-}
-
-QTSS_Error HTTPSession::rawData2Image(char* rawBuf, int bufSize, int codec, int width, int height)
-{
-	QTSS_Error theErr = QTSS_NoErr;
-
-	decodeParam.codec = codec;
-	decodeParam.width = width;
-	decodeParam.height = height;
-	decoderHelper.SetVideoDecoderParam(width, height, codec, 3);
-
-	int yuvdata_size = width * height * 3;
-	char* yuvdata = new char[yuvdata_size + 1];
-	memset(yuvdata, 0x00, yuvdata_size + 1);
-
-	int snapHeight = height >= SNAP_IMAGE_HEIGHT ? SNAP_IMAGE_HEIGHT : height;
-	int snapWidth = height >= SNAP_IMAGE_HEIGHT ? SNAP_IMAGE_WIDTH : height * 16 / 9;
-
-	if (decoderHelper.DecodeVideo(rawBuf, bufSize, yuvdata, snapWidth, snapHeight) != 0)
-	{
-		theErr = QTSS_RequestFailed;
-	}
-	else
-	{
-		memset(decodeParam.imageData, 0, SNAP_SIZE);
-		yuv2BMPImage(snapWidth, snapHeight, static_cast<char*>(yuvdata), &decodeParam.imageSize, reinterpret_cast<unsigned char*>(decodeParam.imageData));
-	}
-
-	if (nullptr != yuvdata)
-	{
-		delete[] yuvdata;
-	}
-
 	return theErr;
 }
 

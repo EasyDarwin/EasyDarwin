@@ -19,9 +19,6 @@
     <ClCompile Include="..\APIModules\EasyRedisModule\EasyRedisModule.cpp">
       <Filter>Source Files\API Modules\EasyRedisModule</Filter>
     </ClCompile>
-    <ClCompile Include="..\Server.tproj\DecoderHelper.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
