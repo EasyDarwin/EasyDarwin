@@ -42,7 +42,6 @@
 
 #include "QTSSDataConverter.h"
 #include "StrPtrLen.h"
-#include "OSMemory.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -123,7 +122,7 @@ QTSS_Error QTSSDataConverter::StringToValue(char* inValueAsString,
     void* ioBuffer,
     UInt32* ioBufSize)
 {
-    if (inValueAsString == NULL || ioBufSize == NULL)
+    if (inValueAsString == nullptr || ioBufSize == nullptr)
         return QTSS_BadArgument;
 
     if (inType == qtssAttrDataTypeCharArray)
@@ -135,7 +134,7 @@ QTSS_Error QTSSDataConverter::StringToValue(char* inValueAsString,
 
         //
         // First check to see if the destination is big enough
-        if ((ioBuffer == NULL) || (*ioBufSize < theLen))
+        if ((ioBuffer == nullptr) || (*ioBufSize < theLen))
         {
             *ioBufSize = theLen;
             return QTSS_NotEnoughSpace;
@@ -158,7 +157,7 @@ QTSS_Error QTSSDataConverter::StringToValue(char* inValueAsString,
             return QTSS_NotEnoughSpace;
         }
 
-        bool* it = (bool*)ioBuffer;
+        bool* it = static_cast<bool*>(ioBuffer);
         StrPtrLen theValuePtr(inValueAsString);
         if (kEnabledStr.EqualIgnoreCase(inValueAsString, ::strlen(inValueAsString)))
             *it = true;
@@ -169,8 +168,8 @@ QTSS_Error QTSSDataConverter::StringToValue(char* inValueAsString,
         return QTSS_NoErr;
     }
 
-    UInt32 theBufSize = 0;
-    char* theFormat = NULL;
+    UInt32 theBufSize;
+    char* theFormat;
     //
     // If this is another type, format the string into that type
     switch (inType)
@@ -242,7 +241,7 @@ QTSS_Error QTSSDataConverter::StringToValue(char* inValueAsString,
         return ConvertCHexStringToBytes(inValueAsString, ioBuffer, ioBufSize);
     }
 
-    if ((ioBuffer == NULL) || (*ioBufSize < theBufSize))
+    if ((ioBuffer == nullptr) || (*ioBufSize < theBufSize))
     {
         *ioBufSize = theBufSize;
         return QTSS_NotEnoughSpace;
@@ -261,19 +260,19 @@ QTSS_Error QTSSDataConverter::ConvertCHexStringToBytes(char* inValueAsString,
     UInt32 dataLen = (stringLen + (stringLen & 1 ? 1 : 0)) / 2;
 
     // First check to see if the destination is big enough
-    if ((ioBuffer == NULL) || (*ioBufSize < dataLen))
+    if ((ioBuffer == nullptr) || (*ioBufSize < dataLen))
     {
         *ioBufSize = dataLen;
         return QTSS_NotEnoughSpace;
     }
 
-    UInt8* dataPtr = (UInt8*)ioBuffer;
+    UInt8* dataPtr = static_cast<UInt8*>(ioBuffer);
     UInt8 char1, char2;
     while (*inValueAsString)
     {
-        char1 = sCharToNums[(UInt8)(*inValueAsString++)] * 16;
+        char1 = sCharToNums[static_cast<UInt8>(*inValueAsString++)] * 16;
         if (*inValueAsString != 0)
-            char2 = sCharToNums[(UInt8)(*inValueAsString++)];
+            char2 = sCharToNums[static_cast<UInt8>(*inValueAsString++)];
         else
             char2 = 0;
         *dataPtr++ = char1 + char2;
@@ -285,12 +284,12 @@ QTSS_Error QTSSDataConverter::ConvertCHexStringToBytes(char* inValueAsString,
 
 char* QTSSDataConverter::ConvertBytesToCHexString(void* inValue, const UInt32 inValueLen)
 {
-    UInt8* theDataPtr = (UInt8*)inValue;
+    UInt8* theDataPtr = static_cast<UInt8*>(inValue);
     UInt32 len = inValueLen * 2;
 
-    char *theString = NEW char[len + 1];
+    char *theString = new char[len + 1];
     char *resultStr = theString;
-    if (theString != NULL)
+    if (theString != nullptr)
     {
         UInt8 temp;
         for (UInt32 count = 0; count < inValueLen; ++count)
@@ -308,17 +307,17 @@ char* QTSSDataConverter::ValueToString(void* inValue,
     const UInt32 inValueLen,
     const QTSS_AttrDataType inType)
 {
-    if (inValue == NULL)
-        return NULL;
+    if (inValue == nullptr)
+        return nullptr;
 
     if (inType == qtssAttrDataTypeCharArray)
     {
-        StrPtrLen theStringPtr((char*)inValue, inValueLen);
+        StrPtrLen theStringPtr(static_cast<char*>(inValue), inValueLen);
         return theStringPtr.GetAsCString();
     }
     if (inType == qtssAttrDataTypeBool16)
     {
-        bool* theBoolPtr = (bool*)inValue;
+        bool* theBoolPtr = static_cast<bool*>(inValue);
         if (*theBoolPtr)
             return kEnabledStr.GetAsCString();
         else
@@ -328,46 +327,46 @@ char* QTSSDataConverter::ValueToString(void* inValue,
     //
     // With these other types, its impossible to tell how big they'll
     // be, so just allocate some buffer and hope we fit.
-    char* theString = NEW char[128];
+    char* theString = new char[128];
 
     //
     // If this is another type, format the string into that type
     switch (inType)
     {
     case qtssAttrDataTypeUInt16:
-        qtss_sprintf(theString, "%hu", *(UInt16*)inValue);
+        qtss_sprintf(theString, "%hu", *static_cast<UInt16*>(inValue));
         break;
 
     case qtssAttrDataTypeSInt16:
-        qtss_sprintf(theString, "%hd", *(SInt16*)inValue);
+        qtss_sprintf(theString, "%hd", *static_cast<SInt16*>(inValue));
         break;
 
     case qtssAttrDataTypeSInt32:
-        qtss_sprintf(theString, "%"  _U32BITARG_, *(SInt32*)inValue);
+        qtss_sprintf(theString, "%" _U32BITARG_ , *static_cast<SInt32*>(inValue));
         break;
 
     case qtssAttrDataTypeUInt32:
-        qtss_sprintf(theString, "%" _U32BITARG_, *(UInt32*)inValue);
+        qtss_sprintf(theString, "%" _U32BITARG_ , *static_cast<UInt32*>(inValue));
         break;
 
     case qtssAttrDataTypeSInt64:
-        qtss_sprintf(theString, "%" _64BITARG_ "d", *(SInt64*)inValue);
+        qtss_sprintf(theString, "%" _64BITARG_ "d", *static_cast<SInt64*>(inValue));
         break;
 
     case qtssAttrDataTypeUInt64:
-        qtss_sprintf(theString, "%" _64BITARG_ "u", *(UInt64*)inValue);
+        qtss_sprintf(theString, "%" _64BITARG_ "u", *static_cast<UInt64*>(inValue));
         break;
 
     case qtssAttrDataTypeFloat32:
-        qtss_sprintf(theString, "%f", *(Float32*)inValue);
+        qtss_sprintf(theString, "%f", *static_cast<Float32*>(inValue));
         break;
 
     case qtssAttrDataTypeFloat64:
-        qtss_sprintf(theString, "%f", *(Float64*)inValue);
+        qtss_sprintf(theString, "%f", *static_cast<Float64*>(inValue));
         break;
 
     case qtssAttrDataTypeTimeVal:
-        qtss_sprintf(theString, "%" _64BITARG_ "d", *(SInt64*)inValue);
+        qtss_sprintf(theString, "%" _64BITARG_ "d", *static_cast<SInt64*>(inValue));
         break;
 
     default:
