@@ -132,7 +132,6 @@
 	</MODULE>
 	<MODULE NAME="QTSSReflectorModule" >
 		<PREF NAME="hls_output_enabled" TYPE="bool" >false</PREF>
-		<PREF NAME="record_output_enabled" TYPE="bool" >true</PREF>
 		<PREF NAME="reflector_bucket_offset_delay_msec" TYPE="UInt32" >73</PREF>
 		<PREF NAME="reflector_buffer_size_sec" TYPE="UInt32" >1</PREF>
 		<PREF NAME="reflector_use_in_packet_receive_time" TYPE="bool" >false</PREF>
