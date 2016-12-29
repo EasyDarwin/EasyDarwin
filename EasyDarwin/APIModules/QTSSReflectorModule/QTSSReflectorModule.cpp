@@ -104,9 +104,6 @@ static bool   sDefaultRTPInfoDisabled = false;
 static bool   sHLSOutputEnabled = false;
 static bool   sDefaultHLSOutputEnabled = false;
 
-static bool   sRecordOutputEnabled = false;
-static bool   sDefaultRecordOutputEnabled = false;
-
 static bool   sAnnounceEnabled = true;
 static bool   sDefaultAnnounceEnabled = true;
 static bool   sBroadcastPushEnabled = true;
@@ -592,11 +589,6 @@ QTSS_Error RereadPrefs()
 	//Êä³öHLS
 	QTSSModuleUtils::GetAttribute(sPrefs, "hls_output_enabled", qtssAttrDataTypeBool16,
 		&sHLSOutputEnabled, &sDefaultHLSOutputEnabled, sizeof(sDefaultHLSOutputEnabled));
-
-	//Êä³öRecord
-	QTSSModuleUtils::GetAttribute(sPrefs, "record_output_enabled", qtssAttrDataTypeBool16,
-		&sRecordOutputEnabled, &sDefaultRecordOutputEnabled, sizeof(sDefaultRecordOutputEnabled));
-
 
 	return QTSS_NoErr;
 }
