@@ -53,8 +53,8 @@ public:
 		StrPtrLen* inModuleName,
 		QTSSDictionaryMap* inMap,
 		bool areInstanceAttrsAllowed,
-		QTSSPrefs* parentDictionary = NULL);
-	virtual ~QTSSPrefs() { if (fPrefName != NULL) delete[] fPrefName; }
+		QTSSPrefs* parentDictionary = nullptr);
+	virtual ~QTSSPrefs() { if (fPrefName != nullptr) delete[] fPrefName; }
 
 	//This is callable at any time, and is thread safe wrt to the accessors
 	void        RereadPreferences();
