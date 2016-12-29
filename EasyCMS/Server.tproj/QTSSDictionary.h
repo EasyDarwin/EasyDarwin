@@ -68,7 +68,7 @@ public:
     //
     // CONSTRUCTOR / DESTRUCTOR
 
-    QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex = NULL);
+    QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex = nullptr);
     virtual ~QTSSDictionary();
 
     //
@@ -114,7 +114,7 @@ public:
 
     // Returns:     QTSS_BadArgument, QTSS_ReadOnly (if attribute is read only),
     QTSS_Error CreateObjectValue(QTSS_AttributeID inAttrID, UInt32* outIndex,
-        QTSSDictionary** newObject, QTSSDictionaryMap* inMap = NULL,
+        QTSSDictionary** newObject, QTSSDictionaryMap* inMap = nullptr,
         UInt32 inFlags = kNoFlags);
 
     // Returns:     QTSS_BadArgument, QTSS_ReadOnly, QTSS_BadIndex
@@ -130,7 +130,7 @@ public:
 
     QTSSDictionaryMap*  GetDictionaryMap() { return fMap; }
 
-    // Returns the Instance dictionary map for this dictionary. This may return NULL
+    // Returns the Instance dictionary map for this dictionary. This may return nullptr
     // if there are no instance attributes in this dictionary
     QTSSDictionaryMap*  GetInstanceDictMap() { return fInstanceMap; }
 
