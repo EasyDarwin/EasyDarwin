@@ -47,6 +47,7 @@
 
 #ifndef __Win32__
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #endif
 #include "QTSServerInterface.h"
