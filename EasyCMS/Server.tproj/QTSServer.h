@@ -23,16 +23,16 @@
  *
  */
  /*
-     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-     Github: https://github.com/EasyDarwin
-     WEChat: EasyDarwin
-     Website: http://www.EasyDarwin.org
+	 Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	 Github: https://github.com/EasyDarwin
+	 WEChat: EasyDarwin
+	 Website: http://www.EasyDarwin.org
  */
  /*
-     File:       QTSServer.h
+	 File:       QTSServer.h
 
-     Contains:   This object is responsible for bringing up & shutting down
-                 the server. It also loads & initializes all modules.
+	 Contains:   This object is responsible for bringing up & shutting down
+				 the server. It also loads & initializes all modules.
  */
 
 #ifndef __QTSSERVER_H__
@@ -48,100 +48,100 @@ class QTSServer : public QTSServerInterface
 {
 public:
 
-    QTSServer() {}
-    virtual ~QTSServer();
+	QTSServer() {}
+	virtual ~QTSServer();
 
-    //
-    // Initialize
-    //
-    // This function starts the server. If it returns true, the server has
-    // started up sucessfully. If it returns false, a fatal error occurred
-    // while attempting to start the server.
-    //
-    // This function *must* be called before the server creates any threads,
-    // because one of its actions is to change the server to the right UID / GID.
-    // Threads will only inherit these if they are created afterwards.
-    bool Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource,
-        UInt16 inPortOverride, bool createListeners);
+	//
+	// Initialize
+	//
+	// This function starts the server. If it returns true, the server has
+	// started up sucessfully. If it returns false, a fatal error occurred
+	// while attempting to start the server.
+	//
+	// This function *must* be called before the server creates any threads,
+	// because one of its actions is to change the server to the right UID / GID.
+	// Threads will only inherit these if they are created afterwards.
+	bool Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessagesSource,
+		UInt16 inPortOverride, bool createListeners);
 
-    //
-    // InitModules
-    //
-    // Initialize *does not* do much of the module initialization tasks. This
-    // function may be called after the server has created threads, but the
-    // server must not be in a state where it can do real work. In other words,
-    // call this function right after calling Initialize.                   
-    void InitModules(QTSS_ServerState inEndState);
+	//
+	// InitModules
+	//
+	// Initialize *does not* do much of the module initialization tasks. This
+	// function may be called after the server has created threads, but the
+	// server must not be in a state where it can do real work. In other words,
+	// call this function right after calling Initialize.                   
+	void InitModules(QTSS_ServerState inEndState);
 
-    //
-    // StartTasks
-    //
-    // The server has certain global tasks that it runs for things like stats
-    // updating and RTCP processing. This function must be called to start those
-    // going, and it must be called after Initialize                
-    void StartTasks();
+	//
+	// StartTasks
+	//
+	// The server has certain global tasks that it runs for things like stats
+	// updating and RTCP processing. This function must be called to start those
+	// going, and it must be called after Initialize                
+	void StartTasks();
 
-    //
-    // RereadPrefsService
-    //
-    // This service is registered by the server (calling "RereadPreferences").
-    // It rereads the preferences. Anyone can call this to reread the preferences,
-    // and it may be called safely at any time, though it will fail with a
-    // QTSS_OutOfState if the server isn't in the qtssRunningState.
+	//
+	// RereadPrefsService
+	//
+	// This service is registered by the server (calling "RereadPreferences").
+	// It rereads the preferences. Anyone can call this to reread the preferences,
+	// and it may be called safely at any time, though it will fail with a
+	// QTSS_OutOfState if the server isn't in the qtssRunningState.
 
-    static QTSS_Error RereadPrefsService(QTSS_ServiceFunctionArgsPtr inArgs);
+	static QTSS_Error RereadPrefsService(QTSS_ServiceFunctionArgsPtr inArgs);
 
-    //
-    // CreateListeners
-    //
-    // This function may be called multiple times & at any time.
-    // It updates the server's listeners to reflect what the preferences say.
-    // Returns false if server couldn't listen on one or more of the ports, true otherwise
-    bool                  CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride);
+	//
+	// CreateListeners
+	//
+	// This function may be called multiple times & at any time.
+	// It updates the server's listeners to reflect what the preferences say.
+	// Returns false if server couldn't listen on one or more of the ports, true otherwise
+	bool                  CreateListeners(bool startListeningNow, QTSServerPrefs* inPrefs, UInt16 inPortOverride);
 
-    //
-    // SetDefaultIPAddr
-    //
-    // Sets the IP address related attributes of the server.
-    bool                  SetDefaultIPAddr();
+	//
+	// SetDefaultIPAddr
+	//
+	// Sets the IP address related attributes of the server.
+	bool                  SetDefaultIPAddr();
 
-    bool                  SwitchPersonality();
+	bool                  SwitchPersonality();
 
 private:
-    // Sets up QTSS API callback routines
-    void                    initCallbacks();
+	// Sets up QTSS API callback routines
+	void                    initCallbacks();
 
-    // Loads compiled-in modules
-    void                    loadCompiledInModules();
+	// Loads compiled-in modules
+	void                    loadCompiledInModules();
 
-    // Loads modules from disk
-    void                    loadModules(QTSServerPrefs* inPrefs);
-    void                    createModule(char* inModuleFolderPath, char* inModuleName);
+	// Loads modules from disk
+	void                    loadModules(QTSServerPrefs* inPrefs);
+	void                    createModule(char* inModuleFolderPath, char* inModuleName);
 
-    // Adds a module to the module array
-    bool                  addModule(QTSSModule* inModule);
+	// Adds a module to the module array
+	bool                  addModule(QTSSModule* inModule);
 
-    // Call module init roles
-    void                    doInitRole();
-    UInt32*                 getBindIPAddrs(QTSServerPrefs* inPrefs, UInt32* outNumAddrsPtr);
-    UInt16					getServicePorts(QTSServerPrefs* inPrefs);
+	// Call module init roles
+	void                    doInitRole();
+	UInt32*                 getBindIPAddrs(QTSServerPrefs* inPrefs, UInt32* outNumAddrsPtr);
+	UInt16					getServicePorts(QTSServerPrefs* inPrefs);
 
-    // Build & destroy the optimized role / module arrays for invoking modules
-    void                    buildModuleRoleArrays();
-    void                    destroyModuleRoleArrays();
+	// Build & destroy the optimized role / module arrays for invoking modules
+	void                    buildModuleRoleArrays();
+	void                    destroyModuleRoleArrays();
 
-    static XMLPrefsParser* sPrefsSource;
-    static PrefsSource* sMessagesSource;
+	static XMLPrefsParser* sPrefsSource;
+	static PrefsSource* sMessagesSource;
 
-    RedisSession*			fRedisSession;
+	RedisSession*			fRedisSession;
 
-    //
-    // Module loading & unloading routines
+	//
+	// Module loading & unloading routines
 
-    static QTSS_Callbacks   sCallbacks;
+	static QTSS_Callbacks   sCallbacks;
 
 #ifndef __Win32__
-    static pid_t            sMainPid;
+	static pid_t            sMainPid;
 #endif
 
 };
@@ -149,11 +149,11 @@ private:
 class RereadPrefsTask : public Task
 {
 public:
-    virtual SInt64 Run()
-    {
-        QTSServer::RereadPrefsService(NULL);
-        return -1;
-    }
+	virtual SInt64 Run()
+	{
+		QTSServer::RereadPrefsService(nullptr);
+		return -1;
+	}
 };
 
 
