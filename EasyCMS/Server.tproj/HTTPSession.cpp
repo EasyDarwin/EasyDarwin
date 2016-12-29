@@ -627,8 +627,10 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 		EasyUtil::DelChar(strTime, ' ');
 	}
 
-	if ((image.size() <= 0) || (device_serial.size() <= 0) || (strType.size() <= 0) || (strTime.size() <= 0))
+	if (image.empty() || device_serial.empty() || strType.empty() || strTime.empty())
+	{
 		return QTSS_BadArgument;
+	}
 
 	image = EasyUtil::Base64Decode(image.data(), image.size());
 
@@ -874,7 +876,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	string strDeviceSerial = req.GetBodyValue(EASY_TAG_SERIAL);
 	string strChannel = req.GetBodyValue(EASY_TAG_CHANNEL);
 
-	if (strDeviceSerial.size() <= 0)
+	if (strDeviceSerial.empty())
 	{
 		return QTSS_BadArgument;
 	}
