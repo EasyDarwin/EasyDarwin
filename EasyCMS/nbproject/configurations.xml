@@ -561,10 +561,8 @@
             <pElem>.</pElem>
             <pElem>../EasyProtocol/Include</pElem>
             <pElem>../EasyProtocol/jsoncpp/include</pElem>
-            <pElem>APIModules/EasyAuthModule</pElem>
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
-            <pElem>../Include/FFmpeg/linux</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -584,9 +582,8 @@
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>../Lib/x64</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
-            <pElem>../Lib/FFmpeg/linux/x64</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt -leasyredisclient -lavformat -lavcodec -lavutil -lavfilter -lswscale -lavdevice -lswresample</commandLine>
+          <commandLine>-lCommonUtilitiesLib -ldl -lpthread -lEasyProtocol -ljsoncpp -lboost_system -lboost_thread -lrt -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPProtocol.cpp"
