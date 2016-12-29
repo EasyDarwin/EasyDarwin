@@ -4,10 +4,10 @@
 
 - 使用EasyDarwin收费吗？
 
-	免费，EasyDarwin流媒体服务器是在Apple开源项目Darwin Streaming Server的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体技术的迭代开发；
+	免费，EasyDarwin流媒体服务器是在Apple开源项目Darwin Streaming Server 6.0.3的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体的技术迭代开发和技术支持服务；
 	
 	
-	> 注：即使EasyDarwin流媒体服务器可能会调用到一些第三方的收费或者授权SDK代码，请直接与第三方团队或者开发者联系获取商业授权，EasyDarwin开源流媒体服务器只做技术研究的先行者；
+	> 注：即使EasyDarwin流媒体服务器可能会调用到一些第三方的收费或者商用授权SDK代码，请直接与第三方团队或开发者联系获取商业授权支持，EasyDarwin开源流媒体服务器只做技术研究的先行者；
 
 - EasyDarwin开源吗？
 
@@ -23,9 +23,9 @@
 
 ## 最新进展 ##
 
-### 2016.11.25
-1. EasyDarwin正在进行新架构模型的迭代，包括直播(RTSP/RTMP/HLS)，点播(ffmpeg+HLS)等方案；
-2. 移除Mongoose web管理功能，直接采用RESTful接口对外提供服务，届时会配套开发调用的html后台；
+### 2016.12.31
+1. EasyDarwin点播方案；
+2. 开发EasyDarwin web后台；
 
 ## 云平台结构 ##
 
