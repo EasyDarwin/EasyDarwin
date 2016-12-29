@@ -119,8 +119,7 @@ enum
     kLockStdLibCallback             = 59,
     kUnlockStdLibCallback           = 60,
 	kGetRTSPPushSessionsCallback	= 61,
-	kLastCallback                   = 62,
-	kGetRTSPRecordSessionsCallback	= 63
+	kLastCallback                   = 62
 };
 
 typedef struct {

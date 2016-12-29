@@ -400,10 +400,3 @@ void* Easy_GetRTSPPushSessions()
 {
 	return (void *) ((QTSS_CallbackPtrProcPtr) sCallbacks->addr [kGetRTSPPushSessionsCallback]) ();
 }
-
-void *Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime) {
-
-	return (void *)((QTSS_CallbackPtrProcPtr)sCallbacks->addr[kGetRTSPRecordSessionsCallback]) (inSessionName, startTime, endTime);
-
-}
-

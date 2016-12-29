@@ -1006,9 +1006,9 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 }
 
 
-void *QTSSCallbacks::Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime) 
-{
-	return nullptr;
+//void *QTSSCallbacks::Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime) 
+//{
+//	return nullptr;
 	//char * rootdir = RTSPRecordSession::getNetRecordRootPath();
 
 	//EasyMsgSCRecordList ack;
@@ -1064,4 +1064,4 @@ void *QTSSCallbacks::Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 star
 	//retMsg[theMsgLen] = '\0';
 	//strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
 	//return (void*)retMsg;
-}
+//}

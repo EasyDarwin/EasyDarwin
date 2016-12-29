@@ -2046,20 +2046,14 @@ void        QTSS_UnlockStdLib();
 // Get HLS Sessions(json)
 void*	Easy_GetRTSPPushSessions();
 
-void*   Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime);
 #ifdef QTSS_OLDROUTINENAMES
 
-//
 // Legacy routines
-
-//
 // QTSS_AddAttribute has been replaced by QTSS_AddStaticAttribute
 QTSS_Error QTSS_AddAttribute(QTSS_ObjectType inObjectType, const char* inAttributeName,
                                 void* inUnused);
 
 #endif
-
-
 
 #ifdef __cplusplus
 }
