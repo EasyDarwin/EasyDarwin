@@ -101,8 +101,6 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 
 ReflectorSession::~ReflectorSession()
 {
-	this->StopHLSSession();
-
 	// For each stream, check to see if the ReflectorStream should be deleted
 	for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
 	{
@@ -140,44 +138,6 @@ QTSS_Error ReflectorSession::SetSessionName()
 		}
 	}
 	return QTSS_NoErr;
-}
-
-QTSS_Error ReflectorSession::StartHLSSession()
-{
-	QTSS_Error theErr = QTSS_NoErr;
-
-	if (!fHLSLive)
-	{
-		// Get the ip addr out of the prefs dictionary
-		UInt16 thePort = 554;
-		UInt32 theLen = sizeof(UInt16);
-		theErr = QTSServerInterface::GetServer()->GetPrefs()->GetValue(qtssPrefsRTSPPorts, 0, &thePort, &theLen);
-		Assert(theErr == QTSS_NoErr);
-
-		//构造本地URL
-		char url[QTSS_MAX_URL_LENGTH] = { 0 };
-		qtss_sprintf(url, "rtsp://127.0.0.1:%d/%s", thePort, fSourceID.Ptr);
-
-		Easy_StartHLSession(fSourceID.Ptr, url, 0, nullptr);
-		//if(QTSS_NoErr == theErr)
-		fHLSLive = true;
-	}
-	
-	return theErr;
-}
-
-QTSS_Error ReflectorSession::StopHLSSession()
-{
-	QTSS_Error theErr = QTSS_NoErr;
-
-	if (fHLSLive)
-	{
-		theErr = Easy_StopHLSession(fSourceID.Ptr);
-		if (QTSS_NoErr == theErr)
-			fHLSLive = false;
-	}
-
-	return theErr;
 }
 
 QTSS_Error ReflectorSession::SetupReflectorSession(SourceInfo* inInfo, QTSS_StandardRTSP_Params* inParams, UInt32 inFlags, bool filterState, UInt32 filterTimeout)

@@ -98,8 +98,7 @@ public:
 		UInt32 inFlags = kMarkSetup, bool filterState = true, UInt32 filterTimeout = 30);
 
 	QTSS_Error		SetSessionName();
-	QTSS_Error		StartHLSSession();
-	QTSS_Error		StopHLSSession();
+
 	// Packets get forwarded by attaching ReflectorOutput objects to a ReflectorSession.
 
 	void    AddOutput(ReflectorOutput* inOutput, bool isClient);
