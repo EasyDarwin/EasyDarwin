@@ -23,15 +23,15 @@
  *
  */
  /*
-     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-     Github: https://github.com/EasyDarwin
-     WEChat: EasyDarwin
-     Website: http://www.EasyDarwin.org
+	 Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	 Github: https://github.com/EasyDarwin
+	 WEChat: EasyDarwin
+	 Website: http://www.EasyDarwin.org
  */
  /*
-     File:       QTSSErrorLogModule.cpp
+	 File:       QTSSErrorLogModule.cpp
 
-     Contains:   Implementation of object defined in .h file.
+	 Contains:   Implementation of object defined in .h file.
 
 
 
@@ -42,34 +42,36 @@
 #include "QTSSRollingLog.h"
 #include "QTSServerInterface.h"
 #include "QTSSExpirationDate.h"
-#include "OSMemory.h"
 #include "Task.h"
 
 #ifdef __linux__
 size_t strlcpy(char *dst, const char *src, size_t siz);
 size_t strlcpy(char *dst, const char *src, size_t siz)
 {
-    char *d = dst;
-    const char *s = src;
-    size_t n = siz;
+	char *d = dst;
+	const char *s = src;
+	size_t n = siz;
 
-    /* Copy as many bytes as will fit */
-    if (n != 0) {
-        while (--n != 0) {
-            if ((*d++ = *s++) == '\0')
-                break;
-        }
-    }
+	/* Copy as many bytes as will fit */
+	if (n != 0)
+	{
+		while (--n != 0)
+		{
+			if ((*d++ = *s++) == '\0')
+				break;
+		}
+	}
 
-    /* Not enough room in dst, add NUL and traverse rest of src */
-    if (n == 0) {
-        if (siz != 0)
-            *d = '\0';		/* NUL-terminate dst */
-        while (*s++)
-            ;
-    }
+	/* Not enough room in dst, add NUL and traverse rest of src */
+	if (n == 0)
+	{
+		if (siz != 0)
+			*d = '\0';		/* NUL-terminate dst */
+		while (*s++)
+			;
+	}
 
-    return(s - src - 1);	/* count does not include NUL */
+	return(s - src - 1);	/* count does not include NUL */
 }
 #endif
 
@@ -94,11 +96,11 @@ static void         WriteShutdownMessage();
 typedef char* LevelMsg;
 
 static LevelMsg sErrorLevel[] = {
-    "FATAL:",
-    "WARNING:",
-    "INFO:",
-    "ASSERT:",
-    "DEBUG:"
+	"FATAL:",
+	"WARNING:",
+	"INFO:",
+	"ASSERT:",
+	"DEBUG:"
 };
 
 // QTSSERRORLOG CLASS DEFINITION
@@ -107,16 +109,16 @@ class QTSSErrorLog : public QTSSRollingLog
 {
 public:
 
-    QTSSErrorLog() : QTSSRollingLog() { this->SetTaskName("QTSSErrorLog"); }
-    virtual ~QTSSErrorLog() {}
+	QTSSErrorLog() : QTSSRollingLog() { this->SetTaskName("QTSSErrorLog"); }
+	virtual ~QTSSErrorLog() {}
 
-    virtual char* getLogName() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogName(); }
+	char* getLogName() override { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogName(); }
 
-    virtual char* getLogDir() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogDir(); }
+	char* getLogDir() override { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorLogDir(); }
 
-    virtual UInt32 getRollIntervalInDays() { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorRollIntervalInDays(); }
-	
-    virtual UInt32 getMaxLogBytes() { return QTSServerInterface::GetServer()->GetPrefs()->GetMaxErrorLogBytes(); }
+	UInt32 getRollIntervalInDays() override { return QTSServerInterface::GetServer()->GetPrefs()->GetErrorRollIntervalInDays(); }
+
+	UInt32 getMaxLogBytes() override { return QTSServerInterface::GetServer()->GetPrefs()->GetMaxErrorLogBytes(); }
 
 };
 
@@ -125,23 +127,23 @@ public:
 class ErrorLogCheckTask : public Task
 {
 public:
-    ErrorLogCheckTask() : Task() { this->SetTaskName("ErrorLogCheckTask"); this->Signal(Task::kStartEvent); }
-    virtual ~ErrorLogCheckTask() {}
+	ErrorLogCheckTask() : Task() { this->SetTaskName("ErrorLogCheckTask"); this->Signal(Task::kStartEvent); }
+	virtual ~ErrorLogCheckTask() {}
 
 private:
-    virtual SInt64 Run();
+	virtual SInt64 Run();
 };
 
 const UInt32 kMaxLogStringLen = 2172;
 
 // STATIC DATA
 
-static OSMutex*         sLogMutex = NULL;//Log module isn't reentrant
-static QTSSErrorLog*    sErrorLog = NULL;
+static OSMutex*         sLogMutex = nullptr;//Log module isn't reentrant
+static QTSSErrorLog*    sErrorLog = nullptr;
 static char             sLastErrorString[kMaxLogStringLen] = "";
 static int              sDupErrorStringCount = 0;
 static bool           sStartedUp = false;
-static ErrorLogCheckTask* sErrorLogCheckTask = NULL;
+static ErrorLogCheckTask* sErrorLogCheckTask = nullptr;
 
 
 
@@ -149,24 +151,25 @@ static ErrorLogCheckTask* sErrorLogCheckTask = NULL;
 
 QTSS_Error QTSSErrorLogModule_Main(void* inPrivateArgs)
 {
-    return _stublibrary_main(inPrivateArgs, QTSSErrorLogModuleDispatch);
+	return _stublibrary_main(inPrivateArgs, QTSSErrorLogModuleDispatch);
 }
 
 
 QTSS_Error QTSSErrorLogModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inParamBlock)
 {
-    switch (inRole)
-    {
-    case QTSS_Register_Role:
-        return Register(&inParamBlock->regParams);
-    case QTSS_StateChange_Role:
-        return StateChange(&inParamBlock->stateChangeParams);
-    case QTSS_ErrorLog_Role:
-        return LogError(inParamBlock);
-    case QTSS_Shutdown_Role:
-        return Shutdown();
-    }
-    return QTSS_NoErr;
+	switch (inRole)
+	{
+	case QTSS_Register_Role:
+		return Register(&inParamBlock->regParams);
+	case QTSS_StateChange_Role:
+		return StateChange(&inParamBlock->stateChangeParams);
+	case QTSS_ErrorLog_Role:
+		return LogError(inParamBlock);
+	case QTSS_Shutdown_Role:
+		return Shutdown();
+	default: break;
+	}
+	return QTSS_NoErr;
 }
 
 
@@ -174,266 +177,266 @@ QTSS_Error QTSSErrorLogModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inPara
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
-    sLogMutex = NEW OSMutex();
+	sLogMutex = new OSMutex();
 
-    // Do role & service setup
+	// Do role & service setup
 
-    (void)QTSS_AddRole(QTSS_ErrorLog_Role);
-    (void)QTSS_AddRole(QTSS_Shutdown_Role);
-    (void)QTSS_AddRole(QTSS_StateChange_Role);
+	(void)QTSS_AddRole(QTSS_ErrorLog_Role);
+	(void)QTSS_AddRole(QTSS_Shutdown_Role);
+	(void)QTSS_AddRole(QTSS_StateChange_Role);
 
-    (void)QTSS_AddService("RollErrorLog", &RollErrorLog);
+	(void)QTSS_AddService("RollErrorLog", &RollErrorLog);
 
-    // Unlike most modules, all initialization for this module happens in
-    // the register role. This is so that this error log can begin logging
-    // errors ASAP.
+	// Unlike most modules, all initialization for this module happens in
+	// the register role. This is so that this error log can begin logging
+	// errors ASAP.
 
-    CheckErrorLogState();
-    WriteStartupMessage();
+	CheckErrorLogState();
+	WriteStartupMessage();
 
-    // Tell the server our name!
-    static char* sModuleName = "QTSSErrorLogModule";
-    ::strcpy(inParams->outModuleName, sModuleName);
+	// Tell the server our name!
+	static char* sModuleName = "QTSSErrorLogModule";
+	::strcpy(inParams->outModuleName, sModuleName);
 
-    sErrorLogCheckTask = NEW ErrorLogCheckTask();
+	sErrorLogCheckTask = new ErrorLogCheckTask();
 
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 QTSS_Error Shutdown()
 {
-    WriteShutdownMessage();
-    if (sErrorLogCheckTask != NULL)
-    {
-        // sErrorLogCheckTask is a task object, so don't delete it directly
-        // instead we signal it to kill itself.
-        sErrorLogCheckTask->Signal(Task::kKillEvent);
-        sErrorLogCheckTask = NULL;
-    }
-    return QTSS_NoErr;
+	WriteShutdownMessage();
+	if (sErrorLogCheckTask != nullptr)
+	{
+		// sErrorLogCheckTask is a task object, so don't delete it directly
+		// instead we signal it to kill itself.
+		sErrorLogCheckTask->Signal(Task::kKillEvent);
+		sErrorLogCheckTask = nullptr;
+	}
+	return QTSS_NoErr;
 }
 
 QTSS_Error StateChange(QTSS_StateChange_Params* stateChangeParams)
 {
-    if (stateChangeParams->inNewState == qtssIdleState)
-    {
-        WriteShutdownMessage();
-    }
-    else if (stateChangeParams->inNewState == qtssRunningState)
-    {
-        // Always force our preferences to be reread when we change
-        // the server's state back to the start -- [sfu]    
-        QTSS_ServiceID id;
-        (void)QTSS_IDForService(QTSS_REREAD_PREFS_SERVICE, &id);
-        (void)QTSS_DoService(id, NULL);
-        WriteStartupMessage();
-    }
+	if (stateChangeParams->inNewState == qtssIdleState)
+	{
+		WriteShutdownMessage();
+	}
+	else if (stateChangeParams->inNewState == qtssRunningState)
+	{
+		// Always force our preferences to be reread when we change
+		// the server's state back to the start -- [sfu]    
+		QTSS_ServiceID id;
+		(void)QTSS_IDForService(QTSS_REREAD_PREFS_SERVICE, &id);
+		(void)QTSS_DoService(id, nullptr);
+		WriteStartupMessage();
+	}
 
-    return QTSS_NoErr;
+	return QTSS_NoErr;
 }
 
 
 QTSS_Error LogError(QTSS_RoleParamPtr inParamBlock)
 {
-    Assert(NULL != inParamBlock->errorParams.inBuffer);
-    if (inParamBlock->errorParams.inBuffer == NULL)
-        return QTSS_NoErr;
+	Assert(nullptr != inParamBlock->errorParams.inBuffer);
+	if (inParamBlock->errorParams.inBuffer == nullptr)
+		return QTSS_NoErr;
 
-    UInt16 verbLvl = (UInt16)inParamBlock->errorParams.inVerbosity;
-    if (verbLvl >= qtssIllegalVerbosity)
-        verbLvl = qtssFatalVerbosity;
+	UInt16 verbLvl = (UInt16)inParamBlock->errorParams.inVerbosity;
+	if (verbLvl >= qtssIllegalVerbosity)
+		verbLvl = qtssFatalVerbosity;
 
-    QTSServerPrefs* thePrefs = QTSServerInterface::GetServer()->GetPrefs();
+	QTSServerPrefs* thePrefs = QTSServerInterface::GetServer()->GetPrefs();
 
-    OSMutexLocker locker(sLogMutex);
-    if (thePrefs->GetErrorLogVerbosity() >= inParamBlock->errorParams.inVerbosity)
-    {
-        size_t inStringLen = ::strlen(inParamBlock->errorParams.inBuffer);
-        size_t lastStringLen = ::strlen(sLastErrorString);
-        bool isDuplicate = true;
+	OSMutexLocker locker(sLogMutex);
+	if (thePrefs->GetErrorLogVerbosity() >= inParamBlock->errorParams.inVerbosity)
+	{
+		size_t inStringLen = ::strlen(inParamBlock->errorParams.inBuffer);
+		size_t lastStringLen = ::strlen(sLastErrorString);
+		bool isDuplicate = true;
 
-        if (inStringLen > sizeof(sLastErrorString) - 1) //truncate to max char buffer subtract \0 terminator
-            inStringLen = sizeof(sLastErrorString) - 1;
+		if (inStringLen > sizeof(sLastErrorString) - 1) //truncate to max char buffer subtract \0 terminator
+			inStringLen = sizeof(sLastErrorString) - 1;
 
-        if (lastStringLen != inStringLen) //same size?
-            isDuplicate = false; // different sizes
-        else if (::strncmp(inParamBlock->errorParams.inBuffer, sLastErrorString, lastStringLen) != 0) //same chars?
-            isDuplicate = false; //different  chars
-        isDuplicate = false;
+		if (lastStringLen != inStringLen) //same size?
+			isDuplicate = false; // different sizes
+		else if (::strncmp(inParamBlock->errorParams.inBuffer, sLastErrorString, lastStringLen) != 0) //same chars?
+			isDuplicate = false; //different  chars
+		isDuplicate = false;
 
-        //is this error message the same as the last one we received?       
-        if (isDuplicate)
-        {   //yes?  increment count and bail if it's not the first time we've seen this message (otherwise fall thourhg and write it to the log)
-            sDupErrorStringCount++;
-            return QTSS_NoErr;
-        }
-        else
-        {
-            //we have a new error message, write a "previous line" message before writing the new log entry
-            if (sDupErrorStringCount >= 1)
-            {
-                /***  clean this up - lots of duplicate code ***/
+		//is this error message the same as the last one we received?       
+		if (isDuplicate)
+		{   //yes?  increment count and bail if it's not the first time we've seen this message (otherwise fall thourhg and write it to the log)
+			sDupErrorStringCount++;
+			return QTSS_NoErr;
+		}
+		else
+		{
+			//we have a new error message, write a "previous line" message before writing the new log entry
+			if (sDupErrorStringCount >= 1)
+			{
+				/***  clean this up - lots of duplicate code ***/
 
-                    //The error logger is the bottleneck for any and all messages printed by the server.
-                    //For debugging purposes, these messages can be printed to stdout as well.
-                if (thePrefs->IsScreenLoggingEnabled())
-                    qtss_printf("--last message repeated %d times\n", sDupErrorStringCount);
+					//The error logger is the bottleneck for any and all messages printed by the server.
+					//For debugging purposes, these messages can be printed to stdout as well.
+				if (thePrefs->IsScreenLoggingEnabled())
+					qtss_printf("--last message repeated %d times\n", sDupErrorStringCount);
 
-                CheckErrorLogState();
+				CheckErrorLogState();
 
-                if (sErrorLog == NULL)
-                    return QTSS_NoErr;
+				if (sErrorLog == nullptr)
+					return QTSS_NoErr;
 
-                //timestamp the error
-                char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-                bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
-                //for now, just ignore the error.
-                if (!result)
-                    theDateBuffer[0] = '\0';
+				//timestamp the error
+				char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
+				bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+				//for now, just ignore the error.
+				if (!result)
+					theDateBuffer[0] = '\0';
 
-                char tempBuffer[kMaxLogStringLen];
-                qtss_snprintf(tempBuffer, sizeof(tempBuffer), "%s: --last message repeated %d times\n", theDateBuffer, sDupErrorStringCount);
+				char tempBuffer[kMaxLogStringLen];
+				qtss_snprintf(tempBuffer, sizeof(tempBuffer), "%s: --last message repeated %d times\n", theDateBuffer, sDupErrorStringCount);
 
-                sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
+				sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
 
-                sDupErrorStringCount = 0;
-            }
+				sDupErrorStringCount = 0;
+			}
 #ifdef __Win32__
-            ::strncpy(sLastErrorString, inParamBlock->errorParams.inBuffer, sizeof(sLastErrorString));
+			::strncpy(sLastErrorString, inParamBlock->errorParams.inBuffer, sizeof(sLastErrorString));
 #else
-            ::strlcpy(sLastErrorString, inParamBlock->errorParams.inBuffer, sizeof(sLastErrorString));
+			::strlcpy(sLastErrorString, inParamBlock->errorParams.inBuffer, sizeof(sLastErrorString));
 #endif
 
-        }
+		}
 
-        //The error logger is the bottleneck for any and all messages printed by the server.
-        //For debugging purposes, these messages can be printed to stdout as well.
-        ////if (thePrefs->IsScreenLoggingEnabled())
-            ////qtss_printf("%s %s\n", sErrorLevel[verbLvl], inParamBlock->errorParams.inBuffer);
+		//The error logger is the bottleneck for any and all messages printed by the server.
+		//For debugging purposes, these messages can be printed to stdout as well.
+		////if (thePrefs->IsScreenLoggingEnabled())
+			////qtss_printf("%s %s\n", sErrorLevel[verbLvl], inParamBlock->errorParams.inBuffer);
 
-        CheckErrorLogState();
+		CheckErrorLogState();
 
-        if (sErrorLog == NULL)
-            return QTSS_NoErr;
+		if (sErrorLog == nullptr)
+			return QTSS_NoErr;
 
-        //timestamp the error
-        char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-        bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
-        //for now, just ignore the error.
-        if (!result)
-            theDateBuffer[0] = '\0';
+		//timestamp the error
+		char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
+		bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+		//for now, just ignore the error.
+		if (!result)
+			theDateBuffer[0] = '\0';
 
-        char tempBuffer[kMaxLogStringLen];
-        qtss_snprintf(tempBuffer, sizeof(tempBuffer), "%s: %s %s\n", theDateBuffer, sErrorLevel[verbLvl], inParamBlock->errorParams.inBuffer);
-        tempBuffer[sizeof(tempBuffer) - 2] = '\n'; //make sure the entry has a line feed before the \0 terminator
-        tempBuffer[sizeof(tempBuffer) - 1] = '\0'; //make sure it is 0 terminated.
+		char tempBuffer[kMaxLogStringLen];
+		qtss_snprintf(tempBuffer, sizeof(tempBuffer), "%s: %s %s\n", theDateBuffer, sErrorLevel[verbLvl], inParamBlock->errorParams.inBuffer);
+		tempBuffer[sizeof(tempBuffer) - 2] = '\n'; //make sure the entry has a line feed before the \0 terminator
+		tempBuffer[sizeof(tempBuffer) - 1] = '\0'; //make sure it is 0 terminated.
 
-        if (thePrefs->IsScreenLoggingEnabled())
-            qtss_printf("%s", tempBuffer);
-        sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
-    }
-    return QTSS_NoErr;
+		if (thePrefs->IsScreenLoggingEnabled())
+			qtss_printf("%s", tempBuffer);
+		sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
+	}
+	return QTSS_NoErr;
 }
 
 
 void CheckErrorLogState()
 {
-    //this function makes sure the logging state is in synch with the preferences.
-    //extern variable declared in QTSSPreferences.h
+	//this function makes sure the logging state is in synch with the preferences.
+	//extern variable declared in QTSSPreferences.h
 
-    QTSServerPrefs* thePrefs = QTSServerInterface::GetServer()->GetPrefs();
+	QTSServerPrefs* thePrefs = QTSServerInterface::GetServer()->GetPrefs();
 
-    //check error log.
-    if ((NULL == sErrorLog) && (thePrefs->IsErrorLogEnabled()))
-    {
-        sErrorLog = NEW QTSSErrorLog();
-        sErrorLog->EnableLog();
-    }
+	//check error log.
+	if ((nullptr == sErrorLog) && (thePrefs->IsErrorLogEnabled()))
+	{
+		sErrorLog = new QTSSErrorLog();
+		sErrorLog->EnableLog();
+	}
 
-    if ((NULL != sErrorLog) && (!thePrefs->IsErrorLogEnabled()))
-    {
-        sErrorLog->Delete(); //sErrorLog is a task object, so don't delete it directly
-        sErrorLog = NULL;
-    }
+	if ((nullptr != sErrorLog) && (!thePrefs->IsErrorLogEnabled()))
+	{
+		sErrorLog->Delete(); //sErrorLog is a task object, so don't delete it directly
+		sErrorLog = nullptr;
+	}
 }
 
 // SERVICE ROUTINES
 
 QTSS_Error RollErrorLog(QTSS_ServiceFunctionArgsPtr /*inArgs*/)
 {
-    OSMutexLocker locker(sLogMutex);
-    if (sErrorLog != NULL)
-        sErrorLog->RollLog();
-    return QTSS_NoErr;
+	OSMutexLocker locker(sLogMutex);
+	if (sErrorLog != nullptr)
+		sErrorLog->RollLog();
+	return QTSS_NoErr;
 }
 
 void WriteStartupMessage()
 {
-    if (sStartedUp)
-        return;
+	if (sStartedUp)
+		return;
 
-    sStartedUp = true;
+	sStartedUp = true;
 
-    //format a date for the startup time
-    char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-    bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	//format a date for the startup time
+	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
-    char tempBuffer[kMaxLogStringLen];
-    if (result)
-        qtss_snprintf(tempBuffer, sizeof(tempBuffer), "# Streaming STARTUP %s\n", theDateBuffer);
+	char tempBuffer[kMaxLogStringLen];
+	if (result)
+		qtss_snprintf(tempBuffer, sizeof(tempBuffer), "# Streaming STARTUP %s\n", theDateBuffer);
 
-    // log startup message to error log as well.
-    if ((result) && (sErrorLog != NULL))
-        sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
+	// log startup message to error log as well.
+	if ((result) && (sErrorLog != nullptr))
+		sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
 
-    //write the expire date to the log
-    if (QTSSExpirationDate::WillSoftwareExpire() && sErrorLog != NULL)
-    {
-        QTSSExpirationDate::sPrintExpirationDate(tempBuffer);
-        sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
-    }
+	//write the expire date to the log
+	if (QTSSExpirationDate::WillSoftwareExpire() && sErrorLog != nullptr)
+	{
+		QTSSExpirationDate::sPrintExpirationDate(tempBuffer);
+		sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
+	}
 }
 
 void WriteShutdownMessage()
 {
-    if (!sStartedUp)
-        return;
+	if (!sStartedUp)
+		return;
 
-    sStartedUp = false;
+	sStartedUp = false;
 
-    //log shutdown message
-    //format a date for the shutdown time
-    char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
-    bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
+	//log shutdown message
+	//format a date for the shutdown time
+	char theDateBuffer[QTSSRollingLog::kMaxDateBufferSizeInBytes];
+	bool result = QTSSRollingLog::FormatDate(theDateBuffer, false);
 
-    char tempBuffer[kMaxLogStringLen];
-    if (result)
-        qtss_snprintf(tempBuffer, sizeof(tempBuffer), "# Streaming SHUTDOWN %s\n", theDateBuffer);
+	char tempBuffer[kMaxLogStringLen];
+	if (result)
+		qtss_snprintf(tempBuffer, sizeof(tempBuffer), "# Streaming SHUTDOWN %s\n", theDateBuffer);
 
-    if (result && sErrorLog != NULL)
-        sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
+	if (result && sErrorLog != nullptr)
+		sErrorLog->WriteToLog(tempBuffer, kAllowLogToRoll);
 }
 
 // This task runs once an hour to check and see if the log needs to roll.
 SInt64 ErrorLogCheckTask::Run()
 {
-    static bool firstTime = true;
+	static bool firstTime = true;
 
-    // don't check the log for rolling the first time we run.
-    if (firstTime)
-    {
-        firstTime = false;
-    }
-    else
-    {
-        bool success = false;
+	// don't check the log for rolling the first time we run.
+	if (firstTime)
+	{
+		firstTime = false;
+	}
+	else
+	{
+		bool success = false;
 
-        if (sErrorLog != NULL && sErrorLog->IsLogEnabled())
-            success = sErrorLog->CheckRollLog();
-        Assert(success);
-    }
-    // execute this task again in one hour.
-    return (60 * 60 * 1000);
+		if (sErrorLog != nullptr && sErrorLog->IsLogEnabled())
+			success = sErrorLog->CheckRollLog();
+		Assert(success);
+	}
+	// execute this task again in one hour.
+	return (60 * 60 * 1000);
 }
 
 
