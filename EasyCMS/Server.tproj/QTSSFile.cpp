@@ -39,11 +39,11 @@
 
 QTSSAttrInfoDict::AttrInfo QTSSFile::sAttributes[] =
 {   /*fields:   fAttrName, fFuncPtr, fAttrDataType, fAttrPermission */
-	/* 0 */ { "qtssFlObjStream",                NULL,   qtssAttrDataTypeQTSS_StreamRef, qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 1 */ { "qtssFlObjFileSysModuleName",     NULL,   qtssAttrDataTypeCharArray,      qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 2 */ { "qtssFlObjLength",                NULL,   qtssAttrDataTypeUInt64,         qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
-	/* 3 */ { "qtssFlObjPosition",              NULL,   qtssAttrDataTypeUInt64,         qtssAttrModeRead | qtssAttrModePreempSafe },
-	/* 4 */ { "qtssFlObjModDate",               NULL,   qtssAttrDataTypeUInt64,         qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite }
+	/* 0 */ { "qtssFlObjStream",                nullptr,   qtssAttrDataTypeQTSS_StreamRef, qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 1 */ { "qtssFlObjFileSysModuleName",     nullptr,   qtssAttrDataTypeCharArray,      qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 2 */ { "qtssFlObjLength",                nullptr,   qtssAttrDataTypeUInt64,         qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite },
+	/* 3 */ { "qtssFlObjPosition",              nullptr,   qtssAttrDataTypeUInt64,         qtssAttrModeRead | qtssAttrModePreempSafe },
+	/* 4 */ { "qtssFlObjModDate",               nullptr,   qtssAttrDataTypeUInt64,         qtssAttrModeRead | qtssAttrModePreempSafe | qtssAttrModeWrite }
 };
 
 void QTSSFile::Initialize()
@@ -55,7 +55,7 @@ void QTSSFile::Initialize()
 
 QTSSFile::QTSSFile()
 	: QTSSDictionary(QTSSDictionaryMap::GetMap(QTSSDictionaryMap::kFileDictIndex)),
-	fModule(NULL),
+	fModule(nullptr),
 	fPosition(0),
 	fLength(0),
 	fModDate(0)
@@ -74,12 +74,12 @@ QTSS_Error QTSSFile::Open(char* inPath, QTSS_OpenFileFlags inFlags)
 	//
 	// Because this is a role being executed from inside a callback, we need to
 	// make sure that QTSS_RequestEvent will not work.
-	Task* curTask = NULL;
+	Task* curTask = nullptr;
 	QTSS_ModuleState* theState = (QTSS_ModuleState*)OSThread::GetMainThreadData();
-	if (OSThread::GetCurrent() != NULL)
+	if (OSThread::GetCurrent() != nullptr)
 		theState = (QTSS_ModuleState*)OSThread::GetCurrent()->GetThreadData();
 
-	if (theState != NULL)
+	if (theState != nullptr)
 		curTask = theState->curTask;
 
 	QTSS_RoleParams theParams;
@@ -113,7 +113,7 @@ QTSS_Error QTSSFile::Open(char* inPath, QTSS_OpenFileFlags inFlags)
 
 	//
 	// Reset the curTask to what it was before this role started
-	if (theState != NULL)
+	if (theState != nullptr)
 		theState->curTask = curTask;
 
 	return theErr;
@@ -121,7 +121,7 @@ QTSS_Error QTSSFile::Open(char* inPath, QTSS_OpenFileFlags inFlags)
 
 void QTSSFile::Close()
 {
-	Assert(fModule != NULL);
+	Assert(fModule != nullptr);
 
 	QTSS_RoleParams theParams;
 	theParams.closeFileParams.inFileObject = this;
@@ -131,7 +131,7 @@ void QTSSFile::Close()
 
 QTSS_Error QTSSFile::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outLengthRead)
 {
-	Assert(fModule != NULL);
+	Assert(fModule != nullptr);
 	UInt32 theLenRead = 0;
 
 	//
@@ -146,7 +146,7 @@ QTSS_Error QTSSFile::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outLengthRead
 	QTSS_Error theErr = fModule->CallDispatch(QTSS_ReadFile_Role, &theParams);
 
 	fPosition += theLenRead;
-	if (outLengthRead != NULL)
+	if (outLengthRead != nullptr)
 		*outLengthRead = theLenRead;
 
 	return theErr;
@@ -154,7 +154,7 @@ QTSS_Error QTSSFile::Read(void* ioBuffer, UInt32 inBufLen, UInt32* outLengthRead
 
 QTSS_Error QTSSFile::Seek(UInt64 inNewPosition)
 {
-	UInt64* theFileLength = NULL;
+	UInt64* theFileLength = nullptr;
 	UInt32 theParamLength = 0;
 
 	(void)this->GetValuePtr(qtssFlObjLength, 0, (void**)(void*)&theFileLength, &theParamLength);
@@ -171,7 +171,7 @@ QTSS_Error QTSSFile::Seek(UInt64 inNewPosition)
 
 QTSS_Error QTSSFile::Advise(UInt64 inPosition, UInt32 inAdviseSize)
 {
-	Assert(fModule != NULL);
+	Assert(fModule != nullptr);
 
 	//
 	// Invoke the owning QTSS API module. Setup a param block to do so.
@@ -185,7 +185,7 @@ QTSS_Error QTSSFile::Advise(UInt64 inPosition, UInt32 inAdviseSize)
 
 QTSS_Error QTSSFile::RequestEvent(QTSS_EventType inEventMask)
 {
-	Assert(fModule != NULL);
+	Assert(fModule != nullptr);
 
 	//
 	// Invoke the owning QTSS API module. Setup a param block to do so.

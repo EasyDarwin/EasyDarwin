@@ -69,7 +69,7 @@ public:
 	// name of the module will be its file name. Otherwise, the
 	// inName parameter will set it.
 
-	QTSSModule(char* inName, char* inPath = NULL);
+	QTSSModule(char* inName, char* inPath = nullptr);
 
 	// This function does all the module setup. If the module is being
 	// loaded from disk, you need not pass in a main entrypoint (as
@@ -77,7 +77,7 @@ public:
 	// in a main entrypoint.
 	//
 	// Note that this function does not invoke any public module roles.
-	QTSS_Error  SetupModule(QTSS_CallbacksPtr inCallbacks, QTSS_MainEntryPointPtr inEntrypoint = NULL);
+	QTSS_Error  SetupModule(QTSS_CallbacksPtr inCallbacks, QTSS_MainEntryPointPtr inEntrypoint = nullptr);
 
 	// Doesn't free up internally allocated stuff
 	virtual ~QTSSModule() {}
@@ -90,7 +90,7 @@ public:
 	// ACCESSORS
 
 	OSQueueElem*    GetQueueElem() { return &fQueueElem; }
-	bool          IsInitialized() { return fDispatchFunc != NULL; }
+	bool          IsInitialized() { return fDispatchFunc != nullptr; }
 	QTSSPrefs*      GetPrefsDict() { return fPrefs; }
 	QTSSDictionary* GetAttributesDict() { return fAttributes; }
 	OSMutex*        GetAttributesMutex() { return &fAttributesMutex; }
