@@ -35,9 +35,6 @@
     <Filter Include="Source Files\API Modules\EasyHLSModule">
       <UniqueIdentifier>{ae02ba8a-e5fd-47e3-b5af-16082afccd5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\API Modules\RTSPRecordModule">
-      <UniqueIdentifier>{7073c92b-0ae7-4723-a8cb-a931e6f767c5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
@@ -241,15 +238,6 @@
     <ClCompile Include="..\FileBrowserUtils\SearchFileDir.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\APIModules\RtspRecordModule\EasyMP4Writer.cpp">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\RTSPRecordModule\RTSPRecordModule.cpp">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\APIModules\RTSPRecordModule\RTSPRecordSession.cpp">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h">
@@ -287,18 +275,6 @@
     </ClInclude>
     <ClInclude Include="..\APIModules\EasyHLSModule\EasyHLSSession.h">
       <Filter>Source Files\API Modules\EasyHLSModule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\APIModules\RtspRecordModule\EasyMP4Writer.h">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\FileBrowserUtils\SearchFileDir.h">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\APIModules\RTSPRecordModule\RTSPRecordModule.h">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\APIModules\RTSPRecordModule\RTSPRecordSession.h">
-      <Filter>Source Files\API Modules\RTSPRecordModule</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

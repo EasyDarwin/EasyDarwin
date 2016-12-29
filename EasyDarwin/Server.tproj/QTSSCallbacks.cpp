@@ -48,8 +48,6 @@
 #include "EasyProtocol.h"
 
 #include "ReflectorSession.h"
-#include "SearchFileDir.h"
-#include "RTSPRecordSession.h"
 
 using namespace EasyDarwin::Protocol;
 using namespace std;
@@ -1050,61 +1048,62 @@ void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 }
 
 
-void *QTSSCallbacks::Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime) {
+void *QTSSCallbacks::Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime) 
+{
+	return nullptr;
+	//char * rootdir = RTSPRecordSession::getNetRecordRootPath();
 
-	char * rootdir = RTSPRecordSession::getNetRecordRootPath();
+	//EasyMsgSCRecordList ack;
+	//ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
+	//ack.SetHeaderValue(EASY_TAG_CSEQ, "1");
 
-	EasyMsgSCRecordList ack;
-	ack.SetHeaderValue(EASY_TAG_VERSION, "1.0");
-	ack.SetHeaderValue(EASY_TAG_CSEQ, "1");
+	//char folder[QTSS_MAX_NAME_LENGTH] = { 0 };
+	////char movieFolder[QTSS_MAX_NAME_LENGTH] = { 0 };
+	////UInt32 pathLen = QTSS_MAX_NAME_LENGTH;
+	////QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
 
-	char folder[QTSS_MAX_NAME_LENGTH] = { 0 };
-	//char movieFolder[QTSS_MAX_NAME_LENGTH] = { 0 };
-	//UInt32 pathLen = QTSS_MAX_NAME_LENGTH;
-	//QTSServerInterface::GetServer()->GetPrefs()->GetMovieFolder(&movieFolder[0], &pathLen);
+	//char *movieFolder = RTSPRecordSession::getRecordRootPath();
 
-	char *movieFolder = RTSPRecordSession::getRecordRootPath();
+	//char httpRoot[QTSS_MAX_NAME_LENGTH] = { 0 };
 
-	char httpRoot[QTSS_MAX_NAME_LENGTH] = { 0 };
+	//qtss_sprintf(httpRoot, "%sMP4/%s/", rootdir, inSessionName);
 
-	qtss_sprintf(httpRoot, "%sMP4/%s/", rootdir, inSessionName);
+	//char subDir[QTSS_MAX_NAME_LENGTH] = { 0 };
+	//qtss_sprintf(subDir, "%s/", inSessionName);
 
-	char subDir[QTSS_MAX_NAME_LENGTH] = { 0 };
-	qtss_sprintf(subDir, "%s/", inSessionName);
+	////char rootDir[QTSS_MAX_NAME_LENGTH] = { 0 };
+	////qtss_sprintf(rootDir,"%s/", movieFolder);
+	//qtss_sprintf(folder, "%sMP4/%s/", movieFolder, subDir);
+	//vector<FileAttributeInfo> list;
 
-	//char rootDir[QTSS_MAX_NAME_LENGTH] = { 0 };
-	//qtss_sprintf(rootDir,"%s/", movieFolder);
-	qtss_sprintf(folder, "%sMP4/%s/", movieFolder, subDir);
-	vector<FileAttributeInfo> list;
+	//vector<string> machList;
+	//machList.push_back(".mp4");
+	//SearchFileDir *dir = SearchFileDir::getInstance();
+	//UInt32 uIndex = 0;
+	//if (dir->searchFileList(folder, list, machList, false)) {
 
-	vector<string> machList;
-	machList.push_back(".mp4");
-	SearchFileDir *dir = SearchFileDir::getInstance();
-	UInt32 uIndex = 0;
-	if (dir->searchFileList(folder, list, machList, false)) {
+	//	for (auto iter : list) {
+	//		if (iter.file_info.st_mtime >= startTime && iter.file_info.st_ctime <= endTime) {
+	//			EasyDarwinRecordSession session;
+	//			session.index = uIndex;
+	//			session.Name = httpRoot + iter.fileName;
+	//			session.startTime = iter.file_info.st_ctime;
+	//			session.endTime = iter.file_info.st_mtime;
+	//			ack.AddRecord(session);
+	//			uIndex++;
+	//		}
+	//	}
+	//}
 
-		for (auto iter : list) {
-			if (iter.file_info.st_mtime >= startTime && iter.file_info.st_ctime <= endTime) {
-				EasyDarwinRecordSession session;
-				session.index = uIndex;
-				session.Name = httpRoot + iter.fileName;
-				session.startTime = iter.file_info.st_ctime;
-				session.endTime = iter.file_info.st_mtime;
-				ack.AddRecord(session);
-				uIndex++;
-			}
-		}
-	}
+	//char count[16] = { 0 };
+	//sprintf(count, "%d", uIndex);
+	//ack.SetBodyValue(EASY_TAG_SESSION_COUNT, count);
 
-	char count[16] = { 0 };
-	sprintf(count, "%d", uIndex);
-	ack.SetBodyValue(EASY_TAG_SESSION_COUNT, count);
+	//string msg = ack.GetMsg();
 
-	string msg = ack.GetMsg();
-
-	UInt32 theMsgLen = strlen(msg.c_str());
-	char* retMsg = new char[theMsgLen + 1];
-	retMsg[theMsgLen] = '\0';
-	strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
-	return (void*)retMsg;
+	//UInt32 theMsgLen = strlen(msg.c_str());
+	//char* retMsg = new char[theMsgLen + 1];
+	//retMsg[theMsgLen] = '\0';
+	//strncpy(retMsg, msg.c_str(), strlen(msg.c_str()));
+	//return (void*)retMsg;
 }

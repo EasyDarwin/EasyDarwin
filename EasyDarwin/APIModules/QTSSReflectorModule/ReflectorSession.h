@@ -39,7 +39,6 @@
 #include "ReflectorStream.h"
 #include "SourceInfo.h"
 #include "Task.h"//add
-#include "RTSPRecordSession.h"
 #include <atomic>
 
 #ifndef _FILE_DELETER_
@@ -101,9 +100,6 @@ public:
 	QTSS_Error		SetSessionName();
 	QTSS_Error		StartHLSSession();
 	QTSS_Error		StopHLSSession();
-
-	QTSS_Error		StartRecordSession();
-	QTSS_Error		StopRecordSession();
 	// Packets get forwarded by attaching ReflectorOutput objects to a ReflectorSession.
 
 	void    AddOutput(ReflectorOutput* inOutput, bool isClient);
@@ -205,7 +201,6 @@ private:
 	bool		fHasBufferedStreams;
 	bool		fHasVideoKeyFrameUpdate;
 
-	RTSPRecordSession	*_recordWriter;
 private:
 	virtual SInt64 Run();
 };
