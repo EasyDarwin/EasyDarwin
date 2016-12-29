@@ -434,8 +434,8 @@ namespace EasyDarwin { namespace Protocol
 
 	public:
 		int index;
-		__int64 startTime;
-		__int64 endTime;
+		long long startTime;
+		long long endTime;
 		std::string Name;
 		int numOutputs;
 	};
