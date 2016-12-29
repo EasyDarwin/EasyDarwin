@@ -23,15 +23,15 @@
  *
  */
  /*
-     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-     Github: https://github.com/EasyDarwin
-     WEChat: EasyDarwin
-     Website: http://www.EasyDarwin.org
+	 Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	 Github: https://github.com/EasyDarwin
+	 WEChat: EasyDarwin
+	 Website: http://www.EasyDarwin.org
  */
  /*
-     File:       QTSSExpirationDate.cpp
+	 File:       QTSSExpirationDate.cpp
 
-     Contains:   Implementation of class defined in QTSSExpirationDate.h
+	 Contains:   Implementation of class defined in QTSSExpirationDate.h
  */
 
 #include "QTSSExpirationDate.h"
@@ -46,66 +46,66 @@ char* QTSSExpirationDate::sExpirationDate = "12/31/2017";
 
 void QTSSExpirationDate::PrintExpirationDate()
 {
-    if (sIsExpirationEnabled)
-        qtss_printf("Software expires on: %s,Get latest version on www.easydarwin.org\n", sExpirationDate);
+	if (sIsExpirationEnabled)
+		qtss_printf("Software expires on: %s,Get latest version on www.easydarwin.org\n", sExpirationDate);
 }
 
 void QTSSExpirationDate::sPrintExpirationDate(char* ioExpireMessage)
 {
-    if (sIsExpirationEnabled)
-        qtss_sprintf(ioExpireMessage, "Software expires on: %s\n", sExpirationDate);
+	if (sIsExpirationEnabled)
+		qtss_sprintf(ioExpireMessage, "Software expires on: %s\n", sExpirationDate);
 }
 
 
 bool QTSSExpirationDate::IsSoftwareExpired()
 {
-    if (!sIsExpirationEnabled)
-        return false;
+	if (!sIsExpirationEnabled)
+		return false;
 
-    SInt32 expMonth, expDay, expYear;
-    if (EOF == ::sscanf(sExpirationDate, "%" _U32BITARG_ "/%" _U32BITARG_ "/%" _U32BITARG_ "", &expMonth, &expDay, &expYear))
-    {
-        Assert(false);
-        return true;
-    }
+	SInt32 expMonth, expDay, expYear;
+	if (EOF == ::sscanf(sExpirationDate, "%" _U32BITARG_ "/%" _U32BITARG_ "/%" _U32BITARG_ "", &expMonth, &expDay, &expYear))
+	{
+		Assert(false);
+		return true;
+	}
 
-    //sanity checks
-    Assert((expMonth > 0) && (expMonth <= 12));
-    if ((expMonth <= 0) || (expMonth > 12))
-        return true;
+	//sanity checks
+	Assert((expMonth > 0) && (expMonth <= 12));
+	if ((expMonth <= 0) || (expMonth > 12))
+		return true;
 
-    Assert((expDay > 0) && (expDay <= 31));
-    if ((expDay <= 0) || (expDay > 31))
-        return true;
+	Assert((expDay > 0) && (expDay <= 31));
+	if ((expDay <= 0) || (expDay > 31))
+		return true;
 
-    Assert(expYear >= 1998);
-    if (expYear < 1998)
-        return true;
+	Assert(expYear >= 1998);
+	if (expYear < 1998)
+		return true;
 
-    time_t theCurrentTime = ::time(NULL);
-    Assert(theCurrentTime != -1);
-    if (theCurrentTime == -1)
-        return true;
+	time_t theCurrentTime = ::time(nullptr);
+	Assert(theCurrentTime != -1);
+	if (theCurrentTime == -1)
+		return true;
 
-    struct tm  timeResult;
-    struct tm* theLocalTime = qtss_localtime(&theCurrentTime, &timeResult);
-    Assert(theLocalTime != NULL);
-    if (theLocalTime == NULL)
-        return true;
+	struct tm  timeResult;
+	struct tm* theLocalTime = qtss_localtime(&theCurrentTime, &timeResult);
+	Assert(theLocalTime != nullptr);
+	if (theLocalTime == nullptr)
+		return true;
 
-    if (expYear > (theLocalTime->tm_year + 1900))
-        return false;//ok
-    if (expYear < (theLocalTime->tm_year + 1900))
-        return true;//expired
+	if (expYear > (theLocalTime->tm_year + 1900))
+		return false;//ok
+	if (expYear < (theLocalTime->tm_year + 1900))
+		return true;//expired
 
-    if (expMonth > (theLocalTime->tm_mon + 1))
-        return false;//ok
-    if (expMonth < (theLocalTime->tm_mon + 1))
-        return true;//expired
+	if (expMonth > (theLocalTime->tm_mon + 1))
+		return false;//ok
+	if (expMonth < (theLocalTime->tm_mon + 1))
+		return true;//expired
 
-    if (expDay > theLocalTime->tm_mday)
-        return false;//ok
-    else
-        return true;//expired
+	if (expDay > theLocalTime->tm_mday)
+		return false;//ok
+	else
+		return true;//expired
 }
 

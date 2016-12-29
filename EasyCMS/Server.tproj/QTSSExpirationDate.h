@@ -23,19 +23,19 @@
  *
  */
  /*
-     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-     Github: https://github.com/EasyDarwin
-     WEChat: EasyDarwin
-     Website: http://www.EasyDarwin.org
+	 Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	 Github: https://github.com/EasyDarwin
+	 WEChat: EasyDarwin
+	 Website: http://www.EasyDarwin.org
  */
  /*
-     File:       QTSSExpirationDate.h
+	 File:       QTSSExpirationDate.h
 
-     Contains:   Routine that checks to see if software is expired.
+	 Contains:   Routine that checks to see if software is expired.
 
-     Written by: Denis Serenyi
+	 Written by: Denis Serenyi
 
-     Copyright:  ?1998 by Apple Computer, Inc., all rights reserved.
+	 Copyright:  ?1998 by Apple Computer, Inc., all rights reserved.
  */
 
 #ifndef __QTSS_EXPIRATION_DATE_H__
@@ -47,16 +47,16 @@ class QTSSExpirationDate
 {
 public:
 
-    //checks current time vs. hard coded time constant.
-    static bool WillSoftwareExpire() { return sIsExpirationEnabled; }
-    static bool IsSoftwareExpired();
-    static void PrintExpirationDate();
-    static void sPrintExpirationDate(char* ioExpireMessage);
+	//checks current time vs. hard coded time constant.
+	static bool WillSoftwareExpire() { return sIsExpirationEnabled; }
+	static bool IsSoftwareExpired();
+	static void PrintExpirationDate();
+	static void sPrintExpirationDate(char* ioExpireMessage);
 
 private:
 
-    static bool sIsExpirationEnabled;
-    static char* sExpirationDate;
+	static bool sIsExpirationEnabled;
+	static char* sExpirationDate;
 
 };
 
