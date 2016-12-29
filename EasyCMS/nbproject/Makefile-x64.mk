@@ -42,13 +42,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/APICommonCode/QTAccessFile.o \
 	${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o \
 	${OBJECTDIR}/APICommonCode/QTSSRollingLog.o \
-	${OBJECTDIR}/APIModules/EasyAuthModule/EasyAuthModule.o \
 	${OBJECTDIR}/APIModules/EasyRedisModule/EasyRedisModule.o \
 	${OBJECTDIR}/APIStubLib/QTSS_Private.o \
 	${OBJECTDIR}/PrefsSourceLib/FilePrefsSource.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLParser.o \
 	${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o \
-	${OBJECTDIR}/Server.tproj/DecoderHelper.o \
 	${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o \
 	${OBJECTDIR}/Server.tproj/HTTPRequestStream.o \
 	${OBJECTDIR}/Server.tproj/HTTPResponseStream.o \
@@ -130,11 +128,6 @@ ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o: APICommonCode/QTSSRollingLog.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APICommonCode/QTSSRollingLog.o APICommonCode/QTSSRollingLog.cpp
 
-${OBJECTDIR}/APIModules/EasyAuthModule/EasyAuthModule.o: APIModules/EasyAuthModule/EasyAuthModule.cpp 
-	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyAuthModule
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyAuthModule/EasyAuthModule.o APIModules/EasyAuthModule/EasyAuthModule.cpp
-
 ${OBJECTDIR}/APIModules/EasyRedisModule/EasyRedisModule.o: APIModules/EasyRedisModule/EasyRedisModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyRedisModule
 	${RM} "$@.d"
@@ -159,11 +152,6 @@ ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o: PrefsSourceLib/XMLPrefsParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/PrefsSourceLib
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PrefsSourceLib/XMLPrefsParser.o PrefsSourceLib/XMLPrefsParser.cpp
-
-${OBJECTDIR}/Server.tproj/DecoderHelper.o: Server.tproj/DecoderHelper.cpp 
-	${MKDIR} -p ${OBJECTDIR}/Server.tproj
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.tproj/DecoderHelper.o Server.tproj/DecoderHelper.cpp
 
 ${OBJECTDIR}/Server.tproj/GenerateXMLPrefs.o: Server.tproj/GenerateXMLPrefs.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Server.tproj

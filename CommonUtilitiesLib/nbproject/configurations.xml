@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="100">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -1408,6 +1408,7 @@
             <pElem>../EasyDarwin/RTPMetaInfoLib</pElem>
             <pElem>../EasyProtocol/Include</pElem>
             <pElem>../RTSPUtilitiesLib</pElem>
+            <pElem>../HTTPUtilitiesLib</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
