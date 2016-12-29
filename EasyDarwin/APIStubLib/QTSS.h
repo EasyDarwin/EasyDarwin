@@ -1198,20 +1198,6 @@ typedef struct
 
 typedef struct
 {
-    char*                       inStreamName;
-	char*						inRTSPUrl;
-	UInt32						inTimeout;
-	char*						outHLSUrl;
-} Easy_HLSOpen_Params;
-
-typedef struct
-{
-    char*                       inStreamName;
-} Easy_HLSClose_Params;
-
-
-typedef struct
-{
 	char*						inDevice;
 	UInt32						inChannel;
 	EasyStreamType				inStreamType;
@@ -1269,9 +1255,6 @@ typedef union
     QTSS_ReadFile_Params                readFileParams;
     QTSS_CloseFile_Params               closeFileParams;
     QTSS_RequestEventFile_Params        reqEventFileParams;
-
-	Easy_HLSOpen_Params					easyHLSOpenParams;
-	Easy_HLSClose_Params				easyHLSCloseParams;
 
 	Easy_StreamInfo_Params              easyStreamInfoParams;
 	QTSS_GetAssociatedCMS_Params	    GetAssociatedCMSParams;
