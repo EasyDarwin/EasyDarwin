@@ -55,7 +55,7 @@ public:
 	XMLTag(char* tagName);
 	~XMLTag();
 
-	bool ParseTag(StringParser* parser, DTDVerifier* verifier, char* errorBuffer = NULL, int errorBufferSize = 0);
+	bool ParseTag(StringParser* parser, DTDVerifier* verifier, char* errorBuffer = nullptr, int errorBufferSize = 0);
 
 	char* GetAttributeValue(const char* attrName);
 	char* GetValue() { return fValue; }
@@ -106,7 +106,7 @@ public:
 class XMLParser
 {
 public:
-	XMLParser(char* inPath, DTDVerifier* verifier = NULL);
+	XMLParser(char* inPath, DTDVerifier* verifier = nullptr);
 	~XMLParser();
 
 	// Check for existence, man.
@@ -114,7 +114,7 @@ public:
 	bool  DoesFileExistAsDirectory();
 	bool  CanWriteFile();
 
-	bool  ParseFile(char* errorBuffer = NULL, int errorBufferSize = 0);
+	bool  ParseFile(char* errorBuffer = nullptr, int errorBufferSize = 0);
 
 	XMLTag* GetRootTag() { return fRootTag; }
 	void SetRootTag(XMLTag* tag);
