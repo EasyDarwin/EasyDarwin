@@ -6,8 +6,6 @@
 */
 #include "DecoderHelper.h"
 
-
-
 DecoderHelper::DecoderHelper()
 {
 	//Register all the codec

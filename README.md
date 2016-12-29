@@ -1,13 +1,13 @@
 # EasyDarwin开源流媒体平台 #
 
-**EasyDarwin**是由国内开源流媒体团队维护的一款开源流媒体平台框架，从2012年12月创建并发展至今，从原有单服务的开源流媒体服务器形式，扩展成现在的云平台架构的开源系列项目，更好地帮助广大流媒体开发者和创业型企业快速构建流媒体服务平台，更快、更简单地实现最新的移动互联网(安卓、IOS、微信)流媒体直播与点播的需求，尤其是安防行业与互联网行业的衔接；
+**EasyDarwin**是由国内开源流媒体团队维护和迭代的一款开源流媒体云平台框架，从2012年12月创建并发展至今，从原有单服务的开源流媒体服务器形式，拓展成现今的流媒体云平台架构的开源系列项目，更好地帮助广大流媒体开发者和创业型企业快速构建流媒体服务平台，更快、更简单地实现最新的移动互联网(安卓、IOS、H5、微信)流媒体直播与点播的需求，尤其是安防行业与互联网行业的衔接；
 
 - 使用EasyDarwin收费吗？
 
-	免费，EasyDarwin流媒体服务器是在Apple开源项目Darwin Streaming Server的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体技术的迭代开发；
+	免费，EasyDarwin流媒体服务器是在Apple开源项目Darwin Streaming Server 6.0.3的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体的技术迭代开发和技术支持服务；
 	
 	
-	> 注：即使EasyDarwin流媒体服务器可能会调用到一些第三方的收费或者授权SDK代码，请直接与第三方团队或者开发者联系获取商业授权，EasyDarwin开源流媒体服务器只做技术研究的先行者；
+	> 注：即使EasyDarwin流媒体服务器可能会调用到一些第三方的收费或者商用授权SDK代码，请直接与第三方团队或开发者联系获取商业授权支持，EasyDarwin开源流媒体服务器只做技术研究的先行者；
 
 - EasyDarwin开源吗？
 
@@ -23,13 +23,13 @@
 
 ## 最新进展 ##
 
-### 2016.11.25
-1. EasyDarwin正在进行新架构模型的迭代，包括直播(RTSP/RTMP/HLS)，点播(ffmpeg+HLS)等方案；
-2. 移除Mongoose web管理功能，直接采用RESTful接口对外提供服务，届时会配套开发调用的html后台；
+### 2016.12.31
+1. EasyDarwin点播方案；
+2. 开发EasyDarwin web后台；
 
 ## 云平台结构 ##
 
-目前EasyDarwin流媒体平台整套解决方案包括有：**EasyCMS**(中心管理服务)，**EasyDarwin**(流媒体服务)，**EasyCamera**(开源流媒体摄像机)、**EasyPlayer**（流媒体播放器）、**EasyClient**（云平台客户端）、以及周边众多工具库([**EasyHLS**](https://github.com/EasyDarwin/EasyHLS "EasyHLS") / [**EasyRTSPClient**](https://github.com/EasyDarwin/EasyRTSPClient "EasyRTSPClient") / [**EasyPusher**](https://github.com/EasyDarwin/EasyPusher "EasyPusher") / [**EasyAACEncoder**](https://github.com/EasyDarwin/EasyAACEncoder "EasyAACEncoder"))，后续也将继续扩展的录像、回放等多种服务和工具集，各个功能单元既可以独立使用于项目，又可以整体使用，形成一个完整、简单、易用、高效的流媒体解决方案：
+目前EasyDarwin流媒体平台整套解决方案包括有：**EasyCMS**(中心管理服务)，**EasyDarwin**(流媒体服务)，**EasyNVR**(通用摄像机接入服务)、**EasyCamera**(开源流媒体摄像机)、**EasyPlayer**（流媒体播放器）、**EasyClient**（云平台客户端）、以及周边众多工具库([**EasyHLS**](https://github.com/EasyDarwin/EasyHLS "EasyHLS") / [**EasyRTSPClient**](https://github.com/EasyDarwin/EasyRTSPClient "EasyRTSPClient") / [**EasyPusher**](https://github.com/EasyDarwin/EasyPusher "EasyPusher") / [**EasyAACEncoder**](https://github.com/EasyDarwin/EasyAACEncoder "EasyAACEncoder"))，后续也将继续扩展的录像、回放等多种服务和工具集，各个功能单元既可以独立使用于项目，又可以整体使用，形成一个完整、简单、易用、高效的流媒体解决方案：
 
 1. **EasyCMS** 开源的设备接入与管理服务，支持多设备、多客户端接入，能非常快速地帮助大家实现稳定的设备接入服务，可以根据自己的需求进行服务功能拆分（例如用户接入服务与设备接入服务拆分等），具体见[https://github.com/EasyDarwin/EasyDarwin/tree/master/EasyCMS](https://github.com/EasyDarwin/EasyDarwin/tree/master/EasyCMS)；
 
@@ -37,7 +37,18 @@
 
 1. **EasyCamera** 设备端（摄像机、移动设备、桌面程序）对接EasyDarwin平台的方案，跨平台，支持Windows、Linux、ARM，其中EasyDarwin摄像机是我们定制的一款摄像机硬件与EasyDarwin平台进行对接的方案，摄像机采用海思3518E方案，支持RTSP、Onvif、WEB管理、配套SDK工具，作为开发和演示硬件工具，我们提供了全套完备的程序和文档，既可以用于流媒体学习，又可以用于方案移植参考，更可以直接用于项目中，购买参考设备可以在：[https://easydarwin.taobao.com/](https://easydarwin.taobao.com/ "EasyDarwin")，用户可以将摄像机定制的部分替换成自己摄像机的硬件SDK，具体接入方法见[https://github.com/EasyDarwin/EasyCamera](https://github.com/EasyDarwin/EasyCamera)；
 
+1. **EasyNVR** 摄像机（通用RTSP、Onvif摄像机）接入服务，EasyNVR能够通过简单的摄像机通道配置、存储配置、云平台对接配置、CDN配置等，将统监控行业里面的高清网络摄像机IP Camera、NVR、移动拍摄设备接入到EasyNVR，EasyNVR能够将这些视频源 的音视频数据采集到设备端，进行全平台终端直播、录像存储、录像检索和录像回放。并且EasyNVR能够将视频源的直播数据对接到第三方视频平台、CDN网络，实现互联网直播分发，具体接入方法见[https://github.com/EasyDarwin/EasyNVR](https://github.com/EasyDarwin/EasyNVR)；
+
+1. **EasyClient** 是EasyDarwin开源流媒体云平台的客户端实现，包含：Windows、Android、iOS、H5(支持微信)四个部分，其主要功能包括：
+
+	- 云平台设备列表获取；
+	- 设备实时码流请求与播放；
+	- 设备云台控制；
+	- 设备语音对讲；
+
+
 1. **EasyPlayer** RTSP流媒体播放客户端，目前只支持Windows桌面版本，后续将陆续支持Android、IOS版本，详细方案见[https://github.com/EasyDarwin/EasyPlayer](https://github.com/EasyDarwin/EasyPlayer)；
+
 
 ## 平台架构 ##
 ![](http://www.easydarwin.org/github/images/cloud_framework.png)
