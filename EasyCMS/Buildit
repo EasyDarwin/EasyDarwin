@@ -37,7 +37,7 @@ if [ "$*" = "clean" -o "$*" = "x64" -o "$*" = "i386" -o "$*" = "debug" ] ; then
 	cd ../EasyProtocol
 	build $1
 
-	cd ../../../EasyCMS
+	cd ../../EasyCMS
 	build $1
 else
 	usage;
