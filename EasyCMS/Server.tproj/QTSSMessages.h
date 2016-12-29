@@ -59,9 +59,10 @@ public:
 	static void Initialize();
 
 	QTSSMessages(PrefsSource* inMessages);
-	virtual ~QTSSMessages() {
+	virtual ~QTSSMessages()
+	{
 		for (UInt32 x = 0; x < numAttrs; x++)
-			if (attrBuffer[x] != NULL)
+			if (attrBuffer[x] != nullptr)
 				delete[] attrBuffer[x];
 		delete[] attrBuffer;
 	}
