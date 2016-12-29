@@ -162,8 +162,6 @@ public:
 	// Stop HLS Session
 	static QTSS_Error	Easy_StopHLSession(const char* inSessionName);
 
-	static void* Easy_GetHLSessions();
-
 	static void* Easy_GetRTSPPushSessions();
 	static void *Easy_GetRTSPRecordSessions(char* inSessionName, UInt64 startTime, UInt64 endTime);
 };

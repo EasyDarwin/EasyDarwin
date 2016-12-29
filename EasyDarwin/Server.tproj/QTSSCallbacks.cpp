@@ -996,11 +996,6 @@ QTSS_Error QTSSCallbacks::Easy_StopHLSession(const char* inSessionName)
 	return QTSS_RequestFailed;
 }
 
-void* QTSSCallbacks::Easy_GetHLSessions()
-{
-	return NULL;
-}
-
 void* QTSSCallbacks::Easy_GetRTSPPushSessions()
 {
 	OSRefTable* reflectorSessionMap = QTSServerInterface::GetServer()->GetReflectorSessionMap();

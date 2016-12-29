@@ -406,11 +406,6 @@ QTSS_Error	Easy_StopHLSession(const char* inSessionName)
 	return (sCallbacks->addr [kStopHLSessionCallback]) (inSessionName);
 }
 
-void* Easy_GetHLSessions()
-{
-	return (void *) ((QTSS_CallbackPtrProcPtr) sCallbacks->addr [kGetHLSessionsCallback]) ();
-}
-
 void* Easy_GetRTSPPushSessions()
 {
 	return (void *) ((QTSS_CallbackPtrProcPtr) sCallbacks->addr [kGetRTSPPushSessionsCallback]) ();
