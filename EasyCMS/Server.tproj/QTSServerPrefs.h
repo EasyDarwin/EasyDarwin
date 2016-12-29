@@ -23,13 +23,13 @@
  *
  */
  /*
-     Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
-     Github: https://github.com/EasyDarwin
-     WEChat: EasyDarwin
-     Website: http://www.EasyDarwin.org
+	 Copyleft (c) 2012-2016 EasyDarwin.ORG.  All rights reserved.
+	 Github: https://github.com/EasyDarwin
+	 WEChat: EasyDarwin
+	 Website: http://www.EasyDarwin.org
  */
  /*
-    Contains:   Object store for HTTP server preferences.
+	Contains:   Object store for HTTP server preferences.
 */
 
 #ifndef __QTSSERVERPREFS_H__
@@ -43,137 +43,137 @@ class QTSServerPrefs : public QTSSPrefs
 {
 public:
 
-    // INITIALIZE
-    //
-    // This function sets up the dictionary map. Must be called before instantiating   
-    static void Initialize();
+	// INITIALIZE
+	//
+	// This function sets up the dictionary map. Must be called before instantiating   
+	static void Initialize();
 
-    QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs);
-    virtual ~QTSServerPrefs() {}
+	QTSServerPrefs(XMLPrefsParser* inPrefsSource, bool inWriteMissingPrefs);
+	virtual ~QTSServerPrefs() {}
 
-    //This is callable at any time, and is thread safe wrt to the accessors.
-    //Pass in true if you want this function to update the prefs file if
-    //any defaults need to be used. False otherwise
-    void RereadServerPreferences(bool inWriteMissingPrefs);
+	//This is callable at any time, and is thread safe wrt to the accessors.
+	//Pass in true if you want this function to update the prefs file if
+	//any defaults need to be used. False otherwise
+	void RereadServerPreferences(bool inWriteMissingPrefs);
 
-    //Individual accessor methods for preferences.
+	//Individual accessor methods for preferences.
 
-    //This is the real timeout
-    UInt32  GetSessionTimeoutInSecs() { return fSessionTimeoutInSecs; }
+	//This is the real timeout
+	UInt32  GetSessionTimeoutInSecs() { return fSessionTimeoutInSecs; }
 
-    //-1 means unlimited
-    SInt32  GetMaxConnections() { return fMaximumConnections; }
+	//-1 means unlimited
+	SInt32  GetMaxConnections() { return fMaximumConnections; }
 
-    //for debugging, mainly
-    bool      ShouldServerBreakOnAssert() { return fBreakOnAssert; }
-    bool      IsAutoRestartEnabled() { return fAutoRestart; }
+	//for debugging, mainly
+	bool      ShouldServerBreakOnAssert() { return fBreakOnAssert; }
+	bool      IsAutoRestartEnabled() { return fAutoRestart; }
 
-    // For the compiled-in error logging module
+	// For the compiled-in error logging module
 
-    bool  IsErrorLogEnabled() { return fErrorLogEnabled; }
-    bool  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
+	bool  IsErrorLogEnabled() { return fErrorLogEnabled; }
+	bool  IsScreenLoggingEnabled() { return fScreenLoggingEnabled; }
 
-    UInt32  GetMaxErrorLogBytes() { return fErrorLogBytes; }
-    UInt32  GetErrorRollIntervalInDays() { return fErrorRollIntervalInDays; }
-    UInt32  GetErrorLogVerbosity() { return fErrorLogVerbosity; }
-    void    SetErrorLogVerbosity(UInt32 verbosity) { fErrorLogVerbosity = verbosity; }
+	UInt32  GetMaxErrorLogBytes() { return fErrorLogBytes; }
+	UInt32  GetErrorRollIntervalInDays() { return fErrorRollIntervalInDays; }
+	UInt32  GetErrorLogVerbosity() { return fErrorLogVerbosity; }
+	void    SetErrorLogVerbosity(UInt32 verbosity) { fErrorLogVerbosity = verbosity; }
 
-    bool  GetMSGDebugPrintfs() { return fEnableMSGDebugPrintfs; }
+	bool  GetMSGDebugPrintfs() { return fEnableMSGDebugPrintfs; }
 
-    // force logs to close after each write (true or false)
-    bool  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
-    void    SetCloseLogsOnWrite(bool closeLogsOnWrite);
+	// force logs to close after each write (true or false)
+	bool  GetCloseLogsOnWrite() { return fCloseLogsOnWrite; }
+	void    SetCloseLogsOnWrite(bool closeLogsOnWrite);
 
-    // String preferences. Note that the pointers returned here is allocated
-    // memory that you must delete!
+	// String preferences. Note that the pointers returned here is allocated
+	// memory that you must delete!
 
-    char*   GetErrorLogDir()
-    {
-        return this->getStringPref(qtssPrefsErrorLogDir);
-    }
-    char*   GetErrorLogName()
-    {
-        return this->getStringPref(qtssPrefsErrorLogName);
-    }
+	char*   GetErrorLogDir()
+	{
+		return this->getStringPref(qtssPrefsErrorLogDir);
+	}
+	char*   GetErrorLogName()
+	{
+		return this->getStringPref(qtssPrefsErrorLogName);
+	}
 
-    char*   GetModuleDirectory()
-    {
-        return this->getStringPref(qtssPrefsModuleFolder);
-    }
+	char*   GetModuleDirectory()
+	{
+		return this->getStringPref(qtssPrefsModuleFolder);
+	}
 
-    char*   GetPidFilePath()
-    {
-        return this->getStringPref(qtssPrefsPidFile);
-    }
+	char*   GetPidFilePath()
+	{
+		return this->getStringPref(qtssPrefsPidFile);
+	}
 
-    char*   GetStatsMonitorFileName()
-    {
-        return this->getStringPref(qtssPrefsMonitorStatsFileName);
-    }
+	char*   GetStatsMonitorFileName()
+	{
+		return this->getStringPref(qtssPrefsMonitorStatsFileName);
+	}
 
-    bool ServerStatFileEnabled() { return fEnableMonitorStatsFile; }
-    UInt32 GetStatFileIntervalSec() { return fStatsFileIntervalSeconds; }
+	bool ServerStatFileEnabled() { return fEnableMonitorStatsFile; }
+	UInt32 GetStatFileIntervalSec() { return fStatsFileIntervalSeconds; }
 
-    UInt32  GetNumThreads() { return fNumThreads; }
-    UInt32  GetNumBlockingThreads() { return fNumMsgThreads; }
+	UInt32  GetNumThreads() { return fNumThreads; }
+	UInt32  GetNumBlockingThreads() { return fNumMsgThreads; }
 
-    UInt16  GetServiceLANPort() { return fMonitorLANPort; }
-    UInt16  GetServiceWANPort() { return fMonitorWANPort; }
+	UInt16  GetServiceLANPort() { return fMonitorLANPort; }
+	UInt16  GetServiceWANPort() { return fMonitorWANPort; }
 
-    char*	GetServiceWANIP() { return this->getStringPref(qtssPrefsServiceWANIPAddr); }
+	char*	GetServiceWANIP() { return this->getStringPref(qtssPrefsServiceWANIPAddr); }
 
-    char*	GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
-    char*	GetSnapWebPath() { return this->getStringPref(qtssPrefsSnapWebPath); }
+	char*	GetSnapLocalPath() { return this->getStringPref(qtssPrefsSnapLocalPath); }
+	char*	GetSnapWebPath() { return this->getStringPref(qtssPrefsSnapWebPath); }
 private:
-    void setupAttributes();
+	void setupAttributes();
 
-    // Returns the string preference with the specified ID. If there
-    // was any problem, this will return an empty string.
-    char* getStringPref(QTSS_AttributeID inAttrID);
+	// Returns the string preference with the specified ID. If there
+	// was any problem, this will return an empty string.
+	char* getStringPref(QTSS_AttributeID inAttrID);
 
-    UInt32      fSessionTimeoutInSecs;
+	UInt32      fSessionTimeoutInSecs;
 
-    SInt32  fMaximumConnections;
+	SInt32  fMaximumConnections;
 
-    bool  fBreakOnAssert;
-    bool  fAutoRestart;
+	bool  fBreakOnAssert;
+	bool  fAutoRestart;
 
-    UInt32  fErrorRollIntervalInDays;
-    UInt32  fErrorLogBytes;
-    UInt32  fErrorLogVerbosity;
-    bool  fScreenLoggingEnabled;
-    bool  fErrorLogEnabled;
+	UInt32  fErrorRollIntervalInDays;
+	UInt32  fErrorLogBytes;
+	UInt32  fErrorLogVerbosity;
+	bool  fScreenLoggingEnabled;
+	bool  fErrorLogEnabled;
 
-    bool  fAutoStart;
-    bool  fEnableMSGDebugPrintfs;
+	bool  fAutoStart;
+	bool  fEnableMSGDebugPrintfs;
 
-    UInt32  fNumThreads;
-    UInt32  fNumMsgThreads;
+	UInt32  fNumThreads;
+	UInt32  fNumMsgThreads;
 
-    bool  fEnableMonitorStatsFile;
-    UInt32  fStatsFileIntervalSeconds;
+	bool  fEnableMonitorStatsFile;
+	UInt32  fStatsFileIntervalSeconds;
 
-    bool  fCloseLogsOnWrite;
+	bool  fCloseLogsOnWrite;
 
-    UInt16 fMonitorLANPort;
-    UInt16 fMonitorWANPort;
+	UInt16 fMonitorLANPort;
+	UInt16 fMonitorWANPort;
 
-    char   fMonitorWANAddr[20];
+	char   fMonitorWANAddr[20];
 
-    enum
-    {
-        kAllowMultipleValues = 1,
-        kDontAllowMultipleValues = 0
-    };
+	enum
+	{
+		kAllowMultipleValues = 1,
+		kDontAllowMultipleValues = 0
+	};
 
-    struct PrefInfo
-    {
-        UInt32  fAllowMultipleValues;
-        char*   fDefaultValue;
-        char**  fAdditionalDefVals; // For prefs with multiple default values
-    };
+	struct PrefInfo
+	{
+		UInt32  fAllowMultipleValues;
+		char*   fDefaultValue;
+		char**  fAdditionalDefVals; // For prefs with multiple default values
+	};
 
-    static QTSSAttrInfoDict::AttrInfo   sAttributes[];
-    static PrefInfo sPrefInfo[];
+	static QTSSAttrInfoDict::AttrInfo   sAttributes[];
+	static PrefInfo sPrefInfo[];
 };
 #endif //__QTSSPREFS_H__
