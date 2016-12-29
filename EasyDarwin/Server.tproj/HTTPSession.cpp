@@ -410,10 +410,10 @@ QTSS_Error HTTPSession::SetupRequest()
 					return execNetMsgCSGetRTSPLiveSessionsRESTful(fRequest->GetQueryString());
 				}
 
-				if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getrecordlist")
-				{
-					return execNetMsgCSGetRTSPRecordSessionsRESTful(fRequest->GetQueryString());
-				}
+				//if (path[0] == "api" && path[1] == EASY_PROTOCOL_VERSION && path[2] == "getrecordlist")
+				//{
+				//	return execNetMsgCSGetRTSPRecordSessionsRESTful(fRequest->GetQueryString());
+				//}
 
 			}
 
