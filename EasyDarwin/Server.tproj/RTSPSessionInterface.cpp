@@ -28,12 +28,10 @@
 	 Contains:   Implementation of RTSPSessionInterface object.
  */
 
-
 #include "RTSPSessionInterface.h"
 #include "QTSServerInterface.h"
 #include "OSMemory.h"
 #include "RTSPProtocol.h"
-
 #include <errno.h>
 
 
@@ -42,8 +40,6 @@
 #else
 #define RTSP_SESSION_INTERFACE_DEBUGGING 0
 #endif
-
-
 
 std::atomic_uint RTSPSessionInterface::sSessionIDCounter{ kFirstRTSPSessionID };
 bool                  RTSPSessionInterface::sDoBase64Decoding = true;

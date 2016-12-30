@@ -26,9 +26,6 @@
 	 File:       QTSSFile.h
 
 	 Contains:
-
-
-
  */
 
 #include "QTSSFile.h"

@@ -26,11 +26,6 @@
 	 File:       RTPSessionInterface.h
 
 	 Contains:   Implementation of object defined in .h
-
-
-
-
-
  */
 
 #include "RTPSessionInterface.h"

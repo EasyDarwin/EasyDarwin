@@ -26,9 +26,6 @@
 	 File:       RTSPRequestStream.cpp
 
 	 Contains:   Implementation of RTSPRequestStream class.
-
-
-
  */
 
 

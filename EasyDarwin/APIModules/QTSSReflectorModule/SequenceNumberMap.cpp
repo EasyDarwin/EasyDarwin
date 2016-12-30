@@ -26,10 +26,6 @@
 	 File:       SequenceNumberMap.cpp
 
 	 Contains:   Implements object defined in SequenceNumberMap.h.
-
-
-
-
  */
 
 #include <string.h>

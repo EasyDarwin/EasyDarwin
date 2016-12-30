@@ -26,9 +26,6 @@
 	 File:       RTPStream.cpp
 
 	 Contains:   Implementation of RTPStream class.
-
-
-
  */
 
 
@@ -53,8 +50,6 @@
 #include "RTCPAPPNADUPacket.h"
 
 #include "SocketUtils.h"
-
-#include <fcntl.h>
 
 #if DEBUG
 #define RTP_TCP_STREAM_DEBUG 1
