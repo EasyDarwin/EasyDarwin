@@ -47,6 +47,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/APICommonCode/SourceInfo.o \
 	${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSModule.o \
 	${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o \
+	${OBJECTDIR}/APIModules/EasyHLSModule/EasyHLSModule.o \
+	${OBJECTDIR}/APIModules/EasyHLSModule/EasyHLSSession.o \
 	${OBJECTDIR}/APIModules/EasyRTMPModule/EasyRTMPModule.o \
 	${OBJECTDIR}/APIModules/EasyRTMPModule/EasyRTMPSession.o \
 	${OBJECTDIR}/APIModules/EasyRedisModule/EasyRedisModule.o \
@@ -214,6 +216,16 @@ ${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o: APIModules/EasyCMSModule
 	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyCMSModule
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -DDSS_USE_API_CALLBACKS -D_REENTRANT -D__USE_POSIX -D__linux__ -I../HTTPUtilitiesLib -I../CommonUtilitiesLib -IServer.tproj -IQTFileLib/ -IRTPMetaInfoLib/ -IPrefsSourceLib/ -IAPIStubLib/ -IAPICommonCode/ -IRTCPUtilitiesLib/ -IRTSPClientLib/ -IAPIModules/QTSSFileModule/ -IAPIModules/QTSSHttpFileModule/ -IAPIModules/QTSSAccessModule/ -IAPIModules/QTSSAccessLogModule/ -IAPIModules/QTSSPOSIXFileSysModule -IAPIModules/QTSSAdminModule/ -IAPIModules/QTSSReflectorModule/ -IAPIModules/QTSSWebStatsModule/ -IAPIModules/QTSSWebDebugModule/ -IAPIModules/QTSSFlowControlModule/ -IAPIModules/QTSSMP3StreamingModule/ -IAPIModules/EasyHLSModule -IAPIModules/EasyRelayModule -IInclude -I. -I../Include -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../RTSPUtilitiesLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyCMSModule/EasyCMSSession.o APIModules/EasyCMSModule/EasyCMSSession.cpp
+
+${OBJECTDIR}/APIModules/EasyHLSModule/EasyHLSModule.o: APIModules/EasyHLSModule/EasyHLSModule.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyHLSModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -DDSS_USE_API_CALLBACKS -D_REENTRANT -D__USE_POSIX -D__linux__ -I../HTTPUtilitiesLib -I../CommonUtilitiesLib -IServer.tproj -IQTFileLib/ -IRTPMetaInfoLib/ -IPrefsSourceLib/ -IAPIStubLib/ -IAPICommonCode/ -IRTCPUtilitiesLib/ -IRTSPClientLib/ -IAPIModules/QTSSFileModule/ -IAPIModules/QTSSHttpFileModule/ -IAPIModules/QTSSAccessModule/ -IAPIModules/QTSSAccessLogModule/ -IAPIModules/QTSSPOSIXFileSysModule -IAPIModules/QTSSAdminModule/ -IAPIModules/QTSSReflectorModule/ -IAPIModules/QTSSWebStatsModule/ -IAPIModules/QTSSWebDebugModule/ -IAPIModules/QTSSFlowControlModule/ -IAPIModules/QTSSMP3StreamingModule/ -IAPIModules/EasyHLSModule -IAPIModules/EasyRelayModule -IInclude -I. -I../Include -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../RTSPUtilitiesLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyHLSModule/EasyHLSModule.o APIModules/EasyHLSModule/EasyHLSModule.cpp
+
+${OBJECTDIR}/APIModules/EasyHLSModule/EasyHLSSession.o: APIModules/EasyHLSModule/EasyHLSSession.cpp 
+	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyHLSModule
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -DCOMMON_UTILITIES_LIB -DDSS_USE_API_CALLBACKS -D_REENTRANT -D__USE_POSIX -D__linux__ -I../HTTPUtilitiesLib -I../CommonUtilitiesLib -IServer.tproj -IQTFileLib/ -IRTPMetaInfoLib/ -IPrefsSourceLib/ -IAPIStubLib/ -IAPICommonCode/ -IRTCPUtilitiesLib/ -IRTSPClientLib/ -IAPIModules/QTSSFileModule/ -IAPIModules/QTSSHttpFileModule/ -IAPIModules/QTSSAccessModule/ -IAPIModules/QTSSAccessLogModule/ -IAPIModules/QTSSPOSIXFileSysModule -IAPIModules/QTSSAdminModule/ -IAPIModules/QTSSReflectorModule/ -IAPIModules/QTSSWebStatsModule/ -IAPIModules/QTSSWebDebugModule/ -IAPIModules/QTSSFlowControlModule/ -IAPIModules/QTSSMP3StreamingModule/ -IAPIModules/EasyHLSModule -IAPIModules/EasyRelayModule -IInclude -I. -I../Include -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyCMSModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../RTSPUtilitiesLib -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/APIModules/EasyHLSModule/EasyHLSSession.o APIModules/EasyHLSModule/EasyHLSSession.cpp
 
 ${OBJECTDIR}/APIModules/EasyRTMPModule/EasyRTMPModule.o: APIModules/EasyRTMPModule/EasyRTMPModule.cpp 
 	${MKDIR} -p ${OBJECTDIR}/APIModules/EasyRTMPModule

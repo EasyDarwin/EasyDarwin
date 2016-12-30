@@ -25,6 +25,12 @@
           <itemPath>APIModules/EasyCMSModule/EasyCMSSession.cpp</itemPath>
           <itemPath>APIModules/EasyCMSModule/EasyCMSSession.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="f2" displayName="EasyHLSModule" projectFiles="true">
+          <itemPath>APIModules/EasyHLSModule/EasyHLSModule.cpp</itemPath>
+          <itemPath>APIModules/EasyHLSModule/EasyHLSModule.h</itemPath>
+          <itemPath>APIModules/EasyHLSModule/EasyHLSSession.cpp</itemPath>
+          <itemPath>APIModules/EasyHLSModule/EasyHLSSession.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="EasyRedisModule"
                        displayName="EasyRedisModule"
                        projectFiles="true">
@@ -468,6 +474,26 @@
             flavor2="0">
       </item>
       <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1085,8 +1111,9 @@
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>Lib/${CND_CONF}</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
+            <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient -leasyrtmp -leasyrtspclient -lEasyAACEncoder -leasyhls</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
@@ -1171,6 +1198,26 @@
             flavor2="0">
       </item>
       <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1877,6 +1924,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="APIModules/EasyRTMPModule/EasyRTMPModule.cpp"
             ex="false"
             tool="1"
@@ -2575,6 +2642,26 @@
             flavor2="0">
       </item>
       <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
             ex="false"
             tool="3"
             flavor2="0">
