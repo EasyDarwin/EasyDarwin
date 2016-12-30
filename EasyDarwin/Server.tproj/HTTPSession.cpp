@@ -1231,7 +1231,7 @@ QTSS_Error HTTPSession::execNetMsgCSLiveDeviceStreamReqRESTful(const char * quer
 	const char* chProtocol = parList.DoFindCGIValueForParam(EASY_TAG_L_PROTOCOL);
 	//const char* chReserve = parList.DoFindCGIValueForParam(EASY_TAG_L_RESERVE);
 
-	UInt32 theChannelNum = 0;
+	UInt32 theChannelNum = 1;
 	EasyStreamType streamType = easyIllegalStreamType;
 
 	int theErr = EASY_ERROR_SERVER_NOT_IMPLEMENTED;
