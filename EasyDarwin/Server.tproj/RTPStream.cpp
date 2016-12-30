@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #ifndef __Win32__
 #include <arpa/inet.h>
+#include <fcntl.h>
 #endif
 #include "SafeStdLib.h"
 #include "RTPStream.h"
