@@ -9,16 +9,15 @@ EasyDarwin本身提供了一个高性能的服务端框架，Linux/Windows跨平
 EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn.net/course/detail/2431](http://edu.csdn.net/course/detail/2431 "EasyDarwin开源流媒体服务器视频教程")
 
 ## EasyDarwin目前支持 ##
-1. MP4点播(nginx)；
+1. MP4点播(nginx/hls)；
 2. 标准RTSP推模式直播(QTSSReflectorModule)；
 3. 标准RTSP拉模式直播(EasyRelayModule)；
-4. HLS直播(EasyHLSModule)；
+4. HLS直播(EasyHLSModule+nginx)；
 5. 接入EasyDarwin流媒体平台，分布式部署(EasyCMSModule)；
 
 ## EasyDarwin正在进行开发的 ##
 1. 点播；
 2. WEB管理后台；
-3. RTMP/HLS直播功能；
 
 ## 接口列表 ##
 
@@ -484,7 +483,7 @@ MP4文件需要先经过RTSP/RTP Hint处理，处理工具可以选择MP4Box或�
 
 WEB：[www.EasyDarwin.org](http://www.easydarwin.org)
 
-QQ交流群：288214068
+QQ交流群：288214068/496258327
 
 Copyright &copy; EasyDarwin.org 2012-2016
 
