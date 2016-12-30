@@ -2515,7 +2515,6 @@
             <pElem>APIModules/QTSSPOSIXFileSysModule</pElem>
             <pElem>APIModules/QTSSAdminModule/</pElem>
             <pElem>APIModules/QTSSReflectorModule/</pElem>
-            <pElem>APIModules/QTSSWebStatsModule/</pElem>
             <pElem>APIModules/QTSSWebDebugModule/</pElem>
             <pElem>APIModules/QTSSFlowControlModule/</pElem>
             <pElem>APIModules/QTSSMP3StreamingModule/</pElem>
@@ -2530,6 +2529,7 @@
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
             <pElem>../RTSPUtilitiesLib</pElem>
+            <pElem>APIModules/EasyRTMPModule</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -2556,8 +2556,9 @@
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
             <pElem>Lib/x64</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
+            <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient -leasyrtmp -leasyrtspclient -lEasyAACEncoder -leasyhls</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
