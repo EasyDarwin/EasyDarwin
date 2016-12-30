@@ -26,9 +26,6 @@
 	 File:       main.cpp
 
 	 Contains:   main function to drive streaming server.
-
-
-
  */
 
 #include "RunServer.h"

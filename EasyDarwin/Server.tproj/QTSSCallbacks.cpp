@@ -35,7 +35,6 @@
 #include "RTSPRequestInterface.h"
 #include "RTPSession.h"
 #include "OS.h"
-#include "EventContext.h"
 #include "QTSSFile.h"
 #include "QTSSSocket.h"
 #include "QTSServerInterface.h"

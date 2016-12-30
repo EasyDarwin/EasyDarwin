@@ -34,8 +34,6 @@
 #include "RTPSessionOutput.h"
 #include "ReflectorStream.h"
 
-#include <errno.h>
-
 
 #if DEBUG 
 #define RTP_SESSION_DEBUGGING 0

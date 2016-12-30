@@ -26,8 +26,6 @@
 	 File:       RTSPResponseStream.cpp
 
 	 Contains:   Impelementation of object in .h
-
-
  */
 
 #include "RTSPResponseStream.h"

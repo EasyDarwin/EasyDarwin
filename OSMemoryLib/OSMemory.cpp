@@ -28,7 +28,6 @@
 	 Contains:   Implementation of OSMemory stuff, including all new & delete operators.
  */
 
-#include <string.h>
 #include "OSMemory.h"
 #include <stdlib.h>
 

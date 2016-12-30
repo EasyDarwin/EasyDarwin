@@ -35,7 +35,6 @@
 #include "RTPPacketResender.h"
 #include "RTPStream.h"
 #include "OSMutex.h"
-#include <new>
 
 #if RTP_PACKET_RESENDER_DEBUGGING
 #include "QTSSRollingLog.h"

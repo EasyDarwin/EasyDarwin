@@ -28,9 +28,6 @@
 	 Contains:   Implementation of RTPSession class.
 
 	 Change History (most recent first):
-
-
-
  */
 
 #include "RTPSession.h"

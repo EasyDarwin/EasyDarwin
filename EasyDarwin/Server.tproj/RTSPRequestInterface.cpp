@@ -26,10 +26,6 @@
 	 File:       RTSPRequestInterface.cp
 
 	 Contains:   Implementation of class defined in RTSPRequestInterface.h
-
-
-
-
  */
 
 
