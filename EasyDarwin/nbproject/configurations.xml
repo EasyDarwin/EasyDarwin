@@ -1109,7 +1109,6 @@
             <pElem>../CommonUtilitiesLib/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/EasyProtocol/${CND_CONF}</pElem>
             <pElem>../EasyProtocol/jsoncpp/${CND_CONF}</pElem>
-            <pElem>Lib/${CND_CONF}</pElem>
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
             <pElem>Lib</pElem>
           </linkerAddLib>
