@@ -40,8 +40,6 @@
 #include "OSHeaders.h"
 #include "StrPtrLen.h"
 #include "StringParser.h"
-#include "OSFileSource.h"
-#include "OSMemory.h"
 #include "QTAccessFile.h"
 
 #ifdef __MacOSX__
@@ -92,23 +90,23 @@ UInt8 QTAccessFile::sWhitespaceAndGreaterThanMask[] =
 
 char*       QTAccessFile::sQTAccessFileName = "qtaccess";
 bool      QTAccessFile::sAllocatedName = false;
-OSMutex*    QTAccessFile::sAccessFileMutex = NULL;//QTAccessFile isn't reentrant
+OSMutex*    QTAccessFile::sAccessFileMutex = nullptr;//QTAccessFile isn't reentrant
 const int kBuffLen = 512;
 
 void QTAccessFile::Initialize() // called by server at initialize never call again
 {
-	if (NULL == sAccessFileMutex)
+	if (nullptr == sAccessFileMutex)
 	{
-		sAccessFileMutex = NEW OSMutex();
+		sAccessFileMutex = new OSMutex();
 	}
 }
 
 void QTAccessFile::SetAccessFileName(const char* inQTAccessFileName)
 {
 	OSMutexLocker locker(sAccessFileMutex);
-	if (NULL == inQTAccessFileName)
+	if (nullptr == inQTAccessFileName)
 	{
-		Assert(NULL != inQTAccessFileName);
+		Assert(nullptr != inQTAccessFileName);
 		return;
 	}
 
@@ -118,7 +116,7 @@ void QTAccessFile::SetAccessFileName(const char* inQTAccessFileName)
 	}
 
 	sAllocatedName = true;
-	sQTAccessFileName = NEW char[strlen(inQTAccessFileName) + 1];
+	sQTAccessFileName = new char[strlen(inQTAccessFileName) + 1];
 	::strcpy(sQTAccessFileName, inQTAccessFileName);
 
 }
@@ -128,7 +126,7 @@ bool QTAccessFile::HaveUser(char* userName, void* extraDataPtr)
 {
 	bool result = false;
 
-	if (NULL != userName && 0 != userName[0])
+	if (nullptr != userName && 0 != userName[0])
 		result = true;
 
 	return result;
@@ -138,7 +136,7 @@ bool QTAccessFile::HaveGroups(char** groupArray, UInt32 numGroups, void* extraDa
 {
 	bool result = false;
 
-	if (numGroups > 0 && groupArray != NULL)
+	if (numGroups > 0 && groupArray != nullptr)
 		result = true;
 
 	return result;
@@ -148,7 +146,7 @@ bool QTAccessFile::HaveRealm(char* userName, StrPtrLen* ioRealmNameStr, void* ex
 {
 	bool result = false;
 
-	if (ioRealmNameStr != NULL && ioRealmNameStr->Ptr != NULL && ioRealmNameStr->Len > 0)
+	if (ioRealmNameStr != nullptr && ioRealmNameStr->Ptr != nullptr && ioRealmNameStr->Len > 0)
 		result = true;
 
 	return result;
@@ -196,17 +194,17 @@ char* QTAccessFile::GetAccessFile_Copy(const char* movieRootDir, const char* dir
 {
 	OSMutexLocker locker(sAccessFileMutex);
 
-	char* currentDir = NULL;
-	char* lastSlash = NULL;
+	char* currentDir = nullptr;
+	char* lastSlash = nullptr;
 	int movieRootDirLen = ::strlen(movieRootDir);
 	int maxLen = strlen(dirPath) + strlen(sQTAccessFileName) + strlen(kPathDelimiterString) + 1;
-	currentDir = NEW char[maxLen];
+	currentDir = new char[maxLen];
 
 	::strcpy(currentDir, dirPath);
 
 	//strip off filename
 	lastSlash = ::strrchr(currentDir, kPathDelimiterChar);
-	if (lastSlash != NULL)
+	if (lastSlash != nullptr)
 		lastSlash[0] = '\0';
 
 	//check qtaccess files
@@ -221,7 +219,7 @@ char* QTAccessFile::GetAccessFile_Copy(const char* movieRootDir, const char* dir
 		::strcat(currentDir, kPathDelimiterString);
 		::strcat(currentDir, sQTAccessFileName);
 
-		QTSS_Object fileObject = NULL;
+		QTSS_Object fileObject = nullptr;
 		if (QTSS_OpenFileObject(currentDir, qtssOpenFileNoFlags, &fileObject) == QTSS_NoErr)
 		{
 			(void)QTSS_CloseFileObject(fileObject);
@@ -234,7 +232,7 @@ char* QTAccessFile::GetAccessFile_Copy(const char* movieRootDir, const char* dir
 
 		//strip of the tailing directory
 		lastSlash = ::strrchr(currentDir, kPathDelimiterChar);
-		if (lastSlash == NULL)
+		if (lastSlash == nullptr)
 			break;
 		else
 			lastSlash[0] = '\0';
@@ -244,22 +242,22 @@ char* QTAccessFile::GetAccessFile_Copy(const char* movieRootDir, const char* dir
 	}
 
 	delete[] currentDir;
-	return NULL;
+	return nullptr;
 }
 
 bool DSAccessFile::CheckGroupMembership(const char* inUsername, const char* inGroupName)
 {
 #ifdef __MacOSX__
 	// In Tiger, group membership is painfully simple: we ask memberd for it!
-	struct passwd	*user = NULL;
-	struct group	*group = NULL;
+	struct passwd	*user = nullptr;
+	struct group	*group = nullptr;
 	uuid_t			userID;
 	uuid_t			groupID;
 	int				isMember = 0;
 
 	// Look up the user using the POSIX APIs: only care about the UID.
 	user = getpwnam(inUsername);
-	if (user == NULL)
+	if (user == nullptr)
 		return false;
 	uuid_clear(userID);
 	if (mbr_uid_to_uuid(user->pw_uid, userID))
@@ -268,7 +266,7 @@ bool DSAccessFile::CheckGroupMembership(const char* inUsername, const char* inGr
 	// Look up the group using the POSIX APIs: only care about the GID.
 	group = getgrnam(inGroupName);
 	endgrent();
-	if (group == NULL)
+	if (group == nullptr)
 		return false;
 	uuid_clear(groupID);
 	if (mbr_gid_to_uuid(group->gr_gid, groupID))
@@ -297,7 +295,7 @@ bool DSAccessFile::ValidUser(char* userName, void* extraDataPtr)
 #ifndef __Win32__
 	struct passwd	*user = getpwnam(userName);
 	bool result = true;
-	if (user == NULL)
+	if (user == nullptr)
 	{
 		return result;
 	}
