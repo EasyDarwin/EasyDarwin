@@ -176,10 +176,6 @@ private:
 	StrPtrLen	fSessionName;
 	UInt32		fChannelNum;
 
-	// HLS Session
-	bool		fHLSLive;
-	bool		fRtspRecord;
-
 	OSQueueElem fQueueElem; // Relay uses this.
 
 	std::atomic_uint fNumOutputs;

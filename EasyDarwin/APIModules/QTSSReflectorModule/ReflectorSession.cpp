@@ -65,8 +65,6 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 	fIsSetup(false),
 	fSessionName(inSourceID->GetAsCString()),
 	fChannelNum(inChannelNum),
-	fHLSLive(false),
-	fRtspRecord(false),
 	fQueueElem(),
 	fNumOutputs(0),
 	fStreamArray(nullptr),
@@ -78,6 +76,8 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 	fHasBufferedStreams(false),
 	fHasVideoKeyFrameUpdate(false)
 {
+	this->SetTaskName("ReflectorSession");
+
 	fQueueElem.SetEnclosingObject(this);
 	if (inSourceID != nullptr)
 	{
