@@ -167,6 +167,7 @@
       <AssemblerOutput />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)json_vc71_libmt.lib</OutputFile>
