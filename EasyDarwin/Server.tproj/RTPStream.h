@@ -179,7 +179,7 @@ class RTPStream : public QTSSDictionary, public UDPDemuxerTask
         enum
         {
             kMaxSsrcSizeInBytes         = 12,
-            kMaxStreamURLSizeInBytes    = 32,
+            kMaxStreamURLSizeInBytes    = 128,
             kDefaultPayloadBufSize      = 32,
             kSenderReportIntervalInSecs = 7,
             kNumPrebuiltChNums          = 10,
