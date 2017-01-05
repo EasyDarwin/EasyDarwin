@@ -435,7 +435,7 @@ QTSS_Error EasyCameraSource::StartStreaming(Easy_StartStream_Params* inParams)
 
 				// 根据接收到的命令生成流信息
 				char sdpName[128] = { 0 };
-				sprintf(sdpName, "%s/%s.sdp", /*inParams->inStreamID,*/ inParams->inSerial, inParams->inChannel);
+				sprintf(sdpName, "%s?channel=%s", /*inParams->inStreamID,*/ inParams->inSerial, inParams->inChannel);
 
 				// 开始推送流媒体数据
 				EasyPusher_StartStream(fPusherHandle, (char*)inParams->inIP, inParams->inPort, sdpName, "", "", &mediainfo, 1024/* 1M Buffer*/, 0);
