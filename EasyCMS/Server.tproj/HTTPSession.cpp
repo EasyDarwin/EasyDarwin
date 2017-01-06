@@ -47,10 +47,7 @@ static const int sPortSize = 6;
 HTTPSession::HTTPSession()
 	: HTTPSessionInterface()
 	, fRequest(nullptr)
-	, fReadMutex()
-	, fSendMutex()
-	//, fCurrentModule(0)
-	, fState(kReadingFirstRequest)
+	, state_(State::kReadingFirstRequest)
 {
 	this->SetTaskName("HTTPSession");
 
@@ -62,7 +59,7 @@ HTTPSession::HTTPSession()
 	fModuleState.curRole = 0;
 	fModuleState.globalLockRequested = false;
 
-	OSRefTableEx* sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
+	auto sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
 	sessionMap->Register(fSessionID, this);
 
 	qtss_printf("Create HTTPSession:%s\n", fSessionID);
@@ -126,9 +123,9 @@ SInt64 HTTPSession::Run()
 
 	while (this->IsLiveSession())
 	{
-		switch (fState)
+		switch (state_)
 		{
-		case kReadingFirstRequest:
+		case State::kReadingFirstRequest:
 			if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
 			{
 				fInputSocketP->RequestEvent(EV_RE);
@@ -146,10 +143,10 @@ SInt64 HTTPSession::Run()
 			}
 
 			if ((err == QTSS_RequestArrived) || (err == E2BIG))
-				fState = kHaveCompleteMessage;
+				state_ = State::kHaveCompleteMessage;
 			continue;
 
-		case kReadingRequest:
+		case State::kReadingRequest:
 			{
 				OSMutexLocker readMutexLocker(&fReadMutex);
 
@@ -179,9 +176,9 @@ SInt64 HTTPSession::Run()
 					Assert(!this->IsLiveSession());
 					break;
 				}
-				fState = kHaveCompleteMessage;
+				state_ = State::kHaveCompleteMessage;
 			}
-		case kHaveCompleteMessage:
+		case State::kHaveCompleteMessage:
 			Assert(fInputStream.GetRequestBuffer());
 
 			Assert(fRequest == nullptr);
@@ -195,14 +192,14 @@ SInt64 HTTPSession::Run()
 			if ((err == E2BIG) || (err == QTSS_BadArgument))
 			{
 				execNetMsgErrorReqHandler(httpBadRequest);
-				fState = kSendingResponse;
+				state_ = State::kSendingResponse;
 				break;
 			}
 
 			Assert(err == QTSS_RequestArrived);
-			fState = kFilteringRequest;
+			state_ = State::kFilteringRequest;
 
-		case kFilteringRequest:
+		case State::kFilteringRequest:
 			{
 				fTimeoutTask.RefreshTimeout();
 
@@ -229,40 +226,40 @@ SInt64 HTTPSession::Run()
 
 				if (fOutputStream.GetBytesWritten() > 0)
 				{
-					fState = kSendingResponse;
+					state_ = State::kSendingResponse;
 					break;
 				}
 
-				fState = kPreprocessingRequest;
+				state_ = State::kPreprocessingRequest;
 				break;
 			}
 
-		case kPreprocessingRequest:
+		case State::kPreprocessingRequest:
 			processRequest();
 
 			if (fOutputStream.GetBytesWritten() > 0)
 			{
 				delete[] fRequestBody;
 				fRequestBody = nullptr;
-				fState = kSendingResponse;
+				state_ = State::kSendingResponse;
 				break;
 			}
 
 			delete[] fRequestBody;
 			fRequestBody = nullptr;
-			fState = kCleaningUp;
+			state_ = State::kCleaningUp;
 			break;
 
-		case kProcessingRequest:
+		case State::kProcessingRequest:
 			if (fOutputStream.GetBytesWritten() == 0)
 			{
 				execNetMsgErrorReqHandler(httpInternalServerError);
-				fState = kSendingResponse;
+				state_ = State::kSendingResponse;
 				break;
 			}
 
-			fState = kSendingResponse;
-		case kSendingResponse:
+			state_ = State::kSendingResponse;
+		case State::kSendingResponse:
 			Assert(fRequest != nullptr);
 
 			err = fOutputStream.Flush();
@@ -284,9 +281,9 @@ SInt64 HTTPSession::Run()
 				break;
 			}
 
-			fState = kCleaningUp;
+			state_ = State::kCleaningUp;
 
-		case kCleaningUp:
+		case State::kCleaningUp:
 			// Cleaning up consists of making sure we've read all the incoming Request Body
 			// data off of the socket
 			if (this->GetRemainingReqBodyLen() > 0)
@@ -304,7 +301,7 @@ SInt64 HTTPSession::Run()
 
 			this->cleanupRequest();
 
-			fState = kReadingRequest;
+			state_ = State::kReadingRequest;
 		default: break;
 		}
 	}
