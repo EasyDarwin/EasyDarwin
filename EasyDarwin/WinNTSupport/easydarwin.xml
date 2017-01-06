@@ -145,7 +145,7 @@
 		<PREF NAME="enforce_static_sdp_port_range" TYPE="bool" >false</PREF>
 		<PREF NAME="minimum_static_sdp_port" TYPE="UInt16" >20000</PREF>
 		<PREF NAME="maximum_static_sdp_port" TYPE="UInt16" >65535</PREF>
-		<PREF NAME="kill_clients_when_broadcast_stops" TYPE="bool" >false</PREF>
+		<PREF NAME="kill_clients_when_broadcast_stops" TYPE="bool" >true</PREF>
 		<PREF NAME="use_one_SSRC_per_stream" TYPE="bool" >true</PREF>
 		<PREF NAME="timeout_stream_SSRC_secs" TYPE="UInt32" >30</PREF>
 		<PREF NAME="timeout_broadcaster_session_secs" TYPE="UInt32" >30</PREF>
