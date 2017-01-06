@@ -653,6 +653,8 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 
 	//web path
 
+	device_->channels_[channel].status_ = "online";
+
 	string snapURL = Format("%s%s/%s_%s_%s.%s", string(QTSServerInterface::GetServer()->GetPrefs()->GetSnapWebPath()), device_serial,
 		device_serial, channel, strTime, EasyProtocol::GetSnapTypeString(EASY_SNAP_TYPE_JPEG));
 	device_->HoldSnapPath(snapURL, channel);
