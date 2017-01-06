@@ -79,7 +79,7 @@ private:
 	OSMutex fReadMutex;
 	OSMutex fSendMutex;
 
-	enum
+	enum class State
 	{
 		kReadingRequest = 0,
 		kFilteringRequest = 1,
@@ -92,7 +92,7 @@ private:
 		kHaveCompleteMessage = 7
 	};
 
-	UInt32 fState;
+	State state_;
 
 	QTSS_ModuleState fModuleState;
 
