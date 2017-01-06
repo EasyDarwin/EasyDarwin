@@ -79,8 +79,8 @@ HTTPSessionInterface::HTTPSessionInterface()
     this->SetVal(EasyHTTPSesType, &fSessionType, sizeof(fSessionType));
     //this->SetEmptyVal(EasyHTTPSesSerial, &fSerial[0], EASY_MAX_SERIAL_LENGTH);
 
-    qtss_sprintf(fSessionID, "%s", EasyUtil::GetUUID().c_str());
-    this->SetValue(EasyHTTPSessionID, 0, fSessionID, ::strlen(fSessionID), QTSSDictionary::kDontObeyReadOnly);
+	sessionId_ = EasyUtil::GetUUID();
+    this->SetValue(EasyHTTPSessionID, 0, sessionId_.c_str(), sessionId_.size(), QTSSDictionary::kDontObeyReadOnly);
 
     fInputStream.ShowMSG(QTSServerInterface::GetServer()->GetPrefs()->GetMSGDebugPrintfs());
     fOutputStream.ShowMSG(QTSServerInterface::GetServer()->GetPrefs()->GetMSGDebugPrintfs());

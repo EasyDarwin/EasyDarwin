@@ -60,9 +60,9 @@ HTTPSession::HTTPSession()
 	fModuleState.globalLockRequested = false;
 
 	auto sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
-	sessionMap->Register(fSessionID, this);
+	sessionMap->Register(sessionId_, this);
 
-	qtss_printf("Create HTTPSession:%s\n", fSessionID);
+	qtss_printf("Create HTTPSession:%s\n", sessionId_.c_str());
 }
 
 HTTPSession::~HTTPSession()
@@ -77,7 +77,7 @@ HTTPSession::~HTTPSession()
 			for (auto& ref : *deviceMap)
 			{
 				auto session = static_cast<HTTPSession*>(ref.second->GetObjectPtr());
-				if (session->GetTalkbackSession() == fSessionID)
+				if (session->GetTalkbackSession() == sessionId_)
 				{
 					session->SetTalkbackSession("");
 				}
@@ -91,9 +91,9 @@ HTTPSession::~HTTPSession()
 	QTSServerInterface::GetServer()->AlterCurrentHTTPSessionCount(-1);
 
 	auto sessionMap = QTSServerInterface::GetServer()->GetHTTPSessionMap();
-	sessionMap->UnRegister(fSessionID);
+	sessionMap->UnRegister(sessionId_);
 
-	qtss_printf("Release HTTPSession:%s Serial:%s Type:%d\n", fSessionID, device_->serial_.c_str(), device_->eAppType);
+	qtss_printf("Release HTTPSession:%s Serial:%s Type:%d\n", sessionId_.c_str(), device_->serial_.c_str(), device_->eAppType);
 
 	if (fRequestBody)
 	{
@@ -886,7 +886,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	bodybody[EASY_TAG_CHANNEL] = strChannel;
 	bodybody[EASY_TAG_RESERVE] = strReserve;
 	bodybody[EASY_TAG_PROTOCOL] = strProtocol;
-	bodybody[EASY_TAG_FROM] = fSessionID;
+	bodybody[EASY_TAG_FROM] = sessionId_;
 	bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 	bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
@@ -1029,7 +1029,7 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 			bodybody[EASY_TAG_SERIAL] = chSerial;
 			bodybody[EASY_TAG_CHANNEL] = chChannel;
 			bodybody[EASY_TAG_RESERVE] = chReserve;
-			bodybody[EASY_TAG_FROM] = fSessionID;
+			bodybody[EASY_TAG_FROM] = sessionId_;
 			bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 			bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
@@ -1125,7 +1125,7 @@ QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString
 	bodybody[EASY_TAG_CHANNEL] = strChannel;
 	bodybody[EASY_TAG_RESERVE] = strReserve;
 	bodybody[EASY_TAG_PROTOCOL] = "";
-	bodybody[EASY_TAG_FROM] = fSessionID;
+	bodybody[EASY_TAG_FROM] = sessionId_;
 	bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 	bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
@@ -1671,7 +1671,7 @@ QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString
 	bodybody[EASY_TAG_ACTION_TYPE] = strActionType;
 	bodybody[EASY_TAG_CMD] = strCmd;
 	bodybody[EASY_TAG_SPEED] = chSpeed;
-	bodybody[EASY_TAG_FROM] = fSessionID;
+	bodybody[EASY_TAG_FROM] = sessionId_;
 	bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 	bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
@@ -1812,7 +1812,7 @@ QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryStr
 	bodybody[EASY_TAG_RESERVE] = chReserve;
 	bodybody[EASY_TAG_CMD] = chCmd;
 	bodybody[EASY_TAG_PRESET] = chPreset;
-	bodybody[EASY_TAG_FROM] = fSessionID;
+	bodybody[EASY_TAG_FROM] = sessionId_;
 	bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 	bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
@@ -1920,7 +1920,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 	string errNo, errString;
 	if (strCmd == "SENDDATA")
 	{
-		if (!pDevSession->GetTalkbackSession().empty() && pDevSession->GetTalkbackSession() == fSessionID)
+		if (!pDevSession->GetTalkbackSession().empty() && pDevSession->GetTalkbackSession() == sessionId_)
 		{
 			EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);
 			EasyJsonValue headerheader, bodybody;
@@ -1936,7 +1936,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 			bodybody[EASY_TAG_AUDIO_TYPE] = strAudioType;
 			bodybody[EASY_TAG_AUDIO_DATA] = strAudioData;
 			bodybody[EASY_TAG_PTS] = strPts;
-			bodybody[EASY_TAG_FROM] = fSessionID;
+			bodybody[EASY_TAG_FROM] = sessionId_;
 			bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 			bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 
@@ -1963,13 +1963,12 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 		{
 			if (pDevSession->GetTalkbackSession().empty())
 			{
-				pDevSession->SetTalkbackSession(fSessionID);
+				pDevSession->SetTalkbackSession(sessionId_);
 				errNo = EASY_ERROR_SUCCESS_OK;
 				errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 			}
-			else if (pDevSession->GetTalkbackSession() == fSessionID)
+			else if (pDevSession->GetTalkbackSession() == sessionId_)
 			{
-
 			}
 			else
 			{
@@ -1980,7 +1979,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 		}
 		else if (strCmd == "STOP")
 		{
-			if (pDevSession->GetTalkbackSession().empty() || pDevSession->GetTalkbackSession() != fSessionID)
+			if (pDevSession->GetTalkbackSession().empty() || pDevSession->GetTalkbackSession() != sessionId_)
 			{
 				errNo = EASY_ERROR_CLIENT_BAD_REQUEST;
 				errString = EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_BAD_REQUEST);
@@ -2008,7 +2007,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 		bodybody[EASY_TAG_AUDIO_TYPE] = strAudioType;
 		bodybody[EASY_TAG_AUDIO_DATA] = strAudioData;
 		bodybody[EASY_TAG_PTS] = strPts;
-		bodybody[EASY_TAG_FROM] = fSessionID;
+		bodybody[EASY_TAG_FROM] = sessionId_;
 		bodybody[EASY_TAG_TO] = pDevSession->GetValue(EasyHTTPSessionID)->GetAsCString();
 		bodybody[EASY_TAG_VIA] = QTSServerInterface::GetServer()->GetCloudServiceNodeID();
 

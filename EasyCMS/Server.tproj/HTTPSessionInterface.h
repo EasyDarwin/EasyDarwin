@@ -109,7 +109,7 @@ protected:
         kFirstHTTPSessionID = 1,    //UInt32
     };
 
-    char                fSessionID[QTSS_MAX_SESSION_ID_LENGTH];
+	string              sessionId_;;
 
     TimeoutTask         fTimeoutTask;//allows the session to be timed out
 
