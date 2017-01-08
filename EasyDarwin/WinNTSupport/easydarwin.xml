@@ -68,7 +68,7 @@
 		<PREF NAME="alt_transport_src_ipaddr" ></PREF>
 		<PREF NAME="max_send_ahead_time" TYPE="UInt32" >25</PREF>
 		<PREF NAME="reliable_udp_slow_start" TYPE="bool" >true</PREF>
-		<PREF NAME="enable_cloud_platform" TYPE="bool" >true</PREF>
+		<PREF NAME="enable_cloud_platform" TYPE="bool" >false</PREF>
 		<PREF NAME="authentication_scheme" >digest</PREF>
 		<PREF NAME="sdp_file_delete_interval_seconds" TYPE="UInt32" >10</PREF>
 		<PREF NAME="auto_start" TYPE="bool" >false</PREF>
