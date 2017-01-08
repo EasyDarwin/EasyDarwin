@@ -57,6 +57,7 @@
 #include "QTSServer.h"
 
 #include <stdlib.h>
+#include <OSArrayObjectDeleter.h>
 
 QTSServer* sServer = nullptr;
 int sStatusUpdateInterval = 0;
