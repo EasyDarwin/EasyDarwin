@@ -1472,51 +1472,61 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 	}
 	else
 	{
+#ifdef REFLECTORSESSION_DEBUG
+		qtss_printf("QTSSReflectorModule.cpp:FindOrCreateSession Session =%p refcount=%"   _U32BITARG_   "\n", theSessionRef, theSessionRef->GetRefCount());
+#endif
 		// Check if broadcast is allowed before doing anything else
 		// At this point we know it is a definitely a reflector session
 		// It is either incoming automatic broadcast setup or a client setup to view broadcast
 		// In either case, verify whether the broadcast is allowed, and send forbidden response
 		// back
-		if (!AllowBroadcast(inParams->inRTSPRequest))
+		do
 		{
-			(void)QTSSModuleUtils::SendErrorResponseWithMessage(inParams->inRTSPRequest, qtssClientForbidden, &sBroadcastNotAllowed);
-			return NULL;
-		}
-
-		if (foundSessionPtr)
-			*foundSessionPtr = true;
-
-		StrPtrLen theFileData;
-
-		if (inData == NULL)
-			(void)QTSSModuleUtils::ReadEntireFile(inPath.Ptr, &theFileData);
-		OSCharArrayDeleter charArrayDeleter(theFileData.Ptr);
-
-		if (theFileData.Len <= 0)
-			return NULL;
-
-		SDPSourceInfo* theInfo = NEW SDPSourceInfo(theFileData.Ptr, theFileData.Len);
-		if (theInfo == NULL)
-			return NULL;
-
-		if (!InfoPortsOK(inParams, theInfo, &inPath))
-		{
-			delete theInfo;
-			return NULL;
-		}
-
-		delete theInfo;
-
-		theSession = (ReflectorSession*)theSessionRef->GetObject();
-		if (isPush && theSession && !(theSession->IsSetup()))
-		{
-			UInt32 theSetupFlag = ReflectorSession::kMarkSetup | ReflectorSession::kIsPushSession;
-			QTSS_Error theErr = theSession->SetupReflectorSession(NULL, inParams, theSetupFlag);
-			if (theErr != QTSS_NoErr)
+			if (!AllowBroadcast(inParams->inRTSPRequest))
 			{
-				return NULL;
+				(void)QTSSModuleUtils::SendErrorResponseWithMessage(inParams->inRTSPRequest, qtssClientForbidden, &sBroadcastNotAllowed);
+				break;
 			}
-		}
+
+			if (foundSessionPtr)
+				*foundSessionPtr = true;
+
+			StrPtrLen theFileData;
+
+			if (inData == NULL)
+				(void)QTSSModuleUtils::ReadEntireFile(inPath.Ptr, &theFileData);
+			OSCharArrayDeleter charArrayDeleter(theFileData.Ptr);
+
+			if (theFileData.Len <= 0)
+				break;
+
+			SDPSourceInfo* theInfo = NEW SDPSourceInfo(theFileData.Ptr, theFileData.Len);
+			if (theInfo == NULL)
+				break;
+
+			if (!InfoPortsOK(inParams, theInfo, &inPath))
+			{
+				delete theInfo;
+				break;
+			}
+
+			delete theInfo;
+
+			theSession = (ReflectorSession*)theSessionRef->GetObject();
+			if (isPush && theSession && !(theSession->IsSetup()))
+			{
+				UInt32 theSetupFlag = ReflectorSession::kMarkSetup | ReflectorSession::kIsPushSession;
+				QTSS_Error theErr = theSession->SetupReflectorSession(NULL, inParams, theSetupFlag);
+				if (theErr != QTSS_NoErr)
+				{
+					theSession =  NULL;
+					break;
+				}
+			}			;
+		} while (0);
+
+		if (theSession == NULL)
+			sSessionMap->Release(theSessionRef);
 	}
 
 	Assert(theSession != NULL);
