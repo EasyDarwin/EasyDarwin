@@ -141,7 +141,7 @@
 		<PREF NAME="enable_broadcast_announce" TYPE="bool" >true</PREF>
 		<PREF NAME="enable_broadcast_push" TYPE="bool" >true</PREF>
 		<PREF NAME="max_broadcast_announce_duration_secs" TYPE="UInt32" >0</PREF>
-		<PREF NAME="allow_duplicate_broadcasts" TYPE="bool" >false</PREF>
+		<PREF NAME="allow_duplicate_broadcasts" TYPE="bool" >true</PREF>
 		<PREF NAME="enforce_static_sdp_port_range" TYPE="bool" >false</PREF>
 		<PREF NAME="minimum_static_sdp_port" TYPE="UInt16" >20000</PREF>
 		<PREF NAME="maximum_static_sdp_port" TYPE="UInt16" >65535</PREF>
