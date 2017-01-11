@@ -1176,6 +1176,7 @@ void DoDescribeAddRequiredSDPLines(QTSS_StandardRTSP_Params* inParams, Reflector
 
 QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 {
+	UInt32 theRefCount = 0;
 	char *theFileName = NULL;
 	ReflectorSession* theSession = DoSessionSetup(inParams, qtssRTSPReqFileName, false, NULL, &theFileName);
 	OSCharArrayDeleter tempFilePath(theFileName);
@@ -1183,8 +1184,10 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	if (theSession == NULL)
 		return QTSS_RequestFailed;
 
+	theRefCount++;
+
 	//	//redis,streamid/serial/channel.sdp,for example "./Movies/\streamid\serial\channel0.sdp"
-	//	if(true)//Don't forget relese ref that used in DoSessionSetup
+	//	if(true)
 	//	{
 	//		//1.get the path
 	//		char* theFileNameStr = NULL;
@@ -1283,6 +1286,9 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	checkedSDPContainer.SetSDPBuffer(&editedSDPSPL);
 	if (!checkedSDPContainer.IsSDPBufferValid())
 	{
+		if(theRefCount)
+			sSessionMap->Release(theSession->GetRef());
+
 		return QTSSModuleUtils::SendErrorResponseWithMessage(inParams->inRTSPRequest, qtssUnsupportedMediaType, &sSDPNotValidMessage);
 	}
 
@@ -1317,7 +1323,8 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	QTSSModuleUtils::SendDescribeResponse(inParams->inRTSPRequest, inParams->inClientSession,
 		&theDescribeVec[0], 3, sessLen + mediaLen);
 
-	sSessionMap->Release(theSession->GetRef());
+	if (theRefCount)
+		sSessionMap->Release(theSession->GetRef());
 
 #ifdef REFLECTORSESSION_DEBUG
 	qtss_printf("QTSSReflectorModule.cpp:DoDescribe Session =%p refcount=%"   _U32BITARG_   "\n", theSession->GetRef(), theSession->GetRef()->GetRefCount());
@@ -1541,6 +1548,9 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 // ONLY call when performing a setup.
 void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSession* theSession, bool foundSession)
 {
+	if(theSession)
+		sSessionMap->Release(theSession->GetRef());
+
 	ReflectorSession* stopSessionProcessing = NULL;
 	QTSS_Error theErr = QTSS_SetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &stopSessionProcessing, sizeof(stopSessionProcessing));
 	Assert(theErr == QTSS_NoErr);
@@ -1621,6 +1631,7 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 				theSession = DoSessionSetup(inParams, qtssRTSPReqFileName, isPush, &foundSession);
 				if (theSession == NULL)
 					return QTSS_RequestFailed;
+
 			}
 			else
 			{
