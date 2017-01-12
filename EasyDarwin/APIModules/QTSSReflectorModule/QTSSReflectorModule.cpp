@@ -1261,6 +1261,7 @@ QTSS_Error DoDescribe(QTSS_StandardRTSP_Params* inParams)
 	checkedSDPContainer.SetSDPBuffer(&editedSDPSPL);
 	if (!checkedSDPContainer.IsSDPBufferValid())
 	{
+        sSessionMap->Release(theSession->GetRef());
 		return QTSSModuleUtils::SendErrorResponseWithMessage(inParams->inRTSPRequest, qtssUnsupportedMediaType, &sSDPNotValidMessage);
 	}
 
@@ -1506,6 +1507,9 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inPath, QTSS_StandardRTSP_Param
 // ONLY call when performing a setup.
 void DeleteReflectorPushSession(QTSS_StandardRTSP_Params* inParams, ReflectorSession* theSession, Bool16 foundSession)
 {
+    if(theSession)
+        sSessionMap->Release(theSession->GetRef());
+
 	ReflectorSession* stopSessionProcessing = NULL;
 	QTSS_Error theErr = QTSS_SetValue(inParams->inClientSession, sClientBroadcastSessionAttr, 0, &stopSessionProcessing, sizeof(stopSessionProcessing));
 	Assert(theErr == QTSS_NoErr);
