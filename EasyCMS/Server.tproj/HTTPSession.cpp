@@ -679,19 +679,20 @@ void HTTPSession::addDevice() const
 	QTSS_RoleParams theParams;
 	theParams.DeviceInfoParams.serial_ = new char[64];
 	theParams.DeviceInfoParams.channels_ = new char[64];
+	theParams.DeviceInfoParams.deviceType_ = new char[64];
 	theParams.DeviceInfoParams.type_ = new char[64];
 	theParams.DeviceInfoParams.token_ = new char[64];
 	strncpy(theParams.DeviceInfoParams.serial_, device_->serial_.c_str(), device_->serial_.size() + 1);
 	strncpy(theParams.DeviceInfoParams.token_, device_->password_.c_str(), device_->password_.size() + 1);
-	string type, channel;
+
+	auto type = EasyProtocol::GetAppTypeString(device_->eAppType);
+	string channel;
 	if (device_->eAppType == EASY_APP_TYPE_CAMERA)
 	{
-		type = "EasyCamera";
 		channel = "1";
 	}
 	else if (device_->eAppType == EASY_APP_TYPE_NVR)
 	{
-		type = "EasyNVR";
 		auto channels = device_->channels_;
 		for (auto& item : channels)
 		{
@@ -711,7 +712,10 @@ void HTTPSession::addDevice() const
 		}
 	}
 
+	auto deviceType = EasyProtocol::GetTerminalTypeString(device_->eDeviceType);
+
 	strncpy(theParams.DeviceInfoParams.channels_, channel.c_str(), channel.size() + 1);
+	strncpy(theParams.DeviceInfoParams.deviceType_, deviceType.c_str(), deviceType.size() + 1);
 	strncpy(theParams.DeviceInfoParams.type_, type.c_str(), type.size() + 1);
 
 	UInt32 numModules = QTSServerInterface::GetNumModulesInRole(QTSSModule::kRedisSetDeviceRole);
@@ -724,8 +728,10 @@ void HTTPSession::addDevice() const
 
 	delete[] theParams.DeviceInfoParams.serial_;
 	delete[] theParams.DeviceInfoParams.channels_;
+	delete[] theParams.DeviceInfoParams.deviceType_;
 	delete[] theParams.DeviceInfoParams.type_;
 	delete[] theParams.DeviceInfoParams.token_;
+
 }
 
 /*

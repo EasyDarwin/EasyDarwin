@@ -296,7 +296,8 @@ QTSS_Error RedisSetDevice(Easy_DeviceInfo_Params* inParams)
 
 	string id(QTSServerInterface::GetServer()->GetCloudServiceNodeID());
 	auto hmset = Format("hmset %s:%s %s %s %s %s %s %s %s %s", string(EASY_REDIS_DEVICE), string(inParams->serial_),
-		string(EASY_REDIS_TYPE), string(inParams->type_), string(EASY_REDIS_CHANNEL), string(inParams->channels_), string(EASY_REDIS_EASYCMS), id,
+		string(EASY_REDIS_DEVICE_TYPE), string(inParams->deviceType_), string(EASY_REDIS_TYPE), string(inParams->type_),
+		string(EASY_REDIS_CHANNEL), string(inParams->channels_), string(EASY_REDIS_EASYCMS), id,
 		string(EASY_REDIS_TOKEN), string(inParams->token_));
 	auto reply = static_cast<redisReply*>(redisCommand(redisContext_, hmset.c_str()));
 	auto replyGuard = MakeGuard([&]()

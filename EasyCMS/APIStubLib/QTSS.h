@@ -587,6 +587,7 @@ extern "C" {
 		char* serial_;
 		char* token_;
 		char* type_;
+		char* deviceType_;
 		char* channels_;
 	} Easy_DeviceInfo_Params;
 
