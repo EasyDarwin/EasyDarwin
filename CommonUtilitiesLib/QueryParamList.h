@@ -41,7 +41,7 @@
 
 #include "PLDoubleLinkedList.h"
 #include "StrPtrLen.h"
-
+#include <string>
 
 class QueryParamListElement {
 
@@ -68,6 +68,7 @@ public:
 class QueryParamList
 {
 public:
+	QueryParamList(const std::string& queryString);
 	QueryParamList(char* queryString);
 	QueryParamList(StrPtrLen* querySPL);
 	~QueryParamList() { delete fNameValueQueryParamlist; }
