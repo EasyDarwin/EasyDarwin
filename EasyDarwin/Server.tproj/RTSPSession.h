@@ -40,64 +40,6 @@
 #include "RTSPRequest.h"
 #include "RTPSession.h"
 
-class RTSPMsg;
-class RTSPSession;
-class RTSPSessionHandler;
-
-class RTSPMsg
-{
-public:
-	RTSPMsg() : fQueueElem() { fQueueElem.SetEnclosingObject(this); this->Reset(); }
-	void Reset() { // make packet ready to reuse fQueueElem is always in use
-		fTimeArrived = 0;
-		fPacketPtr.Set(fPacketData, 0);
-		fIsData = true;
-		fMsgCountID = 0;
-	}
-
-	~RTSPMsg() {}
-
-	void    SetMsgData(char *data, UInt32 len)
-	{
-		Assert(kMaxRTSPMsgLen > len);
-
-		if (len > kMaxRTSPMsgLen)
-        {
-            printf("len > kMaxRTSPMsgLen\n");
-			len = kMaxRTSPMsgLen;
-        }
-
-		if (len > 0)
-			memcpy(this->fPacketPtr.Ptr, data, len);
-		this->fPacketPtr.Len = len;
-	}
-
-	Bool16  IsData() { return fIsData; }
-	inline  UInt16  GetPacketSeqNum();
-
-private:
-
-	enum
-	{
-		kMaxRTSPMsgLen = 2060
-	};
-
-	SInt64      fTimeArrived;
-	OSQueueElem fQueueElem;
-	char        fPacketData[kMaxRTSPMsgLen];
-	StrPtrLen   fPacketPtr;
-	Bool16      fIsData;
-	UInt64      fMsgCountID;
-
-	friend class RTSPSession;
-	friend class RTSPSessionHandler;
-};
-
-UInt16 RTSPMsg::GetPacketSeqNum()
-{
-	return 0;
-}
-
 class RTSPSession : public RTSPSessionInterface
 {
 public:
@@ -145,9 +87,6 @@ private:
 
 	RTSPRequest*        fRequest;
 	RTPSession*         fRTPSession;
-
-    RTSPSessionHandler* fRTSPSessionHandler;
-
 
 	/* -- begin adds for HTTP ProxyTunnel -- */
 
@@ -235,42 +174,6 @@ private:
 
     UInt64 fMsgCount;
 
-    friend class RTSPSessionHandler;
-
-};
-
-class RTSPSessionHandler : public Task
-{
-public:
-	RTSPSessionHandler(RTSPSession* session);
-	virtual ~RTSPSessionHandler();
-
-private:
-	virtual SInt64 Run();
-    
-    void Release();
-    RTSPSession* fRTSPSession;
-
-    //Number of packets to allocate when the socket is first created
-	enum
-	{
-		kNumPreallocatedMsgs = 20,   //UInt32
-        sMsgHandleInterval = 1
-	};
-
-	OSQueue fFreeMsgQueue;
-	OSQueue fMsgQueue;
-    OSMutex fQueueMutex;
-    OSMutex fFreeQueueMutex;
-
-    Bool16  fLiveHandler;
-
-public:
-    RTSPMsg* GetMsg();
-	Bool16  ProcessMsg(const SInt64& inMilliseconds, RTSPMsg* theMsg);
-    void HandleDataPacket(RTSPMsg* msg);
-
-    friend class RTSPSession;
 };
 
 #endif // __RTSPSESSION_H__
