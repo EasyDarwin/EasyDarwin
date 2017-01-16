@@ -30,12 +30,12 @@ namespace EasyDarwin { namespace Protocol
 	}
 
 
-	EasyNVR::EasyNVR() : object_(NULL)
+	EasyNVR::EasyNVR() : object_(nullptr)
 	{
 	}
 
 	EasyNVR::EasyNVR(const string& serial, const string& name, const string& password, const string& tag, EasyDevices &channel)
-		: channels_(channel), object_(NULL)
+		: channels_(channel), object_(nullptr)
 	{
 		serial_ = serial;
 		name_ = name;
@@ -44,7 +44,7 @@ namespace EasyDarwin { namespace Protocol
 	}
 
 	// MSG_DS_REGISTER_REQ消息报文构造
-	EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, EasyDarwinAppType appType, EasyNVR &nvr, size_t cseq)
+	EasyMsgDSRegisterREQ::EasyMsgDSRegisterREQ(EasyDarwinTerminalType terminalType, EasyDarwinAppType appType, EasyNVR& nvr, size_t cseq)
 		: EasyProtocol(MSG_DS_REGISTER_REQ)
 		, nvr_(nvr)
 	{
@@ -60,7 +60,7 @@ namespace EasyDarwin { namespace Protocol
 		if (appType == EASY_APP_TYPE_NVR)
 		{
 			SetBodyValue(EASY_TAG_CHANNEL_COUNT, nvr.channels_.size());
-			for (EasyDevices::iterator it = nvr.channels_.begin(); it != nvr.channels_.end(); ++it)
+			for (auto it = nvr.channels_.begin(); it != nvr.channels_.end(); ++it)
 			{
 				Json::Value value;
 				value[EASY_TAG_CHANNEL] = it->second.channel_;
@@ -85,7 +85,7 @@ namespace EasyDarwin { namespace Protocol
 		int size = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size();
 		for (int i = 0; i < size; i++)
 		{
-			Json::Value &json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];
+			Json::Value& json_camera = root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];
 			EasyDevice channel;
 			channel.channel_ = json_camera[EASY_TAG_CHANNEL].asString();
 			channel.name_ = json_camera[EASY_TAG_NAME].asString();
@@ -96,14 +96,14 @@ namespace EasyDarwin { namespace Protocol
 	}
 
 	// MSG_SD_REGISTER_ACK消息构造
-	EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(EasyJsonValue &body, size_t cseq, size_t error)
+	EasyMsgSDRegisterACK::EasyMsgSDRegisterACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SD_REGISTER_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -116,12 +116,12 @@ namespace EasyDarwin { namespace Protocol
 	}
 
 	// MSG_SD_PUSH_STREAM_REQ消息构造
-	EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(EasyJsonValue &body, size_t cseq)
+	EasyMsgSDPushStreamREQ::EasyMsgSDPushStreamREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_SD_PUSH_STREAM_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -134,26 +134,26 @@ namespace EasyDarwin { namespace Protocol
 	}
 
 	// MSG_DS_PUSH_STREAM_ACK消息构造
-	EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(EasyJsonValue &body, size_t cseq, size_t error)
+	EasyMsgDSPushSteamACK::EasyMsgDSPushSteamACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_DS_PUSH_STREAM_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
 	}
 
 	// MSG_CS_FREE_STREAM_REQ消息构造
-	EasyMsgCSFreeStreamREQ::EasyMsgCSFreeStreamREQ(EasyJsonValue &body, size_t cseq)
+	EasyMsgCSFreeStreamREQ::EasyMsgCSFreeStreamREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_CS_FREE_STREAM_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -190,14 +190,14 @@ namespace EasyDarwin { namespace Protocol
 	}
 
 	// MSG_SD_STREAM_STOP_REQ消息构造
-	EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(EasyJsonValue &body, size_t cseq, size_t error)
+	EasyMsgDSStopStreamACK::EasyMsgDSStopStreamACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_DS_STREAM_STOP_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -239,7 +239,7 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	bool EasyMsgSCHLSessionListACK::AddSession(EasyDarwinHLSession &session)
+	bool EasyMsgSCHLSessionListACK::AddSession(EasyDarwinHLSession& session)
 	{
 		Json::Value value;
 		value[EASY_TAG_L_INDEX] = session.index;
@@ -248,11 +248,12 @@ namespace EasyDarwin { namespace Protocol
 		value[EASY_TAG_L_SOURCE] = session.sourceUrl;
 		value[EASY_TAG_BITRATE] = session.bitrate;
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_SESSIONS].append(value);
+
 		return true;
 	}
 
 
-	EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(EasyDevices & devices, size_t cseq, size_t error)
+	EasyMsgSCDeviceListACK::EasyMsgSCDeviceListACK(EasyDevices& devices, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SC_DEVICE_LIST_ACK)
 		, devices_(devices)
 	{
@@ -261,7 +262,7 @@ namespace EasyDarwin { namespace Protocol
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
 		SetBodyValue(EASY_TAG_DEVICE_COUNT, devices.size());
-		for (EasyDevices::iterator it = devices.begin(); it != devices.end(); ++it)
+		for (auto it = devices.begin(); it != devices.end(); ++it)
 		{
 			Json::Value value;
 			value[EASY_TAG_SERIAL] = it->second.serial_;
@@ -299,7 +300,7 @@ namespace EasyDarwin { namespace Protocol
 
 		SetBodyValue(EASY_TAG_SERIAL, device_serial);
 		SetBodyValue(EASY_TAG_CHANNEL_COUNT, cameras.size());
-		for (EasyDevices::iterator it = cameras.begin(); it != cameras.end(); ++it)
+		for (auto it = cameras.begin(); it != cameras.end(); ++it)
 		{
 			Json::Value value;
 			value[EASY_TAG_SERIAL] = it->second.serial_;
@@ -326,14 +327,14 @@ namespace EasyDarwin { namespace Protocol
 		}
 	}
 
-	EasyMsgSCGetStreamACK::EasyMsgSCGetStreamACK(EasyJsonValue &body, size_t cseq, size_t error)
+	EasyMsgSCGetStreamACK::EasyMsgSCGetStreamACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SC_GET_STREAM_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -344,14 +345,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSCFreeStreamACK::EasyMsgSCFreeStreamACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgSCFreeStreamACK::EasyMsgSCFreeStreamACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SC_FREE_STREAM_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -362,12 +363,12 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgDSPostSnapREQ::EasyMsgDSPostSnapREQ(EasyJsonValue & body, size_t cseq)
+	EasyMsgDSPostSnapREQ::EasyMsgDSPostSnapREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_DS_POST_SNAP_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -378,14 +379,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgSDPostSnapACK::EasyMsgSDPostSnapACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SD_POST_SNAP_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -396,12 +397,12 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(EasyJsonValue & body, size_t cseq)
+	EasyMsgCSPTZControlREQ::EasyMsgCSPTZControlREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_CS_PTZ_CONTROL_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -412,14 +413,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgSCPTZControlACK::EasyMsgSCPTZControlACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SC_PTZ_CONTROL_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -430,12 +431,12 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(EasyJsonValue & body, size_t cseq)
+	EasyMsgSDControlPTZREQ::EasyMsgSDControlPTZREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_SD_CONTROL_PTZ_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -446,14 +447,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgDSControlPTZACK::EasyMsgDSControlPTZACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_DS_CONTROL_PTZ_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -464,12 +465,12 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgCSPresetControlREQ::EasyMsgCSPresetControlREQ(EasyJsonValue & body, size_t cseq)
+	EasyMsgCSPresetControlREQ::EasyMsgCSPresetControlREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_CS_PRESET_CONTROL_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -480,14 +481,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSCPresetControlACK::EasyMsgSCPresetControlACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgSCPresetControlACK::EasyMsgSCPresetControlACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SC_PRESET_CONTROL_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -498,12 +499,12 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSDControlPresetREQ::EasyMsgSDControlPresetREQ(EasyJsonValue & body, size_t cseq)
+	EasyMsgSDControlPresetREQ::EasyMsgSDControlPresetREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_SD_CONTROL_PRESET_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -514,14 +515,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgDSControlPresetACK::EasyMsgDSControlPresetACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgDSControlPresetACK::EasyMsgDSControlPresetACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_DS_CONTROL_PRESET_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -532,12 +533,12 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgCSTalkbackControlREQ::EasyMsgCSTalkbackControlREQ(EasyJsonValue & body, size_t cseq)
+	EasyMsgCSTalkbackControlREQ::EasyMsgCSTalkbackControlREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_CS_TALKBACK_CONTROL_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -548,14 +549,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSCTalkbackControlACK::EasyMsgSCTalkbackControlACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgSCTalkbackControlACK::EasyMsgSCTalkbackControlACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_SC_TALKBACK_CONTROL_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -566,12 +567,12 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgSDControlTalkbackREQ::EasyMsgSDControlTalkbackREQ(EasyJsonValue & body, size_t cseq)
+	EasyMsgSDControlTalkbackREQ::EasyMsgSDControlTalkbackREQ(EasyJsonValue& body, size_t cseq)
 		: EasyProtocol(MSG_SD_CONTROL_TALKBACK_REQ)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -582,14 +583,14 @@ namespace EasyDarwin { namespace Protocol
 	{
 	}
 
-	EasyMsgDSControlTalkbackACK::EasyMsgDSControlTalkbackACK(EasyJsonValue & body, size_t cseq, size_t error)
+	EasyMsgDSControlTalkbackACK::EasyMsgDSControlTalkbackACK(EasyJsonValue& body, size_t cseq, size_t error)
 		: EasyProtocol(MSG_DS_CONTROL_TALKBACK_ACK)
 	{
 		SetHeaderValue(EASY_TAG_CSEQ, cseq);
 		SetHeaderValue(EASY_TAG_ERROR_NUM, error);
 		SetHeaderValue(EASY_TAG_ERROR_STRING, GetErrorString(error));
 
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -617,7 +618,8 @@ namespace EasyDarwin { namespace Protocol
 		: EasyProtocol(msg, MSG_SC_RTSP_LIVE_SESSIONS_ACK)
 	{
 	}
-	bool EasyMsgSCRTSPLiveSessionsACK::AddSession(EasyDarwinRTSPSession &session)
+
+	bool EasyMsgSCRTSPLiveSessionsACK::AddSession(EasyDarwinRTSPSession& session)
 	{
 		Json::Value value;
 		value[EASY_TAG_L_INDEX] = session.index;
@@ -649,17 +651,17 @@ namespace EasyDarwin { namespace Protocol
 		return true;
 	}
 
-	void EasyProtocolACK::SetHead(EasyJsonValue &header)
+	void EasyProtocolACK::SetHead(EasyJsonValue& header)
 	{
-		for (EasyJsonValue::iterator it = header.begin(); it != header.end(); ++it)
+		for (auto it = header.begin(); it != header.end(); ++it)
 		{
 			SetHeaderValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
 	}
 
-	void EasyProtocolACK::SetBody(EasyJsonValue &body)
+	void EasyProtocolACK::SetBody(EasyJsonValue& body)
 	{
-		for (EasyJsonValue::iterator it = body.begin(); it != body.end(); ++it)
+		for (auto it = body.begin(); it != body.end(); ++it)
 		{
 			SetBodyValue(it->first.c_str(), boost::apply_visitor(EasyJsonValueVisitor(), it->second));
 		}
@@ -681,7 +683,7 @@ namespace EasyDarwin { namespace Protocol
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
 	}
 
-	void EasyMsgSCRecordListACK::AddRecord(const string & starttime, const string & endtime)
+	void EasyMsgSCRecordListACK::AddRecord(const string& starttime, const string& endtime)
 	{
 		Json::Value value;
 		value[EASY_TAG_START_TIME] = starttime;
@@ -689,8 +691,8 @@ namespace EasyDarwin { namespace Protocol
 		root[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_RECORDS].append(value);
 	}
 
-	//add,紫光，start
-	strDevice::strDevice() : eDeviceType(), eAppType()
+	strDevice::strDevice()
+		: eDeviceType(), eAppType()
 	{
 		snapJpgPath_.clear();
 	}
@@ -704,7 +706,7 @@ namespace EasyDarwin { namespace Protocol
 			string strAppType = proTemp.GetHeaderValue(EASY_TAG_APP_TYPE);//获取App类型
 			serial_ = proTemp.GetBodyValue(EASY_TAG_SERIAL);//获取设备序列号
 
-			if ((strTerminalType.size() <= 0) || (serial_.size() <= 0) || (strAppType.size() <= 0))
+			if (strTerminalType.empty() || serial_.empty() || strAppType.empty())
 				break;
 
 			eDeviceType = static_cast<EasyDarwinTerminalType>(EasyProtocol::GetTerminalType(strTerminalType));
@@ -724,7 +726,6 @@ namespace EasyDarwin { namespace Protocol
 				//channels_.clear();//这一句不能要，否则多线程bug
 				Json::Value *proot = proTemp.GetRoot();
 				int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size(); //数组大小 
-
 
 				for (int i = 0; i < size; ++i)
 				{
@@ -781,7 +782,8 @@ namespace EasyDarwin { namespace Protocol
 		: EasyProtocol(msg, MSG_SC_RTSP_RECORD_SESSION_LIST_ACK)
 	{
 	}
-	bool EasyMsgSCRecordList::AddRecord(EasyDarwinRecordSession &session)
+
+	bool EasyMsgSCRecordList::AddRecord(EasyDarwinRecordSession& session)
 	{
 		Json::Value value;
 		value[EASY_TAG_L_INDEX] = session.index;

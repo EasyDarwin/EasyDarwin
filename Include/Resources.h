@@ -13,6 +13,7 @@
 #define EASY_REDIS_HTTP					"HTTP"
 #define EASY_REDIS_RTSP					"RTSP"
 
+#define EASY_REDIS_DEVICE_TYPE			"DeviceType"
 #define EASY_REDIS_TYPE					"Type"
 #define EASY_REDIS_CHANNEL				"Channel"
 #define EASY_REDIS_TOKEN				"Token"

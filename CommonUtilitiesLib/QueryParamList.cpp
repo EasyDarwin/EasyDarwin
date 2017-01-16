@@ -33,6 +33,15 @@
 #include <stdlib.h>
 #include "SafeStdLib.h"
 
+QueryParamList::QueryParamList(const std::string& queryString)
+{
+	StrPtrLen querySPL(const_cast<char*>(queryString.c_str()), queryString.size());
+
+	fNameValueQueryParamlist = new PLDoubleLinkedList<QueryParamListElement>;
+
+	this->BulidList(&querySPL);
+}
+
 QueryParamList::QueryParamList(StrPtrLen* querySPL)
 {
 	// ctor from StrPtrLen
