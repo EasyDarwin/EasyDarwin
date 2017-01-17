@@ -11,7 +11,6 @@
 */
 #include "HTTPClientRequestStream.h"
 #include "StringParser.h"
-#include "OSMemory.h"
 #include "base64.h"
 
 #include <errno.h>
