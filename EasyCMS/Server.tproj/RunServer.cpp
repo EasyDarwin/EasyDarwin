@@ -577,6 +577,8 @@ void RunServer()
 		//
 		LogStatus(theServerState);
 
+		theServerState = sServer->GetServerState();
+
 		if (sStatusUpdateInterval)
 		{
 			debugLevel = sServer->GetDebugLevel();
@@ -615,10 +617,18 @@ void RunServer()
 	//the shutdown process
 	delete sServer;
 
+	restartServer = true;
+
 	CleanPid(false);
 	//ok, we're ready to exit. If we're quitting because of some fatal error
 	//while running the server, make sure to let the parent process know by
 	//exiting with a nonzero status. Otherwise, exit with a 0 status
 	if (theServerState == qtssFatalErrorState || restartServer)
-		::exit(-2);//-2 signals parent process to restart server
+	{
+#ifdef WIN32
+		::ExitProcess(-2);
+#else
+		::exit(-2);
+#endif //WIN32
+	}
 }
