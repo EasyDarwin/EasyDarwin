@@ -38,7 +38,6 @@
 #include "RunServer.h"
 #include "SafeStdLib.h"
 #include "OS.h"
-#include "OSMemory.h"
 #include "OSThread.h"
 #include "Socket.h"
 #include "SocketUtils.h"
@@ -106,7 +105,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 	QTSSDictionaryMap::Initialize();
 	//初始化Server对象属性字典，包括其他具有属性字典的类，都要先进行Initialize
 	QTSServerInterface::Initialize();//此部分必须在QTSServer对象构造前调用
-	sServer = NEW QTSServer();
+	sServer = new QTSServer();
 	sServer->SetDebugLevel(debugLevel);
 	sServer->SetDebugOptions(debugOptions);
 
@@ -213,7 +212,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 		qtss_snprintf(msgStr, sizeof(msgStr), "EasyCMS Service done starting up");
 		QTSServerInterface::LogError(qtssMessageVerbosity, msgStr);
 
-		OSMemory::SetMemoryError(ENOMEM);
+		//OSMemory::SetMemoryError(ENOMEM);
 	}
 
 	//// SWITCH TO RUN USER AND GROUP ID

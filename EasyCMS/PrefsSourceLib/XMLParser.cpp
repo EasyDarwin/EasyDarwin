@@ -36,7 +36,6 @@
 #endif
 
 #include "XMLParser.h"
-#include "OSMemory.h"
 
 XMLParser::XMLParser(char* inPath, DTDVerifier* verifier)
 	: fRootTag(nullptr), fFilePath(nullptr)

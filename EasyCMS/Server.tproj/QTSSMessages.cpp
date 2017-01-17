@@ -35,7 +35,6 @@
  */
 
 #include "QTSSMessages.h"
-#include "OSMemory.h"
 
  // see QTSS.h (QTSS_TextMessagesObject) for list of enums to map these strings
 

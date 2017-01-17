@@ -40,7 +40,6 @@
 
 #include "QTSSModule.h"
 #include "OSArrayObjectDeleter.h"
-#include "OSMemory.h"
 #include "StringParser.h"
 #include "Socket.h"
 #include "QTSServerInterface.h"

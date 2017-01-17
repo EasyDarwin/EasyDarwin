@@ -191,7 +191,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\OSMemoryLib\OSMemory.cpp" />
     <ClCompile Include="base64.c" />
     <ClCompile Include="ClientSocket.cpp" />
     <ClCompile Include="ConfParser.cpp" />
@@ -247,7 +246,6 @@
     <ClInclude Include="Format.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="OSMapEx.h" />
-    <ClInclude Include="OSMemory.h" />
     <ClInclude Include="OSRefTableEx.h" />
     <ClInclude Include="QueryParamList.h" />
     <ClInclude Include="ScopeGuard.h" />

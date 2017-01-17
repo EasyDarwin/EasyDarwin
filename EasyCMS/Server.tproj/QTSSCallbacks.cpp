@@ -39,7 +39,6 @@
 #include "QTSSCallbacks.h"
 #include "QTSSDictionary.h"
 #include "QTSSStream.h"
-#include "OSMemory.h"
 #include "HTTPSession.h"
 #include "OS.h"
 #include "QTSSFile.h"
@@ -61,12 +60,15 @@ void* QTSSCallbacks::QTSS_New(FourCharCode /*inMemoryIdentifier*/, UInt32 inSize
     // version of New is used.
 
     //return OSMemory::New(inSize, inMemoryIdentifier, false);
-    return OSMemory::New(inSize);
+
+	auto temp = new int[inSize];
+
+    return temp;
 }
 
 void QTSSCallbacks::QTSS_Delete(void* inMemory)
 {
-    OSMemory::Delete(inMemory);
+	delete[] inMemory;
 }
 
 void QTSSCallbacks::QTSS_Milliseconds(SInt64* outMilliseconds)
@@ -423,7 +425,7 @@ QTSS_Error QTSSCallbacks::QTSS_OpenFileObject(char* inPath, QTSS_OpenFileFlags i
 
     //
     // Create a new file object
-    QTSSFile* theNewFile = NEW QTSSFile();
+    QTSSFile* theNewFile = new QTSSFile();
     QTSS_Error theErr = theNewFile->Open(inPath, inFlags);
 
     if (theErr != QTSS_NoErr)
@@ -456,7 +458,7 @@ QTSS_Error QTSSCallbacks::QTSS_CreateStreamFromSocket(int inFileDesc, QTSS_Strea
 
     //
     // Create a new socket object
-    *outStream = static_cast<QTSS_StreamRef>(NEW QTSSSocket(inFileDesc));
+    *outStream = static_cast<QTSS_StreamRef>(new QTSSSocket(inFileDesc));
     return QTSS_NoErr;
 }
 

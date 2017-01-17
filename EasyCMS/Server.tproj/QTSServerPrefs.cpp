@@ -37,7 +37,6 @@
  */
 
 #include "QTSServerPrefs.h"
-#include "OSMemory.h"
 #include "QTSSDataConverter.h"
 #include "defaultPaths.h"
 #include "QTSSRollingLog.h"

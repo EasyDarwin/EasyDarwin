@@ -11,7 +11,6 @@
 */
 
 #include "HTTPResponseStream.h"
-#include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include "OS.h"
 #include <errno.h>

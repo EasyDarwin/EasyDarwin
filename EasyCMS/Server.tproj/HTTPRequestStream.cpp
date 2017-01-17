@@ -12,7 +12,6 @@
 
 #include "HTTPRequestStream.h"
 #include "StringParser.h"
-#include "OSMemory.h"
 #include "base64.h"
 #include "OS.h"
 
@@ -306,7 +305,7 @@ QTSS_Error HTTPRequestStream::decodeIncomingData(char* inSrcData, UInt32 inSrcDa
 
 	if (fRequest.Ptr == &fRequestBuffer[0])
 	{
-		fRequest.Ptr = NEW char[EASY_REQUEST_BUFFER_SIZE_LEN];
+		fRequest.Ptr = new char[EASY_REQUEST_BUFFER_SIZE_LEN];
 		fRequest.Len = 0;
 	}
 

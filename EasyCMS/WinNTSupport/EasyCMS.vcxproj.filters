@@ -46,9 +46,6 @@
     <ClCompile Include="..\..\CommonUtilitiesLib\OSMapEx.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\CommonUtilitiesLib\OSRefTableEx.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
