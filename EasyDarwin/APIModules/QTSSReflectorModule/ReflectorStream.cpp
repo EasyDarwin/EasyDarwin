@@ -688,6 +688,7 @@ OSQueueElem*    ReflectorSender::GetClientBufferNextPacketTime(UInt32 inRTPTime)
 
 Bool16 ReflectorSender::GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr)
 {
+    printf("1");
 	OSMutexLocker locker(&fStream->fBucketMutex);
 	OSQueueElem* packetElem = this->GetClientBufferStartPacketOffset(ReflectorStream::sFirstPacketOffsetMsec);
 
@@ -720,6 +721,7 @@ Bool16 ReflectorSender::GetFirstRTPTimePacket(UInt16* outSeqNumPtr, UInt32* outR
 
 Bool16 ReflectorSender::GetFirstPacketInfo(UInt16* outSeqNumPtr, UInt32* outRTPTimePtr, SInt64* outArrivalTimePtr)
 {
+    printf("2");
 	OSMutexLocker locker(&fStream->fBucketMutex);
 	OSQueueElem* packetElem = this->GetClientBufferStartPacketOffset(ReflectorStream::sFirstPacketOffsetMsec);
 	//    OSQueueElem* packetElem = this->GetClientBufferStartPacket();
@@ -1193,6 +1195,7 @@ OSQueueElem*    ReflectorSender::SendPacketsToOutput(ReflectorOutput* theOutput,
 
 OSQueueElem* ReflectorSender::GetClientBufferStartPacketOffset(SInt64 offsetMsec, Bool16 needKeyFrameFirstPacket)
 {
+    printf("3");
 	OSQueueIter qIter(&fPacketQueue);// start at oldest packet in q
 	SInt64 theCurrentTime = OS::Milliseconds();
 	SInt64 packetDelay = 0;
@@ -1874,7 +1877,7 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds, ReflectorPac
 			// 2、在这里判断上面插入的thePacket是否为关键帧起始RTP包，如果是，这记录thePacket->fQueueElem
 			if (theSender->IsKeyFrameFirstPacket(thePacket))
 			{
-				//printf("\nI");
+				printf("\nI");
 				//3、取消原来的fKeyFrameStartPacketElementPointer
 				if (theSender->fKeyFrameStartPacketElementPointer)
 				{
@@ -1895,10 +1898,10 @@ Bool16 ReflectorSocket::ProcessPacket(const SInt64& inMilliseconds, ReflectorPac
 					theSender->fStream->GetMyReflectorSession()->SetHasVideoKeyFrameUpdate(true);
 				}
 			}
-			//else if(theSender->IsFrameFirstPacket(thePacket))
-			//{
-			//	printf("P");
-			//}
+			else if(theSender->IsFrameFirstPacket(thePacket))
+			{
+				printf("P");
+			}
 		}
 
 		// TODO:B、如果视频关键帧有更新，音频也根据视频的更新立即进行更新
