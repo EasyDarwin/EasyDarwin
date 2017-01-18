@@ -147,37 +147,37 @@ SInt64 HTTPSession::Run()
 			continue;
 
 		case State::kReadingRequest:
-			{
-				OSMutexLocker readMutexLocker(&fReadMutex);
+		{
+			OSMutexLocker readMutexLocker(&fReadMutex);
 
-				if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
+			if ((err = fInputStream.ReadRequest()) == QTSS_NoErr)
+			{
+				fInputSocketP->RequestEvent(EV_RE);
+				return 0;
+			}
+
+			if ((err != QTSS_RequestArrived) && (err != E2BIG) && (err != QTSS_BadArgument))
+			{
+				//Any other error implies that the input connection has gone away.
+				// We should only kill the whole session if we aren't doing HTTP.
+				// (If we are doing HTTP, the POST connection can go away)
+				Assert(err > 0);
+				if (fOutputSocketP->IsConnected())
 				{
-					fInputSocketP->RequestEvent(EV_RE);
+					// If we've gotten here, this must be an HTTP session with
+					// a dead input connection. If that's the case, we should
+					// clean up immediately so as to not have an open socket
+					// needlessly lingering around, taking up space.
+					Assert(fOutputSocketP != fInputSocketP);
+					Assert(!fInputSocketP->IsConnected());
+					fInputSocketP->Cleanup();
 					return 0;
 				}
-
-				if ((err != QTSS_RequestArrived) && (err != E2BIG) && (err != QTSS_BadArgument))
-				{
-					//Any other error implies that the input connection has gone away.
-					// We should only kill the whole session if we aren't doing HTTP.
-					// (If we are doing HTTP, the POST connection can go away)
-					Assert(err > 0);
-					if (fOutputSocketP->IsConnected())
-					{
-						// If we've gotten here, this must be an HTTP session with
-						// a dead input connection. If that's the case, we should
-						// clean up immediately so as to not have an open socket
-						// needlessly lingering around, taking up space.
-						Assert(fOutputSocketP != fInputSocketP);
-						Assert(!fInputSocketP->IsConnected());
-						fInputSocketP->Cleanup();
-						return 0;
-					}
-					Assert(!this->IsLiveSession());
-					break;
-				}
-				state_ = State::kHaveCompleteMessage;
+				Assert(!this->IsLiveSession());
+				break;
 			}
+			state_ = State::kHaveCompleteMessage;
+		}
 		case State::kHaveCompleteMessage:
 			Assert(fInputStream.GetRequestBuffer());
 
@@ -200,39 +200,39 @@ SInt64 HTTPSession::Run()
 			state_ = State::kFilteringRequest;
 
 		case State::kFilteringRequest:
+		{
+			fTimeoutTask.RefreshTimeout();
+
+			if (fSessionType != EasyHTTPSession && !device_->serial_.empty())
 			{
-				fTimeoutTask.RefreshTimeout();
+				addDevice();
+			}
 
-				if (fSessionType != EasyHTTPSession && !device_->serial_.empty())
-				{
-					addDevice();
-				}
+			QTSS_Error theErr = setupRequest();
 
-				QTSS_Error theErr = setupRequest();
+			if (theErr == QTSS_WouldBlock)
+			{
+				this->ForceSameThread();
+				fInputSocketP->RequestEvent(EV_RE);
+				// We are holding mutexes, so we need to force
+				// the same thread to be used for next Run()
+				return 0;
+			}
 
-				if (theErr == QTSS_WouldBlock)
-				{
-					this->ForceSameThread();
-					fInputSocketP->RequestEvent(EV_RE);
-					// We are holding mutexes, so we need to force
-					// the same thread to be used for next Run()
-					return 0;
-				}
+			if (theErr != QTSS_NoErr)
+			{
+				execNetMsgErrorReqHandler(httpBadRequest);
+			}
 
-				if (theErr != QTSS_NoErr)
-				{
-					execNetMsgErrorReqHandler(httpBadRequest);
-				}
-
-				if (fOutputStream.GetBytesWritten() > 0)
-				{
-					state_ = State::kSendingResponse;
-					break;
-				}
-
-				state_ = State::kPreprocessingRequest;
+			if (fOutputStream.GetBytesWritten() > 0)
+			{
+				state_ = State::kSendingResponse;
 				break;
 			}
+
+			state_ = State::kPreprocessingRequest;
+			break;
+		}
 
 		case State::kPreprocessingRequest:
 			processRequest();
@@ -314,7 +314,7 @@ SInt64 HTTPSession::Run()
 	return 0;
 }
 
-QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement)
+QTSS_Error HTTPSession::SendHTTPPacket(const string& msg, bool connectionClose, bool decrement)
 {
 	OSMutexLocker lock(&fSendMutex);
 
@@ -322,23 +322,21 @@ QTSS_Error HTTPSession::SendHTTPPacket(StrPtrLen* contentXML, bool connectionClo
 
 	if (httpAck.CreateResponseHeader(httpOK))
 	{
-		if (contentXML->Len)
-			httpAck.AppendContentLengthHeader(contentXML->Len);
+		if (!msg.empty())
+			httpAck.AppendContentLengthHeader(static_cast<UInt32>(msg.size()));
 
 		if (connectionClose)
 			httpAck.AppendConnectionCloseHeader();
 
 		StrPtrLen* ackPtr = httpAck.GetCompleteHTTPHeader();
 		string sendString(ackPtr->Ptr, ackPtr->Len);
-		if (contentXML->Len > 0)
-			sendString.append(contentXML->Ptr, contentXML->Len);
+		if (!msg.empty())
+			sendString.append(msg.c_str(), msg.size());
 
 		UInt32 theLengthSent = 0;
 		UInt32 amtInBuffer = sendString.size();
 		do
 		{
-			auto str = fOutputSocketP->GetRemoteAddrStr();
-			string remote(str->Ptr);
 			QTSS_Error theErr = fOutputSocketP->Send(sendString.c_str(), amtInBuffer, &theLengthSent);
 
 			if (theErr != QTSS_NoErr && theErr != EAGAIN)
@@ -645,10 +643,9 @@ QTSS_Error HTTPSession::execNetMsgDSPostSnapReq(const char* json)
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
-	string msg = rsp.GetMsg();
 
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	string msg = rsp.GetMsg();
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -837,10 +834,9 @@ QTSS_Error HTTPSession::execNetMsgDSRegisterReq(const char* json)
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
-	string msg = rsp.GetMsg();
 
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	string msg = rsp.GetMsg();
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -898,9 +894,7 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 	reqreq.SetBody(bodybody);
 
 	string buffer = reqreq.GetMsg();
-
-	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-	pDevSession->SendHTTPPacket(&theValue, false, false);
+	pDevSession->SendHTTPPacket(buffer, false, false);
 
 	//Ö±½Ó¶Ô¿Í»§¶Ë£¨EasyDarWin)½øÐÐÕýÈ·»ØÓ¦
 	EasyProtocolACK rsp(MSG_SC_FREE_STREAM_ACK);
@@ -917,10 +911,9 @@ QTSS_Error HTTPSession::execNetMsgCSFreeStreamReq(const char* json)//¿Í»§¶ËµÄÍ£Ö
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
-	string msg = rsp.GetMsg();
 
-	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValueAck, false, false);
+	string msg = rsp.GetMsg();
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1043,8 +1036,8 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 			reqreq.SetBody(bodybody);
 
 			string buffer = reqreq.GetMsg();
-			StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-			pDevSession->SendHTTPPacket(&theValue, false, false);
+			pDevSession->SendHTTPPacket(buffer, false, false);
+
 			fTimeoutTask.SetTimeout(3 * 1000);
 			fTimeoutTask.RefreshTimeout();
 
@@ -1071,10 +1064,9 @@ QTSS_Error HTTPSession::execNetMsgCSStartStreamReqRESTful(const char* queryStrin
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
-	string msg = rsp.GetMsg();
 
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	string msg = rsp.GetMsg();
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1135,9 +1127,7 @@ QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString
 	reqreq.SetBody(bodybody);
 
 	string buffer = reqreq.GetMsg();
-
-	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-	pDevSession->SendHTTPPacket(&theValue, false, false);
+	pDevSession->SendHTTPPacket(buffer, false, false);
 
 	//Ö±½Ó¶Ô¿Í»§¶Ë£¨EasyDarWin)½øÐÐÕýÈ·»ØÓ¦
 	EasyProtocolACK rsp(MSG_SC_STOP_STREAM_ACK);
@@ -1153,10 +1143,9 @@ QTSS_Error HTTPSession::execNetMsgCSStopStreamReqRESTful(const char* queryString
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
-	string msg = rsp.GetMsg();
 
-	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValueAck, false, false);
+	string msg = rsp.GetMsg();
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1215,10 +1204,9 @@ QTSS_Error HTTPSession::execNetMsgDSPushStreamAck(const char* json) const
 
 		rsp.SetHead(header);
 		rsp.SetBody(body);
-		string msg = rsp.GetMsg();
 
-		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-		httpSession->SendHTTPPacket(&theValue, false, false);
+		string msg = rsp.GetMsg();
+		httpSession->SendHTTPPacket(msg, false, false);
 	}
 
 	return QTSS_NoErr;
@@ -1303,8 +1291,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetDeviceListReqRESTful(const char* queryStr
 	rsp.SetBody(body);
 
 	string msg = rsp.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1353,9 +1340,9 @@ QTSS_Error HTTPSession::execNetMsgCSDeviceListReq(const char* json)//¿Í»§¶Ë»ñµÃÉ
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
+
 	string msg = rsp.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1425,9 +1412,9 @@ QTSS_Error HTTPSession::execNetMsgCSGetCameraListReqRESTful(const char* queryStr
 	}
 	rsp.SetHead(header);
 	rsp.SetBody(body);
+
 	string msg = rsp.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1483,9 +1470,9 @@ QTSS_Error HTTPSession::execNetMsgCSCameraListReq(const char* json)
 	}
 	rsp.SetHead(header);
 	rsp.SetBody(body);
+
 	string msg = rsp.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1603,9 +1590,9 @@ QTSS_Error HTTPSession::processRequest()//´¦ÀíÇëÇó
 		}
 
 		rsp.SetHead(header);
+
 		string msg = rsp.GetMsg();
-		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-		this->SendHTTPPacket(&theValue, false, false);
+		this->SendHTTPPacket(msg, false, false);
 	}
 	return theErr;
 }
@@ -1681,8 +1668,7 @@ QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString
 	reqreq.SetBody(bodybody);
 
 	string buffer = reqreq.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-	pDevSession->SendHTTPPacket(&theValue, false, false);
+	pDevSession->SendHTTPPacket(buffer, false, false);
 
 	EasyProtocolACK rsp(MSG_SC_PTZ_CONTROL_ACK);
 	EasyJsonValue header, body;
@@ -1698,9 +1684,9 @@ QTSS_Error HTTPSession::execNetMsgCSPTZControlReqRESTful(const char* queryString
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
+
 	string msg = rsp.GetMsg();
-	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValueAck, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -1822,8 +1808,8 @@ QTSS_Error HTTPSession::execNetMsgCSPresetControlReqRESTful(const char* queryStr
 	reqreq.SetBody(bodybody);
 
 	string buffer = reqreq.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-	pDevSession->SendHTTPPacket(&theValue, false, false);
+	pDevSession->SendHTTPPacket(buffer, false, false);
+
 	fTimeoutTask.SetTimeout(3 * 1000);
 	fTimeoutTask.RefreshTimeout();
 
@@ -1879,9 +1865,9 @@ QTSS_Error HTTPSession::execNetMsgDSPresetControlAck(const char* json) const
 
 		rsp.SetHead(header);
 		rsp.SetBody(body);
+
 		string msg = rsp.GetMsg();
-		StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-		httpSession->SendHTTPPacket(&theValue, false, false);
+		httpSession->SendHTTPPacket(msg, false, false);
 	}
 
 	return QTSS_NoErr;
@@ -1946,8 +1932,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 			reqreq.SetBody(bodybody);
 
 			string buffer = reqreq.GetMsg();
-			StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-			pDevSession->SendHTTPPacket(&theValue, false, false);
+			pDevSession->SendHTTPPacket(buffer, false, false);
 
 			errNo = EASY_ERROR_SUCCESS_OK;
 			errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
@@ -2017,8 +2002,7 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 		reqreq.SetBody(bodybody);
 
 		string buffer = reqreq.GetMsg();
-		StrPtrLen theValue(const_cast<char*>(buffer.c_str()), buffer.size());
-		pDevSession->SendHTTPPacket(&theValue, false, false);
+		pDevSession->SendHTTPPacket(buffer, false, false);
 	}
 
 ACK:
@@ -2037,9 +2021,9 @@ ACK:
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
+
 	string msg = rsp.GetMsg();
-	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValueAck, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -2072,8 +2056,7 @@ QTSS_Error HTTPSession::execNetMsgCSGetBaseConfigReqRESTful(const char* queryStr
 	rsp.SetBody(body);
 
 	string msg = rsp.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -2144,8 +2127,7 @@ QTSS_Error HTTPSession::execNetMsgCSSetBaseConfigReqRESTful(const char* queryStr
 	rsp.SetBody(body);
 
 	string msg = rsp.GetMsg();
-	StrPtrLen theValue(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValue, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }
@@ -2253,9 +2235,9 @@ QTSS_Error HTTPSession::execNetMsgCSGetUsagesReqRESTful(const char* queryString)
 
 	rsp.SetHead(header);
 	rsp.SetBody(body);
+
 	string msg = rsp.GetMsg();
-	StrPtrLen theValueAck(const_cast<char*>(msg.c_str()), msg.size());
-	this->SendHTTPPacket(&theValueAck, false, false);
+	this->SendHTTPPacket(msg, false, false);
 
 	return QTSS_NoErr;
 }

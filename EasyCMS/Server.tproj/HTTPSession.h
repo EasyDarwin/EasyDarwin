@@ -23,7 +23,7 @@ public:
 	HTTPSession();
 	virtual ~HTTPSession();
 
-	QTSS_Error SendHTTPPacket(StrPtrLen* contentXML, bool connectionClose, bool decrement);
+	QTSS_Error SendHTTPPacket(const string& msg, bool connectionClose, bool decrement);
 
 	string GetTalkbackSession() const { return talkbackSession; }
 	void SetTalkbackSession(const string& session) { talkbackSession = session; }

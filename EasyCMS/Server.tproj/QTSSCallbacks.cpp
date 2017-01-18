@@ -662,7 +662,7 @@ QTSS_Error QTSSCallbacks::Easy_SendMsg(Easy_HTTPSessionObject inHTTPSession, cha
         return QTSS_BadArgument;
 
     HTTPSession* session = static_cast<HTTPSession*>(inHTTPSession);
-    StrPtrLen theValue(inMsg, inMsgLen);
+    string theValue(inMsg, inMsgLen);
 
-    return session->SendHTTPPacket(&theValue, connectionClose, decrement);
+    return session->SendHTTPPacket(theValue, connectionClose, decrement);
 }
