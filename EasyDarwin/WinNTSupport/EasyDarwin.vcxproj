@@ -140,7 +140,6 @@
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPClientResponseStream.cpp" />
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp" />
     <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp" />
-    <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp" />
     <ClCompile Include="..\..\RTSPUtilitiesLib\RTSPProtocol.cpp" />
     <ClCompile Include="..\..\SafeStdLib\InternalStdLib.cpp" />
     <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSModule.cpp" />

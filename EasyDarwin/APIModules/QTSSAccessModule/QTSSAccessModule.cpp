@@ -38,7 +38,6 @@
 
 #include "OSArrayObjectDeleter.h"
 #include "StrPtrLen.h"
-#include "OSMemory.h"
 #include "MyAssert.h"
 #include "AccessChecker.h"
 #include "QTAccessFile.h"
@@ -179,8 +178,8 @@ QTSS_Error Register()
 QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
 	// Create an array of AccessCheckers
-	sAccessCheckers = NEW AccessChecker*[2];
-	sAccessCheckers[0] = NEW AccessChecker();
+	sAccessCheckers = new AccessChecker*[2];
+	sAccessCheckers[0] = new AccessChecker();
 	sNumAccessCheckers = 1;
 	sAccessCheckerArraySize = 2;
 
@@ -190,7 +189,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 	sMessages = inParams->inMessages;
 	sPrefs = QTSSModuleUtils::GetModulePrefsObject(inParams->inModule);
 	sServerPrefs = inParams->inPrefs;
-	sUserMutex = NEW OSMutex();
+	sUserMutex = new OSMutex();
 	RereadPrefs();
 	QTAccessFile::Initialize();
 
@@ -239,7 +238,7 @@ char* GetCheckedFileName()
 		QTSSModuleUtils::LogError(qtssWarningVerbosity, sBadNameMessageAttrID, 0, theBadCharMessage, result);
 
 		delete[] result;
-		result = NEW char[::strlen(sDefaultAccessFileName) + 2];
+		result = new char[::strlen(sDefaultAccessFileName) + 2];
 		::strcpy(result, sDefaultAccessFileName);
 	}
 	return result;
@@ -384,7 +383,7 @@ QTSS_Error AuthenticateRTSPRequest(QTSS_RTSPAuth_Params* inParams)
 			if (sNumAccessCheckers == sAccessCheckerArraySize)
 			{
 				AccessChecker** oldAccessCheckers = sAccessCheckers;
-				sAccessCheckers = NEW AccessChecker*[sAccessCheckerArraySize * 2];
+				sAccessCheckers = new AccessChecker*[sAccessCheckerArraySize * 2];
 				for (index = 0; index < sNumAccessCheckers; index++)
 				{
 					sAccessCheckers[index] = oldAccessCheckers[index];
@@ -394,7 +393,7 @@ QTSS_Error AuthenticateRTSPRequest(QTSS_RTSPAuth_Params* inParams)
 			}
 
 			// And create a new AccessChecker for the paths
-			sAccessCheckers[sNumAccessCheckers] = NEW AccessChecker();
+			sAccessCheckers[sNumAccessCheckers] = new AccessChecker();
 			sAccessCheckers[sNumAccessCheckers]->UpdateFilePaths(usersFilePath, groupsFilePath);
 			fileErr = sAccessCheckers[sNumAccessCheckers]->UpdateUserProfiles();
 
@@ -497,7 +496,7 @@ QTSS_Error AuthenticateRTSPRequest(QTSS_RTSPAuth_Params* inParams)
 		UInt32 curLen = ::strlen(profile->groups[index]);
 		if (curLen < maxLen)
 		{
-			char* groupWithPaddedZeros = NEW char[maxLen];  // memory allocated
+			char* groupWithPaddedZeros = new char[maxLen];  // memory allocated
 			::memcpy(groupWithPaddedZeros, profile->groups[index], curLen);
 			::memset(groupWithPaddedZeros + curLen, '\0', maxLen - curLen);
 			(void)QTSS_SetValue(theUserProfile, qtssUserGroups, index, (void*)groupWithPaddedZeros, maxLen);

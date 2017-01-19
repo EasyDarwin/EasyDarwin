@@ -265,7 +265,7 @@ QTSS_Error LiveDeviceStream(Easy_GetDeviceStream_Params* inParams)
 //	}
 //	else
 //	{
-//		session = NEW EasyHLSSession(&streamName);
+//		session = new EasyHLSSession(&streamName);
 //
 //		OS_Error theErr = sHLSSessionMap->Register(session->GetRef());
 //		Assert(theErr == QTSS_NoErr);

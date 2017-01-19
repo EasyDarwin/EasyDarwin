@@ -50,7 +50,6 @@
 
 #include <errno.h>
 #include "UDPSocket.h"
-#include "OSMemory.h"
 
 #ifdef USE_NETLOG
 #include <netlog.h>

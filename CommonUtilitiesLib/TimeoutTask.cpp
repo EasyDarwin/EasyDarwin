@@ -31,7 +31,6 @@
  */
 
 #include "TimeoutTask.h"
-#include "OSMemory.h"
 
 shared_ptr<TimeoutTaskThread> TimeoutTask::sThread = nullptr;
 

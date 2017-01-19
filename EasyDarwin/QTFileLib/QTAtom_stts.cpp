@@ -44,7 +44,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_stts.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -98,7 +97,7 @@ void QTAtom_stts_SampleTableControlBlock::Reset()
 //
 QTAtom_stts::QTAtom_stts(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
-	fNumEntries(0), fTimeToSampleTable(NULL), fTableSize(0)
+	fNumEntries(0), fTimeToSampleTable(nullptr), fTableSize(0)
 {
 }
 
@@ -107,10 +106,10 @@ QTAtom_stts::~QTAtom_stts()
 	//
 	// Free our variables.
 #if MMAP_TABLES
-	if (fTimeToSampleTable != NULL)
+	if (fTimeToSampleTable != nullptr)
 		this->UnMap(fTimeToSampleTable, fTableSize);
 #else
-	if (fTimeToSampleTable != NULL)
+	if (fTimeToSampleTable != nullptr)
 		delete[] fTimeToSampleTable;
 #endif
 
@@ -147,11 +146,11 @@ bool QTAtom_stts::Initialize()
 #if MMAP_TABLES
 	fTableSize = (fNumEntries * 8);
 	fTimeToSampleTable = this->MemMap(sttsPos_SampleTable, fTableSize);
-	if (fTimeToSampleTable == NULL)
+	if (fTimeToSampleTable == nullptr)
 		return false;
 #else
-	fTimeToSampleTable = NEW char[fNumEntries * 8];
-	if (fTimeToSampleTable == NULL)
+	fTimeToSampleTable = new char[fNumEntries * 8];
+	if (fTimeToSampleTable == nullptr)
 		return false;
 
 	ReadBytes(sttsPos_SampleTable, fTimeToSampleTable, fNumEntries * 8);
@@ -171,14 +170,14 @@ bool QTAtom_stts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumbe
 {
 	// General vars
 	UInt32      SampleCount, SampleDuration;
-	QTAtom_stts_SampleTableControlBlock *tempSTCB = NULL;
+	QTAtom_stts_SampleTableControlBlock *tempSTCB = nullptr;
 	bool      result = false;
 	//
 	// Use the default STCB if one was not passed in to us.
-	if (STCB == NULL)
+	if (STCB == nullptr)
 	{
-		//      qtss_printf("QTAtom_stts::MediaTimeToSampleNumber  ( STCB == NULL ) \n");
-		tempSTCB = NEW QTAtom_stts_SampleTableControlBlock;
+		//      qtss_printf("QTAtom_stts::MediaTimeToSampleNumber  ( STCB == nullptr ) \n");
+		tempSTCB = new QTAtom_stts_SampleTableControlBlock;
 		STCB = tempSTCB;
 	}
 	//
@@ -210,7 +209,7 @@ bool QTAtom_stts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumbe
 		//
 		// Locate and return the sample which is/begins right before the
 		// given media time.
-		if (SampleNumber != NULL)
+		if (SampleNumber != nullptr)
 		{
 			*SampleNumber = STCB->fMTtSN_CurSample;
 			if (SampleDuration > 0)
@@ -231,7 +230,7 @@ bool QTAtom_stts::SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaTim
 	UInt32      SampleCount, SampleDuration;
 	//
 	// Use the default STCB if one was not passed in to us.
-	Assert(STCB != NULL);
+	Assert(STCB != nullptr);
 
 	if (STCB->fGetSampleMediaTime_SampleNumber == SampleNumber)
 	{
@@ -269,7 +268,7 @@ bool QTAtom_stts::SampleNumberToMediaTime(UInt32 SampleNumber, UInt32 * MediaTim
 
 		//
 		// Return the sample time at the beginning of this sample.
-		if (MediaTime != NULL)
+		if (MediaTime != nullptr)
 			*MediaTime = STCB->fSNtMT_CurMediaTime + ((SampleNumber - STCB->fSNtMT_CurSample) * SampleDuration);
 
 		STCB->fGetSampleMediaTime_SampleNumber = SampleNumber;
@@ -372,7 +371,7 @@ void QTAtom_ctts_SampleTableControlBlock::Reset()
 //
 QTAtom_ctts::QTAtom_ctts(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
-	fNumEntries(0), fTimeToSampleTable(NULL)
+	fNumEntries(0), fTimeToSampleTable(nullptr)
 {
 }
 
@@ -380,7 +379,7 @@ QTAtom_ctts::~QTAtom_ctts()
 {
 	//
 	// Free our variables.
-	if (fTimeToSampleTable != NULL)
+	if (fTimeToSampleTable != nullptr)
 		delete[] fTimeToSampleTable;
 }
 
@@ -410,8 +409,8 @@ bool QTAtom_ctts::Initialize()
 
 	//
 	// Read in the time-to-sample table.
-	fTimeToSampleTable = NEW char[fNumEntries * 8];
-	if (fTimeToSampleTable == NULL)
+	fTimeToSampleTable = new char[fNumEntries * 8];
+	if (fTimeToSampleTable == nullptr)
 		return false;
 
 	ReadBytes(cttsPos_SampleTable, fTimeToSampleTable, fNumEntries * 8);
@@ -430,14 +429,14 @@ bool QTAtom_ctts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumbe
 {
 	// General vars
 	UInt32      SampleCount, SampleDuration;
-	QTAtom_ctts_SampleTableControlBlock *tempSTCB = NULL;
+	QTAtom_ctts_SampleTableControlBlock *tempSTCB = nullptr;
 	bool      result = false;
 	//
 	// Use the default STCB if one was not passed in to us.
-	if (STCB == NULL)
+	if (STCB == nullptr)
 	{
-		//      qtss_printf("QTAtom_ctts::MediaTimeToSampleNumber  ( STCB == NULL ) \n");
-		tempSTCB = NEW QTAtom_ctts_SampleTableControlBlock;
+		//      qtss_printf("QTAtom_ctts::MediaTimeToSampleNumber  ( STCB == nullptr ) \n");
+		tempSTCB = new QTAtom_ctts_SampleTableControlBlock;
 		STCB = tempSTCB;
 	}
 	//
@@ -469,7 +468,7 @@ bool QTAtom_ctts::MediaTimeToSampleNumber(UInt32 MediaTime, UInt32 * SampleNumbe
 		//
 		// Locate and return the sample which is/begins right before the
 		// given media time.
-		if (SampleNumber != NULL)
+		if (SampleNumber != nullptr)
 		{
 			*SampleNumber = STCB->fMTtSN_CurSample;
 			if (SampleDuration > 0)
@@ -490,7 +489,7 @@ bool QTAtom_ctts::SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * Me
 	UInt32      SampleCount, SampleOffset;
 	//
 	// Use the default STCB if one was not passed in to us.
-	Assert(STCB != NULL);
+	Assert(STCB != nullptr);
 
 	if (STCB->fGetSampleMediaTime_SampleNumber == SampleNumber)
 	{
@@ -528,7 +527,7 @@ bool QTAtom_ctts::SampleNumberToMediaTimeOffset(UInt32 SampleNumber, UInt32 * Me
 
 		//
 		// Return the sample time at the beginning of this sample.
-		if (MediaTimeOffset != NULL)
+		if (MediaTimeOffset != nullptr)
 			*MediaTimeOffset = SampleOffset;
 
 		STCB->fGetSampleMediaTime_SampleNumber = SampleNumber;

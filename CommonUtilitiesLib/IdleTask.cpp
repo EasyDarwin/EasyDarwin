@@ -36,7 +36,6 @@
  */
 
 #include "IdleTask.h"
-#include "OSMemory.h"
 #include "OS.h"
 
  //IDLETASKTHREAD IMPLEMENTATION:

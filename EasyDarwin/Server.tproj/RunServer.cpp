@@ -31,7 +31,6 @@
 #include "RunServer.h"
 #include "SafeStdLib.h"
 #include "OS.h"
-#include "OSMemory.h"
 #include "OSThread.h"
 #include "Socket.h"
 #include "SocketUtils.h"
@@ -93,7 +92,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 	//start the server
 	QTSSDictionaryMap::Initialize();
 	QTSServerInterface::Initialize();// this must be called before constructing the server object
-	sServer = NEW QTSServer();
+	sServer = new QTSServer();
 	sServer->SetDebugLevel(debugLevel);
 	sServer->SetDebugOptions(debugOptions);
 
@@ -195,7 +194,7 @@ QTSS_ServerState StartServer(XMLPrefsParser* inPrefsSource, PrefsSource* inMessa
 
 		doneStartingUp = true;
 		qtss_printf("Streaming Server done starting up\n");
-		OSMemory::SetMemoryError(ENOMEM);
+		//OSMemory::SetMemoryError(ENOMEM);
 	}
 
 

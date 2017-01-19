@@ -43,7 +43,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_stsz.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -119,7 +118,7 @@ bool QTAtom_stsz::Initialize()
 
 	//
 	// Read in the sample size table.
-	fSampleSizeTable = NEW char[(fNumEntries * 4) + 1];
+	fSampleSizeTable = new char[(fNumEntries * 4) + 1];
 	if (fSampleSizeTable == NULL)
 		return false;
 

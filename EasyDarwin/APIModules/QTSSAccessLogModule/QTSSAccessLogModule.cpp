@@ -36,8 +36,6 @@
 #include "QTSSRollingLog.h"
 #include "OSMutex.h"
 #include "MyAssert.h"
-#include "OSMemory.h"
-#include <time.h>
 #include "StringParser.h"
 #include "StringFormatter.h"
 #include "StringTranslator.h"
@@ -173,7 +171,7 @@ QTSS_Error QTSSAccessLogModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inPar
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
-	sLogMutex = NEW OSMutex();
+	sLogMutex = new OSMutex();
 
 	// Do role & service setup
 
@@ -208,7 +206,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 	RereadPrefs();
 	WriteStartupMessage();
-	sLogCheckTask = NEW LogCheckTask();
+	sLogCheckTask = new LogCheckTask();
 	return QTSS_NoErr;
 }
 
@@ -844,7 +842,7 @@ void CheckAccessLogState(bool forceEnabled)
 	//check error log.
 	if ((NULL == sAccessLog) && (forceEnabled || sLogEnabled))
 	{
-		sAccessLog = NEW QTSSAccessLog();
+		sAccessLog = new QTSSAccessLog();
 		sAccessLog->EnableLog();
 	}
 

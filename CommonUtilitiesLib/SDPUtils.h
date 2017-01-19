@@ -37,7 +37,6 @@
 #include "StrPtrLen.h"
 #include "ResizeableStringFormatter.h"
 #include "StringParser.h"
-#include "OSMemory.h"
 
 class SDPLine : public StrPtrLen
 {

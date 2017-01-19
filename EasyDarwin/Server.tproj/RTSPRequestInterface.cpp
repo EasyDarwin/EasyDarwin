@@ -40,7 +40,6 @@
 #include "RTSPRequestStream.h"
 
 #include "StringParser.h"
-#include "OSMemory.h"
 #include "OSThread.h"
 #include "DateTranslator.h"
 #include "QTSSDataConverter.h"
@@ -783,7 +782,7 @@ void* RTSPRequestInterface::GetLocalPath(QTSSDictionary* inRequest, UInt32* outL
 	OS::RecursiveMakeDir(rootDir);
 
 	UInt32 fullPathLen = filePath.Len + theRootDir->Len;
-	char* theFullPath = NEW char[fullPathLen + 1];
+	char* theFullPath = new char[fullPathLen + 1];
 	theFullPath[fullPathLen] = '\0';
 
 	::memcpy(theFullPath, theRootDir->Ptr, theRootDir->Len);

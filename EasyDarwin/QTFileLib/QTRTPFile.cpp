@@ -44,7 +44,6 @@
 #include "QTHintTrack.h"
 
 #include "QTRTPFile.h"
-#include "OSMemory.h"
 
 
 #define QT_PROFILE 0
@@ -81,8 +80,8 @@ QTRTPFile::RTPFileCacheEntry    *QTRTPFile::gFirstFileCacheEntry = NULL;
 
 void QTRTPFile::Initialize()
 {
-	QTRTPFile::gFileCacheMutex = NEW OSMutex();
-	QTRTPFile::gFileCacheAddMutex = NEW OSMutex();
+	QTRTPFile::gFileCacheMutex = new OSMutex();
+	QTRTPFile::gFileCacheAddMutex = new OSMutex();
 }
 
 
@@ -117,7 +116,7 @@ QTRTPFile::ErrorCode QTRTPFile::new_QTFile(const char * filePath, QTFile ** theQ
 
 	//
 	// Construct our file object.
-	*theQTFile = NEW QTFile(debugFlag, deepDebugFlag);
+	*theQTFile = new QTFile(debugFlag, deepDebugFlag);
 	if (*theQTFile == NULL)
 		return errInternalError;
 
@@ -236,11 +235,11 @@ void QTRTPFile::AddFileToCache(const char *inFilename, QTRTPFile::RTPFileCacheEn
 
 	//
 	// Add this track object to our track list.
-	(*newListEntry) = NEW QTRTPFile::RTPFileCacheEntry();
+	(*newListEntry) = new QTRTPFile::RTPFileCacheEntry();
 	if ((*newListEntry) == NULL)
 		return;
 
-	(*newListEntry)->InitMutex = NEW OSMutex();
+	(*newListEntry)->InitMutex = new OSMutex();
 	if ((*newListEntry)->InitMutex == NULL) {
 		delete (*newListEntry);
 		*newListEntry = NULL;
@@ -248,7 +247,7 @@ void QTRTPFile::AddFileToCache(const char *inFilename, QTRTPFile::RTPFileCacheEn
 	}
 	(*newListEntry)->InitMutex->Lock();
 
-	(*newListEntry)->fFilename = NEW char[(::strlen(inFilename) + 2)];
+	(*newListEntry)->fFilename = new char[(::strlen(inFilename) + 2)];
 	::strcpy((*newListEntry)->fFilename, inFilename);
 	(*newListEntry)->File = NULL;
 
@@ -368,7 +367,7 @@ QTRTPFile::QTRTPFile(bool debugFlag, bool deepDebugFlag)
 	, fDropRepeatPackets(false)
 	, fErr(errNoError)
 {
-	fFCB = NEW QTFile_FileControlBlock();
+	fFCB = new QTFile_FileControlBlock();
 }
 
 
@@ -447,14 +446,14 @@ QTRTPFile::ErrorCode QTRTPFile::Initialize(const char * filePath)
 
 		//
 		// Add this track object to our track list.
-		listEntry = NEW RTPTrackListEntry();
+		listEntry = new RTPTrackListEntry();
 		if (listEntry == NULL)
 			return fErr = errNoHintTracks;
 
 		listEntry->TrackID = track->GetTrackID();
 		listEntry->HintTrack = hintTrack;
 
-		listEntry->HTCB = NEW QTHintTrack_HintTrackControlBlock(fFCB);
+		listEntry->HTCB = new QTHintTrack_HintTrackControlBlock(fFCB);
 		listEntry->IsTrackActive = false;
 		listEntry->IsPacketAvailable = false;
 		listEntry->QualityLevel = kAllPackets;
@@ -616,7 +615,7 @@ char * QTRTPFile::GetSDPFile(int * sdpFileLength)
 
 	//
 	// Build the SDP file.
-	fSDPFile = pSDPFile = NEW char[fSDPFileLength + 1];
+	fSDPFile = pSDPFile = new char[fSDPFileLength + 1];
 	if (fSDPFile == NULL)
 	{
 		fErr = errInternalError;

@@ -38,7 +38,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_elst.h"
-#include "OSMemory.h"
 
 
 
@@ -116,7 +115,7 @@ bool QTAtom_elst::Initialize()
 
 		//
 		// Allocate our ref table.
-		fEdits = NEW EditListEntry[fNumEdits];
+		fEdits = new EditListEntry[fNumEdits];
 		if (fEdits == NULL)
 			return false;
 

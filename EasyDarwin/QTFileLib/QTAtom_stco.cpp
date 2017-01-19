@@ -37,7 +37,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_stco.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -100,7 +99,7 @@ bool QTAtom_stco::Initialize()
 
 	//
 	// Read in the chunk offset table.
-	fChunkOffsetTable = NEW char[(fNumEntries * fOffSetSize) + 1];
+	fChunkOffsetTable = new char[(fNumEntries * fOffSetSize) + 1];
 	if (fChunkOffsetTable == NULL)
 		return false;
 

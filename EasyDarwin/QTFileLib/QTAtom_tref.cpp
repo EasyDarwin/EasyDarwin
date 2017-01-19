@@ -38,7 +38,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_tref.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -86,7 +85,7 @@ bool QTAtom_tref::Initialize()
 
 	//
 	// Read in the track reference table.
-	fTrackReferenceTable = NEW char[(SInt32)((fNumEntries * 4) + 1)];
+	fTrackReferenceTable = new char[(SInt32)((fNumEntries * 4) + 1)];
 	if (fTrackReferenceTable == NULL)
 		return false;
 

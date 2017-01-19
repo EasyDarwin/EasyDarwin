@@ -37,7 +37,6 @@
 #include "QTSServerInterface.h"
 
 #include "MyAssert.h"
-#include "OSMemory.h"
 
 #include "QTSS.h"
 #include "QTSSModuleUtils.h"
@@ -373,7 +372,7 @@ SInt64 RTSPSession::Run()
 				if (fRequest == nullptr)
 				{
 					//                    printf("RTSPRequest size########## %d\n",sizeof(RTSPRequest));
-					fRequest = NEW RTSPRequest(this);
+					fRequest = new RTSPRequest(this);
 				}
 				fRequest->ReInit(this);
 
@@ -1883,7 +1882,7 @@ QTSS_Error  RTSPSession::CreateNewRTPSession(OSRefTable* inRefTable)
 
 	// Create the RTPSession object
 	Assert(fRTPSession == nullptr);
-	fRTPSession = NEW RTPSession();
+	fRTPSession = new RTPSession();
 
 	{
 		//
@@ -2189,7 +2188,7 @@ void RTSPSession::HandleIncomingDataPacket()
 //
 //	for (UInt32 numPackets = 0; numPackets < kNumPreallocatedMsgs; numPackets++)
 //	{
-//		RTSPMsg* msg = NEW RTSPMsg();
+//		RTSPMsg* msg = new RTSPMsg();
 //		fFreeMsgQueue.EnQueue(&msg->fQueueElem);
 //	}
 //
@@ -2263,7 +2262,7 @@ void RTSPSession::HandleIncomingDataPacket()
 //{
 //    OSMutexLocker locker(&fFreeQueueMutex);
 //	if (fFreeMsgQueue.GetLength() == 0)
-//		return NEW RTSPMsg();
+//		return new RTSPMsg();
 //	else
 //		return (RTSPMsg*)fFreeMsgQueue.DeQueue()->GetEnclosingObject();
 //}

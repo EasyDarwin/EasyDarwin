@@ -37,7 +37,6 @@
 #include <string.h>
 
 #include "OSMutex.h"
-#include "OSMemory.h"
 
 #include "QTFile.h"
 
@@ -303,7 +302,7 @@ void QTFile_FileControlBlock::AdjustDataBufferBitRate(UInt32 inUnitSizeInK, UInt
 	// Free the old buffer.
 	delete[] fDataBufferPool;
 	fDataBufferSize = newDataBufferSize;
-	fDataBufferPool = NEW char[2 * newDataBufferSize]; // 2 contiguous buffers
+	fDataBufferPool = new char[2 * newDataBufferSize]; // 2 contiguous buffers
 	fCurrentDataBuffer = fDataBufferPool;
 	fPreviousDataBuffer = (char *)fDataBufferPool + newDataBufferSize;
 

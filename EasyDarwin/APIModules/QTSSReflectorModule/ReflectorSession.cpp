@@ -29,7 +29,6 @@
 
 #include "ReflectorSession.h"
 #include "SocketUtils.h"
-#include "OSMemory.h"
 #include "OS.h"
 #include "QTSServerInterface.h"
 
@@ -41,7 +40,7 @@ FileDeleter::FileDeleter(StrPtrLen* inSDPPath)
 {
 	Assert(inSDPPath);
 	fFilePath.Len = inSDPPath->Len;
-	fFilePath.Ptr = NEW char[inSDPPath->Len + 1];
+	fFilePath.Ptr = new char[inSDPPath->Len + 1];
 	Assert(fFilePath.Ptr);
 	memcpy(fFilePath.Ptr, inSDPPath->Ptr, inSDPPath->Len);
 	fFilePath.Ptr[inSDPPath->Len] = 0;
@@ -86,7 +85,7 @@ ReflectorSession::ReflectorSession(StrPtrLen* inSourceID, UInt32 inChannelNum, S
 			inSourceID->Len = QTSS_MAX_NAME_LENGTH;
 
 		sprintf(streamID, "%s%s%d", inSourceID->Ptr, EASY_KEY_SPLITER, fChannelNum);
-		fSourceID.Ptr = NEW char[::strlen(streamID) + 1];
+		fSourceID.Ptr = new char[::strlen(streamID) + 1];
 		::strncpy(fSourceID.Ptr, streamID, strlen(streamID));
 		fSourceID.Ptr[strlen(streamID)] = '\0';
 		fSourceID.Len = strlen(streamID);
@@ -159,12 +158,12 @@ QTSS_Error ReflectorSession::SetupReflectorSession(SourceInfo* inInfo, QTSS_Stan
 		delete fStreamArray; // keep the array list synchronized with the source info.
 	}
 
-	fStreamArray = NEW ReflectorStream*[fSourceInfo->GetNumStreams()];
+	fStreamArray = new ReflectorStream*[fSourceInfo->GetNumStreams()];
 	::memset(fStreamArray, 0, fSourceInfo->GetNumStreams() * sizeof(ReflectorStream*));
 
 	for (UInt32 x = 0; x < fSourceInfo->GetNumStreams(); x++)
 	{
-		fStreamArray[x] = NEW ReflectorStream(fSourceInfo->GetStreamInfo(x));
+		fStreamArray[x] = new ReflectorStream(fSourceInfo->GetStreamInfo(x));
 		// Obviously, we may encounter an error binding the reflector sockets.
 		// If that happens, we'll just abort here, which will leave the ReflectorStream
 		// array in an inconsistent state, so we need to make sure in our cleanup

@@ -37,7 +37,6 @@
 #include "StrPtrLen.h"
 #include "MyAssert.h"
 #include "OS.h"
-#include "OSMemory.h"
 
 
 UInt8 StrPtrLen::sCaseInsensitiveMask[] =

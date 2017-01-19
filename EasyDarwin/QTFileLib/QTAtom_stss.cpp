@@ -43,7 +43,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_stss.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -122,7 +121,7 @@ bool QTAtom_stss::Initialize()
 #else
 		//
 		// Read in the sync sample table.
-		fSyncSampleTable = NEW char[(fNumEntries * 4) + 1];
+		fSyncSampleTable = new char[(fNumEntries * 4) + 1];
 		if (fSyncSampleTable == NULL)
 			return false;
 

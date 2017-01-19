@@ -39,7 +39,6 @@
 #endif
 
 #include "XMLPrefsParser.h"
-#include "OSMemory.h"
 #include "OSHeaders.h"
 
 static const UInt32 kPrefArrayMinSize = 20;
@@ -232,7 +231,7 @@ ContainerRef XMLPrefsParser::AddPref(ContainerRef container, char* inPrefName,
 	if (pref != NULL)
 		return pref;    // it already exists
 
-	pref = NEW XMLTag(kPref);   // start it out as a pref
+	pref = new XMLTag(kPref);   // start it out as a pref
 	pref->AddAttribute(kNameAttr, inPrefName);
 	if (!strcmp(inPrefDataType, "QTSS_Object"))
 		pref->SetTagName(kEmptyObject);
@@ -258,7 +257,7 @@ void XMLPrefsParser::AddPrefValue(ContainerRef pref, char* inNewValue)
 		{
 			// it already has a value, so change the pref to be a list pref and go to code below
 			char* firstValue = pref->GetValue();
-			XMLTag* value = NEW XMLTag(kValue);
+			XMLTag* value = new XMLTag(kValue);
 			value->SetValue(firstValue);
 
 			pref->SetTagName(kListPref);
@@ -270,7 +269,7 @@ void XMLPrefsParser::AddPrefValue(ContainerRef pref, char* inNewValue)
 	// we want to fall through from second case above, so this isn't an else
 	if (!strcmp(pref->GetTagName(), kListPref))
 	{
-		XMLTag* value = NEW XMLTag(kValue);
+		XMLTag* value = new XMLTag(kValue);
 		value->SetValue(inNewValue);
 		pref->AddEmbeddedTag(value);
 	}
@@ -288,7 +287,7 @@ void XMLPrefsParser::AddNewObject(ContainerRef pref)
 	if (!strcmp(pref->GetTagName(), kObject))
 	{
 		// change the object to be an object list and go to code below
-		XMLTag* subObject = NEW XMLTag(kObject);
+		XMLTag* subObject = new XMLTag(kObject);
 		XMLTag* objectPref;
 		// copy all this objects tags into the new listed object
 		while ((objectPref = pref->GetEmbeddedTag()) != NULL)
@@ -304,7 +303,7 @@ void XMLPrefsParser::AddNewObject(ContainerRef pref)
 	// we want to fall through from second case above, so this isn't an else
 	if (!strcmp(pref->GetTagName(), kObjectList))
 	{
-		XMLTag* subObject = NEW XMLTag(kObject);
+		XMLTag* subObject = new XMLTag(kObject);
 		pref->AddEmbeddedTag(subObject);
 	}
 }

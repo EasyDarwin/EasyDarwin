@@ -44,7 +44,6 @@
 #endif
 
 #include "OSFileSource.h"
-#include "OSMemory.h"
 #include "OSThread.h"
 #include "OSQueue.h"
 #include "OSHeaders.h"

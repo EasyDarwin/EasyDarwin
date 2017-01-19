@@ -31,7 +31,6 @@
 
 #include "RTSPRequestStream.h"
 #include "StringParser.h"
-#include "OSMemory.h"
 #include "base64.h"
 #include "OS.h"
 
@@ -323,7 +322,7 @@ QTSS_Error RTSPRequestStream::DecodeIncomingData(char* inSrcData, UInt32 inSrcDa
 
 	if (fRequest.Ptr == &fRequestBuffer[0])
 	{
-		fRequest.Ptr = NEW char[kRequestBufferSizeInBytes];
+		fRequest.Ptr = new char[kRequestBufferSizeInBytes];
 		fRequest.Len = 0;
 	}
 

@@ -34,7 +34,6 @@
 #include "RTCPAckPacket.h"
 #include "RTCPPacket.h"
 #include "MyAssert.h"
-#include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include <stdio.h>
 
@@ -98,7 +97,7 @@ void   RTCPAckPacket::Dump()
 
 	::memcpy(name, &fRTCPAckBuffer[kAppPacketTypeOffset], 4);
 	UInt16 numBufferBytes = (UInt16)((7 * theAckMaskSizeInBits) + 1);
-	char *maskBytesBuffer = NEW char[numBufferBytes];
+	char *maskBytesBuffer = new char[numBufferBytes];
 	OSCharArrayDeleter deleter(maskBytesBuffer);
 	maskBytesBuffer[0] = 0;
 	maskBytesBuffer[numBufferBytes - 1] = 0;

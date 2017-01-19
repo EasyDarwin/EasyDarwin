@@ -33,7 +33,6 @@
 #include "ReflectorSession.h"
 #include "OSArrayObjectDeleter.h"
 #include "QTSSMemoryDeleter.h"
-#include "OSMemory.h"
 #include "OSRef.h"
 #include "OS.h"
 #include "ResizeableStringFormatter.h"
@@ -420,7 +419,7 @@ char *GetTrimmedKeyWord(char *prefKeyWord)
 	StrPtrLen theKeyWordStr;
 	theRequestPathParser.ConsumeUntil(&theKeyWordStr, kPathDelimiterChar); // stop when we see a / and don't include
 
-	char *keyword = NEW char[theKeyWordStr.Len + 1];
+	char *keyword = new char[theKeyWordStr.Len + 1];
 	::memcpy(keyword, theKeyWordStr.Ptr, theKeyWordStr.Len);
 	keyword[theKeyWordStr.Len] = 0;
 
@@ -439,7 +438,7 @@ void SetMoviesRelativeDir()
 		redirectPath.PutChar(kPathDelimiterChar);
 	redirectPath.Put(sBroadcastsRedirectDir);
 
-	char *newMovieRelativeDir = NEW char[redirectPath.GetBytesWritten() + 1];
+	char *newMovieRelativeDir = new char[redirectPath.GetBytesWritten() + 1];
 	::memcpy(newMovieRelativeDir, redirectPath.GetBufPtr(), redirectPath.GetBytesWritten());
 	newMovieRelativeDir[redirectPath.GetBytesWritten()] = 0;
 
@@ -999,7 +998,7 @@ QTSS_Error DoAnnounce(QTSS_StandardRTSP_Params* inParams)
 		//
 		// First time we've been here for this request. Create a buffer for the content body and
 		// shove it in the request.
-		theRequestBody = NEW char[*theContentLenP + 1];
+		theRequestBody = new char[*theContentLenP + 1];
 		memset(theRequestBody, 0, *theContentLenP + 1);
 		theLen = sizeof(theRequestBody);
 		theErr = QTSS_SetValue(inParams->inRTSPRequest, sRequestBodyAttr, 0, &theRequestBody, theLen);// SetValue creates an internal copy.
@@ -1360,7 +1359,7 @@ bool InfoPortsOK(QTSS_StandardRTSP_Params* inParams, SDPSourceInfo* theInfo, Str
 				char *thePath = inPath->GetAsCString();
 				OSCharArrayDeleter charArrayPathDeleter(thePath);
 
-				char *thePathPort = NEW char[inPath->Len + 32];
+				char *thePathPort = new char[inPath->Len + 32];
 				OSCharArrayDeleter charArrayPathPortDeleter(thePathPort);
 
 				qtss_sprintf(thePathPort, "%s:%s", thePath, thePort);
@@ -1413,7 +1412,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 		if (theFileData.Len <= 0)
 			return NULL;
 
-		SDPSourceInfo* theInfo = NEW SDPSourceInfo(theFileData.Ptr, theFileData.Len); // will make a copy
+		SDPSourceInfo* theInfo = new SDPSourceInfo(theFileData.Ptr, theFileData.Len); // will make a copy
 
 		if (!theInfo->IsReflectable())
 		{
@@ -1445,7 +1444,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 		if (isPush)
 			theSetupFlag |= ReflectorSession::kIsPushSession;
 
-		theSession = NEW ReflectorSession(inName, inChannel);
+		theSession = new ReflectorSession(inName, inChannel);
 		if (theSession == NULL)
 		{
 			return NULL;
@@ -1507,7 +1506,7 @@ ReflectorSession* FindOrCreateSession(StrPtrLen* inName, QTSS_StandardRTSP_Param
 			if (theFileData.Len <= 0)
 				break;
 
-			SDPSourceInfo* theInfo = NEW SDPSourceInfo(theFileData.Ptr, theFileData.Len);
+			SDPSourceInfo* theInfo = new SDPSourceInfo(theFileData.Ptr, theFileData.Len);
 			if (theInfo == NULL)
 				break;
 
@@ -1618,7 +1617,7 @@ QTSS_Error DoSetup(QTSS_StandardRTSP_Params* inParams)
 			if (theSession == NULL)
 				return QTSS_RequestFailed;
 
-			RTPSessionOutput* theNewOutput = NEW RTPSessionOutput(inParams->inClientSession, theSession, sServerPrefs, sStreamCookieAttr);
+			RTPSessionOutput* theNewOutput = new RTPSessionOutput(inParams->inClientSession, theSession, sServerPrefs, sStreamCookieAttr);
 			theSession->AddOutput(theNewOutput, true);
 			(void)QTSS_SetValue(inParams->inClientSession, sOutputAttr, 0, &theNewOutput, sizeof(theNewOutput));
 		}

@@ -52,7 +52,6 @@
 
 #include "QTTrack.h"
 #include "QTHintTrack.h"
-#include "OSMemory.h"
 #if MMAP_TABLES
 #include <sys/mman.h>
 #endif
@@ -161,7 +160,7 @@ QTFile::ErrorCode QTFile::Open(const char * MoviePath)
 
 	//
 	// Create our mutexen.
-	fReadMutex = NEW OSMutex();
+	fReadMutex = new OSMutex();
 	if (fReadMutex == NULL)
 		return errInternalError;
 
@@ -170,7 +169,7 @@ QTFile::ErrorCode QTFile::Open(const char * MoviePath)
 	// Attempt to open the movie file.
 	DEBUG_PRINT(("QTFile::Open - Opening movie.\n"));
 
-	fMoviePath = NEW char[strlen(MoviePath) + 1];
+	fMoviePath = new char[strlen(MoviePath) + 1];
 	::strcpy(fMoviePath, MoviePath);
 
 #if MMAP_TABLES
@@ -223,7 +222,7 @@ QTFile::ErrorCode QTFile::Open(const char * MoviePath)
 	if (!FindTOCEntry("moov:mvhd", &TOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fMovieHeaderAtom = NEW QTAtom_mvhd(this, TOCEntry, fDebug, fDeepDebug);
+	fMovieHeaderAtom = new QTAtom_mvhd(this, TOCEntry, fDebug, fDeepDebug);
 	if (fMovieHeaderAtom == NULL)
 		return errInternalError;
 	if (!fMovieHeaderAtom->Initialize())
@@ -248,18 +247,18 @@ QTFile::ErrorCode QTFile::Open(const char * MoviePath)
 
 		//
 		// Allocate space for this list entry.
-		ListEntry = NEW TrackListEntry();
+		ListEntry = new TrackListEntry();
 		if (ListEntry == NULL)
 			return errInternalError;
 
 		//
 		// Make a hint track if that's what this is.
 		if (FindTOCEntry(":tref:hint", NULL, TOCEntry)) {
-			ListEntry->Track = NEW QTHintTrack(this, TOCEntry, fDebug, fDeepDebug);
+			ListEntry->Track = new QTHintTrack(this, TOCEntry, fDebug, fDeepDebug);
 			ListEntry->IsHintTrack = true;
 		}
 		else {
-			ListEntry->Track = NEW QTTrack(this, TOCEntry, fDebug, fDeepDebug);
+			ListEntry->Track = new QTTrack(this, TOCEntry, fDebug, fDeepDebug);
 			ListEntry->IsHintTrack = false;
 		}
 		if (ListEntry->Track == NULL) {
@@ -800,7 +799,7 @@ bool QTFile::GenerateAtomTOC()
 
 		//
 		// Create a TOC entry for this atom.
-		NewTOCEntry = NEW AtomTOCEntry();
+		NewTOCEntry = new AtomTOCEntry();
 		if (NewTOCEntry == NULL)
 			return false;
 

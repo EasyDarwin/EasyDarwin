@@ -44,7 +44,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_stsd.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -116,11 +115,11 @@ bool QTAtom_stsd::Initialize()
 		// Allocate our description tables.
 		UInt64 tableSize = fTOCEntry.AtomDataLength - 8;
 		Assert(tableSize < kSInt32_Max);
-		fSampleDescriptionTable = NEW char[(SInt32)tableSize];
+		fSampleDescriptionTable = new char[(SInt32)tableSize];
 		if (fSampleDescriptionTable == NULL)
 			return false;
 
-		fTable = NEW char *[fNumEntries];
+		fTable = new char *[fNumEntries];
 		if (fTable == NULL)
 			return false;
 

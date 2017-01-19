@@ -33,7 +33,6 @@
 
 #include "QTSServerPrefs.h"
 #include "MyAssert.h"
-#include "OSMemory.h"
 #include "QTSSDataConverter.h"
 #include "defaultPaths.h"
 #include "QTSSRollingLog.h"
@@ -611,7 +610,7 @@ void    QTSServerPrefs::UpdateAuthScheme()
 //	else
 //	{
 //		// Otherwise, allocate a buffer to store the path
-//		inBuffer = NEW char[theMovieFolder->Len + 2];
+//		inBuffer = new char[theMovieFolder->Len + 2];
 //		::memcpy(inBuffer, theMovieFolder->Ptr, theMovieFolder->Len);
 //	}
 //	inBuffer[theMovieFolder->Len] = 0;
@@ -680,7 +679,7 @@ char* QTSServerPrefs::GetStringPref(QTSS_AttributeID inAttrID)
 {
 	StrPtrLen theBuffer;
 	(void)this->GetValue(inAttrID, 0, NULL, &theBuffer.Len);
-	theBuffer.Ptr = NEW char[theBuffer.Len + 1];
+	theBuffer.Ptr = new char[theBuffer.Len + 1];
 	theBuffer.Ptr[0] = '\0';
 
 	if (theBuffer.Len > 0)

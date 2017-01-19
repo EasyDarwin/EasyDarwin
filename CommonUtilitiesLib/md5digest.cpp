@@ -32,7 +32,6 @@
 #include "md5digest.h"
 #include "StrPtrLen.h"
 #include <string.h>
-#include "OSMemory.h"
 
 static StrPtrLen sColon(":", 1);
 static StrPtrLen sMD5Sess("md5-sess", 8);

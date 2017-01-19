@@ -35,7 +35,6 @@
 
 #include "HTTPSessionInterface.h"
 #include "QTSServerInterface.h"
-#include "OSMemory.h"
 #include <errno.h>
 
 
@@ -194,7 +193,7 @@ void    HTTPSessionInterface::SnarfInputSocket(HTTPSessionInterface* fromRTSPSes
 	fInputStream.SnarfRetreat(fromRTSPSession->fInputStream);
 
 	if (fInputSocketP == fOutputSocketP)
-		fInputSocketP = NEW TCPSocket(this, Socket::kNonBlockingSocketType);
+		fInputSocketP = new TCPSocket(this, Socket::kNonBlockingSocketType);
 	else
 		fInputSocketP->Cleanup();   // if this is a socket replacing an old socket, we need
 									// to make sure the file descriptor gets closed

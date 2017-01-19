@@ -33,7 +33,6 @@
 
 #include "QTSSPrefs.h"
 #include "MyAssert.h"
-#include "OSMemory.h"
 #include "QTSSDataConverter.h"
 #include "OSArrayObjectDeleter.h"
 #include <APICommonCode/QTSSModuleUtils.h>
@@ -52,7 +51,7 @@ QTSSPrefs::QTSSPrefs(XMLPrefsParser* inPrefsSource, StrPtrLen* inModuleName, QTS
 
 QTSSDictionary* QTSSPrefs::CreateNewDictionary(QTSSDictionaryMap* inMap, OSMutex* /* inMutex */)
 {
-	return NEW QTSSPrefs(fPrefsSource, NULL, inMap, true, this);
+	return new QTSSPrefs(fPrefsSource, NULL, inMap, true, this);
 }
 
 void QTSSPrefs::RereadPreferences()
@@ -77,7 +76,7 @@ void QTSSPrefs::RereadObjectPreferences(ContainerRef container)
 	char** modulePrefInServer;
 	if (initialNumAttrs > 0)
 	{
-		modulePrefInServer = NEW char*[initialNumAttrs];
+		modulePrefInServer = new char*[initialNumAttrs];
 		::memset(modulePrefInServer, 0, sizeof(char*) * initialNumAttrs);
 	}
 	else

@@ -37,7 +37,6 @@
 #include "RTSPSessionInterface.h"
 #include "StringParser.h"
 #include "StringTranslator.h"
-#include "OSMemory.h"
 #include "QTSS.h"
 #include "QTSSModuleUtils.h"
 #include "base64.h"
@@ -816,7 +815,7 @@ QTSS_Error RTSPRequest::ParseBasicHeader(StringParser *inParsedAuthLinePtr)
 	char* encodedStr = authWord.GetAsCString();
 	OSCharArrayDeleter encodedStrDeleter(encodedStr);
 
-	char *decodedAuthWord = NEW char[Base64decode_len(encodedStr) + 1];
+	char *decodedAuthWord = new char[Base64decode_len(encodedStr) + 1];
 	OSCharArrayDeleter decodedAuthWordDeleter(decodedAuthWord);
 
 	(void)Base64decode(decodedAuthWord, encodedStr);

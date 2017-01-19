@@ -32,9 +32,6 @@
 
 #include "SourceInfo.h"
 #include "SocketUtils.h"
-#include "SDPSourceInfo.h"
-#include "OSMemory.h"
-#include "StringParser.h"
 
 SourceInfo::SourceInfo(const SourceInfo& copy)
 :   fStreamArray(NULL), fNumStreams(copy.fNumStreams), 
@@ -46,14 +43,14 @@ SourceInfo::SourceInfo(const SourceInfo& copy)
     
     if(copy.fStreamArray != NULL && fNumStreams != 0)
     {
-        fStreamArray = NEW StreamInfo[fNumStreams];
+        fStreamArray = new StreamInfo[fNumStreams];
         for (UInt32 index=0; index < fNumStreams; index++)
             fStreamArray[index].Copy(copy.fStreamArray[index]);
     }
     
     if(copy.fOutputArray != NULL && fNumOutputs != 0)
     {
-        fOutputArray = NEW OutputInfo[fNumOutputs];
+        fOutputArray = new OutputInfo[fNumOutputs];
         for (UInt32 index2=0; index2 < fNumOutputs; index2++)
             fOutputArray[index2].Copy(copy.fOutputArray[index2]);
     }
@@ -307,7 +304,7 @@ void SourceInfo::OutputInfo::Copy(const OutputInfo& copy)
     fNumPorts = copy.fNumPorts;
     if(fNumPorts != 0)
     {
-        fPortArray = NEW UInt16[fNumPorts];
+        fPortArray = new UInt16[fNumPorts];
         ::memcpy(fPortArray, copy.fPortArray, fNumPorts * sizeof(UInt16));
     }
     fBasePort = copy.fBasePort;

@@ -37,7 +37,6 @@
 #include "QTSSRollingLog.h"
 #include "QTSServerInterface.h"
 #include "QTSSExpirationDate.h"
-#include "OSMemory.h"
 #include "Task.h"
 
 #ifdef __linux__
@@ -169,7 +168,7 @@ QTSS_Error QTSSErrorLogModuleDispatch(QTSS_Role inRole, QTSS_RoleParamPtr inPara
 
 QTSS_Error Register(QTSS_Register_Params* inParams)
 {
-	sLogMutex = NEW OSMutex();
+	sLogMutex = new OSMutex();
 
 	// Do role & service setup
 
@@ -190,7 +189,7 @@ QTSS_Error Register(QTSS_Register_Params* inParams)
 	static char* sModuleName = "QTSSErrorLogModule";
 	::strcpy(inParams->outModuleName, sModuleName);
 
-	sErrorLogCheckTask = NEW ErrorLogCheckTask();
+	sErrorLogCheckTask = new ErrorLogCheckTask();
 
 	return QTSS_NoErr;
 }
@@ -338,7 +337,7 @@ void CheckErrorLogState()
 	//check error log.
 	if ((NULL == sErrorLog) && (thePrefs->IsErrorLogEnabled()))
 	{
-		sErrorLog = NEW QTSSErrorLog();
+		sErrorLog = new QTSSErrorLog();
 		sErrorLog->EnableLog();
 	}
 

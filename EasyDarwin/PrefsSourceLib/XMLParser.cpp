@@ -30,7 +30,6 @@
 #endif
 
 #include "XMLParser.h"
-#include "OSMemory.h"
 
 XMLParser::XMLParser(char* inPath, DTDVerifier* verifier)
 	: fRootTag(NULL), fFilePath(NULL)
@@ -67,14 +66,14 @@ bool XMLParser::ParseFile(char* errorBuffer, int errorBufferSize)
 		return false;   // we don't have a valid file;
 	}
 
-	char* fileData = NEW char[(SInt32)(fFile.GetLength() + 1)];
+	char* fileData = new char[(SInt32)(fFile.GetLength() + 1)];
 	UInt32 theLengthRead = 0;
 	fFile.Read(0, fileData, (UInt32)fFile.GetLength(), &theLengthRead);
 
 	StrPtrLen theDataPtr(fileData, theLengthRead);
 	StringParser theParser(&theDataPtr);
 
-	fRootTag = NEW XMLTag();
+	fRootTag = new XMLTag();
 	bool result = fRootTag->ParseTag(&theParser, fVerifier, errorBuffer, errorBufferSize);
 	if (!result)
 	{
@@ -428,7 +427,7 @@ bool XMLTag::ParseTag(StringParser* parser, DTDVerifier* verifier, char* errorBu
 		if (((*parser)[1] != '!') && ((*parser)[1] != '?'))
 		{
 			// this must be the beginning of an embedded tag
-			XMLTag* tag = NEW XMLTag();
+			XMLTag* tag = new XMLTag();
 			fEmbeddedTags.EnQueue(&tag->fElem);
 			if (!tag->ParseTag(parser, verifier, errorBuffer, errorBufferSize))
 				return false;
@@ -573,7 +572,7 @@ XMLTag* XMLTag::GetEmbeddedTagByNameAndAttr(const char* tagName, const char* att
 
 void XMLTag::AddAttribute(char* attrName, char* attrValue)
 {
-	XMLAttribute* attr = NEW XMLAttribute;
+	XMLAttribute* attr = new XMLAttribute;
 	StrPtrLen temp(attrName);
 	attr->fAttrName = temp.GetAsCString();
 	temp.Set(attrValue);

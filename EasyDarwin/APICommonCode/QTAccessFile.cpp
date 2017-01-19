@@ -36,9 +36,6 @@
 #include "StrPtrLen.h"
 #include "StringParser.h"
 #include "QTSSModuleUtils.h"
-#include "OSFileSource.h"
-#include "OSMemory.h"
-#include "OSHeaders.h"
 #include "QTAccessFile.h"
 #include "OSArrayObjectDeleter.h"
 
@@ -96,7 +93,7 @@ const int kBuffLen = 512;
 void QTAccessFile::Initialize() // called by server at initialize never call again
 {
     if (NULL == sAccessFileMutex)
-    {   sAccessFileMutex = NEW OSMutex();
+    {   sAccessFileMutex = new OSMutex();
     }
 }
 
@@ -113,7 +110,7 @@ void QTAccessFile::SetAccessFileName(const char *inQTAccessFileName)
     }
     
     sAllocatedName = true;
-    sQTAccessFileName = NEW char[strlen(inQTAccessFileName)+1];
+    sQTAccessFileName = new char[strlen(inQTAccessFileName)+1];
     ::strcpy(sQTAccessFileName, inQTAccessFileName);
     
 }
@@ -334,7 +331,7 @@ char*  QTAccessFile::GetAccessFile_Copy( const char* movieRootDir, const char* d
     char* lastSlash = NULL;
     int movieRootDirLen = ::strlen(movieRootDir);
     int maxLen = strlen(dirPath)+strlen(sQTAccessFileName) + strlen(kPathDelimiterString) + 1;
-    currentDir = NEW char[maxLen];
+    currentDir = new char[maxLen];
 
     ::strcpy(currentDir, dirPath);
 

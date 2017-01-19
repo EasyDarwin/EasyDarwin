@@ -34,14 +34,13 @@
  */
 
 #include "RCFSourceInfo.h"
-#include "OSMemory.h"
 #include "SocketUtils.h"
 
 void RCFSourceInfo::SetName(const char* inName)
 {
 	if (inName != NULL)
 	{
-		fName = NEW char[::strlen(inName) + 1];
+		fName = new char[::strlen(inName) + 1];
 		::strcpy(fName, inName);
 	}
 }
@@ -110,7 +109,7 @@ void RCFSourceInfo::Parse(XMLTag* relayTag)
 		fNumStreams = prefTag->GetNumEmbeddedTags();
 
 		// Allocate a proper sized stream array
-		fStreamArray = NEW StreamInfo[fNumStreams];
+		fStreamArray = new StreamInfo[fNumStreams];
 
 		for (UInt32 x = 0; x < fNumStreams; x++)
 		{
@@ -144,7 +143,7 @@ void RCFSourceInfo::ParseRelayDestinations(XMLTag* relayTag)
 	char* name = relayTag->GetAttributeValue("NAME");
 	if (name != NULL)
 	{
-		fName = NEW char[::strlen(name) + 1];
+		fName = new char[::strlen(name) + 1];
 		::strcpy(fName, name);
 	}
 
@@ -203,7 +202,7 @@ void RCFSourceInfo::ParseDestination(XMLTag* destTag, UInt32 index)
 	{
 		fOutputArray[index].fNumPorts = prefTag->GetNumEmbeddedTags();
 
-		fOutputArray[index].fPortArray = NEW UInt16[fOutputArray[index].fNumPorts];
+		fOutputArray[index].fPortArray = new UInt16[fOutputArray[index].fNumPorts];
 		::memset(fOutputArray[index].fPortArray, 0, fOutputArray[index].fNumPorts * sizeof(UInt16));
 
 		for (UInt32 x = 0; x < fOutputArray[index].fNumPorts; x++)
@@ -242,5 +241,5 @@ void RCFSourceInfo::ParseAnnouncedDestination(XMLTag* destTag, UInt32 index)
 void RCFSourceInfo::AllocateOutputArray(UInt32 numOutputs)
 {
 	// Allocate the proper number of relay outputs
-	fOutputArray = NEW OutputInfo[numOutputs];
+	fOutputArray = new OutputInfo[numOutputs];
 }

@@ -62,7 +62,6 @@
 #include "OSMutex.h"
 #include "FastCopyMacros.h"
 #include "MyAssert.h"
-#include "OSMemory.h"
 #include "OS.h"
 
 // -------------------------------------
@@ -283,7 +282,7 @@ QTTrack::ErrorCode QTHintTrack::Initialize()
 	// Load in the hint info atom for this track.
 	if (fFile->FindTOCEntry(":udta:hinf", &hinfTOCEntry, &fTOCEntry))
 	{
-		fHintInfoAtom = NEW QTAtom_hinf(fFile, hinfTOCEntry, fDebug, fDeepDebug);
+		fHintInfoAtom = new QTAtom_hinf(fFile, hinfTOCEntry, fDebug, fDeepDebug);
 
 		if (fHintInfoAtom == NULL)
 			return errInternalError;
@@ -297,7 +296,7 @@ QTTrack::ErrorCode QTHintTrack::Initialize()
 	if (!fFile->FindTOCEntry(":tref:hint", &hinfTOCEntry, &fTOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fHintTrackReferenceAtom = NEW QTAtom_tref(fFile, hinfTOCEntry, fDebug, fDeepDebug);
+	fHintTrackReferenceAtom = new QTAtom_tref(fFile, hinfTOCEntry, fDebug, fDeepDebug);
 	if (fHintTrackReferenceAtom == NULL)
 		return errInternalError;
 	if (!fHintTrackReferenceAtom->Initialize())
@@ -310,7 +309,7 @@ QTTrack::ErrorCode QTHintTrack::Initialize()
 	if (numTrackRefs > QTHintTrack::kMaxHintTrackRefs)
 		return errInvalidQuickTimeFile;
 
-	fTrackRefs = NEW QTTrack *[numTrackRefs];
+	fTrackRefs = new QTTrack *[numTrackRefs];
 	if (fTrackRefs == NULL)
 		return errInternalError;
 
@@ -398,7 +397,7 @@ char * QTHintTrack::GetSDPFile(int * length)
 	if (!fFile->FindTOCEntry(":udta:hnti:sdp ", &sdpTOCEntry, &fTOCEntry))
 		return NULL;
 
-	sdpAtom = NEW QTAtom(fFile, sdpTOCEntry, fDebug, fDeepDebug);
+	sdpAtom = new QTAtom(fFile, sdpTOCEntry, fDebug, fDeepDebug);
 	if (sdpAtom == NULL)
 		return NULL;
 	if (!sdpAtom->Initialize())
@@ -408,7 +407,7 @@ char * QTHintTrack::GetSDPFile(int * length)
 	// Allocate a buffer to hold the SDP file.
 	*length = (int)sdpTOCEntry->AtomDataLength;
 	//sdpBuffer = (char *)malloc(*Length);
-	sdpBuffer = NEW char[*length];
+	sdpBuffer = new char[*length];
 	if (sdpBuffer != NULL)
 		sdpAtom->ReadBytes(0, sdpBuffer, *length);
 
@@ -624,7 +623,7 @@ bool QTHintTrack::GetSamplePtr(UInt32 sampleNumber, char ** samplePtr, UInt32 * 
 		//
 		// Create a new cache entry.
 		htcb->fCachedSampleLength = htcb->fCachedSampleSize = newSampleLength;
-		htcb->fCachedSample = NEW char[htcb->fCachedSampleSize];
+		htcb->fCachedSample = new char[htcb->fCachedSampleSize];
 		if (htcb->fCachedSample == NULL)
 			return false;
 	}
@@ -887,7 +886,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData(QTHintTrack_HintTrackControlBlock 
 
 		if (htcb->fMediaTrackRefIndex == -2) // initial value : -1 is hint track and 0 is first index so use -2 as uninitialized
 		{
-			htcb->fMediaTrackSTSC_STCB = NEW QTAtom_stsc_SampleTableControlBlock();
+			htcb->fMediaTrackSTSC_STCB = new QTAtom_stsc_SampleTableControlBlock();
 			htcb->fMediaTrackRefIndex = trackRefIndex;
 		}
 
@@ -1089,7 +1088,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData(QTHintTrack_HintTrackControlBlock 
 		if (htcb->fCachedHintTrackSample == NULL)
 		{
 			//          qtss_printf("create a cache buffer for %" _S32BITARG_ " of size %" _S32BITARG_ "\n",mediaSampleNumber,cacheHintSampleLen); 
-			htcb->fCachedHintTrackSample = NEW char[(SInt32)cacheHintSampleLen];
+			htcb->fCachedHintTrackSample = new char[(SInt32)cacheHintSampleLen];
 			htcb->fCachedHintTrackBufferLength = (SInt32)cacheHintSampleLen;
 
 		}
@@ -1100,7 +1099,7 @@ QTTrack::ErrorCode QTHintTrack::GetSampleData(QTHintTrack_HintTrackControlBlock 
 			htcb->fCachedHintTrackSampleOffset = 0;
 			delete[] htcb->fCachedHintTrackSample;
 
-			htcb->fCachedHintTrackSample = NEW char[(SInt32)cacheHintSampleLen];
+			htcb->fCachedHintTrackSample = new char[(SInt32)cacheHintSampleLen];
 			htcb->fCachedHintTrackBufferLength = (SInt32)cacheHintSampleLen;
 		}
 

@@ -29,7 +29,6 @@
 
 #include "QTSSModule.h"
 #include "OSArrayObjectDeleter.h"
-#include "OSMemory.h"
 #include "StringParser.h"
 #include "QTSServerInterface.h"
 
@@ -102,12 +101,12 @@ QTSSModule::QTSSModule(char* inName, char* inPath)
 	{
 		// Create a code fragment if this module is being loaded from disk
 
-		fFragment = NEW OSCodeFragment(inPath);
-		fPath = NEW char[::strlen(inPath) + 2];
+		fFragment = new OSCodeFragment(inPath);
+		fPath = new char[::strlen(inPath) + 2];
 		::strcpy(fPath, inPath);
 	}
 
-	fAttributes = NEW QTSSDictionary(NULL, &fAttributesMutex);
+	fAttributes = new QTSSDictionary(NULL, &fAttributesMutex);
 
 	this->SetVal(qtssModPrefs, &fPrefs, sizeof(fPrefs));
 	this->SetVal(qtssModAttributes, &fAttributes, sizeof(fAttributes));
@@ -205,7 +204,7 @@ QTSS_Error QTSSModule::LoadFromDisk(QTSS_MainEntryPointPtr* outEntrypoint)
 
 	// 
 	// The main entrypoint symbol name is the file name plus that _Main__ string up there.
-	OSCharArrayDeleter theSymbolName(NEW char[theFileName.Len + sMainEntrypointName.Len + 2]);
+	OSCharArrayDeleter theSymbolName(new char[theFileName.Len + sMainEntrypointName.Len + 2]);
 	::memcpy(theSymbolName, theFileName.Ptr, theFileName.Len);
 	theSymbolName[theFileName.Len] = '\0';
 

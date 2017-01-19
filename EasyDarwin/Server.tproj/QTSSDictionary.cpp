@@ -37,7 +37,6 @@
 #include <stdio.h>
 
 #include "MyAssert.h"
-#include "OSMemory.h"
 #include "QTSSDataConverter.h"
 
 QTSSDictionary::QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex)
@@ -52,11 +51,11 @@ QTSSDictionary::QTSSDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex)
 			exit(0);
 		}
 	}
-	//    fAttributes = NEW DictValueElement[inMap->GetNumAttrs()];
+	//    fAttributes = new DictValueElement[inMap->GetNumAttrs()];
 	if (fMutexP == NULL)
 	{
 		fMyMutex = true;
-		fMutexP = NEW OSMutex();
+		fMutexP = new OSMutex();
 	}
 }
 
@@ -75,7 +74,7 @@ QTSSDictionary::~QTSSDictionary()
 
 QTSSDictionary* QTSSDictionary::CreateNewDictionary(QTSSDictionaryMap* inMap, OSMutex* inMutex)
 {
-	return NEW QTSSDictionary(inMap, inMutex);
+	return new QTSSDictionary(inMap, inMutex);
 }
 
 QTSS_Error QTSSDictionary::GetValuePtr(QTSS_AttributeID inAttrID, UInt32 inIndex,
@@ -331,7 +330,7 @@ QTSS_Error QTSSDictionary::SetValue(QTSS_AttributeID inAttrID, UInt32 inIndex,
 				// instead of directly using the old storage as the old storage didn't 
 				// have its string null terminated
 			UInt32 tempStringLen = theAttrs[theMapIndex].fAttributeData.Len;
-			char* temp = NEW char[tempStringLen + 1];
+			char* temp = new char[tempStringLen + 1];
 			::memcpy(temp, theAttrs[theMapIndex].fAttributeData.Ptr, tempStringLen);
 			temp[tempStringLen] = '\0';
 			delete[] theAttrs[theMapIndex].fAttributeData.Ptr;
@@ -339,7 +338,7 @@ QTSS_Error QTSSDictionary::SetValue(QTSS_AttributeID inAttrID, UInt32 inIndex,
 			//char* temp = theAttrs[theMapIndex].fAttributeData.Ptr;
 
 			theAttrs[theMapIndex].fAllocatedLen = 16 * sizeof(char*);
-			theAttrs[theMapIndex].fAttributeData.Ptr = NEW char[theAttrs[theMapIndex].fAllocatedLen];
+			theAttrs[theMapIndex].fAttributeData.Ptr = new char[theAttrs[theMapIndex].fAllocatedLen];
 			theAttrs[theMapIndex].fAttributeData.Len = sizeof(char*);
 			// store off original string as first value in array
 			*(char**)theAttrs[theMapIndex].fAttributeData.Ptr = temp;
@@ -370,7 +369,7 @@ QTSS_Error QTSSDictionary::SetValue(QTSS_AttributeID inAttrID, UInt32 inIndex,
 			theLen = attrLen;   // most attributes are single valued, so allocate just enough space
 		else
 			theLen = 2 * (attrLen * (inIndex + 1));// Allocate twice as much as we need
-		char* theNewBuffer = NEW char[theLen];
+		char* theNewBuffer = new char[theLen];
 		if (inIndex > 0)
 		{
 			// Copy out the old attribute data
@@ -401,9 +400,9 @@ QTSS_Error QTSSDictionary::SetValue(QTSS_AttributeID inAttrID, UInt32 inIndex,
 	}
 	else
 	{
-		//attributeBufferPtr = NEW char[inLen];
+		//attributeBufferPtr = new char[inLen];
 		// allocating one extra so that we can null terminate the string
-		attributeBufferPtr = NEW char[inLen + 1];
+		attributeBufferPtr = new char[inLen + 1];
 		char* tempBuffer = (char*)attributeBufferPtr;
 		tempBuffer[inLen] = '\0';
 
@@ -699,7 +698,7 @@ QTSS_Error  QTSSDictionary::AddInstanceAttribute(const char* inAttrName,
 			theNewArraySize = QTSSDictionaryMap::kMinArraySize;
 		Assert(theNewArraySize > fInstanceMap->GetNumAttrs());
 
-		DictValueElement* theNewArray = NEW DictValueElement[theNewArraySize];
+		DictValueElement* theNewArray = new DictValueElement[theNewArraySize];
 		if (fInstanceAttrs != NULL)
 		{
 			::memcpy(theNewArray, fInstanceAttrs, sizeof(DictValueElement) * fInstanceArraySize);
@@ -877,7 +876,7 @@ QTSSDictionaryMap::QTSSDictionaryMap(UInt32 inNumReservedAttrs, UInt32 inFlags)
 {
 	if (fAttrArraySize < kMinArraySize)
 		fAttrArraySize = kMinArraySize;
-	fAttrArray = NEW QTSSAttrInfoDict*[fAttrArraySize];
+	fAttrArray = new QTSSAttrInfoDict*[fAttrArraySize];
 	::memset(fAttrArray, 0, sizeof(QTSSAttrInfoDict*) * fAttrArraySize);
 }
 
@@ -921,7 +920,7 @@ QTSS_Error QTSSDictionaryMap::AddAttribute(const char* inAttrName,
 		if (theNewArraySize == 0)
 			theNewArraySize = kMinArraySize;
 
-		QTSSAttrInfoDict** theNewArray = NEW QTSSAttrInfoDict*[theNewArraySize];
+		QTSSAttrInfoDict** theNewArray = new QTSSAttrInfoDict*[theNewArraySize];
 		::memset(theNewArray, 0, sizeof(QTSSAttrInfoDict*) * theNewArraySize);
 		if (fAttrArray != NULL)
 		{
@@ -955,7 +954,7 @@ void QTSSDictionaryMap::SetAttribute(QTSS_AttributeID inID,
 	Assert(theNameLen < QTSS_MAX_ATTRIBUTE_NAME_SIZE);
 	Assert(fAttrArray[theIndex] == NULL);
 
-	fAttrArray[theIndex] = NEW QTSSAttrInfoDict;
+	fAttrArray[theIndex] = new QTSSAttrInfoDict;
 
 	//Copy the information into the first available element
 	fAttrArray[theIndex]->fID = inID;

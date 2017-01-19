@@ -85,7 +85,6 @@ OSMutex OS::sStdLibOSMutex;
 
 #if DEBUG || __Win32__
 #include "OSMutex.h"
-#include "OSMemory.h"
 static OSMutex* sLastMillisMutex = nullptr;
 #endif
 

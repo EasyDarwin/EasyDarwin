@@ -33,7 +33,6 @@
 #include "QTSSPosixFileSysModule.h"
 #include "QTSSModuleUtils.h"
 
-#include "OSMemory.h"
 #include "OSFileSource.h"
 #include "Socket.h"
 #include "QTSSModule.h"
@@ -118,7 +117,7 @@ QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 
 QTSS_Error  OpenFile(QTSS_OpenFile_Params* inParams)
 {
-	OSFileSource* theFileSource = NEW OSFileSource(inParams->inPath);
+	OSFileSource* theFileSource = new OSFileSource(inParams->inPath);
 
 	UInt64 theLength = theFileSource->GetLength();
 
@@ -149,7 +148,7 @@ QTSS_Error  OpenFile(QTSS_OpenFile_Params* inParams)
 	// If caller wants async I/O, at this point we should set up the EventContext
 	if (inParams->inFlags & qtssOpenFileAsync)
 	{
-		EventContext* theEventContext = NEW EventContext(EventContext::kInvalidFileDesc, Socket::GetEventThread());
+		EventContext* theEventContext = new EventContext(EventContext::kInvalidFileDesc, Socket::GetEventThread());
 		theEventContext->InitNonBlocking(theFileSource->GetFD());
 
 		theErr = QTSS_SetValue(inParams->inFileObject, sEventContextAttr, 0, &theEventContext, sizeof(theEventContext));

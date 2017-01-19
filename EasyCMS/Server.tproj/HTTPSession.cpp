@@ -97,7 +97,7 @@ HTTPSession::~HTTPSession()
 
 	if (fRequestBody)
 	{
-		delete[]fRequestBody;
+		delete[] fRequestBody;
 		fRequestBody = nullptr;
 	}
 }
@@ -179,6 +179,7 @@ SInt64 HTTPSession::Run()
 			state_ = State::kHaveCompleteMessage;
 		}
 		case State::kHaveCompleteMessage:
+
 			Assert(fInputStream.GetRequestBuffer());
 
 			Assert(fRequest == nullptr);
@@ -1972,12 +1973,10 @@ QTSS_Error HTTPSession::execNetMsgCSTalkbackControlReq(const char* json)
 				errString = EasyProtocol::GetErrorString(EASY_ERROR_CLIENT_BAD_REQUEST);
 				goto ACK;
 			}
-			else
-			{
-				pDevSession->SetTalkbackSession("");
-				errNo = EASY_ERROR_SUCCESS_OK;
-				errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
-			}
+
+			pDevSession->SetTalkbackSession("");
+			errNo = EASY_ERROR_SUCCESS_OK;
+			errString = EasyProtocol::GetErrorString(EASY_ERROR_SUCCESS_OK);
 		}
 
 		EasyProtocolACK reqreq(MSG_SD_CONTROL_TALKBACK_REQ);

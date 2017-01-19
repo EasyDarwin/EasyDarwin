@@ -34,7 +34,6 @@
 
 #include "StrPtrLen.h"
 #include "OSArrayObjectDeleter.h"
-#include "OSMemory.h"
 #include "MyAssert.h"
 #include "StringFormatter.h"
 #include "ResizeableStringFormatter.h"
@@ -124,7 +123,7 @@ QTSS_Error QTSSModuleUtils::ReadEntireFile(char* inPath, StrPtrLen* outData, QTS
 				break;
 	
 			// Allocate memory for the file data
-			outData->Ptr = NEW char[ (SInt32) (*theLength + 1) ];
+			outData->Ptr = new char[ (SInt32) (*theLength + 1) ];
 			outData->Len = (SInt32) *theLength;
 			outData->Ptr[outData->Len] = 0;
 		
@@ -197,7 +196,7 @@ void    QTSSModuleUtils::LogError(  QTSS_ErrorVerbosity inVerbosity,
     
     UInt32 theMessageLen = theMessage.Len + ::strlen(inArgument) + ::strlen(inArg2);
 
-    OSCharArrayDeleter theLogString(NEW char[theMessageLen + 1]);
+    OSCharArrayDeleter theLogString(new char[theMessageLen + 1]);
     qtss_sprintf(theLogString.GetObject(), theMessage.Ptr, inArgument, inArg2);
     Assert(theMessageLen >= ::strlen(theLogString.GetObject()));
     
@@ -268,7 +267,7 @@ char* QTSSModuleUtils::GetFullPath( QTSS_RTSPRequestObject inRequest,
     if (suffix != NULL)
         *outLen += suffix->Len;
     
-    char* theFullPath = NEW char[*outLen];
+    char* theFullPath = new char[*outLen];
     
     //write all the pieces of the path into this new buffer.
     StringFormatter thePathFormatter(theFullPath, *outLen);
@@ -402,7 +401,7 @@ QTSS_Error  QTSSModuleUtils::SendErrorResponse( QTSS_RTSPRequestObject inRequest
         if (inStringArg != NULL)
             theMsgLen += inStringArg->Len;
         
-        messageBuffPtr = NEW char[theMsgLen];
+        messageBuffPtr = new char[theMsgLen];
         messageBuffPtr[0] = 0;
         theErrorMsgFormatter.Set(messageBuffPtr, theMsgLen);
         //
@@ -618,7 +617,7 @@ char*   QTSSModuleUtils::CoalesceVectors(iovec* inVec, UInt32 inNumVectors, UInt
     if (inTotalLength == 0)
         return NULL;
     
-    char* buffer = NEW char[inTotalLength];
+    char* buffer = new char[inTotalLength];
     UInt32 bufferOffset = 0;
     
     for (UInt32 index = 0; index < inNumVectors; index++)
@@ -761,7 +760,7 @@ char*   QTSSModuleUtils::GetStringAttribute(QTSS_Object inObject, char* inAttrib
         // solely on whether the caller passed in a non-NULL pointer or not.
         // This ensures that if the caller wants an empty-string returned as a default
         // value, it can do that.
-        theString = NEW char[theDefaultValLen + 1];
+        theString = new char[theDefaultValLen + 1];
         ::strcpy(theString, inDefaultValue);
         return theString;
     }
@@ -771,7 +770,7 @@ char*   QTSSModuleUtils::GetStringAttribute(QTSS_Object inObject, char* inAttrib
 void    QTSSModuleUtils::GetIOAttribute(QTSS_Object inObject, char* inAttributeName, QTSS_AttrDataType inType,
                             void* ioDefaultResultBuffer, UInt32 inBufferLen)
 {
-    char *defaultBuffPtr = NEW char[inBufferLen];
+    char *defaultBuffPtr = new char[inBufferLen];
     ::memcpy(defaultBuffPtr,ioDefaultResultBuffer,inBufferLen);
     QTSSModuleUtils::GetAttribute(inObject, inAttributeName, inType, ioDefaultResultBuffer, defaultBuffPtr, inBufferLen);
     delete [] defaultBuffPtr;
@@ -906,7 +905,7 @@ char**  QTSSModuleUtils::GetGroupsArray_Copy(QTSS_UserProfileObject inUserProfil
     if (theErr != QTSS_NoErr || *outNumGroupsPtr == 0)
         return NULL;
         
-    outGroupCharPtrArray = NEW char*[*outNumGroupsPtr]; // array of char *
+    outGroupCharPtrArray = new char*[*outNumGroupsPtr]; // array of char *
     UInt32 len = 0;
     for (UInt32 index = 0; index < *outNumGroupsPtr; index++)
     {   outGroupCharPtrArray[index] = NULL;

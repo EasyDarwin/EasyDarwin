@@ -29,7 +29,6 @@
 #include "StrPtrLen.h"
 #include "ResizeableStringFormatter.h"
 #include "StringParser.h"
-#include "OSMemory.h"
 
 SInt32 SDPContainer::AddHeaderLine(StrPtrLen *theLinePtr)
 {

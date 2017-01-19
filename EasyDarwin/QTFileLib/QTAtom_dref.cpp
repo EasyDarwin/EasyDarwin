@@ -45,7 +45,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_dref.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -102,7 +101,7 @@ typedef struct
 //
 QTAtom_dref::QTAtom_dref(QTFile * File, QTFile::AtomTOCEntry * TOCEntry, bool Debug, bool DeepDebug)
 	: QTAtom(File, TOCEntry, Debug, DeepDebug),
-	fNumRefs(0), fRefs(NULL)
+	fNumRefs(0), fRefs(nullptr)
 {
 }
 
@@ -148,8 +147,8 @@ bool QTAtom_dref::Initialize()
 	if (fNumRefs > 0) {
 		//
 		// Allocate our ref table.
-		fRefs = NEW DataRefEntry[fNumRefs];
-		if (fRefs == NULL)
+		fRefs = new DataRefEntry[fNumRefs];
+		if (fRefs == nullptr)
 			return false;
 
 		//
@@ -159,13 +158,13 @@ bool QTAtom_dref::Initialize()
 			//
 			// Set up the entry.
 			fRefs[CurRef].Flags = 0x0;
-			fRefs[CurRef].ReferenceType = FOUR_CHARS_TO_INT('N', 'U', 'L', 'L'); // NULL
+			fRefs[CurRef].ReferenceType = FOUR_CHARS_TO_INT('N', 'U', 'L', 'L'); // nullptr
 			fRefs[CurRef].DataLength = 0;
-			fRefs[CurRef].Data = NULL;
+			fRefs[CurRef].Data = nullptr;
 
 			fRefs[CurRef].IsEntryInitialized = false;
 			fRefs[CurRef].IsFileOpen = false;
-			fRefs[CurRef].FCB = NULL;
+			fRefs[CurRef].FCB = nullptr;
 
 
 			//
@@ -189,8 +188,8 @@ bool QTAtom_dref::Initialize()
 			ReadInt32(refPos + drefRefPos_Size, &tempInt32);
 			fRefs[CurRef].DataLength = tempInt32 - 12 /* skip the header */;
 
-			fRefs[CurRef].Data = NEW char[fRefs[CurRef].DataLength];
-			if (fRefs[CurRef].Data == NULL) {
+			fRefs[CurRef].Data = new char[fRefs[CurRef].DataLength];
+			if (fRefs[CurRef].Data == nullptr) {
 				//
 				// De-initialize this entry.
 				fRefs[CurRef].DataLength = 0;
@@ -203,8 +202,8 @@ bool QTAtom_dref::Initialize()
 
 				//
 				// Configure the rest of the entry.
-				fRefs[CurRef].FCB = NEW QTFile_FileControlBlock();
-				if (fRefs[CurRef].FCB == NULL)
+				fRefs[CurRef].FCB = new QTFile_FileControlBlock();
+				if (fRefs[CurRef].FCB == nullptr)
 					fRefs[CurRef].IsEntryInitialized = false;
 				else
 					fRefs[CurRef].IsEntryInitialized = true;
@@ -271,16 +270,16 @@ bool QTAtom_dref::Read(UInt32 RefID, UInt64 Offset, char * const Buffer, UInt32 
 
 		//
 		// Parse the alias.
-		if ((AliasPath = ResolveAlias(Entry->Data, Entry->DataLength)) == NULL)
+		if ((AliasPath = ResolveAlias(Entry->Data, Entry->DataLength)) == nullptr)
 			return false;
 
 		//
 		// Create a path which does *not* contain the current movie's name.
 		char * p;
 		char * MoviePath = fFile->GetMoviePath();
-		char * NewPath = NEW char[strlen(MoviePath) + strlen(AliasPath) + 1];
+		char * NewPath = new char[strlen(MoviePath) + strlen(AliasPath) + 1];
 		//char * NewPath = (char *)calloc(1, strlen(MoviePath) + strlen(AliasPath));
-		if ((p = strrchr(MoviePath, QT_PATH_SEPARATOR)) == NULL) {
+		if ((p = strrchr(MoviePath, QT_PATH_SEPARATOR)) == nullptr) {
 			memcpy(NewPath, AliasPath, strlen(AliasPath) + 1);
 		}
 		else {
@@ -339,7 +338,7 @@ char * QTAtom_dref::ResolveAlias(char * const AliasData, UInt32 /* AliasDataLeng
 	//
 	// Verify that we have a relative path.
 	if ((Alias->nlvlTo == -1) || (Alias->nlvlFrom == -1))
-		return NULL;
+		return nullptr;
 
 	//
 	// Search for the absolute pathname in this alias.

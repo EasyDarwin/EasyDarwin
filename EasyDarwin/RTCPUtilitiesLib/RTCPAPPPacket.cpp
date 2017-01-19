@@ -34,7 +34,6 @@
 #include "RTCPAPPPacket.h"
 #include "MyAssert.h"
 #include "OS.h"
-#include "OSMemory.h"
 #include "ResizeableStringFormatter.h"
 
 
@@ -48,7 +47,7 @@ RTCPAPPPacket::RTCPAPPPacket(bool debug) :
 {
 	if (fDebug)
 	{
-		mDumpArray = NEW char[kmDumpArraySize];
+		mDumpArray = new char[kmDumpArraySize];
 		mDumpArray[0] = '\0';
 		mDumpArrayStrDeleter.Set(mDumpArray);
 	}

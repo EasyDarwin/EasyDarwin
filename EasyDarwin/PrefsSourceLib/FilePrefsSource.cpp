@@ -37,7 +37,6 @@
 #include <errno.h>
 
 #include "MyAssert.h"
-#include "OSMemory.h"
 #include "ConfParser.h"
 
 const int kMaxLineLen = 2048;
@@ -68,9 +67,9 @@ KeyValuePair::KeyValuePair(const char* inKey, const char* inValue, KeyValuePair*
 	fValue(NULL),
 	fNext(NULL)
 {
-	fKey = NEW char[::strlen(inKey) + 1];
+	fKey = new char[::strlen(inKey) + 1];
 	::strcpy(fKey, inKey);
-	fValue = NEW char[::strlen(inValue) + 1];
+	fValue = new char[::strlen(inValue) + 1];
 	::strcpy(fValue, inValue);
 	fNext = inNext;
 }
@@ -86,7 +85,7 @@ KeyValuePair::~KeyValuePair()
 void KeyValuePair::ResetValue(const char* inValue)
 {
 	delete[] fValue;
-	fValue = NEW char[::strlen(inValue) + 1];
+	fValue = new char[::strlen(inValue) + 1];
 	::strcpy(fValue, inValue);
 }
 
@@ -197,7 +196,7 @@ void FilePrefsSource::SetValue(const char* inKey, const char* inValue)
 	}
 	else
 	{
-		fKeyValueList = NEW KeyValuePair(inKey, inValue, fKeyValueList);
+		fKeyValueList = new KeyValuePair(inKey, inValue, fKeyValueList);
 		fNumKeys++;
 	}
 }

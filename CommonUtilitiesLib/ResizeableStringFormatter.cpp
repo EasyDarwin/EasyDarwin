@@ -31,7 +31,6 @@
  */
 
 #include "ResizeableStringFormatter.h"
-#include "OSMemory.h"
 
 bool ResizeableStringFormatter::BufferIsFull(char* inBuffer, UInt32 inBufferLen)
 {

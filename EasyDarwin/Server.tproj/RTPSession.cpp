@@ -35,7 +35,6 @@
 #include "QTSServerInterface.h"
 #include "QTSS.h"
 #include "OS.h"
-#include "OSMemory.h"
 
 #define RTPSESSION_DEBUGGING 0
 
@@ -224,7 +223,7 @@ QTSS_Error RTPSession::AddStream(RTSPRequestInterface* request, RTPStream** outS
 		}
 	}
 
-	*outStream = NEW RTPStream(theSSRC, this);
+	*outStream = new RTPStream(theSSRC, this);
 
 	QTSS_Error theErr = (*outStream)->Setup(request, inFlags);
 	if (theErr != QTSS_NoErr)

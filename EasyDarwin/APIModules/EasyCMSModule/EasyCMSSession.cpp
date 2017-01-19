@@ -9,14 +9,13 @@
 	Contains:   Implementation of object defined in EasyCMSSession.h.
 */
 #include "EasyCMSSession.h"
-#include "OSMemory.h"
 #include "OSArrayObjectDeleter.h"
 #include "SocketUtils.h"
 #include "QTSServerInterface.h"
 
 EasyCMSSession::EasyCMSSession()
 	: Task(),
-	fSocket(NEW TCPClientSocket(Socket::kNonBlockingSocketType)),
+	fSocket(new TCPClientSocket(Socket::kNonBlockingSocketType)),
 	fTimeoutTask(nullptr),
 	fState(kIdle),
 	fInputStream(fSocket),
@@ -179,7 +178,7 @@ SInt64 EasyCMSSession::Run()
 			Assert(fRequest == NULL);
 
 			// 根据具体请求报文构造HTTPRequest请求类
-			fRequest = NEW HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
+			fRequest = new HTTPRequest(&QTSServerInterface::GetServerHeader(), fInputStream.GetRequestBuffer());
 
 			// 清空发送缓冲区
 			fOutputStream.ResetBytesWritten();
@@ -276,7 +275,7 @@ QTSS_Error EasyCMSSession::ProcessMessage()
 		// 进行content请求处理,如果不存在,我们需要创建并初始化fContentBuffer和fContentBufferOffset
 		if (fContentBuffer == nullptr)
 		{
-			fContentBuffer = NEW char[content_length + 1];
+			fContentBuffer = new char[content_length + 1];
 			memset(fContentBuffer, 0, content_length + 1);
 			fContentBufferOffset = 0;
 		}

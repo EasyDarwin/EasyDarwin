@@ -44,7 +44,6 @@
 
 #include "QTAtom.h"
 #include "QTAtom_stsc.h"
-#include "OSMemory.h"
 
 
 // -------------------------------------
@@ -176,7 +175,7 @@ bool QTAtom_stsc::Initialize()
 	if (fSampleToChunkTable == NULL)
 		return false;
 #else
-	fSampleToChunkTable = NEW char[fNumEntries * 12];
+	fSampleToChunkTable = new char[fNumEntries * 12];
 	if (fSampleToChunkTable == NULL)
 		return false;
 	ReadBytes(stscPos_SampleTable, fSampleToChunkTable, fNumEntries * 12);
@@ -213,7 +212,7 @@ bool QTAtom_stsc::GetChunkFirstLastSample(UInt32 chunkNumber, UInt32 *firstSampl
 	if (STCB == NULL)
 	{
 		//      qtss_printf(" QTAtom_stsc::GetChunkFirstLastSample (NULL == STCB) \n");
-		tempSTCB = NEW QTAtom_stsc_SampleTableControlBlock;
+		tempSTCB = new QTAtom_stsc_SampleTableControlBlock;
 		STCB = tempSTCB;
 
 	}
@@ -400,7 +399,7 @@ bool QTAtom_stsc::SampleToChunkInfo(UInt32 SampleNumber, UInt32 *samplesPerChunk
 	if (STCB == NULL)
 	{
 		//      qtss_printf(" QTAtom_stsc::SampleToChunkInfo (NULL == STCB) \n");
-		tempSTCB = NEW QTAtom_stsc_SampleTableControlBlock;
+		tempSTCB = new QTAtom_stsc_SampleTableControlBlock;
 		STCB = tempSTCB;
 	}
 

@@ -36,7 +36,6 @@
 
 #include "QTSSDataConverter.h"
 #include "StrPtrLen.h"
-#include "OSMemory.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -284,7 +283,7 @@ char* QTSSDataConverter::ConvertBytesToCHexString(void* inValue, const UInt32 in
 	UInt8* theDataPtr = (UInt8*)inValue;
 	UInt32 len = inValueLen * 2;
 
-	char *theString = NEW char[len + 1];
+	char *theString = new char[len + 1];
 	char *resultStr = theString;
 	if (theString != NULL)
 	{
@@ -325,7 +324,7 @@ char* QTSSDataConverter::ValueToString(void* inValue,
 	//
 	// With these other types, its impossible to tell how big they'll
 	// be, so just allocate some buffer and hope we fit.
-	char* theString = NEW char[128];
+	char* theString = new char[128];
 
 	//
 	// If this is another type, format the string into that type

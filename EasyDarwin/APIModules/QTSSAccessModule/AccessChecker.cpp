@@ -43,7 +43,6 @@
 #include "SafeStdLib.h"
 #include "StringParser.h"
 #include "OSFileSource.h"
-#include "OSMemory.h"
 #include "OSHeaders.h"
 #include "AccessChecker.h"
 #include "QTSSModuleUtils.h"
@@ -88,10 +87,10 @@ void AccessChecker::UpdateFilePaths(const char* inUsersFilePath, const char* inG
 	delete[] fGroupsFilePath;
 	delete[] fUsersFilePath;
 
-	fUsersFilePath = NEW char[strlen(inUsersFilePath) + 1];
+	fUsersFilePath = new char[strlen(inUsersFilePath) + 1];
 	::strcpy(fUsersFilePath, inUsersFilePath);
 
-	fGroupsFilePath = NEW char[strlen(inGroupsFilePath) + 1];
+	fGroupsFilePath = new char[strlen(inGroupsFilePath) + 1];
 	::strcpy(fGroupsFilePath, inGroupsFilePath);
 }
 
@@ -245,7 +244,7 @@ UInt32 AccessChecker::UpdateUserProfiles() {
 	OSCharArrayDeleter groupDataPtrDeleter(groupData.Ptr);
 
 	// Create the fProfiles array of size kDefaultNumProfiles
-	fProfiles = NEW UserProfile*[kDefaultNumProfiles];
+	fProfiles = new UserProfile*[kDefaultNumProfiles];
 	fCurrentSize = kDefaultNumProfiles;
 
 	StringParser userDataParser(&userData);
@@ -272,8 +271,8 @@ UInt32 AccessChecker::UpdateUserProfiles() {
 			resultErr |= kBadUsersFileErr;
 
 			// Create a new user profile for the first username
-			UserProfile* profile = NEW UserProfile;
-			profile->groups = NEW char*[kDefaultNumGroups];
+			UserProfile* profile = new UserProfile;
+			profile->groups = new char*[kDefaultNumGroups];
 			profile->maxGroupNameLen = 0;
 			profile->numGroups = 0;
 			profile->groupsSize = kDefaultNumGroups;
@@ -307,8 +306,8 @@ UInt32 AccessChecker::UpdateUserProfiles() {
 			continue;
 
 		// Create a new user profile for each username found
-		UserProfile* profile = NEW UserProfile;
-		profile->groups = NEW char*[kDefaultNumGroups];
+		UserProfile* profile = new UserProfile;
+		profile->groups = new char*[kDefaultNumGroups];
 		profile->maxGroupNameLen = 0;
 		profile->numGroups = 0;
 		profile->groupsSize = kDefaultNumGroups;
@@ -329,7 +328,7 @@ UInt32 AccessChecker::UpdateUserProfiles() {
 
 		if (index >= fCurrentSize) {
 			UserProfile** oldProfiles = fProfiles;
-			fProfiles = NEW UserProfile*[fCurrentSize * 2];
+			fProfiles = new UserProfile*[fCurrentSize * 2];
 			for (i = 0; i < fCurrentSize; i++)
 			{
 				fProfiles[i] = oldProfiles[i];
@@ -376,7 +375,7 @@ UInt32 AccessChecker::UpdateUserProfiles() {
 							UInt32 grpSize = fProfiles[i]->groupsSize;
 							if (fProfiles[i]->numGroups >= grpSize) {
 								char** oldGroups = fProfiles[i]->groups;
-								fProfiles[i]->groups = NEW char*[grpSize * 2];
+								fProfiles[i]->groups = new char*[grpSize * 2];
 								for (j = 0; j < grpSize; j++) {
 									fProfiles[i]->groups[j] = oldGroups[j];
 								}

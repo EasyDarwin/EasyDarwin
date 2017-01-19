@@ -50,8 +50,6 @@
 
 #include "QTTrack.h"
 
-#include "OSMemory.h"
-
 // -------------------------------------
 // Macros
 //
@@ -85,7 +83,7 @@ QTTrack::QTTrack(QTFile * File, QTFile::AtomTOCEntry * Atom, bool Debug, bool De
 	if (!fFile->FindTOCEntry(":tkhd", &tempTOCEntry, &fTOCEntry))
 		return;
 
-	fTrackHeaderAtom = NEW QTAtom_tkhd(fFile, tempTOCEntry, fDebug, fDeepDebug);
+	fTrackHeaderAtom = new QTAtom_tkhd(fFile, tempTOCEntry, fDebug, fDeepDebug);
 	if (fTrackHeaderAtom == NULL)
 		return;
 	if (!fTrackHeaderAtom->Initialize()) {
@@ -150,7 +148,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	//
 	// See if this track has a name and load it in.
 	if (fFile->FindTOCEntry(":udta:name", &tempTOCEntry, &fTOCEntry)) {
-		fTrackName = NEW char[(SInt32)(tempTOCEntry->AtomDataLength + 1)];
+		fTrackName = new char[(SInt32)(tempTOCEntry->AtomDataLength + 1)];
 		if (fTrackName != NULL)
 			fFile->Read(tempTOCEntry->AtomDataPos, fTrackName, (UInt32)tempTOCEntry->AtomDataLength);
 	}
@@ -161,7 +159,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	if (!fFile->FindTOCEntry(":mdia:mdhd", &tempTOCEntry, &fTOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fMediaHeaderAtom = NEW QTAtom_mdhd(fFile, tempTOCEntry, fDebug, fDeepDebug);
+	fMediaHeaderAtom = new QTAtom_mdhd(fFile, tempTOCEntry, fDebug, fDeepDebug);
 	if (fMediaHeaderAtom == NULL)
 		return errInternalError;
 	if (!fMediaHeaderAtom->Initialize())
@@ -172,7 +170,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	// Load in the edit list atom for this track.
 	DEEP_DEBUG_PRINT(("Searching track #%"   _U32BITARG_   " 'elst' atom.\n", GetTrackID()));
 	if (fFile->FindTOCEntry(":edts:elst", &tempTOCEntry, &fTOCEntry)) {
-		fEditListAtom = NEW QTAtom_elst(fFile, tempTOCEntry, fDebug, fDeepDebug);
+		fEditListAtom = new QTAtom_elst(fFile, tempTOCEntry, fDebug, fDeepDebug);
 		if (fEditListAtom == NULL)
 			return errInternalError;
 		if (!fEditListAtom->Initialize())
@@ -192,7 +190,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	if (!fFile->FindTOCEntry(":mdia:minf:dinf:dref", &tempTOCEntry, &fTOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fDataReferenceAtom = NEW QTAtom_dref(fFile, tempTOCEntry, fDebug, fDeepDebug);
+	fDataReferenceAtom = new QTAtom_dref(fFile, tempTOCEntry, fDebug, fDeepDebug);
 	if (fDataReferenceAtom == NULL)
 		return errInternalError;
 	if (!fDataReferenceAtom->Initialize())
@@ -204,7 +202,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	if (!fFile->FindTOCEntry(":mdia:minf:stbl:stts", &tempTOCEntry, &fTOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fTimeToSampleAtom = NEW QTAtom_stts(fFile, tempTOCEntry, fDebug, fDeepDebug);
+	fTimeToSampleAtom = new QTAtom_stts(fFile, tempTOCEntry, fDebug, fDeepDebug);
 	if (fTimeToSampleAtom == NULL)
 		return errInternalError;
 	if (!fTimeToSampleAtom->Initialize())
@@ -212,7 +210,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 
 	if (fFile->FindTOCEntry(":mdia:minf:stbl:ctts", &tempTOCEntry, &fTOCEntry))
 	{
-		fCompTimeToSampleAtom = NEW QTAtom_ctts(fFile, tempTOCEntry, fDebug, fDeepDebug);
+		fCompTimeToSampleAtom = new QTAtom_ctts(fFile, tempTOCEntry, fDebug, fDeepDebug);
 		if (fCompTimeToSampleAtom == NULL)
 			return errInternalError;
 		if (!fCompTimeToSampleAtom->Initialize())
@@ -222,7 +220,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	if (!fFile->FindTOCEntry(":mdia:minf:stbl:stsc", &tempTOCEntry, &fTOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fSampleToChunkAtom = NEW QTAtom_stsc(fFile, tempTOCEntry, fDebug, fDeepDebug);
+	fSampleToChunkAtom = new QTAtom_stsc(fFile, tempTOCEntry, fDebug, fDeepDebug);
 	if (fSampleToChunkAtom == NULL)
 		return errInternalError;
 	if (!fSampleToChunkAtom->Initialize())
@@ -232,7 +230,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	if (!fFile->FindTOCEntry(":mdia:minf:stbl:stsd", &tempTOCEntry, &fTOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fSampleDescriptionAtom = NEW QTAtom_stsd(fFile, tempTOCEntry, fDebug, fDeepDebug);
+	fSampleDescriptionAtom = new QTAtom_stsd(fFile, tempTOCEntry, fDebug, fDeepDebug);
 	if (fSampleDescriptionAtom == NULL)
 		return errInternalError;
 	if (!fSampleDescriptionAtom->Initialize())
@@ -256,7 +254,7 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	if (!coFound)
 		return errInvalidQuickTimeFile;
 
-	fChunkOffsetAtom = NEW QTAtom_stco(fFile, tempTOCEntry, offSetSize, fDebug, fDeepDebug);
+	fChunkOffsetAtom = new QTAtom_stco(fFile, tempTOCEntry, offSetSize, fDebug, fDeepDebug);
 	if (fChunkOffsetAtom == NULL)
 		return errInternalError;
 	if (!fChunkOffsetAtom->Initialize())
@@ -266,14 +264,14 @@ QTTrack::ErrorCode QTTrack::Initialize()
 	if (!fFile->FindTOCEntry(":mdia:minf:stbl:stsz", &tempTOCEntry, &fTOCEntry))
 		return errInvalidQuickTimeFile;
 
-	fSampleSizeAtom = NEW QTAtom_stsz(fFile, tempTOCEntry, fDebug, fDeepDebug);
+	fSampleSizeAtom = new QTAtom_stsz(fFile, tempTOCEntry, fDebug, fDeepDebug);
 	if (fSampleSizeAtom == NULL)
 		return errInternalError;
 	if (!fSampleSizeAtom->Initialize())
 		return errInvalidQuickTimeFile;
 
 	if (fFile->FindTOCEntry(":mdia:minf:stbl:stss", &tempTOCEntry, &fTOCEntry)) {
-		fSyncSampleAtom = NEW QTAtom_stss(fFile, tempTOCEntry, fDebug, fDeepDebug);
+		fSyncSampleAtom = new QTAtom_stss(fFile, tempTOCEntry, fDebug, fDeepDebug);
 		if (fSyncSampleAtom == NULL)
 			return errInternalError;
 		if (!fSyncSampleAtom->Initialize())

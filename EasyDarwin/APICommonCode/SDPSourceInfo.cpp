@@ -34,7 +34,6 @@
 
 #include "StringParser.h"
 #include "StringFormatter.h"
-#include "OSMemory.h"
 #include "SocketUtils.h"
 #include "StrPtrLen.h"
 #include "SDPUtils.h"
@@ -74,7 +73,7 @@ char* SDPSourceInfo::GetLocalSDP(UInt32* newSDPLen)
     bool appendCLine = true;
     UInt32 trackIndex = 0;
     
-    char *localSDP = NEW char[fSDPData.Len * 2];
+    char *localSDP = new char[fSDPData.Len * 2];
     OSCharArrayDeleter charArrayPathDeleter(localSDP);
     StringFormatter localSDPFormatter(localSDP, fSDPData.Len * 2);
 
@@ -193,7 +192,7 @@ void SDPSourceInfo::Parse(char* sdpData, UInt32 sdpLen)
         
     Assert(fStreamArray == NULL);
     
-    char *sdpDataCopy = NEW char[sdpLen];
+    char *sdpDataCopy = new char[sdpLen];
     Assert(sdpDataCopy != NULL);
     
     memcpy(sdpDataCopy,sdpData, sdpLen);
@@ -225,7 +224,7 @@ void SDPSourceInfo::Parse(char* sdpData, UInt32 sdpLen)
     //We should scale the # of StreamInfos to the # of trax, but we can't because
     //of an annoying compiler bug...
     
-    fStreamArray = NEW StreamInfo[fNumStreams];
+    fStreamArray = new StreamInfo[fNumStreams];
 	::memset(fStreamArray, 0, sizeof(StreamInfo) * fNumStreams);
 
     // set the default destination as our default IP address and set the default ttl

@@ -34,7 +34,6 @@
 #include <string.h>
 
 #include "OSHeap.h"
-#include "OSMemory.h"
 
 OSHeap::OSHeap(UInt32 inStartSize)
 	: fFreeIndex(1)

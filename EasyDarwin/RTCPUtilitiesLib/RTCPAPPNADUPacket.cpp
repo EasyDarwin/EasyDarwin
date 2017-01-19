@@ -33,7 +33,6 @@
 
 #include "RTCPAPPNADUPacket.h"
 #include "MyAssert.h"
-#include "OSMemory.h"
 #include "StrPtrLen.h"
 
 
@@ -477,7 +476,7 @@ void   RTCPNaduPacket::Dump()
 /* class NaduReport */
 NaduReport::NaduReport(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 id)
 {
-	fPacketBuffer = NEW UInt8[inPacketLength + 1];
+	fPacketBuffer = new UInt8[inPacketLength + 1];
 	fPacketBuffer[inPacketLength] = 0;
 	fLength = inPacketLength;
 	::memcpy(fPacketBuffer, inPacketBuffer, inPacketLength);
@@ -492,7 +491,7 @@ NaduReport::NaduReport(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 id)
 void NaduList::Initialize(UInt32 listSize)
 {
 
-	fNaduReportList = NEW NaduReport *[listSize];
+	fNaduReportList = new NaduReport *[listSize];
 	::memset((void *)fNaduReportList, 0, sizeof(NaduReport*) * listSize); //initialize ptr array with 0.
 	fListSize = listSize;
 
@@ -576,7 +575,7 @@ bool NaduList::AddReport(UInt8* inPacketBuffer, UInt32 inPacketLength, UInt32 *o
 	if (fNaduReportList[index] != 0)
 		delete fNaduReportList[index];
 
-	fNaduReportList[index] = NEW NaduReport(inPacketBuffer, inPacketLength, resultID);
+	fNaduReportList[index] = new NaduReport(inPacketBuffer, inPacketLength, resultID);
 
 	if (outID)
 		*outID = resultID;
