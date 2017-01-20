@@ -319,6 +319,11 @@ void __stdcall ServiceMain(DWORD /*argc*/, LPTSTR *argv)
 	else
 		::ReportStatus(SERVICE_STOPPED, ERROR_BAD_COMMAND); // I dunno... report some error
 
+#ifdef WIN32
+	::ExitProcess(0);
+#else
+	::exit(0);
+#endif //WIN32
 }
 
 void WINAPI ServiceControl(DWORD inControlCode)
@@ -401,6 +406,7 @@ void WINAPI ServiceControl(DWORD inControlCode)
 
 	qtss_printf("Reporting status from ServiceControl function\n");
 	::ReportStatus(theStatusReport, NO_ERROR);
+
 }
 
 void ReportStatus(DWORD inCurrentState, DWORD inExitCode)
