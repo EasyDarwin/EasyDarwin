@@ -617,8 +617,6 @@ void RunServer()
 	//the shutdown process
 	delete sServer;
 
-	restartServer = true;
-
 	CleanPid(false);
 	//ok, we're ready to exit. If we're quitting because of some fatal error
 	//while running the server, make sure to let the parent process know by

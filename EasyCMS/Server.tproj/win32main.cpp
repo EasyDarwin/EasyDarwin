@@ -241,6 +241,11 @@ void __stdcall ServiceMain(DWORD /*argc*/, LPTSTR* argv)
 	else
 		::ReportStatus(SERVICE_STOPPED, ERROR_BAD_COMMAND); // I dunno... report some error
 
+#ifdef WIN32
+	::ExitProcess(0);
+#else
+	::exit(0);
+#endif //WIN32
 }
 
 void WINAPI ServiceControl(DWORD inControlCode)
