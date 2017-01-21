@@ -694,20 +694,17 @@ void HTTPSession::addDevice() const
 		auto channels = device_->channels_;
 		for (auto& item : channels)
 		{
-			channel += item.first + R"(/)";
+			if (!channel.empty())
+			{
+				channel.append(R"(/)");
+			}
+			channel += item.first;
 		}
 	}
 
 	if (channel.empty())
 	{
 		channel = "0";
-	}
-	else
-	{
-		if (channel.back() == '/')
-		{
-			channel.pop_back();
-		}
 	}
 
 	auto deviceType = EasyProtocol::GetTerminalTypeString(device_->eDeviceType);
