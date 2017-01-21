@@ -37,7 +37,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/b9fc5c32/HTTPProtocol.o \
 	${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o \
-	${OBJECTDIR}/_ext/dfc17a71/OSMemory.o \
 	${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o \
 	${OBJECTDIR}/APICommonCode/QTAccessFile.o \
 	${OBJECTDIR}/APICommonCode/QTSSModuleUtils.o \
@@ -102,11 +101,6 @@ ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o: ../HTTPUtilitiesLib/HTTPRequest.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/b9fc5c32
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9fc5c32/HTTPRequest.o ../HTTPUtilitiesLib/HTTPRequest.cpp
-
-${OBJECTDIR}/_ext/dfc17a71/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/dfc17a71
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -IAPICommonCode -IAPIStubLib -IPrefsSourceLib -IServer.tproj -I../CommonUtilitiesLib -I../HTTPUtilitiesLib -I../Include -I. -I../EasyProtocol/Include -I../EasyProtocol/jsoncpp/include -IAPIModules/EasyAuthModule -IAPIModules/EasyRedisModule -I../EasyRedisClient -I../Include/FFmpeg/linux -include ../Include/PlatformHeader.h -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o ../OSMemoryLib/OSMemory.cpp
 
 ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/cbf2331e

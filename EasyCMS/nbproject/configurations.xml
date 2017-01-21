@@ -35,9 +35,6 @@
       <itemPath>../HTTPUtilitiesLib/HTTPRequest.cpp</itemPath>
       <itemPath>../HTTPUtilitiesLib/HTTPRequest.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="OSMemoryLib" displayName="OSMemoryLib" projectFiles="true">
-      <itemPath>../OSMemoryLib/OSMemory.cpp</itemPath>
-    </logicalFolder>
     <logicalFolder name="PrefsSourceLib"
                    displayName="PrefsSourceLib"
                    projectFiles="true">
@@ -180,8 +177,6 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -391,8 +386,6 @@
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="APICommonCode/APICommonCode.vcproj" ex="false" tool="3" flavor2="0">
@@ -599,8 +592,6 @@
             flavor2="0">
       </item>
       <item path="../HTTPUtilitiesLib/HTTPRequest.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../OSMemoryLib/OSMemory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../SafeStdLib/InternalStdLib.cpp" ex="false" tool="1" flavor2="0">
       </item>

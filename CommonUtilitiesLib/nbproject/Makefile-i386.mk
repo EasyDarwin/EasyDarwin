@@ -35,7 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/dfc17a71/OSMemory.o \
 	${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o \
 	${OBJECTDIR}/ClientSocket.o \
 	${OBJECTDIR}/ConfParser.o \
@@ -113,11 +112,6 @@ ${CND_CONF}/libCommonUtilitiesLib.a: ${OBJECTFILES}
 	${RM} ${CND_CONF}/libCommonUtilitiesLib.a
 	${AR} -rv ${CND_CONF}/libCommonUtilitiesLib.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libCommonUtilitiesLib.a
-
-${OBJECTDIR}/_ext/dfc17a71/OSMemory.o: ../OSMemoryLib/OSMemory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/dfc17a71
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -D_REENTRANT -D__USE_POSIX -D__linux__ -I. -I../Include -I../EasyDarwin/APICommonCode -I../EasyDarwin/APIStubLib -I../EasyDarwin/RTPMetaInfoLib -I../EasyProtocol/Include -I../RTSPUtilitiesLib -I../HTTPUtilitiesLib -include ../Include/PlatformHeader.h -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/dfc17a71/OSMemory.o ../OSMemoryLib/OSMemory.cpp
 
 ${OBJECTDIR}/_ext/cbf2331e/InternalStdLib.o: ../SafeStdLib/InternalStdLib.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/cbf2331e

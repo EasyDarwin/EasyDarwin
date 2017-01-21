@@ -45,7 +45,6 @@
 #include "OSMutex.h"
 #include "OSRef.h"
 #include "AdminElementNode.h"
-#include "OSMemory.h"
  //#include "OSHeaders.h"
 
 static char* sParameterDelimeter = ";";
@@ -201,7 +200,7 @@ char* NewCharArrayCopy(StrPtrLen *theStringPtr)
 	char* newArray = NULL;
 	if (theStringPtr != NULL)
 	{
-		newArray = NEW char[theStringPtr->Len + 1];
+		newArray = new char[theStringPtr->Len + 1];
 		if (newArray != NULL)
 		{
 			memcpy(newArray, theStringPtr->Ptr, theStringPtr->Len);
@@ -331,24 +330,24 @@ QTSS_Error ElementNode::AllocateFields(UInt32 numFields)
 	if (numFields > 0) do
 	{
 		Assert(fFieldIDs == NULL);
-		fFieldIDs = NEW ElementNode::ElementDataFields[numFields]; ElementNode_InsertPtr(fFieldIDs, "ElementNode::AllocateFields fFieldIDs array");
+		fFieldIDs = new ElementNode::ElementDataFields[numFields]; ElementNode_InsertPtr(fFieldIDs, "ElementNode::AllocateFields fFieldIDs array");
 		Assert(fFieldIDs != NULL);
 		if (fFieldIDs == NULL) break;
 		memset(fFieldIDs, 0, numFields * sizeof(ElementNode::ElementDataFields));
 
 		Assert(fElementMap == NULL);
-		fElementMap = NEW OSRefTable();  ElementNode_InsertPtr(fElementMap, "ElementNode::AllocateFields fElementMap OSRefTable");
+		fElementMap = new OSRefTable();  ElementNode_InsertPtr(fElementMap, "ElementNode::AllocateFields fElementMap OSRefTable");
 		Assert(fElementMap != NULL);
 		if (fElementMap == NULL) break;
 
 		Assert(fFieldDataPtrs == NULL);
-		fFieldDataPtrs = NEW char*[numFields]; ElementNode_InsertPtr(fFieldDataPtrs, "ElementNode::AllocateFields fFieldDataPtrs array");
+		fFieldDataPtrs = new char*[numFields]; ElementNode_InsertPtr(fFieldDataPtrs, "ElementNode::AllocateFields fFieldDataPtrs array");
 		Assert(fFieldDataPtrs != NULL);
 		if (fFieldDataPtrs == NULL) break;
 		memset(fFieldDataPtrs, 0, numFields * sizeof(char*));
 
 		Assert(fFieldOSRefPtrs == NULL);
-		fFieldOSRefPtrs = NEW OSRef*[numFields];  ElementNode_InsertPtr(fFieldOSRefPtrs, "ElementNode::AllocateFields fFieldDataPtrs array");
+		fFieldOSRefPtrs = new OSRef*[numFields];  ElementNode_InsertPtr(fFieldOSRefPtrs, "ElementNode::AllocateFields fFieldDataPtrs array");
 		Assert(fFieldOSRefPtrs != NULL);
 		if (fFieldOSRefPtrs == NULL) break;
 		memset(fFieldOSRefPtrs, 0, numFields * sizeof(OSRef*));
@@ -446,7 +445,7 @@ ElementNode* ElementNode::CreateArrayAttributeNode(UInt32 index, QTSS_Object sou
 	SetFields(index, attributeInfo);
 	fFieldIDs[index].fFieldType = eArrayNode;
 
-	ElementNode* nodePtr = NEW ElementNode(); ElementNode_InsertPtr(nodePtr, "ElementNode::CreateArrayAttributeNode ElementNode*");
+	ElementNode* nodePtr = new ElementNode(); ElementNode_InsertPtr(nodePtr, "ElementNode::CreateArrayAttributeNode ElementNode*");
 	this->SetElementDataPtr(index, (char *)nodePtr, true);
 	Assert(nodePtr != NULL);
 	if (NULL == nodePtr) return NULL;
@@ -617,7 +616,7 @@ void ElementNode::SetNodeName(char *namePtr)
 	}
 	//qtss_printf(" ElementNode::SetNodeName new NodeName = %s \n",namePtr);
 	int len = ::strlen(namePtr);
-	fNodeNameSPL.Ptr = NEW char[len + 1]; ElementNode_InsertPtr(fNodeNameSPL.Ptr, "ElementNode::SetNodeName ElementNode* chars");
+	fNodeNameSPL.Ptr = new char[len + 1]; ElementNode_InsertPtr(fNodeNameSPL.Ptr, "ElementNode::SetNodeName ElementNode* chars");
 	fNodeNameSPL.Len = len;
 	memcpy(fNodeNameSPL.Ptr, namePtr, len);
 	fNodeNameSPL.Ptr[len] = 0;
@@ -734,8 +733,8 @@ void ElementNode::SetUpSingleNode(QueryURI *queryPtr, StrPtrLen *currentSegmentP
 		ElementNode* nodePtr = (ElementNode *)GetElementDataPtr(index);
 		if (nodePtr == NULL)
 		{
-			//qtss_printf("ElementNode::SetUpSingleNode %s nodePtr == NULL make NEW nodePtr index = %" _S32BITARG_ "\n", GetMyName(),index);
-			nodePtr = NEW ElementNode(); ElementNode_InsertPtr(nodePtr, "ElementNode::SetUpSingleNode ElementNode* NEW ElementNode() ");
+			//qtss_printf("ElementNode::SetUpSingleNode %s nodePtr == NULL make new nodePtr index = %" _S32BITARG_ "\n", GetMyName(),index);
+			nodePtr = new ElementNode(); ElementNode_InsertPtr(nodePtr, "ElementNode::SetUpSingleNode ElementNode* new ElementNode() ");
 			SetElementDataPtr(index, (char *)nodePtr, true);
 		}
 
@@ -951,7 +950,7 @@ OSRef* ElementNode::GetOSRef(SInt32 index)
 	if (resultPtr == NULL)
 	{
 		StrPtrLen theName;
-		fFieldOSRefPtrs[index] = NEW OSRef(); Assert(fFieldOSRefPtrs[index] != NULL); ElementNode_InsertPtr(fFieldOSRefPtrs[index], "ElementNode::GetOSRef NEW OSRef() fFieldOSRefPtrs ");
+		fFieldOSRefPtrs[index] = new OSRef(); Assert(fFieldOSRefPtrs[index] != NULL); ElementNode_InsertPtr(fFieldOSRefPtrs[index], "ElementNode::GetOSRef new OSRef() fFieldOSRefPtrs ");
 		GetNameSPL(index, &theName); Assert(theName.Len != 0);
 		//qtss_printf("ElementNode::GetOSRef index = %" _S32BITARG_ " name = %s \n", index, theName.Ptr);
 		fFieldOSRefPtrs[index]->Set(theName, (void *)index);
@@ -2304,18 +2303,18 @@ void AdminClass::Initialize(QTSS_Initialize_Params *initParams, QueryURI *queryP
 	do
 	{
 		Assert(fElementMap == NULL);
-		fElementMap = NEW OSRefTable();  ElementNode_InsertPtr(fElementMap, "AdminClass::Initialize ElementNode* fElementMap ");
+		fElementMap = new OSRefTable();  ElementNode_InsertPtr(fElementMap, "AdminClass::Initialize ElementNode* fElementMap ");
 		Assert(fElementMap != NULL);
 		if (fElementMap == NULL) break;
 
 		Assert(fFieldDataPtrs == NULL);
-		fFieldDataPtrs = NEW char*[numFields];  ElementNode_InsertPtr(fFieldDataPtrs, "AdminClass::Initialize ElementNode* fFieldDataPtrs array ");
+		fFieldDataPtrs = new char*[numFields];  ElementNode_InsertPtr(fFieldDataPtrs, "AdminClass::Initialize ElementNode* fFieldDataPtrs array ");
 		Assert(fFieldDataPtrs != NULL);
 		if (fFieldDataPtrs == NULL) break;
 		memset(fFieldDataPtrs, 0, numFields * sizeof(char*));
 
 		Assert(fFieldOSRefPtrs == NULL);
-		fFieldOSRefPtrs = NEW OSRef *[numFields]; ElementNode_InsertPtr(fFieldOSRefPtrs, "AdminClass::Initialize ElementNode* fFieldOSRefPtrs array ");
+		fFieldOSRefPtrs = new OSRef *[numFields]; ElementNode_InsertPtr(fFieldOSRefPtrs, "AdminClass::Initialize ElementNode* fFieldOSRefPtrs array ");
 		Assert(fFieldOSRefPtrs != NULL);
 		if (fFieldOSRefPtrs == NULL) break;
 		memset(fFieldOSRefPtrs, 0, numFields * sizeof(OSRef*));
@@ -2342,7 +2341,7 @@ void AdminClass::SetUpSingleNode(QueryURI *queryPtr, StrPtrLen *currentSegmentPt
 	{
 	case eServer:
 		//qtss_printf("AdminClass::SetUpSingleNode case eServer\n");
-		fNodePtr = NEW ElementNode();  ElementNode_InsertPtr(fNodePtr, "AdminClass::SetUpSingleNode ElementNode * NEW ElementNode()");
+		fNodePtr = new ElementNode();  ElementNode_InsertPtr(fNodePtr, "AdminClass::SetUpSingleNode ElementNode * new ElementNode()");
 		SetElementDataPtr(index, (char *)fNodePtr, true);
 		if (fNodePtr)
 		{

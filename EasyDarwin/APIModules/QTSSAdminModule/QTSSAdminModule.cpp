@@ -55,7 +55,6 @@
 #include "OSRef.h"
 #include "AdminElementNode.h"
 #include "base64.h"
-#include "OSMemory.h"
 #include "md5digest.h"
 #include "OS.h"
 
@@ -433,7 +432,7 @@ QTSS_Error RereadPrefs()
 
 QTSS_Error Initialize(QTSS_Initialize_Params* inParams)
 {
-	sAdminMutex = NEW OSMutex();
+	sAdminMutex = new OSMutex();
 	ElementNode_InitPtrArray();
 	// Setup module utils
 	QTSSModuleUtils::Initialize(inParams->inMessages, inParams->inServer, inParams->inErrorLogStream);
@@ -570,7 +569,7 @@ inline bool OSXAuthenticate(StrPtrLen *keyStrPtr)
 	char *encodedKey = keyStrPtr->GetAsCString();
 	OSCharArrayDeleter encodedKeyDeleter(encodedKey);
 
-	char *decodedKey = NEW char[Base64decode_len(encodedKey) + 1];
+	char *decodedKey = new char[Base64decode_len(encodedKey) + 1];
 	OSCharArrayDeleter decodedKeyDeleter(decodedKey);
 
 	(void)Base64decode(decodedKey, encodedKey);
@@ -872,10 +871,10 @@ inline bool InWaitInterval(QTSS_Filter_Params* inParams)
 
 inline void GetQueryData(QTSS_RTSPRequestObject theRequest)
 {
-	sAdminPtr = NEW AdminClass();
+	sAdminPtr = new AdminClass();
 	Assert(sAdminPtr != NULL);
 	if (sAdminPtr == NULL)
-	{   //qtss_printf ("NEW AdminClass() failed!! \n");
+	{   //qtss_printf ("new AdminClass() failed!! \n");
 		return;
 	}
 	if (sAdminPtr != NULL)
@@ -1012,7 +1011,7 @@ QTSS_Error FilterRequest(QTSS_Filter_Params* inParams)
 		delete sQueryPtr;
 		sQueryPtr = NULL;
 	}
-	sQueryPtr = NEW QueryURI(&theFullRequest);
+	sQueryPtr = new QueryURI(&theFullRequest);
 	if (sQueryPtr == NULL) return QTSS_NoErr;
 
 	ShowQuery_DEBUG();

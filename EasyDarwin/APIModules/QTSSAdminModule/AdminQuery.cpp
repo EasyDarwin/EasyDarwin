@@ -45,7 +45,6 @@
 #include "OSMutex.h"
 #include "OSRef.h"
 #include "AdminQuery.h"
-#include "OSMemory.h"
 #include "StringTranslator.h"
 
  /*
@@ -668,7 +667,7 @@ void QueryURI::URLParse(StrPtrLen *inStream)
 {
 	if (inStream != NULL)
 	{
-		char * decodedRequest = NEW char[inStream->Len + 1];
+		char * decodedRequest = new char[inStream->Len + 1];
 		Assert(decodedRequest != NULL);
 		decodedRequest[inStream->Len] = 0;
 		OSCharArrayDeleter decodedRequestDeleter(decodedRequest);
