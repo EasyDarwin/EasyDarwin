@@ -300,7 +300,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\EasyProtocol\jsoncpp\lib_json.vcxproj">
       <Project>{b84f7231-16ce-41d8-8c08-7b523ff4225b}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\..\EasyRedisClient\EasyRedisClient.vcxproj">
       <Project>{b1878765-6fb3-4e82-926a-4a68539f8a8c}</Project>

@@ -27,6 +27,20 @@
 
 /* Defines needed to compile windows headers */
 
+
+#ifdef _WIN64
+
+#ifndef _X64_
+#define _X64_ 1
+#endif
+
+/* Pro4 compilers should automatically define this to appropriate value */
+#ifndef _M_IA64
+#define _M_IA64 600
+#endif
+
+#else
+
 #ifndef _X86_
     #define _X86_ 1
 #endif
@@ -35,6 +49,9 @@
 #ifndef _M_IX86
     #define _M_IX86 500
 #endif
+
+#endif // _WIN64
+
 
 #ifndef WIN32
     /* same as definition in OLE2.h where 100 implies WinNT version 1.0 */
