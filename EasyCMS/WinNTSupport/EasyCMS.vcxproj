@@ -156,7 +156,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>ws2_32.lib;wsock32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\WinNTSupport\Debug\EasyCMS.exe</OutputFile>
+      <OutputFile>..\WinNTSupport\x64\Debug\EasyCMS.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>../../Lib;../Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
