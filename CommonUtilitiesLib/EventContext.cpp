@@ -308,7 +308,8 @@ void EventThread::Entry()
 		{
 			//The cookie in this event is an ObjectID. Resolve that objectID into
 			//a pointer.
-			StrPtrLen idStr((char*)&theCurrentEvent.er_data, sizeof(theCurrentEvent.er_data));
+			//StrPtrLen idStr((char*)&theCurrentEvent.er_data, sizeof(theCurrentEvent.er_data));
+			StrPtrLen idStr((char*)&theCurrentEvent.er_data, sizeof(PointerSizedInt));
 			OSRef* ref = fRefTable.Resolve(&idStr);
 			if (ref != NULL)
 			{
