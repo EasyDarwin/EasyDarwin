@@ -7,6 +7,7 @@
 
 #include <EasyProtocol.h>
 #include <EasyUtil.h>
+#include <set>
 
 namespace EasyDarwin { namespace Protocol
 {
@@ -727,10 +728,12 @@ namespace EasyDarwin { namespace Protocol
 				Json::Value *proot = proTemp.GetRoot();
 				int size = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS].size(); //数组大小 
 
-				for (int i = 0; i < size; ++i)
+				set<string> channelSetTemp;
+				for (auto i = 0; i < size; ++i)
 				{
-					Json::Value& json_camera = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];
+					auto& json_camera = (*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_CHANNELS][i];
 					auto channel = json_camera[EASY_TAG_CHANNEL].asString();
+					channelSetTemp.emplace(channel);
 					auto name = json_camera[EASY_TAG_NAME].asString();
 					auto status = json_camera[EASY_TAG_STATUS].asString();
 
@@ -750,6 +753,19 @@ namespace EasyDarwin { namespace Protocol
 						channels_[channel] = camera;
 					}
 				}
+
+				for (auto it = channels_.begin(); it != channels_.end();)
+				{
+					if (channelSetTemp.find(it->first) == channelSetTemp.end())
+					{
+						channels_.erase(it++);
+					}
+					else
+					{
+						++it;
+					}
+				}
+
 			}
 			return true;
 		} while (false);
