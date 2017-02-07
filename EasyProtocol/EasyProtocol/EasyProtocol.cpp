@@ -743,6 +743,8 @@ namespace EasyDarwin { namespace Protocol
 					if (channels_.find(channel) != channels_.end())//Already exist
 					{
 						channels_[channel].status_ = status;//change status_
+						channels_[channel].name_ = name;
+						channels_[channel].channel_ = channel;
 					}
 					else
 					{
