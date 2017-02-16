@@ -175,8 +175,6 @@ QTSServer::~QTSServer()
 	OSThread::SetMainThreadData(nullptr);
 
 	delete fRTPMap;
-	delete fHLSMap;
-	delete fRTMPMap;
 	delete fReflectorSessionMap;
 
 	delete fSocketPool;
@@ -237,8 +235,6 @@ bool QTSServer::Initialize(XMLPrefsParser* inPrefsSource, PrefsSource* inMessage
 	// CREATE GLOBAL OBJECTS
 	fSocketPool = new RTPSocketPool();
 	fRTPMap = new OSRefTable(kRTPSessionMapSize);
-	fHLSMap = new OSRefTable(kHLSSessionMapSize);
-	fRTMPMap = new OSRefTable();
 	fReflectorSessionMap = new OSRefTable(kReflectorSessionMapSize);
 
 	//
