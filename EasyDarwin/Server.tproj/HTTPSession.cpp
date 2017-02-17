@@ -715,8 +715,8 @@ QTSS_Error HTTPSession::execNetMsgCSUsageAck()
 		Json::Value value;
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "SetBaseConfig";
-		value[EASY_TAG_PARAMETER] = "NginxRootFolder='./nginx/www/'&NginxWebPath='http://192.168.1.53/'&RTSPLanPort=554&RTSPWanPort=10554&RTMPWanPort=10035&ServiceLanPort=10008&ServiceWanIP=192.168.66.121&ServiceWanPort=10008";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/setbaseconfig?nginxrtmppath=xxx&nginxwebpath=xxx...";
+		value[EASY_TAG_PARAMETER] = "RTSPLanPort=554&RTSPWanPort=10554&ServiceLanPort=10008&ServiceWanIP=192.168.66.121&ServiceWanPort=10008";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/setbaseconfig?RTSPWanPort=8554&ServiceWanIP=8.8.8.8...";
 		value[EASY_TAG_DESCRIPTION] = "set server base config";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -724,9 +724,9 @@ QTSS_Error HTTPSession::execNetMsgCSUsageAck()
 	{
 		Json::Value value;
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
-		value[EASY_TAG_ACTION] = "GetLiveSessions";
+		value[EASY_TAG_ACTION] = "GetRTSPLiveSessions";
 		value[EASY_TAG_PARAMETER] = "";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/getlivesessions";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/getrtsplivesessions";
 		value[EASY_TAG_DESCRIPTION] = "get live sessions";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
@@ -735,19 +735,9 @@ QTSS_Error HTTPSession::execNetMsgCSUsageAck()
 		Json::Value value;
 		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
 		value[EASY_TAG_ACTION] = "GetDeviceStream";
-		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]&reserved=[0/1]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/getdevicestream?device=00001&channel=1&protocol=RTSP&reserved=0";
+		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP]";
+		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/getdevicestream?device=00001&channel=1&protocol=RTSP";
 		value[EASY_TAG_DESCRIPTION] = "get device channel stream";
-		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
-	}
-
-	{
-		Json::Value value;
-		value[EASY_TAG_HTTP_METHOD] = EASY_TAG_HTTP_GET;
-		value[EASY_TAG_ACTION] = "LiveDeviceStream";
-		value[EASY_TAG_PARAMETER] = "device=[Serial]&channel=[Channel]&protocol=[RTSP/RTMP/HLS]&reserved=[0/1]";
-		value[EASY_TAG_EXAMPLE] = "http://ip:port/api/[Version]/livedevicestream?device=00001&channel=1&protocol=RTSP&reserved=0";
-		value[EASY_TAG_DESCRIPTION] = "keepalive device channel stream";
 		(*proot)[EASY_TAG_ROOT][EASY_TAG_BODY][EASY_TAG_API].append(value);
 	}
 
