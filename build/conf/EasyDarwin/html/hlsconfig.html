@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
+  <title>EasyDarwin</title>
+	<link href="css/bootstrap.min.css" rel='stylesheet' type='text/css' />
+	<link href="css/style.css" rel='stylesheet' type='text/css' />
+	<link href="css/font-awesome.css" rel="stylesheet"> 
+	<link href="css/custom.css" rel="stylesheet">
+	<link href="css/new-css.css" rel="stylesheet">
+	<!-- Metis Menu Plugin JavaScript -->
+	 <script src="js/jquery/jquery-1.5.2.min.js"  type="text/javascript"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/metisMenu.min.js"></script>
+	<script src="js/custom.js"></script>
+	<script src="language.js" type="text/javascript"></script>
+	<script src="js/navigation.js"></script>
+	<script src="js/ajaxhandle.js" ></script>
+	<script src="js/verify.js"></script>
+	 
+	<!-- Graph JavaScript -->
+	
+</head>
+<body  onload="fLoad();getHLS()">
+<div id="wrapper">
+     <!-- Navigation -->
+<script type="text/javascript">document.write(navigation);</script> 
+                <!--/Navigation -->
+				
+				
+			    <!--contetn rihgt -->	
+				<div class="main-right">
+                    <script type="text/javascript">document.write(contextright);</script> 
+					
+					<!---主体部分-->
+					  <div class="m-content">
+					   <h3><script type="text/javascript">document.write(str_hls_live_config);</script></h3>
+
+										 <div class="tab-content">
+											<div class="tab-pane active" id="horizontal-form">
+												<form class="form-horizontal">
+													<div class="form-group">
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_http_root);</script></label>
+														<div class="col-sm-4">
+															<input type="text" class="form-control1" id="txthttproot"  >
+														</div>
+														<div class="col-sm-2">
+															<p class="help-block"></p>
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_live_tsduration);</script></label>
+														<div class="col-sm-4">
+															<input type="text" class="form-control1" id="txttsd"  >
+														</div>
+														<div class="col-sm-2">
+															<p class="help-block"></p>
+														</div>
+													</div>
+													<div class="form-group">
+														<label for="focusedinput" class="col-sm-2 control-label"><script type="text/javascript">document.write(str_hls_live_tscapacity);</script></label>
+														<div class="col-sm-4">
+															<input type="text" class="form-control1" id="txttsc"  >
+														</div>
+														<div class="col-sm-2">
+															<p class="help-block"></p>
+														</div>
+													</div>
+													
+													 <div class="form-group">
+														<div class="row">
+														<div class="col-sm-8 col-sm-offset-2">
+														<button class="btn-success btn" onclick="setHLS()"><script type="text/javascript">document.write(str_save);</script></button>
+														</div>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+					  </div>
+					<!---/主体部分---->
+								
+				</div>
+				<!--/contetn rihgt -->
+            </div>
+    
+ 
+
+    <!-- /#wrapper -->
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>

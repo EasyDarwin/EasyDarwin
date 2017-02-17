@@ -3,11 +3,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerEnvironment>path=%path%;..\Lib;</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-d</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easydarwin.xml" -d</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerEnvironment>path=%path%;..\Lib\x64;</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-d</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easydarwin.xml" -d</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easydarwin.xml" -d</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easydarwin.xml" -d</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

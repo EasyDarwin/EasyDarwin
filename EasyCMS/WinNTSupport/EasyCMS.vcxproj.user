@@ -3,10 +3,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerEnvironment>path=%path%;..\..\Bin\FFmpeg\x86;</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-d</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easycms.xml" -d</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-d</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easycms.xml" -d</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easycms.xml" -d</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>-c "..\..\..\..\conf\$(ProjectName)\easycms.xml" -d</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\..\build\bin\$(Platform)\$(Configuration)\$(ProjectName)\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
 </Project>

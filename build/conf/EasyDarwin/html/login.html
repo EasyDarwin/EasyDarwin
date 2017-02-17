@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link rel="stylesheet" type="text/css" href="css/css.css" media="screen" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/mall-common.js"></script>
+<script type="text/javascript" src="js/select.js"></script>
+<title>EasyDarwin</title>
+</head>
+ <script src="language.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var language0;
+        function onlanchanged(value) {
+            var vlanguage = value;
+            setcookie('language0', vlanguage, 720);
+            window.location.reload();
+        }
+		function onload()
+		{
+			var str=getcookie('language0');
+			if(str!='')
+			{
+				if(str=="1")
+					document.getElementById("dtchoose").innerHTML="English";
+				else
+					document.getElementById("dtchoose").innerHTML="中文";
+			}
+		}
+		
+
+			
+    </script>
+<body onload="onload()">
+<div class="login-from"> 
+<form  method="POST"  onsubmit="return toVaild()" id="myform" class="login-fr clearfix">
+    <div class="login-logo"><a href="#"><img src="images/logo-logo.gif" /></a></div>
+
+
+   
+            <div class="input-group input-login-sm">
+                <label for="login-username"><script type="text/javascript">document.write(str_user);</script> </label>
+                <input type="text" id="name" autocomplete="off" name="name"/>
+            </div>
+
+            <div class="input-group input-login-sm no-mar-r">
+                <label for="login-password"><script type="text/javascript">document.write(str_pwd);</script></label>
+                <input type="password" id="password" name="password" autocomplete="off" />
+            </div>
+
+			<!--下拉菜单-->
+
+			  <div class="demo">
+
+					<dl class="select" onChange="onlanchanged();">
+						<dt id="dtchoose">选择语言</dt>
+						<dd>
+							<ul>
+								<li><a href="#" onclick="onlanchanged('1')">English</a></li>
+								<li><a href="#" onclick="onlanchanged('0')">中文</a></li>
+							</ul>
+						</dd>
+					</dl>
+             </div>
+
+			<!--/下拉菜单-->
+            <button class="submit-btn b-color " type="submit"><script type="text/javascript">document.write(str_login);</script></button>
+     </form>
+
+
+</div>
+
+</body>
+ <script language="javascript">
+             function toVaild(){
+               if(document.getElementById("name").value==""||document.getElementById("name").value==null)
+			{
+				alert(str_user_warn);
+                return false;
+			}
+			if(document.getElementById("password").value==""||document.getElementById("password").value==null)
+			{
+				alert(str_pwd_warn);
+                return false;
+			}
+                return true;
+             }
+     </script>
+</html>
