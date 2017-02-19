@@ -40,7 +40,7 @@
 #include <time.h>
 
 
-bool  QTSSExpirationDate::sIsExpirationEnabled = true;
+bool  QTSSExpirationDate::sIsExpirationEnabled = false;
 //must be in "5/12/1998" format, "m/d/4digityear"
 char*   QTSSExpirationDate::sExpirationDate = "12/31/2017";
 
