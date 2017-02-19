@@ -3,28 +3,28 @@
 usage()
 {
 	echo "0. clean up ./Buildit clean"	
-	# echo "1. build 32bit program ./Buildit i386 [target in i386]"	
+	echo "1. build 32bit program ./Buildit i386 [target in i386]"	
 	echo "2. build 64bit program ./Buildit x64 [target in x64]"		
-	# echo "3. build debug program ./Buildit debug [target in debug]"
+	#echo "3. build debug program ./Buildit debug [target in debug]"
 }
 
 build()
 {
 	if [ "$*" = "clean" ] ; then
-		# make -f nbproject/Makefile-i386.mk QMAKE= SUBPROJECTS= .clean-conf
+		make -f nbproject/Makefile-i386.mk QMAKE= SUBPROJECTS= .clean-conf
 		make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .clean-conf
-		# make -f nbproject/Makefile-Debug.mk QMAKE= SUBPROJECTS= .clean-conf
+		make -f nbproject/Makefile-Debug.mk QMAKE= SUBPROJECTS= .clean-conf
 	elif [ "$*" = "x64" ] ; then
 		make -f nbproject/Makefile-x64.mk QMAKE= SUBPROJECTS= .build-conf
-	# elif [ "$*" = "i386" ] ; then
-	# 	make -f nbproject/Makefile-i386.mk QMAKE= SUBPROJECTS= .build-conf
-	# elif [ "$*" = "debug" ] ; then
-    #             make -f nbproject/Makefile-Debug.mk QMAKE= SUBPROJECTS= .build-conf
+	elif [ "$*" = "i386" ] ; then
+		make -f nbproject/Makefile-i386.mk QMAKE= SUBPROJECTS= .build-conf
+	elif [ "$*" = "debug" ] ; then
+        make -f nbproject/Makefile-Debug.mk QMAKE= SUBPROJECTS= .build-conf
 	fi
 }
 
 
-if [ "$*" = "clean" -o "$*" = "x64" ] ; then 
+if [ "$*" = "clean" -o "$*" = "i386" -o "$*" = "x64" ] ; then 
 	cd ../CommonUtilitiesLib
 	build $1
 	

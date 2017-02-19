@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="EasyDarwin" displayName="EasyDarwin" projectFiles="true">
       <logicalFolder name="APICommonCode"
@@ -25,23 +25,11 @@
           <itemPath>APIModules/EasyCMSModule/EasyCMSSession.cpp</itemPath>
           <itemPath>APIModules/EasyCMSModule/EasyCMSSession.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="EasyHLSModule" projectFiles="true">
-          <itemPath>APIModules/EasyHLSModule/EasyHLSModule.cpp</itemPath>
-          <itemPath>APIModules/EasyHLSModule/EasyHLSModule.h</itemPath>
-          <itemPath>APIModules/EasyHLSModule/EasyHLSSession.cpp</itemPath>
-          <itemPath>APIModules/EasyHLSModule/EasyHLSSession.h</itemPath>
-        </logicalFolder>
         <logicalFolder name="EasyRedisModule"
                        displayName="EasyRedisModule"
                        projectFiles="true">
           <itemPath>APIModules/EasyRedisModule/EasyRedisModule.cpp</itemPath>
           <itemPath>APIModules/EasyRedisModule/EasyRedisModule.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="f1" displayName="EasyRTMPModule" projectFiles="true">
-          <itemPath>APIModules/EasyRTMPModule/EasyRTMPModule.cpp</itemPath>
-          <itemPath>APIModules/EasyRTMPModule/EasyRTMPModule.h</itemPath>
-          <itemPath>APIModules/EasyRTMPModule/EasyRTMPSession.cpp</itemPath>
-          <itemPath>APIModules/EasyRTMPModule/EasyRTMPSession.h</itemPath>
         </logicalFolder>
         <logicalFolder name="QTSSAccessLogModule"
                        displayName="QTSSAccessLogModule"
@@ -474,46 +462,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1112,7 +1060,7 @@
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
             <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient -leasyrtmp -leasyrtspclient -lEasyAACEncoder</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
@@ -1197,46 +1145,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1923,46 +1831,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="APIModules/EasyRedisModule/EasyRedisModule.cpp"
             ex="false"
             tool="1"
@@ -2517,7 +2385,6 @@
             <pElem>APIModules/QTSSWebDebugModule/</pElem>
             <pElem>APIModules/QTSSFlowControlModule/</pElem>
             <pElem>APIModules/QTSSMP3StreamingModule/</pElem>
-            <pElem>APIModules/EasyHLSModule</pElem>
             <pElem>APIModules/EasyRelayModule</pElem>
             <pElem>Include</pElem>
             <pElem>.</pElem>
@@ -2528,7 +2395,6 @@
             <pElem>APIModules/EasyRedisModule</pElem>
             <pElem>../EasyRedisClient</pElem>
             <pElem>../RTSPUtilitiesLib</pElem>
-            <pElem>APIModules/EasyRTMPModule</pElem>
           </incDir>
           <incFile>
             <pElem>../Include/PlatformHeader.h</pElem>
@@ -2557,7 +2423,7 @@
             <pElem>../EasyRedisClient/${CND_CONF}</pElem>
             <pElem>Lib</pElem>
           </linkerAddLib>
-          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient -leasyrtmp -leasyrtspclient -lEasyAACEncoder</commandLine>
+          <commandLine>-lCommonUtilitiesLib -lpthread -ldl -lstdc++ -lm -lcrypt -lEasyProtocol -ljsoncpp -leasyredisclient</commandLine>
         </linkerTool>
       </compileType>
       <item path="../HTTPUtilitiesLib/HTTPClientRequestStream.cpp"
@@ -2642,46 +2508,6 @@
             flavor2="0">
       </item>
       <item path="APIModules/EasyCMSModule/EasyCMSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyHLSModule/EasyHLSSession.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPModule.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="APIModules/EasyRTMPModule/EasyRTMPSession.h"
             ex="false"
             tool="3"
             flavor2="0">

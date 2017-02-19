@@ -70,37 +70,37 @@ ${CND_CONF}/libeasyredisclient.a: ${OBJECTFILES}
 	${AR} -rv ${CND_CONF}/libeasyredisclient.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_CONF}/libeasyredisclient.a
 
-${OBJECTDIR}/EasyRedisClient.o: EasyRedisClient.cpp 
+${OBJECTDIR}/EasyRedisClient.o: EasyRedisClient.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I../EasyProtocol/Include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EasyRedisClient.o EasyRedisClient.cpp
 
-${OBJECTDIR}/async.o: async.c 
+${OBJECTDIR}/async.o: async.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/async.o async.c
 
-${OBJECTDIR}/dict.o: dict.c 
+${OBJECTDIR}/dict.o: dict.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dict.o dict.c
 
-${OBJECTDIR}/hiredis.o: hiredis.c 
+${OBJECTDIR}/hiredis.o: hiredis.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hiredis.o hiredis.c
 
-${OBJECTDIR}/net.o: net.c 
+${OBJECTDIR}/net.o: net.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/net.o net.c
 
-${OBJECTDIR}/read.o: read.c 
+${OBJECTDIR}/read.o: read.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/read.o read.c
 
-${OBJECTDIR}/sds.o: sds.c 
+${OBJECTDIR}/sds.o: sds.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sds.o sds.c
@@ -111,7 +111,6 @@ ${OBJECTDIR}/sds.o: sds.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_CONF}/libeasyredisclient.a
 
 # Subprojects
 .clean-subprojects:
