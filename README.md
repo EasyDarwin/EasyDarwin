@@ -4,32 +4,18 @@
 
 - 使用EasyDarwin收费吗？
 
-	免费，EasyDarwin流媒体服务器是在Apple开源项目Darwin Streaming Server 6.0.3的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体的技术迭代开发和技术支持服务；
-	
-	
-	> 注：即使EasyDarwin流媒体服务器可能会调用到一些第三方的收费或者商用授权SDK代码，请直接与第三方团队或开发者联系获取商业授权支持，EasyDarwin开源流媒体服务器只做技术研究的先行者；
+	免费，EasyDarwin流媒体服务器开源版是在Apple开源项目Darwin Streaming Server 6.0.3的基础上进行开发和扩展的，遵循[Apple APSL](http://www.opensource.apple.com/license/apsl/ "Apple APSL")开源协议，EasyDarwin开源团队不会对开发者就代码使用上收取任何费用，我们只做开源流媒体的技术迭代开发和技术支持服务；
 
 - EasyDarwin开源吗？
 
-	EasyDarwin开源流媒体服务器完全开源，EasyDarwin在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧推送等优化，这些都是全代码完全开源的；
+	EasyDarwin RTSP流媒体服务器完全开源，EasyDarwin RTSP流媒体服务器在Darwin Streaming Server基础上做的底层(Select/Epoll网络模型、无锁队列调度)和上层(RESTful接口、WEB管理、多平台编译)、关键帧索引（秒开画面）、远程运维等方面优化，这些都是全代码完全开源的；
 
-	> EasyDarwin流媒体服务器原来带有非开源SDK的EasyRelayModule和EasyHLSModule已经移除，新版本的拉模式转发和HLS直播模块功能将全部采用开源live555/ffmpeg等开源项目结合实现，敬请期待！
-	> 
-	> Tip：原有版本可以在：https://github.com/babosa/EasyDarwin 获取源码功能；
+	> EasyDarwin流媒体服务器后续将提供功能更加强大和完善的商用版本，支持点播、直播、RTMP、HLS、热升级、关键帧推送、秒开画面、远程运维、负载均衡等等功能；
 
-- EasyDarwin编译不过？
-
-	由于我们的EasyDarwin开发者各自熟悉的开发平台不一样，有的熟悉Windows开发，有的熟悉Linux开发，所以就会导致有的时候版本经常会出现Windows或者Linux编译不过的情况，那么这种情况下，我们可以通过下载https://github.com/EasyDarwin/EasyDarwin/releases里面已经归档的版本进行编译即可；	
-
-## 最新进展 ##
-
-### 2016.12.31
-1. EasyDarwin点播方案；
-2. 开发EasyDarwin web后台；
 
 ## 云平台结构 ##
 
-目前EasyDarwin流媒体平台整套解决方案包括有：**EasyCMS**(中心管理服务)，**EasyDarwin**(流媒体服务)，**EasyNVR**(通用摄像机接入服务)、**EasyCamera**(开源流媒体摄像机)、**EasyPlayer**（流媒体播放器）、**EasyClient**（云平台客户端）、以及周边众多工具库([**EasyHLS**](https://github.com/EasyDarwin/EasyHLS "EasyHLS") / [**EasyRTSPClient**](https://github.com/EasyDarwin/EasyRTSPClient "EasyRTSPClient") / [**EasyPusher**](https://github.com/EasyDarwin/EasyPusher "EasyPusher") / [**EasyAACEncoder**](https://github.com/EasyDarwin/EasyAACEncoder "EasyAACEncoder"))，后续也将继续扩展的录像、回放等多种服务和工具集，各个功能单元既可以独立使用于项目，又可以整体使用，形成一个完整、简单、易用、高效的流媒体解决方案：
+目前EasyDarwin流媒体平台整套解决方案包括有：**EasyCMS**(中心管理服务)，**EasyDarwin**(流媒体服务)，**EasyNVR**(通用摄像机接入服务)、**EasyCamera**(开源流媒体摄像机)、**EasyPlayer**（流媒体播放器）、**EasyClient**（开源云平台客户端）、以及周边众多工具库([**EasyHLS**](https://github.com/EasyDarwin/EasyHLS "EasyHLS") / [**EasyRTSPClient**](https://github.com/EasyDarwin/EasyRTSPClient "EasyRTSPClient") / [**EasyPusher**](https://github.com/EasyDarwin/EasyPusher "EasyPusher") / [**EasyAACEncoder**](https://github.com/EasyDarwin/EasyAACEncoder "EasyAACEncoder"))，后续也将继续扩展的录像、回放等多种服务和工具集，各个功能单元既可以独立使用于项目，又可以整体使用，形成一个完整、简单、易用、高效的流媒体解决方案：
 
 1. **EasyCMS** 开源的设备接入与管理服务，支持多设备、多客户端接入，能非常快速地帮助大家实现稳定的设备接入服务，可以根据自己的需求进行服务功能拆分（例如用户接入服务与设备接入服务拆分等），具体见[https://github.com/EasyDarwin/EasyDarwin/tree/master/EasyCMS](https://github.com/EasyDarwin/EasyDarwin/tree/master/EasyCMS)；
 
@@ -62,7 +48,6 @@
 - EasyCMS：接口服务端口,10000
 - EasyDarwin：接口服务端口,10008
 - EasyDarwin：RTSP服务端口,10554
-- EasyDarwin：RTMP服务端口,10035
 - EasyDarwin：HTTP后台管理端口,10080
 - EasyNVR：接口服务端口,10010
 - EasyNVR：后台管理端口,10080
