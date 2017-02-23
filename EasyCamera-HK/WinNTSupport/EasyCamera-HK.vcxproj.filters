@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6b478d19-1eaf-4dfc-84d7-b6437c7ad98b}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Source Files\API Modules">
+      <UniqueIdentifier>{f6303c68-b737-487a-adf9-2acc54db827c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\API Modules\EasyCMSModule">
+      <UniqueIdentifier>{4653e96a-971f-4c5b-a592-8ee0bbf4af1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\API Modules\EasyCameraModule">
+      <UniqueIdentifier>{5dd1655e-1b17-4afe-9096-90098f07e9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{db2349f2-fe0a-48c0-9117-24a801cba1cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\HTTPUtilitiesLib">
+      <UniqueIdentifier>{c2a206d7-83f3-4861-b397-0edf2b702293}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSModule.cpp">
+      <Filter>Source Files\API Modules\EasyCMSModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\EasyCMSModule\EasyCMSSession.cpp">
+      <Filter>Source Files\API Modules\EasyCMSModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\EasyCameraModule\EasyCameraModule.cpp">
+      <Filter>Source Files\API Modules\EasyCameraModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\EasyCameraModule\EasyCameraSource.cpp">
+      <Filter>Source Files\API Modules\EasyCameraModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\GenerateXMLPrefs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SafeStdLib\InternalStdLib.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSCallbacks.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSDataConverter.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSDictionary.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSErrorLogModule.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSServer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSServerInterface.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSServerPrefs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSExpirationDate.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSFile.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSMessages.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSModule.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSPrefs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSSocket.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\RunServer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\win32main.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\XMLPrefsParser.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.cpp">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSModule.h">
+      <Filter>Source Files\API Modules\EasyCMSModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyCMSModule\EasyCMSSession.h">
+      <Filter>Source Files\API Modules\EasyCMSModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyCameraModule\EasyCameraModule.h">
+      <Filter>Source Files\API Modules\EasyCameraModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyCameraModule\EasyCameraSource.h">
+      <Filter>Source Files\API Modules\EasyCameraModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPProtocol.h">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequest.h">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPRequestStream.h">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\HTTPUtilitiesLib\HTTPResponseStream.h">
+      <Filter>Source Files\HTTPUtilitiesLib</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

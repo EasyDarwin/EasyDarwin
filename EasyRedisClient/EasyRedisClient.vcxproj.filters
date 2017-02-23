@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4fe5c788-09d1-4436-8600-80ee165bc2df}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Windows\async.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\dict.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EasyRedisClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\hiredis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\net.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\sds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Windows\async.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\dict.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EasyRedisClient.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\fmacros.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\hiredis.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\net.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\sds.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\util.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

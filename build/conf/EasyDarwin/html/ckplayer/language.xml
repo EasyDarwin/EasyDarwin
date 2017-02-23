@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<ckplayer>
+		<style>
+			<pr_zip>{font color='#FFFFFF' face='NSimSun'}已加载[$prtage]%{/font}</pr_zip>
+			<!--
+			加载皮肤包进度提示的文字，[$prtage]会被替换成加载百分比
+			-->
+			<pr_load>{font color='#FFFFFF' face='NSimSun'}已加载[$prtage]%{/font}</pr_load>
+			<!--
+			当调用多段视频时，并且没有配置好各段视频的时间和字节数的情况下，播放器需要先读取各段视频的元数据进行计算，此时需要显示一个加载进度告诉用户已计算的情况。 
+			-->
+			<pr_noload>{font color='#FFFFFF' face='NSimSun'}加载失败{/font}</pr_noload>
+			<!--
+			加载视频失败时显示的内容 
+			-->
+			<pr_buffer>{font color='#FFFFFF' face='Arial'}[$buffer]%{/font}</pr_buffer>
+			<!--
+			视频缓冲时显示的提示，[$buffer]会被替换成缓冲的百分比数字部份
+			-->
+			<pr_play>{font color='#FFFFFF' face='NSimSun'}点击播放{/font}</pr_play>
+			<!--
+			鼠标经过播放按钮时的提示，支持html 
+			-->
+			<pr_pause>{font color='#FFFFFF' face='NSimSun'}点击暂停{/font}</pr_pause>
+			<!--
+			鼠标经过暂停按钮时的提示，支持html 
+			-->
+			<pr_mute>{font color='#FFFFFF' face='NSimSun'}点击静音{/font}</pr_mute>
+			<!--
+			鼠标经过静音按钮时的提示，支持html 
+			-->
+			<pr_nomute>{font color='#FFFFFF' face='NSimSun'}取消静音{/font}</pr_nomute>
+			<!--
+			鼠标经过取消静音按钮时的提示，支持html 
+			-->
+			<pr_full>{font color='#FFFFFF' face='NSimSun'}点击全屏{/font}</pr_full>
+			<!--
+			鼠标经过全屏按钮时的提示，支持html 
+			-->
+			<pr_nofull>{font color='#FFFFFF' face='NSimSun'}退出全屏{/font}</pr_nofull>
+			<!--
+			鼠标经过退出全屏按钮时的提示，支持html 
+			-->
+			<pr_fastf>{font color='#FFFFFF' face='NSimSun'}快进{/font}</pr_fastf>
+			<!--
+			鼠标经过快进按钮时的提示，支持html 
+			-->
+			<pr_fastr>{font color='#FFFFFF' face='NSimSun'}快退{/font}</pr_fastr>
+			<!--
+			鼠标经过快退按钮时的提示，支持html 
+			-->
+			<pr_time>{font color='#FFFFFF' face='Arial'}[$Time]{/font}</pr_time>
+			<!--
+			鼠标经过进度栏时提示当前点上时间的，[$Time]会被替换成时间，支持html 
+			-->
+			<pr_volume>{font color='#FFFFFF' face='NSimSun'}音量[$Volume]%{/font}</pr_volume>
+			<!--
+			鼠标经过音量调节框或调整音量时提示，[$Volume]会自动替换音量值(0-100) 
+			-->
+			<pr_clockwait>{font color='#FFFFFF' face='Arial'}00:00 | 00:00{/font}</pr_clockwait>
+			<!--
+			在默认不加载视频，即m=1的时候，同时并没有设置视频的时间和字节，即o和w值的时候，pr_clock和pr_clock2里的所有内容被替换成这里设置的值 
+			-->
+			<pr_live>{font color='#FFFFFF' face='NSimSun'}视频直播中{/font}</pr_live>
+			<!--
+			在直播的情况下显示的文字 
+			-->
+			<pr_adv>{font color='#FFFFFF' size='12'}广告剩余：{font color='#FF0000' size='15'}{b}[$Second]{/b}{/font} 秒{/font}</pr_adv>
+			<!--
+			广告倒计时显示的内容，[$Second]将会显示倒计时的秒数
+			-->
+		</style>
+	</ckplayer>

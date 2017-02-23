@@ -1,0 +1,28 @@
+.ht-logo{height:104px; width:100%; border-bottom:1px solid #151515; background:url(../images/bg.jpg) left top repeat; text-align:center; line-height:104px;}
+
+.main-right{background:#fff; width:85%; float:right; min-height:800px}
+.m-top{ height:52px; line-height:52px; background:#151515; width:100%; padding-left:30px; padding-right:30px;}
+
+.m-top .m-time{ float:left; display:block; font-size:12px; color:#666666;}
+.clear{ clear:both; height:0px;}
+.m-record{ float:right; display:inline;}
+
+.m-record .rec-1{ display:block;float:right; font-size:12px; color:#666; padding-right:20px; font-family:"Î¢ÈíÑÅºÚ";}
+
+.m-record .rec-2{ float:right; display:block; background:url(../images/home.gif) left center no-repeat; padding-left:22px; font-size:12px; padding-right:20px;}
+.m-record .rec-2 a,.m-record .rec-3 a{color:#666; font-size:12px; text-decoration:none;}
+.m-record .rec-2 a:hover,.m-record .rec-3 a:hover{ text-decoration:underline}
+.m-record .rec-3{ float:right; display:block; background:url(../images/exit.gif) left center no-repeat; padding-left:22px; font-size:12px;}
+
+/**************/
+.m-content{margin-top:30px; margin-left:30px; margin-right:30px;}
+
+#pagelist{ float:right;}
+
+ #pagelist a, #pagelist strong{font-size: 14px; height: 38px; line-height:38px; margin-left: 5px; border: 1px solid #ddd;color: #666666; display: inline-block;text-align: center;
+text-decoration: none; padding-left:15px; padding-right:15px;}
+
+.f90{background-color:#eee;}
+
+#pagelist .pn{ display:inline;font-size: 14px; height: 38px; line-height:38px; margin-left: 5px; border: 1px solid #ddd;color: #666666; display: inline-block;text-align: center;
+text-decoration: none; padding-left:15px; padding-right:15px;}

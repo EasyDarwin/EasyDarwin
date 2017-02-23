@@ -1,0 +1,108 @@
+
+/* reset */
+html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,blockquote,pre,hr,figure,table,caption,th,td,form,fieldset,legend,input,button,textarea,menu{margin:0;padding:0;}
+header,footer,section,article,aside,nav,hgroup,address,figure,figcaption,menu,details{ display:block;}
+table{ border-collapse:collapse; border-spacing:0;}
+caption,th{ text-align:left; font-weight:normal;}
+html,body,fieldset,img,iframe,abbr{ border:0;}
+i,cite,em,var,address,dfn{ font-style:normal;}
+[hidefocus],summary{ outline:0;}
+li{ list-style:none;}
+h1,h2,h3,h4,h5,h6,small{ font-size:100%;}
+sup,sub{ font-size:83%;}
+pre,code,kbd,samp{ font-family:inherit;}
+q:before,q:after{ content:none;}
+textarea{ overflow:auto; resize:none;}
+label,summary{ cursor:default;}
+a,button{ cursor:pointer;}
+h1,h2,h3,h4,h5,h6,em,strong,b{ font-weight:bold;}
+h1,h2,h3,h4,h5,h6 { font-family:\5FAE\8F6F\96C5\9ED1;}
+del,ins,u,s,a,a:hover{ text-decoration:none;}
+
+
+
+/* head*/
+body,textarea,input,button,select,keygen,legend{ font-family:\5FAE\8F6F\96C5\9ED1; outline:0; border:none;}
+body {background: #00a892 url(../images/bg.gif) center top no-repeat}
+a{ color:#683300; border:none; outline:none;}
+a:hover{ color:#a11715; text-decoration:none;}
+/* /heads */
+
+.login-from{width:340px; height:auto; margin:0 auto; background:#fefefe; margin-top:10%; padding:40px 30px;box-shadow:0 0 4px #008876}
+.login-logo{margin-bottom:30px; text-align:center;}
+
+form.login-fr {
+    width: 340px;
+}
+form.login-fr .input-group {
+    border: 1px solid #dddddd;
+    position: relative;
+    color: #959595;
+	font-size:16px;
+
+}
+form.login-fr .input-group input,
+form.login-fr .input-group textarea {
+    width: 100%;
+    height: 100%;
+}
+form.login-fr textarea {
+    background: none;
+    border: 0;
+    line-height: 40px;
+}
+form.login-fr label {
+    line-height: 40px;
+    color: #999999;
+    position: absolute;
+}
+form.login-fr .input-login-sm {
+    width: 325px;
+    height: 44px;
+    margin-bottom: 20px;
+	padding-left:15px;
+	line-height:44px;
+
+}
+form.login-fr .input-login-sm.no-mar-r {
+    margin-right: 0; font-size:16px;
+}
+form.login-fr .submit-btn {
+    width: 100%;
+    font-size:20px;
+    color: #fff;
+    height: 48px;
+    cursor: pointer;
+	line-height:48px;
+	margin-top:30px;
+
+	background:#4dc2b3;
+}
+
+
+#name{ background: url('../images/u-dot.gif') right center no-repeat;}
+#password{ background: url('../images/p-dot.gif') right center no-repeat;}
+.login-fr input{ font-size:16px;color:#00a891}
+
+/* select */
+.select{position:relative;float:left; color:#f00 }
+
+.select dt{height:44px;display:inline-block;border:1px solid #ddd;background:#fff url(../images/ico.gif) no-repeat 150px center; line-height:44px; font-size:16px;color:#959595;padding-left:10px;cursor:pointer;width:160px;padding-right:12px;text-overflow:ellipsis;overflow:hidden;position:relative;z-index:99;}
+
+.select dt:hover,.select dt.cur{color:#00a892}
+
+/*/.select dt:hover,.select dt.cur{border:1px solid #409DFE;box-shadow:0 0 3px #409DFE;color:#f00}/*/
+
+.select dd{position:absolute;left:0;top:45px;border:1px solid #ddd;background:#fff;display:none;}
+
+.select dd ul{padding:4px;width:174px;max-height:250px;overflow:auto;color:#00a892}
+
+.select dd ul li a{line-height:36px;display:block;padding:0 10px; color:#666}
+
+.select dd ul li a:hover{background:#f5f5f5; color:#00a892}
+dt.active{color:#4dc2b3;}
+
+
+
+
+
