@@ -63,7 +63,7 @@
 
 - iOS版本：[https://itunes.apple.com/us/app/easyclient/id1141850816](https://itunes.apple.com/us/app/easyclient/id1141850816 "EasyClient iOS")
 
-![EasyClient iOS](http://www.easydarwin.org/github/images/firimeasyclientios.png)
+![EasyClient iOS](http://www.easydarwin.org/github/images/firimeasyclientios170228.png)
 
 
 ## 系列视频教程 ##
