@@ -218,7 +218,7 @@ RTPStream::RTPStream(UInt32 inSSRC, RTPSessionInterface* inSession)
 	fAudioDryCount(0),
 	fClientSSRC(0),
 	fIsTCP(false),
-	fTransportType(qtssRTPTransportTypeUDP),
+	fTransportType(qtssRTPTransportTypeTCP),
 	fTurnThinningOffDelay_TCP(0),
 	fIncreaseThinningDelay_TCP(0),
 	fDropAllPacketsForThisStreamDelay_TCP(0),

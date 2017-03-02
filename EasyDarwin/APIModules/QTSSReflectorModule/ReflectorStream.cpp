@@ -142,7 +142,7 @@ ReflectorStream::ReflectorStream(SourceInfo::StreamInfo* inInfo)
 	fEyeCount(0),
 	fFirst_RTCP_RTP_Time(0),
 	fFirst_RTCP_Arrival_Time(0),
-	fTransportType(qtssRTPTransportTypeUDP),
+	fTransportType(qtssRTPTransportTypeTCP),
 	fMyReflectorSession(NULL)
 {
 
