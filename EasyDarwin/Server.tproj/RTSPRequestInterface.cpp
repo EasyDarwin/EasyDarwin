@@ -163,7 +163,7 @@ RTSPRequestInterface::RTSPRequestInterface(RTSPSessionInterface *session)
 	fTtl(0),
 	fDestinationAddr(0),
 	fSourceAddr(0),
-	fTransportType(qtssRTPTransportTypeUDP),
+	fTransportType(qtssRTPTransportTypeTCP),
 	fNetworkMode(qtssRTPNetworkModeDefault),
 	fContentLength(0),
 	fIfModSinceDate(0),
