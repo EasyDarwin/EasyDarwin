@@ -145,6 +145,10 @@ void RTSPRequestInterface::ReInit(RTSPSessionInterface *session)
 
 	RTSPRequestStream* input = session->GetInputStream();
 	this->SetVal(qtssRTSPReqFullRequest, input->GetRequestBuffer()->Ptr, input->GetRequestBuffer()->Len);
+
+	// klaus(20170223):fix ffplay cant pull stream from easydarwin
+	fHeaderDictionary.SetVal(qtssSessionHeader, NULL, 0);
+	fHeaderDictionary.SetNumValues(qtssSessionHeader, 0);
 }
 
 //CONSTRUCTOR / DESTRUCTOR: very simple stuff
