@@ -676,7 +676,7 @@ void HTTPSession::addDevice() const
 {
 	QTSS_RoleParams theParams;
 	theParams.DeviceInfoParams.serial_ = new char[64];
-	theParams.DeviceInfoParams.channels_ = new char[64];
+	theParams.DeviceInfoParams.channels_ = new char[1024];
 	theParams.DeviceInfoParams.deviceType_ = new char[64];
 	theParams.DeviceInfoParams.type_ = new char[64];
 	theParams.DeviceInfoParams.token_ = new char[64];
