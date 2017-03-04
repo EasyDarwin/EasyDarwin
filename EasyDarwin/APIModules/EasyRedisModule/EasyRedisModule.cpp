@@ -277,7 +277,7 @@ QTSS_Error RedisUpdateStream(Easy_StreamInfo_Params* inParams)
 		return QTSS_NotConnected;
 	}
 
-	char chKey[128] = { 0 };
+	char chKey[512] = { 0 };
 	sprintf(chKey, "del %s:%s/%d", EASY_REDIS_LIVE, inParams->inStreamName, inParams->inChannel);
 
 	if (inParams->inAction == easyRedisActionDelete)
