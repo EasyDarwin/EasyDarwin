@@ -50,6 +50,7 @@
 #include "SocketUtils.h"
 #include "TCPListenerSocket.h"
 #include "Task.h"
+#include "SnapCleaner.h"
 
 #include "QTSS_Private.h"
 #include "QTSSCallbacks.h"
@@ -550,6 +551,13 @@ void QTSServer::loadCompiledInModules()
 #ifdef _WIN32
 	SetUnhandledExceptionFilter(reinterpret_cast<LPTOP_LEVEL_EXCEPTION_FILTER>(CrashHandler_EasyCMS));
 #endif
+
+	auto snapPath = QTSServerInterface::GetServer()->GetPrefs()->GetSnapLocalPath();
+	if (snapPath)
+	{
+		auto snapCleaner = make_shared<SnapCleaner>(snapPath);
+	}
+	
 }
 
 void QTSServer::initCallbacks()
