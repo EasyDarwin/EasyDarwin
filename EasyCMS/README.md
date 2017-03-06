@@ -97,6 +97,6 @@ WEB：[www.EasyDarwin.org](http://www.easydarwin.org)
 
 QQ交流群：288214068
 
-Copyright &copy; EasyDarwin.org 2012-2015
+Copyright &copy; EasyDarwin.org 2012-2017
 
 ![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
