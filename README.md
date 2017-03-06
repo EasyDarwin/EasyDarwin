@@ -12,19 +12,22 @@ EasyDarwin开源项目至今包括有：**EasyDarwin**（开源流媒体服务�
 1. **EasyCamera** 设备端（摄像机、移动设备、桌面程序）对接EasyDarwin平台的方案，跨平台，支持Windows、Linux、ARM，其中EasyDarwin摄像机是我们定制的一款摄像机硬件与EasyDarwin平台进行对接的方案，摄像机采用海思3518E方案，支持RTSP、Onvif、WEB管理、配套SDK工具，作为开发和演示硬件工具，我们提供了全套完备的程序和文档，既可以用于流媒体学习，又可以用于方案移植参考，更可以直接用于项目中，用户可以将摄像机定制的部分替换成自己摄像机的硬件SDK，具体接入方法见[https://github.com/EasyDarwin/EasyCamera](https://github.com/EasyDarwin/EasyCamera)；
 
 1. **EasyClient** 是EasyDarwin开源流媒体云平台的客户端实现，项目地址：[https://github.com/EasyDarwin/EasyClient](https://github.com/EasyDarwin/EasyClient "EasyClient")，功能包含：Windows、Android、iOS、H5(支持微信)四个部分，其主要功能包括：
-	- 云平台设备列表获取；
-	- 设备实时码流请求与播放；
-	- 设备云台控制；
-	- 设备语音对讲；
+> - 云平台设备列表获取；
+> - 设备实时码流请求与播放；
+> - 设备云台控制；
+> - 设备语音对讲；
+
+1. **EasyAACEncoder** 是一套简单、高效、稳定的开源音频编码库，支持将各种音频数据(G.711A/PCMA、G.711U/PCMU、G726、PCM)转码成AAC(with adts)格式，其中aac编码部分采用的是业界公认的faac库，EasyAACEncoder支持Windows、Linux、ARM等多种平台，能够广泛应用于各种移动终端设备、嵌入式设备和流媒体转码服务器！项目地址：[https://github.com/EasyDarwin/EasyAACEncoder](https://github.com/EasyDarwin/EasyAACEncoder "EasyAACEncoder")；
+
+1. **EasyAudioDecoder** 是一套应用于移动端的简单、高效、稳定的开源音频解码库，能够将G.711A/PCMA、G.711U/PCMU、G726、AAC等音频格式转码到Linear PCM，再提供给流媒体播放器进行音频播放，EasyAudioDecoder支持跨平台，支持Android & iOS，目前已稳定应用于EasyPlayer、EasyClient等多个开源及商业项目！项目地址：[https://github.com/EasyDarwin/EasyAudioDecoder](https://github.com/EasyDarwin/EasyAudioDecoder "EasyAudioDecoder")；
+
+1. **EasyProtocol** 是EasyDarwin开源流媒体服务器和开源平台使用的一套开源json协议，具有合理的结构设计、完善的层次逻辑以及简单精炼的调用接口，非常易于使用和扩展，不仅长期应用于EasyDarwin的服务器及平台中，而且能够快速扩展用户的自定义需求，非常好用！项目地址：[https://github.com/EasyDarwin/EasyProtocol](https://github.com/EasyDarwin/EasyProtocol "EasyProtocol")；
 
 EasyDarwin RTSP流媒体服务器完全开源，EasyDarwin RTSP流媒体服务器在Darwin Streaming Server基础上做的优化和迭代，完全开源！后续也将继续扩展的录像、回放等多种服务和工具集，各个功能单元既可以独立使用于项目，又可以整体使用，形成一个完整、简单、易用、高效的流媒体解决方案！
 
 
 ## EasyDarwin商业项目（8Project） ##
 同时，EasyDarwin开源团队也开发了很多流媒体方面的商业项目，包括有：
-
-
-
 
 1. **EasyPlayer** 是一款精炼、高效、稳定的流媒体播放器，分为RTSP版和Pro版本，EasyPlayer RTSP版本支持Windows(支持多窗口、包含ActiveX，npAPI Web插件)、Android、iOS多个平台，EasyPlayerPro支持Android、iOS，支持各种各样的流媒体音视频直播/点播播放，项目地址：[https://github.com/EasyDarwin/EasyPlayer](https://github.com/EasyDarwin/EasyPlayer "EasyPlayer")；
 
