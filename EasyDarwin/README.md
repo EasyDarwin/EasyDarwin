@@ -239,7 +239,7 @@ Windows添加公网地址的方法：
 
 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
 
-WEB：[www.EasyDarwin.org](http://www.easydarwin.org)
+WEB：[www.easydarwin.org](http://www.easydarwin.org)
 
 QQ交流群：288214068/496258327
 
