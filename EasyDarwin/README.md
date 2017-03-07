@@ -34,7 +34,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 > 
 > 1. vs调试运行需要设置EasyDarwin项目为启动项；
 > 2. 运行缺少dll时，可以将dll复制到vs的EasyDarwin.vcproj同级目录，或者设置EasyDarwin.vcproj项目熟悉，将dll路径以环境变量的形式添加到vs：
-> ![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/0.png)
+> ![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/00.png)
 
 
 - Linux版本编译(**gcc4.8+，support c++ 11**)，将从Github获取的EasyDarwin源码zip文件进行unzip解压，再进行具体编译：
