@@ -51,7 +51,7 @@ EasyDarwin云平台是一套由EasyDarwin、EasyCMS、EasyCamera、EasyClient、
 
 ### 平台架构 ###
 
-![](http://www.easydarwin.org/github/images/cloud_framework0310.jpg)
+![](http://www.easydarwin.org/github/images/cloud_framework.png)
 
 ### 平台协议 ###
 
