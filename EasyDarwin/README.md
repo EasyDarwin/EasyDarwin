@@ -137,7 +137,7 @@ EasyDarwin主要的几个配置项：
 
 Windows添加公网地址的方法：
 
-![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/8604f16ba3eb39ba2dd4e32a63f1fcf3.jpg)
+![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/8604f16ba3eb39ba2dd4e32a63f1fcf4.jpg)
 
 ### 2. EasyDarwin做转发延时10几秒? ###
 	
