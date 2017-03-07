@@ -50,7 +50,7 @@ EasyDarwin RTSP流媒体服务器完全开源，EasyDarwin RTSP流媒体服务�
 EasyDarwin云平台是一套由EasyDarwin、EasyCMS、EasyCamera、EasyClient、nginx、redis构成的完整云平台架构，支持分布式、跨平台、多点部署，流媒体服务器支持负载均衡，按需直播，非常适用于互联网化的安防、智能家居、幼教平台、透明厨房、透明家装等多个行业应用：
 
 ### 平台架构 ###
-![](http://www.easydarwin.org/github/images/cloud_framework20170306.jpg)
+![](http://www.easydarwin.org/github/images/cloud_framework20170309.jpg)
 
 ### 平台协议 ###
 
