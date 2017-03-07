@@ -53,6 +53,8 @@ EasyDarwin主要的几个配置项：
 
 ***service\_lan\_port***：HTTP RESTful服务端口；
 
+**enable\_cloud\_platform**：是否接入云平台，true表示接入redis，由EasyCMS负载均衡；
+
 ### 4、运行EasyDarwin ###
  
 
