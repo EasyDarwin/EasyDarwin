@@ -133,7 +133,7 @@ EasyDarwin主要的几个配置项：
 
 我们通过命令：ip addr add dev eth0 [公网IP]，向eth0添加一个公网地址就解决问题了：
 
-![](http://www.easydarwin.org/github/images/easydarwin/267035e801fadf06ea5f6acb5486a988.jpg)
+![](http://www.easydarwin.org/github/images/easydarwin/167035e801fadf06ea5f6acb5486a988.jpg)
 
 Windows添加公网地址的方法：
 
