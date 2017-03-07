@@ -34,7 +34,7 @@ EasyDarwin开源流媒体服务器：编译、配置、部署：[http://edu.csdn
 > 
 > 1. vs调试运行需要设置EasyDarwin项目为启动项；
 > 2. 运行缺少dll时，可以将dll复制到vs的EasyDarwin.vcproj同级目录，或者设置EasyDarwin.vcproj项目熟悉，将dll路径以环境变量的形式添加到vs：
-> ![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/0.png)
+> ![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/00.png)
 
 
 - Linux版本编译(**gcc4.8+，support c++ 11**)，将从Github获取的EasyDarwin源码zip文件进行unzip解压，再进行具体编译：
@@ -133,13 +133,11 @@ EasyDarwin主要的几个配置项：
 
 我们通过命令：ip addr add dev eth0 [公网IP]，向eth0添加一个公网地址就解决问题了：
 
-![](http://www.easydarwin.org/github/images/easydarwin/267035e801fadf06ea5f6acb5486a988.jpg)
+![](http://www.easydarwin.org/github/images/easydarwin/167035e801fadf06ea5f6acb5486a988.jpg)
 
 Windows添加公网地址的方法：
 
-![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/8604f16ba3eb39ba2dd4e32a63f1fcf1.jpg)
-
-![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/8604f16ba3eb39ba2dd4e32a63f1fcf1.jpg)
+![EasyDarwin](http://www.easydarwin.org/github/images/easydarwin/8604f16ba3eb39ba2dd4e32a63f1fcf5.jpg)
 
 ### 2. EasyDarwin做转发延时10几秒? ###
 	
