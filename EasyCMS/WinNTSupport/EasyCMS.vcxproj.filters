@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{f88db81e-96e2-440f-aa60-4ea857f14029}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Source Files\API Modules">
+      <UniqueIdentifier>{1b5a1e48-7b11-43c0-b006-dfe71f218a54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\API Modules\EasyAuthModule">
+      <UniqueIdentifier>{305c4e8f-b4f3-4977-87ab-3c50458f3a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\API Modules\EasyRedisModule">
+      <UniqueIdentifier>{63a3213b-9592-422b-bc60-72f5b252e218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{8a65e1a5-cf2b-4e95-9653-cf42ef3d3029}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\APIModules\EasyAuthModule\EasyAuthModule.cpp">
+      <Filter>Source Files\API Modules\EasyAuthModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\APIModules\EasyRedisModule\EasyRedisModule.cpp">
+      <Filter>Source Files\API Modules\EasyRedisModule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\DecoderHelper.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\FilePrefsSource.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\GenerateXMLPrefs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPProtocol.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\HTTPUtilitiesLib\HTTPRequest.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\HTTPRequestStream.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\HTTPResponseStream.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\HTTPSession.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\HTTPSessionInterface.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CommonUtilitiesLib\OSMapEx.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\OSMemoryLib\OSMemory.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CommonUtilitiesLib\OSRefTableEx.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSCallbacks.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSDataConverter.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSDictionary.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSErrorLogModule.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSServer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSServerInterface.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSServerPrefs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSExpirationDate.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSFile.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSMessages.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSModule.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSPrefs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\QTSSSocket.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\RunServer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server.tproj\win32main.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\XMLParser.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PrefsSourceLib\XMLPrefsParser.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\APIModules\EasyAuthModule\EasyAuthModule.h">
+      <Filter>Source Files\API Modules\EasyAuthModule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\APIModules\EasyRedisModule\EasyRedisModule.h">
+      <Filter>Source Files\API Modules\EasyRedisModule</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

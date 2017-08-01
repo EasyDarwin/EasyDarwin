@@ -1,0 +1,9 @@
+/*#pagelist{ float:right;}*/
+
+ #pagelist a, #pagelist strong{font-size: 14px; height: 28px; line-height:28px; margin-left: 5px; color: #666666; display: inline-block;text-align: center;
+text-decoration: none;}
+
+.f90{background-color:#eee;}
+
+#pagelist .pn{ display:inline;font-size: 12px; height: 28px; line-height:28px; margin-left: 5px; color: #666666; display: inline-block;text-align: center;
+text-decoration: none;}
