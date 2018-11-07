@@ -1,0 +1,61 @@
+{
+  "name": "easydarwin",
+  "version": "1.0.0",
+  "description": "EasyDarwin Open Source Media Server",
+  "main": "index.js",
+  "scripts": {
+    "build:ico": "rsrc -arch amd64 -ico ed.ico -o EasyDarwin_windows.syso",
+    "build:www": "cd web_src && npm run build && cd .. && apidoc -i routers -o www/apidoc",
+    "build:doc": "apidoc -i routers -o www/apidoc",
+    "build:win": "go clean -cache -i ./vendor/github.com/penggy/EasyGoLib/buildtime && go build -tags release -ldflags \"-s -w\" -o EasyDarwin.exe",
+    "build:lin": "go clean -cache -i ./vendor/github.com/penggy/EasyGoLib/buildtime && go build -tags release -ldflags \"-s -w\" -o easydarwin",
+    "build:dev": "go clean -cache -i ./vendor/github.com/penggy/EasyGoLib/buildtime && go build -o EasyDarwin.exe",
+    "dev": "gobuild -o EasyDarwin.exe",
+    "dev:lin": "gobuild -o easydarwin",
+    "dev:www": "cd web_src && npm run start",
+    "clean": "rimraf EasyDarwin.exe EasyDarwin.exe~ easydarwin"
+  },
+  "apidoc": {
+    "name": "EasyDarwin",
+    "title": "EasyDarwin API Reference",
+    "order": [
+      "stats",
+      "Pushers",
+      "Players",
+
+      "sys",
+      "Login",
+      "Logout",
+      "GetUserInfo",
+      "ModifyPassword",
+      "GetServerInfo"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "pack": [
+    {
+      "name": "EasyDarwin-windows",
+      "format": "zip",
+      "pattern": "{www/**,EasyDarwin.exe,ServiceInstall-EasyDarwin.exe,ServiceUninstall-EasyDarwin.exe,easydarwin.ini}",
+      "options": {
+        "dot": true,
+        "ignore": [
+          "*.log"
+        ]
+      }
+    },
+    {
+      "name": "EasyDarwin-linux",
+      "format": "tar",
+      "pattern": "{www/**,easydarwin,easydarwin.ini,*.sh}",
+      "options": {
+        "dot": true,
+        "ignore": [
+          "*.log"
+        ]
+      }
+    }
+  ]  
+}

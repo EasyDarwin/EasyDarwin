@@ -1,0 +1,13 @@
+.vscode
+/easydarwin
+/EasyDarwin.exe
+/EasyDarwin.exe~
+/logs
+node_modules
+*.db
+*.db.bak
+/*.zip
+/*.tar.gz
+/*.dev.ini
+/*.dev.db
+.idea
