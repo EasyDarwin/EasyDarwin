@@ -1,6 +1,6 @@
 {
   "name": "easydarwin",
-  "version": "1.0.0",
+  "version": "8.1.0",
   "description": "EasyDarwin Open Source Media Server",
   "main": "index.js",
   "scripts": {

@@ -90,6 +90,7 @@ EasyPusher参数设置如下
 - node 系
 
         npm i -g rimraf
+        npm i -g @penggy/pack
 
 - go 系
 
@@ -129,6 +130,19 @@ EasyPusher参数设置如下
 - 清理编译文件
 
         npm run clean 
+
+- 打包
+
+        # for windows
+        npm run build:win
+        pack zip
+
+        # for linux 
+        npm run build:lin
+        pack tar
+
+        # for clean
+        pack clean
 
 ## 下一步开发计划
 
