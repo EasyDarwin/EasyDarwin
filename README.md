@@ -102,7 +102,7 @@ EasyPusher参数设置如下
 - 获取代码
 
         cd $GOPATH/src/github.com
-        git clone https://github.com/easydarwin/EasyDarwin.git EasyDarwin
+        git clone https://github.com/EasyDarwin/EasyDarwin.git EasyDarwin
         cd EasyDarwin
 
 - 以开发模式运行 server
