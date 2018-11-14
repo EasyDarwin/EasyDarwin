@@ -1,24 +1,27 @@
 # EasyDarwin开源流媒体服务器
 
-![snapshot](http://ww1.sinaimg.cn/large/79414a05ly1fwzq9dirmij212u0ipwg9.jpg)
- 
+
 ## 主要功能特点
 
-- 基于Golang开发维护
+- 基于Golang开发维护；
 
-- 支持windows、linux平台
+- 支持Windows、Linux平台；
 
-- 接收RTSP流推送
+- 支持RTSP推流分发（推模式转发）；
 
-- RTSP流分发
+- 支持RTSP拉流分发（拉模式转发）；
 
-- 关键帧缓存
+- 服务端录像；
 
-- 秒开画面
+- 服务端录像检索与回放（研发中）；
 
-- Web后台管理
+- 关键帧缓存；
 
-- 分布式负载均衡
+- 秒开画面；
+
+- Web后台管理；
+
+- 分布式负载均衡；
 
 
 ## 安装部署
@@ -66,19 +69,6 @@
 
 	ffplay rtsp://localhost/test 
 
-
-## 手机推流
-
-可以使用EasyPusher测试手机推流,[下载地址](https://github.com/EasyDSS/EasyPusher)
-
-推流URL规则: rtsp://{ip}:{port}/{id} ， 例如 : rtsp://www.easydarwin.org:554/your_stream_id
-
-EasyPusher参数设置如下
-
-![snapshot](http://ww1.sinaimg.cn/large/79414a05ly1fwzqe8oyjxj20u01hcafw.jpg)
-
-可使用vlc播放器、[EasyScreenLive](https://github.com/EasyDSS/EasyScreenLive)、[EasyPlayer-RTSP](https://github.com/EasyDSS/EasyPlayer-RTSP-Win/releases)、[EasyPlayerPro](https://github.com/EasyDSS/EasyPlayerPro-Win)测试播放
-
 ## 效果图
 
 ![snapshot](http://ww1.sinaimg.cn/large/79414a05ly1fwzqdbi8efj20w00mrn0c.jpg)
@@ -86,13 +76,6 @@ EasyPusher参数设置如下
 ## 二次开发
 
 ### 准备工具
-
-- node 系
-
-        npm i -g rimraf
-        npm i -g @penggy/pack
-
-- go 系
 
         go get -u github.com/kardianos/govendor
         go get -u github.com/caixw/gobuild
@@ -143,14 +126,6 @@ EasyPusher参数设置如下
 
         # for clean
         pack clean
-
-## 下一步开发计划
-
-- 系统运行信息统计：CPU、内存、分发流量、累积运行时间等；
-
-- 拉模式转发/分发；
-
-- 服务端录像；
 
 
 ## 技术支持
