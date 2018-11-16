@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/EasyDarwin/models"
-	"github.com/EasyDarwin/rtsp"
+	"github.com/EasyDarwin/EasyDarwin/models"
+	"github.com/EasyDarwin/EasyDarwin/rtsp"
 	"github.com/gin-gonic/gin"
 	"github.com/penggy/EasyGoLib/buildtime"
 	"github.com/penggy/EasyGoLib/db"

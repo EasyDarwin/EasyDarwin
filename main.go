@@ -8,9 +8,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/EasyDarwin/models"
-	"github.com/EasyDarwin/routers"
-	"github.com/EasyDarwin/rtsp"
+	"github.com/EasyDarwin/EasyDarwin/models"
+	"github.com/EasyDarwin/EasyDarwin/routers"
+	"github.com/EasyDarwin/EasyDarwin/rtsp"
 	figure "github.com/common-nighthawk/go-figure"
 	"github.com/penggy/EasyGoLib/utils"
 	"github.com/penggy/service"
