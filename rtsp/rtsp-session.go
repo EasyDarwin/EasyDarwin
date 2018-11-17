@@ -349,11 +349,11 @@ func (session *Session) handleRequest(req *Request) {
 		}
 		session.Player = NewPlayer(session, pusher)
 		session.Pusher = pusher
-		session.AControl = pusher.AControl
-		session.VControl = pusher.VControl
-		session.ACodec = pusher.ACodec
-		session.VCodec = pusher.VCodec
-		res.SetBody(session.Pusher.SDPRaw)
+		session.AControl = pusher.AControl()
+		session.VControl = pusher.VControl()
+		session.ACodec = pusher.ACodec()
+		session.VCodec = pusher.VCodec()
+		res.SetBody(session.Pusher.SDPRaw())
 	case "SETUP":
 		ts := req.Header["Transport"]
 		control := req.URL[strings.LastIndex(req.URL, "/")+1:]

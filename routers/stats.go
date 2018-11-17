@@ -50,7 +50,7 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 	hostname := utils.GetRequestHostname(c.Request)
 	pushers := make([]interface{}, 0)
 	for _, pusher := range rtsp.Instance.GetPushers() {
-		port := pusher.Server.TCPPort
+		port := pusher.Server().TCPPort
 		rtsp := fmt.Sprintf("rtsp://%s:%d%s", hostname, port, pusher.Path)
 		if port == 554 {
 			rtsp = fmt.Sprintf("rtsp://%s%s", hostname, pusher.Path)
@@ -62,8 +62,8 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 			"id":        pusher.ID,
 			"path":      rtsp,
 			"transType": pusher.TransType.String(),
-			"inBytes":   pusher.InBytes,
-			"outBytes":  pusher.OutBytes,
+			"inBytes":   pusher.InBytes(),
+			"outBytes":  pusher.OutBytes(),
 			"startAt":   utils.DateTime(pusher.StartAt),
 			"onlines":   len(pusher.GetPlayers()),
 		})
