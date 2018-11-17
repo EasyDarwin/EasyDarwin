@@ -134,6 +134,18 @@ func Conf() *ini.File {
 	return conf
 }
 
+func ConfByPath(path string) (*ini.File, error) {
+	if conf != nil {
+		return conf, nil
+	}
+	if _conf, err := ini.InsensitiveLoad(path); err != nil {
+		return nil, err
+	} else {
+		conf = _conf
+	}
+	return conf, nil
+}
+
 func ReloadConf() *ini.File {
 	if _conf, err := ini.InsensitiveLoad(ConfFile()); err != nil {
 		_conf, _ = ini.LoadSources(ini.LoadOptions{Insensitive: true}, []byte(""))

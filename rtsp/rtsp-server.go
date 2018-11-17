@@ -24,15 +24,18 @@ type Server struct {
 	removePusherCh chan *Pusher
 }
 
-var Instance *Server = &Server{
-	Stoped:         true,
-	TCPPort:        utils.Conf().Section("rtsp").Key("port").MustInt(554),
-	pushers:        make(map[string]*Pusher),
-	addPusherCh:    make(chan *Pusher),
-	removePusherCh: make(chan *Pusher),
-}
+var Instance *Server = nil
 
 func GetServer() *Server {
+	if Instance == nil {
+		Instance = &Server{
+			Stoped:         true,
+			TCPPort:        utils.Conf().Section("rtsp").Key("port").MustInt(554),
+			pushers:        make(map[string]*Pusher),
+			addPusherCh:    make(chan *Pusher),
+			removePusherCh: make(chan *Pusher),
+		}
+	}
 	return Instance
 }
 

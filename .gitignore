@@ -11,3 +11,4 @@ node_modules
 /*.dev.ini
 /*.dev.db
 .idea
+easydarwin_debug.ini

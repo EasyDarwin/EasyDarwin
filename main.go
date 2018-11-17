@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+	"strings"
 	"time"
+
+	"github.com/go-ini/ini"
 
 	"github.com/EasyDarwin/EasyDarwin/models"
 	"github.com/EasyDarwin/EasyDarwin/routers"
@@ -128,12 +131,29 @@ func (p *program) Stop(s service.Service) (err error) {
 }
 
 func main() {
+	configPath := flag.String("config", "", "configure file path")
+	flag.Parse()
+	tail := flag.Args()
 	log.SetPrefix("[EasyDarwin] ")
 	log.SetFlags(log.LstdFlags)
 	if utils.Debug {
 		log.SetFlags(log.Lshortfile | log.LstdFlags)
 	}
-	sec := utils.Conf().Section("service")
+	var conf *ini.File
+	var err error
+	if len(*configPath) != 0 {
+		log.Printf("use config file[%s]", *configPath)
+		conf, err = utils.ConfByPath(*configPath)
+	} else {
+		conf = utils.Conf()
+		err = nil
+	}
+	if err != nil {
+		log.Print(err)
+		log.Printf("EasyDarwin terminate due to config not found.")
+		return
+	}
+	sec := conf.Section("service")
 	svcConfig := &service.Config{
 		Name:        sec.Key("name").MustString("EasyDarwin_Service"),
 		DisplayName: sec.Key("display_name").MustString("EasyDarwin_Service"),
@@ -147,22 +167,26 @@ func main() {
 		rtspPort:   rtspServer.TCPPort,
 		rtspServer: rtspServer,
 	}
-	var s, err = service.New(p, svcConfig)
+	s, err := service.New(p, svcConfig)
 	if err != nil {
 		log.Println(err)
 		utils.PauseExit()
 	}
-	if len(os.Args) > 1 {
-		if os.Args[1] == "install" || os.Args[1] == "stop" {
-			figure.NewFigure("EasyDarwin", "", false).Print()
+	if len(tail) > 0 {
+		cmd := tail[0]
+		cmd = strings.ToLower(cmd)
+		if cmd == "install" || cmd == "stop" || cmd == "start" || cmd == "uninstall" {
+			if cmd == "install" || cmd == "stop" {
+				figure.NewFigure("EasyDarwin", "", false).Print()
+			}
+			log.Println(svcConfig.Name, cmd, "...")
+			if err = service.Control(s, cmd); err != nil {
+				log.Println(err)
+				utils.PauseExit()
+			}
+			log.Println(svcConfig.Name, cmd, "ok")
+			return
 		}
-		log.Println(svcConfig.Name, os.Args[1], "...")
-		if err = service.Control(s, os.Args[1]); err != nil {
-			log.Println(err)
-			utils.PauseExit()
-		}
-		log.Println(svcConfig.Name, os.Args[1], "ok")
-		return
 	}
 	figure.NewFigure("EasyDarwin", "", false).Print()
 	if err = s.Run(); err != nil {
