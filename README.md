@@ -85,6 +85,7 @@
 - 获取代码
 
         cd $GOPATH/src/github.com
+        mkdir EasyDarwin && cd EasyDarwin
         git clone https://github.com/EasyDarwin/EasyDarwin.git EasyDarwin
         cd EasyDarwin
 
@@ -115,6 +116,9 @@
         npm run clean 
 
 - 打包
+
+        # install pack
+        npm i -g @penggy/pack
 
         # for windows
         npm run build:win
