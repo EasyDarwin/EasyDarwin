@@ -136,6 +136,7 @@ func NewClientPusher(client *RTSPClient) (pusher *Pusher) {
 		pusher.QueueRTP(pack)
 	})
 	client.StopHandles = append(client.StopHandles, func() {
+		pusher.ClearPlayer()
 		pusher.Server().RemovePusher(pusher)
 		pusher.cond.Broadcast()
 	})
@@ -157,6 +158,7 @@ func NewPusher(session *Session) (pusher *Pusher) {
 		pusher.QueueRTP(pack)
 	})
 	session.StopHandles = append(session.StopHandles, func() {
+		pusher.ClearPlayer()
 		pusher.Server().RemovePusher(pusher)
 		pusher.cond.Broadcast()
 		if pusher.UDPServer != nil {
@@ -254,8 +256,28 @@ func (pusher *Pusher) AddPlayer(player *Player) *Pusher {
 
 func (pusher *Pusher) RemovePlayer(player *Player) *Pusher {
 	pusher.playersLock.Lock()
+	if len(pusher.players) == 0 {
+		pusher.playersLock.Unlock()
+		return pusher
+	}
 	delete(pusher.players, player.ID)
 	log.Printf("%v end, now player size[%d]\n", player, len(pusher.players))
 	pusher.playersLock.Unlock()
 	return pusher
+}
+
+func (pusher *Pusher) ClearPlayer() {
+	// copy a new map to avoid deadlock
+	players := make(map[string]*Player)
+	pusher.playersLock.Lock()
+	for k,v := range pusher.players {
+		//v.Stop()
+		players[k] = v
+	}
+	pusher.players = make(map[string]*Player)
+	pusher.playersLock.Unlock()
+
+	for _,v:=range players{
+		v.Stop()
+	}
 }
