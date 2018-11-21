@@ -51,15 +51,15 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 	pushers := make([]interface{}, 0)
 	for _, pusher := range rtsp.Instance.GetPushers() {
 		port := pusher.Server().TCPPort
-		rtsp := fmt.Sprintf("rtsp://%s:%d%s", hostname, port, pusher.Path)
+		rtsp := fmt.Sprintf("rtsp://%s:%d%s", hostname, port, pusher.Path())
 		if port == 554 {
-			rtsp = fmt.Sprintf("rtsp://%s%s", hostname, pusher.Path)
+			rtsp = fmt.Sprintf("rtsp://%s%s", hostname, pusher.Path())
 		}
 		if form.Q != "" && !strings.Contains(strings.ToLower(rtsp), strings.ToLower(form.Q)) {
 			continue
 		}
 		pushers = append(pushers, map[string]interface{}{
-			"id":        pusher.ID,
+			"id":        pusher.ID(),
 			"path":      rtsp,
 			"transType": pusher.TransType.String(),
 			"inBytes":   pusher.InBytes(),
