@@ -117,7 +117,7 @@
 - 打包
 
         # install pack
-	npm i -g @penggy/pack
+        npm i -g @penggy/pack
 
         # for windows
         npm run build:win
