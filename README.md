@@ -79,6 +79,7 @@
 
         go get -u github.com/kardianos/govendor
         go get -u github.com/caixw/gobuild
+        go get -u github.com/reactivex/rxgo
 
 ### 编译命令
 
