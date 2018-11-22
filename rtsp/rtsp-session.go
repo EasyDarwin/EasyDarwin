@@ -87,7 +87,7 @@ const UDP_BUF_SIZE = 1048576
 type Session struct {
 	ID        string
 	Server    *Server
-	Conn      *net.TCPConn
+	Conn      net.Conn
 	connRW    *bufio.ReadWriter
 	connWLock sync.RWMutex
 	Type      SessionType
@@ -127,13 +127,16 @@ func (session *Session) String() string {
 	return fmt.Sprintf("session[%v][%v][%s][%s]", session.Type, session.TransType, session.Path, session.ID)
 }
 
-func NewSession(server *Server, conn *net.TCPConn) *Session {
+func NewSession(server *Server, conn net.Conn) *Session {
 	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+	timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
+	timeoutTCPConn := RichConn{conn, time.Duration(timeoutMillis) * time.Millisecond}
+
 	session := &Session{
 		ID:      shortid.MustGenerate(),
 		Server:  server,
 		Conn:    conn,
-		connRW:  bufio.NewReadWriter(bufio.NewReaderSize(conn, networkBuffer), bufio.NewWriterSize(conn, networkBuffer)),
+		connRW:  bufio.NewReadWriter(bufio.NewReaderSize(&timeoutTCPConn, networkBuffer), bufio.NewWriterSize(&timeoutTCPConn, networkBuffer)),
 		StartAt: time.Now(),
 		Timeout: utils.Conf().Section("rtsp").Key("timeout").MustInt(0),
 
@@ -263,9 +266,9 @@ func (session *Session) Start() {
 }
 
 func (session *Session) handleRequest(req *Request) {
-	if session.Timeout > 0 {
-		session.Conn.SetDeadline(time.Now().Add(time.Duration(session.Timeout) * time.Second))
-	}
+	//if session.Timeout > 0 {
+	//	session.Conn.SetDeadline(time.Now().Add(time.Duration(session.Timeout) * time.Second))
+	//}
 
 	log.Println("<<<", req)
 	res := NewResponse(200, "OK", req.Header["CSeq"], session.ID, "")

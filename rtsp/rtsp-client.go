@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"github.com/penggy/EasyGoLib/utils"
 	"io"
 	"log"
 	"net"
@@ -88,13 +89,25 @@ func (client *RTSPClient) Start() observable.Observable {
 		if err != nil {
 			return err
 		}
-		conn, err := net.Dial("tcp", l.Hostname()+":"+l.Port())
+		port := l.Port()
+		if len(port) == 0 {
+			port = "554"
+		}
+		conn, err := net.Dial("tcp", l.Hostname()+":"+port)
 		if err != nil {
 			// handle error
 			return err
 		}
 		client.Conn = conn
-		client.connRW = bufio.NewReadWriter(bufio.NewReaderSize(conn, 10240), bufio.NewWriterSize(conn, 10240))
+
+		networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+		timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
+
+		timeoutConn := RichConn{
+			conn,
+			time.Duration(timeoutMillis) * time.Millisecond,
+		}
+		client.connRW = bufio.NewReadWriter(bufio.NewReaderSize(&timeoutConn, networkBuffer), bufio.NewWriterSize(&timeoutConn, networkBuffer))
 
 		headers := make(map[string]string)
 		headers["Require"] = "implicit-play"
@@ -311,6 +324,7 @@ func (client *RTSPClient) Start() observable.Observable {
 		}
 	}
 	go func() {
+		defer client.Stop()
 		r := requestStream()
 		source <- r
 		switch r.(type) {
