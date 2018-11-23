@@ -87,7 +87,7 @@
 
         cd $GOPATH/src/github.com
         mkdir EasyDarwin && cd EasyDarwin
-        git clone https://github.com/EasyDarwin/EasyDarwin.git EasyDarwin
+        git clone https://github.com/EasyDarwin/EasyDarwin.git --depth=1 EasyDarwin
         cd EasyDarwin
 
 - 以开发模式运行 server
