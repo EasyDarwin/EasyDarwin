@@ -231,6 +231,14 @@ func (pusher *Pusher) Start() {
 	}
 }
 
+func (pusher *Pusher) Stop() {
+	if pusher.Session != nil {
+		pusher.Session.Stop()
+		return
+	}
+	pusher.RTSPClient.Stop()
+}
+
 func (pusher *Pusher) BroadcastRTP(pack *RTPPack) *Pusher {
 	for _, player := range pusher.GetPlayers() {
 		player.QueueRTP(pack)

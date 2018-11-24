@@ -286,12 +286,6 @@
 			"revisionTime": "2018-09-07T02:33:35Z"
 		},
 		{
-			"checksumSHA1": "wGV+EeSd5YGVLiYL36qT65GWahg=",
-			"path": "github.com/reactivex/rxgo/observable",
-			"revision": "e715dd83f030be66a2cbef90b842fc3caedfcc69",
-			"revisionTime": "2018-10-31T19:04:19Z"
-		},
-		{
 			"checksumSHA1": "q14d3C3xvWevU3dSv4P5K0+OSD0=",
 			"path": "github.com/shirou/gopsutil/cpu",
 			"revision": "63047d776e07105e370af46ecbd0ae96850f5ef2",

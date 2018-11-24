@@ -16,7 +16,6 @@ import (
 	"github.com/penggy/EasyGoLib/utils"
 
 	"github.com/pixelbender/go-sdp/sdp"
-	"github.com/reactivex/rxgo/observable"
 )
 
 type RTSPClient struct {
@@ -77,9 +76,14 @@ func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) *RTSPC
 	return client
 }
 
-func (client *RTSPClient) Start() observable.Observable {
-	source := make(chan interface{})
-	requestStream := func() interface{} {
+func (client *RTSPClient) Start(timeout time.Duration) error {
+	//source := make(chan interface{})
+
+	if timeout == 0 {
+		timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
+		timeout = time.Duration(timeoutMillis) * time.Millisecond
+	}
+	requestStream := func() error {
 		l, err := url.Parse(client.URL)
 		setStatus := func() {
 			if err != nil {
@@ -92,11 +96,19 @@ func (client *RTSPClient) Start() observable.Observable {
 		if err != nil {
 			return err
 		}
+		if strings.ToLower(l.Scheme) != "rtsp" {
+			err = fmt.Errorf("RTSP url is invalid")
+			return err
+		}
+		if strings.ToLower(l.Hostname()) == "" {
+			err = fmt.Errorf("RTSP url is invalid")
+			return err
+		}
 		port := l.Port()
 		if len(port) == 0 {
 			port = "554"
 		}
-		conn, err := net.Dial("tcp", l.Hostname()+":"+port)
+		conn, err := net.DialTimeout("tcp", l.Hostname()+":"+port, timeout)
 		if err != nil {
 			// handle error
 			return err
@@ -104,11 +116,10 @@ func (client *RTSPClient) Start() observable.Observable {
 		client.Conn = conn
 
 		networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
-		timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
 
 		timeoutConn := RichConn{
 			conn,
-			time.Duration(timeoutMillis) * time.Millisecond,
+			timeout,
 		}
 		client.connRW = bufio.NewReadWriter(bufio.NewReaderSize(&timeoutConn, networkBuffer), bufio.NewWriterSize(&timeoutConn, networkBuffer))
 
@@ -175,17 +186,14 @@ func (client *RTSPClient) Start() observable.Observable {
 		if err != nil {
 			return err
 		}
-		return 0
+		return nil
 	}
-	stream := func(ch chan interface{}) {
+
+	stream := func() {
 		OptionIntervalMillis := client.OptionIntervalMillis
 		startTime := time.Now()
 		loggerTime := time.Now().Add(-10 * time.Second)
-		defer func() {
-			if client.Stoped {
-				close(ch)
-			}
-		}()
+		defer client.Stop()
 		for !client.Stoped {
 			if OptionIntervalMillis > 0 {
 				elapse := time.Now().Sub(startTime)
@@ -205,7 +213,6 @@ func (client *RTSPClient) Start() observable.Observable {
 			if err != nil {
 				if !client.Stoped {
 					log.Printf("client.connRW.ReadByte err:%v", err)
-					ch <- err
 				}
 				return
 			}
@@ -217,7 +224,6 @@ func (client *RTSPClient) Start() observable.Observable {
 				if err != nil {
 
 					if !client.Stoped {
-						ch <- err
 						log.Printf("io.ReadFull err:%v", err)
 					}
 					return
@@ -228,7 +234,6 @@ func (client *RTSPClient) Start() observable.Observable {
 				_, err = io.ReadFull(client.connRW, content)
 				if err != nil {
 					if !client.Stoped {
-						ch <- err
 						log.Printf("io.ReadFull err:%v", err)
 					}
 					return
@@ -267,7 +272,7 @@ func (client *RTSPClient) Start() observable.Observable {
 				}
 				elapsed := time.Now().Sub(loggerTime)
 				if elapsed >= 10*time.Second {
-					log.Printf("client[%v]read rtp frame.", client)
+					log.Printf("%v read rtp frame.", client)
 					loggerTime = time.Now()
 				}
 				client.InBytes += int(length + 4)
@@ -283,7 +288,6 @@ func (client *RTSPClient) Start() observable.Observable {
 					line, prefix, err := client.connRW.ReadLine()
 					if err != nil {
 						if !client.Stoped {
-							ch <- err
 							log.Printf("client.connRW.ReadLine err:%v", err)
 						}
 						return
@@ -295,7 +299,6 @@ func (client *RTSPClient) Start() observable.Observable {
 							if err != nil {
 								if !client.Stoped {
 									err = fmt.Errorf("Read content err.ContentLength:%d", contentLen)
-									ch <- err
 								}
 								return
 							}
@@ -316,7 +319,6 @@ func (client *RTSPClient) Start() observable.Observable {
 						contentLen, err = strconv.Atoi(strings.TrimSpace(splits[1]))
 						if err != nil {
 							if !client.Stoped {
-								ch <- err
 								log.Printf("strconv.Atoi err:%v, str:%v", err, splits[1])
 							}
 							return
@@ -326,19 +328,25 @@ func (client *RTSPClient) Start() observable.Observable {
 			}
 		}
 	}
-	go func() {
-		defer client.Stop()
-		r := requestStream()
-		source <- r
-		switch r.(type) {
-		case error:
-			return
-		}
-		stream(source)
-	}()
-	return observable.Observable(source)
+	//go func() {
+	//	defer client.Stop()
+	//	r := requestStream()
+	//	source <- r
+	//	switch r.(type) {
+	//	case error:
+	//		return
+	//	}
+	//	stream(source)
+	//}()
+	//return observable.Observable(source)
 
 	//return observable.Just(1)
+	err := requestStream()
+	if err != nil {
+		return err
+	}
+	go stream()
+	return nil
 }
 
 func (client *RTSPClient) Stop() {
