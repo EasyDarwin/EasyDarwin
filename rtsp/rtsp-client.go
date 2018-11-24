@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/teris-io/shortid"
+
 	"github.com/penggy/EasyGoLib/utils"
 
 	"github.com/pixelbender/go-sdp/sdp"
@@ -24,6 +26,7 @@ type RTSPClient struct {
 	Status               string
 	URL                  string
 	Path                 string
+	CustomPath           string //custom path for pusher
 	ID                   string
 	Conn                 net.Conn
 	AuthHeaders          bool
@@ -56,24 +59,25 @@ func (client *RTSPClient) String() string {
 	return fmt.Sprintf("client[%s]", client.URL)
 }
 
-func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) *RTSPClient {
+func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) (client *RTSPClient, err error) {
 	url, err := url.Parse(rawUrl)
 	if err != nil {
-		return nil
+		return
 	}
-	client := &RTSPClient{
+	client = &RTSPClient{
 		Server:               server,
 		Stoped:               false,
 		URL:                  rawUrl,
-		ID:                   url.Path,
+		ID:                   shortid.MustGenerate(),
 		Path:                 url.Path,
 		vRTPChannel:          0,
 		vRTPControlChannel:   1,
 		aRTPChannel:          2,
 		aRTPControlChannel:   3,
 		OptionIntervalMillis: sendOptionMillis,
+		StartAt:              time.Now(),
 	}
-	return client
+	return
 }
 
 func (client *RTSPClient) Start(timeout time.Duration) error {
@@ -197,7 +201,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 		for !client.Stoped {
 			if OptionIntervalMillis > 0 {
 				elapse := time.Now().Sub(startTime)
-				if elapse > time.Duration(OptionIntervalMillis*int64(time.Millisecond)) {
+				if elapse > time.Duration(OptionIntervalMillis)*time.Millisecond {
 					startTime = time.Now()
 					headers := make(map[string]string)
 					headers["Require"] = "implicit-play"

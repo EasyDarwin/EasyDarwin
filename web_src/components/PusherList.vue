@@ -32,20 +32,23 @@
             <div class="box-body">
                 <el-table :data="pushers" stripe class="view-list" :default-sort="{prop: 'startAt', order: 'descending'}" @sort-change="sortChange">
                     <el-table-column prop="id" label="ID" min-width="120"></el-table-column>
-                    <el-table-column prop="path" label="播放地址" min-width="240" show-overflow-tooltip>
+                    <el-table-column label="播放地址" min-width="240" show-overflow-tooltip>
                       <template slot-scope="scope">
                         <span>
-                          <i class="fa fa-copy" role="button" v-clipboard="scope.row.path" title="点击拷贝" @success="$message({type:'success', message:'成功拷贝到粘贴板'})"></i>
-                          {{scope.row.path}}
+                          <i class="fa fa-copy" role="button" v-clipboard="scope.row.url" title="点击拷贝" @success="$message({type:'success', message:'成功拷贝到粘贴板'})"></i>
+                          {{scope.row.url}}
                           </span>
                       </template>
                     </el-table-column>                    
-                    <!-- <el-table-column prop="source" label="源地址" min-width="240" show-overflow-tooltip>
+                    <el-table-column label="源地址" min-width="240" show-overflow-tooltip>
                       <template slot-scope="scope">
-                        <span v-if="scope.row.source">{{scope.row.source}}</span>
+                        <span v-if="scope.row.source">
+                          <i class="fa fa-copy" role="button" v-clipboard="scope.row.source" title="点击拷贝" @success="$message({type:'success', message:'成功拷贝到粘贴板'})"></i>
+                          {{scope.row.source}}
+                          </span>
                         <span v-else>-</span>
                       </template>
-                    </el-table-column>    -->
+                    </el-table-column>
                     <el-table-column prop="transType" label="传输方式" min-width="100"></el-table-column>                            
                     <el-table-column prop="inBytes" label="上行流量" min-width="120" :formatter="formatBytes" sortable="custom"></el-table-column>
                     <el-table-column prop="outBytes" label="下行流量" min-width="120" :formatter="formatBytes" sortable="custom"></el-table-column>
@@ -54,7 +57,9 @@
                     <el-table-column label="操作" min-width="120" fixed="right">
                         <template slot-scope="scope">
                             <div class="btn-group">
-                                <a role="button" class="btn btn-xs btn-danger" @click.prevent="stop(scope.row)" v-if="scope.row.source"><i class="fa fa-stop"></i> 停止</a>
+                                <a role="button" class="btn btn-xs btn-danger" @click.prevent="stop(scope.row)">
+                                  <i class="fa fa-stop"></i> 停止
+                                </a>
                             </div>
                         </template>
                     </el-table-column>
@@ -97,7 +102,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs["q"].focus();
+    // this.$refs["q"].focus();
     this.timer = setInterval(() => {
       this.getPushers();
     }, 3000);
@@ -144,11 +149,13 @@ export default {
       return prettyBytes(val);
     },
     stop(row) {
-      $.get("/api/v1/stream/stop", {
-        streamID: row.id
-      }).then(data => {
-        this.getPushers();
-      })
+      this.$confirm(`确认停止 ${row.path} ?`, "提示").then(() => {
+        $.get("/api/v1/stream/stop", {
+          id: row.id
+        }).then(data => {
+          this.getPushers();
+        })
+      }).catch(() => {});
     }
   },
   beforeRouteEnter(to, from, next) {

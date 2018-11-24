@@ -55,6 +55,9 @@ func (pusher *Pusher) Path() string {
 	if pusher.Session != nil {
 		return pusher.Session.Path
 	}
+	if pusher.RTSPClient.CustomPath != "" {
+		return pusher.RTSPClient.CustomPath
+	}
 	return pusher.RTSPClient.Path
 }
 
@@ -134,6 +137,13 @@ func (pusher *Pusher) StartAt() time.Time {
 		return pusher.Session.StartAt
 	}
 	return pusher.RTSPClient.StartAt
+}
+
+func (pusher *Pusher) Source() string {
+	if pusher.Session != nil {
+		return pusher.Session.URL
+	}
+	return pusher.RTSPClient.URL
 }
 
 func NewClientPusher(client *RTSPClient) (pusher *Pusher) {

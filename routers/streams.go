@@ -3,9 +3,6 @@ package routers
 import (
 	"bytes"
 	"fmt"
-	"github.com/EasyDarwin/EasyDarwin/rtsp"
-	"github.com/gin-gonic/gin"
-	"github.com/penggy/EasyGoLib/utils"
 	"log"
 	"math"
 	"net/http"
@@ -16,12 +13,18 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/EasyDarwin/EasyDarwin/rtsp"
+	"github.com/gin-gonic/gin"
+	"github.com/penggy/EasyGoLib/utils"
 )
 
 func (h *APIHandler) StreamStart(c *gin.Context) {
 	type Form struct {
-		URL         string `form:"url" binding:"required"`
-		IdleTimeout int    `form:"idleTimeout"`
+		URL               string `form:"url" binding:"required"`
+		CustomPath        string `form:"customPath"`
+		IdleTimeout       int    `form:"idleTimeout"`
+		HeartbeatInterval int    `form:"heartbeatInterval"`
 	}
 	var form Form
 	err := c.Bind(&form)
@@ -29,8 +32,21 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 		log.Printf("Pull to push err:%v", err)
 		return
 	}
-	client := rtsp.NewRTSPClient(rtsp.GetServer(), form.URL, 0)
+	client, err := rtsp.NewRTSPClient(rtsp.GetServer(), form.URL, int64(form.HeartbeatInterval)*1000)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	if form.CustomPath != "" && !strings.HasPrefix(form.CustomPath, "/") {
+		form.CustomPath = "/" + form.CustomPath
+	}
+	client.CustomPath = form.CustomPath
+
 	pusher := rtsp.NewClientPusher(client)
+	if rtsp.GetServer().GetPusher(pusher.Path()) != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, fmt.Sprintf("Path %s already exists", client.Path))
+		return
+	}
 	err = client.Start(time.Duration(form.IdleTimeout) * time.Second)
 	if err != nil {
 		log.Printf("Pull stream err :%v", err)
@@ -57,7 +73,6 @@ func (h *APIHandler) StreamStop(c *gin.Context) {
 		if v.ID() == form.ID {
 			v.Stop()
 			c.IndentedJSON(200, "OK")
-
 			log.Printf("Stop %v success ", v)
 			return
 		}
