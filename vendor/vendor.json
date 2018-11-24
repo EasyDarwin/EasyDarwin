@@ -273,11 +273,23 @@
 			"revisionTime": "2018-05-29T03:02:45Z"
 		},
 		{
+			"checksumSHA1": "tQsy6xGhp1I9d+quwDQZWMtSVeQ=",
+			"path": "github.com/pixelbender/go-sdp/sdp",
+			"revision": "100bc9371a0caf8b1797c82bcc9c36854b059b51",
+			"revisionTime": "2018-11-23T09:41:52Z"
+		},
+		{
 			"checksumSHA1": "d6BycwPpKXW09I/tXMqcItE8SA4=",
 			"origin": "github.com/penggy/EasyGoLib/vendor/github.com/pkg/errors",
 			"path": "github.com/pkg/errors",
 			"revision": "d0926230dda8c9e4e61040cb7825a026dee7d2d3",
 			"revisionTime": "2018-09-07T02:33:35Z"
+		},
+		{
+			"checksumSHA1": "wGV+EeSd5YGVLiYL36qT65GWahg=",
+			"path": "github.com/reactivex/rxgo/observable",
+			"revision": "e715dd83f030be66a2cbef90b842fc3caedfcc69",
+			"revisionTime": "2018-10-31T19:04:19Z"
 		},
 		{
 			"checksumSHA1": "q14d3C3xvWevU3dSv4P5K0+OSD0=",
@@ -362,5 +374,5 @@
 			"revisionTime": "2018-03-28T19:50:20Z"
 		}
 	],
-	"rootPath": "github.com/EasyDarwin"
+	"rootPath": "github.com/EasyDarwin/EasyDarwin"
 }

@@ -61,10 +61,10 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 		pushers = append(pushers, map[string]interface{}{
 			"id":        pusher.ID(),
 			"path":      rtsp,
-			"transType": pusher.TransType.String(),
+			"transType": pusher.TransType(),
 			"inBytes":   pusher.InBytes(),
 			"outBytes":  pusher.OutBytes(),
-			"startAt":   utils.DateTime(pusher.StartAt),
+			"startAt":   utils.DateTime(pusher.StartAt()),
 			"onlines":   len(pusher.GetPlayers()),
 		})
 	}

@@ -58,7 +58,7 @@ export default {
                 return;
             }
             this.bLoading = true;
-            $.get('/stream/start', this.form).then(data => {
+            $.get('/api/v1/stream/start', this.form).then(data => {
                 this.$refs['dlg'].hide();
                 this.$emit('submit');
             }).always(() => {

@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"github.com/penggy/EasyGoLib/utils"
 	"io"
 	"log"
 	"net"
@@ -13,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/penggy/EasyGoLib/utils"
 
 	"github.com/pixelbender/go-sdp/sdp"
 	"github.com/reactivex/rxgo/observable"
@@ -32,6 +33,8 @@ type RTSPClient struct {
 	connRW               *bufio.ReadWriter
 	InBytes              int
 	OutBytes             int
+	TransType            TransType
+	StartAt              time.Time
 	Sdp                  *sdp.Session
 	AControl             string
 	VControl             string

@@ -12,14 +12,14 @@ define({
     "ModifyPassword",
     "GetServerInfo"
   ],
-  "version": "1.0.0",
+  "version": "8.1.0",
   "description": "EasyDarwin Open Source Media Server",
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-11-03T06:17:10.067Z",
+    "time": "2018-11-24T02:46:15.810Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }

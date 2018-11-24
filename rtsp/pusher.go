@@ -4,6 +4,7 @@ import (
 	"log"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/penggy/EasyGoLib/utils"
 )
@@ -119,6 +120,20 @@ func (pusher *Pusher) OutBytes() int {
 		return pusher.Session.OutBytes
 	}
 	return pusher.RTSPClient.OutBytes
+}
+
+func (pusher *Pusher) TransType() string {
+	if pusher.Session != nil {
+		return pusher.Session.TransType.String()
+	}
+	return pusher.RTSPClient.TransType.String()
+}
+
+func (pusher *Pusher) StartAt() time.Time {
+	if pusher.Session != nil {
+		return pusher.Session.StartAt
+	}
+	return pusher.RTSPClient.StartAt
 }
 
 func NewClientPusher(client *RTSPClient) (pusher *Pusher) {
@@ -270,14 +285,14 @@ func (pusher *Pusher) ClearPlayer() {
 	// copy a new map to avoid deadlock
 	players := make(map[string]*Player)
 	pusher.playersLock.Lock()
-	for k,v := range pusher.players {
+	for k, v := range pusher.players {
 		//v.Stop()
 		players[k] = v
 	}
 	pusher.players = make(map[string]*Player)
 	pusher.playersLock.Unlock()
 
-	for _,v:=range players{
+	for _, v := range players {
 		v.Stop()
 	}
 }
