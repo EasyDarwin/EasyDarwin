@@ -87,7 +87,7 @@ const UDP_BUF_SIZE = 1048576
 type Session struct {
 	ID        string
 	Server    *Server
-	Conn      net.Conn
+	Conn      *RichConn
 	connRW    *bufio.ReadWriter
 	connWLock sync.RWMutex
 	Type      SessionType
@@ -130,13 +130,13 @@ func (session *Session) String() string {
 func NewSession(server *Server, conn net.Conn) *Session {
 	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
-	timeoutTCPConn := RichConn{conn, time.Duration(timeoutMillis) * time.Millisecond}
+	timeoutTCPConn := &RichConn{conn, time.Duration(timeoutMillis) * time.Millisecond}
 
 	session := &Session{
 		ID:      shortid.MustGenerate(),
 		Server:  server,
-		Conn:    conn,
-		connRW:  bufio.NewReadWriter(bufio.NewReaderSize(&timeoutTCPConn, networkBuffer), bufio.NewWriterSize(&timeoutTCPConn, networkBuffer)),
+		Conn:    timeoutTCPConn,
+		connRW:  bufio.NewReadWriter(bufio.NewReaderSize(timeoutTCPConn, networkBuffer), bufio.NewWriterSize(timeoutTCPConn, networkBuffer)),
 		StartAt: time.Now(),
 		Timeout: utils.Conf().Section("rtsp").Key("timeout").MustInt(0),
 
@@ -356,6 +356,7 @@ func (session *Session) handleRequest(req *Request) {
 		session.VControl = pusher.VControl()
 		session.ACodec = pusher.ACodec()
 		session.VCodec = pusher.VCodec()
+		session.Conn.timeout = 0
 		res.SetBody(session.Pusher.SDPRaw())
 	case "SETUP":
 		ts := req.Header["Transport"]
