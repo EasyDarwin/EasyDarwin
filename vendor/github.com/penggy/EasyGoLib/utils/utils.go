@@ -97,7 +97,12 @@ func DataDir() string {
 	return dir
 }
 
+var FlagVarConfFile string
+
 func ConfFile() string {
+	if FlagVarConfFile != "" {
+		return FlagVarConfFile
+	}
 	if Exist(ConfFileDev()) {
 		return ConfFileDev()
 	}
@@ -108,7 +113,12 @@ func ConfFileDev() string {
 	return filepath.Join(CWD(), strings.ToLower(EXEName())+".dev.ini")
 }
 
+var FlagVarDBFile string
+
 func DBFile() string {
+	if FlagVarDBFile != "" {
+		return FlagVarDBFile
+	}
 	if Exist(DBFileDev()) {
 		return DBFileDev()
 	}
@@ -132,18 +142,6 @@ func Conf() *ini.File {
 		conf = _conf
 	}
 	return conf
-}
-
-func ConfByPath(path string) (*ini.File, error) {
-	if conf != nil {
-		return conf, nil
-	}
-	if _conf, err := ini.InsensitiveLoad(path); err != nil {
-		return nil, err
-	} else {
-		conf = _conf
-	}
-	return conf, nil
 }
 
 func ReloadConf() *ini.File {
