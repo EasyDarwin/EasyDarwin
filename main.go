@@ -9,8 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-ini/ini"
-
 	"github.com/EasyDarwin/EasyDarwin/models"
 	"github.com/EasyDarwin/EasyDarwin/routers"
 	"github.com/EasyDarwin/EasyDarwin/rtsp"
@@ -131,7 +129,7 @@ func (p *program) Stop(s service.Service) (err error) {
 }
 
 func main() {
-	configPath := flag.String("config", "", "configure file path")
+	flag.StringVar(&utils.FlagVarConfFile, "config", "", "configure file path")
 	flag.Parse()
 	tail := flag.Args()
 	log.SetPrefix("[EasyDarwin] ")
@@ -139,21 +137,7 @@ func main() {
 	if utils.Debug {
 		log.SetFlags(log.Lshortfile | log.LstdFlags)
 	}
-	var conf *ini.File
-	var err error
-	if len(*configPath) != 0 {
-		log.Printf("use config file[%s]", *configPath)
-		conf, err = utils.ConfByPath(*configPath)
-	} else {
-		conf = utils.Conf()
-		err = nil
-	}
-	if err != nil {
-		log.Print(err)
-		log.Printf("EasyDarwin terminate due to config not found.")
-		return
-	}
-	sec := conf.Section("service")
+	sec := utils.Conf().Section("service")
 	svcConfig := &service.Config{
 		Name:        sec.Key("name").MustString("EasyDarwin_Service"),
 		DisplayName: sec.Key("display_name").MustString("EasyDarwin_Service"),
@@ -173,8 +157,7 @@ func main() {
 		utils.PauseExit()
 	}
 	if len(tail) > 0 {
-		cmd := tail[0]
-		cmd = strings.ToLower(cmd)
+		cmd := strings.ToLower(tail[0])
 		if cmd == "install" || cmd == "stop" || cmd == "start" || cmd == "uninstall" {
 			if cmd == "install" || cmd == "stop" {
 				figure.NewFigure("EasyDarwin", "", false).Print()
