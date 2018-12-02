@@ -119,7 +119,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 		}
 		client.Conn = conn
 
-		networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+		networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(204800)
 
 		timeoutConn := RichConn{
 			conn,

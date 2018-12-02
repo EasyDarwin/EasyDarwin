@@ -2,16 +2,16 @@ package rtsp
 
 import (
 	"fmt"
+	"github.com/penggy/EasyGoLib/utils"
 	"log"
 	"net"
 	"os"
 	"os/exec"
 	"path"
+	"strconv"
 	"sync"
 	"syscall"
 	"time"
-
-	"github.com/penggy/EasyGoLib/utils"
 )
 
 type Server struct {
@@ -49,14 +49,15 @@ func (server *Server) Start() (err error) {
 		return
 	}
 
-	localRecord := utils.Conf().Section("rtsp").Key("save_stream_to_mp4").MustInt(0)
+	localRecord := utils.Conf().Section("rtsp").Key("save_stream_to_local").MustInt(0)
 	ffmpeg := utils.Conf().Section("rtsp").Key("ffmpeg_path").MustString("")
-	mp4Path := utils.Conf().Section("rtsp").Key("mp4_dir_path").MustString("")
+	m3u8_dir_path := utils.Conf().Section("rtsp").Key("m3u8_dir_path").MustString("")
+	ts_duration_second := utils.Conf().Section("rtsp").Key("ts_duration_second").MustInt(10 * 60)
 	SaveStreamToLocal := false
-	if (len(ffmpeg) > 0) && localRecord > 0 && len(mp4Path) > 0 {
-		err := utils.EnsureDir(mp4Path)
+	if (len(ffmpeg) > 0) && localRecord > 0 && len(m3u8_dir_path) > 0 {
+		err := utils.EnsureDir(m3u8_dir_path)
 		if err != nil {
-			log.Printf("Create mp4_dir_path[%s] err:%v.", mp4Path, err)
+			log.Printf("Create m3u8_dir_path[%s] err:%v.", m3u8_dir_path, err)
 		} else {
 			SaveStreamToLocal = true
 		}
@@ -75,14 +76,16 @@ func (server *Server) Start() (err error) {
 			case pusher, addChnOk = <-server.addPusherCh:
 				if SaveStreamToLocal {
 					if addChnOk {
-						dir := path.Join(mp4Path, pusher.Path())
+						dir := path.Join(m3u8_dir_path, pusher.Path(), time.Now().Format("20060102150405"))
 						err := utils.EnsureDir(dir)
 						if err != nil {
 							log.Printf("EnsureDir:[%s] err:%v.", dir, err)
 							continue
 						}
-						path := path.Join(dir, fmt.Sprintf("%s.mp4", time.Now().Format("20060102150405")))
-						cmd := exec.Command(ffmpeg, "-i", pusher.URL(), "-c:v", "copy", "-c:a", "copy", path)
+						path := path.Join(dir, fmt.Sprintf("out.m3u8"))
+						// ffmpeg -i ~/Downloads/720p.mp4 -s 640x360 -g 15 -c:a aac -hls_time 5 -hls_list_size 0 record.m3u8
+
+						cmd := exec.Command(ffmpeg, "-fflags", "genpts", "-rtsp_transport", "tcp", "-i", pusher.URL(), "-c:v", "copy", "-hls_time", strconv.Itoa(ts_duration_second), "-hls_list_size", "0", path)
 						cmd.Stdout = os.Stdout
 						cmd.Stderr = os.Stderr
 						err = cmd.Start()
@@ -90,7 +93,7 @@ func (server *Server) Start() (err error) {
 							log.Printf("Start ffmpeg err:%v", err)
 						}
 						pusher2ffmpegMap[pusher] = cmd
-						log.Printf("add ffmpeg to pull stream from pusher[%v]", pusher)
+						log.Printf("add ffmpeg [%v] to pull stream from pusher[%v]", cmd, pusher)
 					} else {
 						log.Printf("addPusherChan closed")
 					}

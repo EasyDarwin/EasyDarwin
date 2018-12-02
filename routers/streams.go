@@ -19,6 +19,20 @@ import (
 	"github.com/penggy/EasyGoLib/utils"
 )
 
+/**
+ * @apiDefine pull 拉流转推
+ */
+
+/**
+ * @api {get} /api/vi/stream/start 启动拉流
+ * @apiGroup pull
+ * @apiName StreamStart
+ * @apiParam {String} url RTSP源地址
+ * @apiParam {String} [customPath] 转推时的推送PATH
+ * @apiParam {Number} [IdleTimeout] 拉流时的超时时间
+ * @apiParam {Number} [HeartbeatInterval] 拉流时的心跳间隔，毫秒为单位。如果心跳间隔不为0，那拉流时会向源地址以该间隔发送OPTION请求用来心跳保活
+ * @apiSuccess (200) {String} ID	拉流的ID。后续可以通过该ID来停止拉流
+ */
 func (h *APIHandler) StreamStart(c *gin.Context) {
 	type Form struct {
 		URL               string `form:"url" binding:"required"`
@@ -58,6 +72,13 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 	c.IndentedJSON(200, pusher.ID())
 }
 
+/**
+ * @api {get} /api/vi/stream/stop 停止拉流
+ * @apiGroup pull
+ * @apiName StreamStop
+ * @apiParam {String} id 拉流的ID
+ * @apiUse simpleSuccess
+ */
 func (h *APIHandler) StreamStop(c *gin.Context) {
 	type Form struct {
 		ID string `form:"id" binding:"required"`
@@ -80,8 +101,33 @@ func (h *APIHandler) StreamStop(c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusBadRequest, fmt.Sprintf("Pusher[%s] not found", form.ID))
 }
 
+/**
+ * @apiDefine record 录像 Record
+ */
+
+/**
+ * @apiDefine fileInfo
+ * @apiSuccess (200) {String} duration	格式化好的录像时长
+ * @apiSuccess (200) {Number} durationMillis	录像时长，毫秒为单位
+ * @apiSuccess (200) {String} path 录像文件的相对路径,其绝对路径为：http[s]://host:port/record/[path]。
+ * @apiSuccess (200) {String} folder 录像文件夹，录像文件夹以推流路径命名。
+ */
+
+/**
+ * @api {get} /api/vi/record/folders 获取所有录像文件夹
+ * @apiGroup record
+ * @apiName RecordFolders
+ * @apiParam {Number} [start] 分页开始,从零开始
+ * @apiParam {Number} [limit] 分页大小
+ * @apiParam {String} [sort] 排序字段
+ * @apiParam {String=ascending,descending} [order] 排序顺序
+ * @apiParam {String} [q] 查询参数
+ * @apiSuccess (200) {Number} total 总数
+ * @apiSuccess (200) {Array} rows 文件夹列表
+ * @apiSuccess (200) {String} rows.folder	录像文件夹名称
+ */
 func (h *APIHandler) RecordFolders(c *gin.Context) {
-	mp4Path := utils.Conf().Section("rtsp").Key("mp4_dir_path").MustString("")
+	mp4Path := utils.Conf().Section("rtsp").Key("m3u8_dir_path").MustString("")
 	form := utils.NewPageForm()
 	if err := c.Bind(form); err != nil {
 		log.Printf("record folder bind err:%v", err)
@@ -118,6 +164,22 @@ func (h *APIHandler) RecordFolders(c *gin.Context) {
 
 }
 
+/**
+ * @api {get} /api/vi/record/files 获取所有录像文件
+ * @apiGroup record
+ * @apiName RecordFiles
+ * @apiParam {Number} folder 录像文件所在的文件夹
+ * @apiParam {Number} [start] 分页开始,从零开始
+ * @apiParam {Number} [limit] 分页大小
+ * @apiParam {String} [sort] 排序字段
+ * @apiParam {String=ascending,descending} [order] 排序顺序
+ * @apiParam {String} [q] 查询参数
+ * @apiSuccess (200) {Number} total 总数
+ * @apiSuccess (200) {Array} rows 文件列表
+ * @apiSuccess (200) {String} rows.duration	格式化好的录像时长
+ * @apiSuccess (200) {Number} rows.durationMillis	录像时长，毫秒为单位
+ * @apiSuccess (200) {String} rows.path 录像文件的相对路径,录像文件为m3u8格式，将其放到video标签中便可直接播放。其绝对路径为：http[s]://host:port/record/[path]。
+ */
 func (h *APIHandler) RecordFiles(c *gin.Context) {
 	type Form struct {
 		utils.PageForm
@@ -134,7 +196,7 @@ func (h *APIHandler) RecordFiles(c *gin.Context) {
 	}
 
 	files := make([]interface{}, 0)
-	mp4Path := utils.Conf().Section("rtsp").Key("mp4_dir_path").MustString("")
+	mp4Path := utils.Conf().Section("rtsp").Key("m3u8_dir_path").MustString("")
 	if mp4Path != "" {
 		ffmpeg_path := utils.Conf().Section("rtsp").Key("ffmpeg_path").MustString("")
 		ffmpeg_folder, executable := filepath.Split(ffmpeg_path)
@@ -162,6 +224,9 @@ func (h *APIHandler) RecordFiles(c *gin.Context) {
 				if info.Name() == ".DS_Store" {
 					return nil
 				}
+				if !strings.HasSuffix(info.Name(), ".m3u8") {
+					return filepath.SkipDir
+				}
 				cmd := exec.Command(ffprobe, "-i", path)
 				cmdOutput := &bytes.Buffer{}
 				//cmd.Stdout = cmdOutput
@@ -185,8 +250,9 @@ func (h *APIHandler) RecordFiles(c *gin.Context) {
 					millis, _ := strconv.Atoi(result[5])
 					duration += time.Duration(millis) * time.Millisecond
 				}
+
 				*files = append(*files, map[string]interface{}{
-					"name":           info.Name(),
+					"path":           path[len(mp4Path):],
 					"durationMillis": duration / time.Millisecond,
 					"duration":       durationStr})
 				return nil
