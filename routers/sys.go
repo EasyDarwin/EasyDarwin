@@ -11,7 +11,6 @@ import (
 	"github.com/EasyDarwin/EasyDarwin/models"
 	"github.com/EasyDarwin/EasyDarwin/rtsp"
 	"github.com/gin-gonic/gin"
-	"github.com/penggy/EasyGoLib/buildtime"
 	"github.com/penggy/EasyGoLib/db"
 	"github.com/penggy/EasyGoLib/utils"
 	"github.com/penggy/sessions"
@@ -20,7 +19,7 @@ import (
 )
 
 /**
- * @apiDefine sys API接口
+ * @apiDefine sys 系统
  */
 
 type APIHandler struct {
@@ -114,7 +113,7 @@ func (h *APIHandler) GetServerInfo(c *gin.Context) {
 		"InterfaceVersion": "V1",
 		"RunningTime":      utils.UpTimeString(),
 		"StartUpTime":      utils.DateTime(utils.StartTime),
-		"Server":           fmt.Sprintf("%s/%s (Build/%s; Platform/%s;)", "EasyDarwin", BuildVersion, buildtime.BuildTime.Format(utils.BuildTimeLayout), strings.Title(runtime.GOOS)),
+		"Server":           fmt.Sprintf("%s/%s (Platform/%s;)", "EasyDarwin", BuildVersion, strings.Title(runtime.GOOS)),
 		"memData":          memData,
 		"cpuData":          cpuData,
 		"pusherData":       pusherData,

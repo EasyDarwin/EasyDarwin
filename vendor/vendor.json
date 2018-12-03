@@ -237,12 +237,6 @@
 			"revisionTime": "2018-05-11T05:30:14Z"
 		},
 		{
-			"checksumSHA1": "GMWMVmq6+1O+MOr1n0WMKN+T4m0=",
-			"path": "github.com/penggy/EasyGoLib/buildtime",
-			"revision": "d0926230dda8c9e4e61040cb7825a026dee7d2d3",
-			"revisionTime": "2018-09-07T02:33:35Z"
-		},
-		{
 			"checksumSHA1": "xLzWQBx93nfL7iWFGbwmyYX/LZA=",
 			"path": "github.com/penggy/EasyGoLib/db",
 			"revision": "d0926230dda8c9e4e61040cb7825a026dee7d2d3",

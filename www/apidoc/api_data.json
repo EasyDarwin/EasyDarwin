@@ -1,6 +1,191 @@
 [
   {
     "type": "get",
+    "url": "/api/vi/record/files",
+    "title": "获取所有录像文件",
+    "group": "record",
+    "name": "RecordFiles",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "folder",
+            "description": "<p>录像文件所在的文件夹</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "start",
+            "description": "<p>分页开始,从零开始</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>分页大小</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sort",
+            "description": "<p>排序字段</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "ascending",
+              "descending"
+            ],
+            "optional": true,
+            "field": "order",
+            "description": "<p>排序顺序</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "q",
+            "description": "<p>查询参数</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Number",
+            "optional": false,
+            "field": "total",
+            "description": "<p>总数</p>"
+          },
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "rows",
+            "description": "<p>文件列表</p>"
+          },
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "rows.duration",
+            "description": "<p>格式化好的录像时长</p>"
+          },
+          {
+            "group": "200",
+            "type": "Number",
+            "optional": false,
+            "field": "rows.durationMillis",
+            "description": "<p>录像时长，毫秒为单位</p>"
+          },
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "rows.path",
+            "description": "<p>录像文件的相对路径,录像文件为m3u8格式，将其放到video标签中便可直接播放。其绝对路径为：http[s]://host:port/record/[path]。</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routers/record.go",
+    "groupTitle": "录像"
+  },
+  {
+    "type": "get",
+    "url": "/api/vi/record/folders",
+    "title": "获取所有录像文件夹",
+    "group": "record",
+    "name": "RecordFolders",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "start",
+            "description": "<p>分页开始,从零开始</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "description": "<p>分页大小</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sort",
+            "description": "<p>排序字段</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "ascending",
+              "descending"
+            ],
+            "optional": true,
+            "field": "order",
+            "description": "<p>排序顺序</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "q",
+            "description": "<p>查询参数</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "Number",
+            "optional": false,
+            "field": "total",
+            "description": "<p>总数</p>"
+          },
+          {
+            "group": "200",
+            "type": "Array",
+            "optional": false,
+            "field": "rows",
+            "description": "<p>文件夹列表</p>"
+          },
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "rows.folder",
+            "description": "<p>录像文件夹名称</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routers/record.go",
+    "groupTitle": "录像"
+  },
+  {
+    "type": "get",
     "url": "/api/v1/players",
     "title": "获取拉流列表",
     "group": "stats",
@@ -114,7 +299,7 @@
     },
     "version": "0.0.0",
     "filename": "routers/stats.go",
-    "groupTitle": "查询接口"
+    "groupTitle": "统计"
   },
   {
     "type": "get",
@@ -238,7 +423,96 @@
     },
     "version": "0.0.0",
     "filename": "routers/stats.go",
-    "groupTitle": "查询接口"
+    "groupTitle": "统计"
+  },
+  {
+    "type": "get",
+    "url": "/api/vi/stream/start",
+    "title": "启动拉流",
+    "group": "stream",
+    "name": "StreamStart",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "url",
+            "description": "<p>RTSP源地址</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "customPath",
+            "description": "<p>转推时的推送PATH</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "idleTimeout",
+            "description": "<p>拉流时的超时时间</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "heartbeatInterval",
+            "description": "<p>拉流时的心跳间隔，毫秒为单位。如果心跳间隔不为0，那拉流时会向源地址以该间隔发送OPTION请求用来心跳保活</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "200": [
+          {
+            "group": "200",
+            "type": "String",
+            "optional": false,
+            "field": "ID",
+            "description": "<p>拉流的ID。后续可以通过该ID来停止拉流</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routers/streams.go",
+    "groupTitle": "流管理"
+  },
+  {
+    "type": "get",
+    "url": "/api/vi/stream/stop",
+    "title": "停止拉流",
+    "group": "stream",
+    "name": "StreamStop",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>拉流的ID</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routers/streams.go",
+    "groupTitle": "流管理",
+    "success": {
+      "examples": [
+        {
+          "title": "成功",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    }
   },
   {
     "type": "get",
@@ -282,7 +556,7 @@
     },
     "version": "0.0.0",
     "filename": "routers/sys.go",
-    "groupTitle": "API接口"
+    "groupTitle": "系统"
   },
   {
     "type": "get",
@@ -321,7 +595,7 @@
     },
     "version": "0.0.0",
     "filename": "routers/sys.go",
-    "groupTitle": "API接口"
+    "groupTitle": "系统"
   },
   {
     "type": "get",
@@ -331,7 +605,7 @@
     "name": "Logout",
     "version": "0.0.0",
     "filename": "routers/sys.go",
-    "groupTitle": "API接口",
+    "groupTitle": "系统",
     "success": {
       "examples": [
         {
@@ -350,7 +624,7 @@
     "name": "Restart",
     "version": "0.0.0",
     "filename": "routers/sys.go",
-    "groupTitle": "API接口",
+    "groupTitle": "系统",
     "success": {
       "examples": [
         {
@@ -369,7 +643,7 @@
     "name": "UserInfo",
     "version": "0.0.0",
     "filename": "routers/sys.go",
-    "groupTitle": "API接口",
+    "groupTitle": "系统",
     "success": {
       "fields": {
         "200": [

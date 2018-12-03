@@ -5,6 +5,12 @@ define({
     "stats",
     "Pushers",
     "Players",
+    "stream",
+    "StreamStart",
+    "StreamStop",
+    "record",
+    "RecordFolders",
+    "RecordFiles",
     "sys",
     "Login",
     "Logout",
@@ -19,7 +25,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-11-29T14:31:43.382Z",
+    "time": "2018-12-03T05:17:28.228Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }
