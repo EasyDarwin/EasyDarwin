@@ -16,7 +16,7 @@ import (
  */
 
 /**
- * @api {get} /api/vi/stream/start 启动拉流
+ * @api {get} /api/v1/stream/start 启动拉转推
  * @apiGroup stream
  * @apiName StreamStart
  * @apiParam {String} url RTSP源地址
@@ -65,7 +65,7 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 }
 
 /**
- * @api {get} /api/vi/stream/stop 停止拉流
+ * @api {get} /api/v1/stream/stop 停止推流
  * @apiGroup stream
  * @apiName StreamStop
  * @apiParam {String} id 拉流的ID

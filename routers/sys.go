@@ -99,7 +99,7 @@ func (h *APIHandler) ModifyPassword(c *gin.Context) {
 }
 
 /**
- * @api {get} /getserverinfo 获取平台运行信息
+ * @api {get} /api/v1/getserverinfo 获取平台运行信息
  * @apiGroup sys
  * @apiName GetServerInfo
  * @apiSuccess (200) {String} Hardware 硬件信息
@@ -122,7 +122,7 @@ func (h *APIHandler) GetServerInfo(c *gin.Context) {
 }
 
 /**
- * @api {get} /restart 重启服务
+ * @api {get} /api/v1/restart 重启服务
  * @apiGroup sys
  * @apiName Restart
  * @apiUse simpleSuccess
@@ -146,7 +146,7 @@ func (h *APIHandler) Restart(c *gin.Context) {
  */
 
 /**
- * @api {get} /login 登录
+ * @api {get} /api/v1/login 登录
  * @apiGroup sys
  * @apiName Login
  * @apiParam {String} username 用户名
@@ -183,7 +183,7 @@ func (h *APIHandler) Login(c *gin.Context) {
 }
 
 /**
- * @api {get} /userInfo 获取当前登录用户信息
+ * @api {get} /api/v1/userInfo 获取当前登录用户信息
  * @apiGroup sys
  * @apiName UserInfo
  * @apiUse userInfo
@@ -202,7 +202,7 @@ func (h *APIHandler) UserInfo(c *gin.Context) {
 }
 
 /**
- * @api {get} /logout 登出
+ * @api {get} /api/v1/logout 登出
  * @apiGroup sys
  * @apiName Logout
  * @apiUse simpleSuccess

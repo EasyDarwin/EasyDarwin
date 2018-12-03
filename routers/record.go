@@ -29,7 +29,7 @@ import (
  */
 
 /**
- * @api {get} /api/vi/record/folders 获取所有录像文件夹
+ * @api {get} /api/v1/record/folders 获取所有录像文件夹
  * @apiGroup record
  * @apiName RecordFolders
  * @apiParam {Number} [start] 分页开始,从零开始
@@ -80,7 +80,7 @@ func (h *APIHandler) RecordFolders(c *gin.Context) {
 }
 
 /**
- * @api {get} /api/vi/record/files 获取所有录像文件
+ * @api {get} /api/v1/record/files 获取所有录像文件
  * @apiGroup record
  * @apiName RecordFiles
  * @apiParam {Number} folder 录像文件所在的文件夹

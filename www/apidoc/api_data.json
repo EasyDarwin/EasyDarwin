@@ -1,7 +1,7 @@
 [
   {
     "type": "get",
-    "url": "/api/vi/record/files",
+    "url": "/api/v1/record/files",
     "title": "获取所有录像文件",
     "group": "record",
     "name": "RecordFiles",
@@ -104,7 +104,7 @@
   },
   {
     "type": "get",
-    "url": "/api/vi/record/folders",
+    "url": "/api/v1/record/folders",
     "title": "获取所有录像文件夹",
     "group": "record",
     "name": "RecordFolders",
@@ -427,8 +427,8 @@
   },
   {
     "type": "get",
-    "url": "/api/vi/stream/start",
-    "title": "启动拉流",
+    "url": "/api/v1/stream/start",
+    "title": "启动拉转推",
     "group": "stream",
     "name": "StreamStart",
     "parameter": {
@@ -484,8 +484,8 @@
   },
   {
     "type": "get",
-    "url": "/api/vi/stream/stop",
-    "title": "停止拉流",
+    "url": "/api/v1/stream/stop",
+    "title": "停止推流",
     "group": "stream",
     "name": "StreamStop",
     "parameter": {
@@ -516,7 +516,7 @@
   },
   {
     "type": "get",
-    "url": "/getserverinfo",
+    "url": "/api/v1/getserverinfo",
     "title": "获取平台运行信息",
     "group": "sys",
     "name": "GetServerInfo",
@@ -560,7 +560,7 @@
   },
   {
     "type": "get",
-    "url": "/login",
+    "url": "/api/v1/login",
     "title": "登录",
     "group": "sys",
     "name": "Login",
@@ -599,7 +599,7 @@
   },
   {
     "type": "get",
-    "url": "/logout",
+    "url": "/api/v1/logout",
     "title": "登出",
     "group": "sys",
     "name": "Logout",
@@ -618,7 +618,7 @@
   },
   {
     "type": "get",
-    "url": "/restart",
+    "url": "/api/v1/restart",
     "title": "重启服务",
     "group": "sys",
     "name": "Restart",
@@ -637,7 +637,7 @@
   },
   {
     "type": "get",
-    "url": "/userInfo",
+    "url": "/api/v1/userInfo",
     "title": "获取当前登录用户信息",
     "group": "sys",
     "name": "UserInfo",
