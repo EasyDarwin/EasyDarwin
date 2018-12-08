@@ -3,7 +3,7 @@ package routers
 import "github.com/penggy/EasyGoLib/utils"
 
 const (
-	BuildVersion = "v8.0"
+	BuildVersion = "v8.1"
 )
 
 type PercentData struct {

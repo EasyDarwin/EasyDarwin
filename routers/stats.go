@@ -10,7 +10,7 @@ import (
 )
 
 /**
- * @apiDefine stats 查询接口
+ * @apiDefine stats 统计
  */
 
 /**

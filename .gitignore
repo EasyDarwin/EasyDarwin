@@ -3,6 +3,7 @@
 /EasyDarwin.exe
 /EasyDarwin.exe~
 /logs
+/*.log
 node_modules
 *.db
 *.db.bak

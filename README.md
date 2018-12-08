@@ -77,8 +77,13 @@
 
 ### 准备工具
 
+        # go tools
         go get -u github.com/kardianos/govendor
         go get -u github.com/caixw/gobuild
+
+        # npm tools
+        npm i -g apidoc
+        npm i -g rimraf
 
 
 ### 编译命令
