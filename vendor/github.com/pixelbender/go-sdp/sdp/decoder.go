@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -199,11 +200,11 @@ func (d *Decoder) rtpmap(f *Format, v string) error {
 	f.Name = p[0]
 	var err error
 	if ok {
-		if f.Channels, err = strconv.Atoi(p[2]); err != nil {
+		if f.Channels, err = strconv.Atoi(strings.TrimSpace(p[2])); err != nil {
 			return err
 		}
 	}
-	if f.ClockRate, err = strconv.Atoi(p[1]); err != nil {
+	if f.ClockRate, err = strconv.Atoi(strings.TrimSpace(p[1])); err != nil {
 		return err
 	}
 	return nil

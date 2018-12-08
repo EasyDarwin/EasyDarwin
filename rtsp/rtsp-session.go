@@ -375,6 +375,8 @@ func (session *Session) handleRequest(req *Request) {
 			}
 		} else if udpMatchs := mudp.FindStringSubmatch(ts); udpMatchs != nil {
 			session.TransType = TRANS_TYPE_UDP
+			// no need for tcp timeout.
+			session.Conn.timeout = 0
 			if session.UDPClient == nil {
 				session.UDPClient = &UDPClient{
 					Session: session,

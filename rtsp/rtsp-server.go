@@ -2,7 +2,6 @@ package rtsp
 
 import (
 	"fmt"
-	"github.com/penggy/EasyGoLib/utils"
 	"log"
 	"net"
 	"os"
@@ -12,6 +11,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/penggy/EasyGoLib/utils"
 )
 
 type Server struct {
@@ -82,12 +83,15 @@ func (server *Server) Start() (err error) {
 							log.Printf("EnsureDir:[%s] err:%v.", dir, err)
 							continue
 						}
-						path := path.Join(dir, fmt.Sprintf("out.m3u8"))
+						m3u8path := path.Join(dir, fmt.Sprintf("out.m3u8"))
 						// ffmpeg -i ~/Downloads/720p.mp4 -s 640x360 -g 15 -c:a aac -hls_time 5 -hls_list_size 0 record.m3u8
 
-						cmd := exec.Command(ffmpeg, "-fflags", "genpts", "-rtsp_transport", "tcp", "-i", pusher.URL(), "-c:v", "copy", "-hls_time", strconv.Itoa(ts_duration_second), "-hls_list_size", "0", path)
-						cmd.Stdout = os.Stdout
-						cmd.Stderr = os.Stderr
+						cmd := exec.Command(ffmpeg, "-fflags", "genpts", "-rtsp_transport", "tcp", "-i", pusher.URL(), "-c:v", "copy", "-hls_time", strconv.Itoa(ts_duration_second), "-hls_list_size", "0", m3u8path)
+						f, err := os.OpenFile(path.Join(dir, fmt.Sprintf("log.txt")), os.O_RDWR|os.O_CREATE, 0755)
+						if err == nil {
+							cmd.Stdout = f
+							cmd.Stderr = f
+						}
 						err = cmd.Start()
 						if err != nil {
 							log.Printf("Start ffmpeg err:%v", err)
@@ -106,7 +110,15 @@ func (server *Server) Start() (err error) {
 						if proc != nil {
 							log.Printf("prepare to SIGTERM to process:%v", proc)
 							proc.Signal(syscall.SIGTERM)
+							proc.Wait()
 							// proc.Kill()
+							// no need to close attached log file.
+							// see "Wait releases any resources associated with the Cmd."
+							// if closer, ok := cmd.Stdout.(io.Closer); ok {
+							// 	closer.Close()
+							// 	log.Printf("process:%v Stdout closed.", proc)
+							// }
+							log.Printf("process:%v terminate.", proc)
 						}
 						delete(pusher2ffmpegMap, pusher)
 						log.Printf("delete ffmpeg from pull stream from pusher[%v]", pusher)
