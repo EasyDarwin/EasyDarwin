@@ -151,6 +151,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 		}
 		client.Sdp = sess
 		client.SDPRaw = resp.Body
+		Session := ""
 		for _, media := range sess.Media {
 			switch media.Type {
 			case "video":
@@ -168,6 +169,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				if err != nil {
 					return err
 				}
+				Session = resp.Header["Session"]
 			case "audio":
 				client.AControl = media.Attributes.Get("control")
 				client.VCodec = media.Formats[0].Name
@@ -183,9 +185,13 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				if err != nil {
 					return err
 				}
+				Session = resp.Header["Session"]
 			}
 		}
 		headers = make(map[string]string)
+		if Session != "" {
+			headers["Session"] = Session
+		}
 		resp, err = client.Request("PLAY", headers)
 		if err != nil {
 			return err
