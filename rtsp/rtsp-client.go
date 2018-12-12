@@ -3,12 +3,14 @@ package rtsp
 import (
 	"bufio"
 	"bytes"
+	"crypto/md5"
 	"encoding/binary"
 	"fmt"
 	"io"
 	"log"
 	"net"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -29,7 +31,6 @@ type RTSPClient struct {
 	CustomPath           string //custom path for pusher
 	ID                   string
 	Conn                 net.Conn
-	AuthHeaders          bool
 	Session              *string
 	Seq                  int
 	connRW               *bufio.ReadWriter
@@ -44,6 +45,8 @@ type RTSPClient struct {
 	VCodec               string
 	OptionIntervalMillis int64
 	SDPRaw               string
+
+	authLine string
 
 	//tcp channels
 	aRTPChannel        int
@@ -78,6 +81,78 @@ func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) (clien
 		StartAt:              time.Now(),
 	}
 	return
+}
+
+func digestAuth(authLine string, method string, URL string) (string, error) {
+	l, err := url.Parse(URL)
+	if err != nil {
+		return "", fmt.Errorf("Url parse error:%v,%v", URL, err)
+	}
+	realm := ""
+	nonce := ""
+	realmRex := regexp.MustCompile(`realm="(\S+)"`)
+	result1 := realmRex.FindStringSubmatch(authLine)
+
+	nonceRex := regexp.MustCompile(`nonce="(\S+)"`)
+	result2 := nonceRex.FindStringSubmatch(authLine)
+
+	if len(result1) == 2 {
+		realm = result1[1]
+	} else {
+		return "", fmt.Errorf("auth error : no realm found")
+	}
+	if len(result2) == 2 {
+		nonce = result2[1]
+	} else {
+		return "", fmt.Errorf("auth error : no nonce found")
+	}
+	// response= md5(md5(username:realm:password):nonce:md5(public_method:url));
+	username := l.User.Username()
+	password, _ := l.User.Password()
+	l.User = nil
+	md5UserRealmPwd := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s:%s", username, realm, password))))
+	md5MethodURL := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s", method, l.String()))))
+
+	response := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s:%s", md5UserRealmPwd, nonce, md5MethodURL))))
+	Authorization := fmt.Sprintf("Authorization: Digest username=\"%s\", realm=\"%s\", nonce=\"%s\", uri=\"%s\", response=\"%s\"", username, realm, nonce, l.String(), response)
+	return Authorization, nil
+}
+
+func (client *RTSPClient) checkAuth(method string, resp *Response) (string, error) {
+	if resp.StatusCode == 401 {
+
+		// need auth.
+		AuthHeaders := resp.Header["WWW-Authenticate"]
+		auths, ok := AuthHeaders.([]string)
+
+		if ok {
+			for _, authLine := range auths {
+
+				if strings.IndexAny(authLine, "Digest") == 0 {
+					// 					realm="HipcamRealServer",
+					// nonce="3b27a446bfa49b0c48c3edb83139543d"
+					client.authLine = authLine
+					return digestAuth(authLine, method, client.URL)
+				} else if strings.IndexAny(authLine, "Basic") == 0 {
+					// not support yet
+					// TODO..
+				}
+
+			}
+			return "", fmt.Errorf("auth error")
+		} else {
+			authLine, _ := AuthHeaders.(string)
+			if strings.IndexAny(authLine, "Digest") == 0 {
+				client.authLine = authLine
+				return digestAuth(authLine, method, client.URL)
+			} else if strings.IndexAny(authLine, "Basic") == 0 {
+				// not support yet
+				// TODO..
+				return "", fmt.Errorf("not support Basic auth yet")
+			}
+		}
+	}
+	return "", nil
 }
 
 func (client *RTSPClient) Start(timeout time.Duration) error {
@@ -132,7 +207,17 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 		// An OPTIONS request returns the request types the server will accept.
 		resp, err := client.Request("OPTIONS", headers)
 		if err != nil {
-			return err
+			Authorization, _ := client.checkAuth("OPTIONS", resp)
+			if len(Authorization) > 0 {
+				headers := make(map[string]string)
+				headers["Require"] = "implicit-play"
+				headers["Authorization"] = Authorization
+				// An OPTIONS request returns the request types the server will accept.
+				resp, err = client.Request("OPTIONS", headers)
+			}
+			if err != nil {
+				return err
+			}
 		}
 
 		// A DESCRIBE request includes an RTSP URL (rtsp://...), and the type of reply data that can be handled. This reply includes the presentation description,
@@ -142,6 +227,15 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 		headers["Accept"] = "application/sdp"
 		resp, err = client.Request("DESCRIBE", headers)
 		if err != nil {
+			Authorization, _ := client.checkAuth("DESCRIBE", resp)
+			if len(Authorization) > 0 {
+				headers := make(map[string]string)
+				headers["Authorization"] = Authorization
+				resp, err = client.Request("DESCRIBE", headers)
+			}
+			if err != nil {
+				return err
+			}
 			return err
 		}
 
@@ -165,11 +259,12 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				}
 				headers = make(map[string]string)
 				headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;interleaved=%d-%d", client.vRTPChannel, client.vRTPControlChannel)
+
 				resp, err = client.RequestWithPath("SETUP", _url, headers, true)
 				if err != nil {
 					return err
 				}
-				Session = resp.Header["Session"]
+				Session, _ = resp.Header["Session"].(string)
 			case "audio":
 				client.AControl = media.Attributes.Get("control")
 				client.VCodec = media.Formats[0].Name
@@ -185,7 +280,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				if err != nil {
 					return err
 				}
-				Session = resp.Header["Session"]
+				Session, _ = resp.Header["Session"].(string)
 			}
 		}
 		headers = make(map[string]string)
@@ -376,8 +471,13 @@ func (client *RTSPClient) Stop() {
 
 func (client *RTSPClient) RequestWithPath(method string, path string, headers map[string]string, needResp bool) (resp *Response, err error) {
 	headers["User-Agent"] = "EasyDarwinGo"
-	if client.AuthHeaders {
-		//headers["Authorization"] = this.digest(method, _url);
+	if len(headers["Authorization"]) == 0 {
+		if len(client.authLine) != 0 {
+			Authorization, _ := digestAuth(client.authLine, method, client.URL)
+			if len(Authorization) > 0 {
+				headers["Authorization"] = Authorization
+			}
+		}
 	}
 	if client.Session != nil {
 		headers["Session"] = *client.Session
@@ -408,7 +508,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 	status := ""
 	sid := ""
 	contentLen := 0
-	respHeader := make(map[string]string)
+	respHeader := make(map[string]interface{})
 	var line []byte
 	builder.Reset()
 	for !client.Stoped {
@@ -429,9 +529,15 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 					builder.Write(content)
 				}
 				resp = NewResponse(statusCode, status, strconv.Itoa(cseq), sid, body)
+				resp.Header = respHeader
 
 				log.Println("S->C	<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 				log.Println(builder.String())
+
+				if !(statusCode >= 200 && statusCode <= 300) {
+					err = fmt.Errorf("Response StatusCode is :%d", statusCode)
+					return
+				}
 				return
 			}
 			s := string(line)
@@ -450,16 +556,23 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 				if err != nil {
 					return
 				}
-				if statusCode != 200 {
-					err = fmt.Errorf("Response StatusCode is :%d", statusCode)
-					return
-				}
 				status = splits[2]
 			}
 			lineCount++
 			splits := strings.Split(s, ":")
 			if len(splits) == 2 {
-				respHeader[splits[0]] = strings.TrimSpace(splits[1])
+				if val, ok := respHeader[splits[0]]; ok {
+					if slice, ok2 := val.([]string); ok2 {
+						slice = append(slice, strings.TrimSpace(splits[1]))
+						respHeader[splits[0]] = slice
+					} else {
+						str, _ := val.(string)
+						slice := []string{str, strings.TrimSpace(splits[1])}
+						respHeader[splits[0]] = slice
+					}
+				} else {
+					respHeader[splits[0]] = strings.TrimSpace(splits[1])
+				}
 			}
 			if strings.Index(s, "Session:") == 0 {
 				splits := strings.Split(s, ":")
@@ -488,12 +601,22 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 	return
 }
 
-func (client *RTSPClient) Request(method string, headers map[string]string) (resp *Response, err error) {
-	return client.RequestWithPath(method, client.URL, headers, true)
+func (client *RTSPClient) Request(method string, headers map[string]string) (*Response, error) {
+	l, err := url.Parse(client.URL)
+	if err != nil {
+		return nil, fmt.Errorf("Url parse error:%v", err)
+	}
+	l.User = nil
+	return client.RequestWithPath(method, l.String(), headers, true)
 }
 
 func (client *RTSPClient) RequestNoResp(method string, headers map[string]string) (err error) {
-	if _, err := client.RequestWithPath(method, client.URL, headers, false); err != nil {
+	l, err := url.Parse(client.URL)
+	if err != nil {
+		return fmt.Errorf("Url parse error:%v", err)
+	}
+	l.User = nil
+	if _, err = client.RequestWithPath(method, l.String(), headers, false); err != nil {
 		return err
 	}
 	return nil

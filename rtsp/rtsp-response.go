@@ -9,7 +9,7 @@ type Response struct {
 	Version    string
 	StatusCode int
 	Status     string
-	Header     map[string]string
+	Header     map[string]interface{}
 	Body       string
 }
 
@@ -18,7 +18,7 @@ func NewResponse(statusCode int, status, cSeq, sid, body string) *Response {
 		Version:    RTSP_VERSION,
 		StatusCode: statusCode,
 		Status:     status,
-		Header:     map[string]string{"CSeq": cSeq, "Session": sid},
+		Header:     map[string]interface{}{"CSeq": cSeq, "Session": sid},
 		Body:       body,
 	}
 	len := len(body)
