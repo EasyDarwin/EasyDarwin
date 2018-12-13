@@ -106,10 +106,10 @@ func (pr *PageResult) Sort(by, order string) *PageResult {
 				break
 			}
 		}
-	}
-	if byIdx == -1 {
-		log.Printf("%v field name[%s] not found, case insensitive", te, by)
-		return pr
+		if byIdx == -1 {
+			log.Printf("%v field name[%s] not found, case insensitive", te, by)
+			return pr
+		}
 	}
 	sort.Slice(pr.Rows, func(i, j int) (ret bool) {
 		va := reflect.ValueOf(pr.Rows).Index(i)
