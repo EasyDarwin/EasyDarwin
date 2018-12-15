@@ -64,6 +64,8 @@ func ParseSDP(sdpRaw string) map[string]*SDPInfo {
 								info.Codec = "aac"
 							case "H264":
 								info.Codec = "h264"
+							case "H265":
+								info.Codec = "h265"
 							}
 							if i, err := strconv.Atoi(keyval[1]); err == nil {
 								info.TimeScale = i
