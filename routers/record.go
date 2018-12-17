@@ -140,7 +140,7 @@ func (h *APIHandler) RecordFiles(c *gin.Context) {
 					return nil
 				}
 				if !strings.HasSuffix(info.Name(), ".m3u8") {
-					return filepath.SkipDir
+					return nil
 				}
 				cmd := exec.Command(ffprobe, "-i", path)
 				cmdOutput := &bytes.Buffer{}

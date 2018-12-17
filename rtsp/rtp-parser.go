@@ -19,7 +19,6 @@ type RTPInfo struct {
 	Timestamp      int
 	SSRC           int
 	Payload        []byte
-	NaluType       uint8
 }
 
 func ParseRTP(rtpBytes []byte) *RTPInfo {
@@ -62,19 +61,20 @@ func ParseRTP(rtpBytes []byte) *RTPInfo {
 	if end-offset < 1 {
 		return nil
 	}
-	payloadHeader := rtpBytes[offset] //https://tools.ietf.org/html/rfc6184#section-5.2
-	info.NaluType = uint8(payloadHeader & 0x1F)
+
 	return info
 }
 
 func (rtp *RTPInfo) IsKeyframeStart() bool {
 	var realNALU uint8
+	payloadHeader := rtp.Payload[0] //https://tools.ietf.org/html/rfc6184#section-5.2
+	NaluType := uint8(payloadHeader & 0x1F)
 
 	switch {
-	case rtp.NaluType <= 23:
+	case NaluType <= 23:
 		realNALU = rtp.Payload[0]
 		//log.Printf("Single NAL:%d", rtp.NaluType)
-	case rtp.NaluType == 28 || rtp.NaluType == 29:
+	case NaluType == 28 || NaluType == 29:
 		realNALU = rtp.Payload[1]
 		if realNALU&0x80 != 0 {
 			//log.Printf("FU NAL Begin :%d", rtp.NaluType)
@@ -128,11 +128,11 @@ func (rtp *RTPInfo) IsKeyframeStartH265() bool {
 
 		} else { // Single NALU
 			/*
-						+---------------+---------------+
-			            |0|1|2|3|4|5|6|7|0|1|2|3|4|5|6|7|
-			            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-			            |F|   Type    |  LayerId  | TID |
-			            +-------------+-----------------+
+							+---------------+---------------+
+				            |0|1|2|3|4|5|6|7|0|1|2|3|4|5|6|7|
+				            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+				            |F|   Type    |  LayerId  | TID |
+				            +-------------+-----------------+
 			*/
 			frameType = firstByte & 0x7e
 		}
