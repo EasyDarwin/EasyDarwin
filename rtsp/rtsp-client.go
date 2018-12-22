@@ -259,7 +259,9 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				}
 				headers = make(map[string]string)
 				headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;interleaved=%d-%d", client.vRTPChannel, client.vRTPControlChannel)
-
+				if Session != "" {
+					headers["Session"] = Session
+				}
 				resp, err = client.RequestWithPath("SETUP", _url, headers, true)
 				if err != nil {
 					return err
@@ -276,6 +278,9 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				}
 				headers = make(map[string]string)
 				headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;interleaved=%d-%d", client.aRTPChannel, client.aRTPControlChannel)
+				if Session != "" {
+					headers["Session"] = Session
+				}
 				resp, err = client.RequestWithPath("SETUP", _url, headers, true)
 				if err != nil {
 					return err
@@ -492,7 +497,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 	}
 	builder.WriteString(fmt.Sprintf("\r\n"))
 	s := builder.String()
-	log.Println("C->S	>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+	log.Println(">>")
 	log.Println(s)
 	_, err = client.connRW.WriteString(s)
 	if err != nil {
@@ -531,7 +536,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 				resp = NewResponse(statusCode, status, strconv.Itoa(cseq), sid, body)
 				resp.Header = respHeader
 
-				log.Println("S->C	<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+				log.Println("<<")
 				log.Println(builder.String())
 
 				if !(statusCode >= 200 && statusCode <= 300) {

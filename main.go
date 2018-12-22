@@ -133,10 +133,7 @@ func main() {
 	flag.Parse()
 	tail := flag.Args()
 	log.SetPrefix("[EasyDarwin] ")
-	log.SetFlags(log.LstdFlags)
-	if utils.Debug {
-		log.SetFlags(log.Lshortfile | log.LstdFlags)
-	}
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	sec := utils.Conf().Section("service")
 	svcConfig := &service.Config{
 		Name:        sec.Key("name").MustString("EasyDarwin_Service"),
