@@ -5,7 +5,7 @@
 
 - 基于Golang开发维护；
 
-- 支持Windows、Linux平台；
+- 支持Windows、Linux、macOS平台；
 
 - 支持RTSP推流分发（推模式转发）；
 
@@ -40,13 +40,13 @@
     
     以 ServiceUninstall-EasyDarwin.exe 卸载 EasyDarwin 服务
 
-- 直接运行(Linux)
+- 直接运行(Linux/macOS)
 
 		cd EasyDarwin
 		./easydarwin
 		# Ctrl + C
 
-- 以服务启动(Linux)
+- 以服务启动(Linux/macOS)
 
 		cd EasyDarwin
 		./start.sh
@@ -95,33 +95,33 @@
         git clone https://github.com/EasyDarwin/EasyDarwin.git --depth=1 EasyDarwin
         cd EasyDarwin
 
-- 以开发模式运行 server
+- 以开发模式运行
 
         npm run dev
 
-- 以开发模式运行前端
+- 以开发模式运行前端 Run as dev mode
 
         npm run dev:www       
 
-- 编译前端
+- 编译前端  Build www
 
         cd web_src && npm i
         cd ..
         npm run build:www
 
-- 编译 Windows 版本
+- 编译 Windows 版本 Build windows version
 
         npm run build:win
 
-- 编译 Linux 版本 (在 bash 环境下执行)
+- 编译 Linux/macOS 版本 (在 bash 环境下执行) Build linux/macOS version
 
         npm run build:lin       
 
-- 清理编译文件
+- 清理编译文件 Clean
 
         npm run clean 
 
-- 打包
+- 打包 Pack
 
         # install pack
         npm i -g @penggy/pack
@@ -130,7 +130,7 @@
         npm run build:win
         pack zip
 
-        # for linux 
+        # for linux/macOS
         npm run build:lin
         pack tar
 
