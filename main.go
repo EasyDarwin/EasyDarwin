@@ -17,6 +17,11 @@ import (
 	"github.com/penggy/service"
 )
 
+var (
+	gitCommitCode string
+	buildDateTime string
+)
+
 type program struct {
 	httpPort   int
 	httpServer *http.Server
@@ -128,13 +133,20 @@ func main() {
 	flag.StringVar(&utils.FlagVarConfFile, "config", "", "configure file path")
 	flag.Parse()
 	tail := flag.Args()
+
 	// log
 	log.SetPrefix("[EasyDarwin] ")
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	if !utils.Debug {
 		log.Println("log files -->", utils.LogDir())
+		log.Printf("git commit code:%s", gitCommitCode)
+		log.Printf("build date:%s", buildDateTime)
 		log.SetOutput(utils.GetLogWriter())
 	}
+	log.Printf("git commit code:%s", gitCommitCode)
+	log.Printf("build date:%s", buildDateTime)
+	routers.BuildVersion = fmt.Sprintf("%s.%s", routers.BuildVersion, gitCommitCode)
+	routers.BuildDateTime = buildDateTime
 
 	sec := utils.Conf().Section("service")
 	svcConfig := &service.Config{

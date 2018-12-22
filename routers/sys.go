@@ -113,7 +113,7 @@ func (h *APIHandler) GetServerInfo(c *gin.Context) {
 		"InterfaceVersion": "V1",
 		"RunningTime":      utils.UpTimeString(),
 		"StartUpTime":      utils.DateTime(utils.StartTime),
-		"Server":           fmt.Sprintf("%s/%s (Platform/%s;)", "EasyDarwin", BuildVersion, strings.Title(runtime.GOOS)),
+		"Server":           fmt.Sprintf("%s/%s,%s (Platform/%s;)", "EasyDarwin", BuildDateTime, BuildVersion, strings.Title(runtime.GOOS)),
 		"memData":          memData,
 		"cpuData":          cpuData,
 		"pusherData":       pusherData,
