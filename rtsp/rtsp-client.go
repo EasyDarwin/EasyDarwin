@@ -10,6 +10,7 @@ import (
 	"log"
 	"net"
 	"net/url"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,7 +24,8 @@ import (
 )
 
 type RTSPClient struct {
-	Server               *Server
+	Server *Server
+	SessionLogger
 	Stoped               bool
 	Status               string
 	URL                  string
@@ -79,6 +81,10 @@ func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) (clien
 		aRTPControlChannel:   3,
 		OptionIntervalMillis: sendOptionMillis,
 		StartAt:              time.Now(),
+	}
+	client.logger = log.New(os.Stdout, fmt.Sprintf("[%s]", client.ID), log.LstdFlags|log.Lshortfile)
+	if !utils.Debug {
+		client.logger.SetOutput(utils.GetLogWriter())
 	}
 	return
 }
@@ -157,7 +163,10 @@ func (client *RTSPClient) checkAuth(method string, resp *Response) (string, erro
 
 func (client *RTSPClient) Start(timeout time.Duration) error {
 	//source := make(chan interface{})
-
+	logger := client.logger
+	if !utils.Debug {
+		logger.SetOutput(utils.GetLogWriter())
+	}
 	if timeout == 0 {
 		timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
 		timeout = time.Duration(timeoutMillis) * time.Millisecond
@@ -322,7 +331,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 			b, err := client.connRW.ReadByte()
 			if err != nil {
 				if !client.Stoped {
-					log.Printf("client.connRW.ReadByte err:%v", err)
+					logger.Printf("client.connRW.ReadByte err:%v", err)
 				}
 				return
 			}
@@ -334,7 +343,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				if err != nil {
 
 					if !client.Stoped {
-						log.Printf("io.ReadFull err:%v", err)
+						logger.Printf("io.ReadFull err:%v", err)
 					}
 					return
 				}
@@ -344,7 +353,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				_, err = io.ReadFull(client.connRW, content)
 				if err != nil {
 					if !client.Stoped {
-						log.Printf("io.ReadFull err:%v", err)
+						logger.Printf("io.ReadFull err:%v", err)
 					}
 					return
 				}
@@ -373,16 +382,16 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 						Buffer: rtpBuf,
 					}
 				default:
-					log.Printf("unknow rtp pack type, channel:%v", channel)
+					logger.Printf("unknow rtp pack type, channel:%v", channel)
 					continue
 				}
 				if pack == nil {
-					log.Printf("session tcp got nil rtp pack")
+					logger.Printf("session tcp got nil rtp pack")
 					continue
 				}
 				elapsed := time.Now().Sub(loggerTime)
 				if elapsed >= 10*time.Second {
-					log.Printf("%v read rtp frame.", client)
+					logger.Printf("%v read rtp frame.", client)
 					loggerTime = time.Now()
 				}
 				client.InBytes += int(length + 4)
@@ -398,7 +407,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 					line, prefix, err := client.connRW.ReadLine()
 					if err != nil {
 						if !client.Stoped {
-							log.Printf("client.connRW.ReadLine err:%v", err)
+							logger.Printf("client.connRW.ReadLine err:%v", err)
 						}
 						return
 					}
@@ -414,8 +423,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 							}
 							builder.Write(content)
 						}
-						log.Println("S->C	<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-						log.Println(builder.String())
+						logger.Printf("<<<\n%s", builder.String())
 						break
 					}
 					s := string(line)
@@ -429,7 +437,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 						contentLen, err = strconv.Atoi(strings.TrimSpace(splits[1]))
 						if err != nil {
 							if !client.Stoped {
-								log.Printf("strconv.Atoi err:%v, str:%v", err, splits[1])
+								logger.Printf("strconv.Atoi err:%v, str:%v", err, splits[1])
 							}
 							return
 						}
@@ -475,6 +483,7 @@ func (client *RTSPClient) Stop() {
 }
 
 func (client *RTSPClient) RequestWithPath(method string, path string, headers map[string]string, needResp bool) (resp *Response, err error) {
+	logger := client.logger
 	headers["User-Agent"] = "EasyDarwinGo"
 	if len(headers["Authorization"]) == 0 {
 		if len(client.authLine) != 0 {
@@ -497,8 +506,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 	}
 	builder.WriteString(fmt.Sprintf("\r\n"))
 	s := builder.String()
-	log.Println(">>")
-	log.Println(s)
+	logger.Printf(">>>\n%s", s)
 	_, err = client.connRW.WriteString(s)
 	if err != nil {
 		return
@@ -535,9 +543,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 				}
 				resp = NewResponse(statusCode, status, strconv.Itoa(cseq), sid, body)
 				resp.Header = respHeader
-
-				log.Println("<<")
-				log.Println(builder.String())
+				logger.Printf("<<\n%s", builder.String())
 
 				if !(statusCode >= 200 && statusCode <= 300) {
 					err = fmt.Errorf("Response StatusCode is :%d", statusCode)

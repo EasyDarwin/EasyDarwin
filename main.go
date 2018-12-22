@@ -103,10 +103,6 @@ func (p *program) Start(s service.Service) (err error) {
 	}
 	p.StartRTSP()
 	p.StartHTTP()
-	if !utils.Debug {
-		log.Println("log files -->", utils.LogDir())
-		log.SetOutput(utils.GetLogWriter())
-	}
 	go func() {
 		for range routers.API.RestartChan {
 			p.StopHTTP()
@@ -132,8 +128,14 @@ func main() {
 	flag.StringVar(&utils.FlagVarConfFile, "config", "", "configure file path")
 	flag.Parse()
 	tail := flag.Args()
+	// log
 	log.SetPrefix("[EasyDarwin] ")
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
+	if !utils.Debug {
+		log.Println("log files -->", utils.LogDir())
+		log.SetOutput(utils.GetLogWriter())
+	}
+
 	sec := utils.Conf().Section("service")
 	svcConfig := &service.Config{
 		Name:        sec.Key("name").MustString("EasyDarwin_Service"),

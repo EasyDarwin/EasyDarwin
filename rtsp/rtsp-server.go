@@ -16,6 +16,7 @@ import (
 )
 
 type Server struct {
+	SessionLogger
 	TCPListener    *net.TCPListener
 	TCPPort        int
 	Stoped         bool
@@ -36,11 +37,13 @@ func GetServer() *Server {
 			addPusherCh:    make(chan *Pusher),
 			removePusherCh: make(chan *Pusher),
 		}
+		Instance.logger = log.New(os.Stdout, "[RTSPServer]", log.LstdFlags|log.Lshortfile)
 	}
 	return Instance
 }
 
 func (server *Server) Start() (err error) {
+	logger := server.logger
 	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", server.TCPPort))
 	if err != nil {
 		return
@@ -58,7 +61,7 @@ func (server *Server) Start() (err error) {
 	if (len(ffmpeg) > 0) && localRecord > 0 && len(m3u8_dir_path) > 0 {
 		err := utils.EnsureDir(m3u8_dir_path)
 		if err != nil {
-			log.Printf("Create m3u8_dir_path[%s] err:%v.", m3u8_dir_path, err)
+			logger.Printf("Create m3u8_dir_path[%s] err:%v.", m3u8_dir_path, err)
 		} else {
 			SaveStreamToLocal = true
 		}
@@ -66,8 +69,8 @@ func (server *Server) Start() (err error) {
 	go func() { // save to local.
 		pusher2ffmpegMap := make(map[*Pusher]*exec.Cmd)
 		if SaveStreamToLocal {
-			log.Printf("Prepare to save stream to local....")
-			defer log.Printf("End save stream to local....")
+			logger.Printf("Prepare to save stream to local....")
+			defer logger.Printf("End save stream to local....")
 		}
 		var pusher *Pusher
 		addChnOk := true
@@ -80,7 +83,7 @@ func (server *Server) Start() (err error) {
 						dir := path.Join(m3u8_dir_path, pusher.Path(), time.Now().Format("20060102150405"))
 						err := utils.EnsureDir(dir)
 						if err != nil {
-							log.Printf("EnsureDir:[%s] err:%v.", dir, err)
+							logger.Printf("EnsureDir:[%s] err:%v.", dir, err)
 							continue
 						}
 						m3u8path := path.Join(dir, fmt.Sprintf("out.m3u8"))
@@ -94,12 +97,12 @@ func (server *Server) Start() (err error) {
 						}
 						err = cmd.Start()
 						if err != nil {
-							log.Printf("Start ffmpeg err:%v", err)
+							logger.Printf("Start ffmpeg err:%v", err)
 						}
 						pusher2ffmpegMap[pusher] = cmd
-						log.Printf("add ffmpeg [%v] to pull stream from pusher[%v]", cmd, pusher)
+						logger.Printf("add ffmpeg [%v] to pull stream from pusher[%v]", cmd, pusher)
 					} else {
-						log.Printf("addPusherChan closed")
+						logger.Printf("addPusherChan closed")
 					}
 				}
 			case pusher, removeChnOk = <-server.removePusherCh:
@@ -108,7 +111,7 @@ func (server *Server) Start() (err error) {
 						cmd := pusher2ffmpegMap[pusher]
 						proc := cmd.Process
 						if proc != nil {
-							log.Printf("prepare to SIGTERM to process:%v", proc)
+							logger.Printf("prepare to SIGTERM to process:%v", proc)
 							proc.Signal(syscall.SIGTERM)
 							proc.Wait()
 							// proc.Kill()
@@ -116,22 +119,22 @@ func (server *Server) Start() (err error) {
 							// see "Wait releases any resources associated with the Cmd."
 							// if closer, ok := cmd.Stdout.(io.Closer); ok {
 							// 	closer.Close()
-							// 	log.Printf("process:%v Stdout closed.", proc)
+							// 	logger.Printf("process:%v Stdout closed.", proc)
 							// }
-							log.Printf("process:%v terminate.", proc)
+							logger.Printf("process:%v terminate.", proc)
 						}
 						delete(pusher2ffmpegMap, pusher)
-						log.Printf("delete ffmpeg from pull stream from pusher[%v]", pusher)
+						logger.Printf("delete ffmpeg from pull stream from pusher[%v]", pusher)
 					} else {
 						for _, cmd := range pusher2ffmpegMap {
 							proc := cmd.Process
 							if proc != nil {
-								log.Printf("prepare to SIGTERM to process:%v", proc)
+								logger.Printf("prepare to SIGTERM to process:%v", proc)
 								proc.Signal(syscall.SIGTERM)
 							}
 						}
 						pusher2ffmpegMap = make(map[*Pusher]*exec.Cmd)
-						log.Printf("removePusherChan closed")
+						logger.Printf("removePusherChan closed")
 					}
 				}
 			}
@@ -140,20 +143,20 @@ func (server *Server) Start() (err error) {
 
 	server.Stoped = false
 	server.TCPListener = listener
-	log.Println("rtsp server start on", server.TCPPort)
+	logger.Println("rtsp server start on", server.TCPPort)
 	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	for !server.Stoped {
 		conn, err := server.TCPListener.Accept()
 		if err != nil {
-			log.Println(err)
+			logger.Println(err)
 			continue
 		}
 		if tcpConn, ok := conn.(*net.TCPConn); ok {
 			if err := tcpConn.SetReadBuffer(networkBuffer); err != nil {
-				log.Printf("rtsp server conn set read buffer error, %v", err)
+				logger.Printf("rtsp server conn set read buffer error, %v", err)
 			}
 			if err := tcpConn.SetWriteBuffer(networkBuffer); err != nil {
-				log.Printf("rtsp server conn set write buffer error, %v", err)
+				logger.Printf("rtsp server conn set write buffer error, %v", err)
 			}
 		}
 
@@ -164,7 +167,8 @@ func (server *Server) Start() (err error) {
 }
 
 func (server *Server) Stop() {
-	log.Println("rtsp server stop on", server.TCPPort)
+	logger := server.logger
+	logger.Println("rtsp server stop on", server.TCPPort)
 	server.Stoped = true
 	if server.TCPListener != nil {
 		server.TCPListener.Close()
@@ -179,12 +183,13 @@ func (server *Server) Stop() {
 }
 
 func (server *Server) AddPusher(pusher *Pusher) {
+	logger := server.logger
 	added := false
 	server.pushersLock.Lock()
 	if _, ok := server.pushers[pusher.Path()]; !ok {
 		server.pushers[pusher.Path()] = pusher
 		go pusher.Start()
-		log.Printf("%v start, now pusher size[%d]", pusher, len(server.pushers))
+		logger.Printf("%v start, now pusher size[%d]", pusher, len(server.pushers))
 		added = true
 	}
 	server.pushersLock.Unlock()
@@ -194,11 +199,12 @@ func (server *Server) AddPusher(pusher *Pusher) {
 }
 
 func (server *Server) RemovePusher(pusher *Pusher) {
+	logger := server.logger
 	removed := false
 	server.pushersLock.Lock()
 	if _pusher, ok := server.pushers[pusher.Path()]; ok && pusher.ID() == _pusher.ID() {
 		delete(server.pushers, pusher.Path())
-		log.Printf("%v end, now pusher size[%d]\n", pusher, len(server.pushers))
+		logger.Printf("%v end, now pusher size[%d]\n", pusher, len(server.pushers))
 		removed = true
 	}
 	server.pushersLock.Unlock()

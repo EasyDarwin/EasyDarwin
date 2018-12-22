@@ -1,7 +1,6 @@
 package rtsp
 
 import (
-	"log"
 	"sync"
 )
 
@@ -27,8 +26,9 @@ func NewPlayer(session *Session, pusher *Pusher) (player *Player) {
 }
 
 func (player *Player) QueueRTP(pack *RTPPack) *Player {
+	logger := player.logger
 	if pack == nil {
-		log.Printf("player queue enter nil pack, drop it")
+		logger.Printf("player queue enter nil pack, drop it")
 		return player
 	}
 	player.cond.L.Lock()
@@ -39,6 +39,7 @@ func (player *Player) QueueRTP(pack *RTPPack) *Player {
 }
 
 func (player *Player) Start() {
+	logger := player.logger
 	for !player.Stoped {
 		var pack *RTPPack
 		player.cond.L.Lock()
@@ -52,12 +53,12 @@ func (player *Player) Start() {
 		player.cond.L.Unlock()
 		if pack == nil {
 			if !player.Stoped {
-				log.Printf("player not stoped, but queue take out nil pack")
+				logger.Printf("player not stoped, but queue take out nil pack")
 			}
 			continue
 		}
 		if err := player.SendRTP(pack); err != nil {
-			log.Println(err)
+			logger.Println(err)
 		}
 	}
 }

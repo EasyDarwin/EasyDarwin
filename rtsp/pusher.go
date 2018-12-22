@@ -68,6 +68,13 @@ func (pusher *Pusher) ID() string {
 	return pusher.RTSPClient.ID
 }
 
+func (pusher *Pusher) Logger() *log.Logger {
+	if pusher.Session != nil {
+		return pusher.Session.logger
+	}
+	return pusher.RTSPClient.logger
+}
+
 func (pusher *Pusher) VCodec() string {
 	if pusher.Session != nil {
 		return pusher.Session.VCodec
@@ -203,6 +210,7 @@ func (pusher *Pusher) QueueRTP(pack *RTPPack) *Pusher {
 }
 
 func (pusher *Pusher) Start() {
+	logger := pusher.Logger()
 	for !pusher.Stoped() {
 		var pack *RTPPack
 		pusher.cond.L.Lock()
@@ -216,7 +224,7 @@ func (pusher *Pusher) Start() {
 		pusher.cond.L.Unlock()
 		if pack == nil {
 			if !pusher.Stoped() {
-				log.Printf("pusher not stoped, but queue take out nil pack")
+				logger.Printf("pusher not stoped, but queue take out nil pack")
 			}
 			continue
 		}
@@ -268,6 +276,7 @@ func (pusher *Pusher) GetPlayers() (players map[string]*Player) {
 }
 
 func (pusher *Pusher) AddPlayer(player *Player) *Pusher {
+	logger := pusher.Logger()
 	if pusher.gopCacheEnable {
 		pusher.gopCacheLock.RLock()
 		for _, pack := range pusher.gopCache {
@@ -281,20 +290,21 @@ func (pusher *Pusher) AddPlayer(player *Player) *Pusher {
 	if _, ok := pusher.players[player.ID]; !ok {
 		pusher.players[player.ID] = player
 		go player.Start()
-		log.Printf("%v start, now player size[%d]", player, len(pusher.players))
+		logger.Printf("%v start, now player size[%d]", player, len(pusher.players))
 	}
 	pusher.playersLock.Unlock()
 	return pusher
 }
 
 func (pusher *Pusher) RemovePlayer(player *Player) *Pusher {
+	logger := pusher.Logger()
 	pusher.playersLock.Lock()
 	if len(pusher.players) == 0 {
 		pusher.playersLock.Unlock()
 		return pusher
 	}
 	delete(pusher.players, player.ID)
-	log.Printf("%v end, now player size[%d]\n", player, len(pusher.players))
+	logger.Printf("%v end, now player size[%d]\n", player, len(pusher.players))
 	pusher.playersLock.Unlock()
 	return pusher
 }
