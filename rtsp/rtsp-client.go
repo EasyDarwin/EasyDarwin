@@ -116,6 +116,9 @@ func digestAuth(authLine string, method string, URL string) (string, error) {
 	username := l.User.Username()
 	password, _ := l.User.Password()
 	l.User = nil
+	if l.Port() == "" {
+		l.Host = fmt.Sprintf("%s:%s", l.Host, "554")
+	}
 	md5UserRealmPwd := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s:%s", username, realm, password))))
 	md5MethodURL := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s", method, l.String()))))
 
@@ -240,6 +243,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 			if len(Authorization) > 0 {
 				headers := make(map[string]string)
 				headers["Authorization"] = Authorization
+				headers["Accept"] = "application/sdp"
 				resp, err = client.Request("DESCRIBE", headers)
 			}
 			if err != nil {
