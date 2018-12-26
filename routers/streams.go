@@ -38,7 +38,11 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 		log.Printf("Pull to push err:%v", err)
 		return
 	}
-	client, err := rtsp.NewRTSPClient(rtsp.GetServer(), form.URL, int64(form.HeartbeatInterval)*1000)
+	agent := fmt.Sprintf("EasyDarwinGo/%s", BuildVersion)
+	if BuildDateTime != "" {
+		agent = fmt.Sprintf("%s(%s)", agent, BuildDateTime)
+	}
+	client, err := rtsp.NewRTSPClient(rtsp.GetServer(), form.URL, int64(form.HeartbeatInterval)*1000, agent)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return

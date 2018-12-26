@@ -33,7 +33,7 @@ type RTSPClient struct {
 	CustomPath           string //custom path for pusher
 	ID                   string
 	Conn                 net.Conn
-	Session              *string
+	Session              string
 	Seq                  int
 	connRW               *bufio.ReadWriter
 	InBytes              int
@@ -48,6 +48,7 @@ type RTSPClient struct {
 	OptionIntervalMillis int64
 	SDPRaw               string
 
+	Agent    string
 	authLine string
 
 	//tcp channels
@@ -64,7 +65,7 @@ func (client *RTSPClient) String() string {
 	return fmt.Sprintf("client[%s]", client.URL)
 }
 
-func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) (client *RTSPClient, err error) {
+func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64, agent string) (client *RTSPClient, err error) {
 	url, err := url.Parse(rawUrl)
 	if err != nil {
 		return
@@ -81,6 +82,7 @@ func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) (clien
 		aRTPControlChannel:   3,
 		OptionIntervalMillis: sendOptionMillis,
 		StartAt:              time.Now(),
+		Agent:                agent,
 	}
 	client.logger = log.New(os.Stdout, fmt.Sprintf("[%s]", client.ID), log.LstdFlags|log.Lshortfile)
 	if !utils.Debug {
@@ -89,7 +91,7 @@ func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64) (clien
 	return
 }
 
-func digestAuth(authLine string, method string, URL string) (string, error) {
+func DigestAuth(authLine string, method string, URL string) (string, error) {
 	l, err := url.Parse(URL)
 	if err != nil {
 		return "", fmt.Errorf("Url parse error:%v,%v", URL, err)
@@ -123,7 +125,7 @@ func digestAuth(authLine string, method string, URL string) (string, error) {
 	md5MethodURL := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s", method, l.String()))))
 
 	response := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s:%s", md5UserRealmPwd, nonce, md5MethodURL))))
-	Authorization := fmt.Sprintf("Authorization: Digest username=\"%s\", realm=\"%s\", nonce=\"%s\", uri=\"%s\", response=\"%s\"", username, realm, nonce, l.String(), response)
+	Authorization := fmt.Sprintf("Digest username=\"%s\", realm=\"%s\", nonce=\"%s\", uri=\"%s\", response=\"%s\"", username, realm, nonce, l.String(), response)
 	return Authorization, nil
 }
 
@@ -141,7 +143,7 @@ func (client *RTSPClient) checkAuth(method string, resp *Response) (string, erro
 					// 					realm="HipcamRealServer",
 					// nonce="3b27a446bfa49b0c48c3edb83139543d"
 					client.authLine = authLine
-					return digestAuth(authLine, method, client.URL)
+					return DigestAuth(authLine, method, client.URL)
 				} else if strings.IndexAny(authLine, "Basic") == 0 {
 					// not support yet
 					// TODO..
@@ -153,7 +155,7 @@ func (client *RTSPClient) checkAuth(method string, resp *Response) (string, erro
 			authLine, _ := AuthHeaders.(string)
 			if strings.IndexAny(authLine, "Digest") == 0 {
 				client.authLine = authLine
-				return digestAuth(authLine, method, client.URL)
+				return DigestAuth(authLine, method, client.URL)
 			} else if strings.IndexAny(authLine, "Basic") == 0 {
 				// not support yet
 				// TODO..
@@ -427,7 +429,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 							}
 							builder.Write(content)
 						}
-						logger.Printf("<<<\n%s", builder.String())
+						logger.Printf("<<<[IN]\n%s\n\n", builder.String())
 						break
 					}
 					s := string(line)
@@ -488,17 +490,17 @@ func (client *RTSPClient) Stop() {
 
 func (client *RTSPClient) RequestWithPath(method string, path string, headers map[string]string, needResp bool) (resp *Response, err error) {
 	logger := client.logger
-	headers["User-Agent"] = "EasyDarwinGo"
+	headers["User-Agent"] = client.Agent
 	if len(headers["Authorization"]) == 0 {
 		if len(client.authLine) != 0 {
-			Authorization, _ := digestAuth(client.authLine, method, client.URL)
+			Authorization, _ := DigestAuth(client.authLine, method, client.URL)
 			if len(Authorization) > 0 {
 				headers["Authorization"] = Authorization
 			}
 		}
 	}
-	if client.Session != nil {
-		headers["Session"] = *client.Session
+	if len(client.Session) > 0 {
+		headers["Session"] = client.Session
 	}
 	client.Seq++
 	cseq := client.Seq
@@ -510,7 +512,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 	}
 	builder.WriteString(fmt.Sprintf("\r\n"))
 	s := builder.String()
-	logger.Printf(">>>\n%s", s)
+	logger.Printf("[OUT]>>>\n%s\n\n", s)
 	_, err = client.connRW.WriteString(s)
 	if err != nil {
 		return
@@ -547,7 +549,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 				}
 				resp = NewResponse(statusCode, status, strconv.Itoa(cseq), sid, body)
 				resp.Header = respHeader
-				logger.Printf("<<\n%s", builder.String())
+				logger.Printf("<<<[IN]\n%s\n\n", builder.String())
 
 				if !(statusCode >= 200 && statusCode <= 300) {
 					err = fmt.Errorf("Response StatusCode is :%d", statusCode)
