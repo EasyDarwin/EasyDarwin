@@ -251,7 +251,6 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 			if err != nil {
 				return err
 			}
-			return err
 		}
 
 		sess, err := sdp.ParseString(resp.Body)
