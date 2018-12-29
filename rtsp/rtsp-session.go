@@ -388,10 +388,12 @@ func (session *Session) handleRequest(req *Request) {
 				session.vRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.vRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
 			}
+			logger.Printf("Parse SETUP req.TRANSPORT:TCP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, control, session.AControl, session.VControl)
 		} else if udpMatchs := mudp.FindStringSubmatch(ts); udpMatchs != nil {
 			session.TransType = TRANS_TYPE_UDP
 			// no need for tcp timeout.
 			session.Conn.timeout = 0
+			logger.Printf("Parse SETUP req.TRANSPORT:UDP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, control, session.AControl, session.VControl)
 			if session.UDPClient == nil {
 				session.UDPClient = &UDPClient{
 					Session: session,
@@ -456,6 +458,8 @@ func (session *Session) handleRequest(req *Request) {
 					tss = append(tss, tail...)
 					ts = strings.Join(tss, ";")
 				}
+			} else {
+				logger.Printf("SETUP got UnKown control:%s", control)
 			}
 		}
 		res.Header["Transport"] = ts

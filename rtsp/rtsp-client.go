@@ -221,15 +221,19 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 		// An OPTIONS request returns the request types the server will accept.
 		resp, err := client.Request("OPTIONS", headers)
 		if err != nil {
-			Authorization, _ := client.checkAuth("OPTIONS", resp)
-			if len(Authorization) > 0 {
-				headers := make(map[string]string)
-				headers["Require"] = "implicit-play"
-				headers["Authorization"] = Authorization
-				// An OPTIONS request returns the request types the server will accept.
-				resp, err = client.Request("OPTIONS", headers)
-			}
-			if err != nil {
+			if resp != nil {
+				Authorization, _ := client.checkAuth("OPTIONS", resp)
+				if len(Authorization) > 0 {
+					headers := make(map[string]string)
+					headers["Require"] = "implicit-play"
+					headers["Authorization"] = Authorization
+					// An OPTIONS request returns the request types the server will accept.
+					resp, err = client.Request("OPTIONS", headers)
+				}
+				if err != nil {
+					return err
+				}
+			} else {
 				return err
 			}
 		}
@@ -241,14 +245,18 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 		headers["Accept"] = "application/sdp"
 		resp, err = client.Request("DESCRIBE", headers)
 		if err != nil {
-			Authorization, _ := client.checkAuth("DESCRIBE", resp)
-			if len(Authorization) > 0 {
-				headers := make(map[string]string)
-				headers["Authorization"] = Authorization
-				headers["Accept"] = "application/sdp"
-				resp, err = client.Request("DESCRIBE", headers)
-			}
-			if err != nil {
+			if resp != nil {
+				Authorization, _ := client.checkAuth("DESCRIBE", resp)
+				if len(Authorization) > 0 {
+					headers := make(map[string]string)
+					headers["Authorization"] = Authorization
+					headers["Accept"] = "application/sdp"
+					resp, err = client.Request("DESCRIBE", headers)
+				}
+				if err != nil {
+					return err
+				}
+			} else {
 				return err
 			}
 		}
@@ -276,6 +284,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				if Session != "" {
 					headers["Session"] = Session
 				}
+				logger.Printf("Parse DESCRIBE response, VIDEO VControl:%s, VCode:%s, url:%s,Session:%s,vRTPChannel:%d,vRTPControlChannel:%d", client.VControl, client.VCodec, _url, Session, client.vRTPChannel, client.vRTPControlChannel)
 				resp, err = client.RequestWithPath("SETUP", _url, headers, true)
 				if err != nil {
 					return err
@@ -283,7 +292,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				Session, _ = resp.Header["Session"].(string)
 			case "audio":
 				client.AControl = media.Attributes.Get("control")
-				client.VCodec = media.Formats[0].Name
+				client.ACodec = media.Formats[0].Name
 				var _url = ""
 				if strings.Index(strings.ToLower(client.AControl), "rtsp://") == 0 {
 					_url = client.AControl
@@ -295,6 +304,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 				if Session != "" {
 					headers["Session"] = Session
 				}
+				logger.Printf("Parse DESCRIBE response, AUDIO AControl:%s, ACodec:%s, url:%s,Session:%s, aRTPChannel:%d,aRTPControlChannel:%d", client.AControl, client.ACodec, _url, Session, client.aRTPChannel, client.aRTPControlChannel)
 				resp, err = client.RequestWithPath("SETUP", _url, headers, true)
 				if err != nil {
 					return err
@@ -428,7 +438,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 							}
 							builder.Write(content)
 						}
-						logger.Printf("<<<[IN]\n%s\n\n", builder.String())
+						logger.Printf("<<<[IN]\n%s", builder.String())
 						break
 					}
 					s := string(line)
@@ -511,7 +521,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 	}
 	builder.WriteString(fmt.Sprintf("\r\n"))
 	s := builder.String()
-	logger.Printf("[OUT]>>>\n%s\n\n", s)
+	logger.Printf("[OUT]>>>\n%s", s)
 	_, err = client.connRW.WriteString(s)
 	if err != nil {
 		return
@@ -533,83 +543,82 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 		isPrefix := false
 		if line, isPrefix, err = client.connRW.ReadLine(); err != nil {
 			return
-		} else {
-			if len(line) == 0 {
-				body := ""
-				if contentLen > 0 {
-					content := make([]byte, contentLen)
-					_, err = io.ReadFull(client.connRW, content)
-					if err != nil {
-						err = fmt.Errorf("Read content err.ContentLength:%d", contentLen)
-						return
-					}
-					body = string(content)
-					builder.Write(content)
-				}
-				resp = NewResponse(statusCode, status, strconv.Itoa(cseq), sid, body)
-				resp.Header = respHeader
-				logger.Printf("<<<[IN]\n%s\n\n", builder.String())
-
-				if !(statusCode >= 200 && statusCode <= 300) {
-					err = fmt.Errorf("Response StatusCode is :%d", statusCode)
+		}
+		s := string(line)
+		builder.Write(line)
+		if !isPrefix {
+			builder.WriteString("\r\n")
+		}
+		if len(line) == 0 {
+			body := ""
+			if contentLen > 0 {
+				content := make([]byte, contentLen)
+				_, err = io.ReadFull(client.connRW, content)
+				if err != nil {
+					err = fmt.Errorf("Read content err.ContentLength:%d", contentLen)
 					return
 				}
+				body = string(content)
+				builder.Write(content)
+			}
+			resp = NewResponse(statusCode, status, strconv.Itoa(cseq), sid, body)
+			resp.Header = respHeader
+			logger.Printf("<<<[IN]\n%s", builder.String())
+
+			if !(statusCode >= 200 && statusCode <= 300) {
+				err = fmt.Errorf("Response StatusCode is :%d", statusCode)
 				return
 			}
-			s := string(line)
-			builder.Write(line)
-			if !isPrefix {
-				builder.WriteString("\r\n")
+			return
+		}
+		if lineCount == 0 {
+			splits := strings.Split(s, " ")
+			if len(splits) < 3 {
+				err = fmt.Errorf("StatusCode Line error:%s", s)
+				return
 			}
-
-			if lineCount == 0 {
-				splits := strings.Split(s, " ")
-				if len(splits) < 3 {
-					err = fmt.Errorf("StatusCode Line error:%s", s)
-					return
-				}
-				statusCode, err = strconv.Atoi(splits[1])
-				if err != nil {
-					return
-				}
-				status = splits[2]
+			statusCode, err = strconv.Atoi(splits[1])
+			if err != nil {
+				return
 			}
-			lineCount++
-			splits := strings.Split(s, ":")
-			if len(splits) == 2 {
-				if val, ok := respHeader[splits[0]]; ok {
-					if slice, ok2 := val.([]string); ok2 {
-						slice = append(slice, strings.TrimSpace(splits[1]))
-						respHeader[splits[0]] = slice
-					} else {
-						str, _ := val.(string)
-						slice := []string{str, strings.TrimSpace(splits[1])}
-						respHeader[splits[0]] = slice
-					}
+			status = splits[2]
+		}
+		lineCount++
+		splits := strings.Split(s, ":")
+		if len(splits) == 2 {
+			if val, ok := respHeader[splits[0]]; ok {
+				if slice, ok2 := val.([]string); ok2 {
+					slice = append(slice, strings.TrimSpace(splits[1]))
+					respHeader[splits[0]] = slice
 				} else {
-					respHeader[splits[0]] = strings.TrimSpace(splits[1])
+					str, _ := val.(string)
+					slice := []string{str, strings.TrimSpace(splits[1])}
+					respHeader[splits[0]] = slice
 				}
-			}
-			if strings.Index(s, "Session:") == 0 {
-				splits := strings.Split(s, ":")
-				sid = strings.TrimSpace(splits[1])
-			}
-			//if strings.Index(s, "CSeq:") == 0 {
-			//	splits := strings.Split(s, ":")
-			//	cseq, err = strconv.Atoi(strings.TrimSpace(splits[1]))
-			//	if err != nil {
-			//		err = fmt.Errorf("Atoi CSeq err. line:%s", s)
-			//		return
-			//	}
-			//}
-			if strings.Index(s, "Content-Length:") == 0 {
-				splits := strings.Split(s, ":")
-				contentLen, err = strconv.Atoi(strings.TrimSpace(splits[1]))
-				if err != nil {
-					return
-				}
+			} else {
+				respHeader[splits[0]] = strings.TrimSpace(splits[1])
 			}
 		}
+		if strings.Index(s, "Session:") == 0 {
+			splits := strings.Split(s, ":")
+			sid = strings.TrimSpace(splits[1])
+		}
+		//if strings.Index(s, "CSeq:") == 0 {
+		//	splits := strings.Split(s, ":")
+		//	cseq, err = strconv.Atoi(strings.TrimSpace(splits[1]))
+		//	if err != nil {
+		//		err = fmt.Errorf("Atoi CSeq err. line:%s", s)
+		//		return
+		//	}
+		//}
+		if strings.Index(s, "Content-Length:") == 0 {
+			splits := strings.Split(s, ":")
+			contentLen, err = strconv.Atoi(strings.TrimSpace(splits[1]))
+			if err != nil {
+				return
+			}
+		}
+
 	}
 	if client.Stoped {
 		err = fmt.Errorf("Client Stoped.")
