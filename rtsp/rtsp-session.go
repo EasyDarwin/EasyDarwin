@@ -375,7 +375,7 @@ func (session *Session) handleRequest(req *Request) {
 		res.SetBody(session.Pusher.SDPRaw())
 	case "SETUP":
 		ts := req.Header["Transport"]
-		// control字段可能是`stream=1`字样，也可能是rtsp://...字样。这里只要control字段与session的url合并起来，等于SETUP的URL，那就视为相同的stream
+		// control字段可能是`stream=1`字样，也可能是rtsp://...字样。即control可能是url的path，也可能是整个url
 		// 例1：
 		// a=control:streamid=1
 		// 例2：
@@ -386,36 +386,45 @@ func (session *Session) handleRequest(req *Request) {
 			res.Status = "Invalid URL"
 			return
 		}
-		if setupUrl.Port() == "" {
-			setupUrl.Host = fmt.Sprintf("%s:%s", setupUrl.Host, "554")
+		setupPath := setupUrl.Path
+		setupPath = setupPath[strings.LastIndex(setupPath, "/")+1:]
+
+		vURL, err := url.Parse(session.VControl)
+		if err != nil {
+			res.StatusCode = 500
+			res.Status = "Invalid VControl"
+			return
 		}
-		setupURL := setupUrl.String()
-		vURL := session.VControl
-		if strings.Index(strings.TrimSpace(strings.ToLower(vURL)), "rtsp://") != 0 {
-			vURL = strings.TrimRight(session.URL, "/") + "/" + strings.TrimLeft(session.VControl, "/")
+		vPath := vURL.Path
+		vPath = vPath[strings.LastIndex(vPath, "/")+1:]
+
+		aURL, err := url.Parse(session.AControl)
+		if err != nil {
+			res.StatusCode = 500
+			res.Status = "Invalid AControl"
+			return
 		}
-		aURL := session.AControl
-		if strings.Index(strings.TrimSpace(strings.ToLower(aURL)), "rtsp://") != 0 {
-			aURL = strings.TrimRight(session.URL, "/") + "/" + strings.TrimLeft(session.AControl, "/")
-		}
+		aPath := aURL.Path
+		aPath = aPath[strings.LastIndex(aPath, "/")+1:]
+
 		mtcp := regexp.MustCompile("interleaved=(\\d+)(-(\\d+))?")
 		mudp := regexp.MustCompile("client_port=(\\d+)(-(\\d+))?")
 
 		if tcpMatchs := mtcp.FindStringSubmatch(ts); tcpMatchs != nil {
 			session.TransType = TRANS_TYPE_TCP
-			if setupURL == aURL {
+			if setupPath == aPath {
 				session.aRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.aRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
-			} else if setupURL == vURL {
+			} else if setupPath == vPath {
 				session.vRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.vRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
 			}
-			logger.Printf("Parse SETUP req.TRANSPORT:TCP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupURL, aURL, vURL)
+			logger.Printf("Parse SETUP req.TRANSPORT:TCP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupPath, aPath, vPath)
 		} else if udpMatchs := mudp.FindStringSubmatch(ts); udpMatchs != nil {
 			session.TransType = TRANS_TYPE_UDP
 			// no need for tcp timeout.
 			session.Conn.timeout = 0
-			logger.Printf("Parse SETUP req.TRANSPORT:UDP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupURL, aURL, vURL)
+			logger.Printf("Parse SETUP req.TRANSPORT:UDP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupPath, aPath, vPath)
 			if session.UDPClient == nil {
 				session.UDPClient = &UDPClient{
 					Session: session,
@@ -426,7 +435,7 @@ func (session *Session) handleRequest(req *Request) {
 					Session: session,
 				}
 			}
-			if setupURL == aURL {
+			if setupPath == aPath {
 				session.UDPClient.APort, _ = strconv.Atoi(udpMatchs[1])
 				session.UDPClient.AControlPort, _ = strconv.Atoi(udpMatchs[3])
 				if err := session.UDPClient.SetupAudio(); err != nil {
@@ -453,7 +462,7 @@ func (session *Session) handleRequest(req *Request) {
 					tss = append(tss, tail...)
 					ts = strings.Join(tss, ";")
 				}
-			} else if setupURL == vURL {
+			} else if setupPath == vPath {
 				session.UDPClient.VPort, _ = strconv.Atoi(udpMatchs[1])
 				session.UDPClient.VControlPort, _ = strconv.Atoi(udpMatchs[3])
 				if err := session.UDPClient.SetupVideo(); err != nil {
@@ -481,7 +490,7 @@ func (session *Session) handleRequest(req *Request) {
 					ts = strings.Join(tss, ";")
 				}
 			} else {
-				logger.Printf("SETUP got UnKown control:%s", setupURL)
+				logger.Printf("SETUP got UnKown control:%s", setupPath)
 			}
 		}
 		res.Header["Transport"] = ts
