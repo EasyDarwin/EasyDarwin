@@ -380,42 +380,60 @@ func (session *Session) handleRequest(req *Request) {
 		// a=control:streamid=1
 		// 例2：
 		// a=control:rtsp://192.168.1.64/trackID=1
+		// 例3：
+		// a=control:?ctype=video
 		setupUrl, err := url.Parse(req.URL)
 		if err != nil {
 			res.StatusCode = 500
 			res.Status = "Invalid URL"
 			return
 		}
-		setupPath := setupUrl.Path
-		setupPath = setupPath[strings.LastIndex(setupPath, "/")+1:]
-
-		vURL, err := url.Parse(session.VControl)
-		if err != nil {
-			res.StatusCode = 500
-			res.Status = "Invalid VControl"
-			return
+		if setupUrl.Port() == "" {
+			setupUrl.Host = fmt.Sprintf("%s:554", setupUrl.Host)
 		}
-		vPath := vURL.Path
-		vPath = vPath[strings.LastIndex(vPath, "/")+1:]
-
-		aURL, err := url.Parse(session.AControl)
-		if err != nil {
-			res.StatusCode = 500
-			res.Status = "Invalid AControl"
-			return
+		setupPath := setupUrl.String()
+		//setupPath = setupPath[strings.LastIndex(setupPath, "/")+1:]
+		vPath := ""
+		if strings.Index(strings.ToLower(session.VControl), "rtsp://") == 0 {
+			vControlUrl, err := url.Parse(req.URL)
+			if err != nil {
+				res.StatusCode = 500
+				res.Status = "Invalid VControl"
+				return
+			}
+			if vControlUrl.Port() == "" {
+				vControlUrl.Host = fmt.Sprintf("%s:554", vControlUrl.Host)
+			}
+			vPath = vControlUrl.String()
+		} else {
+			vPath = session.VControl
 		}
-		aPath := aURL.Path
-		aPath = aPath[strings.LastIndex(aPath, "/")+1:]
+
+		aPath := ""
+		if strings.Index(strings.ToLower(session.AControl), "rtsp://") == 0 {
+			aControlUrl, err := url.Parse(req.URL)
+			if err != nil {
+				res.StatusCode = 500
+				res.Status = "Invalid AControl"
+				return
+			}
+			if aControlUrl.Port() == "" {
+				aControlUrl.Host = fmt.Sprintf("%s:554", aControlUrl.Host)
+			}
+			aPath = aControlUrl.String()
+		} else {
+			aPath = session.AControl
+		}
 
 		mtcp := regexp.MustCompile("interleaved=(\\d+)(-(\\d+))?")
 		mudp := regexp.MustCompile("client_port=(\\d+)(-(\\d+))?")
 
 		if tcpMatchs := mtcp.FindStringSubmatch(ts); tcpMatchs != nil {
 			session.TransType = TRANS_TYPE_TCP
-			if setupPath == aPath {
+			if setupPath == aPath || strings.LastIndex(setupPath, aPath) == len(setupPath)-len(aPath) {
 				session.aRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.aRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
-			} else if setupPath == vPath {
+			} else if setupPath == vPath || strings.LastIndex(setupPath, vPath) == len(setupPath)-len(vPath) {
 				session.vRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.vRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
 			}
@@ -435,7 +453,7 @@ func (session *Session) handleRequest(req *Request) {
 					Session: session,
 				}
 			}
-			if setupPath == aPath {
+			if setupPath == aPath || strings.LastIndex(setupPath, aPath) == len(setupPath)-len(aPath) {
 				session.UDPClient.APort, _ = strconv.Atoi(udpMatchs[1])
 				session.UDPClient.AControlPort, _ = strconv.Atoi(udpMatchs[3])
 				if err := session.UDPClient.SetupAudio(); err != nil {
@@ -462,7 +480,7 @@ func (session *Session) handleRequest(req *Request) {
 					tss = append(tss, tail...)
 					ts = strings.Join(tss, ";")
 				}
-			} else if setupPath == vPath {
+			} else if setupPath == vPath || strings.LastIndex(setupPath, vPath) == len(setupPath)-len(vPath) {
 				session.UDPClient.VPort, _ = strconv.Atoi(udpMatchs[1])
 				session.UDPClient.VControlPort, _ = strconv.Atoi(udpMatchs[3])
 				if err := session.UDPClient.SetupVideo(); err != nil {
