@@ -49,7 +49,7 @@ type Origin struct {
 	      suggested that a Network Time Protocol (NTP) format timestamp be
 	      used to ensure uniqueness [13].
 
-		some IPC do is a string. ie.  o=RTSP Session 0 0 IN IP4 0.0.0.0
+		some IPC do is a non-numeric string. i.e., o=RTSP Session 0 0 IN IP4 0.0.0.0
 	*/
 	SessionID      string
 	SessionVersion int64
