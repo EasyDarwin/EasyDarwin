@@ -395,7 +395,7 @@ func (session *Session) handleRequest(req *Request) {
 		//setupPath = setupPath[strings.LastIndex(setupPath, "/")+1:]
 		vPath := ""
 		if strings.Index(strings.ToLower(session.VControl), "rtsp://") == 0 {
-			vControlUrl, err := url.Parse(req.URL)
+			vControlUrl, err := url.Parse(session.VControl)
 			if err != nil {
 				res.StatusCode = 500
 				res.Status = "Invalid VControl"
@@ -411,7 +411,7 @@ func (session *Session) handleRequest(req *Request) {
 
 		aPath := ""
 		if strings.Index(strings.ToLower(session.AControl), "rtsp://") == 0 {
-			aControlUrl, err := url.Parse(req.URL)
+			aControlUrl, err := url.Parse(session.AControl)
 			if err != nil {
 				res.StatusCode = 500
 				res.Status = "Invalid AControl"
