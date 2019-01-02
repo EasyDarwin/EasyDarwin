@@ -78,8 +78,8 @@
 ### 准备工具
 
         # go tools
-        go get -u github.com/kardianos/govendor
-        go get -u github.com/caixw/gobuild
+        go get -u -v github.com/kardianos/govendor
+        go get -u -v github.com/penggy/gobuild
 
         # npm tools
         npm i -g apidoc
