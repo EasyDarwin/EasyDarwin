@@ -40,8 +40,18 @@ func (s *Session) Bytes() []byte {
 
 // Origin represents an originator of the session.
 type Origin struct {
-	Username       string
-	SessionID      int64
+	Username string
+	/**
+		<sess-id> is a numeric string such that the tuple of <username>,
+	      <sess-id>, <nettype>, <addrtype>, and <unicast-address> forms a
+	      globally unique identifier for the session.  The method of
+	      <sess-id> allocation is up to the creating tool, but it has been
+	      suggested that a Network Time Protocol (NTP) format timestamp be
+	      used to ensure uniqueness [13].
+
+		some IPC do is a string. ie.  o=RTSP Session 0 0 IN IP4 0.0.0.0
+	*/
+	SessionID      string
 	SessionVersion int64
 	Network        string
 	Type           string
@@ -137,7 +147,7 @@ func NegotiateMode(local, remote string) string {
 }
 
 // DeleteAttr removes all elements with name from attrs.
-func DeleteAttr(attrs Attributes, name ... string) Attributes {
+func DeleteAttr(attrs Attributes, name ...string) Attributes {
 	n := 0
 loop:
 	for _, it := range attrs {

@@ -247,11 +247,8 @@ func (d *Decoder) origin(v string) (*Origin, error) {
 		return nil, errFormat
 	}
 	o := new(Origin)
-	o.Username, o.Network, o.Type, o.Address = p[0], p[3], p[4], p[5]
+	o.Username, o.SessionID, o.Network, o.Type, o.Address = p[0], p[1], p[3], p[4], p[5]
 	var err error
-	if o.SessionID, err = d.int(p[1]); err != nil {
-		return nil, err
-	}
 	if o.SessionVersion, err = d.int(p[2]); err != nil {
 		return nil, err
 	}
