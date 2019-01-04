@@ -430,19 +430,22 @@ func (session *Session) handleRequest(req *Request) {
 
 		if tcpMatchs := mtcp.FindStringSubmatch(ts); tcpMatchs != nil {
 			session.TransType = TRANS_TYPE_TCP
-			if setupPath == aPath || strings.LastIndex(setupPath, aPath) == len(setupPath)-len(aPath) {
+			if setupPath == aPath || aPath != "" && strings.LastIndex(setupPath, aPath) == len(setupPath)-len(aPath) {
 				session.aRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.aRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
-			} else if setupPath == vPath || strings.LastIndex(setupPath, vPath) == len(setupPath)-len(vPath) {
+			} else if setupPath == vPath || vPath != "" && strings.LastIndex(setupPath, vPath) == len(setupPath)-len(vPath) {
 				session.vRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.vRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
+			} else {
+				res.StatusCode = 500
+				res.Status = fmt.Sprintf("SETUP [TCP] got UnKown control:%s", setupPath)
+				logger.Printf("SETUP [TCP] got UnKown control:%s", setupPath)
 			}
 			logger.Printf("Parse SETUP req.TRANSPORT:TCP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupPath, aPath, vPath)
 		} else if udpMatchs := mudp.FindStringSubmatch(ts); udpMatchs != nil {
 			session.TransType = TRANS_TYPE_UDP
 			// no need for tcp timeout.
 			session.Conn.timeout = 0
-			logger.Printf("Parse SETUP req.TRANSPORT:UDP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupPath, aPath, vPath)
 			if session.UDPClient == nil {
 				session.UDPClient = &UDPClient{
 					Session: session,
@@ -453,7 +456,8 @@ func (session *Session) handleRequest(req *Request) {
 					Session: session,
 				}
 			}
-			if setupPath == aPath || strings.LastIndex(setupPath, aPath) == len(setupPath)-len(aPath) {
+			logger.Printf("Parse SETUP req.TRANSPORT:UDP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupPath, aPath, vPath)
+			if setupPath == aPath || aPath != "" && strings.LastIndex(setupPath, aPath) == len(setupPath)-len(aPath) {
 				session.UDPClient.APort, _ = strconv.Atoi(udpMatchs[1])
 				session.UDPClient.AControlPort, _ = strconv.Atoi(udpMatchs[3])
 				if err := session.UDPClient.SetupAudio(); err != nil {
@@ -480,7 +484,7 @@ func (session *Session) handleRequest(req *Request) {
 					tss = append(tss, tail...)
 					ts = strings.Join(tss, ";")
 				}
-			} else if setupPath == vPath || strings.LastIndex(setupPath, vPath) == len(setupPath)-len(vPath) {
+			} else if setupPath == vPath || vPath != "" && strings.LastIndex(setupPath, vPath) == len(setupPath)-len(vPath) {
 				session.UDPClient.VPort, _ = strconv.Atoi(udpMatchs[1])
 				session.UDPClient.VControlPort, _ = strconv.Atoi(udpMatchs[3])
 				if err := session.UDPClient.SetupVideo(); err != nil {
@@ -508,7 +512,7 @@ func (session *Session) handleRequest(req *Request) {
 					ts = strings.Join(tss, ";")
 				}
 			} else {
-				logger.Printf("SETUP got UnKown control:%s", setupPath)
+				logger.Printf("SETUP [UDP] got UnKown control:%s", setupPath)
 			}
 		}
 		res.Header["Transport"] = ts
