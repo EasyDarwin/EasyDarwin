@@ -32,7 +32,7 @@ type RTSPClient struct {
 	Path                 string
 	CustomPath           string //custom path for pusher
 	ID                   string
-	Conn                 net.Conn
+	Conn                 *RichConn
 	Session              string
 	Seq                  int
 	connRW               *bufio.ReadWriter
@@ -57,6 +57,7 @@ type RTSPClient struct {
 	vRTPChannel        int
 	vRTPControlChannel int
 
+	UDPServer   *UDPServer
 	RTPHandles  []func(*RTPPack)
 	StopHandles []func()
 }
@@ -76,6 +77,7 @@ func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64, agent 
 		URL:                  rawUrl,
 		ID:                   shortid.MustGenerate(),
 		Path:                 url.Path,
+		TransType:            TRANS_TYPE_UDP,
 		vRTPChannel:          0,
 		vRTPControlChannel:   1,
 		aRTPChannel:          2,
@@ -206,7 +208,6 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 			// handle error
 			return err
 		}
-		client.Conn = conn
 
 		networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(204800)
 
@@ -214,6 +215,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 			conn,
 			timeout,
 		}
+		client.Conn = &timeoutConn
 		client.connRW = bufio.NewReadWriter(bufio.NewReaderSize(&timeoutConn, networkBuffer), bufio.NewWriterSize(&timeoutConn, networkBuffer))
 
 		headers := make(map[string]string)
@@ -280,7 +282,21 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 					_url = strings.TrimRight(client.URL, "/") + "/" + strings.TrimLeft(client.VControl, "/")
 				}
 				headers = make(map[string]string)
-				headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;interleaved=%d-%d", client.vRTPChannel, client.vRTPControlChannel)
+				if client.TransType == TRANS_TYPE_TCP {
+					headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;interleaved=%d-%d", client.vRTPChannel, client.vRTPControlChannel)
+				} else {
+					if client.UDPServer == nil {
+						client.UDPServer = &UDPServer{RTSPClient: client}
+					}
+					//RTP/AVP;unicast;client_port=64864-64865
+					err = client.UDPServer.SetupVideo()
+					if err != nil {
+						logger.Printf("Setup video err.%v", err)
+						return err
+					}
+					headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;client_port=%d-%d", client.UDPServer.VPort, client.UDPServer.VControlPort)
+					client.Conn.timeout = 0	//	UDP ignore timeout
+				}
 				if Session != "" {
 					headers["Session"] = Session
 				}
@@ -300,7 +316,20 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 					_url = strings.TrimRight(client.URL, "/") + "/" + strings.TrimLeft(client.AControl, "/")
 				}
 				headers = make(map[string]string)
-				headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;interleaved=%d-%d", client.aRTPChannel, client.aRTPControlChannel)
+				if client.TransType == TRANS_TYPE_TCP {
+					headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;interleaved=%d-%d", client.aRTPChannel, client.aRTPControlChannel)
+				} else {
+					if client.UDPServer == nil {
+						client.UDPServer = &UDPServer{RTSPClient: client}
+					}
+					err = client.UDPServer.SetupAudio()
+					if err != nil {
+						logger.Printf("Setup audio err.%v", err)
+						return err
+					}
+					headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;client_port=%d-%d", client.UDPServer.APort, client.UDPServer.AControlPort)
+					client.Conn.timeout = 0	//	UDP ignore timeout
+				}
 				if Session != "" {
 					headers["Session"] = Session
 				}

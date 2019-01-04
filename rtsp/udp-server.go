@@ -2,6 +2,8 @@ package rtsp
 
 import (
 	"bytes"
+	"fmt"
+	"log"
 	"net"
 	"strconv"
 	"strings"
@@ -11,6 +13,7 @@ import (
 
 type UDPServer struct {
 	*Session
+	*RTSPClient
 
 	APort        int
 	AConn        *net.UDPConn
@@ -22,6 +25,45 @@ type UDPServer struct {
 	VControlConn *net.UDPConn
 
 	Stoped bool
+}
+
+func (s* UDPServer)AddInputBytes(bytes int)  {
+	if s.Session != nil {
+		s.Session.InBytes += bytes
+		return
+	}
+	if s.RTSPClient != nil {
+		s.RTSPClient.InBytes += bytes
+		return
+	}
+	panic(fmt.Errorf("session and RTSPClient both nil"))
+}
+
+func (s *UDPServer)HandleRTP(pack *RTPPack)  {
+	if s.Session != nil {
+		for _, v := range s.Session.RTPHandles {
+			v(pack)
+		}
+		return
+	}
+
+	if s.RTSPClient != nil {
+		for _, v := range s.RTSPClient.RTPHandles {
+			v(pack)
+		}
+		return
+	}
+	panic(fmt.Errorf("session and RTSPClient both nil"))
+}
+
+func (s *UDPServer) Logger() *log.Logger  {
+	if s.Session != nil {
+		return s.Session.logger
+	}
+	if s.RTSPClient != nil {
+		return s.RTSPClient.logger
+	}
+	panic(fmt.Errorf("session and RTSPClient both nil"))
 }
 
 func (s *UDPServer) Stop() {
@@ -48,7 +90,7 @@ func (s *UDPServer) Stop() {
 }
 
 func (s *UDPServer) SetupAudio() (err error) {
-	logger := s.logger
+	logger := s.Logger()
 	addr, err := net.ResolveUDPAddr("udp", ":0")
 	if err != nil {
 		return
@@ -77,15 +119,13 @@ func (s *UDPServer) SetupAudio() (err error) {
 		for !s.Stoped {
 			if n, _, err := s.AConn.ReadFromUDP(bufUDP); err == nil {
 				rtpBytes := make([]byte, n)
-				s.Session.InBytes += n
+				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)
 				pack := &RTPPack{
 					Type:   RTP_TYPE_AUDIO,
 					Buffer: bytes.NewBuffer(rtpBytes),
 				}
-				for _, h := range s.Session.RTPHandles {
-					h(pack)
-				}
+				s.HandleRTP(pack)
 			} else {
 				logger.Println("udp server read audio pack error", err)
 				continue
@@ -119,15 +159,13 @@ func (s *UDPServer) SetupAudio() (err error) {
 		for !s.Stoped {
 			if n, _, err := s.AControlConn.ReadFromUDP(bufUDP); err == nil {
 				rtpBytes := make([]byte, n)
-				s.Session.InBytes += n
+				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)
 				pack := &RTPPack{
 					Type:   RTP_TYPE_AUDIOCONTROL,
 					Buffer: bytes.NewBuffer(rtpBytes),
 				}
-				for _, h := range s.Session.RTPHandles {
-					h(pack)
-				}
+				s.HandleRTP(pack)
 			} else {
 				logger.Println("udp server read audio control pack error", err)
 				continue
@@ -138,7 +176,7 @@ func (s *UDPServer) SetupAudio() (err error) {
 }
 
 func (s *UDPServer) SetupVideo() (err error) {
-	logger := s.logger
+	logger := s.Logger()
 	addr, err := net.ResolveUDPAddr("udp", ":0")
 	if err != nil {
 		return
@@ -167,15 +205,13 @@ func (s *UDPServer) SetupVideo() (err error) {
 		for !s.Stoped {
 			if n, _, err := s.VConn.ReadFromUDP(bufUDP); err == nil {
 				rtpBytes := make([]byte, n)
-				s.Session.InBytes += n
+				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)
 				pack := &RTPPack{
 					Type:   RTP_TYPE_VIDEO,
 					Buffer: bytes.NewBuffer(rtpBytes),
 				}
-				for _, h := range s.Session.RTPHandles {
-					h(pack)
-				}
+				s.HandleRTP(pack)
 			} else {
 				logger.Println("udp server read video pack error", err)
 				continue
@@ -210,15 +246,13 @@ func (s *UDPServer) SetupVideo() (err error) {
 		for !s.Stoped {
 			if n, _, err := s.VControlConn.ReadFromUDP(bufUDP); err == nil {
 				rtpBytes := make([]byte, n)
-				s.Session.InBytes += n
+				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)
 				pack := &RTPPack{
 					Type:   RTP_TYPE_VIDEOCONTROL,
 					Buffer: bytes.NewBuffer(rtpBytes),
 				}
-				for _, h := range s.Session.RTPHandles {
-					h(pack)
-				}
+				s.HandleRTP(pack)
 			} else {
 				logger.Println("udp server read video control pack error", err)
 				continue

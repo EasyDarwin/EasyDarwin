@@ -392,6 +392,25 @@ func (session *Session) handleRequest(req *Request) {
 			setupUrl.Host = fmt.Sprintf("%s:554", setupUrl.Host)
 		}
 		setupPath := setupUrl.String()
+
+		// 播放器可能直接从SETUP来，不用DESCRIBE（比如可能事先已经获取过了）
+		if session.Pusher == nil {
+			session.Path = setupUrl.Path
+			pusher := session.Server.GetPusher(session.Path)
+			if pusher == nil {
+				res.StatusCode = 404
+				res.Status = "NOT FOUND"
+				return
+			}
+			session.Type = SESSEION_TYPE_PLAYER
+			session.Player = NewPlayer(session, pusher)
+			session.Pusher = pusher
+			session.AControl = pusher.AControl()
+			session.VControl = pusher.VControl()
+			session.ACodec = pusher.ACodec()
+			session.VCodec = pusher.VCodec()
+			session.Conn.timeout = 0
+		}
 		//setupPath = setupPath[strings.LastIndex(setupPath, "/")+1:]
 		vPath := ""
 		if strings.Index(strings.ToLower(session.VControl), "rtsp://") == 0 {
@@ -446,7 +465,7 @@ func (session *Session) handleRequest(req *Request) {
 			session.TransType = TRANS_TYPE_UDP
 			// no need for tcp timeout.
 			session.Conn.timeout = 0
-			if session.UDPClient == nil {
+			if session.Type == SESSEION_TYPE_PLAYER && session.UDPClient == nil {
 				session.UDPClient = &UDPClient{
 					Session: session,
 				}
@@ -458,14 +477,15 @@ func (session *Session) handleRequest(req *Request) {
 			}
 			logger.Printf("Parse SETUP req.TRANSPORT:UDP.Session.Type:%d,control:%s, AControl:%s,VControl:%s", session.Type, setupPath, aPath, vPath)
 			if setupPath == aPath || aPath != "" && strings.LastIndex(setupPath, aPath) == len(setupPath)-len(aPath) {
-				session.UDPClient.APort, _ = strconv.Atoi(udpMatchs[1])
-				session.UDPClient.AControlPort, _ = strconv.Atoi(udpMatchs[3])
-				if err := session.UDPClient.SetupAudio(); err != nil {
-					res.StatusCode = 500
-					res.Status = fmt.Sprintf("udp client setup audio error, %v", err)
-					return
+				if session.Type == SESSEION_TYPE_PLAYER {
+					session.UDPClient.APort, _ = strconv.Atoi(udpMatchs[1])
+					session.UDPClient.AControlPort, _ = strconv.Atoi(udpMatchs[3])
+					if err := session.UDPClient.SetupAudio(); err != nil {
+						res.StatusCode = 500
+						res.Status = fmt.Sprintf("udp client setup audio error, %v", err)
+						return
+					}
 				}
-
 				if session.Type == SESSION_TYPE_PUSHER {
 					if err := session.Pusher.UDPServer.SetupAudio(); err != nil {
 						res.StatusCode = 500
@@ -485,12 +505,14 @@ func (session *Session) handleRequest(req *Request) {
 					ts = strings.Join(tss, ";")
 				}
 			} else if setupPath == vPath || vPath != "" && strings.LastIndex(setupPath, vPath) == len(setupPath)-len(vPath) {
-				session.UDPClient.VPort, _ = strconv.Atoi(udpMatchs[1])
-				session.UDPClient.VControlPort, _ = strconv.Atoi(udpMatchs[3])
-				if err := session.UDPClient.SetupVideo(); err != nil {
-					res.StatusCode = 500
-					res.Status = fmt.Sprintf("udp client setup video error, %v", err)
-					return
+				if session.Type == SESSEION_TYPE_PLAYER {
+					session.UDPClient.VPort, _ = strconv.Atoi(udpMatchs[1])
+					session.UDPClient.VControlPort, _ = strconv.Atoi(udpMatchs[3])
+					if err := session.UDPClient.SetupVideo(); err != nil {
+						res.StatusCode = 500
+						res.Status = fmt.Sprintf("udp client setup video error, %v", err)
+						return
+					}
 				}
 
 				if session.Type == SESSION_TYPE_PUSHER {
