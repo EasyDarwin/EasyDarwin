@@ -2,12 +2,13 @@ package routers
 
 import (
 	"fmt"
-	"github.com/EasyDarwin/EasyDarwin/models"
-	"github.com/penggy/EasyGoLib/db"
 	"log"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/EasyDarwin/EasyDarwin/models"
+	"github.com/penggy/EasyGoLib/db"
 
 	"github.com/EasyDarwin/EasyDarwin/rtsp"
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ import (
  * @apiName StreamStart
  * @apiParam {String} url RTSP源地址
  * @apiParam {String} [customPath] 转推时的推送PATH
+ * @apiParam {String=TCP,UDP} [transType=TCP] 拉流传输模式
  * @apiParam {Number} [idleTimeout] 拉流时的超时时间
  * @apiParam {Number} [heartbeatInterval] 拉流时的心跳间隔，毫秒为单位。如果心跳间隔不为0，那拉流时会向源地址以该间隔发送OPTION请求用来心跳保活
  * @apiSuccess (200) {String} ID	拉流的ID。后续可以通过该ID来停止拉流
@@ -31,6 +33,7 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 	type Form struct {
 		URL               string `form:"url" binding:"required"`
 		CustomPath        string `form:"customPath"`
+		TransType         string `form:"transType"`
 		IdleTimeout       int    `form:"idleTimeout"`
 		HeartbeatInterval int    `form:"heartbeatInterval"`
 	}
@@ -53,6 +56,14 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 		form.CustomPath = "/" + form.CustomPath
 	}
 	client.CustomPath = form.CustomPath
+	switch strings.ToLower(form.TransType) {
+	case "udp":
+		client.TransType = rtsp.TRANS_TYPE_UDP
+	case "tcp":
+		fallthrough
+	default:
+		client.TransType = rtsp.TRANS_TYPE_TCP
+	}
 
 	pusher := rtsp.NewClientPusher(client)
 	if rtsp.GetServer().GetPusher(pusher.Path()) != nil {

@@ -13,7 +13,17 @@
                 <input type="text" id="input-custom-path" class="form-control" name="customPath" data-vv-as="自定义路径" v-model.trim="form.customPath" placeholder="/your/custom/path">
                 <span class="help-block">{{errors.first('customPath')}}</span>
             </div>
-        </div>   
+        </div> 
+        <div class="form-group">
+            <label for="input-transport" class="col-sm-3 control-label">传输协议</label>
+            <div class="col-sm-8">
+                <el-radio-group id="input-transport" v-model.trim="form.transType" size="mini">
+                    <el-radio-button label="TCP"></el-radio-button>
+                    <el-radio-button label="UDP"></el-radio-button>
+                    <!-- <el-radio-button label="Multicast"></el-radio-button> -->
+                </el-radio-group>
+            </div>
+        </div>          
         <div :class="['form-group', { 'has-error': errors.has('idleTimeout')}]">
             <label for="input-idle-timeout" class="col-sm-3 control-label">空闲超时(秒)</label>
             <div class="col-sm-8">
@@ -51,6 +61,7 @@ export default {
             return {
                 url: '',
                 customPath: '',
+                transType: 'TCP',
                 idleTimeout: '',
                 heartbeatInterval: ''
             }

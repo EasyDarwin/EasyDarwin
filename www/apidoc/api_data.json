@@ -450,6 +450,18 @@
           },
           {
             "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "TCP",
+              "UDP"
+            ],
+            "optional": true,
+            "field": "transType",
+            "defaultValue": "TCP",
+            "description": "<p>拉流传输模式</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "Number",
             "optional": true,
             "field": "idleTimeout",
