@@ -10,7 +10,7 @@ func Init() (err error) {
 	if err != nil {
 		return
 	}
-	db.SQLite.AutoMigrate(User{})
+	db.SQLite.AutoMigrate(User{}, Stream{})
 	count := 0
 	sec := utils.Conf().Section("http")
 	defUser := sec.Key("default_username").MustString("admin")

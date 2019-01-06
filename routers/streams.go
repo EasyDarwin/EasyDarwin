@@ -2,6 +2,8 @@ package routers
 
 import (
 	"fmt"
+	"github.com/EasyDarwin/EasyDarwin/models"
+	"github.com/penggy/EasyGoLib/db"
 	"log"
 	"net/http"
 	"strings"
@@ -65,6 +67,18 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 	}
 	log.Printf("Pull to push %v success ", form)
 	rtsp.GetServer().AddPusher(pusher)
+	// save to db.
+	var stream = models.Stream{
+		URL:               form.URL,
+		CustomPath:        form.CustomPath,
+		IdleTimeout:       form.IdleTimeout,
+		HeartbeatInterval: form.HeartbeatInterval,
+	}
+	if db.SQLite.Where(&models.Stream{URL: form.URL}).First(&models.Stream{}).RecordNotFound() {
+		db.SQLite.Create(&stream)
+	} else {
+		db.SQLite.Save(&stream)
+	}
 	c.IndentedJSON(200, pusher.ID())
 }
 
@@ -91,6 +105,11 @@ func (h *APIHandler) StreamStop(c *gin.Context) {
 			v.Stop()
 			c.IndentedJSON(200, "OK")
 			log.Printf("Stop %v success ", v)
+			if v.RTSPClient != nil {
+				var stream models.Stream
+				stream.URL = v.RTSPClient.URL
+				db.SQLite.Delete(stream)
+			}
 			return
 		}
 	}

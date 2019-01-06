@@ -77,7 +77,7 @@ func NewRTSPClient(server *Server, rawUrl string, sendOptionMillis int64, agent 
 		URL:                  rawUrl,
 		ID:                   shortid.MustGenerate(),
 		Path:                 url.Path,
-		TransType:            TRANS_TYPE_UDP,
+		TransType:            TRANS_TYPE_TCP,
 		vRTPChannel:          0,
 		vRTPControlChannel:   1,
 		aRTPChannel:          2,
@@ -295,7 +295,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 						return err
 					}
 					headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;client_port=%d-%d", client.UDPServer.VPort, client.UDPServer.VControlPort)
-					client.Conn.timeout = 0	//	UDP ignore timeout
+					client.Conn.timeout = 0 //	UDP ignore timeout
 				}
 				if Session != "" {
 					headers["Session"] = Session
@@ -328,7 +328,7 @@ func (client *RTSPClient) Start(timeout time.Duration) error {
 						return err
 					}
 					headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;client_port=%d-%d", client.UDPServer.APort, client.UDPServer.AControlPort)
-					client.Conn.timeout = 0	//	UDP ignore timeout
+					client.Conn.timeout = 0 //	UDP ignore timeout
 				}
 				if Session != "" {
 					headers["Session"] = Session

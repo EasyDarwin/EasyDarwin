@@ -139,7 +139,7 @@ func (h *APIHandler) RecordFiles(c *gin.Context) {
 				if info.Name() == ".DS_Store" {
 					return nil
 				}
-				if !strings.HasSuffix(info.Name(), ".m3u8") {
+				if !strings.HasSuffix(strings.ToLower(info.Name()), ".m3u8") && !strings.HasSuffix(strings.ToLower(info.Name()), ".ts") {
 					return nil
 				}
 				cmd := exec.Command(ffprobe, "-i", path)
