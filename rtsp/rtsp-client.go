@@ -235,17 +235,22 @@ func (client *RTSPClient) requestStream(timeout time.Duration) (err error) {
 	headers = make(map[string]string)
 	headers["Accept"] = "application/sdp"
 	resp, err = client.Request("DESCRIBE", headers)
-	authorization, _ := client.checkAuth("DESCRIBE", resp)
-	if len(authorization) > 0 {
-		headers := make(map[string]string)
-		headers["Authorization"] = authorization
-		headers["Accept"] = "application/sdp"
-		resp, err = client.Request("DESCRIBE", headers)
-	}
 	if err != nil {
-		return err
+		if resp != nil {
+			authorization, _ := client.checkAuth("DESCRIBE", resp)
+			if len(authorization) > 0 {
+				headers := make(map[string]string)
+				headers["Authorization"] = authorization
+				headers["Accept"] = "application/sdp"
+				resp, err = client.Request("DESCRIBE", headers)
+			}
+			if err != nil {
+				return err
+			}
+		} else {
+			return err
+		}
 	}
-
 	_sdp, err := sdp.ParseString(resp.Body)
 	if err != nil {
 		return err
