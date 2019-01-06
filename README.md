@@ -11,9 +11,9 @@
 
 - 支持RTSP拉流分发（拉模式转发）；
 
-- 服务端录像；
+- 服务端录像(参考:https://blog.csdn.net/jyt0551/article/details/84189498)；
 
-- 服务端录像检索与回放（研发中）；
+- 服务端录像检索与回放 (参考:https://blog.csdn.net/jyt0551/article/details/84189498)；
 
 - 关键帧缓存；
 
