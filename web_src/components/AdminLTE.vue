@@ -92,13 +92,12 @@ export default {
       setTimeout(() => {
         localStorage["sidebar-collapse"] = $("body").hasClass("sidebar-collapse") ? "sidebar-collapse" : "";
       }, 500)
+    }).ready(() => {
+      $("body").layout("fix");
+      this.fixHover();
     });
     $("body").addClass(localStorage["sidebar-collapse"]);
     this.getServerInfo();
-    this.fixHover();
-    $(() => {
-        $("body").layout("fix");
-    })
   },
   components: {
     NaviBar, Sider, ModifyPasswordDlg
