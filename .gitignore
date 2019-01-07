@@ -13,3 +13,7 @@ node_modules
 /*.dev.db
 .idea
 easydarwin_debug.ini
+.DS_Store
+/www/*
+Unnamed
+dev.ini
