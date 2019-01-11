@@ -100,10 +100,10 @@ func DigestAuth(authLine string, method string, URL string) (string, error) {
 	}
 	realm := ""
 	nonce := ""
-	realmRex := regexp.MustCompile(`realm="(\S+)"`)
+	realmRex := regexp.MustCompile(`realm="(.*?)"`)
 	result1 := realmRex.FindStringSubmatch(authLine)
 
-	nonceRex := regexp.MustCompile(`nonce="(\S+)"`)
+	nonceRex := regexp.MustCompile(`nonce="(.*?)"`)
 	result2 := nonceRex.FindStringSubmatch(authLine)
 
 	if len(result1) == 2 {
