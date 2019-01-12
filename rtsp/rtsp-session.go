@@ -3,6 +3,7 @@ package rtsp
 import (
 	"bufio"
 	"bytes"
+	"crypto/md5"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -16,6 +17,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/EasyDarwin/EasyDarwin/models"
+	"github.com/penggy/EasyGoLib/db"
 	"github.com/penggy/EasyGoLib/utils"
 
 	"github.com/teris-io/shortid"
@@ -99,6 +102,9 @@ type Session struct {
 	SDPRaw    string
 	SDPMap    map[string]*SDPInfo
 
+	authorizationEnable bool
+	nonce               string
+
 	AControl string
 	VControl string
 	ACodec   string
@@ -133,17 +139,17 @@ func NewSession(server *Server, conn net.Conn) *Session {
 	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(204800)
 	timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
 	timeoutTCPConn := &RichConn{conn, time.Duration(timeoutMillis) * time.Millisecond}
-
+	authorizationEnable := utils.Conf().Section("rtsp").Key("authorization_enable").MustInt(0)
 	session := &Session{
-		ID:      shortid.MustGenerate(),
-		Server:  server,
-		Conn:    timeoutTCPConn,
-		connRW:  bufio.NewReadWriter(bufio.NewReaderSize(timeoutTCPConn, networkBuffer), bufio.NewWriterSize(timeoutTCPConn, networkBuffer)),
-		StartAt: time.Now(),
-		Timeout: utils.Conf().Section("rtsp").Key("timeout").MustInt(0),
-
-		RTPHandles:  make([]func(*RTPPack), 0),
-		StopHandles: make([]func(), 0),
+		ID:                  shortid.MustGenerate(),
+		Server:              server,
+		Conn:                timeoutTCPConn,
+		connRW:              bufio.NewReadWriter(bufio.NewReaderSize(timeoutTCPConn, networkBuffer), bufio.NewWriterSize(timeoutTCPConn, networkBuffer)),
+		StartAt:             time.Now(),
+		Timeout:             utils.Conf().Section("rtsp").Key("timeout").MustInt(0),
+		authorizationEnable: authorizationEnable != 0,
+		RTPHandles:          make([]func(*RTPPack), 0),
+		StopHandles:         make([]func(), 0),
 	}
 
 	session.logger = log.New(os.Stdout, fmt.Sprintf("[%s]", session.ID), log.LstdFlags|log.Lshortfile)
@@ -273,6 +279,68 @@ func (session *Session) Start() {
 	}
 }
 
+func CheckAuth(authLine string, method string, sessionNonce string) error {
+	realmRex := regexp.MustCompile(`realm="(.*?)"`)
+	nonceRex := regexp.MustCompile(`nonce="(.*?)"`)
+	usernameRex := regexp.MustCompile(`username="(.*?)"`)
+	responseRex := regexp.MustCompile(`response="(.*?)"`)
+	uriRex := regexp.MustCompile(`uri="(.*?)"`)
+
+	realm := ""
+	nonce := ""
+	username := ""
+	response := ""
+	uri := ""
+	result1 := realmRex.FindStringSubmatch(authLine)
+	if len(result1) == 2 {
+		realm = result1[1]
+	} else {
+		return fmt.Errorf("CheckAuth error : no realm found")
+	}
+	result1 = nonceRex.FindStringSubmatch(authLine)
+	if len(result1) == 2 {
+		nonce = result1[1]
+	} else {
+		return fmt.Errorf("CheckAuth error : no nonce found")
+	}
+	if sessionNonce != nonce {
+		return fmt.Errorf("CheckAuth error : sessionNonce not same as nonce")
+	}
+
+	result1 = usernameRex.FindStringSubmatch(authLine)
+	if len(result1) == 2 {
+		username = result1[1]
+	} else {
+		return fmt.Errorf("CheckAuth error : username not found")
+	}
+
+	result1 = responseRex.FindStringSubmatch(authLine)
+	if len(result1) == 2 {
+		response = result1[1]
+	} else {
+		return fmt.Errorf("CheckAuth error : response not found")
+	}
+
+	result1 = uriRex.FindStringSubmatch(authLine)
+	if len(result1) == 2 {
+		uri = result1[1]
+	} else {
+		return fmt.Errorf("CheckAuth error : uri not found")
+	}
+	var user models.User
+	err := db.SQLite.Where("Username = ?", username).First(&user).Error
+	if err != nil {
+		return fmt.Errorf("CheckAuth error : user not exists")
+	}
+	md5UserRealmPwd := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s:%s", username, realm, user.Password))))
+	md5MethodURL := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s", method, uri))))
+	myResponse := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s:%s", md5UserRealmPwd, nonce, md5MethodURL))))
+	if myResponse != response {
+		return fmt.Errorf("CheckAuth error : response not equal")
+	}
+	return nil
+}
+
 func (session *Session) handleRequest(req *Request) {
 	//if session.Timeout > 0 {
 	//	session.Conn.SetDeadline(time.Now().Add(time.Duration(session.Timeout) * time.Second))
@@ -306,11 +374,33 @@ func (session *Session) handleRequest(req *Request) {
 				return
 			}
 		}
-		if res.StatusCode != 200 {
+		if res.StatusCode != 200 && res.StatusCode != 401 {
 			logger.Printf("Response request error[%d]. stop session.", res.StatusCode)
 			session.Stop()
 		}
 	}()
+	if req.Method != "OPTIONS" {
+		if session.authorizationEnable {
+			authLine := req.Header["Authorization"]
+			authFailed := true
+			if authLine != "" {
+				err := CheckAuth(authLine, req.Method, session.nonce)
+				if err == nil {
+					authFailed = false
+				} else {
+					logger.Printf("%v", err)
+				}
+			}
+			if authFailed {
+				res.StatusCode = 401
+				res.Status = "Unauthorized"
+				nonce := fmt.Sprintf("%x", md5.Sum([]byte(shortid.MustGenerate())))
+				session.nonce = nonce
+				res.Header["WWW-Authenticate"] = fmt.Sprintf(`Digest realm="EasyDarwin", nonce="%s", algorithm="MD5"`, nonce)
+				return
+			}
+		}
+	}
 	switch req.Method {
 	case "OPTIONS":
 		res.Header["Public"] = "DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE, OPTIONS, ANNOUNCE, RECORD"
@@ -393,23 +483,11 @@ func (session *Session) handleRequest(req *Request) {
 		}
 		setupPath := setupUrl.String()
 
-		// 播放器可能直接从SETUP来，不用DESCRIBE（比如可能事先已经获取过了）
+		// error status. SETUP without ANNOUNCE or DESCRIBE.
 		if session.Pusher == nil {
-			session.Path = setupUrl.Path
-			pusher := session.Server.GetPusher(session.Path)
-			if pusher == nil {
-				res.StatusCode = 404
-				res.Status = "NOT FOUND"
-				return
-			}
-			session.Type = SESSEION_TYPE_PLAYER
-			session.Player = NewPlayer(session, pusher)
-			session.Pusher = pusher
-			session.AControl = pusher.AControl()
-			session.VControl = pusher.VControl()
-			session.ACodec = pusher.ACodec()
-			session.VCodec = pusher.VCodec()
-			session.Conn.timeout = 0
+			res.StatusCode = 500
+			res.Status = "Error Status"
+			return
 		}
 		//setupPath = setupPath[strings.LastIndex(setupPath, "/")+1:]
 		vPath := ""
@@ -539,8 +617,20 @@ func (session *Session) handleRequest(req *Request) {
 		}
 		res.Header["Transport"] = ts
 	case "PLAY":
+		// error status. PLAY without ANNOUNCE or DESCRIBE.
+		if session.Pusher == nil {
+			res.StatusCode = 500
+			res.Status = "Error Status"
+			return
+		}
 		res.Header["Range"] = req.Header["Range"]
 	case "RECORD":
+		// error status. RECORD without ANNOUNCE or DESCRIBE.
+		if session.Pusher == nil {
+			res.StatusCode = 500
+			res.Status = "Error Status"
+			return
+		}
 	}
 }
 
