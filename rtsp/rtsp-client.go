@@ -282,7 +282,7 @@ func (client *RTSPClient) requestStream(timeout time.Duration) (err error) {
 					client.logger.Printf("Setup video err.%v", err)
 					return err
 				}
-				headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;client_port=%d-%d", client.UDPServer.VPort, client.UDPServer.VControlPort)
+				headers["Transport"] = fmt.Sprintf("RTP/AVP/UDP;unicast;client_port=%d-%d", client.UDPServer.VPort, client.UDPServer.VControlPort)
 				client.Conn.timeout = 0 //	UDP ignore timeout
 			}
 			if session != "" {
@@ -315,7 +315,7 @@ func (client *RTSPClient) requestStream(timeout time.Duration) (err error) {
 					client.logger.Printf("Setup audio err.%v", err)
 					return err
 				}
-				headers["Transport"] = fmt.Sprintf("RTP/AVP/TCP;unicast;client_port=%d-%d", client.UDPServer.APort, client.UDPServer.AControlPort)
+				headers["Transport"] = fmt.Sprintf("RTP/AVP/UDP;unicast;client_port=%d-%d", client.UDPServer.APort, client.UDPServer.AControlPort)
 				client.Conn.timeout = 0 //	UDP ignore timeout
 			}
 			if session != "" {
