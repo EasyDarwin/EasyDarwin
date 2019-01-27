@@ -428,7 +428,7 @@ func (client *RTSPClient) startStream() {
 			}
 
 		default: // rtsp
-			builder := strings.Builder{}
+			builder := bytes.Buffer{}
 			builder.WriteByte(b)
 			contentLen := 0
 			for !client.Stoped {
@@ -519,7 +519,7 @@ func (client *RTSPClient) RequestWithPath(method string, path string, headers ma
 	}
 	client.Seq++
 	cseq := client.Seq
-	builder := strings.Builder{}
+	builder := bytes.Buffer{}
 	builder.WriteString(fmt.Sprintf("%s %s RTSP/1.0\r\n", method, path))
 	builder.WriteString(fmt.Sprintf("CSeq: %d\r\n", cseq))
 	for k, v := range headers {
