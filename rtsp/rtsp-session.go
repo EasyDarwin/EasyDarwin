@@ -150,6 +150,10 @@ func NewSession(server *Server, conn net.Conn) *Session {
 		authorizationEnable: authorizationEnable != 0,
 		RTPHandles:          make([]func(*RTPPack), 0),
 		StopHandles:         make([]func(), 0),
+		vRTPChannel:         -1,
+		vRTPControlChannel:  -1,
+		aRTPChannel:         -1,
+		aRTPControlChannel:  -1,
 	}
 
 	session.logger = log.New(os.Stdout, fmt.Sprintf("[%s]", session.ID), log.LstdFlags|log.Lshortfile)
