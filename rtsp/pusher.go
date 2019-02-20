@@ -229,7 +229,7 @@ func (pusher *Pusher) Start() {
 			continue
 		}
 
-		if pusher.gopCacheEnable {
+		if pusher.gopCacheEnable && pack.Type == RTP_TYPE_VIDEO {
 			pusher.gopCacheLock.Lock()
 			if strings.EqualFold(pusher.VCodec(), "h264") {
 				if rtp := ParseRTP(pack.Buffer.Bytes()); rtp != nil && rtp.IsKeyframeStart() {
