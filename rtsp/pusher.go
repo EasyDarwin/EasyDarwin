@@ -327,19 +327,19 @@ func (pusher *Pusher) shouldSequeceStart(rtp *RTPInfo) bool {
 		switch {
 		case NaluType <= 23:
 			realNALU = rtp.Payload[0]
-			log.Printf("Single NAL:%d", NaluType)
+			// log.Printf("Single NAL:%d", NaluType)
 		case NaluType == 28 || NaluType == 29:
 			realNALU = rtp.Payload[1]
 			if realNALU&0x40 != 0 {
-				log.Printf("FU NAL End :%02X", realNALU)
+				// log.Printf("FU NAL End :%02X", realNALU)
 			}
 			if realNALU&0x80 != 0 {
-				log.Printf("FU NAL Begin :%02X", realNALU)
+				// log.Printf("FU NAL Begin :%02X", realNALU)
 			} else {
 				return false
 			}
 		case NaluType == 24:
-			log.Printf("STAP-A")
+			// log.Printf("STAP-A")
 			off := 1
 			singleSPSPPS := 0
 			for {
