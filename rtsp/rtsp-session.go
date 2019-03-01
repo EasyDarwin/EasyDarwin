@@ -104,6 +104,7 @@ type Session struct {
 
 	authorizationEnable bool
 	nonce               string
+	closeOld            bool
 
 	AControl string
 	VControl string
@@ -140,6 +141,7 @@ func NewSession(server *Server, conn net.Conn) *Session {
 	timeoutMillis := utils.Conf().Section("rtsp").Key("timeout").MustInt(0)
 	timeoutTCPConn := &RichConn{conn, time.Duration(timeoutMillis) * time.Millisecond}
 	authorizationEnable := utils.Conf().Section("rtsp").Key("authorization_enable").MustInt(0)
+	close_old := utils.Conf().Section("rtsp").Key("close_old").MustInt(0)
 	session := &Session{
 		ID:                  shortid.MustGenerate(),
 		Server:              server,
@@ -154,6 +156,7 @@ func NewSession(server *Server, conn net.Conn) *Session {
 		vRTPControlChannel:  -1,
 		aRTPChannel:         -1,
 		aRTPControlChannel:  -1,
+		closeOld:            close_old != 0,
 	}
 
 	session.logger = log.New(os.Stdout, fmt.Sprintf("[%s]", session.ID), log.LstdFlags|log.Lshortfile)
@@ -365,13 +368,13 @@ func (session *Session) handleRequest(req *Request) {
 		session.connWLock.Unlock()
 		session.OutBytes += len(outBytes)
 		switch req.Method {
-		case "PLAY", "RECORD":
-			switch session.Type {
-			case SESSEION_TYPE_PLAYER:
-				session.Pusher.AddPlayer(session.Player)
-			case SESSION_TYPE_PUSHER:
-				session.Server.AddPusher(session.Pusher)
-			}
+		// case "PLAY", "RECORD":
+		// 	switch session.Type {
+		// 	case SESSEION_TYPE_PLAYER:
+		// 		session.Pusher.AddPlayer(session.Player)
+		// 	case SESSION_TYPE_PUSHER:
+		// 		session.Server.AddPusher(session.Pusher)
+		// 	}
 		case "TEARDOWN":
 			{
 				session.Stop()
@@ -435,12 +438,12 @@ func (session *Session) handleRequest(req *Request) {
 			logger.Printf("video codec[%s]\n", session.VCodec)
 		}
 		session.Pusher = NewPusher(session)
-		if session.Server.GetPusher(session.Path) == nil {
-			session.Server.AddPusher(session.Pusher)
-		} else {
+
+		addedToServer := session.Server.AddPusher(session.Pusher, session.closeOld)
+		if !addedToServer {
+			logger.Printf("reject pusher.")
 			res.StatusCode = 406
 			res.Status = "Not Acceptable"
-			return
 		}
 	case "DESCRIBE":
 		session.Type = SESSEION_TYPE_PLAYER

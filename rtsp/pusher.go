@@ -232,7 +232,7 @@ func (pusher *Pusher) Start() {
 
 		if pusher.gopCacheEnable && pack.Type == RTP_TYPE_VIDEO {
 			pusher.gopCacheLock.Lock()
-			if rtp := ParseRTP(pack.Buffer.Bytes()); rtp != nil && pusher.shouldSequeceStart(rtp) {
+			if rtp := ParseRTP(pack.Buffer.Bytes()); rtp != nil && pusher.shouldSequenceStart(rtp) {
 				pusher.gopCache = make([]*RTPPack, 0)
 			}
 			pusher.gopCache = append(pusher.gopCache, pack)
@@ -318,7 +318,7 @@ func (pusher *Pusher) ClearPlayer() {
 	}
 }
 
-func (pusher *Pusher) shouldSequeceStart(rtp *RTPInfo) bool {
+func (pusher *Pusher) shouldSequenceStart(rtp *RTPInfo) bool {
 	if strings.EqualFold(pusher.VCodec(), "h264") {
 		var realNALU uint8
 		payloadHeader := rtp.Payload[0] //https://tools.ietf.org/html/rfc6184#section-5.2
