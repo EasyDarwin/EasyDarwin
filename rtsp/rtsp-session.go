@@ -368,13 +368,13 @@ func (session *Session) handleRequest(req *Request) {
 		session.connWLock.Unlock()
 		session.OutBytes += len(outBytes)
 		switch req.Method {
-		// case "PLAY", "RECORD":
-		// 	switch session.Type {
-		// 	case SESSEION_TYPE_PLAYER:
-		// 		session.Pusher.AddPlayer(session.Player)
-		// 	case SESSION_TYPE_PUSHER:
-		// 		session.Server.AddPusher(session.Pusher)
-		// 	}
+		case "PLAY", "RECORD":
+			switch session.Type {
+			case SESSEION_TYPE_PLAYER:
+				session.Pusher.AddPlayer(session.Player)
+				// case SESSION_TYPE_PUSHER:
+				// 	session.Server.AddPusher(session.Pusher)
+			}
 		case "TEARDOWN":
 			{
 				session.Stop()
