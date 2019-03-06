@@ -190,6 +190,7 @@ func (session *Session) Start() {
 	buf1 := make([]byte, 1)
 	buf2 := make([]byte, 2)
 	logger := session.logger
+	timer := time.Unix(0, 0)
 	for !session.Stoped {
 		if _, err := io.ReadFull(session.connRW, buf1); err != nil {
 			logger.Println(session, err)
@@ -219,6 +220,11 @@ func (session *Session) Start() {
 					Type:   RTP_TYPE_AUDIO,
 					Buffer: rtpBuf,
 				}
+				elapsed := time.Now().Sub(timer)
+				if elapsed >= 30*time.Second {
+					logger.Println("Recv an audio RTP package")
+					timer = time.Now()
+				}
 			case session.aRTPControlChannel:
 				pack = &RTPPack{
 					Type:   RTP_TYPE_AUDIOCONTROL,
@@ -228,6 +234,11 @@ func (session *Session) Start() {
 				pack = &RTPPack{
 					Type:   RTP_TYPE_VIDEO,
 					Buffer: rtpBuf,
+				}
+				elapsed := time.Now().Sub(timer)
+				if elapsed >= 30*time.Second {
+					logger.Println("Recv an video RTP package")
+					timer = time.Now()
 				}
 			case session.vRTPControlChannel:
 				pack = &RTPPack{

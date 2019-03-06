@@ -7,6 +7,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/penggy/EasyGoLib/utils"
 )
@@ -27,7 +28,7 @@ type UDPServer struct {
 	Stoped bool
 }
 
-func (s* UDPServer)AddInputBytes(bytes int)  {
+func (s *UDPServer) AddInputBytes(bytes int) {
 	if s.Session != nil {
 		s.Session.InBytes += bytes
 		return
@@ -39,7 +40,7 @@ func (s* UDPServer)AddInputBytes(bytes int)  {
 	panic(fmt.Errorf("session and RTSPClient both nil"))
 }
 
-func (s *UDPServer)HandleRTP(pack *RTPPack)  {
+func (s *UDPServer) HandleRTP(pack *RTPPack) {
 	if s.Session != nil {
 		for _, v := range s.Session.RTPHandles {
 			v(pack)
@@ -56,7 +57,7 @@ func (s *UDPServer)HandleRTP(pack *RTPPack)  {
 	panic(fmt.Errorf("session and RTSPClient both nil"))
 }
 
-func (s *UDPServer) Logger() *log.Logger  {
+func (s *UDPServer) Logger() *log.Logger {
 	if s.Session != nil {
 		return s.Session.logger
 	}
@@ -116,8 +117,14 @@ func (s *UDPServer) SetupAudio() (err error) {
 		bufUDP := make([]byte, UDP_BUF_SIZE)
 		logger.Printf("udp server start listen audio port[%d]", s.APort)
 		defer logger.Printf("udp server stop listen audio port[%d]", s.APort)
+		timer := time.Unix(0, 0)
 		for !s.Stoped {
 			if n, _, err := s.AConn.ReadFromUDP(bufUDP); err == nil {
+				elapsed := time.Now().Sub(timer)
+				if elapsed >= 30*time.Second {
+					logger.Printf("Package recv from AConn.len:%d\n", n)
+					timer = time.Now()
+				}
 				rtpBytes := make([]byte, n)
 				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)
@@ -158,6 +165,7 @@ func (s *UDPServer) SetupAudio() (err error) {
 		defer logger.Printf("udp server stop listen audio control port[%d]", s.AControlPort)
 		for !s.Stoped {
 			if n, _, err := s.AControlConn.ReadFromUDP(bufUDP); err == nil {
+				//logger.Printf("Package recv from AControlConn.len:%d\n", n)
 				rtpBytes := make([]byte, n)
 				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)
@@ -202,8 +210,14 @@ func (s *UDPServer) SetupVideo() (err error) {
 		bufUDP := make([]byte, UDP_BUF_SIZE)
 		logger.Printf("udp server start listen video port[%d]", s.VPort)
 		defer logger.Printf("udp server stop listen video port[%d]", s.VPort)
+		timer := time.Unix(0, 0)
 		for !s.Stoped {
 			if n, _, err := s.VConn.ReadFromUDP(bufUDP); err == nil {
+				elapsed := time.Now().Sub(timer)
+				if elapsed >= 30*time.Second {
+					logger.Printf("Package recv from VConn.len:%d\n", n)
+					timer = time.Now()
+				}
 				rtpBytes := make([]byte, n)
 				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)
@@ -245,6 +259,7 @@ func (s *UDPServer) SetupVideo() (err error) {
 		defer logger.Printf("udp server stop listen video control port[%d]", s.VControlPort)
 		for !s.Stoped {
 			if n, _, err := s.VControlConn.ReadFromUDP(bufUDP); err == nil {
+				//logger.Printf("Package recv from VControlConn.len:%d\n", n)
 				rtpBytes := make([]byte, n)
 				s.AddInputBytes(n)
 				copy(rtpBytes, bufUDP)

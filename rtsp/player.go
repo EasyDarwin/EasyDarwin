@@ -2,6 +2,7 @@ package rtsp
 
 import (
 	"sync"
+	"time"
 )
 
 type Player struct {
@@ -40,6 +41,7 @@ func (player *Player) QueueRTP(pack *RTPPack) *Player {
 
 func (player *Player) Start() {
 	logger := player.logger
+	timer := time.Unix(0, 0)
 	for !player.Stoped {
 		var pack *RTPPack
 		player.cond.L.Lock()
@@ -59,6 +61,11 @@ func (player *Player) Start() {
 		}
 		if err := player.SendRTP(pack); err != nil {
 			logger.Println(err)
+		}
+		elapsed := time.Now().Sub(timer)
+		if elapsed >= 30*time.Second {
+			logger.Printf("Send a package.type:%d\n", pack.Type)
+			timer = time.Now()
 		}
 	}
 }
