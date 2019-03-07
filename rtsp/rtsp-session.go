@@ -368,6 +368,7 @@ func (session *Session) handleRequest(req *Request) {
 	res := NewResponse(200, "OK", req.Header["CSeq"], session.ID, "")
 	defer func() {
 		if p := recover(); p != nil {
+			logger.Printf("handleRequest err ocurs:%v",p)
 			res.StatusCode = 500
 			res.Status = fmt.Sprintf("Inner Server Error, %v", p)
 		}
