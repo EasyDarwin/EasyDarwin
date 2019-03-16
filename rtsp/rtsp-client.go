@@ -501,6 +501,10 @@ func (client *RTSPClient) Stop() {
 		client.Conn.Close()
 		client.Conn = nil
 	}
+	if client.UDPServer != nil{
+		client.UDPServer.Stop()
+		client.UDPServer = nil
+	}
 }
 
 func (client *RTSPClient) RequestWithPath(method string, path string, headers map[string]string, needResp bool) (resp *Response, err error) {
