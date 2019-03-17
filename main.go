@@ -155,7 +155,7 @@ func (p *program) Start(s service.Service) (err error) {
 					log.Printf("Pull stream err :%v", err)
 					continue
 				}
-				rtsp.GetServer().AddPusher(pusher, false)
+				rtsp.GetServer().AddPusher(pusher)
 				//streams = streams[0:i]
 				//streams = append(streams[:i], streams[i+1:]...)
 			}

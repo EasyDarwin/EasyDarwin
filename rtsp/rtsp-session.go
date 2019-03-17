@@ -368,7 +368,7 @@ func (session *Session) handleRequest(req *Request) {
 	res := NewResponse(200, "OK", req.Header["CSeq"], session.ID, "")
 	defer func() {
 		if p := recover(); p != nil {
-			logger.Printf("handleRequest err ocurs:%v",p)
+			logger.Printf("handleRequest err ocurs:%v", p)
 			res.StatusCode = 500
 			res.Status = fmt.Sprintf("Inner Server Error, %v", p)
 		}
@@ -449,13 +449,46 @@ func (session *Session) handleRequest(req *Request) {
 			session.VCodec = sdp.Codec
 			logger.Printf("video codec[%s]\n", session.VCodec)
 		}
-		session.Pusher = NewPusher(session)
+		addPusher := false
+		if session.closeOld {
+			r, _ := session.Server.TryAttachToPusher(session)
+			if r < -1 {
+				logger.Printf("reject pusher.")
+				res.StatusCode = 406
+				res.Status = "Not Acceptable"
+			} else if r == 0 {
+				addPusher = true
+			} else {
+				logger.Printf("Attached to old pusher")
+				// 尝试发给客户端ANNOUCE
+				// players := pusher.GetPlayers()
+				// for _, v := range players {
+				// 	sess := v.Session
 
-		addedToServer := session.Server.AddPusher(session.Pusher, session.closeOld)
-		if !addedToServer {
-			logger.Printf("reject pusher.")
-			res.StatusCode = 406
-			res.Status = "Not Acceptable"
+				// 	hearers := make(map[string]string)
+				// 	hearers["Content-Type"] = "application/sdp"
+				// 	hearers["Session"] = sess.ID
+				// 	hearers["Content-Length"] = strconv.Itoa(len(v.SDPRaw))
+				// 	var req = Request{Method: ANNOUNCE, URL: v.URL, Version: "1.0", Header: hearers, Body: pusher.SDPRaw()}
+				// 	sess.connWLock.Lock()
+				// 	logger.Println(req.String())
+				// 	outBytes := []byte(req.String())
+				// 	sess.connRW.Write(outBytes)
+				// 	sess.connRW.Flush()
+				// 	sess.connWLock.Unlock()
+				// }
+			}
+		} else {
+			addPusher = true
+		}
+		if addPusher {
+			session.Pusher = NewPusher(session)
+			addedToServer := session.Server.AddPusher(session.Pusher)
+			if !addedToServer {
+				logger.Printf("reject pusher.")
+				res.StatusCode = 406
+				res.Status = "Not Acceptable"
+			}
 		}
 	case "DESCRIBE":
 		session.Type = SESSEION_TYPE_PLAYER

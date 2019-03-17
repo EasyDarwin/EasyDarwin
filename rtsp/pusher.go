@@ -12,13 +12,12 @@ import (
 type Pusher struct {
 	*Session
 	*RTSPClient
-	players        map[string]*Player //SessionID <-> Player
-	playersLock    sync.RWMutex
-	gopCacheEnable bool
-	gopCache       []*RTPPack
-	gopCacheLock   sync.RWMutex
-	UDPServer      *UDPServer
-
+	players           map[string]*Player //SessionID <-> Player
+	playersLock       sync.RWMutex
+	gopCacheEnable    bool
+	gopCache          []*RTPPack
+	gopCacheLock      sync.RWMutex
+	UDPServer         *UDPServer
 	spsppsInSTAPaPack bool
 	cond              *sync.Cond
 	queue             []*RTPPack
@@ -187,10 +186,24 @@ func NewPusher(session *Session) (pusher *Pusher) {
 		cond:  sync.NewCond(&sync.Mutex{}),
 		queue: make([]*RTPPack, 0),
 	}
+	pusher.bindSession(session)
+	return
+}
+
+func (pusher *Pusher) bindSession(session *Session) {
+	pusher.Session = session
 	session.RTPHandles = append(session.RTPHandles, func(pack *RTPPack) {
+		if session != pusher.Session {
+			session.logger.Printf("Session recv rtp to pusher.but pusher got a new session[%v].", pusher.Session.ID)
+			return
+		}
 		pusher.QueueRTP(pack)
 	})
 	session.StopHandles = append(session.StopHandles, func() {
+		if session != pusher.Session {
+			session.logger.Printf("Session stop to release pusher.but pusher got a new session[%v].", pusher.Session.ID)
+			return
+		}
 		pusher.ClearPlayer()
 		pusher.Server().RemovePusher(pusher)
 		pusher.cond.Broadcast()
@@ -199,7 +212,37 @@ func NewPusher(session *Session) (pusher *Pusher) {
 			pusher.UDPServer = nil
 		}
 	})
-	return
+}
+
+func (pusher *Pusher) RebindSession(session *Session) bool {
+	if pusher.RTSPClient != nil {
+		pusher.Logger().Printf("call RebindSession[%s] to a Client-Pusher. got false", session.ID)
+		return false
+	}
+	sess := pusher.Session
+	pusher.bindSession(session)
+	session.Pusher = pusher
+
+	pusher.gopCacheLock.Lock()
+	pusher.gopCache = make([]*RTPPack, 0)
+	pusher.gopCacheLock.Unlock()
+	if sess != nil {
+		sess.Stop()
+	}
+	return true
+}
+
+func (pusher *Pusher) RebindClient(client *RTSPClient) bool {
+	if pusher.Session != nil {
+		pusher.Logger().Printf("call RebindClient[%s] to a Session-Pusher. got false", client.ID)
+		return false
+	}
+	sess := pusher.RTSPClient
+	pusher.RTSPClient = client
+	if sess != nil {
+		sess.Stop()
+	}
+	return true
 }
 
 func (pusher *Pusher) QueueRTP(pack *RTPPack) *Pusher {
@@ -312,10 +355,11 @@ func (pusher *Pusher) ClearPlayer() {
 	}
 	pusher.players = make(map[string]*Player)
 	pusher.playersLock.Unlock()
-
-	for _, v := range players {
-		v.Stop()
-	}
+	go func() { // do not block
+		for _, v := range players {
+			v.Stop()
+		}
+	}()
 }
 
 func (pusher *Pusher) shouldSequenceStart(rtp *RTPInfo) bool {

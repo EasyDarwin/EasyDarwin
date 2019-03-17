@@ -77,7 +77,7 @@ func (h *APIHandler) StreamStart(c *gin.Context) {
 		return
 	}
 	log.Printf("Pull to push %v success ", form)
-	rtsp.GetServer().AddPusher(pusher, false)
+	rtsp.GetServer().AddPusher(pusher)
 	// save to db.
 	var stream = models.Stream{
 		URL:               form.URL,

@@ -187,33 +187,41 @@ func (server *Server) Stop() {
 	close(server.removePusherCh)
 }
 
-func (server *Server) AddPusher(pusher *Pusher, closeOld bool) bool {
+func (server *Server) AddPusher(pusher *Pusher) bool {
 	logger := server.logger
 	added := false
 	server.pushersLock.Lock()
-	old, ok := server.pushers[pusher.Path()]
+	_, ok := server.pushers[pusher.Path()]
 	if !ok {
 		server.pushers[pusher.Path()] = pusher
 		logger.Printf("%v start, now pusher size[%d]", pusher, len(server.pushers))
 		added = true
 	} else {
-		if closeOld {
-			server.pushers[pusher.Path()] = pusher
-			logger.Printf("%v start, replace old pusher", pusher)
-			added = true
-		}
+		added = false
 	}
 	server.pushersLock.Unlock()
-	if ok && closeOld {
-		logger.Printf("old pusher %v stoped", pusher)
-		old.Stop()
-		server.removePusherCh <- old
-	}
 	if added {
 		go pusher.Start()
 		server.addPusherCh <- pusher
 	}
 	return added
+}
+
+func (server *Server) TryAttachToPusher(session *Session) (int, *Pusher) {
+	server.pushersLock.Lock()
+	attached := 0
+	var pusher *Pusher = nil
+	if _pusher, ok := server.pushers[session.Path]; ok {
+		if _pusher.RebindSession(session) {
+			session.logger.Printf("Attached to a pusher")
+			attached = 1
+			pusher = _pusher
+		} else {
+			attached = -1
+		}
+	}
+	server.pushersLock.Unlock()
+	return attached, pusher
 }
 
 func (server *Server) RemovePusher(pusher *Pusher) {
