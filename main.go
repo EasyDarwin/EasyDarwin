@@ -210,9 +210,7 @@ func main() {
 	if len(tail) > 0 {
 		cmd := strings.ToLower(tail[0])
 		if cmd == "install" || cmd == "stop" || cmd == "start" || cmd == "uninstall" {
-			if cmd == "install" || cmd == "stop" {
-				figure.NewFigure("EasyDarwin", "", false).Print()
-			}
+			figure.NewFigure("EasyDarwin", "", false).Print()
 			log.Println(svcConfig.Name, cmd, "...")
 			if err = service.Control(s, cmd); err != nil {
 				log.Println(err)
