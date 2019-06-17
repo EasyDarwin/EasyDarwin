@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/penggy/EasyGoLib/utils"
+	"github.com/rikugun/EasyGoLib/utils"
 )
 
 type Pusher struct {
