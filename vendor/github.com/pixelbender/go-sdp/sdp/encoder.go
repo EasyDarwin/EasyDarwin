@@ -203,7 +203,7 @@ func (e *Encoder) key(k *Key) *Encoder {
 }
 
 func (e *Encoder) origin(o *Origin) *Encoder {
-	return e.str(strd(o.Username, "-")).sp().str(o.SessionID).sp().int(o.SessionVersion).sp().transport(o.Network, o.Type, o.Address)
+	return e.str(strd(o.Username, "-")).sp().int(o.SessionID).sp().int(o.SessionVersion).sp().transport(o.Network, o.Type, o.Address)
 }
 
 func (e *Encoder) connection(c *Connection) *Encoder {
