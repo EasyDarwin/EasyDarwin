@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rikugun/EasyGoLib/utils"
+	"github.com/rikugun/EasyDarwin/utils"
 )
 
 /**

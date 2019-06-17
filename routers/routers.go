@@ -7,15 +7,15 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/rikugun/EasyGoLib/db"
+	"github.com/rikugun/EasyDarwin/db"
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/penggy/cors"
 	"github.com/penggy/sessions"
-	"github.com/rikugun/EasyGoLib/utils"
-	validator "gopkg.in/go-playground/validator.v8"
+	"github.com/rikugun/EasyDarwin/utils"
+	"gopkg.in/go-playground/validator.v8"
 )
 
 /**
@@ -111,7 +111,7 @@ func Init() (err error) {
 	Router.Use(Errors())
 	Router.Use(cors.Default())
 
-	store := sessions.NewGormStoreWithOptions(db.SQLite, sessions.GormStoreOptions{
+	store := sessions.NewGormStoreWithOptions(db.DB, sessions.GormStoreOptions{
 		TableName: "t_sessions",
 	}, []byte("EasyDarwin@2018"))
 	tokenTimeout := utils.Conf().Section("http").Key("token_timeout").MustInt(7 * 86400)

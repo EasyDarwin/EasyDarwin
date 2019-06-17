@@ -9,14 +9,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rikugun/EasyGoLib/db"
+	"github.com/rikugun/EasyDarwin/db"
 
-	"github.com/EasyDarwin/EasyDarwin/models"
-	"github.com/EasyDarwin/EasyDarwin/routers"
-	"github.com/EasyDarwin/EasyDarwin/rtsp"
-	figure "github.com/common-nighthawk/go-figure"
+	"github.com/common-nighthawk/go-figure"
 	"github.com/penggy/service"
-	"github.com/rikugun/EasyGoLib/utils"
+	"github.com/rikugun/EasyDarwin/models"
+	"github.com/rikugun/EasyDarwin/routers"
+	"github.com/rikugun/EasyDarwin/rtsp"
+	"github.com/rikugun/EasyDarwin/utils"
 )
 
 var (
@@ -129,8 +129,8 @@ func (p *program) Start(s service.Service) (err error) {
 		log.Printf("demon pull streams")
 		for {
 			var streams []models.Stream
-			db.SQLite.Find(&streams)
-			if err := db.SQLite.Find(&streams).Error; err != nil {
+			db.DB.Find(&streams)
+			if err := db.DB.Find(&streams).Error; err != nil {
 				log.Printf("find stream err:%v", err)
 				return
 			}

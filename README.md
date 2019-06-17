@@ -85,7 +85,13 @@
         npm i -g apidoc
         npm i -g rimraf
 
-
+        # install dep libs
+        mkdir -p $GOPATH/src/golang.org/x/
+        cd !$
+        git clone https://github.com/golang/net.git
+        git clone https://github.com/golang/sys.git
+        git clone https://github.com/golang/tools.git
+        
 ### 编译命令
 
 - 获取代码

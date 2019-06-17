@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/rikugun/EasyGoLib/utils"
+	"github.com/rikugun/EasyDarwin/utils"
 )
 
 type Server struct {
