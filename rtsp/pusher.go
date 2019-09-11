@@ -311,6 +311,13 @@ func (pusher *Pusher) GetPlayers() (players map[string]*Player) {
 	return
 }
 
+func (pusher *Pusher) HasPlayer(player *Player) bool {
+	pusher.playersLock.Lock()
+	_, ok := pusher.players[player.ID]
+	pusher.playersLock.Unlock()
+	return ok
+}
+
 func (pusher *Pusher) AddPlayer(player *Player) *Pusher {
 	logger := pusher.Logger()
 	if pusher.gopCacheEnable {

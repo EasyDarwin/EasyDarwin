@@ -105,6 +105,7 @@ type Session struct {
 	authorizationEnable bool
 	nonce               string
 	closeOld            bool
+	debugLogEnable      bool
 
 	AControl string
 	VControl string
@@ -133,7 +134,7 @@ type Session struct {
 }
 
 func (session *Session) String() string {
-	return fmt.Sprintf("session[%v][%v][%s][%s]", session.Type, session.TransType, session.Path, session.ID)
+	return fmt.Sprintf("session[%v][%v][%s][%s][%s]", session.Type, session.TransType, session.Path, session.ID, session.Conn.RemoteAddr().String())
 }
 
 func NewSession(server *Server, conn net.Conn) *Session {
@@ -142,6 +143,7 @@ func NewSession(server *Server, conn net.Conn) *Session {
 	timeoutTCPConn := &RichConn{conn, time.Duration(timeoutMillis) * time.Millisecond}
 	authorizationEnable := utils.Conf().Section("rtsp").Key("authorization_enable").MustInt(0)
 	close_old := utils.Conf().Section("rtsp").Key("close_old").MustInt(0)
+	debugLogEnable := utils.Conf().Section("rtsp").Key("debug_log_enable").MustInt(0)
 	session := &Session{
 		ID:                  shortid.MustGenerate(),
 		Server:              server,
@@ -150,6 +152,7 @@ func NewSession(server *Server, conn net.Conn) *Session {
 		StartAt:             time.Now(),
 		Timeout:             utils.Conf().Section("rtsp").Key("timeout").MustInt(0),
 		authorizationEnable: authorizationEnable != 0,
+		debugLogEnable:      debugLogEnable != 0,
 		RTPHandles:          make([]func(*RTPPack), 0),
 		StopHandles:         make([]func(), 0),
 		vRTPChannel:         -1,
@@ -383,7 +386,11 @@ func (session *Session) handleRequest(req *Request) {
 		case "PLAY", "RECORD":
 			switch session.Type {
 			case SESSEION_TYPE_PLAYER:
-				session.Pusher.AddPlayer(session.Player)
+				if session.Pusher.HasPlayer(session.Player) {
+					session.Player.Pause(false)
+				} else {
+					session.Pusher.AddPlayer(session.Player)
+				}
 				// case SESSION_TYPE_PUSHER:
 				// 	session.Server.AddPusher(session.Pusher)
 			}
@@ -683,6 +690,13 @@ func (session *Session) handleRequest(req *Request) {
 			res.Status = "Error Status"
 			return
 		}
+	case "PAUSE":
+		if session.Player == nil {
+			res.StatusCode = 500
+			res.Status = "Error Status"
+			return
+		}
+		session.Player.Pause(true)
 	}
 }
 
