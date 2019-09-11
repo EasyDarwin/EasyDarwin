@@ -7553,6 +7553,13 @@ webpack-dev-server@2.11.2:
     webpack-dev-middleware "1.12.2"
     yargs "6.6.0"
 
+webpack-merge@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-3.0.0.tgz#f2c9c28691bc44fdb124745cb84a8fab74125701"
+  integrity sha1-8snChpG8RP2xJHRcuEqPq3QSVwE=
+  dependencies:
+    lodash "^4.17.4"
+
 webpack-sources@^1.0.1:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.4.3.tgz#eedd8ec0b928fbf1cbfe994e22d2d890f330a933"

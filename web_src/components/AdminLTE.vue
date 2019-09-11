@@ -10,9 +10,9 @@
     </div>
     <footer class="main-footer">
       <div class="pull-right hidden-xs hide">
-        {{process.env.SYS_TITLE}}
+        {{env.SYS_TITLE}}
       </div>
-      <strong>Copyright &copy; {{ thisYear() }} <a :href="process.env.COMP_URL">{{process.env.COMP_INFO}}</a>.</strong> All rights reserved.
+      <strong>Copyright &copy; {{ thisYear() }} <a :href="env.COMP_URL">{{env.COMP_INFO}}</a>.</strong> All rights reserved.
     </footer>
   </div>
 </template>

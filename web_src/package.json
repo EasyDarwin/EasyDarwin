@@ -11,33 +11,42 @@
   "keywords": [
     "EasyDarwin"
   ],
-  "author": "penggy",
+  "author": "rikugun",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "admin-lte": "2.4.3",
+    "bootstrap": "3.3.7",
+    "echarts": "4.0.4",
+    "element-ui": "2.2.2",
+    "jquery-ui": "1.12.1",
+    "lodash": "4.17.10",
+    "moment": "2.21.0",
+    "vue": "2.5.16",
+    "vue-backtotop": "1.2.6",
+    "vue-clipboards": "1.2.4",
+    "vue-fullscreen": "2.1.3",
+    "vue-router": "3.0.1",
+    "vue-template-compiler": "2.5.16",
+    "vuex": "3.0.1"
+  },
+  "devDependencies": {
     "babel-core": "6.26.0",
     "babel-loader": "7.1.4",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.6.1",
     "babel-preset-stage-2": "6.24.1",
-    "bootstrap": "3.3.7",
     "clean-webpack-plugin": "0.1.19",
     "copy-webpack-plugin": "4.5.1",
     "cross-env": "5.1.4",
     "css-loader": "0.28.11",
     "easy-player": "1.0.15",
-    "echarts": "4.0.4",
-    "element-ui": "2.2.2",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.11",
     "font-awesome": "4.7.0",
     "glob": "7.1.2",
     "html-webpack-plugin": "3.1.0",
-    "jquery-ui": "1.12.1",
     "less": "3.0.1",
     "less-loader": "4.1.0",
-    "lodash": "4.17.10",
-    "moment": "2.21.0",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "3.2.0",
     "pretty-bytes": "4.0.2",
@@ -47,15 +56,18 @@
     "url-loader": "1.0.1",
     "v-charts": "1.16.7",
     "vee-validate": "2.0.6",
-    "vue": "2.5.16",
-    "vue-backtotop": "1.2.6",
-    "vue-clipboards": "1.2.4",
-    "vue-fullscreen": "2.1.3",
-    "vue-loader": "14.2.2",
-    "vue-router": "3.0.1",
-    "vue-template-compiler": "2.5.16",
-    "vuex": "3.0.1",
+    "vue-loader": "15.3.0",
     "webpack": "3.11.0",
-    "webpack-dev-server": "2.11.2"
-  }
+    "webpack-dev-server": "2.11.2",
+    "webpack-merge": "^3.0.0"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

@@ -5,6 +5,15 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
+let env
+
+if (process.env.NODE_ENV == 'production') {
+    env = require(resolve('config/prod.env'))
+} else if (process.env.NODE_ENV == 'development') {
+    env = require(resolve('config/dev.env'))
+}
+
+//
 
 function resolve(dir) {
     return path.resolve(__dirname, dir)
@@ -33,9 +42,10 @@ module.exports = {
     },
     devServer: {
         host: '0.0.0.0',
-        useLocalIp: true,       
+        // port:4000,
+        useLocalIp: true,
         proxy: {
-            "*": {
+            "/api/**": {
                 target: `http://localhost:10008`,
                 secure: false
             }
@@ -92,7 +102,7 @@ module.exports = {
                 outputPath: "images/",
                 limit: 10000,
                 name: "[name].[hash:8].[ext]"
-            }              
+            }
         }, {
             test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
             loader: 'url-loader',
@@ -100,7 +110,7 @@ module.exports = {
                 outputPath: "fonts/",
                 limit: 10000,
                 name: "[name].[hash:8].[ext]"
-            }              
+            }
         }, {
             test: /\.(swf|mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
             loader: 'url-loader',
@@ -108,10 +118,13 @@ module.exports = {
                 outputPath: "media/",
                 limit: 10000,
                 name: "[name].[hash:8].[ext]"
-            }              
+            }
         }]
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': env
+        }),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
@@ -120,22 +133,22 @@ module.exports = {
         }),
         new webpack.HashedModuleIdsPlugin(),
         new CopyWebpackPlugin([
-            { from: 'externals' },
-            { from: 'node_modules/easy-player/dist/component/easy-player-lib.min.js', to: 'js/'},
-            { from: 'node_modules/easy-player/dist/component/easy-player-fluent.swf'},
-            { from: 'node_modules/easy-player/dist/component/easy-player.swf'}
+            {from: 'externals'},
+            {from: 'node_modules/easy-player/dist/component/easy-player-lib.min.js', to: 'js/'},
+            {from: 'node_modules/easy-player/dist/component/easy-player-fluent.swf'},
+            {from: 'node_modules/easy-player/dist/component/easy-player.swf'}
         ]),
         new ExtractTextPlugin("css/[name].[chunkhash:8].css"),
         new HtmlWebpackPlugin({
             filename: 'login.html',
-            title: process.env.SYS_TITLE+" 登录",
+            title: "系统登录",
             inject: true,
             chunks: ['login'],
             template: './template-login.html'
-        }),        
+        }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            title: process.env.SYS_TITLE,
+            title: '视屏媒体处理平台',
             inject: true, // head -> Cannot find element: #app
             chunks: ['index'],
             template: './template.html'
@@ -148,25 +161,17 @@ if (process.env.NODE_ENV == "production") {
         new CleanWebpackPlugin(['www'], {
             root: resolve("../")
         }),
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
         new OptimizeCssAssetsPlugin({
             assetNameRegExp: /\.css$/g,
             cssProcessor: require('cssnano'),
-            cssProcessorOptions: { discardComments: { removeAll: true } },
+            cssProcessorOptions: {discardComments: {removeAll: true}},
             canPrint: true
-        }),         
+        }),
         new webpack.optimize.UglifyJsPlugin({
             comments: false,
             compress: {
-              warnings: false
+                warnings: false
             }
         })
     ])
 }
-process.env.SYS_TITLE="视屏转发平台"
-process.env.COMP_INFO="视屏转发平台"
-process.env.COMP_URL="http://www.mysite.com"

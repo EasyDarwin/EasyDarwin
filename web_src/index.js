@@ -2,6 +2,7 @@ import Vue from 'vue'
 import store from "./store";
 import router from './router'
 
+Vue.prototype.env = process.env
 
 new Vue({
   el: '#app',

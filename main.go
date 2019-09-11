@@ -125,7 +125,7 @@ func (p *program) Start(s service.Service) (err error) {
 	}()
 
 	go func() {
-		log.Printf("demon pull streams")
+		log.Printf("daemon pull streams")
 		for {
 			var streams []models.Stream
 			db.DB.Find(&streams)
