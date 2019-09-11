@@ -40,16 +40,22 @@
 			"revisionTime": "2018-03-01T03:08:58Z"
 		},
 		{
-			"checksumSHA1": "90S9sFqcIo/uuwQzz1t/wYs7GEs=",
+			"checksumSHA1": "HEntnMv3nrn9ONvSDhzZ58vJUiY=",
 			"path": "github.com/gin-gonic/gin",
-			"revision": "b869fe1415e4b9eb52f247441830d502aece2d4d",
-			"revisionTime": "2018-08-14T08:58:52Z"
+			"revision": "9aa870f108a1dab29abeba1f6289357a327e53d1",
+			"revisionTime": "2019-09-10T09:16:37Z"
 		},
 		{
 			"checksumSHA1": "BjShmaQTKI8+411rCb7LFqJkLA0=",
 			"path": "github.com/gin-gonic/gin/binding",
 			"revision": "b869fe1415e4b9eb52f247441830d502aece2d4d",
 			"revisionTime": "2018-08-14T08:58:52Z"
+		},
+		{
+			"checksumSHA1": "rST0S8cuVbM57VmJhWXhKNUkKTc=",
+			"path": "github.com/gin-gonic/gin/internal/json",
+			"revision": "9aa870f108a1dab29abeba1f6289357a327e53d1",
+			"revisionTime": "2019-09-10T09:16:37Z"
 		},
 		{
 			"checksumSHA1": "woO1qIxIeQ1bcbPSiMfAKk3r4xg=",
@@ -235,18 +241,6 @@
 			"path": "github.com/modern-go/reflect2",
 			"revision": "58118c1ea9161250907268a484af4dd6ed314280",
 			"revisionTime": "2018-05-11T05:30:14Z"
-		},
-		{
-			"checksumSHA1": "xLzWQBx93nfL7iWFGbwmyYX/LZA=",
-			"path": "github.com/penggy/EasyGoLib/db",
-			"revision": "d0926230dda8c9e4e61040cb7825a026dee7d2d3",
-			"revisionTime": "2018-09-07T02:33:35Z"
-		},
-		{
-			"checksumSHA1": "38aBVjLg48devHs7imW6AeWQ/Ho=",
-			"path": "github.com/penggy/EasyGoLib/utils",
-			"revision": "c61bc7ee568dd64a40f19ff44e32db22134226d9",
-			"revisionTime": "2018-12-13T05:46:04Z"
 		},
 		{
 			"checksumSHA1": "yXyZH4154nxQEC53bh1u9TNTZsY=",

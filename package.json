@@ -13,7 +13,7 @@
     "dev": "gobuild -o EasyDarwin.exe",
     "dev:lin": "gobuild -o easydarwin",
     "dev:www": "cd web_src && npm run start",
-    "clean": "rimraf EasyDarwin.exe EasyDarwin.exe~ easydarwin"
+    "clean": "rimraf dist EasyDarwin.exe EasyDarwin.exe~ easydarwin"
   },
   "apidoc": {
     "name": "EasyDarwin",

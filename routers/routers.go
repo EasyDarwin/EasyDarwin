@@ -7,14 +7,14 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/rikugun/EasyDarwin/db"
+	"github.com/rikugun/EasyGoLib/db"
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/penggy/cors"
 	"github.com/penggy/sessions"
-	"github.com/rikugun/EasyDarwin/utils"
+	"github.com/rikugun/EasyGoLib/utils"
 	"gopkg.in/go-playground/validator.v8"
 )
 
