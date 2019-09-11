@@ -15,8 +15,11 @@ node_modules
 easydarwin_debug.ini
 .DS_Store
 Unnamed
-dev.ini
+*.dev.ini
 debug
-debug.ini
+*.debug.ini
 dist
 *.iml
+vendor
+www
+go.sum

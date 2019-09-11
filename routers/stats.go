@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"../rtsp"
 	"github.com/gin-gonic/gin"
+	"github.com/rikugun/EasyDarwin/rtsp"
 	"github.com/rikugun/EasyGoLib/utils"
 )
 

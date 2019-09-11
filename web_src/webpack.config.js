@@ -128,14 +128,14 @@ module.exports = {
         new ExtractTextPlugin("css/[name].[chunkhash:8].css"),
         new HtmlWebpackPlugin({
             filename: 'login.html',
-            title: 'EasyDarwin 登录',
+            title: process.env.SYS_TITLE+" 登录",
             inject: true,
             chunks: ['login'],
             template: './template-login.html'
         }),        
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            title: 'EasyDarwin',
+            title: process.env.SYS_TITLE,
             inject: true, // head -> Cannot find element: #app
             chunks: ['index'],
             template: './template.html'
@@ -167,3 +167,6 @@ if (process.env.NODE_ENV == "production") {
         })
     ])
 }
+process.env.SYS_TITLE="视屏转发平台"
+process.env.COMP_INFO="视屏转发平台"
+process.env.COMP_URL="http://www.mysite.com"

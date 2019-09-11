@@ -12,8 +12,8 @@ import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/penggy/cors"
-	"github.com/penggy/sessions"
+	"github.com/rikugun/EasyGoLib/cors"
+	"github.com/rikugun/EasyGoLib/sessions"
 	"github.com/rikugun/EasyGoLib/utils"
 	"gopkg.in/go-playground/validator.v8"
 )

@@ -76,14 +76,17 @@
 ## 二次开发
 
 ### 准备工具
-
+        # set env
+        export GOPROXY=https://goproxy.io
         # go tools
-        go get -u -v github.com/kardianos/govendor
+        go get -u golang.org/x/vgo
+        #go get -u -v github.com/kardianos/govendor
         go get -u -v github.com/penggy/gobuild
 
         # npm tools
-        npm i -g apidoc
-        npm i -g rimraf
+        yarn global add apidoc
+        yarn global add rimraf
+        yarn global add cross-env
 
         # install dep libs
         mkdir -p $GOPATH/src/golang.org/x/
@@ -91,6 +94,8 @@
         git clone https://github.com/golang/net.git
         git clone https://github.com/golang/sys.git
         git clone https://github.com/golang/tools.git
+        
+        vgo install
         
 ### 编译命令
 
@@ -100,9 +105,11 @@
         mkdir EasyDarwin && cd EasyDarwin
         git clone https://github.com/EasyDarwin/EasyDarwin.git --depth=1 EasyDarwin
         cd EasyDarwin
+        
 
 - 以开发模式运行
 
+        touch easydarwin.db
         npm run dev
 
 - 以开发模式运行前端 Run as dev mode
@@ -111,9 +118,9 @@
 
 - 编译前端  Build www
 
-        cd web_src && npm i
+        cd web_src && yarn install
         cd ..
-        npm run build:www
+        yarn run build:www
 
 - 编译 Windows 版本 Build windows version
 

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"../models"
-	"../rtsp"
 	"github.com/gin-gonic/gin"
+	"github.com/rikugun/EasyDarwin/models"
+	"github.com/rikugun/EasyDarwin/rtsp"
 	"github.com/rikugun/EasyGoLib/db"
 )
 

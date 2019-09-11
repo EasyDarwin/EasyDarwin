@@ -9,13 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rikugun/EasyGoLib/db"
-
-	"./models"
-	"./routers"
-	"./rtsp"
 	"github.com/common-nighthawk/go-figure"
-	"github.com/penggy/service"
+	"github.com/rikugun/EasyDarwin/models"
+	"github.com/rikugun/EasyDarwin/routers"
+	"github.com/rikugun/EasyDarwin/rtsp"
+	"github.com/rikugun/EasyGoLib/db"
+	"github.com/rikugun/EasyGoLib/service"
 	"github.com/rikugun/EasyGoLib/utils"
 )
 

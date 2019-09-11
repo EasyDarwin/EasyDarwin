@@ -10,9 +10,9 @@
     </div>
     <footer class="main-footer">
       <div class="pull-right hidden-xs hide">
-        EasyDarwin
+        {{process.env.SYS_TITLE}}
       </div>
-      <strong>Copyright &copy; {{ thisYear() }} <a href="http://www.easydarwin.org">www.easydarwin.org</a>.</strong> All rights reserved.
+      <strong>Copyright &copy; {{ thisYear() }} <a :href="process.env.COMP_URL">{{process.env.COMP_INFO}}</a>.</strong> All rights reserved.
     </footer>
   </div>
 </template>
