@@ -48,8 +48,8 @@ type RTSPClient struct {
 	OptionIntervalMillis int64
 	SDPRaw               string
 
-	debugLogEnable       bool
-	lastRtpSN            uint16
+	debugLogEnable bool
+	lastRtpSN      uint16
 
 	Agent    string
 	authLine string
@@ -418,17 +418,13 @@ func (client *RTSPClient) startStream() {
 				client.logger.Printf("unknow rtp pack type, channel:%v", channel)
 				continue
 			}
-			if pack == nil {
-				client.logger.Printf("session tcp got nil rtp pack")
-				continue
-			}
 
 			if client.debugLogEnable {
 				rtp := ParseRTP(pack.Buffer.Bytes())
 				if rtp != nil {
 					rtpSN := uint16(rtp.SequenceNumber)
-					if client.lastRtpSN != 0 && client.lastRtpSN + 1 != rtpSN {
-						client.logger.Printf("%s, %d packets lost, current SN=%d, last SN=%d\n", client.String(), rtpSN - client.lastRtpSN, rtpSN, client.lastRtpSN)
+					if client.lastRtpSN != 0 && client.lastRtpSN+1 != rtpSN {
+						client.logger.Printf("%s, %d packets lost, current SN=%d, last SN=%d\n", client.String(), rtpSN-client.lastRtpSN, rtpSN, client.lastRtpSN)
 					}
 					client.lastRtpSN = rtpSN
 				}

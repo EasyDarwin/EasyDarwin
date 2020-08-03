@@ -354,12 +354,8 @@ func (pusher *Pusher) RemovePlayer(player *Player) *Pusher {
 
 func (pusher *Pusher) ClearPlayer() {
 	// copy a new map to avoid deadlock
-	players := make(map[string]*Player)
 	pusher.playersLock.Lock()
-	for k, v := range pusher.players {
-		//v.Stop()
-		players[k] = v
-	}
+	players := pusher.players
 	pusher.players = make(map[string]*Player)
 	pusher.playersLock.Unlock()
 	go func() { // do not block
