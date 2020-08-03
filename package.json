@@ -10,8 +10,8 @@
     "build:win": "go build -tags release -ldflags \"-s -w\" -o EasyDarwin.exe",
     "build:lin": "go build -tags release -ldflags \"-X 'main.buildDateTime=$(date '+%Y-%m-%d %H:%M:%S')' -X 'main.gitCommitCode=$(git rev-list --full-history --all --abbrev-commit --max-count 1)' -s -w\" -o easydarwin",
     "build:dev": "go build -o EasyDarwin.exe",
-    "dev": "gobuild -o EasyDarwin.exe",
-    "dev:lin": "gobuild -o easydarwin",
+    "dev": "go build -o EasyDarwin.exe",
+    "dev:lin": "go build -o easydarwin",
     "dev:www": "cd web_src && npm run start",
     "clean": "rimraf EasyDarwin.exe EasyDarwin.exe~ easydarwin"
   },
