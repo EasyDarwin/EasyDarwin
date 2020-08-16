@@ -660,8 +660,10 @@ func (client *RTSPClient) Request(method string, headers map[string]string) (*Re
 }
 
 func (client *RTSPClient) RequestNoResp(method string, headers map[string]string) (err error) {
-	l, err := url.Parse(client.URL)
-	if err != nil {
+	var (
+		l *url.URL
+	)
+	if l, err = url.Parse(client.URL); err != nil {
 		return fmt.Errorf("Url parse error:%v", err)
 	}
 	l.User = nil

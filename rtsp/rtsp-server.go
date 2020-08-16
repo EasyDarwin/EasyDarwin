@@ -41,13 +41,15 @@ func GetServer() *Server {
 }
 
 func (server *Server) Start() (err error) {
-	logger := server.logger
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", server.TCPPort))
-	if err != nil {
+	var (
+		logger   = server.logger
+		addr     *net.TCPAddr
+		listener *net.TCPListener
+	)
+	if addr, err = net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", server.TCPPort)); err != nil {
 		return
 	}
-	listener, err := net.ListenTCP("tcp", addr)
-	if err != nil {
+	if listener, err = net.ListenTCP("tcp", addr); err != nil {
 		return
 	}
 
@@ -57,7 +59,7 @@ func (server *Server) Start() (err error) {
 	ts_duration_second := utils.Conf().Section("rtsp").Key("ts_duration_second").MustInt(6)
 	SaveStreamToLocal := false
 	if (len(ffmpeg) > 0) && localRecord > 0 && len(m3u8_dir_path) > 0 {
-		err := utils.EnsureDir(m3u8_dir_path)
+		err = utils.EnsureDir(m3u8_dir_path)
 		if err != nil {
 			logger.Printf("Create m3u8_dir_path[%s] err:%v.", m3u8_dir_path, err)
 		} else {
@@ -151,16 +153,18 @@ func (server *Server) Start() (err error) {
 	logger.Println("rtsp server start on", server.TCPPort)
 	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	for !server.Stoped {
-		conn, err := server.TCPListener.Accept()
-		if err != nil {
+		var (
+			conn net.Conn
+		)
+		if conn, err = server.TCPListener.Accept(); err != nil {
 			logger.Println(err)
 			continue
 		}
 		if tcpConn, ok := conn.(*net.TCPConn); ok {
-			if err := tcpConn.SetReadBuffer(networkBuffer); err != nil {
+			if err = tcpConn.SetReadBuffer(networkBuffer); err != nil {
 				logger.Printf("rtsp server conn set read buffer error, %v", err)
 			}
-			if err := tcpConn.SetWriteBuffer(networkBuffer); err != nil {
+			if err = tcpConn.SetWriteBuffer(networkBuffer); err != nil {
 				logger.Printf("rtsp server conn set write buffer error, %v", err)
 			}
 		}
