@@ -15,6 +15,5 @@ type User struct {
 }
 
 func (user *User) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("ID", utils.ShortID())
-	return nil
+	return scope.SetColumn("ID", utils.ShortID())
 }

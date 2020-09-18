@@ -372,7 +372,7 @@ func (client *RTSPClient) startStream() {
 		case 0x24: // rtp
 			header := make([]byte, 4)
 			header[0] = b
-			_, err := io.ReadFull(client.connRW, header[1:])
+			_, err = io.ReadFull(client.connRW, header[1:])
 			if err != nil {
 
 				if !client.Stoped {
