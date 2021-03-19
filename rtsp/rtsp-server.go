@@ -27,17 +27,23 @@ type Server struct {
 	removePusherCh chan *Pusher
 }
 
-var Instance *Server = &Server{
-	SessionLogger:  SessionLogger{log.New(os.Stdout, "[RTSPServer]", log.LstdFlags|log.Lshortfile)},
-	Stoped:         true,
-	TCPPort:        utils.Conf().Section("rtsp").Key("port").MustInt(554),
-	pushers:        make(map[string]*Pusher),
-	addPusherCh:    make(chan *Pusher),
-	removePusherCh: make(chan *Pusher),
-}
+var (
+	instance *Server
+	once sync.Once
+)
 
 func GetServer() *Server {
-	return Instance
+	once.Do(func() {
+		instance = &Server{
+			SessionLogger:  SessionLogger{log.New(os.Stdout, "[RTSPServer]", log.LstdFlags|log.Lshortfile)},
+			Stoped:         true,
+			TCPPort:        utils.Conf().Section("rtsp").Key("port").MustInt(554),
+			pushers:        make(map[string]*Pusher),
+			addPusherCh:    make(chan *Pusher),
+			removePusherCh: make(chan *Pusher),
+		}
+	})
+	return instance
 }
 
 func (server *Server) Start() (err error) {
