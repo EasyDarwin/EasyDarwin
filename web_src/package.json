@@ -20,7 +20,7 @@
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.6.1",
     "babel-preset-stage-2": "6.24.1",
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "clean-webpack-plugin": "0.1.19",
     "copy-webpack-plugin": "4.5.1",
     "cross-env": "5.1.4",
