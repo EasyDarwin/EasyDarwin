@@ -698,16 +698,13 @@ func (session *Session) handleRequest(req *Request) {
 
 func (session *Session) SendRTP(pack *RTPPack) (err error) {
 	if pack == nil {
-		err = fmt.Errorf("player send rtp got nil pack")
-		return
+		return fmt.Errorf("player send rtp got nil pack")
 	}
 	if session.TransType == TRANS_TYPE_UDP {
 		if session.UDPClient == nil {
-			err = fmt.Errorf("player use udp transport but udp client not found")
-			return
+			return fmt.Errorf("player use udp transport but udp client not found")
 		}
-		err = session.UDPClient.SendRTP(pack)
-		return
+		return session.UDPClient.SendRTP(pack)
 	}
 	switch pack.Type {
 	case RTP_TYPE_AUDIO:
@@ -763,7 +760,7 @@ func (session *Session) SendRTP(pack *RTPPack) (err error) {
 		session.connWLock.Unlock()
 		session.OutBytes += pack.Buffer.Len() + 4
 	default:
-		err = fmt.Errorf("session tcp send rtp got unkown pack type[%v]", pack.Type)
+		return fmt.Errorf("session tcp send rtp got unkown pack type[%v]", pack.Type)
 	}
 	return
 }
