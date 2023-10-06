@@ -49,7 +49,7 @@ func (h *APIHandler) Pushers(c *gin.Context) {
 	}
 	hostname := utils.GetRequestHostname(c.Request)
 	pushers := make([]interface{}, 0)
-	for _, pusher := range rtsp.Instance.GetPushers() {
+	for _, pusher := range rtsp.GetServer().GetPushers() {
 		port := pusher.Server().TCPPort
 		rtsp := fmt.Sprintf("rtsp://%s:%d%s", hostname, port, pusher.Path())
 		if port == 554 {
@@ -102,7 +102,7 @@ func (h *APIHandler) Players(c *gin.Context) {
 		return
 	}
 	players := make([]*rtsp.Player, 0)
-	for _, pusher := range rtsp.Instance.GetPushers() {
+	for _, pusher := range rtsp.GetServer().GetPushers() {
 		for _, player := range pusher.GetPlayers() {
 			players = append(players, player)
 		}
