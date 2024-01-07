@@ -4,29 +4,20 @@
 ## 主要功能特点
 
 - 基于Golang开发维护；
-
 - 支持Windows、Linux、macOS平台；
-
 - 支持RTSP推流分发（推模式转发）；
-
 - 支持RTSP拉流分发（拉模式转发）；
-
 - 服务端录像 参考:https://blog.csdn.net/jyt0551/article/details/84189498
-
 - 服务端录像检索与回放 参考:https://blog.csdn.net/jyt0551/article/details/84189498
-
 - 关键帧缓存；
-
 - 秒开画面；
-
 - Web后台管理；
-
 - 分布式负载均衡；
 
 
 ## 安装部署
 
-- [下载解压 release 包](https://github.com/EasyDarwin/EasyDarwin/releases)
+- [直接下载运行Release包](https://www.easydarwin.org/p/easydarwin.html)
 
 - 直接运行(Windows)
 
@@ -54,13 +45,13 @@
 
 - 查看界面
 	
-	打开浏览器输入 [http://localhost:10008](http://localhost:10008), 进入控制页面,默认用户名密码是admin/admin
+	打开浏览器输入 [http://localhost:10086](http://localhost:10086), 进入控制页面,默认用户名密码是admin/admin
 
 - 测试推流
 
-	ffmpeg -re -i C:\Users\Administrator\Videos\test.mkv -rtsp_transport tcp -vcodec h264 -f rtsp rtsp://localhost/test
+	ffmpeg -re -i C:\Users\Administrator\Videos\test.mkv -rtsp_transport tcp -vcodec libx264 -acodec aac -f rtsp rtsp://localhost/test
 
-	ffmpeg -re -i C:\Users\Administrator\Videos\test.mkv -rtsp_transport udp -vcodec h264 -f rtsp rtsp://localhost/test
+	ffmpeg -re -i C:\Users\Administrator\Videos\test.mkv -rtsp_transport udp -vcodec libx264 -acodec aac -f rtsp rtsp://localhost/test
 			
 
 - 测试播放
@@ -69,9 +60,6 @@
 
 	ffplay rtsp://localhost/test 
 
-## 效果图
-
-![snapshot](http://ww1.sinaimg.cn/large/79414a05ly1fwzqdbi8efj20w00mrn0c.jpg)
 
 ## 二次开发
 
@@ -121,28 +109,12 @@
 
         npm run clean 
 
-- 打包 Pack
-
-        # install pack
-        npm i -g @penggy/pack
-
-        # for windows
-        npm run build:win
-        pack zip
-
-        # for linux/macOS
-        npm run build:lin
-        pack tar
-
-        # for clean
-        pack clean
-
 
 ## 技术支持
 
 - 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
 
-- QQ交流群：**436297092**
+- QQ交流群：**965773206**
 
 - EasyDarwin开源流媒体服务器是属于EasyDarwin开源团队的免费产品，大家免费使用，同时，EasyDarwin开源团队也能提供相应的收费技术咨询、技术服务和技术定制，谢谢大家支持！
 
@@ -151,6 +123,4 @@
 
 **EasyDarwin**开源项目：[www.EasyDarwin.org](http://www.easydarwin.org)
 
-Copyright &copy; EasyDarwin Team 2012-2018
-
-![EasyDarwin](http://www.easydarwin.org/skin/easydarwin/images/wx_qrcode.jpg)
+Copyright &copy; EasyDarwin.org Team 2012-2024
