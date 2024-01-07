@@ -43,24 +43,6 @@
 		./start.sh
 		# ./stop.sh
 
-- 查看界面
-	
-	打开浏览器输入 [http://localhost:10086](http://localhost:10086), 进入控制页面,默认用户名密码是admin/admin
-
-- 测试推流
-
-	ffmpeg -re -i C:\Users\Administrator\Videos\test.mkv -rtsp_transport tcp -vcodec libx264 -acodec aac -f rtsp rtsp://localhost/test
-
-	ffmpeg -re -i C:\Users\Administrator\Videos\test.mkv -rtsp_transport udp -vcodec libx264 -acodec aac -f rtsp rtsp://localhost/test
-			
-
-- 测试播放
-
-	ffplay -rtsp_transport tcp rtsp://localhost/test
-
-	ffplay rtsp://localhost/test 
-
-
 ## 二次开发
 
 ### 准备工具
