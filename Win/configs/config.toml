@@ -1,0 +1,153 @@
+lanip = '192.168.0.11'
+serverid = 'local'
+wanip = ''
+
+[base]
+disabledcaptcha = true
+jwtsecret = ''
+timeout = 60
+
+[baselog]
+dir = './logs'
+level = 'info'
+maxage = 2678400
+rotationsize = 50
+rotationtime = 28800
+
+[data]
+connmaxlifetime = 21600
+dsn = './configs/data.db'
+maxidleconns = 1
+maxopenconns = 1
+slowthreshold = 200
+
+[defaulthttpconfig]
+httplistenaddr = ':10086'
+httpscertfile = './configs/cert.pem'
+httpskeyfile = './configs/key.pem'
+httpslistenaddr = ':24433'
+
+[gopcacheconfig]
+gopnum = 1
+singlegopmaxframenum = 200
+
+[hlsconfig]
+boundarybyvideo = true
+cleanupmode = 2
+deletethreshold = 2
+enable = true
+enablehttps = true
+fragmentdurationms = 2000
+fragmentnum = 5
+outpath = './stream/hls/'
+subsessionhashkey = 'sms'
+subsessiontimeoutms = 20000
+urlpattern = '/hls/ts/*streamname'
+usem3u8memoryflag = false
+usememoryasdiskflag = false
+
+[hlsconfig.fmp4]
+enable = false
+enablehttps = false
+urlpattern = '/hls/m4s/*streamname'
+
+[httpapiconfig]
+enable = true
+
+[httpflvconfig]
+enable = true
+enablehttps = true
+urlpattern = '/live/:streamname'
+
+[httpfmp4config]
+enable = false
+enablehttps = false
+urlpattern = '/m4s/live/:streamname.mp4'
+
+[httptsconfig]
+enable = false
+enablehttps = false
+urlpattern = '/ts/live/:streamname'
+
+[insessionconfig]
+adddummyaudioenable = true
+adddummyaudiowaitaudioms = 150
+
+[logconfig]
+assertbehavior = 1
+filename = './logs/sugar.log'
+isrotatedaily = true
+istostdout = true
+level = 4
+levelflag = true
+shortfileflag = true
+timestampflag = true
+timestampwithmsflag = true
+
+[recordconfig]
+enableflv = false
+enablefmp4 = false
+enablempegts = false
+flvoutpath = './streamsvr_record/flv/'
+fmp4outpath = './streamsvr_record/fmp4'
+mpegtsoutpath = './r/'
+
+[relaypush]
+addrlist = []
+enable = false
+
+[roomconfig]
+apikey = 'admin@admin'
+apisecret = 'admin@admin'
+enable = true
+
+[rtcconfig]
+enable = true
+enablehttps = true
+icehostnattoips = ['192.168.0.11', '112.123.213.206']
+icetcpmuxport = 24888
+iceudpmuxport = 24888
+pubtimeoutsec = 10
+urlpattern = '/live/:streamname'
+
+[rtmpconfig]
+addr = ':21935'
+enable = true
+mergewritesize = 0
+pubtimeoutsec = 0
+pulltimeoutsec = 30
+rtmpoverquicaddr = ':25935'
+rtmpoverquicenable = true
+rtmpsaddr = ':24935'
+rtmpscertfile = './configs/cert.pem'
+rtmpsenable = true
+rtmpskeyfile = './configs/key.pem'
+
+[rtspconfig]
+addr = ':25544'
+authenable = false
+authmethod = 1
+enable = true
+outwaitkeyframeflag = true
+password = 'admin@admin'
+pubtimeoutsec = 0
+pulltimeoutsec = 30
+rtspsaddr = ':25322'
+rtspscertfile = './configs/cert.pem'
+rtspsenable = true
+rtspskeyfile = './configs/key.pem'
+username = 'admin@admin'
+wsrtspaddr = ':25566'
+wsrtspenable = true
+
+[srtconfig]
+addr = ':6000'
+enable = false
+encryptenable = false
+encryptmode = 2
+passphrase = 'streamsvr-password'
+pubtimeoutsec = 0
+
+[staticrelaypull]
+addr = ''
+enable = false

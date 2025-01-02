@@ -1,0 +1,180 @@
+# 服务唯一标识，连接同一个 redis 的每个 sms 此标识应该唯一。
+serverId = "local"
+# 内网 IP，空串时自动识别
+lanIP = ""
+# 公网 IP，空串时自动识别
+wanIP = ""
+# 基础配置
+[Base]
+# 是否启用登录验证码
+DisabledCaptcha = true
+JwtSecret = ""
+Timeout = 60
+
+[Data]
+Dsn = './configs/data.db'
+MaxIdleConns = 1
+MaxOpenConns = 1
+ConnMaxLifetime = 21600
+SlowThreshold = 200
+
+[BaseLog]
+# 日志存储目录，不能使用特殊符号
+Dir = './logs'
+# 记录级别 debug/info/warn/error
+Level = 'info'
+# 保留日志多久，超过时间自动删除
+MaxAge = 2678400
+# 多久时间，分割一个新的日志文件
+RotationTime = 28800
+# 多大文件，分割一个新的日志文件(MB)
+RotationSize = 50
+
+# 全局 gop cache 配置
+[gopCacheConfig]
+# gop 缓存的个数
+gopNum = 1
+# 0 表示不限制，此参数可以限制每个 gop 的最大帧数
+singleGopMaxFrameNum = 200
+
+[RtcConfig]
+Enable = true
+EnableHttps = true
+UrlPattern = "/live/:streamname"
+IceUdpMuxPort = 24888
+IceTcpMuxPort = 24888
+IceHostNATToIPs = []
+# 发布流，没有流超时时间，自动销毁
+PubTimeoutSec = 10
+
+[defaultHttpConfig]
+httpListenAddr = ":10086"
+httpsListenAddr = ":24433"
+httpsCertFile = "./configs/cert.pem"
+httpsKeyFile = "./configs/key.pem"
+
+[rtmpConfig]
+enable = true
+addr = ":21935"
+rtmpsEnable = true
+rtmpsAddr = ":24935"
+rtmpOverQuicEnable = true
+rtmpOverQuicAddr = ":25935"
+rtmpsCertFile = "./configs/cert.pem"
+rtmpsKeyFile = "./configs/key.pem"
+mergeWriteSize = 0
+# 发布流，没有流超时时间，自动销毁
+pubTimeoutSec = 0
+pullTimeoutSec = 30
+
+[inSessionConfig]
+addDummyAudioEnable = true
+addDummyAudioWaitAudioMs = 150
+
+[httpflvConfig]
+enable = true
+enableHttps = true
+urlPattern = "/live/:streamname"
+
+[hlsConfig]
+enable = true
+enableHttps = true
+urlPattern = "/hls/ts/*streamname"
+outPath = "./stream/hls/"
+# 每个片段多少秒
+fragmentDurationMs = 2000
+# 写入 .m3u8 的ts数量
+fragmentNum = 5
+# 当cleanupMode=2且数量超过 fragmentNum+deleteThreshold+cleanupMode 时执行删除
+deleteThreshold = 2
+cleanupMode = 2
+# 是否以内存替代硬盘，避免频繁对硬盘读写
+useMemoryAsDiskFlag = false
+useM3u8MemoryFlag = false
+# 是否以视频切片
+boundaryByVideo = true
+# 订阅者超时时间后，销毁。
+subSessionTimeoutMs = 20000
+subSessionHashKey = "sms"
+
+[hlsConfig.fmp4]
+enable = false
+enableHttps = false
+urlPattern = "/hls/m4s/*streamname"
+
+[httptsConfig]
+enable = false
+enableHttps = false
+urlPattern = "/ts/live/:streamname"
+
+[rtspConfig]
+enable = true
+addr = ":25544"
+rtspsEnable = true
+rtspsAddr = ":25322"
+rtspsCertFile = "./configs/cert.pem"
+rtspsKeyFile = "./configs/key.pem"
+outWaitKeyFrameFlag = true
+authEnable = false
+authMethod = 1
+username = "admin@admin"
+password = "admin@admin"
+wsRtspEnable = true
+wsRtspAddr = ":25566"
+# 发布流，没有流超时时间，自动销毁
+pubTimeoutSec = 0
+pullTimeoutSec = 30
+
+[srtConfig]
+enable = false
+addr = ":6000"
+encryptEnable = false
+encryptMode = 2
+passphrase = "streamsvr-password"
+# 发布流，没有流超时时间，自动销毁
+PubTimeoutSec = 0
+
+[httpFmp4Config]
+enable = false
+enableHttps = false
+urlPattern = "/m4s/live/:streamname.mp4"
+
+[roomConfig]
+enable = true
+apiKey = "admin@admin"
+apiSecret = "admin@admin"
+
+[recordConfig]
+enableFlv = false
+flvOutPath = "./streamsvr_record/flv/"
+enableMpegts = false
+mpegtsOutPath = "./r/"
+enableFmp4 = false
+fmp4OutPath = "./streamsvr_record/fmp4"
+
+[relayPush]
+enable = false
+addrList = []
+
+[staticRelayPull]
+enable = false
+addr = ""
+
+[httpApiConfig]
+enable = true
+
+[logConfig]
+# 日志级别，0 trace, 1 debug, 2 info, 3 warn, 4 error, 5 fatal
+level = 4
+# 是否输出文件
+filename = "./logs/sugar.log"
+# 是否打印至标准控制台输出
+isToStdout = true
+isRotateDaily = true
+# 日志末尾是否携带源码文件名以及行号的信息
+shortFileFlag = true
+timestampFlag = true
+timestampWithMsFlag = true
+levelFlag = true
+# 日志断言的行为，1 只打印错误日志 2 打印并退出程序 3 打印并panic
+assertBehavior = 1

@@ -1,0 +1,36 @@
+@import 'variables';
+@import 'scrollbar';
+
+html,
+body {
+  overflow: hidden;
+
+  // 色弱模式
+  &.color-weak {
+    filter: invert(80%);
+  }
+  // 灰色模式
+  &.gray-mode {
+    filter: grayscale(100%);
+  }
+}
+
+.cp {
+  cursor: pointer;
+}
+.pagination-box {
+  text-align: right;
+}
+.table-box {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 2px 2px #eee;
+}
+.ant-layout-footer {
+  a {
+    color: rgba(0, 0, 0, 0.88);
+    &:hover{
+      color: #0cbb92;
+    }
+  }
+}

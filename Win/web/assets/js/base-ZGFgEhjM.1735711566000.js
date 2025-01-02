@@ -1,0 +1,1 @@
+import{r as e}from"./request-YsyQPLWC.1735711566000.js";const s={versionInfo(o){return e({url:"/version",method:"get",params:o})},setReboot(){return e({url:"/app/reboot",method:"post"})},getConfigBase(){return e({url:"/configs/base",method:"get"})},postConfigBase(o,r){return e({url:`/configs/base?is_reload=${r}`,method:"post",data:o})}};export{s as b};
