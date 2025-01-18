@@ -18,6 +18,7 @@ const titleColor = computed(() => layoutThemeStore.titleColor)
 
 const style = computed(() => {
   return {
+    // paddingRight: '54px',
     height: `var(--app-header-height)`,
     color: titleColor.value,
   }
@@ -33,6 +34,7 @@ baseStore.getServerInfo()
     class="flex-cc overflow-hidden whitespace-nowrap font-500 text-20px cp"
     :style="style"
   >
+    <!-- <img class="h32px mr10px" src="~@/assets/images/logo.png" alt="" /> -->
     <span v-show="collapsed">E</span>
     <div v-show="!collapsed" :class="[{'pr24px':!collapsed}]" @click="onRouter">
       {{ title }}<sup>{{ version }}</sup>

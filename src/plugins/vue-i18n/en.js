@@ -13,6 +13,8 @@ export default {
     live: "live",
     config: "config",
     apidoc: "apidoc",
+    plans: "plans",
+    records: "records",
   },
   setting: {
     projectConfig: 'ProjectConfig',

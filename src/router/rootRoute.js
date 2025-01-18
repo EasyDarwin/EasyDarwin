@@ -1,7 +1,6 @@
 import { RouterView } from 'vue-router'
 import router from '@/router/index.js'
 
-// 刷新
 const RefreshRoute = {
   path: '/refresh',
   name: 'Refresh',
@@ -10,7 +9,6 @@ const RefreshRoute = {
     title: 'route.refresh',
   },
   beforeEnter: (to, from) => {
-    // 刷新
     setTimeout(() => {
       router.replace(from.fullPath)
     })

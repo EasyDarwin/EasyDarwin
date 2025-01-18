@@ -17,3 +17,7 @@ export const hexToRgba = (hex, alpha = 1) => {
 
   return `rgba(${+r},${+g},${+b},${alpha})`
 }
+
+// 使用示例
+// console.log(hexToRgba('#ff5733')) // 输出: "rgba(255,87,51,1)"
+// console.log(hexToRgba('#ff5733', 0.5)) // 输出: "rgba(255,87,51,0.5)"

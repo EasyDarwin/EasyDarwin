@@ -12,6 +12,8 @@ export default {
     live: "直播服务",
     config: "服务配置",
     apidoc: "接口文档",
+    plans: "录像计划",
+    records: "云端录像",
   },
   setting: {
     projectConfig: '项目配置',

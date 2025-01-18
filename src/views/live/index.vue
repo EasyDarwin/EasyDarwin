@@ -18,6 +18,8 @@ const columns = [
     { title: '状态', align: 'center', width: 80, dataIndex: 'online', key: 'online' },
     { title: '类型', align: 'center', width: 100, dataIndex: 'liveType', key: 'liveType' },
     { title: '启用', align: 'center', width: 80, dataIndex: 'enable', key: 'enable' },
+    // { title: '按需', align: 'center', width: 80, dataIndex: 'onDemand', key: 'onDemand' },
+    // { title: '音频', align: 'center', width: 80, dataIndex: 'audio', key: 'audio' },
     { title: '详情', align: 'center', width: 80, dataIndex: 'info', key: 'info' },
     { title: '创建时间', align: 'center', width: 100, dataIndex: 'created_at', key: 'created_at' },
     {
@@ -151,10 +153,10 @@ const onPlayStart = (text) => {
                         selectUrlItems.value.push({ key: 'WEBRTC', value: v })
                         break;
                     case "rtmp":
-                        selectUrlItems.value.push({ key: 'RTSP', value: v })
+                        selectUrlItems.value.push({ key: 'RTMP', value: v })
                         break;
                     case "rtsp":
-                        selectUrlItems.value.push({ key: 'RTMP', value: v })
+                        selectUrlItems.value.push({ key: 'RTSP', value: v })
                         break;
                     default:
                         break;
@@ -269,6 +271,7 @@ const onDel = (text) => {
             })
         },
         onCancel() {
+            // console.log('Cancel');
         },
     });
 }
@@ -326,6 +329,9 @@ onBeforeUnmount(() => {
                     <a-button type="primary" shape="circle" class="mr5px ml5px" @click="onEdit(text)">
                         <EditOutlined />
                     </a-button>
+                    <!-- <a-button type="primary" danger shape="circle" class="mr5px ml5px" @click="onPlayStop(text)">
+                        <PoweroffOutlined />
+                    </a-button> -->
                     <a-button type="primary" danger shape="circle" class="ml5px" @click="onDel(text)">
                         <DeleteOutlined />
                     </a-button>
@@ -342,6 +348,12 @@ onBeforeUnmount(() => {
                 <template v-if="column.key === 'enable'">
                     <a-switch v-model:checked="record.enable" @change="onSwitch('enable', record)" />
                 </template>
+                <!-- <template v-if="column.key === 'onDemand'">
+                    <a-switch v-model:checked="record.onDemand" @change="onSwitch('onDemand', record)" />
+                </template>
+                <template v-if="column.key === 'audio'">
+                    <a-switch v-model:checked="record.audio" @change="onSwitch('audio', record)" />
+                </template> -->
                 <template v-if="column.key === 'snapURL'">
                     <a-flex justify="center">
                         <a-popover placement="left">

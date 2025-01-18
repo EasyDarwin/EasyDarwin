@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import antd_zhCN from 'ant-design-vue/es/locale/zh_CN'
 import antd_enUS from 'ant-design-vue/es/locale/en_US'
 import { useLayoutThemeStore } from '@/store/layout/layoutTheme.js'
+import LockScreen from '@/layouts/components/lockscreen/LockScreen.vue'
 const layoutThemeStore = useLayoutThemeStore()
 const layoutSetting = layoutThemeStore.layoutSetting
 const theme = computed(() => layoutThemeStore.theme)
@@ -30,9 +31,11 @@ const locale = computed(() => {
   <a-config-provider :theme="theme" :locale="locale">
     <a-watermark v-if="watermark && watermarkArea_all" :content="watermarkText">
       <RouterView />
+      <!-- <LockScreen /> -->
     </a-watermark>
     <template v-else>
       <RouterView />
+      <!-- <LockScreen /> -->
     </template>
   </a-config-provider>
 </template>

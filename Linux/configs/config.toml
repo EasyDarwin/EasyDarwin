@@ -1,4 +1,4 @@
-lanip = '192.168.0.11'
+lanip = ''
 serverid = 'local'
 wanip = ''
 
@@ -104,7 +104,7 @@ enable = true
 [rtcconfig]
 enable = true
 enablehttps = true
-icehostnattoips = ['192.168.0.11', '2408:8445:9b90:4aa:83a2:ab60:9968:5685']
+icehostnattoips = ['192.168.0.11']
 icetcpmuxport = 24888
 iceudpmuxport = 24888
 pubtimeoutsec = 10
@@ -151,3 +151,35 @@ pubtimeoutsec = 0
 [staticrelaypull]
 addr = ''
 enable = false
+# 录像
+[Storage]
+# 存储路径，支持绝对路径和相对路径
+Path = './r'
+# 存储天数
+Days = 3
+# 存储使用率(%)
+DiskUsageRatio = 85.95
+# 分片时长，单位秒
+FragmentDurationS = 20
+# 录像文件格式
+Format = 'mp4'
+# 开启第三方云服务对象存储
+EnabledCloudStorage = false
+# access key
+Key = ''
+# secret key
+Secret = ''
+# endpoint
+Endpoint = ''
+# region
+Region = ''
+# bucket
+Bucket = ''
+# 超时时间（毫秒）
+Timeout = 30000
+# 重试次数
+Retry = 0
+# 并发上传文件数
+Concurrency = 8
+# 缓冲队列长度
+QueueLength = 512

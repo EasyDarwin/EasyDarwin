@@ -11,11 +11,12 @@ defineProps({
 })
 
 const isShowSubMenu = menuItem => menuItem?.children?.length
+// isShowSubMenu(item)
 </script>
 
 <template>
   <!-- 目录 -->
-  <a-sub-menu v-if="isShowSubMenu(item)" v-bind="$attrs" :key="item?.name">
+  <a-sub-menu v-if="false" v-bind="$attrs" :key="item?.name">
     <template #title>
       <MenuItemContent :item="item" />
     </template>

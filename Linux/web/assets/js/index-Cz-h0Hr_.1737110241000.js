@@ -1,0 +1,1 @@
+import{c}from"./vue-clipboard3-BvuNYtD-.1737110241000.js";import{J as o}from"./ant-design-vue-YDCKpw9Q.1737110241000.js";const{toClipboard:i}=c(),a=async t=>{try{await i(t),o.success({description:"复制成功!"})}catch{o.error({description:"复制失败!"})}},p=t=>/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(t);export{a as c,p as i};

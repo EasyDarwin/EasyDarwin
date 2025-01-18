@@ -11,6 +11,9 @@ const isAdd = ref(false)
 const id = ref(0)
 const formState = reactive({});
 const onFinish = () => {
+    if (formState.isLive) {
+        formState.speedEnum = 0
+    }
     if (isAdd.value) {
         live.postLive(liveType.value,toRaw(formState)).then(res => {
             if (res.status == 200) {
@@ -45,6 +48,8 @@ const setOpen = (data) => {
         formState.audio = data?.audio
         formState.transType = data?.transType
         formState.authed = data?.authed
+        formState.speedEnum = data?.speedEnum
+        formState.isLive = data?.isLive
         id.value = data?.id
     }
     open.value = true
@@ -69,6 +74,8 @@ const init = () => {
     formState.onDemand = true
     formState.audio = false
     formState.transType = "TCP"
+    formState.isLive =  true
+    formState.speedEnum =  0
     id.value = 0
     liveType.value='pull'
 }
@@ -128,6 +135,22 @@ defineExpose({
                 <a-form-item label="地址">
                     <a-input v-model:value="formState.url" placeholder="请输入地址" />
                 </a-form-item>
+                <a-form-item label="流类型">
+                    <a-radio-group v-model:value="formState.isLive">
+                        <a-radio-button :value="true">在线流</a-radio-button>
+                        <a-radio-button :value="false">文件</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item label="倍速" v-if="!formState.isLive">
+                    <a-select v-model:value="formState.speedEnum" style="width: 133px" >
+                        <a-select-option :value="0">标准</a-select-option>
+                        <a-select-option :value="6">2倍速</a-select-option>
+                        <a-select-option :value="7">4倍速</a-select-option>
+                        <a-select-option :value="8">8倍速</a-select-option>
+                        <a-select-option :value="9">16倍速</a-select-option>
+                    </a-select>
+                </a-form-item>
+               
                 <a-form-item label="协议">
                     <a-radio-group v-model:value="formState.transType">
                         <a-radio-button value="TCP">TCP</a-radio-button>

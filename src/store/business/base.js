@@ -15,9 +15,11 @@ export const useBaseStore = defineStore(
       const res = await base.versionInfo()
       if (res.status == 200) {
         serverInfo.value = res.data
+        // serverInfo.value.hardware = toUpperCaseStr(serverInfo.value.hardware)
         serverInfo.value.server =toUpperCaseStr(serverInfo.value.server)
       }
     }
     return { getServerInfo, serverInfo }
   },
+//   { persist: true },
 )

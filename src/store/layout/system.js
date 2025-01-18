@@ -322,4 +322,19 @@ export const useSystemStore = defineStore(
       clearCacheReload,
     }
   },
+  // {
+  //   persist: {
+  //     enabled: true,
+  //     key: 'system',
+  //     storage: localStorage,
+  //     paths: [
+  //       'menus',
+  //       'menuList',
+  //       'lockScreenState',
+  //       'lockScreenPassword',
+  //       'tabsList',
+  //       'keepAliveList',
+  //     ],
+  //   },
+  // },
 )

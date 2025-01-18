@@ -5,6 +5,15 @@ import { base } from "@/api";
 import { notification } from 'ant-design-vue'
 import { useBaseStore } from '@/store/business/base.js'
 const baseStore = useBaseStore()
+// const info = ref({
+//     "name": "",
+//     "buildTime": "",
+//     "hardware": "",
+//     "runtime": "",
+//     "server": "",
+//     "startTime": "",
+//     "version": ""
+// })
 const onReboot = (text) => {
     base.setReboot().then(res => {
         if (res.status == 200) {

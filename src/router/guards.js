@@ -20,8 +20,10 @@ export const routerGuards = router => {
     if (layoutThemeStore.layoutSetting.showProgress) {
       NProgress.done()
     }
+    // console.log('路由跳转', to, from, failure)
   })
 
   router.onError(() => {
+    // console.error('路由错误', error)
   })
 }

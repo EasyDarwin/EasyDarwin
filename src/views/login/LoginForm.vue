@@ -64,6 +64,7 @@ const onFinish = () => {
     .catch(error => {
       console.log('error', error);
     });
+  // message.success(t('message.loginSuccess'))
 }
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo)

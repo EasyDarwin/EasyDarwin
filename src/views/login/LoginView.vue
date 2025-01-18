@@ -22,6 +22,13 @@ const bodyStyle = computed(() => ({
 
 <template>
   <a-card class="w100vw h100vh" :bodyStyle="bodyStyle">
+    <!-- <a-card
+      class="pos-fixed right--1 top-100 z-999"
+      :bodyStyle="{ padding: '10px' }"
+      v-if="showSetting"
+    >
+      <LayoutSetting />
+    </a-card> -->
     <a-card
       class="pos-absolute w400px"
       :style="{
