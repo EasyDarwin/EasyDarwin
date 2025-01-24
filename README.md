@@ -92,17 +92,8 @@
         npm run clean 
 
 
-## 技术支持
-
-- 邮件：[support@easydarwin.org](mailto:support@easydarwin.org) 
-
-- QQ交流群：**965773206**
-
-- EasyDarwin开源流媒体服务器是属于EasyDarwin开源团队的免费产品，大家免费使用，同时，EasyDarwin开源团队也能提供相应的收费技术咨询、技术服务和技术定制，谢谢大家支持！
-
-
 ## 获取更多信息
 
 **EasyDarwin**开源项目：[www.EasyDarwin.org](http://www.easydarwin.org)
 
-Copyright &copy; EasyDarwin.org Team 2012-2024
+Copyright &copy; EasyDarwin.org Team 2012-2025
