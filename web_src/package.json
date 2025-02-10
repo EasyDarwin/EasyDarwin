@@ -22,7 +22,7 @@
     "babel-preset-stage-2": "6.24.1",
     "bootstrap": "3.3.7",
     "clean-webpack-plugin": "0.1.19",
-    "copy-webpack-plugin": "4.5.1",
+    "copy-webpack-plugin": "12.0.2",
     "cross-env": "5.1.4",
     "css-loader": "0.28.11",
     "easy-player": "1.0.15",
