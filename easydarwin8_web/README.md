@@ -9,10 +9,10 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/EasyDarwin
+git https://github.com/EasyDarwin/EasyDarwin.git
 
 # 进入项目目录
-cd easydarwin8_web
+cd EasyDarwin/easydarwin8_web
 
 # node环境
 v18.19.0
