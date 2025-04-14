@@ -25,7 +25,7 @@ require (
 	github.com/pion/webrtc/v3 v3.2.40
 	github.com/q191201771/lal v0.37.4
 	github.com/q191201771/naza v0.30.49
-	github.com/redis/go-redis/v9 v9.7.0
+	github.com/redis/go-redis/v9 v9.7.3
 	github.com/sourcegraph/conc v0.3.0
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
