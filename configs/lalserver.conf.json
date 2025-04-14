@@ -1,0 +1,130 @@
+{
+    "# doc of config": "https://pengrl.com/lal/#/ConfigBrief",
+    "conf_version": "v0.4.1",
+    "rtmp": {
+      "enable": true,
+      "addr": ":21935",
+      "rtmps_enable": false,
+      "rtmps_addr": ":4935",
+      "rtmps_cert_file": "./conf/cert.pem",
+      "rtmps_key_file": "./conf/key.pem",
+      "gop_num": 1,
+      "single_gop_max_frame_num": 0,
+      "merge_write_size": 0
+    },
+    "in_session": {
+      "add_dummy_audio_enable": false,
+      "add_dummy_audio_wait_audio_ms": 150
+    },
+    "default_http": {
+      "http_listen_addr": ":8080",
+      "https_listen_addr": ":4433",
+      "https_cert_file": "./conf/cert.pem",
+      "https_key_file": "./conf/key.pem"
+    },
+    "httpflv": {
+      "enable": true,
+      "enable_https": false,
+      "url_pattern": "/",
+      "gop_num": 0,
+      "single_gop_max_frame_num": 0
+    },
+    "hls": {
+      "enable": true,
+      "enable_https": false,
+      "url_pattern": "/hls/",
+      "out_path": "./stream/hls/",
+      "fragment_duration_ms": 3000,
+      "fragment_num": 6,
+      "delete_threshold": 6,
+      "cleanup_mode": 1,
+      "use_memory_as_disk_flag": false,
+      "sub_session_timeout_ms": 30000,
+      "sub_session_hash_key": ""
+    },
+    "httpts": {
+      "enable": false,
+      "enable_https": false,
+      "url_pattern": "/",
+      "gop_num": 0,
+      "single_gop_max_frame_num": 0
+    },
+    "rtsp": {
+      "enable": true,
+      "addr": ":5544",
+      "rtsps_enable": false,
+      "rtsps_addr": ":5322",
+      "rtsps_cert_file": "./configs/cert.pem",
+      "rtsps_key_file": "./configs/key.pem",
+      "out_wait_key_frame_flag": true,
+      "auth_enable": false,
+      "auth_method": 1,
+      "username": "admin",
+      "password": "admin"
+    },
+    "record": {
+      "enable_flv": false,
+      "flv_out_path": "./lal_record/flv/",
+      "enable_mpegts": false,
+      "mpegts_out_path": "./lal_record/mpegts"
+    },
+    "relay_push": {
+      "enable": false,
+      "addr_list":[
+      ]
+    },
+    "static_relay_pull": {
+      "enable": false,
+      "addr": ""
+    },
+    "http_api": {
+      "enable": true,
+      "addr": ":8083"
+    },
+    "server_id": "1",
+    "http_notify": {
+      "enable": true,
+      "update_interval_sec": 5,
+      "on_update": "http://127.0.0.1:10086/on_update",
+      "on_pub_start": "http://127.0.0.1:10086/api/v1/push/on_pub_start",
+      "on_pub_stop": "http://127.0.0.1:10086/api/v1/push/on_pub_stop",
+      "on_sub_start": "http://127.0.0.1:10086/on_sub_start",
+      "on_sub_stop": "http://127.0.0.1:10086/on_sub_stop",
+      "on_relay_pull_start": "http://127.0.0.1:10086/on_relay_pull_start",
+      "on_relay_pull_stop": "http://127.0.0.1:10086/on_relay_pull_stop",
+      "on_rtmp_connect": "http://127.0.0.1:10086/api/v1/push/on_rtmp_connect",
+      "on_server_start": "http://127.0.0.1:10086/on_server_start",
+      "on_hls_make_ts": "http://127.0.0.1:10086/on_hls_make_ts"
+    },
+    "simple_auth": {
+      "key": "q191201771",
+      "dangerous_lal_secret": "pengrl",
+      "pub_rtmp_enable": false,
+      "sub_rtmp_enable": false,
+      "sub_httpflv_enable": false,
+      "sub_httpts_enable": false,
+      "pub_rtsp_enable": false,
+      "sub_rtsp_enable": false,
+      "hls_m3u8_enable": false
+    },
+    "pprof": {
+      "enable": true,
+      "addr": ":8084"
+    },
+    "log": {
+      "level": 4,
+      "filename": "./logs/lalmax.log",
+      "is_to_stdout": true,
+      "is_rotate_daily": true,
+      "short_file_flag": true,
+      "timestamp_flag": true,
+      "timestamp_with_ms_flag": true,
+      "level_flag": true,
+      "assert_behavior": 1
+    },
+    "debug": {
+      "log_group_interval_sec": 30,
+      "log_group_max_group_num": 10,
+      "log_group_max_sub_num_per_group": 10
+    }
+  }

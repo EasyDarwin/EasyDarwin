@@ -1,0 +1,9 @@
+snap/*
+logs/*
+__debug_bin*
+*.db
+*.log
+build
+.idea/*
+stream/*
+tem/*

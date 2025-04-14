@@ -1,0 +1,9 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-TARGETDURATION:12
+#EXTINF:12.000,
+http://sdbucket.oos-xiongan.ctyunapi.cn/record/hls/ck5qqav8hhvq3gpgh4bg/20230921/18/1695291223491-0.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=0f6ca7429abaee658d82%2F20231106%2Fxiongan%2Fs3%2Faws4_request&X-Amz-Date=20231106T083957Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=af802eaa6fc89f167110c54facc0489a4116d108ab53fe479ca55827073f6a56
+#EXTINF:12.000,
+http://sdbucket.oos-xiongan.ctyunapi.cn/record/hls/ck5qqav8hhvq3gpgh4bg/20230921/18/1695291263571-1.ts?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=0f6ca7429abaee658d82%2F20231106%2Fxiongan%2Fs3%2Faws4_request&X-Amz-Date=20231106T083957Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=713e8b2b7a6c9251e8f8fb86aa1c0eb879bd7e36fa3e74d20d064497c3dd6ef8
+#EXT-X-ENDLIST
