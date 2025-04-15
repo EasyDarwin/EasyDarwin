@@ -1,16 +1,3 @@
-<p align="center">
-    <img src="./logo.png#gh-light-mode-only" alt="Goyave Logo" width="550"/>
-    <img src="./logo_dark.png#gh-dark-mode-only" alt="Goyave Logo" width="550"/>
-</p>
-
-<p align="center">
-    <a href="https://github.com/ixugo/goweb/releases"><img src="https://img.shields.io/github/v/release/ixugo/goweb?include_prereleases" alt="Version"/></a>
-    <a href="https://github.com/ixugo/goweb/blob/master/LICENSE.txt"><img src="https://img.shields.io/dub/l/vibe-d.svg" alt="License"/></a>
-	<a href="https://gin-gonic.com"><img width=30px  src="https://avatars.githubusercontent.com/u/7894478?s=48&v=4" alt="GIN"/></a>
-    <a href="https://gorm.io"><img width=70px src="https://gorm.io/gorm.svg" alt="GORM"/></a>
-
-</p>
-
 [English](./README.md) | [简体中文](./README_zh.md)
 
 # 企业 REST API 模板
@@ -50,8 +37,9 @@ Goweb 目标是:
 │   │           └── versiondb 		数据库操作
 │   ├── data					数据库初始化
 │   └── web
-│       └── api					RESTful API
-└── pkg						依赖库
+│   |   └── api					RESTful API
+|   └—— pkg                 依赖库
+|   └—— utils               工具
 ```
 
 
@@ -89,159 +77,6 @@ makefile 中提供了一些默认的操作便于快速编写
 
 3. 如果没有任何 tag，则默认版本号为 v0.0.0，后续提交次数作为版本号的次版本号。
 
-## 快速开始
-
-业务说明:
-
-假设我们要做一个版本管理的业务，curd 步骤如下:
-
-在 「internal」-「core」 创建 「version」 目录，创建「model.go」写入领域模型，该模型为数据库表结构映射。
-
-创建「core.go」 写入如下内容
-
-```go
-package version
-
-import (
-	"fmt"
-	"strings"
-)
-
-// Storer 依赖反转的数据持久化接口
-type Storer interface {
-	First(*Version) error
-	Add(*Version) error
-}
-
-// Core 业务对象
-type Core struct {
-	Storer    Storer
-}
-
-// NewCore 创建业务对象
-func NewCore(store Storer) *Core {
-	return &Core{
-		Storer: store,
-	}
-}
-
-// IsAutoMigrate 是否需要进行表迁移
-// 判断硬编码在代码中的数据库表版本号，与数据库存储的版本号做对比
-func (c *Core) IsAutoMigrate(currentVer, remark string) bool {
-	var ver Version
-	if err := c.Storer.First(&ver); err != nil {
-		isMigrate := true
-		c.IsMigrate = &isMigrate
-		return isMigrate
-	}
-	isMigrate := compareVersionFunc(currentVer, ver.Version, func(a, b string) bool {
-		return a > b
-	})
-	c.IsMigrate = &isMigrate
-	return isMigrate
-}
-
-func compareVersionFunc(a, b string, f func(a, b string) bool) bool {
-	s1 := versionToStr(a)
-	s2 := versionToStr(b)
-	if len(s1) != len(s2) {
-		return true
-	}
-	return f(s1, s2)
-}
-
-func versionToStr(str string) string {
-	var result strings.Builder
-	arr := strings.Split(str, ".")
-	for _, item := range arr {
-		if idx := strings.Index(item, "-"); idx != -1 {
-			item = item[0:idx]
-		}
-		result.WriteString(fmt.Sprintf("%03s", item))
-	}
-	return result.String()
-}
-```
-
-创建 「store/versiondb」 目录，创建「db.go」 文件写入
-
-```go
-type DB struct {
-	db *gorm.DB
-}
-
-func NewDB(db *gorm.DB) DB {
-	return DB{db: db}
-}
-
-// AutoMigrate 表迁移
-func (d DB) AutoMigrate(ok bool) DB {
-	if !ok {
-		return d
-	}
-	if err := d.db.AutoMigrate(
-		new(version.Version),
-	); err != nil {
-		panic(err)
-	}
-	return d
-}
-
-func (d DB) First(v *version.Version) error {
-	return d.db.Order("id DESC").First(v).Error
-}
-
-func (d DB) Add(v *version.Version) error {
-	return d.db.Create(v).Error
-}
-```
-
-在 API 层做依赖注入，对 「web/api/provider.go」 写入函数，往 Usecase 中注入业务对象
-
-```go
-var ProviderSet = wire.NewSet(
-	wire.Struct(new(Usecase), "*"),
-	NewHTTPHandler,
-	NewVersion,
-)
-
-func NewVersion(db *gorm.DB) *version.Core {
-	vdb := versiondb.NewDB(db)
-	core := version.NewCore(vdb)
-	isOK := core.IsAutoMigrate(dbVersion, dbRemark)
-	vdb.AutoMigrate(isOK)
-	if isOK {
-		slog.Info("更新数据库表结构")
-		if err := core.RecordVersion(dbVersion, dbRemark); err != nil {
-			slog.Error("RecordVersion", "err", err)
-		}
-	}
-	return core
-}
-```
-
-在 API 层新建「version.go」文件，写入
-
-```go
-// version 业务函数命名空间
-type VersionAPI struct {
-	ver *version.Core
-}
-
-func NewVersionAPI(ver *version.Core) VersionAPI {
-	return VersionAPI{ver: ver}
-}
-// registerVersion 向路由注册业务接口
-func registerVersion(r gin.IRouter, verAPI VersionAPI, handler ...gin.HandlerFunc) {
-	ver := r.Group("/version", handler...)
-	ver.GET("", web.WarpH(verAPI.getVersion))
-}
-
-func (v VersionAPI) getVersion(_ *gin.Context, _ *struct{}) (any, error) {
-	return gin.H{"msg": "test"}, nil
-}
-```
-
 
 ## 常见问题
 
@@ -251,29 +86,7 @@ func (v VersionAPI) getVersion(_ *gin.Context, _ *struct{}) (any, error) {
 
 > 那 api 层参数模型，表映射模型到底应该定义在哪里?
 
-要清楚各层之间的依赖关系，api 直接依赖 core，db 依赖反转 core。故而领域模型定义在 core 中，api 的入参和出参也可以定义在 core，当然 core 层用不上的结构体，定义在 API 层也无妨。
-
-> 为什么 api 层直接依赖 core 层，而不是依赖接口?
-
-接口的目的是为了解耦，在实际开发过程中，更多是替换 api 层，而不是替换 core 层。
-
-API 只做参数获取，返回响应参数，只做最少的事情，方便从 HTTP 快速过度的 GRPC。
-
-面向未来设计，面向当下编程，先提高搬砖效率，等未来需要的那天会有更好的方式重构。
-
-> 为什么 db 依赖反转 core?
-
-数据持久化不是独立的，它为业务而服务。即持久化服务于业务，依赖于业务。
-
-通过依赖反转，业务可以在中间穿插 redis cache 等其它 db 。
-
-> 为什么入参/出参模型以  Input/Output 单词结尾
-
-约定大于配置，类似有些项目以 Request/Response 单词结尾，只是为了有一个统一的，大家都明确的参数。
-
-当然，有可能出参也是入参，你可以定义别名，也可以直接使用。
-
-很多时候，我们都想明确自己在做什么，为什么这样做，这个「常见问题」希望能提供一点解惑思路。
+要清楚各层之间的依赖关系，api 直接依赖 data目录，db 依赖反转 data目录。故而领域模型定义在 data 中，api 的入参和出参也可以定义在 data，当然 data 层用不上的结构体，定义在 API 层也无妨。
 
 > 如何为 goweb 编写业务插件?
 
@@ -286,14 +99,6 @@ func RegisterVersion(r gin.IRouter, verAPI VersionAPI, handler ...gin.HandlerFun
 	ver.GET("", web.WarpH(verAPI.getVersion))
 }
 ```
-
-## 表迁移
-
-每次程序启动都执行一遍，太慢了。
-
-所以通过 version 表来控制，是否要进行表迁移操作。
-
-当发现数据库表版本已经是最新时，即不执行。通过修改 api/db.go 文件中 dbVersion 控制版本号。
 
 ## 错误处理
 
@@ -329,3 +134,4 @@ details 仅开发模式使用，将完整的错误内容暴露给开发者，方
 + gorm
 + slog / zap
 + wire
++ lal
