@@ -8,7 +8,7 @@ EasyDarwin8.x 基于原 [EasyDarwin](http://www.easydarwin.com/) 软件基础上
 
 EasyDarwin 采用 MIT 协议授权.
 
-![示例](./images/main.png)
+![示例](images/main.png)
 
 ## 功能特性
 

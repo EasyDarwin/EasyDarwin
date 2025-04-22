@@ -8,7 +8,7 @@ EasyDarwin 8.x is a secondary development based on the original [EasyDarwin](htt
 
 EasyDarwin is licensed under the MIT License.
 
-![example](./images/main.png)
+![example](images/main.png)
 
 ## Features
 
