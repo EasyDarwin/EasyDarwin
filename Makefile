@@ -183,7 +183,7 @@ build/windows:
 			-X main.gitHash=$(HASH_AND_DATE) \
 			-X main.buildTimeAt=$(shell date +%s) \
 			-X main.release=true \
-			" -o=$(dir)/EasyDarwin.com ./cmd/server
+			" -o=$(dir)/EasyDarwin.exe ./cmd/server
 	@scp -r web configs ${BUILD_WINDOWS_AMD64_DIR}
 	@scp ffmpeg.exe ${BUILD_WINDOWS_AMD64_DIR}
 	@rm -rf ${BUILD_WINDOWS_AMD64_DIR}/configs/data.db
