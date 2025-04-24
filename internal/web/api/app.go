@@ -150,15 +150,3 @@ func getVersion(c *gin.Context) {
 		"runtime":    timeStr,
 	})
 }
-
-func registerApp(g gin.IRouter) {
-	l := login{
-		database: data.GetDatabase(),
-	}
-	g.GET("/version", getVersion)
-	g.POST("/login", web.WarpH(l.Login))
-	g.POST("/logout", l.logout)
-
-	users := g.Group("/users")
-	users.PUT("/:username/reset-password", l.resetPassword)
-}

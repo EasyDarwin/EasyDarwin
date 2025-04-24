@@ -208,9 +208,3 @@ func HlsHandler() gin.HandlerFunc {
 		return
 	}
 }
-
-func registerReverseProxy(r gin.IRouter) {
-	r.Group("/flv").GET("/*path", FlvHandler())
-	r.Group("/ws_flv").GET("/*path", WSFlvHandler())
-	r.Group("/ts").Any("/*path", HlsHandler())
-}

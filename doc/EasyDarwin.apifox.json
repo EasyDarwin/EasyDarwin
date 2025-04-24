@@ -1,0 +1,2773 @@
+{
+  "apifoxProject": "1.0.0",
+  "$schema": {
+    "app": "apifox",
+    "type": "project",
+    "version": "1.2.0"
+  },
+  "info": {
+    "name": "EasyDarwin",
+    "description": "",
+    "mockRule": {
+      "rules": [],
+      "enableSystemRule": true
+    }
+  },
+  "apiCollection": [
+    {
+      "name": "根目录",
+      "id": 55297856,
+      "auth": {},
+      "securityScheme": {},
+      "parentId": 0,
+      "serverId": "",
+      "description": "",
+      "identityPattern": {
+        "httpApi": {
+          "type": "methodAndPath",
+          "bodyType": "",
+          "fields": []
+        }
+      },
+      "shareSettings": {},
+      "visibility": "SHARED",
+      "preProcessors": [
+        {
+          "id": "inheritProcessors",
+          "type": "inheritProcessors",
+          "data": {}
+        }
+      ],
+      "postProcessors": [
+        {
+          "id": "inheritProcessors",
+          "type": "inheritProcessors",
+          "data": {}
+        }
+      ],
+      "inheritPostProcessors": {},
+      "inheritPreProcessors": {},
+      "items": [
+        {
+          "name": "apidoc",
+          "id": 55297871,
+          "auth": {
+            "type": "bearer",
+            "bearer": {
+              "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ"
+            }
+          },
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "用户管理",
+              "id": 55297872,
+              "auth": {},
+              "securityScheme": {},
+              "parentId": 55297871,
+              "serverId": "",
+              "description": "",
+              "identityPattern": {
+                "httpApi": {
+                  "type": "inherit",
+                  "bodyType": "",
+                  "fields": []
+                }
+              },
+              "shareSettings": {},
+              "visibility": "INHERITED",
+              "preProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "postProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "inheritPostProcessors": {},
+              "inheritPreProcessors": {},
+              "items": [
+                {
+                  "name": "修改用户密码",
+                  "api": {
+                    "id": "288117005",
+                    "method": "put",
+                    "path": "/api/v1/users/{username}/reset-password",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "username#0",
+                          "name": "username",
+                          "required": true,
+                          "description": "",
+                          "type": "string",
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194783",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                          "password": {
+                            "type": "string",
+                            "title": "旧密码（sha256加密）"
+                          },
+                          "new_password": {
+                            "type": "string",
+                            "title": "新密码（sha256加密）"
+                          }
+                        },
+                        "required": [
+                          "password",
+                          "new_password"
+                        ],
+                        "x-apifox-orders": [
+                          "password",
+                          "new_password"
+                        ]
+                      },
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 0,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.662194783",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "账号密码登录",
+                  "api": {
+                    "id": "288117006",
+                    "method": "post",
+                    "path": "/api/v1/login",
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194784",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "title": "认证令牌",
+                              "description": "示例：1adjd1i2jnqaw.12312fainofasdasdas.12312fasdasd"
+                            },
+                            "username": {
+                              "type": "string",
+                              "title": "token过期时间戳(秒)"
+                            },
+                            "name": {
+                              "type": "string",
+                              "title": "用户信息"
+                            },
+                            "password": {
+                              "type": "string",
+                              "title": "是否为重置账号"
+                            },
+                            "role": {
+                              "type": "string"
+                            },
+                            "created_at": {
+                              "type": "string"
+                            },
+                            "remark": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "username",
+                            "name",
+                            "password",
+                            "role",
+                            "created_at",
+                            "remark"
+                          ],
+                          "x-apifox-orders": [
+                            "id",
+                            "username",
+                            "name",
+                            "password",
+                            "role",
+                            "created_at",
+                            "remark"
+                          ]
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "成功示例",
+                        "data": "{\n    \"id\": 222,\n    \"username\": \"admin\",\n    \"name\": \"系统管理员\",\n    \"password\": \"111111111111\",\n    \"role\": \"\",\n    \"created_at\": \"\",\n    \"remark\": \"\"\n}",
+                        "responseId": 662194784,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                          "username": {
+                            "description": "用户名",
+                            "type": "string",
+                            "title": "用户名"
+                          },
+                          "password": {
+                            "description": "密码(sha256)",
+                            "type": "string",
+                            "title": "加密的密码"
+                          }
+                        },
+                        "required": [
+                          "username",
+                          "password"
+                        ],
+                        "x-apifox-orders": [
+                          "username",
+                          "password"
+                        ]
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\n    \"username\": \"adminetc\",\n    \"password\": \"ijasijr12nkj21ndaskind1i2j312312312dasd\"\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "## 业务说明\n1.用户输入密码，效验密码合法性(字母+数字+符号)\n2.密码 sha256 加密，账号密码登录\n\n默认超管账号: admin\n密码:  admin\n记得要 sha256 加密",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 6,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {},
+                      "isDefaultUrlEncoding": 1
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.662194784",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "退出登录",
+                  "api": {
+                    "id": "288117007",
+                    "method": "post",
+                    "path": "/api/v1/logout",
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194785",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "none",
+                      "parameters": [],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 12,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.662194785",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                }
+              ]
+            },
+            {
+              "name": "直播管理",
+              "id": 55297873,
+              "auth": {},
+              "securityScheme": {},
+              "parentId": 55297871,
+              "serverId": "",
+              "description": "",
+              "identityPattern": {
+                "httpApi": {
+                  "type": "inherit",
+                  "bodyType": "",
+                  "fields": []
+                }
+              },
+              "shareSettings": {},
+              "visibility": "INHERITED",
+              "preProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "postProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "inheritPostProcessors": {},
+              "inheritPreProcessors": {},
+              "items": [
+                {
+                  "name": "直播列表",
+                  "api": {
+                    "id": "288117008",
+                    "method": "get",
+                    "path": "/api/v1/live",
+                    "parameters": {
+                      "query": [
+                        {
+                          "id": "CfLvmi8Hsj",
+                          "name": "page",
+                          "required": true,
+                          "description": "页码",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        },
+                        {
+                          "id": "j4B2eVmCM1",
+                          "name": "size",
+                          "required": true,
+                          "description": "数量",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        },
+                        {
+                          "id": "ujtNrFswfz",
+                          "name": "type",
+                          "required": false,
+                          "description": "直播类型",
+                          "example": "pull、push",
+                          "type": "string",
+                          "enable": true
+                        },
+                        {
+                          "id": "6wS6MPiap2",
+                          "name": "q",
+                          "required": false,
+                          "description": "关键字",
+                          "type": "string",
+                          "enable": true
+                        }
+                      ],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194786",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "成功示例",
+                        "data": "{\n    \"items\": [\n        {\n            \"id\": 1,\n            \"created_at\": \"2025-01-01 07:46:52\",\n            \"updated_at\": \"2025-01-01 09:19:15\",\n            \"name\": \"sdd\",\n            \"url\": \"rtmp://127.0.0.1:21935/live/stream_1?sign=1DZl4llGJn\",\n            \"liveType\": \"push\",\n            \"online\": 0,\n            \"enable\": true,\n            \"onDemand\": false,\n            \"audio\": false,\n            \"transType\": \"\",\n            \"snapURL\": \"\",\n            \"keyFrame\": \"\",\n            \"authed\": true,\n            \"sessionId\": \"\",\n            \"sign\": \"1DZl4llGJn\",\n            \"errorString\": \"\"\n        }\n    ],\n    \"total\": 1\n}",
+                        "responseId": 662194786,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "none",
+                      "parameters": [],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 0,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888066": true,
+                      "340888067": true
+                    },
+                    "responseChildren": [
+                      "BLANK.662194786",
+                      "COMPONENT.340888066",
+                      "COMPONENT.340888067"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [
+                      {
+                        "type": "assertion",
+                        "data": {
+                          "name": "状态为 available",
+                          "subject": "responseJson",
+                          "comparison": "equal",
+                          "value": "available",
+                          "path": "$.data.status",
+                          "multipleValue": [],
+                          "extractSettings": {
+                            "expression": "$.data.status",
+                            "continueExtractorSettings": {
+                              "isContinueExtractValue": false,
+                              "JsonArrayValueIndexValue": ""
+                            }
+                          }
+                        },
+                        "defaultEnable": false,
+                        "enable": true,
+                        "id": "xadceRDiirVMevGNYFI6e6n7fygbPaES"
+                      }
+                    ],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "直播URL",
+                  "api": {
+                    "id": "288451617",
+                    "method": "get",
+                    "path": "/api/v1/live/playurl/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662810331",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "成功示例",
+                        "data": "{\n    \"info\": {\n        \"name\": \"123\",\n        \"id\": 2,\n        \"http_flv\": \"http://127.0.0.1:10086/live/stream_2.flv\",\n        \"http_hls\": \"http://127.0.0.1:10086/hls/ts/stream_2/ts-playlist.m3u8\",\n        \"ws_flv\": \"ws://127.0.0.1:10086/live/stream_2.flv\",\n        \"webrtc\": \"webrtc://127.0.0.1:10086/webrtc/play/live/stream_2.whep\",\n        \"rtmp\": \"rtmp://127.0.0.1:21935/live/stream_2\",\n        \"rtsp\": \"rtmp://127.0.0.1:25544/live/stream_2\"\n    }\n}",
+                        "responseId": 662810331,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "none",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {},
+                        "x-apifox-orders": []
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"wqe\",\r\n    \"authed\": true,\r\n    \"enable\": true\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "根据ID获取对应直播的URL地址",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 27,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662810331"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "直播详情",
+                  "api": {
+                    "id": "288117009",
+                    "method": "get",
+                    "path": "/api/v1/live/info/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194787",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "成功示例",
+                        "data": "{\n    \"info\": {\n        \"id\": 1,\n        \"created_at\": \"2025-01-01 07:46:52\",\n        \"updated_at\": \"2025-01-01 10:33:32\",\n        \"name\": \"sdd\",\n        \"url\": \"\",\n        \"liveType\": \"push\",\n        \"online\": 0,\n        \"enable\": true,\n        \"onDemand\": false,\n        \"audio\": false,\n        \"transType\": \"\",\n        \"snapURL\": \"\",\n        \"keyFrame\": \"\",\n        \"authed\": true,\n        \"sessionId\": \"\",\n        \"sign\": \"1DZl4llGJn\",\n        \"errorString\": \"\"\n    }\n}",
+                        "responseId": 662194787,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "none",
+                      "parameters": [],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 6,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888066": true,
+                      "340888067": true
+                    },
+                    "responseChildren": [
+                      "BLANK.662194787",
+                      "COMPONENT.340888066",
+                      "COMPONENT.340888067"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [
+                      {
+                        "type": "assertion",
+                        "data": {
+                          "name": "状态为 available",
+                          "subject": "responseJson",
+                          "comparison": "equal",
+                          "value": "available",
+                          "path": "$.data.status",
+                          "multipleValue": [],
+                          "extractSettings": {
+                            "expression": "$.data.status",
+                            "continueExtractorSettings": {
+                              "isContinueExtractValue": false,
+                              "JsonArrayValueIndexValue": ""
+                            }
+                          }
+                        },
+                        "defaultEnable": false,
+                        "enable": true,
+                        "id": "4LifwMSOz40NYFIagcUU8nvFSBuqa7p2"
+                      }
+                    ],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "直播流详情",
+                  "api": {
+                    "id": "288117010",
+                    "method": "get",
+                    "path": "/api/v1/live/stream/info/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194788",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "none",
+                      "parameters": [],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 12,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888066": true,
+                      "340888067": true
+                    },
+                    "responseChildren": [
+                      "BLANK.662194788",
+                      "COMPONENT.340888066",
+                      "COMPONENT.340888067"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [
+                      {
+                        "type": "assertion",
+                        "data": {
+                          "name": "状态为 available",
+                          "subject": "responseJson",
+                          "comparison": "equal",
+                          "value": "available",
+                          "path": "$.data.status",
+                          "multipleValue": [],
+                          "extractSettings": {
+                            "expression": "$.data.status",
+                            "continueExtractorSettings": {
+                              "isContinueExtractValue": false,
+                              "JsonArrayValueIndexValue": ""
+                            }
+                          }
+                        },
+                        "defaultEnable": false,
+                        "enable": true,
+                        "id": "G1a5dIuQJDMZRrEderakmKD5PSj78CZr"
+                      }
+                    ],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "停止播放",
+                  "api": {
+                    "id": "288117011",
+                    "method": "get",
+                    "path": "/api/v1/live/play/stop/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194789",
+                        "code": 201,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "成功示例",
+                        "data": "{\n    \"info\": {\n        \"name\": \"123\",\n        \"id\": 2,\n        \"http_flv\": \"http://127.0.0.1:10086/live/stream_2.flv\",\n        \"http_hls\": \"http://127.0.0.1:10086/hls/ts/stream_2/ts-playlist.m3u8\",\n        \"ws_flv\": \"ws://127.0.0.1:10086/live/stream_2.flv\",\n        \"webrtc\": \"webrtc://127.0.0.1:10086/webrtc/play/live/stream_2.whep\",\n        \"rtmp\": \"rtmp://127.0.0.1:21935/live/stream_2\",\n        \"rtsp\": \"rtmp://127.0.0.1:25544/live/stream_2\"\n    }\n}",
+                        "responseId": 662194789,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {},
+                        "x-apifox-orders": []
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"wqe\",\r\n    \"authed\": true,\r\n    \"enable\": true\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "主动停流只支持拉流类型的直播。非按需状态无效，推流类型无效！！！",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 18,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194789"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "开始播放",
+                  "api": {
+                    "id": "288117012",
+                    "method": "get",
+                    "path": "/api/v1/live/play/start/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194790",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "成功示例",
+                        "data": "{\n    \"info\": {\n        \"name\": \"123\",\n        \"id\": 2,\n        \"http_flv\": \"http://127.0.0.1:10086/live/stream_2.flv\",\n        \"http_hls\": \"http://127.0.0.1:10086/hls/ts/stream_2/ts-playlist.m3u8\",\n        \"ws_flv\": \"ws://127.0.0.1:10086/live/stream_2.flv\",\n        \"webrtc\": \"webrtc://127.0.0.1:10086/webrtc/play/live/stream_2.whep\",\n        \"rtmp\": \"rtmp://127.0.0.1:21935/live/stream_2\",\n        \"rtsp\": \"rtmp://127.0.0.1:25544/live/stream_2\"\n    }\n}",
+                        "responseId": 662194790,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {},
+                        "x-apifox-orders": []
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"wqe\",\r\n    \"authed\": true,\r\n    \"enable\": true\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "拉流按需状态需要一直直播，请30-45s调用一次此接口。推流，非按需、不需要调用。",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 24,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194790"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "新建拉流直播",
+                  "api": {
+                    "id": "288117013",
+                    "method": "post",
+                    "path": "/api/v1/live/pull",
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194791",
+                        "code": 201,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "名称"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "拉流地址"
+                          },
+                          "enable": {
+                            "type": "boolean",
+                            "description": "是否启用"
+                          },
+                          "onDemand": {
+                            "type": "boolean",
+                            "description": "是否按需"
+                          },
+                          "audio": {
+                            "type": "boolean",
+                            "description": "启用音频"
+                          },
+                          "transType": {
+                            "type": "string",
+                            "description": "协议类型"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "url",
+                          "enable",
+                          "onDemand",
+                          "audio",
+                          "transType"
+                        ],
+                        "x-apifox-orders": [
+                          "name",
+                          "url",
+                          "enable",
+                          "onDemand",
+                          "audio",
+                          "transType"
+                        ]
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"123\",\r\n    \"url\": \"132\",\r\n    \"authed\": true,\r\n    \"enable\": true,\r\n    \"onDemand\": true,\r\n    \"audio\": false,\r\n    \"transType\": \"TCP\"\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 30,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194791"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "更新拉流直播",
+                  "api": {
+                    "id": "288117014",
+                    "method": "put",
+                    "path": "/api/v1/live/pull/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194792",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "名称"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "拉流地址"
+                          },
+                          "enable": {
+                            "type": "boolean",
+                            "description": "是否启用"
+                          },
+                          "onDemand": {
+                            "type": "boolean",
+                            "description": "是否按需"
+                          },
+                          "audio": {
+                            "type": "boolean",
+                            "description": "启用音频"
+                          },
+                          "transType": {
+                            "type": "string",
+                            "description": "协议类型"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "url",
+                          "enable",
+                          "onDemand",
+                          "audio",
+                          "transType"
+                        ],
+                        "x-apifox-orders": [
+                          "name",
+                          "url",
+                          "enable",
+                          "onDemand",
+                          "audio",
+                          "transType"
+                        ]
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"123\",\r\n    \"url\": \"132\",\r\n    \"authed\": true,\r\n    \"enable\": true,\r\n    \"onDemand\": true,\r\n    \"audio\": false,\r\n    \"transType\": \"TCP\"\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 36,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194792"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "新建推流直播",
+                  "api": {
+                    "id": "288117015",
+                    "method": "post",
+                    "path": "/api/v1/live/push",
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194793",
+                        "code": 201,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "名称"
+                          },
+                          "authed": {
+                            "type": "boolean",
+                            "description": "鉴权开关"
+                          },
+                          "enable": {
+                            "type": "boolean",
+                            "description": "是否启用"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "authed",
+                          "enable"
+                        ],
+                        "x-apifox-orders": [
+                          "name",
+                          "authed",
+                          "enable"
+                        ]
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"wqe\",\r\n    \"authed\": true,\r\n    \"enable\": true\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 42,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194793"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "更新推流直播",
+                  "api": {
+                    "id": "288117016",
+                    "method": "put",
+                    "path": "/api/v1/live/push/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194794",
+                        "code": 201,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "名称"
+                          },
+                          "authed": {
+                            "type": "boolean",
+                            "description": "鉴权开关"
+                          },
+                          "enable": {
+                            "type": "boolean",
+                            "description": "是否启用"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "authed",
+                          "enable"
+                        ],
+                        "x-apifox-orders": [
+                          "name",
+                          "authed",
+                          "enable"
+                        ]
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"wqe\",\r\n    \"authed\": true,\r\n    \"enable\": true\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 48,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194794"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "更新单个字段",
+                  "api": {
+                    "id": "288117017",
+                    "method": "put",
+                    "path": "/api/v1/live/{livetype}/{id}/{key}/{value}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "livetype#0",
+                          "name": "livetype",
+                          "required": true,
+                          "description": "直播类型",
+                          "example": "push、pull",
+                          "type": "string",
+                          "enable": true
+                        },
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "example": "",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        },
+                        {
+                          "id": "key#0",
+                          "name": "key",
+                          "required": true,
+                          "description": "启用、按需、音频、推流鉴权",
+                          "example": "enable、onDemand、audio、sign",
+                          "type": "string",
+                          "enable": true
+                        },
+                        {
+                          "id": "value#0",
+                          "name": "value",
+                          "required": true,
+                          "description": "启用、关闭",
+                          "example": "true、false",
+                          "type": "string",
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194795",
+                        "code": 201,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {},
+                        "x-apifox-orders": []
+                      },
+                      "mediaType": "",
+                      "examples": [
+                        {
+                          "value": "{\r\n    \"name\": \"wqe\",\r\n    \"authed\": true,\r\n    \"enable\": true\r\n}",
+                          "mediaType": "application/json",
+                          "description": ""
+                        }
+                      ],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 54,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194795"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "删除直播",
+                  "api": {
+                    "id": "288117018",
+                    "method": "delete",
+                    "path": "/api/v1/live/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "直播id",
+                          "type": "integer",
+                          "schema": {
+                            "type": "integer"
+                          },
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": [
+                        {
+                          "id": "tnoT7O2PBd",
+                          "name": "api_key",
+                          "type": "string",
+                          "enable": true
+                        }
+                      ]
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194796",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "none",
+                      "parameters": [],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 60,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {},
+                    "responseChildren": [
+                      "BLANK.662194796"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                }
+              ]
+            },
+            {
+              "name": "系统相关",
+              "id": 55297874,
+              "auth": {},
+              "securityScheme": {},
+              "parentId": 55297871,
+              "serverId": "",
+              "description": "",
+              "identityPattern": {
+                "httpApi": {
+                  "type": "inherit",
+                  "bodyType": "",
+                  "fields": []
+                }
+              },
+              "shareSettings": {},
+              "visibility": "INHERITED",
+              "preProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "postProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "inheritPostProcessors": {},
+              "inheritPreProcessors": {},
+              "items": [
+                {
+                  "name": "版本信息",
+                  "api": {
+                    "id": "288117019",
+                    "method": "get",
+                    "path": "/api/v1/version",
+                    "parameters": {
+                      "query": [],
+                      "path": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "662194797",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {},
+                          "x-apifox-orders": []
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "application/json",
+                      "parameters": [],
+                      "jsonSchema": {
+                        "type": "object",
+                        "properties": {},
+                        "x-apifox-orders": []
+                      },
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 0,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.662194797",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "socketCollection": [],
+  "docCollection": [],
+  "webSocketCollection": [],
+  "socketIOCollection": [],
+  "responseCollection": [
+    {
+      "_databaseId": 6542808,
+      "updatedAt": "2025-04-23T07:25:12.000Z",
+      "name": "根目录",
+      "type": "root",
+      "children": [],
+      "parentId": 0,
+      "id": 6542808,
+      "items": [
+        {
+          "_databaseId": 340888066,
+          "name": "记录不存在",
+          "code": 404,
+          "contentType": "json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string",
+                "mock": {
+                  "mock": "Not found"
+                }
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "x-apifox-orders": [
+              "code",
+              "message"
+            ]
+          },
+          "defaultEnable": false,
+          "folderId": 0,
+          "id": 340888066,
+          "databaseResponseExamples": [],
+          "responseExamples": []
+        },
+        {
+          "_databaseId": 340888067,
+          "name": "参数不正确",
+          "code": 400,
+          "contentType": "json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "mock": {
+                  "mock": "400"
+                }
+              },
+              "message": {
+                "type": "string",
+                "mock": {
+                  "mock": "Invalid input"
+                }
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "x-apifox-orders": [
+              "code",
+              "message"
+            ]
+          },
+          "defaultEnable": false,
+          "folderId": 0,
+          "id": 340888067,
+          "databaseResponseExamples": [],
+          "responseExamples": []
+        },
+        {
+          "_databaseId": 340888070,
+          "name": "错误",
+          "code": 400,
+          "contentType": "json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "msg": {
+                "type": "string",
+                "title": "错误消息",
+                "description": "提示给用户",
+                "mock": {
+                  "mock": "@ctitle"
+                }
+              },
+              "trace_id": {
+                "type": "string",
+                "title": "错误追踪",
+                "description": "提示给研发/运维"
+              },
+              "reason": {
+                "type": "string",
+                "title": "错误类型标识"
+              }
+            },
+            "required": [
+              "msg",
+              "trace_id",
+              "reason"
+            ],
+            "x-apifox-orders": [
+              "msg",
+              "reason",
+              "trace_id"
+            ]
+          },
+          "defaultEnable": true,
+          "folderId": 0,
+          "id": 340888070,
+          "databaseResponseExamples": [],
+          "responseExamples": []
+        },
+        {
+          "_databaseId": 340888071,
+          "name": "无权限",
+          "code": 401,
+          "contentType": "json",
+          "jsonSchema": {
+            "type": "object",
+            "properties": {
+              "msg": {
+                "type": "string",
+                "title": "错误提示",
+                "description": "提示给用户"
+              },
+              "reason": {
+                "type": "string",
+                "title": "错误类型标识"
+              },
+              "trace_id": {
+                "type": "string",
+                "title": "错误追踪",
+                "description": "提示给研发/运维"
+              }
+            },
+            "required": [
+              "msg",
+              "reason",
+              "trace_id"
+            ],
+            "x-apifox-orders": [
+              "msg",
+              "reason",
+              "trace_id"
+            ]
+          },
+          "defaultEnable": true,
+          "folderId": 0,
+          "id": 340888071,
+          "databaseResponseExamples": [],
+          "responseExamples": []
+        }
+      ]
+    }
+  ],
+  "schemaCollection": [
+    {
+      "id": 14035326,
+      "name": "根目录",
+      "visibility": "SHARED",
+      "items": [
+        {
+          "id": 14035323,
+          "name": "示例数据模型",
+          "visibility": "INHERITED",
+          "items": [
+            {
+              "name": "Pet",
+              "displayName": "",
+              "id": "#/definitions/162953740",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "required": [
+                    "name",
+                    "photoUrls",
+                    "id",
+                    "category",
+                    "tags",
+                    "status"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 1,
+                      "mock": {
+                        "mock": "@natural"
+                      },
+                      "description": "宠物ID编号"
+                    },
+                    "category": {
+                      "$ref": "#/definitions/162953741",
+                      "description": "分组"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "名称",
+                      "mock": {
+                        "mock": "@cword(3)"
+                      },
+                      "examples": [
+                        "doggie"
+                      ]
+                    },
+                    "photoUrls": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "mock": {
+                          "mock": "@image"
+                        }
+                      },
+                      "description": "照片URL"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/162953742"
+                      },
+                      "description": "标签"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "宠物销售状态",
+                      "enum": [
+                        "available",
+                        "pending",
+                        "sold"
+                      ]
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "id",
+                    "category",
+                    "name",
+                    "photoUrls",
+                    "tags",
+                    "status"
+                  ]
+                }
+              },
+              "visibility": "INHERITED"
+            },
+            {
+              "name": "Category",
+              "displayName": "",
+              "id": "#/definitions/162953741",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 1,
+                      "description": "分组ID编号"
+                    },
+                    "name": {
+                      "type": "string",
+                      "mock": {
+                        "mock": "@cword(2)"
+                      },
+                      "description": "分组名称"
+                    }
+                  },
+                  "xml": {
+                    "name": "Category"
+                  },
+                  "x-apifox-orders": [
+                    "id",
+                    "name"
+                  ]
+                }
+              },
+              "visibility": "INHERITED"
+            },
+            {
+              "name": "Tag",
+              "displayName": "",
+              "id": "#/definitions/162953742",
+              "description": "",
+              "schema": {
+                "jsonSchema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "format": "int64",
+                      "minimum": 1,
+                      "description": "标签ID编号"
+                    },
+                    "name": {
+                      "type": "string",
+                      "mock": {
+                        "mock": "@cword(4)"
+                      },
+                      "description": "标签名称"
+                    }
+                  },
+                  "xml": {
+                    "name": "Tag"
+                  },
+                  "x-apifox-orders": [
+                    "id",
+                    "name"
+                  ]
+                }
+              },
+              "visibility": "INHERITED"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "securitySchemeCollection": [
+    {
+      "id": 970098,
+      "name": "根目录",
+      "items": [],
+      "ordering": []
+    }
+  ],
+  "requestCollection": [
+    {
+      "name": "根目录",
+      "children": [
+        {
+          "name": "临时测试",
+          "children": [],
+          "items": [
+            {
+              "id": 3058109,
+              "createdAt": "2025-04-23T07:25:16.000Z",
+              "updatedAt": "2025-04-23T07:25:16.000Z",
+              "name": "http://localhost:8080/products",
+              "method": "get",
+              "path": "http://localhost:8080/products",
+              "requestBody": {
+                "type": "none",
+                "parameters": []
+              },
+              "parameters": {},
+              "commonParameters": {
+                "query": [],
+                "body": [],
+                "header": [],
+                "cookie": []
+              },
+              "preProcessors": [],
+              "postProcessors": [],
+              "auth": {},
+              "advancedSettings": {},
+              "folderId": 6635310,
+              "projectId": 6276435,
+              "creatorId": 1059412,
+              "editorId": 1059412
+            }
+          ]
+        }
+      ],
+      "items": []
+    }
+  ],
+  "apiTestCaseCollection": [
+    {
+      "name": "根目录",
+      "children": [
+        {
+          "name": "宠物店",
+          "children": [],
+          "items": [
+            {
+              "steps": [
+                {
+                  "type": "http",
+                  "bind": false,
+                  "bindType": "API",
+                  "bindId": 288116897,
+                  "syncMode": "MANUAL",
+                  "httpApiCase": {
+                    "id": 255080105,
+                    "name": "新建在售宠物",
+                    "method": "",
+                    "path": "/pet",
+                    "auth": {},
+                    "type": "http",
+                    "options": {},
+                    "parameters": {},
+                    "responseId": 662193536,
+                    "requestBody": {
+                      "parameters": [
+                        {
+                          "id": "ybPpcZ1dgw",
+                          "relatedId": "ybPpcZ1dgw",
+                          "relatedName": "name",
+                          "name": "name",
+                          "value": "Hello Kitty",
+                          "type": "string",
+                          "description": "宠物名",
+                          "enable": true
+                        },
+                        {
+                          "id": "fDkEuKyzG4",
+                          "relatedId": "fDkEuKyzG4",
+                          "relatedName": "status",
+                          "name": "status",
+                          "value": "sold",
+                          "type": "string",
+                          "description": "宠物销售状态",
+                          "enable": true
+                        }
+                      ],
+                      "type": "application/x-www-form-urlencoded",
+                      "data": ""
+                    },
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "commonParameters": {},
+                    "inheritPreProcessors": {},
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessorsSnapshot": null,
+                    "inheritPostProcessorsSnapshot": null,
+                    "apiId": 288116897
+                  }
+                },
+                {
+                  "type": "http",
+                  "bind": false,
+                  "bindType": "API",
+                  "bindId": 288116896,
+                  "syncMode": "MANUAL",
+                  "httpApiCase": {
+                    "id": 255080104,
+                    "name": "查询刚刚建的宠物",
+                    "method": "",
+                    "path": "/pet/{petId}",
+                    "auth": {},
+                    "type": "http",
+                    "options": {},
+                    "parameters": {
+                      "path": [
+                        {
+                          "id": "petId#0",
+                          "relatedId": "petId#0",
+                          "relatedName": "petId",
+                          "name": "petId",
+                          "value": "{{petId}}",
+                          "type": "string",
+                          "description": "宠物 ID",
+                          "enable": true
+                        }
+                      ]
+                    },
+                    "responseId": 662193535,
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "commonParameters": {},
+                    "inheritPreProcessors": {},
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessorsSnapshot": null,
+                    "inheritPostProcessorsSnapshot": null,
+                    "apiId": 288116896
+                  }
+                },
+                {
+                  "type": "http",
+                  "bind": false,
+                  "bindType": "API",
+                  "bindId": 288116898,
+                  "syncMode": "MANUAL",
+                  "httpApiCase": {
+                    "id": 255080103,
+                    "name": "修改宠物状态为 sold",
+                    "method": "",
+                    "path": "/pet",
+                    "auth": {},
+                    "type": "http",
+                    "options": {},
+                    "parameters": {},
+                    "responseId": 662193538,
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "application/json",
+                      "data": "{\n    \"name\": \"test\"\n}"
+                    },
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "commonParameters": {},
+                    "inheritPreProcessors": {},
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessorsSnapshot": null,
+                    "inheritPostProcessorsSnapshot": null,
+                    "apiId": 288116898
+                  }
+                },
+                {
+                  "type": "http",
+                  "bind": false,
+                  "bindType": "API",
+                  "bindId": 288116896,
+                  "syncMode": "MANUAL",
+                  "httpApiCase": {
+                    "id": 255080102,
+                    "name": "查询宠物状态是否修改成功",
+                    "method": "",
+                    "path": "/pet/{petId}",
+                    "auth": {},
+                    "type": "http",
+                    "options": {},
+                    "parameters": {
+                      "path": [
+                        {
+                          "id": "petId#0",
+                          "relatedId": "petId#0",
+                          "relatedName": "petId",
+                          "name": "petId",
+                          "value": "2",
+                          "type": "string",
+                          "description": "宠物 ID",
+                          "enable": true
+                        }
+                      ]
+                    },
+                    "responseId": 662193535,
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "commonParameters": {},
+                    "inheritPreProcessors": {},
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessorsSnapshot": null,
+                    "inheritPostProcessorsSnapshot": null,
+                    "apiId": 288116896
+                  }
+                },
+                {
+                  "type": "http",
+                  "bind": false,
+                  "bindType": "API",
+                  "bindId": 288116899,
+                  "syncMode": "MANUAL",
+                  "httpApiCase": {
+                    "id": 255080101,
+                    "name": "删除该宠物",
+                    "method": "",
+                    "path": "/pet/{petId}",
+                    "auth": {},
+                    "type": "http",
+                    "options": {},
+                    "parameters": {
+                      "header": [
+                        {
+                          "id": "tnoT7O2PBd",
+                          "relatedId": "tnoT7O2PBd",
+                          "relatedName": "api_key",
+                          "name": "api_key",
+                          "enable": true
+                        }
+                      ],
+                      "path": [
+                        {
+                          "id": "petId#0",
+                          "relatedId": "petId#0",
+                          "relatedName": "petId",
+                          "name": "petId",
+                          "value": "",
+                          "enable": true
+                        }
+                      ]
+                    },
+                    "responseId": 662193540,
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "commonParameters": {},
+                    "inheritPreProcessors": {},
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessorsSnapshot": null,
+                    "inheritPostProcessorsSnapshot": null,
+                    "apiId": 288116899
+                  }
+                },
+                {
+                  "type": "http",
+                  "bind": false,
+                  "bindType": "API",
+                  "bindId": 288116896,
+                  "syncMode": "MANUAL",
+                  "httpApiCase": {
+                    "id": 255080100,
+                    "name": "检查删除是否成功",
+                    "method": "",
+                    "path": "/pet/{petId}",
+                    "auth": {},
+                    "type": "http",
+                    "options": {},
+                    "parameters": {
+                      "path": [
+                        {
+                          "id": "petId#0",
+                          "relatedId": "petId#0",
+                          "relatedName": "petId",
+                          "name": "petId",
+                          "value": "1645646",
+                          "type": "string",
+                          "description": "宠物 ID",
+                          "enable": true
+                        }
+                      ]
+                    },
+                    "responseId": 340888066,
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "commonParameters": {},
+                    "inheritPreProcessors": {},
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessorsSnapshot": null,
+                    "inheritPostProcessorsSnapshot": null,
+                    "apiId": 288116896
+                  }
+                }
+              ],
+              "id": 6429897,
+              "name": "测试宠物新建/修改/删除流程",
+              "tags": [],
+              "options": {},
+              "priority": 2,
+              "ordering": 0,
+              "description": "",
+              "preProcessors": [],
+              "postProcessors": [],
+              "children": [],
+              "performanceTestOptions": {},
+              "apiTestDataSets": []
+            }
+          ]
+        }
+      ],
+      "items": []
+    }
+  ],
+  "testCaseReferences": [],
+  "environments": [],
+  "commonScripts": [],
+  "databaseConnections": [],
+  "globalVariables": [
+    {
+      "id": "6276435",
+      "variables": [
+        {
+          "name": "API_HOST",
+          "value": "",
+          "description": "",
+          "isBindInitial": true,
+          "initialValue": "",
+          "isSync": true
+        }
+      ]
+    }
+  ],
+  "commonParameters": null,
+  "projectSetting": {
+    "id": "6306651",
+    "auth": {},
+    "securityScheme": {},
+    "servers": [
+      {
+        "id": "default",
+        "name": "默认服务"
+      }
+    ],
+    "gateway": [],
+    "language": "zh-CN",
+    "apiStatuses": [
+      "developing",
+      "testing",
+      "released",
+      "deprecated"
+    ],
+    "mockSettings": {},
+    "preProcessors": [],
+    "postProcessors": [],
+    "advancedSettings": {
+      "enableJsonc": false,
+      "enableBigint": false,
+      "responseValidate": true,
+      "enableTestScenarioSetting": false,
+      "enableYAPICompatScript": false,
+      "isDefaultUrlEncoding": 2,
+      "publishedDocUrlRules": {
+        "defaultRule": "RESOURCE_KEY_ONLY",
+        "resourceKeyStandard": "NEW"
+      }
+    },
+    "initialDisabledMockIds": [],
+    "cloudMock": {
+      "security": "free",
+      "enable": false,
+      "tokenKey": "apifoxToken"
+    }
+  },
+  "customFunctions": [],
+  "projectAssociations": []
+}

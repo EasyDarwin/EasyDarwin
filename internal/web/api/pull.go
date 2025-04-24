@@ -1,3 +1,8 @@
+// Package api Copyright 2025 EasyDarwin.
+// http://www.easydarwin.org
+// 对拉流的路由操作
+// History (ID, Time, Desc)
+// (xukongzangpusa, 20250424, 添加注释，增加url功能)
 package api
 
 import (
@@ -77,6 +82,16 @@ func (l LiveStreamAPI) findInfo(c *gin.Context) {
 		return
 	}
 	web.Success(c, gin.H{"info": out})
+}
+
+func (l LiveStreamAPI) getPlayUrl(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		web.Fail(c, err)
+		return
+	}
+	urlInfo := l.GetLiveUrl(c, id)
+	web.Success(c, gin.H{"info": urlInfo})
 }
 
 func (l LiveStreamAPI) playStart(c *gin.Context) {
@@ -202,38 +217,16 @@ func (l LiveStreamAPI) updatePull(c *gin.Context) {
 	})
 }
 
-func registerLiveStream(r gin.IRouter) {
-	l := LiveStreamAPI{
-		database: data.GetDatabase(),
-	}
-	{
-		r.Any("/push/on_pub_start", l.pubStart)
-		r.Any("/push/on_pub_stop", l.pubStop)
-		r.Any("/push/on_rtmp_connect", l.pubRtmpConnect)
-	}
-	{
-		group := r.Group("/live")
-		group.GET("", l.find)
-		group.GET("/info/:id", l.findInfo)
-
-		group.GET("/play/start/:id", l.playStart)
-		group.GET("/play/stop/:id", l.playStop)
-		group.GET("/stream/info/:id", l.StreamInfo)
-		group.DELETE("/:id", l.delete)
-
-		pull := group.Group("/pull")
-		pull.POST("", l.createPull) // 创建
-		pull.PUT(":id", l.updatePull)
-		pull.PUT(":id/:type/:value", l.updateOnePull)
-
-		push := group.Group("/push")
-		push.POST("", l.createPush) // 创建
-		push.PUT(":id", l.updatePush)
-		push.PUT(":id/:type/:value", l.updateOnePush)
-	}
+func (l LiveStreamAPI) GetLiveStreamUrl(c *gin.Context, live livestream.LiveStream) livestream.LivePlayer {
+	return l.getLiveUrl(c, live.ID, live.Name)
 }
 
-func (l LiveStreamAPI) GetLiveStreamUrl(c *gin.Context, live livestream.LiveStream) livestream.LivePlayer {
+// GetLiveUrl 根据id获取流的url
+func (l LiveStreamAPI) GetLiveUrl(c *gin.Context, id int) livestream.LivePlayer {
+	return l.getLiveUrl(c, id, "")
+}
+
+func (l LiveStreamAPI) getLiveUrl(c *gin.Context, id int, name string) livestream.LivePlayer {
 	hostStr := strings.Split(c.Request.Host, ":")
 	host := hostStr[0]
 	//httpPort := l.Conf.Server.HTTP.Port
@@ -255,14 +248,14 @@ func (l LiveStreamAPI) GetLiveStreamUrl(c *gin.Context, live livestream.LiveStre
 		wsStr = "wss"
 	}
 	urlInfo := livestream.LivePlayer{
-		ID:      live.ID,
-		Name:    live.Name,
-		HttpFlv: fmt.Sprintf("%s://%s%s/flv/live/stream_%d.flv", httpStr, host, httpPort, live.ID),
-		HttpHls: fmt.Sprintf("%s://%s%s/ts/hls/stream_%d/playlist.m3u8", httpStr, host, httpPort, live.ID),
-		WsFlv:   fmt.Sprintf("%s://%s%s/ws_flv/live/stream_%d.flv", wsStr, host, httpPort, live.ID),
-		WEBRTC:  fmt.Sprintf("webrtc://%s%s/webrtc/play/live/stream_%d", host, rtcPort, live.ID),
+		ID:      id,
+		Name:    name,
+		HttpFlv: fmt.Sprintf("%s://%s%s/flv/live/stream_%d.flv", httpStr, host, httpPort, id),
+		HttpHls: fmt.Sprintf("%s://%s%s/ts/hls/stream_%d/playlist.m3u8", httpStr, host, httpPort, id),
+		WsFlv:   fmt.Sprintf("%s://%s%s/ws_flv/live/stream_%d.flv", wsStr, host, httpPort, id),
+		WEBRTC:  fmt.Sprintf("webrtc://%s%s/webrtc/play/live/stream_%d", host, rtcPort, id),
 		//RTMP:    fmt.Sprintf("rtmp://%s%s/live/stream_%d", host, rtmpPort, live.ID),
-		RTSP: fmt.Sprintf("rtsp://%s%s/live/stream_%d", host, rtspPort, live.ID),
+		RTSP: fmt.Sprintf("rtsp://%s%s/live/stream_%d", host, rtspPort, id),
 	}
 
 	return urlInfo
