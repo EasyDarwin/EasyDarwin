@@ -84,6 +84,7 @@ func (l LiveStreamAPI) findInfo(c *gin.Context) {
 	web.Success(c, gin.H{"info": out})
 }
 
+// 获取播放url地址
 func (l LiveStreamAPI) getPlayUrl(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

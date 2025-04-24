@@ -73,6 +73,19 @@ cd EasyDarwin-lin-"version"-"build-time"
 easydarwin
 ```
 
+Here is the translation of the provided text into English:
+
+### System Service
+EasyDarwin can run as a system service, ensuring that the program can be restarted and used even in case of unexpected interruptions.
+
+```shell
+Install service: easydarwin -service install
+Start service: easydarwin -service start
+Restart service: easydarwin -service restart
+Stop service: easydarwin -service stop
+Uninstall service: easydarwin -service uninstall
+```
+
 ## Getting Started Guide
 
 Open [http://localhost:10086](http://localhost:10086) and add the streaming protocol.

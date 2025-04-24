@@ -115,6 +115,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/gorilla/websocket v1.5.3
 	github.com/grafov/m3u8 v0.12.1
+	github.com/kardianos/service v1.2.2
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lib/pq v1.10.9
 	github.com/mojocn/base64Captcha v1.3.8
