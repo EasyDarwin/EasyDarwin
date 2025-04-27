@@ -19,10 +19,11 @@ EasyDarwin is licensed under the MIT License.
 + Supports pulling RTSP streams and redistributing them via various protocols
 + Supports push stream authentication
 + Offline and online monitoring
++ Video on demand functionality
 + RESTful API with apidoc documentation tool (located in the web directory)
 
 ### Features to be Added
-+ Video on demand functionality
++ User Authentication
 
 ## Usage
 Currently, only source code compilation is supported for generation; one-click installation packages will be supported later. Please refer to the deployment section for instructions on building from source code before use.
