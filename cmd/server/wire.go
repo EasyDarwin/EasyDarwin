@@ -14,8 +14,15 @@ func wireApp(cfg *conf.Bootstrap) (http.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// 消除 sqlite 空闲页，防止数据库过大
+	db.Exec("VACUUM;")
+
 	liveStreamcore := api.NewLiveStream(db)
 	api.NewUserCore(db)
+
+	api.NewVodCore(db)
+
 	source.InitDb(liveStreamcore)
 	handler := api.NewHTTPHandler(cfg)
 	if handler == nil {

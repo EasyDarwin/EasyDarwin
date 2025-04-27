@@ -140,17 +140,18 @@ type Bootstrap struct {
 	RoomConfig            RoomConfig            `json:"room"`
 	RtcConfig             RtcConfig             `json:"rtc"`
 	RtmpConfig            RtmpConfig            `json:"rtmp"`
+	VodConfig             VodConfig             `json:"vod"`
 	RtspConfig            RtspConfig            `json:"rtsp"`
 	SrtConfig             config.SrtConfig      `json:"srt"`
 	StaticRelayPullConfig StaticRelayPullConfig `json:"static_relay_pull"`
-
+	
 	*config.Config
 	LogicCfg logic.Config
 }
 
 type Base struct {
-	DisabledCaptcha *bool  `json:"disabled_captcha"`                            //是否禁用登录验证码
-	Timeout         int64  `json:"timeout" comment:"请求超时时间" `                   // 请求超时时间
+	DisabledCaptcha *bool  `json:"disabled_captcha"`                                            //是否禁用登录验证码
+	Timeout         int64  `json:"timeout" comment:"请求超时时间" `                             // 请求超时时间
 	JwtSecret       string `json:"jwt_secret" comment:"jwt 秘钥，空串时，每次启动程序将随机赋值"` // JWT密钥
 }
 
@@ -248,6 +249,29 @@ type RTSPConfig struct {
 	AuthMethod          int    `json:"auth_method"`
 	UserName            string `json:"username"`
 	PassWord            string `json:"password"`
+}
+type VodConfig struct {
+	Dir           string `json:"dir"`
+	SrcDir        string `json:"src_dir"`
+	SysTranNumber uint   `json:"sys_tran_number"`
+	//ProgressNotifyURL 点播：点播转码进度回调
+	ProgressNotifyURL string `json:"progress_notify_url"`
+	//HlsTime 点播：点播转码切片时间
+	HlsTime int `json:"hls_time"`
+	//OpenSquare 点播：是否开启分享视频广场
+	OpenSquare bool `json:"open_square"`
+	//OpenDefinition 点播：是否开启多清晰度转码
+	OpenDefinition bool `json:"open_definition"`
+	//DefaultDefinition 点播：播放默认播放清晰度 hd
+	DefaultDefinition string `json:"default_definition"`
+	//TransDefinition 点播：待转码的清晰度 值是数组字符串 如:  sd,hd,fhd
+	TransDefinition string `json:"trans_definition"`
+	//TransVideo 点播：是否重新编码视频 默认0
+	TransVideo bool `json:"trans_video"`
+	// 转码方式,两种方式 软解码 libx264 、硬解码 h264_nvenc 方式，默认 libx264
+	TranWay string `json:"tran_way"`
+	// h265 的转码方式,三种方式：软解码 libx264 、硬解码 h264_nvenc、不变 copy，默认 libx264
+	TranHevcWay string `json:"tran_hevc_way"`
 }
 type RecordConfig struct {
 	EnableFlv            bool   `json:"enable_flv"`

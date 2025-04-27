@@ -8,14 +8,20 @@ package api
 import (
 	"easydarwin/internal/conf"
 	"easydarwin/internal/data"
+	"easydarwin/internal/gutils/consts"
 	"easydarwin/utils/pkg/web"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
 	"runtime/debug"
 )
 
+var gCfg *conf.Bootstrap
+
 func setupRouter(router *gin.Engine, uc *conf.Bootstrap) {
+
+	gCfg = uc
 
 	router.Use(
 		// 格式化输出到控制台，然后记录到日志
@@ -37,6 +43,7 @@ func setupRouter(router *gin.Engine, uc *conf.Bootstrap) {
 	//registerVersion(r, uc.Version, auth)
 	registerLiveStream(r)
 	registerReverseProxy(router)
+	registerVod(router, r)
 }
 
 func registerApp(g gin.IRouter) {
@@ -87,4 +94,44 @@ func registerReverseProxy(r gin.IRouter) {
 	r.Group("/flv").GET("/*path", FlvHandler())
 	r.Group("/ws_flv").GET("/*path", WSFlvHandler())
 	r.Group("/ts").Any("/*path", HlsHandler())
+}
+
+func registerVod(root, r gin.IRouter) {
+
+	initVod()
+
+	// 将文件夹设置为可访问
+	root.Group(consts.RouteStaticVOD).GET("/*filepath",
+		static.Serve(consts.RouteStaticVOD, static.LocalFile(gCfg.VodConfig.Dir, false)))
+	root.Group(consts.RouteStaticVOD).HEAD("/*filepath",
+		static.Serve(consts.RouteStaticVOD, static.LocalFile(gCfg.VodConfig.Dir, false)))
+
+	vod := r.Group("/vod")
+	{
+		vod.Use()
+		vod.GET("/accept", gVodRouter.accept)
+		vod.OPTIONS("/upload", gVodRouter.uploadoptions)
+		vod.POST("/upload", gVodRouter.upload)
+
+		vod.GET("/progress", gVodRouter.progress)
+		vod.POST("/progress", gVodRouter.progress)
+		vod.POST("/retran", gVodRouter.retran)
+
+		vod.GET("/list", gVodRouter.list)
+		vod.POST("/list", gVodRouter.list)
+		vod.GET("/get", gVodRouter.get)
+		vod.POST("/get", gVodRouter.get)
+		vod.POST("/save", gVodRouter.save)
+		vod.GET("/snap", gVodRouter.snap)
+		vod.POST("/snap", gVodRouter.snap)
+
+		vod.GET("/turn/shared", gVodRouter.shared)
+		vod.POST("/turn/shared", gVodRouter.shared)
+		vod.GET("/sharelist", gVodRouter.sharelist)
+		vod.POST("/sharelist", gVodRouter.sharelist)
+
+		vod.POST("/remove", gVodRouter.remove)
+		vod.POST("/removeBatch", gVodRouter.removeBatch)
+		vod.GET("/download/:id", gVodRouter.download)
+	}
 }

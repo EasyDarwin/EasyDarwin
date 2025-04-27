@@ -124,7 +124,7 @@ rtmpsenable = true
 rtmpskeyfile = './configs/key.pem'
 
 [rtspconfig]
-addr = ':5544'
+addr = ':15544'
 authenable = false
 authmethod = 1
 enable = true
@@ -168,3 +168,17 @@ region = ''
 retry = 0
 secret = ''
 timeout = 30000
+
+[vodconfig]
+dir = 'vod_data/vod'
+srcdir = 'vod_data/vodsrc'
+systrannumber = 3
+progressnotifyurl = ""
+hlstime = 8
+opensquare = true
+opendefinition = false
+defaultdefinition = 'hd'
+transdefinition = 'sd,hd,fhd'
+transvideo = false
+tranway = 'libx264'
+tranhevcway = 'copy'

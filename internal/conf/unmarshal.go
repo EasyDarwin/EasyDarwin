@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"easydarwin/internal/gutils/efile"
 	config "easydarwin/pkg/lalmax/conf"
 	"fmt"
 	"github.com/q191201771/lal/pkg/logic"
@@ -15,18 +16,16 @@ import (
 //	return toml.Unmarshal(b, v)
 //}
 
-var Vtoml *viper.Viper
-
 func SetupConfig(path string) (Bootstrap, error) {
 	var bc Bootstrap
-	Vtoml = viper.New()
-	Vtoml.SetConfigName("config")
-	Vtoml.SetConfigType("toml")
-	Vtoml.AddConfigPath(path)
-	if err := Vtoml.ReadInConfig(); err != nil {
+	vtoml := viper.New()
+	vtoml.SetConfigName("config")
+	vtoml.SetConfigType("toml")
+	vtoml.AddConfigPath(path)
+	if err := vtoml.ReadInConfig(); err != nil {
 		return bc, err
 	}
-	err := Vtoml.Unmarshal(&bc)
+	err := vtoml.Unmarshal(&bc)
 	if err != nil {
 		return bc, err
 	}
@@ -48,6 +47,13 @@ func SetupConfig(path string) (Bootstrap, error) {
 
 	SetConfig(bc, &cfg)
 	bc.Config = &cfg
+
+	bc.VodConfig.Dir = efile.GetRealPath(bc.VodConfig.Dir)
+	bc.VodConfig.SrcDir = efile.GetRealPath(bc.VodConfig.SrcDir)
+
+	efile.EnsureDir(bc.VodConfig.Dir)
+	efile.EnsureDir(bc.VodConfig.SrcDir)
+
 	return bc, nil
 }
 

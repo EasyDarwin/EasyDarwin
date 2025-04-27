@@ -6,6 +6,8 @@ import (
 	"easydarwin/internal/core/livestream"
 	"easydarwin/internal/core/livestream/store/livestreamdb"
 	"easydarwin/internal/core/svr"
+	"easydarwin/internal/core/video"
+	"easydarwin/internal/core/video/store/voddb"
 	"easydarwin/internal/data"
 	"encoding/hex"
 	"fmt"
@@ -30,7 +32,40 @@ func NewLiveStream(db *gorm.DB) *livestream.Core {
 	return core
 }
 
-//var g *gin.Engine
+func NewVodCore(db *gorm.DB) *video.Core {
+	vodDb := voddb.NewDB(db).AutoMigrate(true)
+	vodCore := video.NewCore(vodDb)
+	return vodCore
+}
+
+func NewUserCore(db *gorm.DB) {
+	// 初始化用户
+	var u data.User
+	db.AutoMigrate(&data.User{})
+
+	if err := db.Where("username=?", "admin").First(&u).Error; err != nil {
+		slog.Info("初始化数据库用户表结构")
+		if err := initUser("admin", "admin"); err != nil {
+			slog.Error("initUser", "err", err)
+		}
+	}
+}
+
+func initUser(username, password string) error {
+	// 创建系统管理员用户
+	u := data.User{
+		ID:       1,        // 用户ID
+		Name:     "系统管理员",  // 用户名称
+		Remark:   "系统创建",   // 用户备注
+		Username: username, // 用户名
+		Role:     "admin",  // 用户角色
+	}
+	// 对密码进行加密
+	s := sha256.Sum256([]byte(password))
+	u.Password = hex.EncodeToString(s[:])
+	data.GetDatabase().Where(data.User{}).FirstOrCreate(&u)
+	return nil
+}
 
 func NewHTTPHandler(uc *conf.Bootstrap) http.Handler {
 
@@ -73,31 +108,4 @@ func NewHTTPHandler(uc *conf.Bootstrap) http.Handler {
 	setupRouter(g, uc) // 设置路由处理函数
 
 	return g // 返回配置好的 Gin 实例作为 http.Handler
-}
-func NewUserCore(db *gorm.DB) {
-	// 初始化用户
-	var u data.User
-	db.AutoMigrate(&data.User{})
-
-	if err := db.Where("username=?", "admin").First(&u).Error; err != nil {
-		slog.Info("初始化数据库用户表结构")
-		if err := initUser("admin", "admin"); err != nil {
-			slog.Error("initUser", "err", err)
-		}
-	}
-}
-func initUser(username, password string) error {
-	// 创建系统管理员用户
-	u := data.User{
-		ID:       1,        // 用户ID
-		Name:     "系统管理员",  // 用户名称
-		Remark:   "系统创建",   // 用户备注
-		Username: username, // 用户名
-		Role:     "admin",  // 用户角色
-	}
-	// 对密码进行加密
-	s := sha256.Sum256([]byte(password))
-	u.Password = hex.EncodeToString(s[:])
-	data.GetDatabase().Where(data.User{}).FirstOrCreate(&u)
-	return nil
 }
