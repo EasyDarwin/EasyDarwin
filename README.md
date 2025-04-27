@@ -73,8 +73,6 @@ cd EasyDarwin-lin-"version"-"build-time"
 easydarwin
 ```
 
-Here is the translation of the provided text into English:
-
 ### System Service
 EasyDarwin can run as a system service, ensuring that the program can be restarted and used even in case of unexpected interruptions.
 
