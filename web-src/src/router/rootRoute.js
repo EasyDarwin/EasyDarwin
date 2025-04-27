@@ -38,6 +38,16 @@ const RootRoute = {
   },
   children: [
     {
+      path: '/vod',
+      name: 'Vod',
+      component: () => import('@/views/vod/index.vue'),
+      meta: {
+        title: 'route.vod',
+        icon: 'icon-park-outline:video',
+        namePath: ['Vod'],
+      },
+    },
+    {
       path: '/live',
       name: 'Live',
       component: () => import('@/views/live/index.vue'),

@@ -9,6 +9,7 @@ export default {
     login: '登录',
     404: '404',
     dynamicRoute: '动态路由',
+    vod: "点播服务",
     live: "直播服务",
     config: "服务配置",
     apidoc: "接口文档",

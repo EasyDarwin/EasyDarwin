@@ -1,0 +1,74 @@
+import request from './request'
+
+export default {
+  // 获取点播列表
+  getVodList(data) {
+    return request({
+      url: '/vod/list',
+      method: 'get',
+      params: data,
+    })
+  },
+
+  // 获取单个点播信息
+  getVodItemInfo(id) {
+    return request({
+      url: `/vod/get`,
+      method: 'get',
+      params: { id },
+    })
+  },
+
+  // 删除点播
+  deleteVod(id) {
+    return request({
+      url: `/vod/remove`,
+      method: 'post',
+      data: { id },
+    })
+  },
+
+  // 上传点播文件
+  uploadVod(data) {
+    return request({
+      url: `/vod/upload`,
+      method: 'post',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      onUploadProgress: progressEvent => {
+        const progresss = Math.round(
+          (progressEvent.loaded / progressEvent.total) * 100,
+        )
+        data.callback(progresss)
+      },
+      data,
+    })
+  },
+
+  // 下载点播文件
+  downloadVod(id) {
+    return request({
+      url: `/vod/download/${id}`,
+      method: 'get',
+      responseType: 'blob',
+    })
+  },
+
+  // 获取转码进度
+  getVodProgress(id) {
+    return request({
+      url: `/vod/progress`,
+      method: 'get',
+      params: { id },
+    })
+  },
+
+  // 获取服务器支持上传文件类型
+  getVodUploadAccept() {
+    return request({
+      url: `/vod/accept`,
+      method: 'get',
+    })
+  },
+}
