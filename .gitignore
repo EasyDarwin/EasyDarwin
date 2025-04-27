@@ -7,3 +7,4 @@ build
 .idea/*
 stream/*
 tem/*
+web-src/node_modules
