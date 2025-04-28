@@ -42,7 +42,7 @@ const playCreate = () => {
         // isMute: true,
         isLogo: props.isLogo
     }
-    playerPro.value = new EasyPlayerPro(container, config);
+    playerPro.value = new window.EasyPlayerPro(container, config);
     playerPro.value.on("error", (type, msg) => {
         console.log("error:", type, msg);
         onDestroy()

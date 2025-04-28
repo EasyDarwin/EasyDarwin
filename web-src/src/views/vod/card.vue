@@ -1,51 +1,64 @@
 <template>
-  <div class="bg-white rounded-md cursor-pointer p-2" @click="onclick">
+  <div class="cursor-pointer rounded-md overflow-hidden bg-white">
     <div v-if="data.status === 'done'">
-      <div class="h-28 relative">
-        <img class="h-full w-full object-cover rounded-md" :src="data.snapUrl" />
-        <button
-          class="absolute left-1/2 top-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 text-primary bg-white/80 rounded-full p-2"
-          @click.stop
-        >
-          ▶️
-        </button>
+      <div class="relative" @click="onclick">
+        <img class="aspect-video w-full object-cover  " :src="data.snapUrl" />
+        <PlayCircleOutlined
+          class="text-white absolute left-1/2 top-1/2 text-4xl -translate-x-1/2 -translate-y-1/2  hover:text-green transition-all" />
       </div>
 
-      <div class="text-left px-1 pt-3 space-y-2">
-        <div class="flex items-center gap-1 text-sm text-gray-500 truncate">
-          🎬 {{ data.name }}
+      <div class="text-left py-2 px-2 space-y-2">
+        <div class="text-sm text-gray-500 truncate">
+          {{ data.name }}
         </div>
 
-        <div class="flex items-center gap-1 text-sm text-gray-500 truncate">
-          📅 {{ data.createAt }}
-        </div>
+        <a-space wrap size="small">
+          <a-tag v-if="data.aspect" :bordered="false">{{ data.aspect }}</a-tag>
+          <a-tag v-if="data.audioCodec" :bordered="false"> {{ data.audioCodec }}</a-tag>
+          <a-tag v-if="data.videoCodec" :bordered="false"> {{ data.videoCodec }}</a-tag>
+          <a-tag v-if="data.size" :bordered="false"> {{ formatFileSize(data.size) }}</a-tag>
+        </a-space>
 
-        <div class="flex items-center gap-1 text-sm text-gray-500 truncate">
-          描述：{{ data.describe }}
-        </div>
+        <div class="flex justify-end items-center space-x-2 pt-2">
+          <a-tooltip title="播放">
+            <a-button type="text" @click.stop="onclick">
+              <template #icon>
+                <PlayCircleOutlined />
+              </template>
+            </a-button>
+          </a-tooltip>
 
-        <div class="flex justify-end items-center space-x-2">
-          <button class="text-gray-500 hover:text-primary" @click.stop="download">⬇️</button>
-          <button class="text-gray-400 cursor-not-allowed" disabled>🔗</button>
-          <button class="text-red-500 hover:text-red-700" @click.stop="confirmDelete">🗑️</button>
+          <a-tooltip title="下载">
+            <a-button type="text" @click.stop="download">
+              <template #icon>
+                <DownloadOutlined />
+              </template>
+            </a-button>
+          </a-tooltip>
+
+          <a-popconfirm title="您确定要删除这条视频吗？" ok-text="是" cancel-text="否" placement="top" @confirm="onClickDelete">
+            <a-button type="text" danger>
+              <template #icon>
+                <DeleteOutlined />
+              </template>
+            </a-button>
+          </a-popconfirm>
         </div>
       </div>
     </div>
 
     <div v-else class="flex justify-center items-center h-28">
-      <a-progress
-        :percent="data.progress"
-        type="circle"
-        :width="64"
-        stroke-color="#409eff"
-      />
+      <a-progress :percent="data.progress" type="circle" :width="64" stroke-color="#409eff" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { saveFile } from "@/utils/down";
+import { formatFileSize } from "@/utils/size";
 import { Progress as AProgress } from "ant-design-vue";
+import { DownloadOutlined, PlayCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue';
+import { vodApi } from '@/api'
 
 const props = defineProps(["data"]);
 const emit = defineEmits(["onClick", "onDelect"]);
@@ -56,19 +69,25 @@ const onclick = () => {
 };
 
 // 确认删除
-const confirmDelete = () => {
-  if (confirm('您确定要删除吗？')) {
-    emit("onDelect", props.data.id);
-  }
+const onClickDelete = () => {
+  emit("onDelect", props.data.id);
 };
 
 // 下载文件
-const download = () => {
-  const url = `/vod/download/${props.data.id}`;
-  saveFile(url);
+const download = async () => {
+  const res = await vodApi.downloadVod(props.data.id);
+  const blob = new Blob([res.data]);
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = url;
+  a.download = props.data.id + '.mp4'; // 如果你传了 filename 就用，否则叫 file
+  document.body.appendChild(a);
+  a.click();
+
+  // 释放 URL 对象，清理内存
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
 };
 </script>
-
-<style scoped>
-/* 不需要额外样式了，unocss + antd-vue足够 */
-</style>

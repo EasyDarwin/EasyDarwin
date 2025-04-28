@@ -1,5 +1,5 @@
 <template>
-  <a-modal :open="open" title="点播上传" :footer="null" width="60%" @cancel="handleCancel" centered>
+  <a-modal :open="open" title="点播上传" :footer="null" width="60%" @cancel="handleCancel" >
     <div class="space-y-4">
       <a-upload-dragger name="file" :file-list="fileList" :before-upload="beforeUpload" :accept="accept" :max-count="1"
         @change="handleFileChange">
