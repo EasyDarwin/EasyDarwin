@@ -71,4 +71,40 @@ export default {
       method: 'get',
     })
   },
+
+  // 重新转码
+  vodRetran(id) {
+    return request({
+      url: `/vod/retran`,
+      method: 'post',
+      data: { id },
+    })
+  },
+
+  // 编辑点播文件
+  vodEdit(data) {
+    return request({
+      url: `/vod/save`,
+      method: 'post',
+      data,
+    })
+  },
+
+  // 上传封面
+  uploadVodCover(data, onUploadProgress) {
+    return request({
+      url: `/vod/snap`,
+      method: 'post',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      onUploadProgress: progressEvent => {
+        const progresss = Math.round(
+          (progressEvent.loaded / progressEvent.total) * 100,
+        )
+        onUploadProgress(progresss)
+      },
+      data,
+    })
+  },
 }

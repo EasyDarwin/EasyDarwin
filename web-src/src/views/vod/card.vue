@@ -1,5 +1,5 @@
 <template>
-  <div class="cursor-pointer rounded-md overflow-hidden bg-white">
+  <div class="cursor-pointer rounded-md overflow-hidden bg-white h-full relative">
     <div v-if="data.status === 'done'">
       <div class="relative" @click="onclick">
         <img class="aspect-video w-full object-cover  " :src="data.snapUrl" />
@@ -28,6 +28,14 @@
             </a-button>
           </a-tooltip>
 
+          <a-tooltip title="编辑">
+            <a-button type="text" @click.stop="onClickEdit">
+              <template #icon>
+                <EditOutlined />
+              </template>
+            </a-button>
+          </a-tooltip>
+
           <a-tooltip title="下载">
             <a-button type="text" @click.stop="download">
               <template #icon>
@@ -36,7 +44,18 @@
             </a-button>
           </a-tooltip>
 
-          <a-popconfirm title="您确定要删除这条视频吗？" ok-text="是" cancel-text="否" placement="top" @confirm="onClickDelete">
+          <a-popconfirm placement="topRight" title="您确定要重新转码这条视频吗？" ok-text="是" cancel-text="否"
+            @confirm="onClickRetran">
+            <a-tooltip title="重新转码">
+              <a-button type="text">
+                <template #icon>
+                  <RedoOutlined />
+                </template>
+              </a-button>
+            </a-tooltip>
+          </a-popconfirm>
+
+          <a-popconfirm placement="topRight" title="您确定要删除这条视频吗？" ok-text="是" cancel-text="否" @confirm="onClickDelete">
             <a-button type="text" danger>
               <template #icon>
                 <DeleteOutlined />
@@ -47,7 +66,7 @@
       </div>
     </div>
 
-    <div v-else class="flex justify-center items-center h-28">
+    <div v-else class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
       <a-progress :percent="data.progress" type="circle" :width="64" stroke-color="#409eff" />
     </div>
   </div>
@@ -57,21 +76,31 @@
 import { saveFile } from "@/utils/down";
 import { formatFileSize } from "@/utils/size";
 import { Progress as AProgress } from "ant-design-vue";
-import { DownloadOutlined, PlayCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue';
+import { DownloadOutlined, PlayCircleOutlined, DeleteOutlined, RedoOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { vodApi } from '@/api'
 
 const props = defineProps(["data"]);
-const emit = defineEmits(["onClick", "onDelect"]);
+const emit = defineEmits(["onClick", "onEdit", "onDelect", "onRetran"]);
 
 // 点击盒子
 const onclick = () => {
-  emit("onClick", props.data.id);
+  emit("onClick", props.data);
 };
+
+// 点击编辑
+const onClickEdit = () => {
+  emit("onEdit", props.data)
+}
 
 // 确认删除
 const onClickDelete = () => {
   emit("onDelect", props.data.id);
 };
+
+// 重新转码
+const onClickRetran = () => {
+  emit("onRetran", props.data.id)
+}
 
 // 下载文件
 const download = async () => {
@@ -82,7 +111,7 @@ const download = async () => {
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
-  a.download = props.data.id + '.mp4'; // 如果你传了 filename 就用，否则叫 file
+  a.download = props.data.name + '.mp4'; // 如果你传了 filename 就用，否则叫 file
   document.body.appendChild(a);
   a.click();
 
