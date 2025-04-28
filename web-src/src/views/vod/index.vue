@@ -7,7 +7,8 @@
       上传视频
     </a-button>
 
-    <!-- <UploadModal @refreshList="getVodDataList" ref="UploadModalRef" @callback="onCallback"></UploadModal> -->
+    <UploadModal :open="uploadModalVisible" @refreshList="getVodDataList" @update:open="uploadModalVisible = false"
+      @callback="onCallback" />
   </div>
 </template>
 
@@ -15,9 +16,9 @@
 import { onMounted, reactive, ref } from 'vue';
 import { vodApi } from '@/api';
 import { PlusOutlined } from '@ant-design/icons-vue';
-// import UploadModal from './upload.vue';
+import UploadModal from './upload.vue';
 
-const UploadModalRef = ref(null);
+const uploadModalVisible = ref(false);
 
 //获取点播数据请求参数
 const vodParams = reactive({
@@ -29,7 +30,7 @@ const vodParams = reactive({
 });
 
 onMounted(() => {
-  // getVodDataList();
+  getVodDataList();
 })
 
 const getVodDataList = () => {
@@ -41,12 +42,12 @@ const getVodDataList = () => {
 }
 
 const onClickUpload = () => {
-
-  UploadModalRef.value.open();
+  console.log('onClickUpload2');
+  uploadModalVisible.value = true
 }
 
 const onCallback = () => {
-  getVodDataList();
+  // getVodDataList();
 }
 
 </script>

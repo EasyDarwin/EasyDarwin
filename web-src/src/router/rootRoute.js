@@ -63,7 +63,7 @@ const RootRoute = {
       component: () => import('@/views/apidoc/index.vue'),
       meta: {
         title: 'route.apidoc',
-        outsideLink:true,
+        outsideLink: true,
         icon: 'material-symbols:unknown-document-outline-rounded',
         namePath: ['Apidoc'],
       },

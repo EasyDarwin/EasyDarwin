@@ -29,7 +29,7 @@ export default {
   },
 
   // 上传点播文件
-  uploadVod(data) {
+  uploadVod(data, onUploadProgress) {
     return request({
       url: `/vod/upload`,
       method: 'post',
@@ -40,7 +40,7 @@ export default {
         const progresss = Math.round(
           (progressEvent.loaded / progressEvent.total) * 100,
         )
-        data.callback(progresss)
+        onUploadProgress(progresss)
       },
       data,
     })

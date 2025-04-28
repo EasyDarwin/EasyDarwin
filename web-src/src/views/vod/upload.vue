@@ -1,20 +1,16 @@
 <template>
-  <a-modal v-model:open="visible" title="点播上传" :footer="null" centered width="500px">
+  <a-modal :open="open" title="点播上传" :footer="null" width="60%" @cancel="handleCancel" centered>
     <div class="space-y-4">
-      <a-upload-dragger
-        name="file"
-        :multiple="false"
-        :max-count="1"
-        :before-upload="() => false"
-        :accept="accept"
-        @change="handleFileChange"
-      >
+      <a-upload-dragger name="file" :file-list="fileList" :before-upload="beforeUpload" :accept="accept" :max-count="1"
+        @change="handleFileChange">
         <div class="flex flex-col items-center justify-center py-8">
           <upload-outlined class="text-4xl text-gray-400" />
           <p class="mt-2 text-sm text-gray-500">
             拖放文件到此 或 点击 <span class="text-primary">上传</span>
           </p>
-          <p class="text-xs text-gray-400 mt-1">支持文件类型：{{ accept }}</p>
+          <p class="text-xs text-gray-400 mt-1">
+            支持文件类型：{{ accept || defaultAccept }}
+          </p>
         </div>
       </a-upload-dragger>
 
@@ -22,121 +18,108 @@
         <a-progress :percent="progress" status="active" />
       </div>
 
-      <div>
-        <p class="font-semibold mb-1">视频描述（可选）</p>
-        <a-textarea
-          v-model:value="form.describe"
-          placeholder="请输入视频描述（最多100字）"
-          :maxlength="100"
-          auto-size
-          allow-clear
-        />
-      </div>
-
       <div class="flex justify-end space-x-2">
-        <a-button @click="close">取消</a-button>
-        <a-button type="primary" :loading="uploading" @click="handleSubmit">上传</a-button>
+        <a-button @click="handleCancel">取消</a-button>
+        <a-button type="primary" :loading="uploading" @click="handleSubmit">
+          上传
+        </a-button>
       </div>
     </div>
   </a-modal>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import { UploadOutlined } from "@ant-design/icons-vue";
-import { UploadVod, FindUploadAccept } from "@/api/vod";
+import { vodApi } from "@/api";
 import { message, notification } from "ant-design-vue";
-const UPLOAD_ACCEPT = ".mp3,.wav,.mp4,.mpg,.mpeg,.wmv,.avi,.rmvb,.mkv,.flv,.mov,.3gpp,.3gp,.webm,.m4v,.mng,.vob"
 
-const emit = defineEmits(["refreshList", "callback"]);
+const props = defineProps({
+  open: { type: Boolean, required: true },
+});
+const emit = defineEmits(["update:open", "refreshList", "callback"]);
 
-const visible = ref(false);
+// 默认支持格式
+const defaultAccept =
+  ".mp3,.wav,.mp4,.mpg,.mpeg,.wmv,.avi,.rmvb,.mkv,.flv,.mov,.3gpp,.3gp,.webm,.m4v,.mng,.vob";
 const accept = ref("");
+
+// 受控 fileList
+const fileList = ref([]);
+
+// 进度 & loading
 const progress = ref(0);
 const uploading = ref(false);
 
-const form = reactive({
-  file: null,
-  describe: ""
-});
+// 我们只需要 file
+const form = reactive({ file: null });
 
-// 打开弹窗
-const open = async () => {
-  await fetchAccept();
-  visible.value = true;
-};
-
-// 关闭弹窗
-const close = () => {
-  resetForm();
-  visible.value = false;
-};
-
-// 选择文件
-const handleFileChange = (info) => {
-  const file = info.file;
-  if (file.status !== "removed") {
-    form.file = file.originFileObj;
+// 当父组件打开弹窗时，拉取 accept；关闭时重置
+watch(
+  () => props.open,
+  (open) => {
+    if (open) {
+      fetchAccept();
+    } else {
+      resetForm();
+    }
   }
+);
+
+const beforeUpload = (file) => {
+  // 立即调用上传逻辑
+  uploadFile(file);
+  // 阻止 a-upload 自带的上传行为
+  return false;
 };
 
-// 表单提交
-const handleSubmit = async () => {
-  if (!form.file) {
-    return message.error("请选择一个视频文件！");
-  }
-
+async function uploadFile(file) {
   const formData = new FormData();
-  formData.append("file", form.file);
-  formData.append("describe", form.describe);
+  formData.append("file", file);
 
-  emit("callback", true);
   uploading.value = true;
   progress.value = 0;
-
+  emit("callback", true);
   try {
-    await uploadVod(formData);
-    notification.success({ message: "上传成功", description: "文件已成功上传！" });
-    emit("refreshList");
-    close();
-  } catch (error) {
-    console.log(error);
-  } finally {
-    emit("callback", false);
-    uploading.value = false;
-  }
-};
-
-// 上传文件
-const uploadVod = async (formData) => {
-    const res = await UploadVod(formData, {
-      onUploadProgress: (e) => {
-        if (e.total > 0) {
-          progress.value = Math.round((e.loaded / e.total) * 100);
-        }
+    await vodApi.uploadVod(formData, (e) => {
+      if (e.total > 0) {
+        progress.value = Math.round((e.loaded / e.total) * 100);
       }
     });
-    return res;
-};
 
-// 请求上传类型
-const fetchAccept = async () => {
-  try {
-    const res = await FindUploadAccept();
-    accept.value = res.data || UPLOAD_ACCEPT;
-  } catch (error) {
-    console.log(error);
+    notification.success({ message: "上传成功", description: "文件已成功上传！" });
+    emit("refreshList");
+    handleCancel();
+  } catch (err) {
+    console.log("上传失败：", err);
+    message.error(err.response?.data?.message || "上传失败，请重试");
+  } finally {
+    uploading.value = false;
+    emit("callback", false);
   }
+}
+// 拉取后端允许的 accept
+async function fetchAccept() {
+  try {
+    const res = await vodApi.getVodUploadAccept();
+    accept.value = res.data || defaultAccept;
+  } catch (e) {
+    console.error(e);
+    accept.value = defaultAccept;
+  }
+}
+
+// 关闭弹窗
+const handleCancel = () => {
+  emit("update:open", false);
 };
 
-// 重置表单
-const resetForm = () => {
+
+// 重置所有状态
+function resetForm() {
+  fileList.value = [];
   form.file = null;
-  form.describe = "";
   progress.value = 0;
-};
-
-defineExpose({
-  open
-});
+  uploading.value = false;
+}
 </script>

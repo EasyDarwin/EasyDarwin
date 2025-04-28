@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, createVNode, watch, onBeforeUnmount } from 'vue';
 import LiveForm from './form.vue'
-import { live,records } from "@/api";
+import { live } from "@/api";
 import { copyText } from "@/utils";
 import { useI18n } from 'vue-i18n'
 import { notification, Modal } from 'ant-design-vue'
