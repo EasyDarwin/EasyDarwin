@@ -1,7 +1,7 @@
 <template>
   <a-modal :open="open" title="上传视频" :footer="null" width="60%" @cancel="handleCancel">
     <div class="space-y-4">
-      <a-upload-dragger name="file" :file-list="fileList" :before-upload="beforeUpload" :accept="accept" :max-count="1"
+      <a-upload-dragger v-if="!progress"  name="file" :file-list="fileList" :before-upload="beforeUpload" :accept="accept" :max-count="1"
         @change="handleFileChange">
         <div class="flex flex-col items-center justify-center py-8">
           <upload-outlined class="text-4xl text-gray-400" />
@@ -14,7 +14,7 @@
         </div>
       </a-upload-dragger>
 
-      <div v-if="progress > 0" class="px-2">
+      <div v-else class="px-2">
         <a-progress :percent="progress" status="active" />
       </div>
     </div>
@@ -75,9 +75,7 @@ async function uploadFile(file) {
   emit("callback", true);
   try {
     await vodApi.uploadVod(formData, (e) => {
-      if (e.total > 0) {
-        progress.value = Math.round((e.loaded / e.total) * 100);
-      }
+      progress.value = e;
     });
 
     notification.success({ message: "上传成功", description: "文件已成功上传！" });

@@ -33,13 +33,11 @@ export default {
     return request({
       url: `/vod/upload`,
       method: 'post',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
       onUploadProgress: progressEvent => {
         const progresss = Math.round(
           (progressEvent.loaded / progressEvent.total) * 100,
         )
+        console.log('>>>progress', progresss, progressEvent)
         onUploadProgress(progresss)
       },
       data,
