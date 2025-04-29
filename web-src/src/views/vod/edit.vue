@@ -6,6 +6,19 @@
         <a-input v-model:value="formData.name" placeholder="请输入视频名称" />
       </a-form-item>
 
+
+      <!--
+      <a-form-item label="视频封面">
+        <a-upload v-model:file-list="fileList" :max-count="1" :beforeUpload="() => false" :customRequest="() => { }"
+          name="file" accept=".png,.jpg,.jpeg" @change="handleImageChange">
+          <a-button>
+            <UploadOutlined />
+            上传封面
+          </a-button>
+        </a-upload>
+      </a-form-item> -->
+
+
       <a-form-item name="shared" label="是否共享" value-prop-name="checked">
         <a-switch v-model:checked="formData.shared" />
       </a-form-item>
@@ -26,6 +39,7 @@
 import { ref, reactive } from 'vue';
 import { Form, message } from 'ant-design-vue';
 import { vodApi } from '@/api';
+import { UploadOutlined } from '@ant-design/icons-vue';
 
 const open = ref(false);
 
@@ -39,18 +53,30 @@ const formData = reactive({
   sharedLink: ''
 })
 
+// const fileImage = ref()
+
+// // 上传封面
+// const handleImageChange = (file, files) => {
+//   console.log('>>>', file, files);
+//   fileImage.value = file;
+// }
 
 // 提交
 async function onFinish(values) {
-  vodApi.vodEdit(values).then(res => {
-    if (res.data.code == 200) {
-      message.info('操作成功');
-      emit('refresh');
-      handelCancel();
-    }
-  }).catch(err => {
+  const vodRes = await vodApi.vodEdit(values).catch(err => {
     message.error('操作失败')
   })
+  if (vodRes.data.code == 200) {
+    message.info('操作成功');
+    emit('refresh');
+    handelCancel();
+  }
+
+  // const formData = new FormData()
+  // formData.append("id", values.id)
+  // formData.append("file", fileImage.value)
+  // const snapRes = await vodApi.uploadVodSnap()
+  // console.log('>>>', snapRes);
 }
 
 const openModal = (item) => {
@@ -67,6 +93,7 @@ const handelCancel = () => {
   formData.name = '';
   formData.shared = false;
   formData.sharedLink = '';
+  // fileImage.value = undefined;
 }
 
 defineExpose({

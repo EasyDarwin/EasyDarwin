@@ -8,15 +8,15 @@
         上传视频
       </a-button>
 
-      <a-input-search class="w-82" v-model:value="vodParams.q" placeholder="请输入视频名称" enter-button @search="onSearch" />
+      <a-input-search class="w-68" v-model:value="vodParams.q" placeholder="请输入视频名称" enter-button @search="onSearch" />
     </div>
 
     <div class="mt-5">
       <a-row :gutter="[16, 16]">
         <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="6" :xxl="4" v-for="(item, index) in vodData.items"
           :key="item.id">
-          <VodCard :data="item" @on-click="onPlayVod" @on-delect="onDeleteVod" @on-retran="onRetran"
-            @on-edit="onEidt" />
+          <VodCard :data="item" @on-click="onPlayVod" @on-delect="onDeleteVod" @on-retran="onRetran" @on-edit="onEidt"
+            @refresh="getVodDataList" />
         </a-col>
       </a-row>
     </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, onBeforeUnmount } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { vodApi } from '@/api';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import VodCard from './card.vue';
@@ -37,13 +37,8 @@ import UploadModal from './upload.vue';
 import VodPlayer from './player.vue';
 import VodEdit from './edit.vue';
 import { message } from 'ant-design-vue';
-
+import { debounce } from 'lodash-es'
 const editRef = ref();
-const editData = ref({
-  id: '',
-  name: '',
-  shared: false,
-})
 
 const uploadModalVisible = ref(false);
 const playerVisible = ref(false);
@@ -78,7 +73,18 @@ const getVodDataList = () => {
 
 // 搜索
 const onSearch = (e) => {
+  getVodDataList();
 }
+
+// 防抖包装，避免每次输入都触发
+const debounceSearch = debounce(() => {
+  getVodDataList();
+}, 500);
+
+// 监听搜索词变化，触发防抖搜索
+watch(() => vodParams.q, () => {
+  debounceSearch();
+});
 
 const onClickUpload = () => {
   uploadModalVisible.value = true
@@ -109,11 +115,6 @@ const onEidt = (item) => {
     sharedLink: item.sharedLink
   }
   editRef.value.open(data)
-}
-
-// 保存编辑内容
-const onEditSave = (v) => {
-
 }
 
 // 点击删除

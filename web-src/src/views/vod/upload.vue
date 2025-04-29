@@ -1,5 +1,5 @@
 <template>
-  <a-modal :open="open" title="点播上传" :footer="null" width="60%" @cancel="handleCancel" >
+  <a-modal :open="open" title="上传视频" :footer="null" width="60%" @cancel="handleCancel">
     <div class="space-y-4">
       <a-upload-dragger name="file" :file-list="fileList" :before-upload="beforeUpload" :accept="accept" :max-count="1"
         @change="handleFileChange">
@@ -16,13 +16,6 @@
 
       <div v-if="progress > 0" class="px-2">
         <a-progress :percent="progress" status="active" />
-      </div>
-
-      <div class="flex justify-end space-x-2">
-        <a-button @click="handleCancel">取消</a-button>
-        <a-button type="primary" :loading="uploading" @click="handleSubmit">
-          上传
-        </a-button>
       </div>
     </div>
   </a-modal>

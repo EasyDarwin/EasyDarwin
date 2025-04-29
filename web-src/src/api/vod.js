@@ -91,7 +91,7 @@ export default {
   },
 
   // 上传封面
-  uploadVodCover(data, onUploadProgress) {
+  uploadVodSnap(data, onUploadProgress) {
     return request({
       url: `/vod/snap`,
       method: 'post',
