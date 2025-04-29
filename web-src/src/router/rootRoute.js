@@ -29,7 +29,7 @@ const RefreshRoute = {
  * */
 const RootRoute = {
   path: '/',
-  redirect: '/live',
+  redirect: '/vod',
   name: 'Layout',
   component: () => import('@/layouts/LayoutDefault.vue'),
   meta: {
