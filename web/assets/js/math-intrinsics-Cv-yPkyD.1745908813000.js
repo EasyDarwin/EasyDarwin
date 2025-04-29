@@ -1,0 +1,1 @@
+var i=Math.abs,o=Math.floor,n=Math.max,v=Math.min,N=Math.pow,f=Math.round,s=Number.isNaN||function(a){return a!==a},t=s,h=function(a){return t(a)||a===0?a:a<0?-1:1};export{n as a,i as b,o as f,v as m,N as p,f as r,h as s};

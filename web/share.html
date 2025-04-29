@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 大风起兮云飞扬，威加海内兮归故乡，安得猛士兮守四方 -->
+
+<head>
+  <meta charset="UTF-8">
+  <script src="./assets/js/EasyPlayer-pro.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000000
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div id="video" style="width: 100vw ;height: 100vh;"></div>
+  </div>
+  <script>
+    // 获取当前URL
+    const urlParams = new URLSearchParams(window.location.search);
+    // 获取具体的参数
+    const vodId = urlParams.get('id');
+    let liveUrl = '';
+    let easypro;
+    const $container = document.querySelector('#video');
+    window.onload = function () {
+      create();
+      play();
+      videoEvents();
+    };
+
+    function create() {
+      easypro = new window.EasyPlayerPro($container, {
+        isLive: false,
+        MSE: true,
+        stretch: false,
+      });
+    }
+
+    function play() {
+      fetch(`${location.origin}/api/v1/vod/get?id=${vodId}`).then(res => res.json()).then(res => {
+        liveUrl = res.videoUrl
+        easypro.play(liveUrl);
+      })
+    }
+
+    function replay() {
+      if (easypro) {
+        easypro.destroy().then(() => {
+          create();
+          play();
+        });
+      } else {
+        create();
+        play();
+      }
+    }
+
+    function videoEvents() {
+      if (easypro) {
+        easypro.on('error', (errorType, message) => {
+          console.error('error', errorType, message);
+        });
+
+        easypro.on('crashLog', (info) => {
+          console.error('crashLog', info);
+        });
+
+        easypro.on('playFailedAndPaused', (reason, lastFrameInfo, msg) => {
+          replay();
+          console.error('playFailedAndPaused', reason, lastFrameInfo, msg);
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
