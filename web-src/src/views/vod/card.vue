@@ -1,8 +1,8 @@
 <template>
-  <div class="cursor-pointer rounded-md overflow-hidden bg-white h-full relative flex flex-col">
+  <div class="cursor-pointer rounded-md overflow-hidden bg-white h-full min-h-[200px] relative flex flex-col">
     <div v-if="data.status === 'done'" class="flex-1 flex flex-col">
       <div class="relative" @click="onclick">
-        <a-image class="aspect-video w-full object-cover" :preview="false" :src="data.snapUrl"
+        <a-image class="aspect-video w-full object-cover" :preview="false" :src="data.snapUrl + `?=${Date.now()}`"
           fallback="/assets/images/noImg.png" />
 
         <PlayCircleOutlined

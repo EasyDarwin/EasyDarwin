@@ -12,13 +12,20 @@
     </div>
 
     <div class="mt-5">
-      <a-row :gutter="[16, 16]">
-        <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="6" :xxl="4" v-for="(item, index) in vodData.items"
-          :key="item.id">
-          <VodCard :data="item" @on-click="onPlayVod" @on-delect="onDeleteVod" @on-retran="onRetran" @on-edit="onEidt"
-            @refresh="getVodDataList" />
-        </a-col>
-      </a-row>
+      <template v-if="vodData.items.length > 0">
+        <a-row :gutter="[16, 16]">
+          <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="6" :xxl="4" v-for="(item, index) in vodData.items"
+            :key="item.id">
+            <VodCard :data="item" @on-click="onPlayVod" @on-delect="onDeleteVod" @on-retran="onRetran" @on-edit="onEidt"
+              @refresh="getVodDataList" />
+          </a-col>
+        </a-row>
+      </template>
+      <template v-else>
+        <div class="p-2 bg-white rounded-md">
+          <a-empty :image="simpleImage" />
+        </div>
+      </template>
     </div>
 
     <VodPlayer :open="playerVisible" :url="playerUrl" @update:open="onPlayerCancel" />
@@ -38,6 +45,9 @@ import VodPlayer from './player.vue';
 import VodEdit from './edit.vue';
 import { message } from 'ant-design-vue';
 import { debounce } from 'lodash-es'
+import { Empty } from 'ant-design-vue';
+const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
+
 const editRef = ref();
 
 const uploadModalVisible = ref(false);
@@ -112,7 +122,8 @@ const onEidt = (item) => {
     id: item.id,
     name: item.name,
     shared: item.shared,
-    sharedLink: item.sharedLink
+    sharedLink: item.sharedLink,
+    snapUrl: item.snapUrl
   }
   editRef.value.open(data)
 }

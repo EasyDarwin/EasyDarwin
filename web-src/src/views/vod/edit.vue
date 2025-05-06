@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model:open="open" title="编辑视频" :confirm-loading="loading" @cancel="handelCancel"
+  <a-modal v-model:open="open" title="编辑视频" :confirm-loading="submitLoading" @cancel="handelCancel"
     :ok-button-props="{ htmlType: 'submit', form: 'editForm' }" centered>
     <a-form id="editForm" :model="formData" layout="vertical" @finish="onFinish" class="pt-2">
       <a-form-item name="name" label="视频名称" :rules="[{ required: true, message: '请输入视频名称' }]">
@@ -7,16 +7,24 @@
       </a-form-item>
 
 
-      <!--
+
       <a-form-item label="视频封面">
-        <a-upload v-model:file-list="fileList" :max-count="1" :beforeUpload="() => false" :customRequest="() => { }"
-          name="file" accept=".png,.jpg,.jpeg" @change="handleImageChange">
-          <a-button>
-            <UploadOutlined />
-            上传封面
-          </a-button>
-        </a-upload>
-      </a-form-item> -->
+        <a-space>
+          <a-upload :max-count="1" :showUploadList="false" :beforeUpload="() => false" :customRequest="() => { }"
+            name="file" accept=".png,.jpg,.jpeg" @change="handleImageChange">
+            <a-button>
+              <UploadOutlined />
+              上传封面
+            </a-button>
+          </a-upload>
+
+          <a-button @click="resetCover">重置封面</a-button>
+        </a-space>
+
+        <div v-if="previewImage" class="mt-2">
+          <img :src="previewImage" alt="封面预览" class="max-w-[200px] border border-gray-200 rounded" />
+        </div>
+      </a-form-item>
 
 
       <a-form-item name="shared" label="是否共享" value-prop-name="checked">
@@ -39,7 +47,7 @@
 import { ref, reactive } from 'vue';
 import { Form, message } from 'ant-design-vue';
 import { vodApi } from '@/api';
-import { UploadOutlined } from '@ant-design/icons-vue';
+import { UploadOutlined, CloseCircleOutlined } from '@ant-design/icons-vue';
 
 const open = ref(false);
 
@@ -53,30 +61,62 @@ const formData = reactive({
   sharedLink: ''
 })
 
-// const fileImage = ref()
+const fileImage = ref(undefined)
+const previewImage = ref(undefined)
 
-// // 上传封面
-// const handleImageChange = (file, files) => {
-//   console.log('>>>', file, files);
-//   fileImage.value = file;
-// }
+// 上传封面
+const handleImageChange = (info) => {
+  fileImage.value = info.file
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewImage.value = e.target.result
+  }
+  reader.readAsDataURL(fileImage.value)
+}
 
 // 提交
+const submitLoading = ref(false);
 async function onFinish(values) {
-  const vodRes = await vodApi.vodEdit(values).catch(err => {
-    message.error('操作失败')
-  })
-  if (vodRes.data.code == 200) {
-    message.info('操作成功');
+  if (submitLoading.value) return;
+  submitLoading.value = true;
+
+  try {
+    const vodPromise = vodApi.vodEdit(values);
+    let uploadPromise = Promise.resolve();
+    if (fileImage.value) {
+      const formData = new FormData();
+      formData.append('id', values.id);
+      formData.append('cover', fileImage.value);
+      uploadPromise = vodApi.uploadVodSnap(formData, () => { });
+    }
+
+    const [vodRes, snapRes] = await Promise.all([vodPromise, uploadPromise]);
+
+    message.success('操作成功');
+
     emit('refresh');
     handelCancel();
-  }
 
-  // const formData = new FormData()
-  // formData.append("id", values.id)
-  // formData.append("file", fileImage.value)
-  // const snapRes = await vodApi.uploadVodSnap()
-  // console.log('>>>', snapRes);
+  } catch (err) {
+    console.error(err);
+    message.error('操作失败，请重试');
+  } finally {
+    submitLoading.value = false;
+  }
+}
+
+// 重置封面
+const resetCover = async () => {
+  const form = new FormData();
+  form.append('id', formData.id);
+  form.append('time', '00:00:01');
+  await vodApi.uploadVodSnap(form, () => { })
+  const { data: vodRes } = await vodApi.getVodItemInfo(formData.id);
+  previewImage.value = vodRes.snapUrl + `?t=${Date.now()}`;
+  fileImage.value = undefined;
+  message.success('重置成功');
+  emit('refresh');
 }
 
 const openModal = (item) => {
@@ -84,6 +124,7 @@ const openModal = (item) => {
   formData.name = item.name;
   formData.shared = item.shared;
   formData.sharedLink = item.sharedLink;
+  previewImage.value = item.snapUrl + `?t=${Date.now()}`;
   open.value = true;
 }
 
@@ -93,7 +134,8 @@ const handelCancel = () => {
   formData.name = '';
   formData.shared = false;
   formData.sharedLink = '';
-  // fileImage.value = undefined;
+  fileImage.value = undefined;
+  previewImage.value = undefined;
 }
 
 defineExpose({

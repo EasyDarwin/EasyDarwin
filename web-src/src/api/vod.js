@@ -37,7 +37,6 @@ export default {
         const progresss = Math.round(
           (progressEvent.loaded / progressEvent.total) * 100,
         )
-        console.log('>>>progress', progresss, progressEvent)
         onUploadProgress(progresss)
       },
       data,
