@@ -107,7 +107,7 @@ GIT_VERSION_PATCH := $(shell echo $(RECENT_TAG) | cut -d. -f3)
 # FINAL_PATCH := $(shell echo $(GIT_VERSION_PATCH) + $(COMMITS) | bc)
 FINAL_PATCH := $(shell echo '$(GIT_VERSION_PATCH) $(COMMITS)' | awk '{print $$1 + $$2}')
 #VERSION := v$(GIT_VERSION_MAJOR).$(GIT_VERSION_MINOR).$(FINAL_PATCH)
-VERSION := v8.3.1
+VERSION := v8.3.2
 # test:
 # 	@echo ">>>${RECENT_TAG}"
 

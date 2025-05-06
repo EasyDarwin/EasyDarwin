@@ -41,7 +41,7 @@ func newVODRow(c *gin.Context, vod video.TVod) video.VodView {
 		httpStr = "https"
 	}
 
-	row.SnapURL = attachPlayTokenIfPlayAuthed(vod.ID, fmt.Sprintf("%s://%s%s%s/%s/%s", httpStr, host, httpPort, consts.RouteStaticVOD, vod.Folder, "snap.jpg"))
+	row.SnapURL = attachPlayTokenIfPlayAuthed(vod.ID, fmt.Sprintf("%s://%s%s%s/%s/%s", httpStr, host, httpPort, consts.RouteStaticVOD, vod.Folder, consts.VodCover))
 	row.VideoURL = attachPlayTokenIfPlayAuthed(vod.ID, fmt.Sprintf("%s://%s%s%s/%s/%s", httpStr, host, httpPort, consts.RouteStaticVOD, vod.Folder, "video.m3u8"))
 
 	row.SharedLink = fmt.Sprintf("%s://%s%s/share.html?id=%s&type=vod", httpStr, host, httpPort, vod.ID)

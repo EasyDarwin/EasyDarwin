@@ -67,4 +67,5 @@ const (
 
 const (
 	Separator = "/"
+	VodCover  = "snap.jpg"
 )

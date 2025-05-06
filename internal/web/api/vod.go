@@ -553,27 +553,52 @@ func (r *VODRouter) save(c *gin.Context) {
  * @apiGroup 02vod
  * @apiParam {String} id
  * @apiParam {String} time 时间, HH:mm:ss
+ * @apiParam {File} cover 封面
  * @apiUse simpleSuccess
  */
 func (r *VODRouter) snap(c *gin.Context) {
 	type formdata struct {
 		ID   string `form:"id" binding:"required"`
-		Time string `form:"time" binding:"required"`
+		Time string `form:"time"`
 	}
 	var form formdata
 	if err := c.Bind(&form); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
+
 	var vod video.TVod
 	data.GetDatabase().First(&vod, "id = ?", form.ID)
 	if vod.ID == "" {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
+
 	fileSrcPath := filepath.Join(gCfg.VodConfig.SrcDir, vod.Path)
 	fileTsPath := filepath.Join(gCfg.VodConfig.Dir, vod.Folder)
-	VODSnap(fileSrcPath, form.Time, DefaultSnapDest(fileTsPath))
+	if form.Time != "" {
+		VODSnap(fileSrcPath, form.Time, DefaultSnapDest(fileTsPath))
+	}
+
+	// 读取 cover 字段，必须是文件
+	file, _ := c.FormFile("cover")
+	if file != nil {
+		ext := filepath.Ext(file.Filename)
+		srcPic := filepath.Join(gCfg.VodConfig.SrcDir, fmt.Sprintf("%s%s", form.ID, ext))
+		if err := c.SaveUploadedFile(file, srcPic); err != nil {
+			slog.Error("上传封面文件失败", "err", err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		destPic := filepath.Join(fileTsPath, consts.VodCover)
+		if err := VodCoverSnap(srcPic, destPic); err != nil {
+			slog.Error("转换为封面失败", "err", err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
 	Success(c)
 }
 

@@ -339,3 +339,17 @@ func TimeSeconds(t string) int {
 	}
 	return 0
 }
+
+// 将图片转为为另一格式的图片 ffmpeg -i input.png snap.jpg
+func VodCoverSnap(src string, dest string) error {
+	args := []string{"-y", "-i", src, dest}
+	cmd := exec.Command(EasyTrans(), args...)
+
+	//printCmd(EasyTrans(), args...)
+	if err := cmd.Run(); err != nil {
+		slog.Error("run snap err", err)
+		return err
+	}
+
+	return nil
+}
