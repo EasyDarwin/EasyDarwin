@@ -64,8 +64,7 @@
           "identityPattern": {
             "httpApi": {
               "type": "inherit",
-              "bodyType": "",
-              "fields": []
+              "bodyType": ""
             }
           },
           "shareSettings": {},
@@ -1895,6 +1894,1888 @@
               ]
             },
             {
+              "name": "点播管理",
+              "id": 55485711,
+              "auth": {},
+              "securityScheme": {},
+              "parentId": 55297871,
+              "serverId": "",
+              "description": "",
+              "identityPattern": {
+                "httpApi": {
+                  "type": "inherit",
+                  "bodyType": "",
+                  "fields": []
+                }
+              },
+              "shareSettings": {},
+              "visibility": "INHERITED",
+              "preProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "postProcessors": [
+                {
+                  "id": "inheritProcessors",
+                  "type": "inheritProcessors",
+                  "data": {}
+                }
+              ],
+              "inheritPostProcessors": {},
+              "inheritPreProcessors": {},
+              "items": [
+                {
+                  "name": "允许上传类型",
+                  "api": {
+                    "id": "289828571",
+                    "method": "get",
+                    "path": "/api/v1/vod/accept",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665188772",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "示例 1",
+                        "data": "{\n    \"id\": \"W5MoqUJHR\",\n    \"name\": \"老友记第2季第18集\",\n    \"size\": 272432029,\n    \"type\": \"video/mp4\",\n    \"path\": \"\",\n    \"folder\": \"W5MoqUJHR\",\n    \"status\": \"done\",\n    \"duration\": 1362,\n    \"videoCodec\": \"H.264\",\n    \"audioCodec\": \"AAC\",\n    \"videoCodecOriginal\": \"H.264\",\n    \"audioCodecOriginal\": \"AAC\",\n    \"aspect\": \"1280x720\",\n    \"error\": \"\",\n    \"shared\": false,\n    \"shareBeginTime\": null,\n    \"shareEndTime\": null,\n    \"rotate\": 0,\n    \"resolution\": \"\",\n    \"isresolution\": false,\n    \"resolutiondefault\": \"hd\",\n    \"transvideo\": false,\n    \"snapUrl\": \"http://127.0.0.1:10086/fvod/W5MoqUJHR/snap.jpg\",\n    \"videoUrl\": \"http://127.0.0.1:10086/fvod/W5MoqUJHR/video.m3u8\",\n    \"sharedLink\": \"http://127.0.0.1:10086/share.html?id=W5MoqUJHR&type=vod\",\n    \"flowNum\": 0,\n    \"progress\": 0,\n    \"playNum\": 0\n}",
+                        "responseId": 665188772,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "获取视频详情",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 82,
+                    "cases": [
+                      {
+                        "id": 256428755,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 665188772,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.f11e9585-688d-4869-bb79-645b69c9fa6a\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"f11e9585-688d-4869-bb79-645b69c9fa6a\",\"requestIndex\":0,\"httpRequestId\":\"1fc3566d-67cf-448d-aa7d-9948c111397f\"},\"type\":\"http\",\"response\":{\"id\":\"d4035b35-0810-4b20-8f88-066886f12c1d\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:15:08 GMT\"},{\"key\":\"Content-Length\",\"value\":\"90\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[34,46,109,112,51,44,46,119,97,118,44,46,109,112,52,44,46,109,112,103,44,46,109,112,101,103,44,46,119,109,118,44,46,97,118,105,44,46,114,109,118,98,44,46,109,107,118,44,46,102,108,118,44,46,109,111,118,44,46,51,103,112,112,44,46,51,103,112,44,46,119,101,98,109,44,46,109,52,118,44,46,109,110,103,44,46,118,111,98,34]},\"cookie\":[],\"responseTime\":2,\"responseSize\":90,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.30030000023543835,\"wait\":0.19669999973848462,\"dns\":0,\"tcp\":0,\"firstByte\":0.6377000003121793,\"download\":0.3619999997317791,\"process\":0.042200000025331974,\"total\":1.5389000000432134}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"accept\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true}],\"method\":\"GET\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"GET\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/accept\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:15:08 GMT\"},{\"key\":\"Content-Length\",\"value\":\"90\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745738108498,\"requestStart\":1745738108499,\"offset\":{\"request\":0.30030000023543835,\"socket\":0.49699999997392297,\"response\":1.1347000002861023,\"end\":1.4967000000178814,\"lookup\":0.49699999997392297,\"connect\":0.49699999997392297,\"done\":1.5389000000432134}}}]}},\"responseValidation\":{\"schema\":{\"valid\":false,\"message\":\"data 应当是 object 类型\",\"errors\":[{\"keyword\":\"type\",\"dataPath\":\"\",\"schemaPath\":\"#/type\",\"params\":{\"type\":\"object\"},\"message\":\"应当是 object 类型\"}]},\"responseCode\":{\"valid\":true}},\"passed\":false,\"timings\":{\"started\":1745738108494,\"preProcessorsStarted\":1745738108495,\"preProcessorsCompleted\":1745738108495,\"postProcessorsStarted\":1745738108501,\"postProcessorsCompleted\":1745738108501,\"completed\":1745738108502},\"metaInfo\":{\"httpApiId\":289828571,\"httpApiCaseId\":256427371,\"httpApiName\":\"可接受的视频文件\",\"httpApiPath\":\"/api/v1/vod/accept\",\"httpApiMethod\":\"get\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665188772",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "上传视频",
+                  "api": {
+                    "id": "289240153",
+                    "method": "post",
+                    "path": "/api/v1/vod/upload",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "664256291",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "示例 1",
+                        "data": "{\n    \"id\": \"M4fz98JNR\",\n    \"name\": \"老友记第2季第18集\",\n    \"size\": 272432029,\n    \"type\": \"video/mp4\",\n    \"path\": \"E:\\\\go\\\\e\\\\EasyDarwin\\\\vod_data\\\\vodsrc\\\\M4fz98JNR.mp4\",\n    \"folder\": \"M4fz98JNR\",\n    \"status\": \"waiting\",\n    \"duration\": 1362,\n    \"videoCodec\": \"H.264\",\n    \"audioCodec\": \"AAC\",\n    \"videoCodecOriginal\": \"H.264\",\n    \"audioCodecOriginal\": \"AAC\",\n    \"aspect\": \"1280x720\",\n    \"error\": \"\",\n    \"shared\": false,\n    \"shareBeginTime\": null,\n    \"shareEndTime\": null,\n    \"rotate\": 0,\n    \"resolution\": \"\",\n    \"isresolution\": false,\n    \"resolutiondefault\": \"hd\",\n    \"transvideo\": false,\n    \"snapUrl\": \"http://127.0.0.1:10086/fvod/M4fz98JNR/snap.jpg\",\n    \"videoUrl\": \"http://127.0.0.1:10086/fvod/M4fz98JNR/video.m3u8\",\n    \"sharedLink\": \"http://127.0.0.1:10086/share.html?id=M4fz98JNR&type=vod\",\n    \"flowNum\": 0,\n    \"progress\": 0,\n    \"playNum\": 0\n}",
+                        "responseId": 664256291,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "N6JmYCOZaG",
+                          "example": "",
+                          "enable": true,
+                          "name": "path"
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "file",
+                          "id": "opw0KD3vMq",
+                          "example": "file://F:\\BaiduNetdiskDownload\\老友记第2季第18集.mp4",
+                          "enable": true,
+                          "name": "file",
+                          "schema": {
+                            "format": "binary",
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 10,
+                    "cases": [
+                      {
+                        "id": 256411451,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 664256291,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "lpS3ZwKJ92",
+                              "relatedId": "N6JmYCOZaG",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false,
+                              "relatedName": "path"
+                            },
+                            {
+                              "id": "nV5zNzsXSn",
+                              "relatedId": "opw0KD3vMq",
+                              "value": "file://F:\\BaiduNetdiskDownload\\老友记第2季第18集.mp4",
+                              "enable": true,
+                              "isDelete": false,
+                              "relatedName": "file"
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": null,
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.664256291",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "转码进度",
+                  "api": {
+                    "id": "289892427",
+                    "method": "get",
+                    "path": "/api/v1/vod/progress",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665331832",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "视频id",
+                          "type": "string",
+                          "id": "3UbieLa9xb",
+                          "example": "",
+                          "enable": true,
+                          "name": "id",
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "获取视频的转码进度",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 64,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665331832",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "视频列表",
+                  "api": {
+                    "id": "289338161",
+                    "method": "post",
+                    "path": "/api/v1/vod/list",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "664408278",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "返回数据",
+                        "data": "{\n    \"rows\": [\n        {\n            \"id\": \"ByESLU1NR\",\n            \"name\": \"老友记第2季第18集\",\n            \"size\": 272432029,\n            \"type\": \"video/mp4\",\n            \"path\": \"\",\n            \"folder\": \"ByESLU1NR\",\n            \"status\": \"done\",\n            \"duration\": 1362,\n            \"videoCodec\": \"H.264\",\n            \"audioCodec\": \"AAC\",\n            \"videoCodecOriginal\": \"H.264\",\n            \"audioCodecOriginal\": \"AAC\",\n            \"aspect\": \"1280x720\",\n            \"error\": \"\",\n            \"shared\": false,\n            \"shareBeginTime\": null,\n            \"shareEndTime\": null,\n            \"rotate\": 0,\n            \"resolution\": \"\",\n            \"isresolution\": false,\n            \"resolutiondefault\": \"hd\",\n            \"transvideo\": false,\n            \"snapUrl\": \"http://127.0.0.1:10086/fvod/ByESLU1NR/snap.jpg\",\n            \"videoUrl\": \"http://127.0.0.1:10086/fvod/ByESLU1NR/video.m3u8\",\n            \"sharedLink\": \"/share.html?id=ByESLU1NR&type=vod\",\n            \"flowNum\": 0,\n            \"progress\": 0,\n            \"playNum\": 0\n        },\n        {\n            \"id\": \"XV63UU1Hg\",\n            \"name\": \"老友记第2季第18集\",\n            \"size\": 272432029,\n            \"type\": \"video/mp4\",\n            \"path\": \"\",\n            \"folder\": \"XV63UU1Hg\",\n            \"status\": \"done\",\n            \"duration\": 1362,\n            \"videoCodec\": \"H.264\",\n            \"audioCodec\": \"AAC\",\n            \"videoCodecOriginal\": \"H.264\",\n            \"audioCodecOriginal\": \"AAC\",\n            \"aspect\": \"1280x720\",\n            \"error\": \"\",\n            \"shared\": false,\n            \"shareBeginTime\": null,\n            \"shareEndTime\": null,\n            \"rotate\": 0,\n            \"resolution\": \"\",\n            \"isresolution\": false,\n            \"resolutiondefault\": \"hd\",\n            \"transvideo\": false,\n            \"snapUrl\": \"http://127.0.0.1:10086/fvod/XV63UU1Hg/snap.jpg\",\n            \"videoUrl\": \"http://127.0.0.1:10086/fvod/XV63UU1Hg/video.m3u8\",\n            \"sharedLink\": \"/share.html?id=XV63UU1Hg&type=vod\",\n            \"flowNum\": 0,\n            \"progress\": 0,\n            \"playNum\": 0\n        }\n    ],\n    \"total\": 2\n}",
+                        "responseId": 664408278,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "分页开始,从零开始",
+                          "type": "integer",
+                          "id": "3UbieLa9xb",
+                          "example": "",
+                          "enable": true,
+                          "name": "start",
+                          "schema": {
+                            "type": "integer"
+                          }
+                        },
+                        {
+                          "required": false,
+                          "description": "分页大小",
+                          "type": "integer",
+                          "id": "AV9VIVjUIi",
+                          "example": "",
+                          "enable": true,
+                          "name": "limit",
+                          "schema": {
+                            "type": "integer"
+                          }
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "2kfV99T4pF",
+                          "example": "",
+                          "enable": true,
+                          "name": "sort"
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "LrVCtGj0uG",
+                          "example": "",
+                          "enable": true,
+                          "name": "order"
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "v5LsaLaAmf",
+                          "example": "",
+                          "enable": true,
+                          "name": "q"
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "获取视频列表",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 46,
+                    "cases": [
+                      {
+                        "id": 256460386,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 664408278,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "sHPB0Z9Dxf",
+                              "relatedId": "3UbieLa9xb",
+                              "relatedName": "start",
+                              "value": "0",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "c2kYcif5O3",
+                              "relatedId": "AV9VIVjUIi",
+                              "relatedName": "limit",
+                              "value": "10",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "8BRWPND8x0",
+                              "relatedId": "2kfV99T4pF",
+                              "relatedName": "sort",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "nWgKvFxxm9",
+                              "relatedId": "LrVCtGj0uG",
+                              "relatedName": "order",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "tZE1uiWUED",
+                              "relatedId": "v5LsaLaAmf",
+                              "relatedName": "q",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.8515d2e6-275b-4e8c-9af3-5f61aef4b3f9\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"8515d2e6-275b-4e8c-9af3-5f61aef4b3f9\",\"requestIndex\":0,\"httpRequestId\":\"6d4a9f98-c545-4d99-9ed6-5f1763cab18b\"},\"type\":\"http\",\"response\":{\"id\":\"9e677709-985e-4719-bac9-98c722872f0e\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:58:14 GMT\"},{\"key\":\"Content-Length\",\"value\":\"1320\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,114,111,119,115,34,58,91,123,34,105,100,34,58,34,77,52,102,122,57,56,74,78,82,34,44,34,110,97,109,101,34,58,34,232,128,129,229,143,139,232,174,176,48,50,49,56,34,44,34,115,105,122,101,34,58,50,55,50,52,51,50,48,50,57,44,34,116,121,112,101,34,58,34,118,105,100,101,111,47,109,112,52,34,44,34,112,97,116,104,34,58,34,34,44,34,102,111,108,100,101,114,34,58,34,77,52,102,122,57,56,74,78,82,34,44,34,115,116,97,116,117,115,34,58,34,100,111,110,101,34,44,34,100,117,114,97,116,105,111,110,34,58,49,51,54,50,44,34,118,105,100,101,111,67,111,100,101,99,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,34,58,34,65,65,67,34,44,34,118,105,100,101,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,65,65,67,34,44,34,97,115,112,101,99,116,34,58,34,49,50,56,48,120,55,50,48,34,44,34,101,114,114,111,114,34,58,34,34,44,34,115,104,97,114,101,100,34,58,116,114,117,101,44,34,115,104,97,114,101,66,101,103,105,110,84,105,109,101,34,58,110,117,108,108,44,34,115,104,97,114,101,69,110,100,84,105,109,101,34,58,110,117,108,108,44,34,114,111,116,97,116,101,34,58,48,44,34,114,101,115,111,108,117,116,105,111,110,34,58,34,34,44,34,105,115,114,101,115,111,108,117,116,105,111,110,34,58,102,97,108,115,101,44,34,114,101,115,111,108,117,116,105,111,110,100,101,102,97,117,108,116,34,58,34,104,100,34,44,34,116,114,97,110,115,118,105,100,101,111,34,58,102,97,108,115,101,44,34,115,110,97,112,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,77,52,102,122,57,56,74,78,82,47,115,110,97,112,46,106,112,103,34,44,34,118,105,100,101,111,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,77,52,102,122,57,56,74,78,82,47,118,105,100,101,111,46,109,51,117,56,34,44,34,115,104,97,114,101,100,76,105,110,107,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,115,104,97,114,101,46,104,116,109,108,63,105,100,61,77,52,102,122,57,56,74,78,82,92,117,48,48,50,54,116,121,112,101,61,118,111,100,34,44,34,102,108,111,119,78,117,109,34,58,48,44,34,112,114,111,103,114,101,115,115,34,58,48,44,34,112,108,97,121,78,117,109,34,58,48,125,44,123,34,105,100,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,110,97,109,101,34,58,34,232,128,129,229,143,139,232,174,176,48,50,49,56,34,44,34,115,105,122,101,34,58,50,55,50,52,51,50,48,50,57,44,34,116,121,112,101,34,58,34,118,105,100,101,111,47,109,112,52,34,44,34,112,97,116,104,34,58,34,34,44,34,102,111,108,100,101,114,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,115,116,97,116,117,115,34,58,34,100,111,110,101,34,44,34,100,117,114,97,116,105,111,110,34,58,49,51,54,50,44,34,118,105,100,101,111,67,111,100,101,99,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,34,58,34,65,65,67,34,44,34,118,105,100,101,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,65,65,67,34,44,34,97,115,112,101,99,116,34,58,34,49,50,56,48,120,55,50,48,34,44,34,101,114,114,111,114,34,58,34,34,44,34,115,104,97,114,101,100,34,58,116,114,117,101,44,34,115,104,97,114,101,66,101,103,105,110,84,105,109,101,34,58,110,117,108,108,44,34,115,104,97,114,101,69,110,100,84,105,109,101,34,58,110,117,108,108,44,34,114,111,116,97,116,101,34,58,48,44,34,114,101,115,111,108,117,116,105,111,110,34,58,34,34,44,34,105,115,114,101,115,111,108,117,116,105,111,110,34,58,102,97,108,115,101,44,34,114,101,115,111,108,117,116,105,111,110,100,101,102,97,117,108,116,34,58,34,104,100,34,44,34,116,114,97,110,115,118,105,100,101,111,34,58,102,97,108,115,101,44,34,115,110,97,112,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,115,110,97,112,46,106,112,103,34,44,34,118,105,100,101,111,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,118,105,100,101,111,46,109,51,117,56,34,44,34,115,104,97,114,101,100,76,105,110,107,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,115,104,97,114,101,46,104,116,109,108,63,105,100,61,87,53,77,111,113,85,74,72,82,92,117,48,48,50,54,116,121,112,101,61,118,111,100,34,44,34,102,108,111,119,78,117,109,34,58,48,44,34,112,114,111,103,114,101,115,115,34,58,48,44,34,112,108,97,121,78,117,109,34,58,48,125,93,44,34,116,111,116,97,108,34,58,50,125]},\"cookie\":[],\"responseTime\":2,\"responseSize\":1320,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.4456000002101064,\"wait\":0.270299999974668,\"dns\":0,\"tcp\":0,\"firstByte\":1.1886999998241663,\"download\":0.41940000001341105,\"process\":0.04150000028312206,\"total\":2.365500000305474}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"list\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------926806839003473983945122\",\"system\":true},{\"key\":\"Content-Length\",\"value\":574,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"start\",\"value\":\"0\",\"type\":\"integer\"},{\"disabled\":false,\"key\":\"limit\",\"value\":\"10\",\"type\":\"integer\"},{\"disabled\":false,\"key\":\"sort\",\"value\":\"\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"order\",\"value\":\"\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"q\",\"value\":\"\",\"type\":\"string\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/list\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------926806839003473983945122\"},{\"key\":\"Content-Length\",\"value\":\"574\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:58:14 GMT\"},{\"key\":\"Content-Length\",\"value\":\"1320\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745740694317,\"requestStart\":1745740694318,\"offset\":{\"request\":0.4456000002101064,\"socket\":0.7159000001847744,\"response\":1.9046000000089407,\"end\":2.3240000000223517,\"lookup\":0.7159000001847744,\"connect\":0.7159000001847744,\"done\":2.365500000305474}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1745740694265,\"preProcessorsStarted\":1745740694267,\"preProcessorsCompleted\":1745740694267,\"postProcessorsStarted\":1745740694320,\"postProcessorsCompleted\":1745740694320,\"completed\":1745740694321},\"metaInfo\":{\"httpApiId\":289338161,\"httpApiCaseId\":256050840,\"httpApiName\":\"视频列表\",\"httpApiPath\":\"/api/v1/vod/list\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.664408278",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "视频详情",
+                  "api": {
+                    "id": "289375289",
+                    "method": "get",
+                    "path": "/api/v1/vod/get",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "664471430",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "示例 1",
+                        "data": "{\n    \"id\": \"W5MoqUJHR\",\n    \"name\": \"老友记第2季第18集\",\n    \"size\": 272432029,\n    \"type\": \"video/mp4\",\n    \"path\": \"\",\n    \"folder\": \"W5MoqUJHR\",\n    \"status\": \"done\",\n    \"duration\": 1362,\n    \"videoCodec\": \"H.264\",\n    \"audioCodec\": \"AAC\",\n    \"videoCodecOriginal\": \"H.264\",\n    \"audioCodecOriginal\": \"AAC\",\n    \"aspect\": \"1280x720\",\n    \"error\": \"\",\n    \"shared\": false,\n    \"shareBeginTime\": null,\n    \"shareEndTime\": null,\n    \"rotate\": 0,\n    \"resolution\": \"\",\n    \"isresolution\": false,\n    \"resolutiondefault\": \"hd\",\n    \"transvideo\": false,\n    \"snapUrl\": \"http://127.0.0.1:10086/fvod/W5MoqUJHR/snap.jpg\",\n    \"videoUrl\": \"http://127.0.0.1:10086/fvod/W5MoqUJHR/video.m3u8\",\n    \"sharedLink\": \"http://127.0.0.1:10086/share.html?id=W5MoqUJHR&type=vod\",\n    \"flowNum\": 0,\n    \"progress\": 0,\n    \"playNum\": 0\n}",
+                        "responseId": 664471430,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "视频id",
+                          "type": "string",
+                          "id": "3UbieLa9xb",
+                          "example": "",
+                          "enable": true,
+                          "name": "id",
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "获取视频详情",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 58,
+                    "cases": [
+                      {
+                        "id": 256454157,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 664471430,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "fce6yge41W",
+                              "relatedId": "3UbieLa9xb",
+                              "relatedName": "id",
+                              "value": "W5MoqUJHR",
+                              "enable": true,
+                              "isDelete": false
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.e4981993-efa8-416b-9da4-1f869e64ff16\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"e4981993-efa8-416b-9da4-1f869e64ff16\",\"requestIndex\":0,\"httpRequestId\":\"b26042d7-f20c-490a-9a87-7853cf190f79\"},\"type\":\"http\",\"response\":{\"id\":\"6bfb423f-4062-461b-b807-f6863b68bd50\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:50:27 GMT\"},{\"key\":\"Content-Length\",\"value\":\"650\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,105,100,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,110,97,109,101,34,58,34,232,128,129,229,143,139,232,174,176,48,50,49,56,34,44,34,115,105,122,101,34,58,50,55,50,52,51,50,48,50,57,44,34,116,121,112,101,34,58,34,118,105,100,101,111,47,109,112,52,34,44,34,112,97,116,104,34,58,34,34,44,34,102,111,108,100,101,114,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,115,116,97,116,117,115,34,58,34,100,111,110,101,34,44,34,100,117,114,97,116,105,111,110,34,58,49,51,54,50,44,34,118,105,100,101,111,67,111,100,101,99,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,34,58,34,65,65,67,34,44,34,118,105,100,101,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,65,65,67,34,44,34,97,115,112,101,99,116,34,58,34,49,50,56,48,120,55,50,48,34,44,34,101,114,114,111,114,34,58,34,34,44,34,115,104,97,114,101,100,34,58,102,97,108,115,101,44,34,115,104,97,114,101,66,101,103,105,110,84,105,109,101,34,58,110,117,108,108,44,34,115,104,97,114,101,69,110,100,84,105,109,101,34,58,110,117,108,108,44,34,114,111,116,97,116,101,34,58,48,44,34,114,101,115,111,108,117,116,105,111,110,34,58,34,34,44,34,105,115,114,101,115,111,108,117,116,105,111,110,34,58,102,97,108,115,101,44,34,114,101,115,111,108,117,116,105,111,110,100,101,102,97,117,108,116,34,58,34,104,100,34,44,34,116,114,97,110,115,118,105,100,101,111,34,58,102,97,108,115,101,44,34,115,110,97,112,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,115,110,97,112,46,106,112,103,34,44,34,118,105,100,101,111,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,118,105,100,101,111,46,109,51,117,56,34,44,34,115,104,97,114,101,100,76,105,110,107,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,115,104,97,114,101,46,104,116,109,108,63,105,100,61,87,53,77,111,113,85,74,72,82,92,117,48,48,50,54,116,121,112,101,61,118,111,100,34,44,34,102,108,111,119,78,117,109,34,58,48,44,34,112,114,111,103,114,101,115,115,34,58,48,44,34,112,108,97,121,78,117,109,34,58,48,125]},\"cookie\":[],\"responseTime\":3,\"responseSize\":650,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.48079999908804893,\"wait\":0.23610000032931566,\"dns\":0,\"tcp\":0,\"firstByte\":1.3825000002980232,\"download\":0.44120000023394823,\"process\":0.018499999307096004,\"total\":2.559099999256432}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"get\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------910783953225332223641739\",\"system\":true},{\"key\":\"Content-Length\",\"value\":166,\"system\":true}],\"method\":\"GET\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"id\",\"value\":\"W5MoqUJHR\",\"type\":\"string\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"GET\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/get\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------910783953225332223641739\"},{\"key\":\"Content-Length\",\"value\":\"166\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:50:27 GMT\"},{\"key\":\"Content-Length\",\"value\":\"650\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745740227918,\"requestStart\":1745740227918,\"offset\":{\"request\":0.48079999908804893,\"socket\":0.7168999994173646,\"response\":2.099399999715388,\"end\":2.540599999949336,\"lookup\":0.7168999994173646,\"connect\":0.7168999994173646,\"done\":2.559099999256432}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1745740227853,\"preProcessorsStarted\":1745740227869,\"preProcessorsCompleted\":1745740227869,\"postProcessorsStarted\":1745740227930,\"postProcessorsCompleted\":1745740227931,\"completed\":1745740227932},\"metaInfo\":{\"httpApiId\":289375289,\"httpApiCaseId\":256040529,\"httpApiName\":\"视频详情\",\"httpApiPath\":\"/api/v1/vod/get\",\"httpApiMethod\":\"get\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.664471430",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "编辑视频",
+                  "api": {
+                    "id": "289784501",
+                    "method": "post",
+                    "path": "/api/v1/vod/save",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665104526",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "示例 1",
+                        "data": "{\n    \"code\": 200,\n    \"msg\": \"Success\"\n}",
+                        "responseId": 665104526,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "ID 编号",
+                          "type": "string",
+                          "id": "N6JmYCOZaG",
+                          "example": "W5MoqUJHR",
+                          "enable": true,
+                          "name": "id"
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "opw0KD3vMq",
+                          "example": "",
+                          "enable": true,
+                          "name": "name",
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "required": false,
+                          "description": "是否共享",
+                          "type": "boolean",
+                          "id": "gZmYE6Bmj2",
+                          "example": "",
+                          "enable": true,
+                          "name": "shared",
+                          "schema": {
+                            "type": "boolean"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 28,
+                    "cases": [
+                      {
+                        "id": 256411033,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 665104526,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "8dFFheCGTC",
+                              "relatedId": "N6JmYCOZaG",
+                              "relatedName": "id",
+                              "value": "W5MoqUJHR",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "vDpjEbDTJu",
+                              "relatedId": "opw0KD3vMq",
+                              "relatedName": "name",
+                              "value": "老友记0218",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "zkJhFkN7u2",
+                              "relatedId": "gZmYE6Bmj2",
+                              "relatedName": "shared",
+                              "value": "true",
+                              "enable": true,
+                              "isDelete": false
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.aa3a8cbf-795d-4ccc-94cc-a38434e2dc8c\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"aa3a8cbf-795d-4ccc-94cc-a38434e2dc8c\",\"requestIndex\":0,\"httpRequestId\":\"8113a85d-b3df-4d47-938e-cc16877b8a3a\"},\"type\":\"http\",\"response\":{\"id\":\"2ad3767d-a73b-488c-9a35-2f3f7d8015db\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 06:47:52 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,115,103,34,58,34,83,117,99,99,101,115,115,34,125]},\"cookie\":[],\"responseTime\":3,\"responseSize\":28,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.48639999981969595,\"wait\":0.1986000002361834,\"dns\":0,\"tcp\":0,\"firstByte\":1.8626999999396503,\"download\":0.4723000000230968,\"process\":0.019499999936670065,\"total\":3.0394999999552965}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"save\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------761043793822855390327960\",\"system\":true},{\"key\":\"Content-Length\",\"value\":391,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"id\",\"value\":\"W5MoqUJHR\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"name\",\"value\":\"老友记0218\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"shared\",\"value\":\"true\",\"type\":\"boolean\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/save\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------761043793822855390327960\"},{\"key\":\"Content-Length\",\"value\":\"391\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 06:47:52 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745736472484,\"requestStart\":1745736472485,\"offset\":{\"request\":0.48639999981969595,\"socket\":0.6850000000558794,\"response\":2.5476999999955297,\"end\":3.0200000000186265,\"lookup\":0.6850000000558794,\"connect\":0.6850000000558794,\"done\":3.0394999999552965}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1745736472479,\"preProcessorsStarted\":1745736472481,\"preProcessorsCompleted\":1745736472481,\"postProcessorsStarted\":1745736472489,\"postProcessorsCompleted\":1745736472489,\"completed\":1745736472490},\"metaInfo\":{\"httpApiId\":289784501,\"httpApiCaseId\":256408673,\"httpApiName\":\"编辑视频\",\"httpApiPath\":\"/api/v1/vod/save\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665104526",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "设置封面",
+                  "api": {
+                    "id": "289801727",
+                    "method": "post",
+                    "path": "/api/v1/vod/snap",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665139019",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "示例 1",
+                        "data": "{\n    \"code\": 200,\n    \"msg\": \"Success\"\n}",
+                        "responseId": 665139019,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "ID 编号",
+                          "type": "string",
+                          "id": "N6JmYCOZaG",
+                          "example": "W5MoqUJHR",
+                          "enable": true,
+                          "name": "id"
+                        },
+                        {
+                          "required": false,
+                          "description": "时间,格式为HH:mm:ss",
+                          "type": "string",
+                          "id": "opw0KD3vMq",
+                          "example": "00:00:30",
+                          "enable": true,
+                          "name": "time",
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "required": false,
+                          "description": "如果time和cover同时存在，则以cover优先",
+                          "type": "file",
+                          "id": "j9KMpO4lUx",
+                          "example": "file://C:\\Users\\zh030\\Desktop\\信令交互.png",
+                          "enable": true,
+                          "name": "cover",
+                          "schema": {
+                            "format": "binary",
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 34,
+                    "cases": [
+                      {
+                        "id": 258256147,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 665139019,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "wqMvglksJC",
+                              "relatedId": "N6JmYCOZaG",
+                              "value": "W5MoqUJHR",
+                              "enable": true,
+                              "isDelete": false,
+                              "relatedName": "id"
+                            },
+                            {
+                              "id": "dOQ04FcSrF",
+                              "relatedId": "opw0KD3vMq",
+                              "value": "00:00:30",
+                              "enable": false,
+                              "isDelete": false,
+                              "relatedName": "time"
+                            },
+                            {
+                              "id": "oO7MADljsU",
+                              "relatedId": "j9KMpO4lUx",
+                              "value": "file://C:\\Users\\zh030\\Desktop\\信令交互.png",
+                              "enable": true,
+                              "isDelete": false,
+                              "relatedName": "cover"
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.c93d2486-a514-4f7e-bddf-572aff6405ca\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"c93d2486-a514-4f7e-bddf-572aff6405ca\",\"requestIndex\":0,\"httpRequestId\":\"55fe83b2-0d12-402f-9279-981ea91e6395\"},\"type\":\"http\",\"response\":{\"id\":\"8fbb2e3a-950f-467b-ad0f-c32512174430\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Tue, 06 May 2025 03:40:09 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,115,103,34,58,34,83,117,99,99,101,115,115,34,125]},\"cookie\":[],\"responseTime\":134,\"responseSize\":28,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":1.0057000014930964,\"wait\":0.804399998858571,\"dns\":0,\"tcp\":0.2291999999433756,\"firstByte\":132.0994000006467,\"download\":0.6522000003606081,\"process\":0.03189999982714653,\"total\":134.8228000011295}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"snap\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------121867993689705480577697\",\"system\":true},{\"key\":\"Content-Length\",\"value\":46907,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"id\",\"value\":\"W5MoqUJHR\",\"type\":\"string\"},{\"disabled\":true,\"key\":\"time\",\"value\":\"00:00:30\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"cover\",\"type\":\"file\",\"src\":\"C:\\\\Users\\\\zh030\\\\Desktop\\\\信令交互.png\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/snap\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------121867993689705480577697\"},{\"key\":\"Content-Length\",\"value\":\"46907\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Tue, 06 May 2025 03:40:09 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1746502809287,\"requestStart\":1746502809288,\"offset\":{\"request\":1.0057000014930964,\"socket\":1.8101000003516674,\"connect\":2.039300000295043,\"response\":134.13870000094175,\"end\":134.79090000130236,\"lookup\":1.8101000003516674,\"done\":134.8228000011295}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1746502809280,\"preProcessorsStarted\":1746502809282,\"preProcessorsCompleted\":1746502809282,\"postProcessorsStarted\":1746502809437,\"postProcessorsCompleted\":1746502809437,\"completed\":1746502809438},\"metaInfo\":{\"httpApiId\":289801727,\"httpApiCaseId\":0,\"httpApiName\":\"设置封面\",\"httpApiPath\":\"/api/v1/vod/snap\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665139019",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "分享开关",
+                  "api": {
+                    "id": "289862534",
+                    "method": "post",
+                    "path": "/api/v1/vod/turn/shared",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665280032",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "示例 1",
+                        "data": "{\n    \"code\": 200,\n    \"msg\": \"Success\"\n}",
+                        "responseId": 665280032,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "ID 编号",
+                          "type": "string",
+                          "id": "N6JmYCOZaG",
+                          "example": "W5MoqUJHR",
+                          "enable": true,
+                          "name": "id"
+                        },
+                        {
+                          "required": false,
+                          "description": "时间,格式为HH:mm:ss",
+                          "type": "boolean",
+                          "id": "opw0KD3vMq",
+                          "example": "false",
+                          "enable": true,
+                          "name": "shared",
+                          "schema": {
+                            "type": "boolean"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 40,
+                    "cases": [
+                      {
+                        "id": 256456868,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 665280032,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "t8VxZgdqST",
+                              "relatedId": "N6JmYCOZaG",
+                              "value": "W5MoqUJHR",
+                              "enable": true,
+                              "isDelete": false,
+                              "relatedName": "id"
+                            },
+                            {
+                              "id": "bM6QgRrpmw",
+                              "relatedId": "opw0KD3vMq",
+                              "value": "false",
+                              "enable": true,
+                              "isDelete": false,
+                              "relatedName": "shared"
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.9bb7bd6d-b904-42d2-a193-5927d895bf16\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"9bb7bd6d-b904-42d2-a193-5927d895bf16\",\"requestIndex\":0,\"httpRequestId\":\"23243d0f-020f-4f68-8187-fcebf47dc1b1\"},\"type\":\"http\",\"response\":{\"id\":\"1f70a73e-2756-4c65-8323-8e26c8739368\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:50:08 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,115,103,34,58,34,83,117,99,99,101,115,115,34,125]},\"cookie\":[],\"responseTime\":68,\"responseSize\":28,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":1.2611999996006489,\"wait\":0.6430000001564622,\"dns\":0,\"tcp\":0,\"firstByte\":66.01460000034422,\"download\":0.43429999984800816,\"process\":0.040099999867379665,\"total\":68.39319999981672}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"turn\",\"shared\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------194430922896125151510285\",\"system\":true},{\"key\":\"Content-Length\",\"value\":276,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"id\",\"value\":\"W5MoqUJHR\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"shared\",\"value\":\"false\",\"type\":\"boolean\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/turn/shared\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------194430922896125151510285\"},{\"key\":\"Content-Length\",\"value\":\"276\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:50:08 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745740207958,\"requestStart\":1745740207959,\"offset\":{\"request\":1.2611999996006489,\"socket\":1.904199999757111,\"response\":67.91880000010133,\"end\":68.35309999994934,\"lookup\":1.904199999757111,\"connect\":1.904199999757111,\"done\":68.39319999981672}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1745740207892,\"preProcessorsStarted\":1745740207908,\"preProcessorsCompleted\":1745740207908,\"postProcessorsStarted\":1745740208030,\"postProcessorsCompleted\":1745740208030,\"completed\":1745740208030},\"metaInfo\":{\"httpApiId\":289862534,\"httpApiCaseId\":0,\"httpApiName\":\"分享开关\",\"httpApiPath\":\"/api/v1/vod/turn/shared\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665280032",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "分享列表",
+                  "api": {
+                    "id": "289868657",
+                    "method": "post",
+                    "path": "/api/v1/vod/sharelist",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665288291",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [
+                      {
+                        "name": "返回数据",
+                        "data": "{\n    \"rows\": [\n        {\n            \"id\": \"ByESLU1NR\",\n            \"name\": \"老友记第2季第18集\",\n            \"size\": 272432029,\n            \"type\": \"video/mp4\",\n            \"path\": \"\",\n            \"folder\": \"ByESLU1NR\",\n            \"status\": \"done\",\n            \"duration\": 1362,\n            \"videoCodec\": \"H.264\",\n            \"audioCodec\": \"AAC\",\n            \"videoCodecOriginal\": \"H.264\",\n            \"audioCodecOriginal\": \"AAC\",\n            \"aspect\": \"1280x720\",\n            \"error\": \"\",\n            \"shared\": false,\n            \"shareBeginTime\": null,\n            \"shareEndTime\": null,\n            \"rotate\": 0,\n            \"resolution\": \"\",\n            \"isresolution\": false,\n            \"resolutiondefault\": \"hd\",\n            \"transvideo\": false,\n            \"snapUrl\": \"http://127.0.0.1:10086/fvod/ByESLU1NR/snap.jpg\",\n            \"videoUrl\": \"http://127.0.0.1:10086/fvod/ByESLU1NR/video.m3u8\",\n            \"sharedLink\": \"/share.html?id=ByESLU1NR&type=vod\",\n            \"flowNum\": 0,\n            \"progress\": 0,\n            \"playNum\": 0\n        },\n        {\n            \"id\": \"XV63UU1Hg\",\n            \"name\": \"老友记第2季第18集\",\n            \"size\": 272432029,\n            \"type\": \"video/mp4\",\n            \"path\": \"\",\n            \"folder\": \"XV63UU1Hg\",\n            \"status\": \"done\",\n            \"duration\": 1362,\n            \"videoCodec\": \"H.264\",\n            \"audioCodec\": \"AAC\",\n            \"videoCodecOriginal\": \"H.264\",\n            \"audioCodecOriginal\": \"AAC\",\n            \"aspect\": \"1280x720\",\n            \"error\": \"\",\n            \"shared\": false,\n            \"shareBeginTime\": null,\n            \"shareEndTime\": null,\n            \"rotate\": 0,\n            \"resolution\": \"\",\n            \"isresolution\": false,\n            \"resolutiondefault\": \"hd\",\n            \"transvideo\": false,\n            \"snapUrl\": \"http://127.0.0.1:10086/fvod/XV63UU1Hg/snap.jpg\",\n            \"videoUrl\": \"http://127.0.0.1:10086/fvod/XV63UU1Hg/video.m3u8\",\n            \"sharedLink\": \"/share.html?id=XV63UU1Hg&type=vod\",\n            \"flowNum\": 0,\n            \"progress\": 0,\n            \"playNum\": 0\n        }\n    ],\n    \"total\": 2\n}",
+                        "responseId": 665288291,
+                        "ordering": 1,
+                        "description": "",
+                        "oasKey": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "分页开始,从零开始",
+                          "type": "integer",
+                          "id": "3UbieLa9xb",
+                          "example": "",
+                          "enable": true,
+                          "name": "start",
+                          "schema": {
+                            "type": "integer"
+                          }
+                        },
+                        {
+                          "required": false,
+                          "description": "分页大小",
+                          "type": "integer",
+                          "id": "AV9VIVjUIi",
+                          "example": "",
+                          "enable": true,
+                          "name": "limit",
+                          "schema": {
+                            "type": "integer"
+                          }
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "2kfV99T4pF",
+                          "example": "",
+                          "enable": true,
+                          "name": "sort"
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "LrVCtGj0uG",
+                          "example": "",
+                          "enable": true,
+                          "name": "order"
+                        },
+                        {
+                          "required": false,
+                          "description": "",
+                          "type": "string",
+                          "id": "v5LsaLaAmf",
+                          "example": "",
+                          "enable": true,
+                          "name": "q"
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "获取视频列表",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 52,
+                    "cases": [
+                      {
+                        "id": 256461423,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 665288291,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "sHPB0Z9Dxf",
+                              "relatedId": "3UbieLa9xb",
+                              "relatedName": "start",
+                              "value": "0",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "c2kYcif5O3",
+                              "relatedId": "AV9VIVjUIi",
+                              "relatedName": "limit",
+                              "value": "10",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "8BRWPND8x0",
+                              "relatedId": "2kfV99T4pF",
+                              "relatedName": "sort",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "nWgKvFxxm9",
+                              "relatedId": "LrVCtGj0uG",
+                              "relatedName": "order",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false
+                            },
+                            {
+                              "id": "tZE1uiWUED",
+                              "relatedId": "v5LsaLaAmf",
+                              "relatedName": "q",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.57fa8c18-fe45-4cfe-8842-36ce2c293a13\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"57fa8c18-fe45-4cfe-8842-36ce2c293a13\",\"requestIndex\":0,\"httpRequestId\":\"a306bc18-fd7a-4985-bed9-7be03b15554d\"},\"type\":\"http\",\"response\":{\"id\":\"f3c96f91-f6fa-4b57-82ec-6540f3a6c832\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:59:24 GMT\"},{\"key\":\"Content-Length\",\"value\":\"1320\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,114,111,119,115,34,58,91,123,34,105,100,34,58,34,77,52,102,122,57,56,74,78,82,34,44,34,110,97,109,101,34,58,34,232,128,129,229,143,139,232,174,176,48,50,49,56,34,44,34,115,105,122,101,34,58,50,55,50,52,51,50,48,50,57,44,34,116,121,112,101,34,58,34,118,105,100,101,111,47,109,112,52,34,44,34,112,97,116,104,34,58,34,34,44,34,102,111,108,100,101,114,34,58,34,77,52,102,122,57,56,74,78,82,34,44,34,115,116,97,116,117,115,34,58,34,100,111,110,101,34,44,34,100,117,114,97,116,105,111,110,34,58,49,51,54,50,44,34,118,105,100,101,111,67,111,100,101,99,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,34,58,34,65,65,67,34,44,34,118,105,100,101,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,65,65,67,34,44,34,97,115,112,101,99,116,34,58,34,49,50,56,48,120,55,50,48,34,44,34,101,114,114,111,114,34,58,34,34,44,34,115,104,97,114,101,100,34,58,116,114,117,101,44,34,115,104,97,114,101,66,101,103,105,110,84,105,109,101,34,58,110,117,108,108,44,34,115,104,97,114,101,69,110,100,84,105,109,101,34,58,110,117,108,108,44,34,114,111,116,97,116,101,34,58,48,44,34,114,101,115,111,108,117,116,105,111,110,34,58,34,34,44,34,105,115,114,101,115,111,108,117,116,105,111,110,34,58,102,97,108,115,101,44,34,114,101,115,111,108,117,116,105,111,110,100,101,102,97,117,108,116,34,58,34,104,100,34,44,34,116,114,97,110,115,118,105,100,101,111,34,58,102,97,108,115,101,44,34,115,110,97,112,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,77,52,102,122,57,56,74,78,82,47,115,110,97,112,46,106,112,103,34,44,34,118,105,100,101,111,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,77,52,102,122,57,56,74,78,82,47,118,105,100,101,111,46,109,51,117,56,34,44,34,115,104,97,114,101,100,76,105,110,107,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,115,104,97,114,101,46,104,116,109,108,63,105,100,61,77,52,102,122,57,56,74,78,82,92,117,48,48,50,54,116,121,112,101,61,118,111,100,34,44,34,102,108,111,119,78,117,109,34,58,48,44,34,112,114,111,103,114,101,115,115,34,58,48,44,34,112,108,97,121,78,117,109,34,58,48,125,44,123,34,105,100,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,110,97,109,101,34,58,34,232,128,129,229,143,139,232,174,176,48,50,49,56,34,44,34,115,105,122,101,34,58,50,55,50,52,51,50,48,50,57,44,34,116,121,112,101,34,58,34,118,105,100,101,111,47,109,112,52,34,44,34,112,97,116,104,34,58,34,34,44,34,102,111,108,100,101,114,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,115,116,97,116,117,115,34,58,34,100,111,110,101,34,44,34,100,117,114,97,116,105,111,110,34,58,49,51,54,50,44,34,118,105,100,101,111,67,111,100,101,99,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,34,58,34,65,65,67,34,44,34,118,105,100,101,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,65,65,67,34,44,34,97,115,112,101,99,116,34,58,34,49,50,56,48,120,55,50,48,34,44,34,101,114,114,111,114,34,58,34,34,44,34,115,104,97,114,101,100,34,58,116,114,117,101,44,34,115,104,97,114,101,66,101,103,105,110,84,105,109,101,34,58,110,117,108,108,44,34,115,104,97,114,101,69,110,100,84,105,109,101,34,58,110,117,108,108,44,34,114,111,116,97,116,101,34,58,48,44,34,114,101,115,111,108,117,116,105,111,110,34,58,34,34,44,34,105,115,114,101,115,111,108,117,116,105,111,110,34,58,102,97,108,115,101,44,34,114,101,115,111,108,117,116,105,111,110,100,101,102,97,117,108,116,34,58,34,104,100,34,44,34,116,114,97,110,115,118,105,100,101,111,34,58,102,97,108,115,101,44,34,115,110,97,112,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,115,110,97,112,46,106,112,103,34,44,34,118,105,100,101,111,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,118,105,100,101,111,46,109,51,117,56,34,44,34,115,104,97,114,101,100,76,105,110,107,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,115,104,97,114,101,46,104,116,109,108,63,105,100,61,87,53,77,111,113,85,74,72,82,92,117,48,48,50,54,116,121,112,101,61,118,111,100,34,44,34,102,108,111,119,78,117,109,34,58,48,44,34,112,114,111,103,114,101,115,115,34,58,48,44,34,112,108,97,121,78,117,109,34,58,48,125,93,44,34,116,111,116,97,108,34,58,50,125]},\"cookie\":[],\"responseTime\":2,\"responseSize\":1320,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.42120000068098307,\"wait\":0.22589999996125698,\"dns\":0,\"tcp\":0,\"firstByte\":1.2525999993085861,\"download\":0.3373000007122755,\"process\":0.019099999219179153,\"total\":2.256099999882281}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"sharelist\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------168489369011385298986093\",\"system\":true},{\"key\":\"Content-Length\",\"value\":574,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"start\",\"value\":\"0\",\"type\":\"integer\"},{\"disabled\":false,\"key\":\"limit\",\"value\":\"10\",\"type\":\"integer\"},{\"disabled\":false,\"key\":\"sort\",\"value\":\"\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"order\",\"value\":\"\",\"type\":\"string\"},{\"disabled\":false,\"key\":\"q\",\"value\":\"\",\"type\":\"string\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/sharelist\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------168489369011385298986093\"},{\"key\":\"Content-Length\",\"value\":\"574\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:59:24 GMT\"},{\"key\":\"Content-Length\",\"value\":\"1320\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745740764188,\"requestStart\":1745740764189,\"offset\":{\"request\":0.42120000068098307,\"socket\":0.64710000064224,\"response\":1.8996999999508262,\"end\":2.2370000006631017,\"lookup\":0.64710000064224,\"connect\":0.64710000064224,\"done\":2.256099999882281}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1745740764137,\"preProcessorsStarted\":1745740764141,\"preProcessorsCompleted\":1745740764141,\"postProcessorsStarted\":1745740764204,\"postProcessorsCompleted\":1745740764204,\"completed\":1745740764204},\"metaInfo\":{\"httpApiId\":289868657,\"httpApiCaseId\":256456897,\"httpApiName\":\"分享列表\",\"httpApiPath\":\"/api/v1/vod/sharelist\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665288291",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "下载视频",
+                  "api": {
+                    "id": "289876521",
+                    "method": "post",
+                    "path": "/api/v1/vod/download/{id}",
+                    "parameters": {
+                      "query": [],
+                      "path": [
+                        {
+                          "id": "id#0",
+                          "name": "id",
+                          "required": true,
+                          "description": "",
+                          "type": "string",
+                          "enable": true
+                        }
+                      ],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665286970",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "none",
+                      "parameters": [],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 22,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665286970",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "删除视频",
+                  "api": {
+                    "id": "289881654",
+                    "method": "post",
+                    "path": "/api/v1/vod/remove",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665304713",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "视频id",
+                          "type": "string",
+                          "id": "3UbieLa9xb",
+                          "example": "",
+                          "enable": true,
+                          "name": "id",
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "删除视频",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 70,
+                    "cases": [
+                      {
+                        "id": 256470653,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 665304713,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "Q1DV3dZeJI",
+                              "relatedId": "3UbieLa9xb",
+                              "value": "",
+                              "enable": true,
+                              "isDelete": false,
+                              "relatedName": "id"
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.01fb71fa-8154-4e64-8853-a20498c16be5\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"01fb71fa-8154-4e64-8853-a20498c16be5\",\"requestIndex\":0,\"httpRequestId\":\"db9fe2c1-895b-406f-a40f-2233b1756d28\"},\"type\":\"http\",\"response\":{\"id\":\"8aaf5b3f-9f10-4ff1-bf01-0381eb00250c\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 08:11:16 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,99,111,100,101,34,58,50,48,48,44,34,109,115,103,34,58,34,83,117,99,99,101,115,115,34,125]},\"cookie\":[],\"responseTime\":127,\"responseSize\":28,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":1.685899999924004,\"wait\":0.19949999917298555,\"dns\":0,\"tcp\":0,\"firstByte\":125.47710000071675,\"download\":0.4272999996319413,\"process\":0.020899999886751175,\"total\":127.81069999933243}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"remove\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------342735293447274404138122\",\"system\":true},{\"key\":\"Content-Length\",\"value\":166,\"system\":true}],\"method\":\"POST\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"id\",\"value\":\"M4fz98JNR\",\"type\":\"string\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"POST\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/remove\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------342735293447274404138122\"},{\"key\":\"Content-Length\",\"value\":\"166\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 08:11:16 GMT\"},{\"key\":\"Content-Length\",\"value\":\"28\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745741476377,\"requestStart\":1745741476378,\"offset\":{\"request\":1.685899999924004,\"socket\":1.8853999990969896,\"response\":127.36249999981374,\"end\":127.78979999944568,\"lookup\":1.8853999990969896,\"connect\":1.8853999990969896,\"done\":127.81069999933243}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1745741476320,\"preProcessorsStarted\":1745741476329,\"preProcessorsCompleted\":1745741476329,\"postProcessorsStarted\":1745741476517,\"postProcessorsCompleted\":1745741476517,\"completed\":1745741476518},\"metaInfo\":{\"httpApiId\":289881654,\"httpApiCaseId\":256467447,\"httpApiName\":\"删除视频\",\"httpApiPath\":\"/api/v1/vod/remove\",\"httpApiMethod\":\"post\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665304713",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "批量删除视频",
+                  "api": {
+                    "id": "289884240",
+                    "method": "post",
+                    "path": "/api/v1/vod/remove",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665313795",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "视频id",
+                          "type": "array",
+                          "id": "3UbieLa9xb",
+                          "example": "",
+                          "enable": true,
+                          "name": "ids",
+                          "schema": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "批量删除视频",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 76,
+                    "cases": [],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665313795",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                },
+                {
+                  "name": "重新转码",
+                  "api": {
+                    "id": "289896055",
+                    "method": "post",
+                    "path": "/api/v1/vod/retran",
+                    "parameters": {},
+                    "auth": {},
+                    "securityScheme": {},
+                    "commonParameters": {
+                      "query": [],
+                      "body": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "responses": [
+                      {
+                        "id": "665318429",
+                        "code": 200,
+                        "name": "成功",
+                        "headers": [],
+                        "jsonSchema": {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        "description": "",
+                        "contentType": "json",
+                        "mediaType": "",
+                        "oasExtensions": ""
+                      }
+                    ],
+                    "responseExamples": [],
+                    "requestBody": {
+                      "type": "multipart/form-data",
+                      "parameters": [
+                        {
+                          "required": false,
+                          "description": "视频id",
+                          "type": "string",
+                          "id": "3UbieLa9xb",
+                          "example": "",
+                          "enable": true,
+                          "name": "id",
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "mediaType": "",
+                      "examples": [],
+                      "oasExtensions": ""
+                    },
+                    "description": "将视频重新转码成hls文件",
+                    "tags": [],
+                    "status": "released",
+                    "serverId": "",
+                    "operationId": "",
+                    "sourceUrl": "",
+                    "ordering": 61,
+                    "cases": [
+                      {
+                        "id": 256477993,
+                        "type": "http",
+                        "path": null,
+                        "name": "成功",
+                        "responseId": 665318429,
+                        "parameters": {
+                          "query": [],
+                          "path": [],
+                          "cookie": [],
+                          "header": []
+                        },
+                        "commonParameters": {
+                          "query": [],
+                          "body": [],
+                          "header": [],
+                          "cookie": []
+                        },
+                        "requestBody": {
+                          "parameters": [
+                            {
+                              "id": "fce6yge41W",
+                              "relatedId": "3UbieLa9xb",
+                              "relatedName": "id",
+                              "value": "W5MoqUJHR",
+                              "enable": true,
+                              "isDelete": false
+                            }
+                          ],
+                          "generateMode": "normal"
+                        },
+                        "auth": {},
+                        "securityScheme": {},
+                        "advancedSettings": {
+                          "disabledSystemHeaders": {}
+                        },
+                        "requestResult": "{\"id\":\"temp.e4981993-efa8-416b-9da4-1f869e64ff16\",\"cursor\":{\"position\":0,\"iteration\":0,\"length\":1,\"cycles\":1,\"empty\":false,\"eof\":false,\"bof\":true,\"cr\":false,\"ref\":\"e4981993-efa8-416b-9da4-1f869e64ff16\",\"requestIndex\":0,\"httpRequestId\":\"b26042d7-f20c-490a-9a87-7853cf190f79\"},\"type\":\"http\",\"response\":{\"id\":\"6bfb423f-4062-461b-b807-f6863b68bd50\",\"status\":\"OK\",\"code\":200,\"header\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:50:27 GMT\"},{\"key\":\"Content-Length\",\"value\":\"650\"}],\"trailer\":[],\"stream\":{\"type\":\"Buffer\",\"data\":[123,34,105,100,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,110,97,109,101,34,58,34,232,128,129,229,143,139,232,174,176,48,50,49,56,34,44,34,115,105,122,101,34,58,50,55,50,52,51,50,48,50,57,44,34,116,121,112,101,34,58,34,118,105,100,101,111,47,109,112,52,34,44,34,112,97,116,104,34,58,34,34,44,34,102,111,108,100,101,114,34,58,34,87,53,77,111,113,85,74,72,82,34,44,34,115,116,97,116,117,115,34,58,34,100,111,110,101,34,44,34,100,117,114,97,116,105,111,110,34,58,49,51,54,50,44,34,118,105,100,101,111,67,111,100,101,99,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,34,58,34,65,65,67,34,44,34,118,105,100,101,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,72,46,50,54,52,34,44,34,97,117,100,105,111,67,111,100,101,99,79,114,105,103,105,110,97,108,34,58,34,65,65,67,34,44,34,97,115,112,101,99,116,34,58,34,49,50,56,48,120,55,50,48,34,44,34,101,114,114,111,114,34,58,34,34,44,34,115,104,97,114,101,100,34,58,102,97,108,115,101,44,34,115,104,97,114,101,66,101,103,105,110,84,105,109,101,34,58,110,117,108,108,44,34,115,104,97,114,101,69,110,100,84,105,109,101,34,58,110,117,108,108,44,34,114,111,116,97,116,101,34,58,48,44,34,114,101,115,111,108,117,116,105,111,110,34,58,34,34,44,34,105,115,114,101,115,111,108,117,116,105,111,110,34,58,102,97,108,115,101,44,34,114,101,115,111,108,117,116,105,111,110,100,101,102,97,117,108,116,34,58,34,104,100,34,44,34,116,114,97,110,115,118,105,100,101,111,34,58,102,97,108,115,101,44,34,115,110,97,112,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,115,110,97,112,46,106,112,103,34,44,34,118,105,100,101,111,85,114,108,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,102,118,111,100,47,87,53,77,111,113,85,74,72,82,47,118,105,100,101,111,46,109,51,117,56,34,44,34,115,104,97,114,101,100,76,105,110,107,34,58,34,104,116,116,112,58,47,47,49,50,55,46,48,46,48,46,49,58,49,48,48,56,54,47,115,104,97,114,101,46,104,116,109,108,63,105,100,61,87,53,77,111,113,85,74,72,82,92,117,48,48,50,54,116,121,112,101,61,118,111,100,34,44,34,102,108,111,119,78,117,109,34,58,48,44,34,112,114,111,103,114,101,115,115,34,58,48,44,34,112,108,97,121,78,117,109,34,58,48,125]},\"cookie\":[],\"responseTime\":3,\"responseSize\":650,\"type\":\"http\",\"tempFilePath\":\"\",\"timingPhases\":{\"prepare\":0.48079999908804893,\"wait\":0.23610000032931566,\"dns\":0,\"tcp\":0,\"firstByte\":1.3825000002980232,\"download\":0.44120000023394823,\"process\":0.018499999307096004,\"total\":2.559099999256432}},\"request\":{\"url\":{\"protocol\":\"http\",\"port\":\"10086\",\"path\":[\"api\",\"v1\",\"vod\",\"get\"],\"host\":[\"127\",\"0\",\"0\",\"1\"],\"query\":[],\"variable\":[]},\"header\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"system\":true},{\"key\":\"Accept\",\"value\":\"*/*\",\"system\":true},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\",\"system\":true},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\",\"system\":true},{\"key\":\"Connection\",\"value\":\"keep-alive\",\"system\":true},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------910783953225332223641739\",\"system\":true},{\"key\":\"Content-Length\",\"value\":166,\"system\":true}],\"method\":\"GET\",\"baseUrl\":\"http://127.0.0.1:10086\",\"body\":{\"mode\":\"formdata\",\"formdata\":[{\"disabled\":false,\"key\":\"id\",\"value\":\"W5MoqUJHR\",\"type\":\"string\"}]},\"auth\":{\"type\":\"bearer\",\"bearer\":[{\"type\":\"any\",\"value\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\",\"key\":\"token\"}]},\"type\":\"http\"},\"history\":{\"execution\":{\"verbose\":false,\"sessions\":{},\"data\":[{\"request\":{\"method\":\"GET\",\"href\":\"http://127.0.0.1:10086/api/v1/vod/get\",\"headers\":[{\"key\":\"User-Agent\",\"value\":\"Apifox/1.0.0 (https://apifox.com)\"},{\"key\":\"Authorization\",\"value\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOjIyMiwiVXNlcm5hbWUiOiJsaXRlZ2JzIiwiR3JvdXBJRCI6MTExLCJHcm91cExldmVsIjoxLCJSb2xlIjoiYWRtaW4iLCJMZXZlbCI6MSwiaXNzIjoieHhAZ29sYW5nLnNwYWNlIiwiZXhwIjoxNzMyOTQ0NTk1LCJpYXQiOjE3MzI1MTI1OTV9.UgYhTbd1rKzdwOHjS3ty5xeAG5dbFFjFgf2H2EoQxwQ\"},{\"key\":\"Accept\",\"value\":\"*/*\"},{\"key\":\"Host\",\"value\":\"127.0.0.1:10086\"},{\"key\":\"Accept-Encoding\",\"value\":\"gzip, deflate, br\"},{\"key\":\"Connection\",\"value\":\"keep-alive\"},{\"key\":\"Content-Type\",\"value\":\"multipart/form-data; boundary=--------------------------910783953225332223641739\"},{\"key\":\"Content-Length\",\"value\":\"166\"}],\"httpVersion\":\"1.1\"},\"response\":{\"statusCode\":200,\"headers\":[{\"key\":\"Access-Control-Allow-Credentials\",\"value\":\"true\"},{\"key\":\"Access-Control-Allow-Headers\",\"value\":\"Content-Type,Access-Token\"},{\"key\":\"Access-Control-Allow-Methods\",\"value\":\"POST, GET, OPTIONS, PUT, DELETE,UPDATE\"},{\"key\":\"Access-Control-Allow-Origin\",\"value\":\"*\"},{\"key\":\"Content-Type\",\"value\":\"application/json; charset=utf-8\"},{\"key\":\"Cross-Origin-Resource-Policy\",\"value\":\"cross-origin\"},{\"key\":\"Date\",\"value\":\"Sun, 27 Apr 2025 07:50:27 GMT\"},{\"key\":\"Content-Length\",\"value\":\"650\"}],\"httpVersion\":\"1.1\"},\"timings\":{\"start\":1745740227918,\"requestStart\":1745740227918,\"offset\":{\"request\":0.48079999908804893,\"socket\":0.7168999994173646,\"response\":2.099399999715388,\"end\":2.540599999949336,\"lookup\":0.7168999994173646,\"connect\":0.7168999994173646,\"done\":2.559099999256432}}}]}},\"responseValidation\":{\"schema\":{\"valid\":true,\"message\":\"\",\"errors\":null},\"responseCode\":{\"valid\":true}},\"passed\":true,\"timings\":{\"started\":1745740227853,\"preProcessorsStarted\":1745740227869,\"preProcessorsCompleted\":1745740227869,\"postProcessorsStarted\":1745740227930,\"postProcessorsCompleted\":1745740227931,\"completed\":1745740227932},\"metaInfo\":{\"httpApiId\":289375289,\"httpApiCaseId\":256040529,\"httpApiName\":\"视频详情\",\"httpApiPath\":\"/api/v1/vod/get\",\"httpApiMethod\":\"get\",\"httpApiCaseName\":\"\"}}",
+                        "visibility": "INHERITED",
+                        "preProcessors": [],
+                        "postProcessors": [],
+                        "inheritPostProcessors": {},
+                        "inheritPreProcessors": {}
+                      }
+                    ],
+                    "mocks": [],
+                    "customApiFields": "{}",
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "mockScript": {},
+                    "codeSamples": [],
+                    "commonResponseStatus": {
+                      "340888070": true,
+                      "340888071": true
+                    },
+                    "responseChildren": [
+                      "BLANK.665318429",
+                      "COMPONENT.340888070",
+                      "COMPONENT.340888071"
+                    ],
+                    "visibility": "INHERITED",
+                    "oasExtensions": "",
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {},
+                    "inheritPreProcessors": {}
+                  }
+                }
+              ]
+            },
+            {
               "name": "系统相关",
               "id": 55297874,
               "auth": {},
@@ -2186,177 +4067,8 @@
       ]
     }
   ],
-  "schemaCollection": [
-    {
-      "id": 14035326,
-      "name": "根目录",
-      "visibility": "SHARED",
-      "items": [
-        {
-          "id": 14035323,
-          "name": "示例数据模型",
-          "visibility": "INHERITED",
-          "items": [
-            {
-              "name": "Pet",
-              "displayName": "",
-              "id": "#/definitions/162953740",
-              "description": "",
-              "schema": {
-                "jsonSchema": {
-                  "required": [
-                    "name",
-                    "photoUrls",
-                    "id",
-                    "category",
-                    "tags",
-                    "status"
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "format": "int64",
-                      "minimum": 1,
-                      "mock": {
-                        "mock": "@natural"
-                      },
-                      "description": "宠物ID编号"
-                    },
-                    "category": {
-                      "$ref": "#/definitions/162953741",
-                      "description": "分组"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "名称",
-                      "mock": {
-                        "mock": "@cword(3)"
-                      },
-                      "examples": [
-                        "doggie"
-                      ]
-                    },
-                    "photoUrls": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "mock": {
-                          "mock": "@image"
-                        }
-                      },
-                      "description": "照片URL"
-                    },
-                    "tags": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/162953742"
-                      },
-                      "description": "标签"
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "宠物销售状态",
-                      "enum": [
-                        "available",
-                        "pending",
-                        "sold"
-                      ]
-                    }
-                  },
-                  "x-apifox-orders": [
-                    "id",
-                    "category",
-                    "name",
-                    "photoUrls",
-                    "tags",
-                    "status"
-                  ]
-                }
-              },
-              "visibility": "INHERITED"
-            },
-            {
-              "name": "Category",
-              "displayName": "",
-              "id": "#/definitions/162953741",
-              "description": "",
-              "schema": {
-                "jsonSchema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "format": "int64",
-                      "minimum": 1,
-                      "description": "分组ID编号"
-                    },
-                    "name": {
-                      "type": "string",
-                      "mock": {
-                        "mock": "@cword(2)"
-                      },
-                      "description": "分组名称"
-                    }
-                  },
-                  "xml": {
-                    "name": "Category"
-                  },
-                  "x-apifox-orders": [
-                    "id",
-                    "name"
-                  ]
-                }
-              },
-              "visibility": "INHERITED"
-            },
-            {
-              "name": "Tag",
-              "displayName": "",
-              "id": "#/definitions/162953742",
-              "description": "",
-              "schema": {
-                "jsonSchema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "format": "int64",
-                      "minimum": 1,
-                      "description": "标签ID编号"
-                    },
-                    "name": {
-                      "type": "string",
-                      "mock": {
-                        "mock": "@cword(4)"
-                      },
-                      "description": "标签名称"
-                    }
-                  },
-                  "xml": {
-                    "name": "Tag"
-                  },
-                  "x-apifox-orders": [
-                    "id",
-                    "name"
-                  ]
-                }
-              },
-              "visibility": "INHERITED"
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "securitySchemeCollection": [
-    {
-      "id": 970098,
-      "name": "根目录",
-      "items": [],
-      "ordering": []
-    }
-  ],
+  "schemaCollection": [],
+  "securitySchemeCollection": [],
   "requestCollection": [
     {
       "name": "根目录",
@@ -2364,354 +4076,18 @@
         {
           "name": "临时测试",
           "children": [],
-          "items": [
-            {
-              "id": 3058109,
-              "createdAt": "2025-04-23T07:25:16.000Z",
-              "updatedAt": "2025-04-23T07:25:16.000Z",
-              "name": "http://localhost:8080/products",
-              "method": "get",
-              "path": "http://localhost:8080/products",
-              "requestBody": {
-                "type": "none",
-                "parameters": []
-              },
-              "parameters": {},
-              "commonParameters": {
-                "query": [],
-                "body": [],
-                "header": [],
-                "cookie": []
-              },
-              "preProcessors": [],
-              "postProcessors": [],
-              "auth": {},
-              "advancedSettings": {},
-              "folderId": 6635310,
-              "projectId": 6276435,
-              "creatorId": 1059412,
-              "editorId": 1059412
-            }
-          ]
+          "ordering": [],
+          "items": []
         }
+      ],
+      "ordering": [
+        "requestFolder.6635308"
       ],
       "items": []
     }
   ],
-  "apiTestCaseCollection": [
-    {
-      "name": "根目录",
-      "children": [
-        {
-          "name": "宠物店",
-          "children": [],
-          "items": [
-            {
-              "steps": [
-                {
-                  "type": "http",
-                  "bind": false,
-                  "bindType": "API",
-                  "bindId": 288116897,
-                  "syncMode": "MANUAL",
-                  "httpApiCase": {
-                    "id": 255080105,
-                    "name": "新建在售宠物",
-                    "method": "",
-                    "path": "/pet",
-                    "auth": {},
-                    "type": "http",
-                    "options": {},
-                    "parameters": {},
-                    "responseId": 662193536,
-                    "requestBody": {
-                      "parameters": [
-                        {
-                          "id": "ybPpcZ1dgw",
-                          "relatedId": "ybPpcZ1dgw",
-                          "relatedName": "name",
-                          "name": "name",
-                          "value": "Hello Kitty",
-                          "type": "string",
-                          "description": "宠物名",
-                          "enable": true
-                        },
-                        {
-                          "id": "fDkEuKyzG4",
-                          "relatedId": "fDkEuKyzG4",
-                          "relatedName": "status",
-                          "name": "status",
-                          "value": "sold",
-                          "type": "string",
-                          "description": "宠物销售状态",
-                          "enable": true
-                        }
-                      ],
-                      "type": "application/x-www-form-urlencoded",
-                      "data": ""
-                    },
-                    "preProcessors": [],
-                    "postProcessors": [],
-                    "advancedSettings": {
-                      "disabledSystemHeaders": {}
-                    },
-                    "commonParameters": {},
-                    "inheritPreProcessors": {},
-                    "inheritPostProcessors": {},
-                    "inheritPreProcessorsSnapshot": null,
-                    "inheritPostProcessorsSnapshot": null,
-                    "apiId": 288116897
-                  }
-                },
-                {
-                  "type": "http",
-                  "bind": false,
-                  "bindType": "API",
-                  "bindId": 288116896,
-                  "syncMode": "MANUAL",
-                  "httpApiCase": {
-                    "id": 255080104,
-                    "name": "查询刚刚建的宠物",
-                    "method": "",
-                    "path": "/pet/{petId}",
-                    "auth": {},
-                    "type": "http",
-                    "options": {},
-                    "parameters": {
-                      "path": [
-                        {
-                          "id": "petId#0",
-                          "relatedId": "petId#0",
-                          "relatedName": "petId",
-                          "name": "petId",
-                          "value": "{{petId}}",
-                          "type": "string",
-                          "description": "宠物 ID",
-                          "enable": true
-                        }
-                      ]
-                    },
-                    "responseId": 662193535,
-                    "requestBody": {
-                      "parameters": [],
-                      "type": "none"
-                    },
-                    "preProcessors": [],
-                    "postProcessors": [],
-                    "advancedSettings": {
-                      "disabledSystemHeaders": {}
-                    },
-                    "commonParameters": {},
-                    "inheritPreProcessors": {},
-                    "inheritPostProcessors": {},
-                    "inheritPreProcessorsSnapshot": null,
-                    "inheritPostProcessorsSnapshot": null,
-                    "apiId": 288116896
-                  }
-                },
-                {
-                  "type": "http",
-                  "bind": false,
-                  "bindType": "API",
-                  "bindId": 288116898,
-                  "syncMode": "MANUAL",
-                  "httpApiCase": {
-                    "id": 255080103,
-                    "name": "修改宠物状态为 sold",
-                    "method": "",
-                    "path": "/pet",
-                    "auth": {},
-                    "type": "http",
-                    "options": {},
-                    "parameters": {},
-                    "responseId": 662193538,
-                    "requestBody": {
-                      "parameters": [],
-                      "type": "application/json",
-                      "data": "{\n    \"name\": \"test\"\n}"
-                    },
-                    "preProcessors": [],
-                    "postProcessors": [],
-                    "advancedSettings": {
-                      "disabledSystemHeaders": {}
-                    },
-                    "commonParameters": {},
-                    "inheritPreProcessors": {},
-                    "inheritPostProcessors": {},
-                    "inheritPreProcessorsSnapshot": null,
-                    "inheritPostProcessorsSnapshot": null,
-                    "apiId": 288116898
-                  }
-                },
-                {
-                  "type": "http",
-                  "bind": false,
-                  "bindType": "API",
-                  "bindId": 288116896,
-                  "syncMode": "MANUAL",
-                  "httpApiCase": {
-                    "id": 255080102,
-                    "name": "查询宠物状态是否修改成功",
-                    "method": "",
-                    "path": "/pet/{petId}",
-                    "auth": {},
-                    "type": "http",
-                    "options": {},
-                    "parameters": {
-                      "path": [
-                        {
-                          "id": "petId#0",
-                          "relatedId": "petId#0",
-                          "relatedName": "petId",
-                          "name": "petId",
-                          "value": "2",
-                          "type": "string",
-                          "description": "宠物 ID",
-                          "enable": true
-                        }
-                      ]
-                    },
-                    "responseId": 662193535,
-                    "requestBody": {
-                      "parameters": [],
-                      "type": "none"
-                    },
-                    "preProcessors": [],
-                    "postProcessors": [],
-                    "advancedSettings": {
-                      "disabledSystemHeaders": {}
-                    },
-                    "commonParameters": {},
-                    "inheritPreProcessors": {},
-                    "inheritPostProcessors": {},
-                    "inheritPreProcessorsSnapshot": null,
-                    "inheritPostProcessorsSnapshot": null,
-                    "apiId": 288116896
-                  }
-                },
-                {
-                  "type": "http",
-                  "bind": false,
-                  "bindType": "API",
-                  "bindId": 288116899,
-                  "syncMode": "MANUAL",
-                  "httpApiCase": {
-                    "id": 255080101,
-                    "name": "删除该宠物",
-                    "method": "",
-                    "path": "/pet/{petId}",
-                    "auth": {},
-                    "type": "http",
-                    "options": {},
-                    "parameters": {
-                      "header": [
-                        {
-                          "id": "tnoT7O2PBd",
-                          "relatedId": "tnoT7O2PBd",
-                          "relatedName": "api_key",
-                          "name": "api_key",
-                          "enable": true
-                        }
-                      ],
-                      "path": [
-                        {
-                          "id": "petId#0",
-                          "relatedId": "petId#0",
-                          "relatedName": "petId",
-                          "name": "petId",
-                          "value": "",
-                          "enable": true
-                        }
-                      ]
-                    },
-                    "responseId": 662193540,
-                    "requestBody": {
-                      "parameters": [],
-                      "type": "none"
-                    },
-                    "preProcessors": [],
-                    "postProcessors": [],
-                    "advancedSettings": {
-                      "disabledSystemHeaders": {}
-                    },
-                    "commonParameters": {},
-                    "inheritPreProcessors": {},
-                    "inheritPostProcessors": {},
-                    "inheritPreProcessorsSnapshot": null,
-                    "inheritPostProcessorsSnapshot": null,
-                    "apiId": 288116899
-                  }
-                },
-                {
-                  "type": "http",
-                  "bind": false,
-                  "bindType": "API",
-                  "bindId": 288116896,
-                  "syncMode": "MANUAL",
-                  "httpApiCase": {
-                    "id": 255080100,
-                    "name": "检查删除是否成功",
-                    "method": "",
-                    "path": "/pet/{petId}",
-                    "auth": {},
-                    "type": "http",
-                    "options": {},
-                    "parameters": {
-                      "path": [
-                        {
-                          "id": "petId#0",
-                          "relatedId": "petId#0",
-                          "relatedName": "petId",
-                          "name": "petId",
-                          "value": "1645646",
-                          "type": "string",
-                          "description": "宠物 ID",
-                          "enable": true
-                        }
-                      ]
-                    },
-                    "responseId": 340888066,
-                    "requestBody": {
-                      "parameters": [],
-                      "type": "none"
-                    },
-                    "preProcessors": [],
-                    "postProcessors": [],
-                    "advancedSettings": {
-                      "disabledSystemHeaders": {}
-                    },
-                    "commonParameters": {},
-                    "inheritPreProcessors": {},
-                    "inheritPostProcessors": {},
-                    "inheritPreProcessorsSnapshot": null,
-                    "inheritPostProcessorsSnapshot": null,
-                    "apiId": 288116896
-                  }
-                }
-              ],
-              "id": 6429897,
-              "name": "测试宠物新建/修改/删除流程",
-              "tags": [],
-              "options": {},
-              "priority": 2,
-              "ordering": 0,
-              "description": "",
-              "preProcessors": [],
-              "postProcessors": [],
-              "children": [],
-              "performanceTestOptions": {},
-              "apiTestDataSets": []
-            }
-          ]
-        }
-      ],
-      "items": []
-    }
-  ],
-  "testCaseReferences": [],
   "environments": [],
   "commonScripts": [],
-  "databaseConnections": [],
   "globalVariables": [
     {
       "id": "6276435",
