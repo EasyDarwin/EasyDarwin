@@ -27,6 +27,8 @@
         </div>
       </template>
     </div>
+    <a-pagination class="mt-4 text-right" :current="currentPage" :page-size="vodParams.limit" :total="vodData.total"
+      show-less-items :show-total="total => `共 ${total} 项`" @change="onPageChange" />
 
     <VodPlayer :open="playerVisible" :url="playerUrl" @update:open="onPlayerCancel" />
     <VodEdit ref="editRef" @refresh="getVodDataList" />
@@ -55,9 +57,10 @@ const playerVisible = ref(false);
 const playerUrl = ref('');
 
 //获取点播数据请求参数
+const currentPage = ref(1);
 const vodParams = reactive({
   start: 0,
-  limit: 10,
+  limit: 12,
   sort: "", //排序字段
   order: "", //排序顺序 允许值: ascending, descending
   q: "", //查询参数
@@ -72,14 +75,28 @@ onMounted(() => {
   getVodDataList();
 })
 
-const getVodDataList = () => {
-  vodApi.getVodList(vodParams).then(res => {
-    vodData.items = res.data.rows
-    vodData.total = res.data.total
-  }).catch(err => {
-    console.log(err);
-  })
+// 拉取列表
+function getVodDataList() {
+  // 根据 currentPage 和 limit 计算 start
+  vodParams.start = (currentPage.value - 1) * vodParams.limit;
+
+  vodApi.getVodList(vodParams)
+    .then(res => {
+      vodData.items = res.data.rows;
+      vodData.total = res.data.total;
+    })
+    .catch(err => {
+      console.error(err);
+      message.error('获取列表失败');
+    });
 }
+
+
+// 翻页
+const onPageChange = (page) => {
+  currentPage.value = page;
+  getVodDataList();
+};
 
 // 搜索
 const onSearch = (e) => {
@@ -88,6 +105,7 @@ const onSearch = (e) => {
 
 // 防抖包装，避免每次输入都触发
 const debounceSearch = debounce(() => {
+  currentPage.value = 1;
   getVodDataList();
 }, 500);
 

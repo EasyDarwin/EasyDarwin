@@ -434,7 +434,7 @@ onBeforeUnmount(() => {
     </a-table>
     <div class="pagination-box p10px">
       <a-pagination v-model:current="queryParams.current" v-model:pageSize="queryParams.pageSize" :size="small"
-        @change="handlePageChange" :total="queryParams.total" show-less-items />
+        @change="handlePageChange" :total="queryParams.total" :show-total="total => `共 ${total} 项`" show-less-items />
     </div>
     <LiveForm ref="LiveFormRef" @ok="onOk" />
 
