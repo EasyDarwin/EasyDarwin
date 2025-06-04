@@ -32,12 +32,8 @@ func SetupConfig(path string) (Bootstrap, error) {
 
 	var cfg config.Config
 	var lgcConfig logic.Config
-	lgcConfig.DefaultHttpConfig.HttpListenAddr = ":8080"
-	lgcConfig.DefaultHttpConfig.HttpsListenAddr = ":4443"
-	lgcConfig.DefaultHttpConfig.HttpsCertFile = "./config/cert.pem"
-	lgcConfig.DefaultHttpConfig.HttpsKeyFile = "./config/key.pem"
 	SetLogicConfig(bc, &lgcConfig)
-	bc.LogicCfg = lgcConfig
+	bc.LogicCfg = &lgcConfig
 
 	//cfg.LalSvrConfigPath = filepath.Join(Getwd(), "configs", "lalserver.conf.json")
 	//rawContent, err := os.ReadFile(cfg.LalSvrConfigPath)
@@ -59,7 +55,9 @@ func SetupConfig(path string) (Bootstrap, error) {
 
 func SetLogicConfig(bc Bootstrap, cfg *logic.Config) {
 	cfg.ConfVersion = "v0.4.1"
+
 	cfg.LogConfig = bc.LogConfig
+
 	cfg.RtspConfig.Addr = bc.RtspConfig.Addr
 	cfg.RtspConfig.AuthEnable = bc.RtspConfig.AuthEnable
 	cfg.RtspConfig.AuthMethod = bc.RtspConfig.AuthMethod
@@ -73,6 +71,7 @@ func SetLogicConfig(bc Bootstrap, cfg *logic.Config) {
 	cfg.RtspConfig.UserName = bc.RtspConfig.UserName
 	cfg.RtspConfig.WsRtspAddr = bc.RtspConfig.WsRtspAddr
 	cfg.RtspConfig.WsRtspEnable = bc.RtspConfig.WsRtspEnable
+
 	cfg.RtmpConfig.Addr = bc.RtmpConfig.Addr
 	cfg.RtmpConfig.Enable = bc.RtmpConfig.Enable
 	cfg.RtmpConfig.MergeWriteSize = bc.RtmpConfig.MergeWriteSize
@@ -82,11 +81,22 @@ func SetLogicConfig(bc Bootstrap, cfg *logic.Config) {
 	cfg.RtmpConfig.RtmpsKeyFile = bc.RtmpConfig.RtmpsKeyFile
 	cfg.InSessionConfig.AddDummyAudioEnable = bc.InSessionConfig.AddDummyAudioEnable
 	cfg.InSessionConfig.AddDummyAudioWaitAudioMs = bc.InSessionConfig.AddDummyAudioWaitAudioMs
+
+	cfg.HttpflvConfig.HttpListenAddr = bc.LalConfig.HttpListenAddr
+	cfg.HttpflvConfig.HttpsListenAddr = bc.LalConfig.HttpsListenAddr
+	cfg.HttpflvConfig.HttpsCertFile = bc.LalConfig.HttpsCertFile
+	cfg.HttpflvConfig.HttpsKeyFile = bc.LalConfig.HttpsKeyFile
 	cfg.HttpflvConfig.Enable = bc.HttpflvConfig.Enable
 	cfg.HttpflvConfig.UrlPattern = bc.HttpflvConfig.UrlPattern
 	cfg.HttpflvConfig.EnableHttps = bc.HttpflvConfig.EnableHttps
 	cfg.HttpflvConfig.GopNum = 0
 	cfg.HttpflvConfig.SingleGopMaxFrameNum = 0
+
+	// 配置流媒体的http端口
+	cfg.HlsConfig.HttpListenAddr = bc.LalConfig.HttpListenAddr
+	cfg.HlsConfig.HttpsListenAddr = bc.LalConfig.HttpsListenAddr
+	cfg.HlsConfig.HttpsCertFile = bc.LalConfig.HttpsCertFile
+	cfg.HlsConfig.HttpsKeyFile = bc.LalConfig.HttpsKeyFile
 	cfg.HlsConfig.CleanupMode = bc.HlsConfig.CleanupMode
 	cfg.HlsConfig.DeleteThreshold = bc.HlsConfig.DeleteThreshold
 	cfg.HlsConfig.Enable = bc.HlsConfig.Enable
@@ -98,12 +108,14 @@ func SetLogicConfig(bc Bootstrap, cfg *logic.Config) {
 	cfg.HlsConfig.SubSessionTimeoutMs = bc.HlsConfig.SubSessionTimeoutMs
 	cfg.HlsConfig.UrlPattern = bc.HlsConfig.UrlPattern
 	cfg.HlsConfig.UseMemoryAsDiskFlag = bc.HlsConfig.UseMemoryAsDiskFlag
+
 	cfg.RecordConfig.EnableFlv = bc.RecordConfig.EnableFlv
 	cfg.RecordConfig.FlvOutPath = bc.RecordConfig.FlvOutPath
 	cfg.RecordConfig.EnableMpegts = bc.RecordConfig.EnableMpegts
 	cfg.RecordConfig.MpegtsOutPath = bc.RecordConfig.MpegtsOutPath
 	cfg.RelayPushConfig.Enable = bc.RelayPushConfig.Enable
 	cfg.RelayPushConfig.AddrList = bc.RelayPushConfig.AddrList
+
 	cfg.StaticRelayPullConfig.Enable = bc.StaticRelayPullConfig.Enable
 	cfg.StaticRelayPullConfig.Addr = bc.StaticRelayPullConfig.Addr
 
@@ -128,6 +140,16 @@ func SetLogicConfig(bc Bootstrap, cfg *logic.Config) {
 	cfg.DebugConfig.LogGroupIntervalSec = 30
 	cfg.DebugConfig.LogGroupMaxGroupNum = 10
 	cfg.DebugConfig.LogGroupMaxSubNumPerGroup = 10
+
+	cfg.HttptsConfig.HttpListenAddr = bc.LalConfig.HttpListenAddr
+	cfg.HttptsConfig.HttpsListenAddr = bc.LalConfig.HttpsListenAddr
+	cfg.HttptsConfig.HttpsCertFile = bc.LalConfig.HttpsCertFile
+	cfg.HttptsConfig.HttpsKeyFile = bc.LalConfig.HttpsKeyFile
+
+	cfg.DefaultHttpConfig.HttpListenAddr = bc.LalConfig.HttpListenAddr
+	cfg.DefaultHttpConfig.HttpsListenAddr = bc.LalConfig.HttpsListenAddr
+	cfg.DefaultHttpConfig.HttpsCertFile = bc.LalConfig.HttpsCertFile
+	cfg.DefaultHttpConfig.HttpsKeyFile = bc.LalConfig.HttpsKeyFile
 }
 
 func SetConfig(bc Bootstrap, cfg *config.Config) {

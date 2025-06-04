@@ -52,28 +52,6 @@ expva/db:
 
 
 # ==================================================================================== #
-# QUALITY CONTROL
-# ==================================================================================== #
-
-## audit: 检查代码依赖/格式化/测试
-.PHONY: audit
-audit:
-	@make title content='Formatting code...'
-	gofumpt -l -w .
-	@make title content='Vetting code...'
-	go vet ./...
-	@make title content='Running tests...'
-	go test -race -vet=off ./...
-
-## vendor: 整理并下载依赖
-.PHONY: vendor
-vendor:
-	@make title content='Tidying and verifying module dependencies...'
-	go mod tidy && go mod verify
-	@make title content='Vendoring dependencies...'
-	go mod vendor
-
-# ==================================================================================== #
 # VERSION
 # ==================================================================================== #
 
@@ -107,7 +85,7 @@ GIT_VERSION_PATCH := $(shell echo $(RECENT_TAG) | cut -d. -f3)
 # FINAL_PATCH := $(shell echo $(GIT_VERSION_PATCH) + $(COMMITS) | bc)
 FINAL_PATCH := $(shell echo '$(GIT_VERSION_PATCH) $(COMMITS)' | awk '{print $$1 + $$2}')
 #VERSION := v$(GIT_VERSION_MAJOR).$(GIT_VERSION_MINOR).$(FINAL_PATCH)
-VERSION := v8.3.2
+VERSION := v8.3.3
 # test:
 # 	@echo ">>>${RECENT_TAG}"
 
@@ -146,7 +124,6 @@ build/local:
 		-trimpath \
 		-ldflags="-s -w \
 			-X main.buildVersion=$(VERSION) \
-			-X main.gitBranch=$(BRANCH_NAME) \
 			-X main.gitHash=$(HASH_AND_DATE) \
 			-X main.buildTimeAt=$(shell date +%s) \
 			-X main.release=true \
@@ -179,14 +156,13 @@ build/windows:
 		-trimpath \
 		-ldflags="-s -w \
 			-X main.buildVersion=$(VERSION) \
-			-X main.gitBranch=$(BRANCH_NAME) \
 			-X main.gitHash=$(HASH_AND_DATE) \
 			-X main.buildTimeAt=$(shell date +%s) \
 			-X main.release=true \
 			" -o=$(dir)/EasyDarwin.exe ./cmd/server
-	@scp -r web configs ${BUILD_WINDOWS_AMD64_DIR}
-	@scp ffmpeg.exe ${BUILD_WINDOWS_AMD64_DIR}
-	@rm -rf ${BUILD_WINDOWS_AMD64_DIR}/configs/data.db
+	@scp -r web configs ${dir}
+	@scp ffmpeg.exe ${dir}
+	@rm -rf ${dir}/configs/data.db
 	@echo '>>> OK'
 
 ## build/arm: 构建Arm应用
@@ -200,7 +176,6 @@ build/arm:
 		-trimpath \
 		-ldflags="-s -w \
 			-X main.buildVersion=$(VERSION) \
-			-X main.gitBranch=$(BRANCH_NAME) \
 			-X main.gitHash=$(HASH_AND_DATE) \
 			-X main.buildTimeAt=$(shell date +%s) \
 			-X main.release=true \

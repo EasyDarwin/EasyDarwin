@@ -118,7 +118,7 @@ func ResetPassword(username string, password, newPassword string) error {
 // 自定义配置目录
 var (
 	startRuntime = time.Now()
-	version      = "8.3.2"
+	version      = "8.3.3"
 	darwinName   = "EasyDarwin"
 )
 

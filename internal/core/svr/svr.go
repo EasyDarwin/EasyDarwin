@@ -21,7 +21,7 @@ func getSleepDuration() time.Duration {
 }
 
 func Start(config *conf.Bootstrap) {
-	svr, err := server.NewLalMaxServer(config.Config, &config.LogicCfg)
+	svr, err := server.NewLalMaxServer(config.Config, config.LogicCfg)
 	if err != nil {
 		nazalog.Fatalf("create lalmax server failed. err=%+v", err)
 		return

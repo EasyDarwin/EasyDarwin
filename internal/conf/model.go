@@ -144,14 +144,15 @@ type Bootstrap struct {
 	RtspConfig            RtspConfig            `json:"rtsp"`
 	SrtConfig             config.SrtConfig      `json:"srt"`
 	StaticRelayPullConfig StaticRelayPullConfig `json:"static_relay_pull"`
-	
+	LalConfig             LalConfig             `json:"lal"` // LalConfig对应的config.toml中则需要是 lalconfig 选项
+
 	*config.Config
-	LogicCfg logic.Config
+	LogicCfg *logic.Config
 }
 
 type Base struct {
-	DisabledCaptcha *bool  `json:"disabled_captcha"`                                            //是否禁用登录验证码
-	Timeout         int64  `json:"timeout" comment:"请求超时时间" `                             // 请求超时时间
+	DisabledCaptcha *bool  `json:"disabled_captcha"`                            //是否禁用登录验证码
+	Timeout         int64  `json:"timeout" comment:"请求超时时间" `                   // 请求超时时间
 	JwtSecret       string `json:"jwt_secret" comment:"jwt 秘钥，空串时，每次启动程序将随机赋值"` // JWT密钥
 }
 
@@ -249,6 +250,12 @@ type RTSPConfig struct {
 	AuthMethod          int    `json:"auth_method"`
 	UserName            string `json:"username"`
 	PassWord            string `json:"password"`
+}
+type LalConfig struct {
+	HttpListenAddr  string `json:"httplistenaddr"`
+	HttpsListenAddr string `json:"httpslistenaddr"`
+	HttpsCertFile   string `json:"httpscertfile"`
+	HttpsKeyFile    string `json:"httpskeyfile"`
 }
 type VodConfig struct {
 	Dir           string `json:"dir"`

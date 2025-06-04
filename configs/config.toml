@@ -27,6 +27,12 @@ httpscertfile = './configs/cert.pem'
 httpskeyfile = './configs/key.pem'
 httpslistenaddr = ':24434'
 
+[lalconfig]
+httplistenaddr = ":8080"
+httpslistenaddr = ""
+httpscertfile = "./conf/cert.pem"
+httpskeyfile = "./conf/key.pem"
+
 [gopcacheconfig]
 gopnum = 0
 singlegopmaxframenum = 200
@@ -36,7 +42,7 @@ boundarybyvideo = true
 cleanupmode = 2
 deletethreshold = 2
 enable = true
-enablehttps = true
+enablehttps = false
 fragmentdurationms = 6000
 fragmentnum = 5
 outpath = './stream/hls/'
