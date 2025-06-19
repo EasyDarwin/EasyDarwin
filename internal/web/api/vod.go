@@ -415,7 +415,10 @@ func (r *VODRouter) list(c *gin.Context) {
 	}
 	db.Count(&total)
 	if form.Sort != "" {
-		db = db.Order(fmt.Sprintf("%s %s", "sort", strings.TrimSuffix(form.Order, "ending")))
+		db = db.Order(fmt.Sprintf("%s %s", form.Sort, strings.TrimSuffix(form.Order, "ending")))
+	} else {
+		// 按照 updateAt 降序
+		db = db.Order(fmt.Sprintf("%s %s", "update_at", "desc"))
 	}
 	var rows []video.TVod
 
@@ -471,7 +474,10 @@ func (r *VODRouter) sharelist(c *gin.Context) {
 	db.Count(&total)
 
 	if form.Sort != "" {
-		db = db.Order(fmt.Sprintf("%s %s", "sort", strings.TrimSuffix(form.Order, "ending")))
+		db = db.Order(fmt.Sprintf("%s %s", form.Sort, strings.TrimSuffix(form.Order, "ending")))
+	} else {
+		// 按照 updateAt 降序
+		db = db.Order(fmt.Sprintf("%s %s", "update_at", "desc"))
 	}
 	var rows []video.TVod
 	db.Limit(int(form.Limit)).Offset(int(form.Start)).Find(&rows)

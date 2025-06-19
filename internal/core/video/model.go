@@ -6,7 +6,10 @@
 // (xukongzangpusa, 20250424, add)
 package video
 
-import "easydarwin/internal/gutils/etime"
+import (
+	"easydarwin/internal/gutils/etime"
+	"time"
+)
 
 // TVod 点播表
 type TVod struct {
@@ -33,6 +36,7 @@ type TVod struct {
 	IsResolution       bool            `json:"isresolution" gorm:"-"`
 	ResolutionDefault  string          `json:"resolutiondefault" gorm:"-"`
 	TransVideo         bool            `json:"transvideo" gorm:"default:0"`
+	UpdateAt           time.Time       `json:"updateAt" gorm:"type:datetime;autoUpdateTime"`
 }
 
 // 表名称
