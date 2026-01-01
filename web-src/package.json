@@ -24,7 +24,7 @@
     "pinia": "^2.2.4",
     "pinia-plugin-persistedstate": "^3.2.3",
     "qrcode-vue3": "^1.7.1",
-    "qs": "^6.13.0",
+    "qs": "^6.14.1",
     "slider-verify-v3": "^1.1.12",
     "vue": "^3.5.11",
     "vue-clipboard3": "^2.0.0",
