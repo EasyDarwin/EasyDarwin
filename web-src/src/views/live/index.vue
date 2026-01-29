@@ -17,7 +17,7 @@ const columns = [
   { title: '状态', align: 'center', width: 80, dataIndex: 'online', key: 'online' },
   { title: '类型', align: 'center', width: 100, dataIndex: 'liveType', key: 'liveType' },
   { title: '启用', align: 'center', width: 80, dataIndex: 'enable', key: 'enable' },
-  // { title: '按需', align: 'center', width: 80, dataIndex: 'onDemand', key: 'onDemand' },
+  { title: '全时直播', align: 'center', width: 100, dataIndex: 'onDemand', key: 'onDemand' },
   // { title: '音频', align: 'center', width: 80, dataIndex: 'audio', key: 'audio' },
   { title: '详情', align: 'center', width: 80, dataIndex: 'info', key: 'info' },
   { title: '地址', align: 'center', width: 100, dataIndex: 'url', key: 'url' },
@@ -389,12 +389,12 @@ onBeforeUnmount(() => {
         <template v-if="column.key === 'enable'">
           <a-switch v-model:checked="record.enable" @change="onSwitch('enable', record)" />
         </template>
-        <!-- <template v-if="column.key === 'onDemand'">
-                    <a-switch v-model:checked="record.onDemand" @change="onSwitch('onDemand', record)" />
-                </template>
-                <template v-if="column.key === 'audio'">
-                    <a-switch v-model:checked="record.audio" @change="onSwitch('audio', record)" />
-                </template> -->
+        <template v-if="column.key === 'onDemand'">
+          <a-switch v-model:checked="record.onDemand" @change="onSwitch('onDemand', record)" />
+      </template>
+      <!-- <template v-if="column.key === 'audio'">
+          <a-switch v-model:checked="record.audio" @change="onSwitch('audio', record)" />
+      </template> -->
         <template v-if="column.key === 'snapURL'">
           <a-flex justify="center">
             <a-popover placement="left">

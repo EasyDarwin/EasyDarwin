@@ -65,6 +65,7 @@ func (l LiveStreamAPI) pubStart(c *gin.Context) {
 		slog.Error(fmt.Sprintf("pub start sscanf err:[%v]", err))
 		return
 	}
+
 	live, err := source.LiveCore.FindInfoLiveStream(id)
 	if err != nil {
 		slog.Error(fmt.Sprintf("pub start find live name:[%s] err:[%v]", onPubStart.StreamName, err))
@@ -86,6 +87,36 @@ func (l LiveStreamAPI) pubStart(c *gin.Context) {
 			return
 		}
 	}
+	// todo: 前台播放跳过这个拦截
+	if !live.OnDemand {
+
+		err = source.LiveCore.UpdateLiveStreamInt(live.ID, "online", 1)
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub start update session id live id:[%d] name:[%s] err:[%v]", live.ID, onPubStart.StreamName, err))
+			return
+		}
+		err = source.LiveCore.UpdateLiveStreamString(live.ID, "session_id", onPubStart.SessionId)
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub start update session id live id:[%d] name:[%s] err:[%v]", live.ID, onPubStart.StreamName, err))
+			return
+		}
+		if time.Since(live.LastAt) > time.Second*15 {
+			_, err = l.KickOutLive(onPubStart.StreamName, onPubStart.SessionId)
+			if err != nil {
+				slog.Error(fmt.Sprintf("pub start kick out live:[%s] err:[%v]", onPubStart.StreamName, err))
+				return
+			}
+		} else {
+			err = source.LiveCore.UpdateLiveStreamInt(live.ID, "online", 2)
+			if err != nil {
+				slog.Error(fmt.Sprintf("pub start update session id live id:[%d] name:[%s] err:[%v]", live.ID, onPubStart.StreamName, err))
+				return
+			}
+		}
+
+		return
+	}
+
 	err = source.LiveCore.UpdateLiveStreamString(live.ID, "session_id", onPubStart.SessionId)
 	if err != nil {
 		slog.Error(fmt.Sprintf("pub start update session id live id:[%d] name:[%s] err:[%v]", live.ID, onPubStart.StreamName, err))
@@ -122,10 +153,17 @@ func (l LiveStreamAPI) pubStop(c *gin.Context) {
 		slog.Error(fmt.Sprintf("pub stop update session id live id:[%d] name:[%s] err:[%v]", live.ID, onPubStart.StreamName, err))
 		return
 	}
-	err = source.LiveCore.UpdateLiveStreamInt(live.ID, "online", 0)
+	live, err = source.LiveCore.FindInfoLiveStream(id)
 	if err != nil {
-		slog.Error(fmt.Sprintf("pub stop update session id live id:[%d] name:[%s] err:[%v]", live.ID, onPubStart.StreamName, err))
+		slog.Error(fmt.Sprintf("pub start find live name:[%s] err:[%v]", onPubStart.StreamName, err))
 		return
+	}
+	if live.OnDemand {
+		err = source.LiveCore.UpdateLiveStreamInt(live.ID, "online", 0)
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub stop update session id live id:[%d] name:[%s] err:[%v]", live.ID, onPubStart.StreamName, err))
+			return
+		}
 	}
 }
 
@@ -240,7 +278,7 @@ func PostUrl(url string, jsonStr string) ([]byte, error) {
 
 // 踢出直播流
 func (l LiveStreamAPI) KickOutLive(name, id string) (bool, error) {
-	httpPort := data.GetConfig().LogicCfg.DefaultHttpConfig.HttpListenAddr
+	httpPort := data.GetConfig().DefaultHttpConfig.HttpListenAddr
 	url := fmt.Sprintf("http://127.0.0.1%s%s", httpPort, livestream.KICK_OUT_API)
 	kickSess := livestream.OutSession{
 		StreamName: name,
@@ -362,6 +400,32 @@ func (l LiveStreamAPI) updateOnePush(c *gin.Context) {
 		if err != nil {
 			web.Fail(c, web.ErrBadRequest.Msg("更新enable失败"))
 			return
+		}
+	case "onDemand":
+		key = "on_demand"
+		var live livestream.LiveStream
+		live, err = source.LiveCore.FindInfoLiveStream(id)
+		if err != nil {
+			web.Fail(c, err)
+			return
+		}
+		if value == 1 {
+			live.OnDemand = true
+		} else {
+			live.OnDemand = false
+		}
+		err = source.LiveCore.UpdateLiveStreamInt(id, key, value)
+		if err != nil {
+			web.Fail(c, web.ErrBadRequest.Msg("更新enable失败"))
+			return
+		}
+		if value == 0 && live.SessionId != "" && live.Authed {
+			_, errs := l.KickOutLive(fmt.Sprintf("stream_%d", live.ID), live.SessionId)
+			if errs != nil {
+				slog.Error(fmt.Sprintf("pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
+				web.Fail(c, web.ErrBadRequest.Msg("关闭推流停止失败"))
+				return
+			}
 		}
 	case "sign":
 		key = "sign"

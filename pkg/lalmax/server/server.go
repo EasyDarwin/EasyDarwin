@@ -87,7 +87,6 @@ func NewLalMaxServer(conf *config.Config, config2 *logic.Config) (*LalMaxServer,
 		option.ConfFilename = conf.LalSvrConfigPath
 		//option.NotifyHandler = NewHttpNotify(conf.HttpNotifyConfig, conf.ServerId)
 	})
-
 	maxsvr := &LalMaxServer{
 		lalsvr: lalsvr,
 		conf:   conf,

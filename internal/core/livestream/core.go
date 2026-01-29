@@ -12,6 +12,7 @@ type Storer interface {
 	Delete(id int) error                                  // 删除
 	Find(v *[]*LiveStream, in PagerFilter) (int64, error) // 查询列表
 	FindAll(v *[]LiveStream) (int64, error)               // 查询全部列表
+	FindPushAll(v *[]LiveStream) (int64, error)           // 查询全部列表
 	GetByID(v *LiveStream, id int) error                  // 查询单条
 	Update(v *LiveStream, id int) error                   // 更新
 	UpdateInt(id int, k string, v int) error              // 更新单个字段
@@ -102,6 +103,15 @@ func (c Core) FindLiveStreamALl() ([]LiveStream, int64, error) {
 	}
 	return lives, total, err
 }
+func (c Core) FindLiveStreamPushALl() ([]LiveStream, int64, error) {
+	lives := make([]LiveStream, 0)
+	total, err := c.Storer.FindPushAll(&lives)
+	// 如果查询出错，返回错误信息
+	if err != nil {
+		return nil, 0, web.ErrDB.Withf("total, err[%s] := c.Storer.FindPushAll(&lives)", err)
+	}
+	return lives, total, err
+}
 func (c Core) UpdateLiveStreamInt(id int, key string, value int) error {
 	if err := c.Storer.UpdateInt(id, key, value); err != nil {
 		return web.ErrUsedLogic.Msg("更新状态失败").With(err.Error(), fmt.Sprintf(`c.Storer.UpdateInt(%d, "online", %d)`, id, value))
@@ -133,6 +143,7 @@ func (c Core) CreatePushStream(input PushInput) (LiveStream, error) {
 	live.Name = input.Name
 	live.Enable = input.Enable
 	live.Authed = input.Authed
+	live.OnDemand = input.OnDemand
 	live.Sign = gutils.GenerateRandomString(10)
 	err := c.Storer.Create(&live)
 	if err != nil {
@@ -149,6 +160,7 @@ func (c Core) UpdatePushStream(input PushInput, id int) error {
 	live.ID = id
 	live.Enable = input.Enable
 	live.Authed = input.Authed
+	live.OnDemand = input.OnDemand
 	return c.Storer.Update(&live, id)
 }
 func (c Core) UpdatePush(live LiveStream, id int) error {

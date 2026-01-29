@@ -62,6 +62,7 @@ func registerLiveStream(r gin.IRouter) {
 	l := LiveStreamAPI{
 		database: data.GetDatabase(),
 	}
+	l.TickCheckPush()
 	{
 		r.Any("/push/on_pub_start", l.pubStart)
 		r.Any("/push/on_pub_stop", l.pubStop)

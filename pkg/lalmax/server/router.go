@@ -243,7 +243,6 @@ func (s *LalMaxServer) ctrlKickSessionHandler(c *gin.Context) {
 	}
 
 	Log.Infof("http api kick session. req info=%+v", info)
-
 	resp := s.lalsvr.CtrlKickSession(info)
 	c.JSON(http.StatusOK, resp)
 }

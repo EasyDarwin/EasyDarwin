@@ -16,6 +16,7 @@ import (
 	"log/slog"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type LiveStreamAPI struct {
@@ -116,6 +117,12 @@ func (l LiveStreamAPI) playStart(c *gin.Context) {
 		return
 	}
 	if out.LiveType == livestream.LIVE_PUSH {
+
+		err = source.LiveCore.UpdateLiveStreamString(id, "last_at", time.Now().String())
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub start update session id live id:[%d]  err:[%v]", id, err))
+			return
+		}
 		urlInfo := l.GetLiveStreamUrl(c, out)
 		web.Success(c, gin.H{"info": urlInfo})
 		return

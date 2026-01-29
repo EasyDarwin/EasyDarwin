@@ -138,7 +138,6 @@ require (
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/discoviking/fsm v0.0.0-20150126104936-f4a273feecca // indirect
 	github.com/elgs/gostrgen v0.0.0-20161222160715-9d61ae07eeae // indirect
-	github.com/gin-gonic/contrib v0.0.0-20250113154928-93b827325fec // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect

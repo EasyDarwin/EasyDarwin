@@ -4,7 +4,7 @@ import QRCodeVue3 from "qrcode-vue3";
 import { notification } from 'ant-design-vue'
 import { live } from "@/api";
 import { copyText } from "@/utils";
-import { CopyOutlined,ReloadOutlined } from '@ant-design/icons-vue'
+import { CopyOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 const emit = defineEmits(['ok'])
 const open = ref(false)
 const liveType = ref("pull")
@@ -16,16 +16,16 @@ const onFinish = () => {
         formState.speedEnum = 0
     }
     if (isAdd.value) {
-        live.postLive(liveType.value,toRaw(formState)).then(res => {
+        live.postLive(liveType.value, toRaw(formState)).then(res => {
             if (res.status == 200) {
-                notification.success({description:"添加成功!"});
+                notification.success({ description: "添加成功!" });
                 emit("ok")
             }
         })
     } else {
-        live.putLive(liveType.value,id.value, toRaw(formState)).then(res => {
+        live.putLive(liveType.value, id.value, toRaw(formState)).then(res => {
             if (res.status == 200) {
-                notification.success({description:"修改成功!"});
+                notification.success({ description: "修改成功!" });
                 emit("ok")
             }
         })
@@ -40,7 +40,7 @@ const setOpen = (data) => {
     if (data == null) {
         isAdd.value = true
     } else {
-        liveType.value= data.liveType
+        liveType.value = data.liveType
         isAdd.value = false
         formState.name = data?.name
         formState.url = data?.url
@@ -56,7 +56,7 @@ const setOpen = (data) => {
     open.value = true
 };
 const onSign = () => {
-    live.putLiveOne(liveType.value,id.value, "sign", 0).then(res => {
+    live.putLiveOne(liveType.value, id.value, "sign", 0).then(res => {
         if (res.status == 200) {
             queryData()
             notification.success({ description: "更新成功!" });
@@ -75,10 +75,10 @@ const init = () => {
     formState.onDemand = false
     formState.audio = false
     formState.transType = "TCP"
-    formState.isLive =  true
-    formState.speedEnum =  0
+    formState.isLive = true
+    formState.speedEnum = 0
     id.value = 0
-    liveType.value='pull'
+    liveType.value = 'pull'
 }
 const labelCol = {
     style: {
@@ -98,13 +98,13 @@ defineExpose({
             </a-form-item>
             <a-form-item label="类型">
                 <a-radio-group v-model:value="liveType">
-                    <template v-if="id==0">
-                        <a-radio-button value="pull" >拉流</a-radio-button>
-                        <a-radio-button value="push" >推流</a-radio-button>
+                    <template v-if="id == 0">
+                        <a-radio-button value="pull">拉流</a-radio-button>
+                        <a-radio-button value="push">推流</a-radio-button>
                     </template>
                     <template v-else>
-                        <a-radio-button value="pull" v-if="liveType=='pull'">拉流</a-radio-button>
-                        <a-radio-button value="push" v-if="liveType=='push'">推流</a-radio-button>
+                        <a-radio-button value="pull" v-if="liveType == 'pull'">拉流</a-radio-button>
+                        <a-radio-button value="push" v-if="liveType == 'push'">推流</a-radio-button>
                     </template>
                 </a-radio-group>
             </a-form-item>
@@ -115,12 +115,12 @@ defineExpose({
                 <a-form-item label="推流鉴权">
                     <a-switch v-model:checked="formState.authed" />
                 </a-form-item>
-                <a-form-item label="推流地址" v-if="formState.url!=''">
+                <a-form-item label="推流地址" v-if="formState.url != ''">
                     <a-input v-model:value="formState.url" disabled>
                         <template #addonBefore>
                             <a-popover placement="top">
                                 <template #content>
-                                    <a-tag :bordered="false" color="warning" >注: 启用鉴权后更新鉴权，推流会断开重新校验!</a-tag>
+                                    <a-tag :bordered="false" color="warning">注: 启用鉴权后更新鉴权，推流会断开重新校验!</a-tag>
                                 </template>
                                 <template #title></template>
                                 <ReloadOutlined class="cp" @click="onSign()" />
@@ -131,33 +131,28 @@ defineExpose({
                         </template>
                     </a-input>
                 </a-form-item>
-              <a-form-item label="扫码推流" v-if="formState.url!=''">
-                <QRCodeVue3
-                  :width="200"
-                  :height="200"
-                  :value="formState.url"
-                  :qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
-                  :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 0 }"
-                  :dotsOptions="{
-                    type: 'dots',
-                    color: '#000000',
-                    gradient: {
-                      type: 'linear',
-                      rotation: 0,
-                      colorStops: [
-                        { offset: 0, color: '#000000' },
-                        { offset: 1, color: '#000000' },
-                      ],
-                    },
-                  }"
-                  :backgroundOptions="{ color: '#ffffff' }"
-                  :cornersSquareOptions="{ type: 'dot', color: '#000000' }"
-                  :cornersDotOptions="{ type: undefined, color: '#000000' }"
-                  fileExt="png"
-                  myclass="my-qur"
-                  imgclass="img-qr"
-                />
-              </a-form-item>
+                <a-form-item label="其他">
+                    <a-checkbox v-model:checked="formState.onDemand">全时直播</a-checkbox>
+                </a-form-item>
+                <a-form-item label="扫码推流" v-if="formState.url != ''">
+                    <QRCodeVue3 :width="200" :height="200" :value="formState.url"
+                        :qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
+                        :imageOptions="{ hideBackgroundDots: true, imageSize: 0.4, margin: 0 }" :dotsOptions="{
+                            type: 'dots',
+                            color: '#000000',
+                            gradient: {
+                                type: 'linear',
+                                rotation: 0,
+                                colorStops: [
+                                    { offset: 0, color: '#000000' },
+                                    { offset: 1, color: '#000000' },
+                                ],
+                            },
+                        }" :backgroundOptions="{ color: '#ffffff' }"
+                        :cornersSquareOptions="{ type: 'dot', color: '#000000' }"
+                        :cornersDotOptions="{ type: undefined, color: '#000000' }" fileExt="png" myclass="my-qur"
+                        imgclass="img-qr" />
+                </a-form-item>
             </template>
             <template v-if="liveType == 'pull'">
                 <a-form-item label="地址">
@@ -169,7 +164,7 @@ defineExpose({
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="倍速" v-if="!formState.isLive">
-                    <a-select v-model:value="formState.speedEnum" style="width: 133px" >
+                    <a-select v-model:value="formState.speedEnum" style="width: 133px">
                         <a-select-option :value="0">标准</a-select-option>
                         <a-select-option :value="6">2倍速</a-select-option>
                         <a-select-option :value="7">4倍速</a-select-option>
@@ -186,7 +181,7 @@ defineExpose({
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="其他">
-                    <a-checkbox v-model:checked="formState.onDemand">按需</a-checkbox>
+                    <a-checkbox v-model:checked="formState.onDemand">全时直播</a-checkbox>
                     <a-checkbox v-model:checked="formState.audio">音频</a-checkbox>
                 </a-form-item>
             </template>
