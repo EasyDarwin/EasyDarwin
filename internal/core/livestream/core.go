@@ -14,6 +14,7 @@ type Storer interface {
 	FindAll(v *[]LiveStream) (int64, error)               // 查询全部列表
 	FindPushAll(v *[]LiveStream) (int64, error)           // 查询全部列表
 	GetByID(v *LiveStream, id int) error                  // 查询单条
+	GetCustomID(v *LiveStream, customId string) error     // 查询自定义ID
 	Update(v *LiveStream, id int) error                   // 更新
 	UpdateInt(id int, k string, v int) error              // 更新单个字段
 	UpdateString(id int, k string, v string) error        // 更新单个字段
@@ -75,6 +76,14 @@ func (c Core) GetLiveStreamByID(id int) error {
 		return web.ErrUsedLogic.Msg("直播不存在").With(err.Error(), fmt.Sprintf(`c.Storer.GetByID(&l, %d)`, id))
 	}
 	return nil
+}
+func (c Core) GetLiveStreamCustomID(customId string) (LiveStream, error) {
+	var l LiveStream
+	err := c.Storer.GetCustomID(&l, customId)
+	if err != nil {
+		return l, web.ErrDB.Withf("err[%s] := c.Storer.GetCustomID(&l, customId)", err)
+	}
+	return l, nil
 }
 func (c Core) FindInfoLiveStream(id int) (LiveStream, error) {
 	var l LiveStream
@@ -144,6 +153,7 @@ func (c Core) CreatePushStream(input PushInput) (LiveStream, error) {
 	live.Enable = input.Enable
 	live.Authed = input.Authed
 	live.OnDemand = input.OnDemand
+	live.CustomId = input.CustomId
 	live.Sign = gutils.GenerateRandomString(10)
 	err := c.Storer.Create(&live)
 	if err != nil {
@@ -161,6 +171,7 @@ func (c Core) UpdatePushStream(input PushInput, id int) error {
 	live.Enable = input.Enable
 	live.Authed = input.Authed
 	live.OnDemand = input.OnDemand
+	live.CustomId = input.CustomId
 	return c.Storer.Update(&live, id)
 }
 func (c Core) UpdatePush(live LiveStream, id int) error {

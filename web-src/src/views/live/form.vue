@@ -49,7 +49,9 @@ const setOpen = (data) => {
         formState.audio = data?.audio
         formState.transType = data?.transType
         formState.authed = data?.authed
+        formState.customId = data?.customId
         formState.speedEnum = data?.speedEnum
+        formState.isLive = data?.isLive
         formState.isLive = data?.isLive
         id.value = data?.id
     }
@@ -70,6 +72,7 @@ const setClose = () => {
 const init = () => {
     formState.name = ''
     formState.url = ''
+    formState.customId = ""
     formState.authed = true
     formState.enable = true
     formState.onDemand = false
@@ -82,7 +85,7 @@ const init = () => {
 }
 const labelCol = {
     style: {
-        width: '80px',
+        width: '100px',
     },
 };
 defineExpose({
@@ -112,6 +115,9 @@ defineExpose({
                 <a-input v-model:value="formState.name" placeholder="请输入名称" />
             </a-form-item>
             <template v-if="liveType == 'push'">
+                <a-form-item label="自定义推流ID" name="customId" >
+                    <a-input v-model:value="formState.customId" :disabled="!isAdd" placeholder="不填为推流ID默认生成" />
+                </a-form-item>
                 <a-form-item label="推流鉴权">
                     <a-switch v-model:checked="formState.authed" />
                 </a-form-item>

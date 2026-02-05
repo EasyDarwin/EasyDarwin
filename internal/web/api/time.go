@@ -24,8 +24,10 @@ func (l LiveStreamAPI) TickCheckPush() {
 						continue
 					}
 					if time.Since(live.LastAt) > time.Second*15 {
-
 						StreamName := fmt.Sprintf("stream_%d", live.ID)
+						if live.CustomId != "" {
+							StreamName = fmt.Sprintf("%s", live.CustomId)
+						}
 						_, err = l.KickOutLive(StreamName, live.SessionId)
 						if err != nil {
 							slog.Error(fmt.Sprintf("pub start kick out live:[%s] err:[%v]", StreamName, err))

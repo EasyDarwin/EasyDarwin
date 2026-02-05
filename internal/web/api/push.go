@@ -54,22 +54,38 @@ func (l LiveStreamAPI) GetGroupsInfo(id int) ([]byte, error) {
 
 func (l LiveStreamAPI) pubStart(c *gin.Context) {
 	var onPubStart = &livestream.PubInfo{}
-	err := c.Bind(onPubStart)
+	var err error
+	err = c.Bind(onPubStart)
 	if err != nil {
 		slog.Error(fmt.Sprintf("pub start bind err:[%v]", err))
 		return
 	}
 	var id int
-	_, err = fmt.Sscanf(onPubStart.StreamName, "stream_%d", &id)
-	if err != nil {
-		slog.Error(fmt.Sprintf("pub start sscanf err:[%v]", err))
-		return
-	}
+	var live livestream.LiveStream
 
-	live, err := source.LiveCore.FindInfoLiveStream(id)
+	live, err = source.LiveCore.GetLiveStreamCustomID(onPubStart.StreamName)
 	if err != nil {
-		slog.Error(fmt.Sprintf("pub start find live name:[%s] err:[%v]", onPubStart.StreamName, err))
-		return
+		_, err = fmt.Sscanf(onPubStart.StreamName, "stream_%d", &id)
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub start sscanf err:[%v]", err))
+			return
+		}
+		live, err = source.LiveCore.FindInfoLiveStream(id)
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub start find live name:[%s] err:[%v]", onPubStart.StreamName, err))
+			return
+		}
+
+		if live.CustomId != "" {
+			_, err = l.KickOutLive(onPubStart.StreamName, onPubStart.SessionId)
+			if err != nil {
+				slog.Error(fmt.Sprintf("pub start kick out live:[%s] err:[%v]", onPubStart.StreamName, err))
+				return
+			}
+			return
+		}
+	} else {
+		id = live.ID
 	}
 	if !live.Enable {
 		slog.Error(fmt.Sprintf("pub start enable live out  id:[%d] name:[%s] Enable:[%v]", live.ID, onPubStart.StreamName, live.Enable))
@@ -137,16 +153,26 @@ func (l LiveStreamAPI) pubStop(c *gin.Context) {
 		return
 	}
 	var id int
-	_, err = fmt.Sscanf(onPubStart.StreamName, "stream_%d", &id)
-	if err != nil {
-		slog.Error(fmt.Sprintf("pub stop sscanf err:[%v]", err))
-		return
-	}
+	var live livestream.LiveStream
 
-	live, err := source.LiveCore.FindInfoLiveStream(id)
+	live, err = source.LiveCore.GetLiveStreamCustomID(onPubStart.StreamName)
 	if err != nil {
-		slog.Error(fmt.Sprintf("pub stop find live name:[%s] err:[%v]", onPubStart.StreamName, err))
-		return
+		_, err = fmt.Sscanf(onPubStart.StreamName, "stream_%d", &id)
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub stop sscanf err:[%v]", err))
+			return
+		}
+		live, err = source.LiveCore.FindInfoLiveStream(id)
+		if err != nil {
+			slog.Error(fmt.Sprintf("pub stop find live name:[%s] err:[%v]", onPubStart.StreamName, err))
+			return
+		}
+		if live.CustomId != "" {
+			slog.Error(fmt.Sprintf("pub stop customId err:[%v]", err))
+			return
+		}
+	} else {
+		id = live.ID
 	}
 	err = source.LiveCore.UpdateLiveStreamString(live.ID, "session_id", "")
 	if err != nil {
@@ -355,7 +381,11 @@ func (l LiveStreamAPI) updatePush(c *gin.Context) {
 		return
 	}
 	if !live.Enable && live.SessionId != "" {
-		_, errs := l.KickOutLive(fmt.Sprintf("stream_%d", live.ID), live.SessionId)
+		streamName := fmt.Sprintf("stream_%d", live.ID)
+		if live.CustomId != "" {
+			streamName = live.CustomId
+		}
+		_, errs := l.KickOutLive(streamName, live.SessionId)
 		if errs != nil {
 			slog.Error(fmt.Sprintf("pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
 			web.Fail(c, web.ErrBadRequest.Msg("更新推流停止失败"))
@@ -389,7 +419,11 @@ func (l LiveStreamAPI) updateOnePush(c *gin.Context) {
 			return
 		}
 		if value == 0 && live.SessionId != "" {
-			_, errs := l.KickOutLive(fmt.Sprintf("stream_%d", live.ID), live.SessionId)
+			streamName := fmt.Sprintf("stream_%d", live.ID)
+			if live.CustomId != "" {
+				streamName = live.CustomId
+			}
+			_, errs := l.KickOutLive(streamName, live.SessionId)
 			if errs != nil {
 				slog.Error(fmt.Sprintf("pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
 				web.Fail(c, web.ErrBadRequest.Msg("关闭推流停止失败"))
@@ -420,7 +454,11 @@ func (l LiveStreamAPI) updateOnePush(c *gin.Context) {
 			return
 		}
 		if value == 0 && live.SessionId != "" && live.Authed {
-			_, errs := l.KickOutLive(fmt.Sprintf("stream_%d", live.ID), live.SessionId)
+			streamName := fmt.Sprintf("stream_%d", live.ID)
+			if live.CustomId != "" {
+				streamName = live.CustomId
+			}
+			_, errs := l.KickOutLive(streamName, live.SessionId)
 			if errs != nil {
 				slog.Error(fmt.Sprintf("pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
 				web.Fail(c, web.ErrBadRequest.Msg("关闭推流停止失败"))

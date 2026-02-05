@@ -89,6 +89,10 @@ func (d DB) FindPushAll(v *[]livestream.LiveStream) (int64, error) {
 func (d DB) GetByID(v *livestream.LiveStream, id int) error {
 	return d.db.Model(&livestream.LiveStream{}).Where(`id=?`, id).First(v).Error
 }
+func (d DB) GetCustomID(v *livestream.LiveStream, customId string) error {
+	return d.db.Model(&livestream.LiveStream{}).Where(`custom_id=?`, customId).First(v).Error
+}
+
 func (d DB) UpdateInt(id int, key string, v int) error {
 	if err := d.db.Model(&livestream.LiveStream{}).Where("id=?", id).Update(key, v).Error; err != nil {
 		return err

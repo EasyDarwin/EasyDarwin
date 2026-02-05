@@ -16,6 +16,7 @@ const (
 type LiveStream struct {
 	ID          int       `gorm:"primaryKey;" json:"id"`
 	Name        string    `json:"name"`                          // 名称
+	CustomId    string    `json:"customId"`                      // 自定义推流ID
 	Url         string    `json:"url"`                           // 地址
 	LiveType    string    `json:"liveType"`                      // 类型
 	Online      int       `json:"online"`                        // 状态
@@ -53,6 +54,7 @@ type LiveInput struct {
 }
 type PushInput struct {
 	Name     string `json:"name"`                          // 名称
+	CustomId string `json:"customId"`                      // 自定义推流ID
 	Enable   bool   `gorm:"default:false" json:"enable"`   // 启用
 	Authed   bool   `json:"authed"`                        // 是否启用推流验证
 	OnDemand bool   `gorm:"default:false" json:"onDemand"` // 按需

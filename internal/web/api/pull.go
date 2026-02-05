@@ -63,7 +63,11 @@ func (l LiveStreamAPI) find(c *gin.Context) {
 	host := hostStr[0]
 	for i, stream := range lives {
 		if stream.LiveType == livestream.LIVE_PUSH {
-			lives[i].Url = fmt.Sprintf("rtmp://%s%s/live/stream_%d?sign=%s", host, rtmpPort, stream.ID, stream.Sign)
+			if stream.CustomId != "" {
+				lives[i].Url = fmt.Sprintf("rtmp://%s%s/live/%s?sign=%s", host, rtmpPort, stream.CustomId, stream.Sign)
+			} else {
+				lives[i].Url = fmt.Sprintf("rtmp://%s%s/live/stream_%d?sign=%s", host, rtmpPort, stream.ID, stream.Sign)
+			}
 		}
 	}
 	// 返回查询结果
@@ -92,7 +96,13 @@ func (l LiveStreamAPI) getPlayUrl(c *gin.Context) {
 		web.Fail(c, err)
 		return
 	}
-	urlInfo := l.GetLiveUrl(c, id)
+	out, err := source.LiveCore.FindInfoLiveStream(id)
+	if err != nil {
+		// 如果查询失败，返回错误信息
+		web.Fail(c, err)
+		return
+	}
+	urlInfo := l.GetLiveUrl(c, out.ID, out.Name, out.CustomId)
 	web.Success(c, gin.H{"info": urlInfo})
 }
 
@@ -164,9 +174,9 @@ func (l LiveStreamAPI) createPull(c *gin.Context) {
 	if err != nil {
 		slog.Error(fmt.Sprintf("添加 拉流失败[%d]%s\n", live.ID, err))
 	}
-
 	rawStr := fmt.Sprintf("/snap/stream_%d/stream_%d.raw", live.ID, live.ID)
 	jpgStr := fmt.Sprintf("/snap/stream_%d/stream_%d.jpg", live.ID, live.ID)
+
 	err = source.LiveCore.UpdateLiveStreamSnap(live.ID, rawStr, jpgStr)
 	if err != nil {
 		web.Fail(c, err)
@@ -226,15 +236,15 @@ func (l LiveStreamAPI) updatePull(c *gin.Context) {
 }
 
 func (l LiveStreamAPI) GetLiveStreamUrl(c *gin.Context, live livestream.LiveStream) livestream.LivePlayer {
-	return l.getLiveUrl(c, live.ID, live.Name)
+	return l.getLiveUrl(c, live.ID, live.Name, live.CustomId)
 }
 
 // GetLiveUrl 根据id获取流的url
-func (l LiveStreamAPI) GetLiveUrl(c *gin.Context, id int) livestream.LivePlayer {
-	return l.getLiveUrl(c, id, "")
+func (l LiveStreamAPI) GetLiveUrl(c *gin.Context, id int, name, customId string) livestream.LivePlayer {
+	return l.getLiveUrl(c, id, name, customId)
 }
 
-func (l LiveStreamAPI) getLiveUrl(c *gin.Context, id int, name string) livestream.LivePlayer {
+func (l LiveStreamAPI) getLiveUrl(c *gin.Context, id int, name, customId string) livestream.LivePlayer {
 	hostStr := strings.Split(c.Request.Host, ":")
 	host := hostStr[0]
 	//httpPort := l.Conf.Server.HTTP.Port
@@ -255,17 +265,31 @@ func (l LiveStreamAPI) getLiveUrl(c *gin.Context, id int, name string) livestrea
 		httpStr = "https"
 		wsStr = "wss"
 	}
-	urlInfo := livestream.LivePlayer{
-		ID:      id,
-		Name:    name,
-		HttpFlv: fmt.Sprintf("%s://%s%s/flv/live/stream_%d.flv", httpStr, host, httpPort, id),
-		HttpHls: fmt.Sprintf("%s://%s%s/ts/hls/stream_%d/playlist.m3u8", httpStr, host, httpPort, id),
-		WsFlv:   fmt.Sprintf("%s://%s%s/ws_flv/live/stream_%d.flv", wsStr, host, httpPort, id),
-		WEBRTC:  fmt.Sprintf("webrtc://%s%s/webrtc/play/live/stream_%d", host, rtcPort, id),
-		//RTMP:    fmt.Sprintf("rtmp://%s%s/live/stream_%d", host, rtmpPort, live.ID),
-		RTSP: fmt.Sprintf("rtsp://%s%s/live/stream_%d", host, rtspPort, id),
-	}
+	var urlInfo livestream.LivePlayer
+	if customId != "" {
+		urlInfo = livestream.LivePlayer{
+			ID:      id,
+			Name:    name,
+			HttpFlv: fmt.Sprintf("%s://%s%s/flv/live/%s.flv", httpStr, host, httpPort, customId),
+			HttpHls: fmt.Sprintf("%s://%s%s/ts/hls/%s/playlist.m3u8", httpStr, host, httpPort, customId),
+			WsFlv:   fmt.Sprintf("%s://%s%s/ws_flv/live/%s.flv", wsStr, host, httpPort, customId),
+			WEBRTC:  fmt.Sprintf("webrtc://%s%s/webrtc/play/live/%s", host, rtcPort, customId),
+			//RTMP:    fmt.Sprintf("rtmp://%s%s/live/%s", host, rtmpPort, live.ID),
+			RTSP: fmt.Sprintf("rtsp://%s%s/live/%s", host, rtspPort, customId),
+		}
 
+	} else {
+		urlInfo = livestream.LivePlayer{
+			ID:      id,
+			Name:    name,
+			HttpFlv: fmt.Sprintf("%s://%s%s/flv/live/stream_%d.flv", httpStr, host, httpPort, id),
+			HttpHls: fmt.Sprintf("%s://%s%s/ts/hls/stream_%d/playlist.m3u8", httpStr, host, httpPort, id),
+			WsFlv:   fmt.Sprintf("%s://%s%s/ws_flv/live/stream_%d.flv", wsStr, host, httpPort, id),
+			WEBRTC:  fmt.Sprintf("webrtc://%s%s/webrtc/play/live/stream_%d", host, rtcPort, id),
+			//RTMP:    fmt.Sprintf("rtmp://%s%s/live/stream_%d", host, rtmpPort, live.ID),
+			RTSP: fmt.Sprintf("rtsp://%s%s/live/stream_%d", host, rtspPort, id),
+		}
+	}
 	return urlInfo
 }
 
