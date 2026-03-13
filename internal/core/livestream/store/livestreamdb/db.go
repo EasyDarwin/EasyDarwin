@@ -78,11 +78,13 @@ func (d DB) FindPushAll(v *[]livestream.LiveStream) (int64, error) {
 	db := d.db.Model(new(livestream.LiveStream))
 	var total int64
 	// 查询符合条件的总数
-	if err := db.Count(&total).Where(`live_type = ?`, livestream.LIVE_PUSH).Error; err != nil {
+	//.Where(`live_type = ?`, livestream.LIVE_PUSH)
+	//.Where(`live_type = ?`, livestream.LIVE_PUSH)
+	if err := db.Count(&total).Error; err != nil {
 		return 0, err
 	}
 	// 查询符合条件的数据，并按照id降序排列，限制返回的条数，并设置偏移量
-	err := db.Order("id DESC").Where(`live_type = ?`, livestream.LIVE_PUSH).Find(v).Error
+	err := db.Order("id DESC").Find(v).Error
 	// 返回符合条件的总数和查询结果
 	return total, err
 }

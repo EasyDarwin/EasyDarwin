@@ -6,7 +6,7 @@ import (
 )
 
 const KICK_OUT_API = "/api/ctrl/kick_session"
-const GROUPS_INFO_API = "/api/groups"
+const GROUPS_ALL_API = "/api/stat/all_group"
 
 const (
 	LIVE_PUSH = "push"
@@ -112,4 +112,18 @@ type Response struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data string `json:"data"`
+}
+
+type OutGroupsAll struct {
+	ErrorCode int    `json:"error_code"`
+	Desp      string `json:"desp"`
+	Data      struct {
+		Groups []struct {
+			StreamName string `json:"stream_name"`
+			AppName    string `json:"app_name"`
+			Subs       []struct {
+				SessionId string `json:"session_id"`
+			} `json:"subs"`
+		} `json:"groups"`
+	} `json:"data"`
 }

@@ -301,6 +301,27 @@ func PostUrl(url string, jsonStr string) ([]byte, error) {
 	}
 	return body, nil
 }
+func (l LiveStreamAPI) GroupsAll() (livestream.OutGroupsAll, error) {
+	httpPort := data.GetConfig().DefaultHttpConfig.HttpListenAddr
+	url := fmt.Sprintf("http://127.0.0.1%s%s", httpPort, livestream.GROUPS_ALL_API)
+	resp := livestream.OutGroupsAll{}
+	body, err := GetUrl(url)
+	if err != nil {
+		return resp, err
+	}
+
+	err = json.Unmarshal(body, &resp)
+	if err != nil {
+		err = fmt.Errorf("post url %s unmarshal json error %s", url, err.Error())
+		return resp, err
+	}
+
+	if resp.ErrorCode == 0 {
+		return resp, nil
+	}
+	err = fmt.Errorf("%s", resp.Desp)
+	return resp, err
+}
 
 // 踢出直播流
 func (l LiveStreamAPI) KickOutLive(name, id string) (bool, error) {
@@ -319,7 +340,6 @@ func (l LiveStreamAPI) KickOutLive(name, id string) (bool, error) {
 
 	resp := livestream.OutResponse{}
 	err = json.Unmarshal(body, &resp)
-	fmt.Println(resp)
 	if err != nil {
 		err = fmt.Errorf("post url %s unmarshal json error %s", url, err.Error())
 		return false, err
