@@ -70,12 +70,14 @@ func (l LiveStreamAPI) TickCheckPush() {
 						}
 					}
 					if isLive {
-						err = source.StopStream(live)
-						if err != nil {
-							slog.Error(fmt.Sprintf("pub  out live:[%s] err:[%v]", StreamName, err))
-							continue
+						if live.Online == 2 {
+							err = source.StopStream(live)
+							if err != nil {
+								slog.Error(fmt.Sprintf("pub  out live:[%s] err:[%v]", StreamName, err))
+								continue
+							}
+							source.LiveCore.UpdateLiveStreamInt(live.ID, "online", 1)
 						}
-						source.LiveCore.UpdateLiveStreamInt(live.ID, "online", 1)
 					}
 				}
 

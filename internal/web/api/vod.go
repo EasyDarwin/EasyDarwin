@@ -774,9 +774,10 @@ func (r *VODRouter) progress(c *gin.Context) {
 	result := []progress{}
 	if form.ID != consts.EmptyString {
 		if v, OK := video.TransProgress.Get(form.ID); OK {
-			result = append(result, progress{
+			c.AbortWithStatusJSON(http.StatusOK, progress{
 				ID:       form.ID,
 				Progress: v})
+			return
 		}
 	} else {
 		for _, k := range video.TransProgress.Keys() {

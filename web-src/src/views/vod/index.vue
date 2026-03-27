@@ -30,7 +30,7 @@
     <a-pagination class="mt-4 text-right" :current="currentPage" :page-size="vodParams.limit" :total="vodData.total"
       show-less-items :show-total="total => `共 ${total} 项`" @change="onPageChange" />
 
-    <VodPlayer :open="playerVisible" :url="playerUrl" @update:open="onPlayerCancel" />
+    <VodPlayer :open="playerVisible" :url="playerUrl" :title="playerTitle" @update:open="onPlayerCancel" />
     <VodEdit ref="editRef" @refresh="getVodDataList" />
     <UploadModal :open="uploadModalVisible" @refreshList="getVodDataList" @update:open="uploadModalVisible = false"
       @callback="onCallback" />
@@ -55,6 +55,7 @@ const editRef = ref();
 const uploadModalVisible = ref(false);
 const playerVisible = ref(false);
 const playerUrl = ref('');
+const playerTitle = ref('');
 
 //获取点播数据请求参数
 const currentPage = ref(1);
@@ -125,6 +126,7 @@ const onCallback = () => {
 // 点击 vod
 const onPlayVod = (item) => {
   playerUrl.value = item.videoUrl
+  playerTitle.value = item.name
   playerVisible.value = true
 }
 

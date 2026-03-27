@@ -37,6 +37,7 @@ const playeId = ref(null)
 const LiveFormRef = ref(null)
 const openVideo = ref(false)
 const videoUrl = ref("")
+const videoTitle = ref("")
 const selectUrl = ref("")
 const keyStr = ref("")
 const streamInfo = ref("")
@@ -164,6 +165,7 @@ const onPlayStart = (text) => {
     if (res.status == 200) {
       openVideo.value = true
       let info = res.data.info || {}
+      videoTitle.value = info.name || '预览直播'
       selectUrlItems.value = []
       let url = ""
       for (const key in info) {
@@ -238,15 +240,26 @@ const onEdit = (text) => {
 }
 const onSwitch = (types, text) => {
   let key = ""
+  let msg = "更新成功!"
   let value = null
   switch (types) {
     case "enable":
       key = "enable"
       value = text.enable ? 1 : 0
+      if (text.enable) {
+        msg = '开启直播!'
+      } else {
+        msg = '关闭直播!'
+      }
       break;
     case "onDemand":
       key = "onDemand"
       value = text.onDemand ? 1 : 0
+      if (text.onDemand) {
+        msg = '开启全时直播!'
+      } else {
+        msg = '关闭全时直播!'
+      }
       break;
     case "audio":
       key = "audio"
@@ -263,7 +276,7 @@ const onSwitch = (types, text) => {
   live.putLiveOne(text.liveType, text.id, key, value).then(res => {
     if (res.status == 200) {
       queryData()
-      notification.success({ description: "更新成功!" });
+      notification.success({ description: msg});
 
     }
   })
@@ -391,8 +404,8 @@ onBeforeUnmount(() => {
         </template>
         <template v-if="column.key === 'onDemand'">
           <a-switch v-model:checked="record.onDemand" @change="onSwitch('onDemand', record)" />
-      </template>
-      <!-- <template v-if="column.key === 'audio'">
+        </template>
+        <!-- <template v-if="column.key === 'audio'">
           <a-switch v-model:checked="record.audio" @change="onSwitch('audio', record)" />
       </template> -->
         <template v-if="column.key === 'snapURL'">
@@ -438,7 +451,7 @@ onBeforeUnmount(() => {
     </div>
     <LiveForm ref="LiveFormRef" @ok="onOk" />
 
-    <a-modal v-model:open="openVideo" title="直播" width="760px" @close="onClose">
+    <a-modal v-model:open="openVideo" :title="videoTitle" width="760px" @close="onClose">
       <div class="h400px">
         <EasyPlayerPro :videoUrl="videoUrl" v-if="openVideo" />
       </div>

@@ -138,9 +138,9 @@ const startPolling = () => {
     try {
       const res = await vodApi.getVodProgress(props.data.id);
       if (res.data) {
-        progress.value = res.data.reason;
+        progress.value = res.data.progress;
       }
-      if (props.data.status === 'done' || res.data.reason == 100) {
+      if (props.data.status === 'done' || res.data.progress == 100) {
         clearInterval(intervalId.value);
         intervalId.value = null;
       }

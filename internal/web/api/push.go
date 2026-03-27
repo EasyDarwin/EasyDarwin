@@ -445,9 +445,7 @@ func (l LiveStreamAPI) updateOnePush(c *gin.Context) {
 			}
 			_, errs := l.KickOutLive(streamName, live.SessionId)
 			if errs != nil {
-				slog.Error(fmt.Sprintf("pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
-				web.Fail(c, web.ErrBadRequest.Msg("关闭推流停止失败"))
-				return
+				slog.Error(fmt.Sprintf("开启推流停止失败pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
 			}
 		}
 		err = source.LiveCore.UpdateLiveStreamInt(id, key, value)
@@ -480,9 +478,7 @@ func (l LiveStreamAPI) updateOnePush(c *gin.Context) {
 			}
 			_, errs := l.KickOutLive(streamName, live.SessionId)
 			if errs != nil {
-				slog.Error(fmt.Sprintf("pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
-				web.Fail(c, web.ErrBadRequest.Msg("关闭推流停止失败"))
-				return
+				slog.Error(fmt.Sprintf("开启推流停止失败pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
 			}
 		}
 	case "sign":
@@ -502,9 +498,7 @@ func (l LiveStreamAPI) updateOnePush(c *gin.Context) {
 		if value == 0 && live.SessionId != "" && live.Authed {
 			_, errs := l.KickOutLive(fmt.Sprintf("stream_%d", live.ID), live.SessionId)
 			if errs != nil {
-				slog.Error(fmt.Sprintf("pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
-				web.Fail(c, web.ErrBadRequest.Msg("关闭推流停止失败"))
-				return
+				slog.Error(fmt.Sprintf("关闭推流停止失败 pub start sign live out id:[%d] name:[%s] err:[%v]", live.ID, live.SessionId, err))
 			}
 		}
 	default:

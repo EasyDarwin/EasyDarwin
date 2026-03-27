@@ -217,14 +217,12 @@ func (l LiveStreamAPI) updatePull(c *gin.Context) {
 	}
 	err = source.StopStream(live)
 	if err != nil {
-		web.Fail(c, web.ErrBadRequest.Msg("更新停流失败"))
-		return
+		slog.Error(fmt.Sprintf("更新停流失败 [%d]%s\n", live.ID, err))
 	}
 	source.DelStreamClient(live.ID)
 	_, err = source.AddStreamClient(live)
 	if err != nil {
-		web.Fail(c, web.ErrBadRequest.Msg("更新流失败"))
-		return
+		slog.Error(fmt.Sprintf("更新流失败 [%d]%s\n", live.ID, err))
 	}
 	err = source.UpdateOnlineStream(live)
 	if err != nil {
@@ -317,14 +315,12 @@ func (l LiveStreamAPI) updateOnePull(c *gin.Context) {
 		if value == 1 {
 			err = source.UpdateOnlineStream(live)
 			if err != nil {
-				web.Fail(c, web.ErrBadRequest.Msg("拉流失败"))
-				return
+				slog.Error(fmt.Sprintf("拉流失败[%s][%d]%s\n", key, live.ID, err))
 			}
 		} else if value == 0 {
 			err = source.StopStream(live)
 			if err != nil {
-				web.Fail(c, web.ErrBadRequest.Msg("停流失败"))
-				return
+				slog.Error(fmt.Sprintf("停流失败[%s][%d]%s\n", key, live.ID, err))
 			}
 
 		}
@@ -344,16 +340,14 @@ func (l LiveStreamAPI) updateOnePull(c *gin.Context) {
 		}
 
 		if live.OnDemand {
-			err = source.UpdateStreamOnDemand(live)
-			if err != nil {
-				web.Fail(c, web.ErrBadRequest.Msg("开启按需失败"))
-				return
-			}
-		} else {
 			err = source.StartStream(live)
 			if err != nil {
-				web.Fail(c, web.ErrBadRequest.Msg("拉流失败"))
-				return
+				slog.Error(fmt.Sprintf("拉流失败[%s][%d]%s\n", key, live.ID, err))
+			}
+		} else {
+			err = source.UpdateStreamOnDemand(live)
+			if err != nil {
+				slog.Error(fmt.Sprintf("开启按需失败[%s][%d]%s\n", key, live.ID, err))
 			}
 		}
 	case "audio":
@@ -371,14 +365,12 @@ func (l LiveStreamAPI) updateOnePull(c *gin.Context) {
 		}
 		err = source.StopStream(live)
 		if err != nil {
-			web.Fail(c, web.ErrBadRequest.Msg("更新停流失败"))
-			return
+			slog.Error(fmt.Sprintf("更新停流失败[%s][%d]%s\n", key, live.ID, err))
 		}
 		source.DelStreamClient(live.ID)
 		_, err = source.AddStreamClient(live)
 		if err != nil {
-			web.Fail(c, web.ErrBadRequest.Msg("更新流失败"))
-			return
+			slog.Error(fmt.Sprintf("更新流失败[%s][%d]%s\n", key, live.ID, err))
 		}
 	default:
 		web.Fail(c, web.ErrBadRequest.Msg("更新失败"))

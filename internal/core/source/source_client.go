@@ -88,7 +88,7 @@ func (client *StreamClient) DoInTicker() {
 	thisTime := time.Now()
 
 	// stop local pusher if touch timeout
-	if client.OnDemand && thisTime.After(client.TouchTime.Add(client.TouchDuration)) {
+	if !client.OnDemand && thisTime.After(client.TouchTime.Add(client.TouchDuration)) {
 		client.Clean()
 	}
 }
@@ -156,7 +156,7 @@ func (client *StreamClient) IsTouchTime() bool {
 	thisTime := time.Now()
 	status := false
 	// stop local pusher if touch timeout
-	if client.OnDemand && thisTime.After(client.TouchTime.Add(client.TouchDuration)) {
+	if !client.OnDemand && thisTime.After(client.TouchTime.Add(client.TouchDuration)) {
 		status = true
 	}
 	return status
@@ -363,7 +363,7 @@ func (client *StreamClient) toSnap() {
 			}(client.videoIFrame)
 		}
 	}
-	if client.OnDemand && client.OnDemandCloseSource {
+	if !client.OnDemand && client.OnDemandCloseSource {
 		client.OnDemandCloseSource = false
 		if client.Online != OnLineState {
 			client.SetOnline(OnLineState)

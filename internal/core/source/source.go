@@ -112,7 +112,7 @@ func UpdateOnlineStream(live livestream.LiveStream) error {
 		return err
 	}
 	if client != nil {
-		if !client.OnDemand {
+		if client.OnDemand {
 			err = client.AddSession()
 			if err != nil {
 				slog.Error(fmt.Sprintf("update start add session stream %d %v", live.ID, err))
@@ -135,7 +135,7 @@ func UpdateOnlineStream(live livestream.LiveStream) error {
 			return err
 		}
 		if client != nil {
-			if !client.OnDemand {
+			if client.OnDemand {
 				err = client.AddSession()
 				if err != nil {
 					slog.Error(fmt.Sprintf("update start add session stream %d %v", live.ID, err))

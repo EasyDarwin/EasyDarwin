@@ -1,5 +1,5 @@
 <template>
-  <a-modal width="60%" title="播放" :open="open" :footer="null" @cancel="handleCancel">
+  <a-modal width="60%" :title="title" :open="open" :footer="null" @cancel="handleCancel">
     <div class="w-full aspect-video">
       <VodVideo :videoUrl="url" />
     </div>
@@ -13,6 +13,10 @@ const props = defineProps({
   open: {
     type: Boolean,
     default: false
+  },
+  title: {
+    type: String,
+    default: "点播预览"
   },
   url: {
     type: String,
