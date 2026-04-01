@@ -16,7 +16,7 @@ rotationtime = 28800
 
 [data]
 connmaxlifetime = 21600
-dsn = './configs/data.db'
+dsn = './data/data.db'
 maxidleconns = 1
 maxopenconns = 1
 slowthreshold = 200

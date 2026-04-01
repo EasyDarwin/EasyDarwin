@@ -1,0 +1,35 @@
+Changes
+=======
+
+v1.1.0 - 28 Aug 2024
+[Miscellaneous]
+  * github.com/pkg/errors has been removed (it has been two years :)
+  * Updated build/test actions
+  * Updated minimum required go version to go 1.21
+  * Fix week number handling
+
+v1.0.6 - 20 Apr 2022
+[Miscellaneous]
+  * Minimum go version is now go 1.13
+  * github.com/pkg/errors is going to be phased out in steps. In this release,
+    users may opt-in to using native errors using `fmt.Errorf("%w")` by
+    specifying the tag `strftime_native_errors`. In the next release, the default
+    will be to use native errors, but users will be able to opt-in to using
+    github.com/pkg/errors using a tag. The version after will remove github.com/pkg/errors.
+
+    This is something that we normally would do over a major version upgrade
+    but since we do not expect this library to receive API breaking changes in the
+    near future and thus no v2 is expected, we have decided to do this over few
+    non-major releases.
+
+v1.0.5
+[New features]
+  * `(strftime.Strftime).FormatBuffer([]byte, time.Time) []byte` has been added.
+    This allows the user to provide the same underlying `[]byte` buffer for each
+    call to `FormatBuffer`, which avoid allocation per call. 
+  * `%I` formatted midnight as `00`, where it should have been using `01`
+
+
+before v1.0.4
+
+Apparently we have failed to provide Changes prior to v1.0.5 :(

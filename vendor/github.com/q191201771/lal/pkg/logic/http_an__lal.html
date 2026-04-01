@@ -1,0 +1,572 @@
+<html>
+    <head>
+        <title>lal</title>
+        <style>
+            body {
+                background-color: #5e5e5e;
+                color: #dadada;
+                text-align: center;
+            }
+
+            table {
+                margin: auto;
+                width: 80%;
+                background-color: #25252b;
+                border-radius: 5px;
+            }
+
+            th {
+                color: #fff;
+                line-height: 1.4;
+                background-color: #19191d;
+            }
+
+            tbody>tr:nth-child(even) {
+                background-color: #29292e;
+            }
+
+            tbody>tr:hover {
+                background-color: #442727;
+            }
+
+            td {
+                color: #ccc;
+                line-height: 1.4;
+            }
+
+            td:hover {
+                background-color: #813737;
+                color: #fff;
+                font-weight: bold;
+            }
+
+            a {
+                color: #dadada;
+            }
+        </style>
+    </head>
+    <body>
+        <section>
+            <h1>Server Info</h1>
+            <table>
+                <tr>
+                    <th>Server ID</th>
+                    <td>{{.ServerID}}</td>
+                </tr>
+                <tr>
+                    <th>Git Tag</th>
+                    <td>{{.GitTag}}</td>
+                </tr>
+                <tr>
+                    <th>Git Commit Log</th>
+                    <td>{{.GitCommitLog}}</td>
+                </tr>
+                <tr>
+                    <th>Git Status</th>
+                    <td>{{.GitStatus}}</td>
+                </tr>
+                <tr>
+                    <th>Build Time</th>
+                    <td>{{.BuildTime}}</td>
+                </tr>
+                <tr>
+                    <th>Go Version</th>
+                    <td>{{.GoVersion}}</td>
+                </tr>
+                <tr>
+                    <th>Runtime</th>
+                    <td>{{.runtime}}</td>
+                </tr>
+                <tr>
+                    <th>lal Version</th>
+                    <td>{{.LalVersion}}</td>
+                </tr>
+                <tr>
+                    <th>API Version</th>
+                    <td>{{.ApiVersion}}</td>
+                </tr>
+                <tr>
+                    <th>Notify Version</th>
+                    <td>{{.NotifyVersion}}</td>
+                </tr>
+                <tr>
+                    <th>Web UI Version</th>
+                    <td>{{.WebUiVersion}}</td>
+                </tr>
+                <tr>
+                    <th>Start Time</th>
+                    <td>{{.StartTime}}</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="allGroupSection">
+            <h1>All Group</h1>
+            <div>
+                Sort:
+                <select id="selAllGroupSortCol">
+                    <option value="name">Name</option>
+                    <option value="start">Pub StartTime</option>
+                </select>
+                <input type="radio" name="rbAllGroupSort" value="asc" checked> ASC
+                <input type="radio" name="rbAllGroupSort" value="desc"> DESC
+            </div>
+            <div>
+                <input type="checkbox" id="chkAllGroupAuto" onclick="onCheckBoxAllGroupAutoClick();"> Auto
+                <input type="number" id="txtAllGroupInterval" value="1" min="1" onchange="onChangeTxtAllGroupInterval();">s
+                <button id="btnAllGroupRefresh" onclick="requestAllGroup();">Refresh</button>
+            </div>
+            <div>
+                Update Time: <label id="lblAllGroupUpdateTime"></label>
+            </div><br>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="3">#</th>
+                        <th colspan="2">Name</th>
+                        <th colspan="3">Video</th>
+                        <th>Audio</th>
+                        <th colspan="7">Pub</th>
+                        <th rowspan="3">Subs</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">App</th>
+                        <th rowspan="2">Stream</th>
+                        <th rowspan="2">Codec</th>
+                        <th rowspan="2">Width</th>
+                        <th rowspan="2">Height</th>
+                        <th rowspan="2">Codec</th>
+                        <th rowspan="2">Session ID</th>
+                        <th rowspan="2">Remote Addr</th>
+                        <th rowspan="2">Start Time</th>
+                        <th colspan="2">Read</th>
+                        <th colspan="2">Write</th>
+                    </tr>
+                    <tr>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                    </tr>
+                </thead>
+                <tbody id="allGroupTable"></tbody>
+            </table>
+        </section>
+
+        <section id="groupSection" style="display: none;">
+            <h1 id="groupName">Group</h1>
+            <a href="javascript:GroupClose()">Back</a>
+            <div>
+                <input type="checkbox" id="chkGroupAuto" onclick="onCheckBoxGroupAutoClick();"> Auto
+                <input type="number" id="txtGroupInterval" value="1" min="1" onchange="onChangeTxtGroupInterval();">s
+                <button id="btnGroupRefresh" onclick="requestGroup();">Refresh</button>
+            </div>
+            <div>
+                Update Time: <label id="lblGroupUpdateTime"></label>
+            </div>
+            <h4>Group Info</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">Name</th>
+                        <th colspan="3">Video</th>
+                        <th>Audio</th>
+                    </tr>
+                    <tr>
+                        <th>App Name</th>
+                        <th>Stream Name</th>
+                        <th>Video Codec</th>
+                        <th>Video Width</th>
+                        <th>Video Height</th>
+                        <th>Audio Codec</th>
+                    </tr>
+                </thead>
+                <tbody id="groupInfoTable"></tbody>
+            </table>
+
+            <h4>Pub</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Session ID</th>
+                        <th rowspan="2">Remote Addr</th>
+                        <th rowspan="2">Start Time</th>
+                        <th colspan="2">Read</th>
+                        <th colspan="2">Write</th>
+                    </tr>
+                    <tr>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                    </tr>
+                </thead>
+                <tbody id="groupPubTable"></tbody>
+            </table>
+
+            <h4>Pull</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Session ID</th>
+                        <th rowspan="2">Protocol</th>
+                        <th rowspan="2">Remote Addr</th>
+                        <th rowspan="2">Start Time</th>
+                        <th colspan="2">Read</th>
+                        <th colspan="2">Write</th>
+                    </tr>
+                    <tr>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                    </tr>
+                </thead>
+                <tbody id="groupPullTable"></tbody>
+            </table>
+
+            <h4>Subs</h4>
+            <div>
+                Sort:
+                <input type="radio" name="rbSubSort" value="asc" checked> ASC
+                <input type="radio" name="rbSubSort" value="desc"> DESC
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">#</th>
+                        <th rowspan="2">Session ID</th>
+                        <th rowspan="2">Protocol</th>
+                        <th rowspan="2">Remote Addr</th>
+                        <th rowspan="2">Start Time</th>
+                        <th colspan="2">Read</th>
+                        <th colspan="2">Write</th>
+                    </tr>
+                    <tr>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                        <th>Bytes Sum</th>
+                        <th>Bitrate</th>
+                    </tr>
+                </thead>
+                <tbody id="groupSubTable"></tbody>
+            </table>
+        </section>
+
+        <footer>
+            <hr><a href="https://github.com/q191201771/lal">lal github</a> | <a href="https://pengrl.com/lal">document</a>
+        </footer>
+
+        <script>
+            const allGroupSection = document.getElementById("allGroupSection");
+            const selAllGroupSortCol = document.getElementById("selAllGroupSortCol");
+            const rbAllGroupSort = document.getElementsByName("rbAllGroupSort");
+            const chkAllGroupAuto = document.getElementById("chkAllGroupAuto");
+            const btnAllGroupRefresh = document.getElementById("btnAllGroupRefresh");
+            const txtAllGroupInterval = document.getElementById("txtAllGroupInterval");
+            const lblAllGroupUpdateTime = document.getElementById("lblAllGroupUpdateTime");
+            const allGroupTable = document.getElementById("allGroupTable");
+            let allGroupTimer;
+
+            const groupSection = document.getElementById("groupSection");
+            const groupName = document.getElementById("groupName");
+            const chkGroupAuto = document.getElementById("chkGroupAuto");
+            const btnGroupRefresh = document.getElementById("btnGroupRefresh");
+            const txtGroupInterval = document.getElementById("txtGroupInterval");
+            const lblGroupUpdateTime = document.getElementById("lblGroupUpdateTime");
+            const groupInfoTable = document.getElementById("groupInfoTable");
+            const groupPubTable = document.getElementById("groupPubTable");
+            const groupPullTable = document.getElementById("groupPullTable");
+            const rbSubSort = document.getElementsByName("rbSubSort");
+            const groupSubTable = document.getElementById("groupSubTable");
+            let groupTimer;
+
+            init();
+
+            function init() {
+                const params = new URLSearchParams(location.search);
+                let sort = params.get("sort");
+                if(sort == "start") {
+                    selAllGroupSortCol.value = "start";
+                }
+                let isDesc = params.get("desc");
+                if(isDesc == 1) {
+                    for(let index = 0; index < rbAllGroupSort.length; index++) {
+                        if(rbAllGroupSort[index].value == "desc") {
+                            rbAllGroupSort[index].checked = true;
+                            break;
+                        }
+                    }
+                }
+                let interval = params.get("interval");
+                if(interval > 0) {
+                    txtAllGroupInterval.value = interval;
+                }
+                let isAuto = params.get("auto");
+                if(isAuto == 1) {
+                    chkAllGroupAuto.checked = true;
+                    onCheckBoxAllGroupAutoClick();
+                    return;
+                }
+                requestAllGroup();
+            }
+
+            function StartAllGroupTimer() {
+                let interval = txtAllGroupInterval.value * 1000;
+                btnAllGroupRefresh.disabled = "disabled";
+                allGroupTimer = setInterval(requestAllGroup, interval);
+            }
+
+            function StopAllGroupTimer() {
+                btnAllGroupRefresh.disabled = false;
+                clearInterval(allGroupTimer);
+            }
+
+            function onCheckBoxAllGroupAutoClick() {
+                if(chkAllGroupAuto.checked) {
+                    requestAllGroup();
+                    StartAllGroupTimer();
+                } else {
+                    StopAllGroupTimer();
+                }
+            }
+
+            function onChangeTxtAllGroupInterval() {
+                if(chkAllGroupAuto.checked) {
+                    StopAllGroupTimer();
+                    StartAllGroupTimer();
+                }
+            }
+
+            function httpAsync(url, method, callback) {
+                const xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    if(xmlHttp.readyState == 4)
+                        callback(xmlHttp.status, xmlHttp.responseText);
+                }
+                xmlHttp.open(method, url, true);
+                xmlHttp.send(null);
+            }
+
+            function allGroupSort(a, b) {
+                const sortCol = selAllGroupSortCol.options[selAllGroupSortCol.selectedIndex].value;
+                let isDesc = false;
+                for(let index = 0; index < rbAllGroupSort.length; index++) {
+                    if(rbAllGroupSort[index].checked) {
+                        if(rbAllGroupSort[index].value == "desc") {
+                            isDesc = true;
+                        }
+                        break;
+                    }
+                }
+                let data1 = sortCol == "name" ? a["app_name"] : a["pub"]["start_time"];
+                let data2 = sortCol == "name" ? b["app_name"] : b["pub"]["start_time"];
+                if(data1 == data2) {
+                    data1 = a["stream_name"];
+                    data2 = b["stream_name"];
+                }
+                if(isDesc) {
+                    let tmp = data1;
+                    data1 = data2;
+                    data2 = tmp;
+                }
+                return data1 < data2 ? -1 : 1
+            }
+
+            function requestAllGroup() {
+                httpAsync("/api/stat/all_group", "GET", function(code, resp) {
+                    if(code == 200) {
+                        for(let index = allGroupTable.rows.length; index > 0; index--) {
+                            allGroupTable.deleteRow(-1);
+                        }
+
+                        const obj = JSON.parse(resp);
+                        if(obj["data"]["groups"]) {
+                            obj["data"]["groups"].sort(allGroupSort);
+                            for(let i=0;i<obj["data"]["groups"].length;i++) {
+                                const group = obj["data"]["groups"][i];
+                                const newRow = allGroupTable.insertRow();
+                                newRow.insertCell(0).innerText = i + 1;
+                                newRow.insertCell(1).innerText = group["app_name"];
+                                newRow.insertCell(2).innerText = group["stream_name"];
+                                newRow.insertCell(3).innerText = group["video_codec"];
+                                newRow.insertCell(4).innerText = group["video_width"];
+                                newRow.insertCell(5).innerText = group["video_height"];
+                                newRow.insertCell(6).innerText = group["audio_codec"];
+                                newRow.insertCell(7).innerText = group["pub"]["session_id"];
+                                newRow.insertCell(8).innerText = group["pub"]["remote_addr"];
+                                newRow.insertCell(9).innerText = group["pub"]["start_time"];
+                                newRow.insertCell(10).innerText = group["pub"]["read_bytes_sum"];
+                                newRow.insertCell(11).innerText = group["pub"]["read_bitrate_kbits"];
+                                newRow.insertCell(12).innerText = group["pub"]["wrote_bytes_sum"];
+                                newRow.insertCell(13).innerText = group["pub"]["write_bitrate_kbits"];
+                                let subsCnt = 0;
+                                if(group["subs"]) {
+                                    subsCnt = group["subs"].length;
+                                }
+                                newRow.insertCell(14).innerText = subsCnt;
+                                newRow.addEventListener("click", function() {GroupOpen(group["stream_name"]);});
+                            }
+                        }
+                        lblAllGroupUpdateTime.innerText = (new Date().toString());
+                    }
+                });
+            }
+
+            function GroupOpen(streamName) {
+                txtGroupInterval.value = txtAllGroupInterval.value;
+                chkGroupAuto.checked = chkAllGroupAuto.checked;
+                for(let i = 0; i < rbAllGroupSort.length; i++) {
+                    if(rbAllGroupSort[i].checked) {
+                        for(let j = 0; j < rbSubSort.length; j++) {
+                            if(rbSubSort[j].value == rbAllGroupSort[i].value) {
+                                rbSubSort[j].checked = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+                StopAllGroupTimer();
+                groupName.innerText = streamName;
+                allGroupSection.style.display = "none";
+                groupSection.style.display = "block";
+                if(chkGroupAuto.checked) {
+                    onCheckBoxGroupAutoClick();
+                    return;
+                }
+                requestGroup();
+            }
+
+            function GroupClose() {
+                txtAllGroupInterval.value = txtGroupInterval.value;
+                chkAllGroupAuto.checked = chkGroupAuto.checked;
+                for(let i = 0; i < rbSubSort.length; i++) {
+                    if(rbSubSort[i].checked) {
+                        for(let j = 0; j < rbAllGroupSort.length; j++) {
+                            if(rbAllGroupSort[j].value == rbSubSort[i].value) {
+                                rbAllGroupSort[j].checked = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+                StopGroupTimer();
+                onCheckBoxAllGroupAutoClick();
+                allGroupSection.style.display = "block";
+                groupSection.style.display = "none";
+            }
+
+            function onCheckBoxGroupAutoClick() {
+                if(chkGroupAuto.checked) {
+                    requestGroup();
+                    StartGroupTimer();
+                } else {
+                    StopGroupTimer();
+                }
+            }
+
+            function onChangeTxtGroupInterval() {
+                if(chkGroupAuto.checked) {
+                    StopGroupTimer();
+                    StartGroupTimer();
+                }
+            }
+
+            function StartGroupTimer() {
+                let interval = txtGroupInterval.value * 1000;
+                btnGroupRefresh.disabled = "disabled";
+                groupTimer = setInterval(requestGroup, interval);
+            }
+
+            function StopGroupTimer() {
+                btnGroupRefresh.disabled = false;
+                clearInterval(groupTimer);
+            }
+
+            function subSort(a, b) {
+                let isDesc = false;
+                for(let index = 0; index < rbSubSort.length; index++) {
+                    if(rbSubSort[index].checked) {
+                        if(rbSubSort[index].value == "desc") {
+                            isDesc = true;
+                        }
+                        break;
+                    }
+                }
+                let data1 = isDesc ? b["session_id"] : a["session_id"];
+                let data2 = isDesc ? a["session_id"] : b["session_id"];
+                return data1 < data2 ? -1 : 1
+            }
+
+            function requestGroup() {
+                let gname = encodeURIComponent(groupName.innerText);
+                httpAsync("/api/stat/group?stream_name="+gname, "GET", function(code, resp) {
+                    if(code == 200) {
+                        const obj = JSON.parse(resp);
+                        for(let index = groupInfoTable.rows.length; index > 0; index--) {
+                            groupInfoTable.deleteRow(-1);
+                        }
+                        for(let index = groupPubTable.rows.length; index > 0; index--) {
+                            groupPubTable.deleteRow(-1);
+                        }
+                        for(let index = groupPullTable.rows.length; index > 0; index--) {
+                            groupPullTable.deleteRow(-1);
+                        }
+                        for(let index = groupSubTable.rows.length; index > 0; index--) {
+                            groupSubTable.deleteRow(-1);
+                        }
+
+                        if(obj["error_code"] > 0) {
+                            return;
+                        }
+
+                        const infoRow = groupInfoTable.insertRow();
+                        infoRow.insertCell(0).innerText = obj["data"]["app_name"];
+                        infoRow.insertCell(1).innerText = obj["data"]["stream_name"];
+                        infoRow.insertCell(2).innerText = obj["data"]["video_codec"];
+                        infoRow.insertCell(3).innerText = obj["data"]["video_width"];
+                        infoRow.insertCell(4).innerText = obj["data"]["video_height"];
+                        infoRow.insertCell(5).innerText = obj["data"]["audio_codec"];
+
+                        const pubRow = groupPubTable.insertRow();
+                        pubRow.insertCell(0).innerText = obj["data"]["pub"]["session_id"];
+                        pubRow.insertCell(1).innerText = obj["data"]["pub"]["remote_addr"];
+                        pubRow.insertCell(2).innerText = obj["data"]["pub"]["start_time"];
+                        pubRow.insertCell(3).innerText = obj["data"]["pub"]["read_bytes_sum"];
+                        pubRow.insertCell(4).innerText = obj["data"]["pub"]["read_bitrate_kbits"];
+                        pubRow.insertCell(5).innerText = obj["data"]["pub"]["wrote_bytes_sum"];
+                        pubRow.insertCell(6).innerText = obj["data"]["pub"]["write_bitrate_kbits"];
+
+                        const pullRow = groupPullTable.insertRow();
+                        pullRow.insertCell(0).innerText = obj["data"]["pull"]["session_id"];
+                        pullRow.insertCell(1).innerText = obj["data"]["pull"]["protocol"];
+                        pullRow.insertCell(2).innerText = obj["data"]["pull"]["remote_addr"];
+                        pullRow.insertCell(3).innerText = obj["data"]["pull"]["start_time"];
+                        pullRow.insertCell(4).innerText = obj["data"]["pull"]["read_bytes_sum"];
+                        pullRow.insertCell(5).innerText = obj["data"]["pull"]["read_bitrate_kbits"];
+                        pullRow.insertCell(6).innerText = obj["data"]["pull"]["wrote_bytes_sum"];
+                        pullRow.insertCell(7).innerText = obj["data"]["pull"]["write_bitrate_kbits"];
+
+                        if(obj["data"]["subs"]) {
+                            obj["data"]["subs"].sort(subSort);
+                            for(let i = 0; i < obj["data"]["subs"].length; i++) {
+                                const sub = obj["data"]["subs"][i];
+                                const subRow = groupSubTable.insertRow();
+                                subRow.insertCell(0).innerText = i + 1;
+                                subRow.insertCell(1).innerText = sub["session_id"];
+                                subRow.insertCell(2).innerText = sub["protocol"];
+                                subRow.insertCell(3).innerText = sub["remote_addr"];
+                                subRow.insertCell(4).innerText = sub["start_time"];
+                                subRow.insertCell(5).innerText = sub["read_bytes_sum"];
+                                subRow.insertCell(6).innerText = sub["read_bitrate_kbits"];
+                                subRow.insertCell(7).innerText = sub["wrote_bytes_sum"];
+                                subRow.insertCell(8).innerText = sub["write_bitrate_kbits"];
+                            }
+                        }
+                        lblGroupUpdateTime.innerText = (new Date().toString());
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

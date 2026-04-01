@@ -1,0 +1,8 @@
+Changes
+=======
+
+v2.4.0 - 8 Sep 2020
+  * Add WithRotationSize option to specify log ration when
+    a certain file size is reached. (NOTE: this does not guarantee
+    that the file size is exactly the size specified, but that it
+    *exceeds* the specified size)

@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  easydarwin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: easydarwin:latest    # 可选：指定 build 完成后打上的标签
+    container_name: easydarwin
+    ports:
+      - "10086:10086"
+      - "21935:21935"
+      - "15544:15544"
+    restart: always    # 自动重启
+    volumes:
+      - ./configs:/app/configs
+      - ./data:/app/data

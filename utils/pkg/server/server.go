@@ -5,6 +5,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -54,6 +55,7 @@ func New(handler http.Handler, opts ...Option) *Server {
 
 func (s *Server) Start() {
 	s.once.Do(func() {
+		fmt.Println("Starting server", s.server.Addr)
 		s.notify <- s.server.ListenAndServe()
 		close(s.notify)
 	})
@@ -61,6 +63,7 @@ func (s *Server) Start() {
 
 func (s *Server) StartTLS(certFile, keyFile string) {
 	s.once.Do(func() {
+		fmt.Println("Starting server with TLS", s.server.Addr)
 		s.notify <- s.server.ListenAndServeTLS(certFile, keyFile)
 		close(s.notify)
 	})

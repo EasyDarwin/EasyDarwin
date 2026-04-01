@@ -1,0 +1,3 @@
+group :development do
+  gom 'github.com/grafov/m3u8', :goos => [:linux]
+end

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:wstop="http://docs.oasis-open.org/wsn/t-1" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://docs.oasis-open.org/wsn/t-1" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:complexType name="Documentation" mixed="true">
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="lax" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensibleDocumented" abstract="true">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="documentation" type="wstop:Documentation" />
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="QueryExpressionType" mixed="true">
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="1" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="Dialect" type="xsd:anyURI" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="TopicNamespaceType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="wstop:ExtensibleDocumented">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Topic">
+            <xsd:complexType>
+              <xsd:complexContent mixed="false">
+                <xsd:extension base="wstop:TopicType">
+                  <xsd:attribute name="parent" type="wstop:ConcreteTopicExpression" />
+                </xsd:extension>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:NCName" />
+        <xsd:attribute name="targetNamespace" type="xsd:anyURI" use="required" />
+        <xsd:attribute default="false" name="final" type="xsd:boolean" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TopicNamespace" type="wstop:TopicNamespaceType">
+    <xsd:unique name="rootTopicUniqueness">
+      <xsd:selector xpath="wstop:Topic" />
+      <xsd:field xpath="@name" />
+    </xsd:unique>
+  </xsd:element>
+  <xsd:attribute name="topicNamespaceLocation" type="xsd:anyURI" />
+  <xsd:complexType name="TopicType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="wstop:ExtensibleDocumented">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="MessagePattern" type="wstop:QueryExpressionType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Topic" type="wstop:TopicType">
+            <xsd:unique name="childTopicUniqueness">
+              <xsd:selector xpath="wstop:topic" />
+              <xsd:field xpath="@name" />
+            </xsd:unique>
+          </xsd:element>
+          <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:NCName" use="required" />
+        <xsd:attribute name="messageTypes">
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:QName" />
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute default="false" name="final" type="xsd:boolean" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TopicSetType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="wstop:ExtensibleDocumented">
+        <xsd:sequence>
+          <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TopicSet" type="wstop:TopicSetType" />
+  <xsd:attribute default="false" name="topic" type="xsd:boolean" />
+  <xsd:simpleType name="FullTopicExpression">
+    <xsd:restriction base="xsd:token">
+      <xsd:annotation>
+        <xsd:documentation>
+        TopicPathExpression  ::=   TopicPath ( '|' TopicPath )*  
+        TopicPath       ::=   RootTopic ChildTopicExpression* 
+        RootTopic       ::=   NamespacePrefix? ('//')? (NCName | '*')  
+        NamespacePrefix ::=   NCName ':'      
+        ChildTopicExpression ::=   '/' '/'? (QName | NCName | '*'| '.')
+                        
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:pattern value="([\i-[:]][\c-[:]]*:)?(//)?([\i-[:]][\c-[:]]*|\*)((/|//)(([\i-[:]][\c-[:]]*:)?[\i-[:]][\c-[:]]*|\*|[.]))*(\|([\i-[:]][\c-[:]]*:)?(//)?([\i-[:]][\c-[:]]*|\*)((/|//)(([\i-[:]][\c-[:]]*:)?[\i-[:]][\c-[:]]*|\*|[.]))*)*" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ConcreteTopicExpression">
+    <xsd:restriction base="xsd:token">
+      <xsd:annotation>
+        <xsd:documentation>
+  The pattern allows strings matching the following EBNF:
+    ConcreteTopicPath    ::=   RootTopic ChildTopic*    
+    RootTopic            ::=   QName  
+    ChildTopic           ::=   '/' (QName | NCName) 
+                        
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:pattern value="(([\i-[:]][\c-[:]]*:)?[\i-[:]][\c-[:]]*)(/([\i-[:]][\c-[:]]*:)?[\i-[:]][\c-[:]]*)*" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SimpleTopicExpression">
+    <xsd:restriction base="xsd:QName">
+      <xsd:annotation>
+        <xsd:documentation>
+  The pattern allows strings matching the following EBNF:
+    RootTopic            ::=   QName  
+                        
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

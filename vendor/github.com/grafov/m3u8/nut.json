@@ -1,0 +1,18 @@
+{
+  "Version": "0.1.0",
+  "Vendor": "grafov",
+  "Authors": [
+    {
+      "FullName": "Alexander I.Grafov",
+      "Email": "grafov@gmail.com"
+    }
+  ],
+  "ExtraFiles": [
+    "README.md",
+    "M3U8.md",
+    "LICENSE",
+    "TODO.org",
+		"sample-playlists"
+  ],
+  "Homepage": "http://github.com/grafov/m3u8"
+}

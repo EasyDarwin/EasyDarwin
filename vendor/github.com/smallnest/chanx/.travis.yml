@@ -1,0 +1,21 @@
+language: go
+
+go:
+  - 1.16.x
+
+env:
+  - GO111MODULE=on
+
+before_script:
+  - go get -v github.com/smallnest/chanx/...
+  - go get github.com/mattn/goveralls
+
+script:
+  - go test -v ./...
+  - goveralls -service=travis-ci
+
+notifications:
+  email:
+    recipients: smallnest@gmail.com
+    on_success: change
+    on_failure: always

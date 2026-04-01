@@ -73,7 +73,10 @@ cd build
 cd EasyDarwin-lin-"version"-"build-time"
 easydarwin
 ```
-
+### Building on Docker
+```shell
+docker-compose up -d
+```
 ### System Service
 EasyDarwin can run as a system service, ensuring that the program can be restarted and used even in case of unexpected interruptions.
 
