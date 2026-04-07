@@ -2,7 +2,7 @@
 
 [EasyDarwin](http://www.easydarwin.com/) is an open-source, simple, and efficient streaming media server that supports RTMP/RTSP push and pull streams. It also supports distributing streams via RTMP/RTSP/HLS/HTTP-FLV/WebSocket-FLV/WebRTC protocols. EasyDarwin can be compiled to support Linux/Windows/macOS operating systems and various architectures including X86_64, ARMv7, AARCH64, M1, RISCV, LOONGARCH, MIPS.
 
-EasyDarwin 8.x is a secondary development based on the original [EasyDarwin](https://www.easydarwin.org/) software combined with the [lalmax](https://github.com/q191201771/lalmax) project.
+EasyDarwin 8.x is a secondary development based on the original [EasyDarwin](https://www.easydarwin.org/) software combined with the [lalmax](https://github.com/q191201771/lalmax) **project.You can go directly to https://www.easydarwin.com Download the latest executable file version.**
 
 EasyDarwin is licensed under the MIT License.
 
