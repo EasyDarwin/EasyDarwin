@@ -256,7 +256,7 @@ func (r *VODRouter) upload(c *gin.Context) {
 	ext := filepath.Ext(file.Filename)
 	reg := regexp.MustCompile("(?i)(" + strings.Join(strings.Split(ACCEPT, ","), "|") + ")$")
 	if !reg.Match([]byte(ext)) {
-		AbortWithString(c, http.StatusBadRequest, "not accept")
+		AbortWithString(c, http.StatusBadRequest, "不支持此类型文件!")
 		return
 	}
 	name := filepath.Base(file.Filename)[:strings.LastIndex(filepath.Base(file.Filename), ".")]

@@ -183,7 +183,7 @@ const onPlayStart = (text) => {
             selectUrlItems.value.push({ key: 'WS-FLV', value: v })
             break;
           case "webrtc":
-            selectUrlItems.value.push({ key: 'WEBRTC', value: v })
+            selectUrlItems.value.push({ key: 'WebRTC', value: v })
             break;
           case "rtsp":
             selectUrlItems.value.push({ key: 'RTSP', value: v })
@@ -392,8 +392,8 @@ onBeforeUnmount(() => {
           <a-tag class="mr0px" color="warning" v-else-if="record.liveType == 'push'">推流</a-tag>
         </template>
         <template v-if="column.key === 'online'">
-          <a-tag class="mr0px" color="success" v-if="record.online == 1">在线</a-tag>
-          <a-tag class="mr0px" color="success" v-else-if="record.online == 2">直播中</a-tag>
+          <a-tag class="mr0px" color="success" v-if="record.online == 1&&record.enable">在线</a-tag>
+          <a-tag class="mr0px" color="success" v-else-if="record.online == 2&&record.enable">直播中</a-tag>
           <a-tag class="mr0px" color="default" v-else>离线</a-tag>
         </template>
         <template v-if="column.key === 'url'">

@@ -352,7 +352,7 @@ func FFMPEG() string {
 }
 
 func (client *StreamClient) toSnap() {
-	if client.IsSnap && client.OnDemandCloseSource == false {
+	if client.IsSnap {
 		if len(client.videoIFrame) > 0 {
 			client.IsSnap = false
 			go func(iframeData []byte) {

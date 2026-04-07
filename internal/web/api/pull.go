@@ -62,6 +62,7 @@ func (l LiveStreamAPI) find(c *gin.Context) {
 	hostStr := strings.Split(c.Request.Host, ":")
 	host := hostStr[0]
 	for i, stream := range lives {
+		lives[i].SnapURL = fmt.Sprintf("%s?t=%d", stream.SnapURL, time.Now().Unix())
 		if stream.LiveType == livestream.LIVE_PUSH {
 			if stream.CustomId != "" {
 				lives[i].Url = fmt.Sprintf("rtmp://%s%s/live/%s?sign=%s", host, rtmpPort, stream.CustomId, stream.Sign)

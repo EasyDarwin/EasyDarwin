@@ -110,7 +110,7 @@ enable = true
 [rtcconfig]
 enable = true
 enablehttps = true
-icehostnattoips = ['192.168.3.107']
+icehostnattoips = ['127.0.0.1']
 icetcpmuxport = 24888
 iceudpmuxport = 24888
 pubtimeoutsec = 10

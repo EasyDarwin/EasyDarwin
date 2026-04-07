@@ -1,8 +1,8 @@
 <template>
-  <a-modal :open="open" title="上传视频" :footer="null" width="60%" @cancel="handleCancel">
+  <a-modal :open="open" title="上传视频" :footer="null" width="60%" @cancel="handleCancel" :maskClosable="false">
     <div class="space-y-4">
-      <a-upload-dragger v-if="!progress"  name="file" :file-list="fileList" :before-upload="beforeUpload" :accept="accept" :max-count="1"
-        @change="handleFileChange">
+      <a-upload-dragger v-if="!progress" name="file" :file-list="fileList" :before-upload="beforeUpload"
+        :accept="accept" :max-count="1" @change="handleFileChange">
         <div class="flex flex-col items-center justify-center py-8">
           <upload-outlined class="text-4xl text-gray-400" />
           <p class="mt-2 text-sm text-gray-500">
@@ -43,6 +43,8 @@ const fileList = ref([]);
 // 进度 & loading
 const progress = ref(0);
 const uploading = ref(false);
+const dataFile = ref(null);
+const isFile = ref(false);
 
 // 我们只需要 file
 const form = reactive({ file: null });
@@ -67,23 +69,35 @@ const beforeUpload = (file) => {
 };
 
 async function uploadFile(file) {
+
+   // 创建一个 AbortController 实例用于取消请求
+  const controller = new AbortController();
+  const signal = controller.signal;
+  isFile.value = false
+  // 将 controller 挂载到文件对象上，以便在点击取消按钮时能找到它
+  // 这里通过扩展 file 对象来存储，也可以用一个 Map 来存储 uid -> controller 的映射
+  file.controller = controller;
   const formData = new FormData();
   formData.append("file", file);
-
+  dataFile.value = file
   uploading.value = true;
   progress.value = 0;
   emit("callback", true);
   try {
     await vodApi.uploadVod(formData, (e) => {
       progress.value = e;
-    });
+    },signal);
 
     notification.success({ message: "上传成功", description: "文件已成功上传！" });
     emit("refreshList");
     handleCancel();
   } catch (err) {
     console.log("上传失败：", err);
-    message.error(err.response?.data?.message || "上传失败，请重试");
+    if (isFile.value) {
+      message.error("取消上传");
+    } else {
+      message.warn("上传失败", err.response?.data);
+    }
   } finally {
     uploading.value = false;
     emit("callback", false);
@@ -99,9 +113,15 @@ async function fetchAccept() {
     accept.value = defaultAccept;
   }
 }
-
+const cancelUpload = () => {
+  isFile.value = true
+  if (dataFile.value.controller) {
+    dataFile.value.controller.abort(); // 触发请求终止
+  }
+}
 // 关闭弹窗
 const handleCancel = () => {
+  cancelUpload()
   emit("update:open", false);
 };
 

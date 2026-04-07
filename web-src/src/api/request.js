@@ -38,8 +38,8 @@ request.interceptors.response.use(
       return Promise.reject(error)
     } else {
       let msg = "api error"
-      if (error.response.data && error.response.data.msg) {
-        msg = error.response.data.msg
+      if (error.response.data) {
+        msg = error.response.data
       }
       notification.error({
         description: msg

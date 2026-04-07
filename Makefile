@@ -127,9 +127,9 @@ build/local:
 			-X main.gitHash=$(HASH_AND_DATE) \
 			-X main.buildTimeAt=$(shell date +%s) \
 			-X main.release=true \
-			" -o=$(dir)/easydarwin.com ./cmd/server
+			" -o=$(dir)/EasyDarwin.com ./cmd/server
 	@scp -r web configs ${BUILD_LINUX_AMD64_DIR}
-	@scp deploy/*.sh deploy/easydarwin ${BUILD_LINUX_AMD64_DIR}
+	@scp deploy/*.sh deploy/EasyDarwin ${BUILD_LINUX_AMD64_DIR}
 	@scp deploy/ffmpeg ${BUILD_LINUX_AMD64_DIR}
 	@rm -rf ${BUILD_LINUX_AMD64_DIR}/configs/data.db
 	@echo '>>> OK'
@@ -159,9 +159,10 @@ build/windows:
 			-X main.gitHash=$(HASH_AND_DATE) \
 			-X main.buildTimeAt=$(shell date +%s) \
 			-X main.release=true \
-			" -o=$(dir)/EasyDarwin.exe ./cmd/server
+			" -o=$(dir)/EasyDarwin.com ./cmd/server
 	@scp -r web configs ${dir}
-	@scp ffmpeg.exe ${dir}
+	@scp deploy/*.bat deploy/EasyDarwin.exe ${BUILD_WINDOWS_AMD64_DIR}
+	@scp deploy/ffmpeg.exe ${BUILD_WINDOWS_AMD64_DIR}
 	@rm -rf ${dir}/configs/data.db
 	@echo '>>> OK'
 
@@ -179,9 +180,9 @@ build/arm:
 			-X main.gitHash=$(HASH_AND_DATE) \
 			-X main.buildTimeAt=$(shell date +%s) \
 			-X main.release=true \
-			" -o=$(dir)/easydarwin.com ./cmd/server
+			" -o=$(dir)/EasyDarwin.com ./cmd/server
 	@scp -r web configs ${BUILD_LINUX_ARM64_DIR}
-	@scp deploy/*.sh deploy/arm/easydarwin ${BUILD_LINUX_ARM64_DIR}
+	@scp deploy/*.sh deploy/arm/EasyDarwin ${BUILD_LINUX_ARM64_DIR}
 	@scp deploy/arm/ffmpeg ${BUILD_LINUX_ARM64_DIR}
 	@rm -rf ${BUILD_LINUX_ARM64_DIR}/configs/data.db
 	@echo '>>> OK'

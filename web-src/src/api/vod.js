@@ -29,10 +29,11 @@ export default {
   },
 
   // 上传点播文件
-  uploadVod(data, onUploadProgress) {
+  uploadVod(data, onUploadProgress, signal) {
     return request({
       url: `/vod/upload`,
       method: 'post',
+      signal: signal,
       onUploadProgress: progressEvent => {
         const progresss = Math.round(
           (progressEvent.loaded / progressEvent.total) * 100,

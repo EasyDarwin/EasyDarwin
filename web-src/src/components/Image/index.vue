@@ -13,8 +13,8 @@ const snapError = () => {
     isError.value = true
 }
 
-watch(() => props.videoUrl, (newValue) => {
- 
+watch(() => props.imgUrl, (newValue, old) => {
+    
 }, { deep: true })
 onMounted(() => {
     
