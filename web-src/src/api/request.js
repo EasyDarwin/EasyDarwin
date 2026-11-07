@@ -37,9 +37,17 @@ request.interceptors.response.use(
       });
       return Promise.reject(error)
     } else {
+      // 优先展示后端返回的具体错误信息（details 优先于通用 msg），避免提示 [object Object]
       let msg = "api error"
-      if (error.response.data) {
-        msg = error.response.data
+      const data = error.response.data
+      if (data) {
+        if (Array.isArray(data.details) && data.details.length > 0) {
+          msg = data.details.join("；")
+        } else if (data.msg) {
+          msg = data.msg
+        } else if (typeof data === 'string') {
+          msg = data
+        }
       }
       notification.error({
         description: msg

@@ -9,6 +9,7 @@ import (
 	"easydarwin/utils/pkg/web"
 	"net"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,7 @@ import (
 // 流媒体内部回调（on_pub_start 等）仅允许本机回环地址访问
 func authWithWhitelist(secret string) gin.HandlerFunc {
 	auth := web.AuthMiddleware(secret)
+	optionalAuth := web.OptionalAuthMiddleware(secret)
 	return func(c *gin.Context) {
 		switch c.FullPath() {
 		case "/api/v1/login", "/api/v1/logout":
@@ -25,7 +27,8 @@ func authWithWhitelist(secret string) gin.HandlerFunc {
 			return
 		case "/api/v1/vod/get":
 			// 分享播放页 share.html 匿名访问，get 处理函数内校验分享状态
-			c.Next()
+			// 可选鉴权：携带合法 token 时注入身份，避免登录用户访问自有非分享视频被误判为匿名而 403
+			optionalAuth(c)
 			return
 		case "/api/v1/push/on_pub_start", "/api/v1/push/on_pub_stop", "/api/v1/push/on_rtmp_connect":
 			// 内部回调由流媒体服务从 127.0.0.1 发起
@@ -37,8 +40,34 @@ func authWithWhitelist(secret string) gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": "无权访问"})
 			return
 		}
+		// 服务端强制改密（CNVD-2026-42897）：仍在使用默认口令的账号
+		// 仅允许修改本人密码，其余管理接口一律拒绝，防止绕过前端弹窗直接调用 API
+		// 必须在 auth(c) 之前判定：AuthMiddleware 内部会 c.Next() 执行处理函数，事后拦截为时已晚
+		if claims := parseBearerClaims(c, secret); claims != nil && claims.NeedChangePwd {
+			if c.FullPath() == "/api/v1/users/:username/reset-password" && c.Param("username") == claims.Username {
+				// 走正常鉴权注入身份，resetPassword 依赖 GetUsername/GetRole 校验
+				auth(c)
+				return
+			}
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "请先修改默认口令"})
+			return
+		}
 		auth(c)
 	}
+}
+
+// parseBearerClaims 解析请求中的 Bearer token，缺失或非法时返回 nil
+func parseBearerClaims(c *gin.Context, secret string) *web.Claims {
+	auth := c.Request.Header.Get("Authorization")
+	const prefix = "Bearer "
+	if len(auth) <= len(prefix) || !strings.EqualFold(auth[:len(prefix)], prefix) {
+		return nil
+	}
+	claims, err := web.ParseToken(auth[len(prefix):], secret)
+	if err != nil || claims.Valid() != nil {
+		return nil
+	}
+	return claims
 }
 
 // isLoopbackRemote 判断 TCP 连接对端是否为本机回环地址

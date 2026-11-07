@@ -17,15 +17,18 @@ type Claims struct {
 	GroupLevel int8
 	Role       string
 	Level      int
+	// NeedChangePwd 仍在使用默认口令，服务端强制仅允许修改本人密码（CNVD-2026-42897）
+	NeedChangePwd bool
 	jwt.RegisteredClaims
 }
 
 const (
-	uid        = "uid"
-	token      = "token"
-	username   = "username"
-	groupLevel = "group_level"
-	role       = "role"
+	uid           = "uid"
+	token         = "token"
+	username      = "username"
+	groupLevel    = "group_level"
+	role          = "role"
+	needChangePwd = "need_change_pwd"
 )
 
 // AuthMiddleware 鉴权
@@ -50,14 +53,41 @@ func AuthMiddleware(secret string) gin.HandlerFunc {
 			return
 		}
 
-		c.Set(uid, claims.UID)
-		c.Set(username, claims.Username)
-		c.Set(token, auth)
-		c.Set(groupLevel, claims.GroupLevel)
-		c.Set(role, claims.Role)
-		c.Set("level", claims.Level)
+		setClaims(c, auth, claims)
 		c.Next()
 	}
+}
+
+// OptionalAuthMiddleware 可选鉴权：携带合法 token 时注入用户身份，
+// 无 token 或 token 非法时按匿名继续，永不 Abort
+// 用于白名单中允许匿名访问、但登录用户需要身份的接口（如分享页点播查询）
+func OptionalAuthMiddleware(secret string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		auth := c.Request.Header.Get("Authorization")
+		const prefix = "Bearer "
+		if len(auth) <= len(prefix) || !strings.EqualFold(auth[:len(prefix)], prefix) {
+			c.Next()
+			return
+		}
+		claims, err := ParseToken(auth[len(prefix):], secret)
+		if err != nil || claims.Valid() != nil {
+			c.Next()
+			return
+		}
+		setClaims(c, auth, claims)
+		c.Next()
+	}
+}
+
+// setClaims 将 token 中的用户身份写入请求上下文
+func setClaims(c *gin.Context, auth string, claims *Claims) {
+	c.Set(uid, claims.UID)
+	c.Set(username, claims.Username)
+	c.Set(token, auth)
+	c.Set(groupLevel, claims.GroupLevel)
+	c.Set(role, claims.Role)
+	c.Set("level", claims.Level)
+	c.Set(needChangePwd, claims.NeedChangePwd)
 }
 
 // GetUID 获取用户 ID
@@ -73,6 +103,11 @@ func GetUsername(c *gin.Context) string {
 // GetRole 获取用户角色
 func GetRole(c *gin.Context) string {
 	return c.GetString(role)
+}
+
+// GetNeedChangePwd 获取是否仍在使用默认口令（强制改密标记）
+func GetNeedChangePwd(c *gin.Context) bool {
+	return c.GetBool(needChangePwd)
 }
 
 func GetGroupLevel(c *gin.Context) int8 {
@@ -124,6 +159,8 @@ type TokenInput struct {
 	Role       string
 	Level      int
 	Exires     time.Duration
+	// NeedChangePwd 仍在使用默认口令，随 token 下发供服务端强制改密拦截
+	NeedChangePwd bool
 }
 
 // NewToken 创建 token
@@ -133,11 +170,12 @@ func NewToken(input TokenInput) (string, error) {
 	}
 	now := time.Now()
 	claims := Claims{
-		UID:        input.UID,
-		Username:   input.Username,
-		GroupID:    input.GroupID,
-		GroupLevel: input.GroupLevel,
-		Level:      input.Level,
+		UID:           input.UID,
+		Username:      input.Username,
+		GroupID:       input.GroupID,
+		GroupLevel:    input.GroupLevel,
+		Level:         input.Level,
+		NeedChangePwd: input.NeedChangePwd,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(now.Add(input.Exires)), // 失效时间
 			IssuedAt:  jwt.NewNumericDate(now),                   // 签发时间

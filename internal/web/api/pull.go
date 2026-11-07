@@ -397,9 +397,24 @@ func (l LiveStreamAPI) updateOnePull(c *gin.Context) {
 // 如 rtsp://admin:pass@192.168.1.1:554/path -> rtsp://****:****@192.168.1.1:554/path
 func maskURLCredentials(raw string) string {
 	u, err := url.Parse(raw)
-	if err != nil || u.User == nil {
+	if err != nil {
+		// 解析失败（如口令含空格、%、中文等未编码字符）时退回字符串级脱敏，绝不回显原文
+		return maskURLCredentialsFallback(raw)
+	}
+	if u.User == nil {
 		return raw
 	}
 	u.User = nil
 	return strings.Replace(u.String(), "://", "://****:****@", 1)
+}
+
+// maskURLCredentialsFallback 字符串级兜底脱敏：定位 scheme 与最后一个 @，替换其间凭据
+// 无法定位凭据位置时返回固定占位符，避免明文凭据外泄
+func maskURLCredentialsFallback(raw string) string {
+	scheme := strings.Index(raw, "://")
+	at := strings.LastIndex(raw, "@")
+	if scheme >= 0 && at > scheme+3 {
+		return raw[:scheme+3] + "****:****@" + raw[at+1:]
+	}
+	return "****"
 }

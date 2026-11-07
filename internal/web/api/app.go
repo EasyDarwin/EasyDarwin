@@ -34,26 +34,29 @@ func (l login) Login(c *gin.Context, input *user.LoginInput) (*loginOutput, erro
 	var u data.User
 	if err := l.database.Where("username=?", input.Username).First(&u).Error; err != nil {
 		if errors.Is(err, orm.ErrRevordNotFound) {
-			return nil, web.ErrNameOrPasswd.With("账号不存在")
+			// 与密码错误返回同一提示，避免暴露账号是否存在
+			return nil, web.ErrNameOrPasswd
 		} else {
 			return nil, web.ErrDB.With(err.Error())
 		}
 	}
 	if input.Username != u.Username || input.Password != u.Password {
-		return nil, web.ErrDB.With("密码错误")
+		return nil, web.ErrNameOrPasswd
 	}
 
-	// 签发 JWT
+	// 签发 JWT，默认口令标记随 token 下发，由 authWithWhitelist 服务端强制改密
+	needChange := isDefaultPassword(u.Password)
 	var expires time.Duration
 	if gCfg.Base.Timeout > 0 {
 		expires = time.Duration(gCfg.Base.Timeout) * time.Second
 	}
 	token, err := web.NewToken(web.TokenInput{
-		UID:      u.ID,
-		Username: u.Username,
-		Role:     u.Role,
-		Secret:   gCfg.Base.JwtSecret,
-		Exires:   expires,
+		UID:           u.ID,
+		Username:      u.Username,
+		Role:          u.Role,
+		Secret:        gCfg.Base.JwtSecret,
+		Exires:        expires,
+		NeedChangePwd: needChange,
 	})
 	if err != nil {
 		slog.Error("NewToken", "err", err)
@@ -62,7 +65,7 @@ func (l login) Login(c *gin.Context, input *user.LoginInput) (*loginOutput, erro
 	return &loginOutput{
 		User:               &u,
 		Token:              token,
-		NeedChangePassword: isDefaultPassword(u.Password),
+		NeedChangePassword: needChange,
 	}, nil
 }
 
@@ -135,7 +138,11 @@ func (u login) resetPassword(c *gin.Context) {
 func ResetPassword(username string, password, newPassword string) error {
 	// 判断新密码长度是否小于8
 	if len(newPassword) < 8 {
-		return web.ErrBadRequest.Msg("密码不合法").With(newPassword)
+		return web.ErrBadRequest.Msg("密码不合法")
+	}
+	// 禁止将密码改回默认口令，避免强制改密形同虚设（CNVD-2026-42897）
+	if isDefaultPassword(newPassword) {
+		return web.ErrBadRequest.Msg("新密码不能为默认口令")
 	}
 	var hUser data.User
 	// 获取操作用户信息
