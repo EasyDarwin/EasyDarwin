@@ -1,9 +1,13 @@
 package conf
 
 import (
+	"crypto/rand"
 	"easydarwin/internal/gutils/efile"
 	config "easydarwin/pkg/lalmax/conf"
+	"encoding/hex"
 	"fmt"
+	"log/slog"
+
 	"github.com/q191201771/lal/pkg/logic"
 	"github.com/spf13/viper"
 )
@@ -28,6 +32,17 @@ func SetupConfig(path string) (Bootstrap, error) {
 	err := vtoml.Unmarshal(&bc)
 	if err != nil {
 		return bc, err
+	}
+
+	// jwt 秘钥为空时随机生成，避免空秘钥导致 token 可被伪造
+	// 注意：随机秘钥在程序重启后变化，已签发的 token 将失效，需重新登录
+	if bc.Base.JwtSecret == "" {
+		secret := make([]byte, 32)
+		if _, err := rand.Read(secret); err != nil {
+			return bc, fmt.Errorf("生成 jwt 秘钥失败: %w", err)
+		}
+		bc.Base.JwtSecret = hex.EncodeToString(secret)
+		slog.Warn("base.jwtsecret 未配置，已随机生成临时秘钥，建议在配置文件中固定配置")
 	}
 
 	var cfg config.Config

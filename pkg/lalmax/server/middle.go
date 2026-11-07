@@ -1,6 +1,7 @@
 package server
 
 import (
+	"net"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -39,8 +40,13 @@ func Authentication(secrets, ips []string) gin.HandlerFunc {
 		Desp:      http.StatusText(http.StatusUnauthorized),
 	}
 	return func(c *gin.Context) {
-		if !authentication(c.Query("token"), c.ClientIP(), secrets, ips) {
-			c.JSON(200, out)
+		// 使用 RemoteAddr 而非 ClientIP，防止 X-Forwarded-For 伪造绕过 ip 白名单
+		host, _, err := net.SplitHostPort(c.Request.RemoteAddr)
+		if err != nil {
+			host = c.Request.RemoteAddr
+		}
+		if !authentication(c.Query("token"), host, secrets, ips) {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, out)
 			return
 		}
 		c.Next()
@@ -48,7 +54,16 @@ func Authentication(secrets, ips []string) gin.HandlerFunc {
 }
 
 // authentication 判断是否符合要求，返回 false 表示鉴权失败
+// 本机回环地址视为内部服务调用直接放行；
+// 未配置 secrets 与 ip 白名单时默认拒绝外部访问（CNVD-2026-42898）
 func authentication(reqToken, clientIP string, secrets, ips []string) bool {
+	if ip := net.ParseIP(clientIP); ip != nil && ip.IsLoopback() {
+		return true
+	}
+	// fail-closed：未配置任何鉴权方式时拒绝外部访问
+	if len(secrets) == 0 && len(ips) == 0 {
+		return false
+	}
 	// 秘钥过滤
 	if len(secrets) > 0 && !containFn(secrets, reqToken) {
 		return false

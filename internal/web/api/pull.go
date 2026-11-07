@@ -11,12 +11,14 @@ import (
 	"easydarwin/internal/data"
 	"easydarwin/utils/pkg/web"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"log/slog"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type LiveStreamAPI struct {
@@ -69,6 +71,10 @@ func (l LiveStreamAPI) find(c *gin.Context) {
 			} else {
 				lives[i].Url = fmt.Sprintf("rtmp://%s%s/live/stream_%d?sign=%s", host, rtmpPort, stream.ID, stream.Sign)
 			}
+		} else {
+			// 列表中的上游源地址脱敏，禁止回显摄像头 RTSP 账密（CNVD-2026-42898）
+			// 编辑时通过已鉴权的 /live/info/:id 获取完整地址
+			lives[i].Url = maskURLCredentials(stream.Url)
 		}
 	}
 	// 返回查询结果
@@ -385,4 +391,15 @@ func (l LiveStreamAPI) updateOnePull(c *gin.Context) {
 	web.Success(c, gin.H{
 		"id": id,
 	})
+}
+
+// maskURLCredentials 对 URL 中的账号凭据脱敏
+// 如 rtsp://admin:pass@192.168.1.1:554/path -> rtsp://****:****@192.168.1.1:554/path
+func maskURLCredentials(raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil || u.User == nil {
+		return raw
+	}
+	u.User = nil
+	return strings.Replace(u.String(), "://", "://****:****@", 1)
 }

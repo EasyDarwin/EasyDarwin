@@ -54,6 +54,8 @@ func AuthMiddleware(secret string) gin.HandlerFunc {
 		c.Set(username, claims.Username)
 		c.Set(token, auth)
 		c.Set(groupLevel, claims.GroupLevel)
+		c.Set(role, claims.Role)
+		c.Set("level", claims.Level)
 		c.Next()
 	}
 }

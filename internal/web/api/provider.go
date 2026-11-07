@@ -11,14 +11,15 @@ import (
 	"easydarwin/internal/data"
 	"encoding/hex"
 	"fmt"
-	"github.com/gin-contrib/static"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/gin-contrib/static"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func NewLiveStream(db *gorm.DB) *livestream.Core {
@@ -48,6 +49,9 @@ func NewUserCore(db *gorm.DB) {
 		if err := initUser("admin", "admin"); err != nil {
 			slog.Error("initUser", "err", err)
 		}
+		slog.Warn("已创建默认管理员账号 admin/admin，首次登录后请立即修改默认口令")
+	} else if isDefaultPassword(u.Password) {
+		slog.Warn("管理员账号仍在使用默认口令，存在未授权接管风险，请立即修改默认口令")
 	}
 }
 
@@ -100,10 +104,8 @@ func NewHTTPHandler(uc *conf.Bootstrap) http.Handler {
 	g.NoRoute(func(c *gin.Context) {
 		c.JSON(404, "来到了无人的荒漠") // 返回 JSON 格式的 404 错误信息
 	})
-	// 如果启用了 Pprof，设置 Pprof 监控
-	//if cfg.Pprof {
-	//	web.SetupPProf(g, &cfg.AcessIps) // 设置 Pprof 监控
-	//}
+	// 可以启用了 Pprof，设置 Pprof 监控
+	//web.SetupPProf(g, &[]string{"127.0.0.1"}) // 设置 Pprof 监控
 
 	setupRouter(g, uc) // 设置路由处理函数
 

@@ -14,6 +14,8 @@ import (
 	config "easydarwin/pkg/lalmax/conf"
 
 	"github.com/q191201771/lal/pkg/base"
+	"github.com/q191201771/lal/pkg/logic"
+	"github.com/q191201771/naza/pkg/nazalog"
 )
 
 var max *LalMaxServer
@@ -33,6 +35,12 @@ func TestMain(m *testing.M) {
 			UpdateIntervalSec: 2,
 			OnUpdate:          fmt.Sprintf("http://127.0.0.1%s/on_update", httpNotifyAddr),
 		},
+	}, &logic.Config{
+		LogConfig: nazalog.Option{
+			Level:          nazalog.LevelInfo,
+			IsToStdout:     true,
+			AssertBehavior: nazalog.AssertError,
+		},
 	})
 	if err != nil {
 		panic(err)
@@ -49,6 +57,7 @@ func TestAllGroup(t *testing.T) {
 	t.Run("no consumer", func(t *testing.T) {
 		r := httptest.NewRecorder()
 		req := httptest.NewRequest("GET", "/api/stat/all_group", nil)
+		req.RemoteAddr = "127.0.0.1:12345" // 模拟本机内部调用
 		max.router.ServeHTTP(r, req)
 		resp := r.Result()
 		if resp.StatusCode != 200 {
@@ -73,6 +82,7 @@ func TestAllGroup(t *testing.T) {
 
 		r := httptest.NewRecorder()
 		req := httptest.NewRequest("GET", "/api/stat/all_group", nil)
+		req.RemoteAddr = "127.0.0.1:12345" // 模拟本机内部调用
 		max.router.ServeHTTP(r, req)
 		resp := r.Result()
 		if resp.StatusCode != 200 {
@@ -125,8 +135,13 @@ func TestNotifyUpdate(t *testing.T) {
 }
 
 func TestAuthentication(t *testing.T) {
-	t.Run("无须鉴权", func(t *testing.T) {
-		if !authentication("12", "192.168.0.2", nil, nil) {
+	t.Run("未配置鉴权时拒绝外部访问", func(t *testing.T) {
+		if authentication("12", "192.168.0.2", nil, nil) {
+			t.Fatal("期望不通过， 但实际通过")
+		}
+	})
+	t.Run("本机回环地址放行", func(t *testing.T) {
+		if !authentication("", "127.0.0.1", nil, nil) {
 			t.Fatal("期望通过， 但实际未通过")
 		}
 	})

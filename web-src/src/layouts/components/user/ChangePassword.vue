@@ -40,7 +40,7 @@ const onFinishFailed = errorInfo => {
       </a-input-password>
     </a-form-item>
     <a-form-item name="new_password" :rules="[{ required: true, message: t('message.pleaseEnterNewPassword') },
-    {min: 6,message: t('message.PasswordLength') ,trigger: 'blur'}]">
+    {min: 8,message: t('message.PasswordLength') ,trigger: 'blur'}]">
       <a-input-password v-model:value="formState.new_password" :placeholder="t('message.pleaseEnterNewPassword')">
         <template #prefix>
           <LockOutlined />
@@ -48,7 +48,7 @@ const onFinishFailed = errorInfo => {
       </a-input-password>
     </a-form-item>
     <a-form-item name="confirm_password" :rules="[{ required: true, message: t('message.PleaseEnterConfirmPassword')},
-    {min: 6,message: t('message.PasswordLength') ,trigger: 'blur'}]">
+    {min: 8,message: t('message.PasswordLength') ,trigger: 'blur'}]">
       <a-input-password v-model:value="formState.confirm_password" :placeholder="t('message.PleaseEnterConfirmPassword')">
         <template #prefix>
           <LockOutlined />

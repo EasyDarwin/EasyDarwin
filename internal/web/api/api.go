@@ -10,11 +10,12 @@ import (
 	"easydarwin/internal/data"
 	"easydarwin/internal/gutils/consts"
 	"easydarwin/utils/pkg/web"
-	"github.com/gin-contrib/static"
-	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
 	"runtime/debug"
+
+	"github.com/gin-contrib/static"
+	"github.com/gin-gonic/gin"
 )
 
 var gCfg *conf.Bootstrap
@@ -38,6 +39,8 @@ func setupRouter(router *gin.Engine, uc *conf.Bootstrap) {
 	)
 	path := "/api/v1"
 	r := router.Group(path)
+	// 统一强制鉴权，修复未授权访问漏洞（CNVD-2026-42897 / CNVD-2026-42898）
+	r.Use(authWithWhitelist(uc.Base.JwtSecret))
 	registerApp(r)
 	//registerConfig(r, ConfigAPI{cfg: uc.Conf, uc: uc, app: app}, auth)
 	//registerVersion(r, uc.Version, auth)

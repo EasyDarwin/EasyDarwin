@@ -1,25 +1,36 @@
 package api
 
 import (
+	"crypto/sha256"
 	"easydarwin/internal/data"
 	"easydarwin/utils/pkg/orm"
 	"easydarwin/utils/pkg/web"
 	"easydarwin/utils/plugin/core/user"
+	"encoding/hex"
 	"errors"
 	"expvar"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	"log/slog"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type login struct {
 	database *gorm.DB
 }
 
-func (l login) Login(c *gin.Context, input *user.LoginInput) (*data.User, error) {
+// loginOutput 登录成功返回，token 供前端后续请求携带（Authorization: Bearer）
+type loginOutput struct {
+	*data.User
+	Token              string `json:"token"`
+	NeedChangePassword bool   `json:"need_change_password"` // 仍在使用默认口令时为 true，前端强制引导修改
+}
+
+func (l login) Login(c *gin.Context, input *user.LoginInput) (*loginOutput, error) {
 	var u data.User
 	if err := l.database.Where("username=?", input.Username).First(&u).Error; err != nil {
 		if errors.Is(err, orm.ErrRevordNotFound) {
@@ -28,10 +39,37 @@ func (l login) Login(c *gin.Context, input *user.LoginInput) (*data.User, error)
 			return nil, web.ErrDB.With(err.Error())
 		}
 	}
-	if input.Username == u.Username && input.Password == u.Password {
-		return &u, nil
+	if input.Username != u.Username || input.Password != u.Password {
+		return nil, web.ErrDB.With("密码错误")
 	}
-	return nil, web.ErrDB.With("密码错误")
+
+	// 签发 JWT
+	var expires time.Duration
+	if gCfg.Base.Timeout > 0 {
+		expires = time.Duration(gCfg.Base.Timeout) * time.Second
+	}
+	token, err := web.NewToken(web.TokenInput{
+		UID:      u.ID,
+		Username: u.Username,
+		Role:     u.Role,
+		Secret:   gCfg.Base.JwtSecret,
+		Exires:   expires,
+	})
+	if err != nil {
+		slog.Error("NewToken", "err", err)
+		return nil, web.ErrServer
+	}
+	return &loginOutput{
+		User:               &u,
+		Token:              token,
+		NeedChangePassword: isDefaultPassword(u.Password),
+	}, nil
+}
+
+// isDefaultPassword 判断是否仍为初始默认口令 admin
+func isDefaultPassword(password string) bool {
+	s := sha256.Sum256([]byte("admin"))
+	return password == hex.EncodeToString(s[:])
 }
 
 func (u login) logout(c *gin.Context) {
@@ -76,8 +114,12 @@ func (u login) resetPassword(c *gin.Context) {
 		return
 	}
 
-	// 获取当前用户ID
-	// handleUID := web.GetUID(c)
+	// 校验操作者身份：仅允许修改本人密码，管理员可修改任意用户密码
+	handleUsername := web.GetUsername(c)
+	if handleUsername == "" || (handleUsername != username && web.GetRole(c) != "admin") {
+		web.Fail(c, web.ErrBadRequest.Msg("权限不足，仅允许修改本人密码"))
+		return
+	}
 	// 调用核心模块重置密码
 	if err := ResetPassword(username, input.Password, input.NewPassword); err != nil {
 		// 如果重置密码失败，返回错误信息

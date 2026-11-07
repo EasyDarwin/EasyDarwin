@@ -11,11 +11,16 @@ import (
 )
 
 // debugAccess 授权指定 ip 访问
+// 未配置 ip 白名单时默认拒绝访问 /debug/ 调试接口（CNVD-2026-42898）
 func debugAccess(ips *[]string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		lips := *ips
-		if !strings.HasPrefix(c.Request.URL.Path, "/debug/") || len(lips) == 0 {
+		if !strings.HasPrefix(c.Request.URL.Path, "/debug/") {
 			c.Next()
+			return
+		}
+		lips := *ips
+		if len(lips) == 0 {
+			c.AbortWithStatusJSON(403, gin.H{"msg": "调试接口未开放"})
 			return
 		}
 		for _, v := range lips {

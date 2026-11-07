@@ -8,9 +8,8 @@ import (
 	"easydarwin/internal/gutils/efile"
 	"easydarwin/internal/gutils/estring"
 	"easydarwin/internal/gutils/etime"
+	"easydarwin/utils/pkg/web"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	melody "gopkg.in/olahol/melody.v1"
 	"log"
 	"log/slog"
 	"net/http"
@@ -21,6 +20,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	melody "gopkg.in/olahol/melody.v1"
 )
 
 type VODRouter struct {
@@ -508,6 +510,11 @@ func (r *VODRouter) get(c *gin.Context) {
 	data.GetDatabase().First(&vod, consts.SqlWhereID, form.ID)
 	if vod.ID == "" {
 		AbortWithString(c, http.StatusBadRequest, "未查找到对应的视频")
+		return
+	}
+	// 匿名访问（分享播放页 share.html）仅允许获取处于分享有效期内的视频
+	if web.GetUID(c) == 0 && !vod.IsSharing() {
+		AbortWithString(c, http.StatusForbidden, "视频未开启分享或分享已过期")
 		return
 	}
 

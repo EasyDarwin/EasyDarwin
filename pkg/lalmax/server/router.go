@@ -42,12 +42,14 @@ func (s *LalMaxServer) InitRouter(router *gin.Engine) {
 	// hls-fmp4/llhls
 	router.GET("/live/hls/:streamid/:type", s.HandleHls)
 
+	auth := Authentication(s.conf.HttpConfig.CtrlAuthWhitelist.Secrets, s.conf.HttpConfig.CtrlAuthWhitelist.IPs)
+
 	// onvif
-	router.POST("/api/ctrl/onvif/pull", s.HandleOnvifPull)
+	router.POST("/api/ctrl/onvif/pull", auth, s.HandleOnvifPull)
 
 	// gb
 	gbLogic := gb28181.NewGbLogic(s.gbsbr)
-	gb := router.Group("/api/gb")
+	gb := router.Group("/api/gb", auth)
 	gb.GET("/device_infos", gbLogic.GetDeviceInfos)
 	gb.POST("/start_play", gbLogic.StartPlay)
 	gb.POST("/stop_play", gbLogic.StopPlay)
@@ -59,7 +61,6 @@ func (s *LalMaxServer) InitRouter(router *gin.Engine) {
 	gb.POST("/ptz_preset", gbLogic.PtzPreset)
 	gb.POST("/ptz_stop", gbLogic.PtzStop)
 
-	auth := Authentication(s.conf.HttpConfig.CtrlAuthWhitelist.Secrets, s.conf.HttpConfig.CtrlAuthWhitelist.IPs)
 	// stat
 	stat := router.Group("/api/stat", auth)
 	stat.GET("/group", s.statGroupHandler)
